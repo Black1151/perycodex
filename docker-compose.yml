@@ -1,24 +1,20 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:16
     container_name: postgres
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: superman
+      POSTGRES_PASSWORD: Rt7kQ32p
       POSTGRES_DB: happiness-score
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - '5432:5432'
-
   app:
-    build:
-      context: .
+    build: .
     container_name: nextjs
     environment:
-      DATABASE_URL: postgres://user:password@postgres:5432/happiness-score
+      DATABASE_URL: postgres://superman:Rt7kQ32p@postgres:5432/happiness-score
     ports:
       - '3000:3000'
     depends_on:

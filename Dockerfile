@@ -1,29 +1,31 @@
 # Install dependencies only when needed
-FROM node:16-alpine AS deps
+FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 
 # Rebuild the source code only when needed
-FROM node:16-alpine AS builder
+FROM node:20-alpine AS builder
 WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
+RUN npm run build
 
-# Development image, copy all the files and run dev
-FROM node:16-alpine AS dev
+# Production image, copy all the files and run next
+FROM node:20-alpine AS runner
 WORKDIR /app
 
-ENV NODE_ENV development
+ENV NODE_ENV production
 
-# Copy the files from the builder stage
-COPY --from=builder /app ./
+# Copy the pre-built files from the builder stage
+COPY --from=builder /app/next.config.mjs ./
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/prisma ./prisma
 
 # Copy the .env file to the container
 COPY .env .env
 
-# Expose the development server port
-EXPOSE 3000
-
-# Start the Next.js development server
-CMD ["npm", "run", "dev"]
+# Start the Next.js server
+CMD ["npm", "start"]
