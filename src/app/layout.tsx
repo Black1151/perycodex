@@ -1,6 +1,8 @@
-import { ChakraProvider } from "@chakra-ui/react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { perygonTheme } from "../theme/theme";
+import { ThemeProvider } from "@/providers/ThemeProvider";
+import "../styles/fonts.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,9 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ChakraProvider>
-          {children}  
-        </ChakraProvider>
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );
