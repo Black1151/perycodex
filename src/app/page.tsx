@@ -1,6 +1,6 @@
 "use client";
 
-import { Heading, useTheme, VStack } from "@chakra-ui/react";
+import { Heading, useTheme, VStack, Text } from "@chakra-ui/react";
 import { ScoreForm } from "./ScoreForm";
 import { Header } from "./Header";
 import BarGraph from "@/components/graphs/BarGraph";
@@ -18,6 +18,7 @@ export default function Home() {
     >
       <Header />
       <ScoreForm />
+      <Text>I HAVE WORKED HUZZAH!</Text>
       <BarGraph
         DataPoints={[
           { value: 9, title: "Leeds" },
