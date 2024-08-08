@@ -6,14 +6,27 @@ import {
   Stack,
   SimpleGrid,
   GridItem,
+  Box,
+  Flex,
 } from "@chakra-ui/react";
-import { ScoreForm } from "./ScoreForm";
 import { Header } from "./Header";
 import BarGraph from "@/components/graphs/BarGraph";
 import { StatBox } from "@/components/Masonry/StatsMasonry/StatBox";
 import { SpringScale } from "@/components/animations/SpringScale";
+import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
+import { SplashScreen } from "@/components/SplashScreen/SplashScreen";
+import { useState, useEffect } from "react";
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
+
   const theme = useTheme();
 
   return (
@@ -24,57 +37,79 @@ export default function Home() {
       flex={1}
       bgGradient={`linear(to-br, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`}
     >
-      <Header />
-      {/* <ScoreForm /> */}
-
-      <Stack
-        flexDirection={["column-reverse", null, null, "row"]}
-        gap={5}
-        width="100%"
-        maxW={1200}
-        p={6}
-      >
-        <SimpleGrid gap={5} columns={[2]}>
-          <SpringScale delay={0}>
-            <StatBox bgColor={theme.colors.red} data="22" title={"1-2"} />
-          </SpringScale>
-          <SpringScale delay={0.5}>
-            <StatBox bgColor={theme.colors.yellow} data={"153"} title={"3-5"} />
-          </SpringScale>
-          <SpringScale delay={0.7}>
-            <StatBox
-              bgColor={theme.colors.lightGreen}
-              data={"6"}
-              title={"6-8"}
-            />
-          </SpringScale>
-          <SpringScale delay={1.2}>
-            <StatBox bgColor={theme.colors.green} data={"220"} title={"9-10"} />
-          </SpringScale>
-          <GridItem colSpan={2}>
-            <SpringScale delay={0.3}>
-              <StatBox
-                bgColor="lightGray"
-                data={"7"}
-                title={"Did not participate"}
-                counterColor={"lightGray"}
+      {isLoading ? (
+        <SplashScreen />
+      ) : (
+        <>
+          <Header />
+          <Stack
+            flexDirection={["column-reverse", null, null, "row"]}
+            gap={5}
+            width="100%"
+            maxW={1200}
+            p={6}
+          >
+            <VStack w="100%" flex={1}>
+              <SpringScale delay={0.2}>
+                <Box mb={2}>
+                  <SectionHeader>Happiness by Individuals</SectionHeader>
+                </Box>
+              </SpringScale>
+              <SimpleGrid gap={5} columns={[2]} flex={1} w="100%">
+                <SpringScale delay={0}>
+                  <StatBox bgColor={theme.colors.red} data="22" title={"1-2"} />
+                </SpringScale>
+                <SpringScale delay={0.5}>
+                  <StatBox
+                    bgColor={theme.colors.yellow}
+                    data={"153"}
+                    title={"3-5"}
+                  />
+                </SpringScale>
+                <SpringScale delay={0.7}>
+                  <StatBox
+                    bgColor={theme.colors.lightGreen}
+                    data={"6"}
+                    title={"6-8"}
+                  />
+                </SpringScale>
+                <SpringScale delay={1.2}>
+                  <StatBox
+                    bgColor={theme.colors.green}
+                    data={"220"}
+                    title={"9-10"}
+                  />
+                </SpringScale>
+                <GridItem colSpan={2}>
+                  <SpringScale delay={0.3}>
+                    <StatBox
+                      bgColor="lightGray"
+                      data={"7"}
+                      title={"Did not participate"}
+                      counterColor={"lightGray"}
+                    />
+                  </SpringScale>
+                </GridItem>
+              </SimpleGrid>
+            </VStack>
+            <SpringScale delay={0.1} style={{ flex: 2 }}>
+              <Flex mb={4} width="100%" justifyContent="center">
+                <SectionHeader>Happiness by Group</SectionHeader>
+              </Flex>
+              <BarGraph
+                DataPoints={[
+                  { value: 9, title: "Leeds" },
+                  { value: 7, title: "Manchester" },
+                  { value: 2, title: "Birmingham" },
+                  { value: 7, title: "London" },
+                  { value: 10, title: "Edinburgh" },
+                  { value: 3, title: "Dublin" },
+                ]}
               />
             </SpringScale>
-          </GridItem>
-        </SimpleGrid>
-        <SpringScale delay={0.1} style={{ width: "100%" }}>
-          <BarGraph
-            DataPoints={[
-              { value: 9, title: "Leeds" },
-              { value: 7, title: "Manchester" },
-              { value: 2, title: "Birmingham" },
-              { value: 7, title: "London" },
-              { value: 10, title: "Edinburugh" },
-              { value: 3, title: "Dublin" },
-            ]}
-          />
-        </SpringScale>
-      </Stack>
+          </Stack>
+        </>
+      )}
     </VStack>
   );
 }
