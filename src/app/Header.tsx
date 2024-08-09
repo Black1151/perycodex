@@ -14,16 +14,24 @@ export const Header = () => {
       fontSize={[20, 40]}
       justifyContent="space-between"
       alignItems="center"
-      pt={3}
+      pt={5}
     >
       <MotionBox
         initial={{ x: "-5vw", opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.3 }}
+        w="150px"
       >
-        <Text lineHeight={0} fontFamily={"bonfire"} color="white">
+        {/* <Text lineHeight={0} fontFamily={"bonfire"} color="white">
           Perygon
-        </Text>
+        </Text> */}
+        <Image
+          src="/logoWhole.png"
+          alt="profile pic"
+          width="100%"
+          height="100%"
+          objectFit="cover"
+        />
       </MotionBox>
       <MotionHStack
         initial={{ x: "5vw", opacity: 0 }}

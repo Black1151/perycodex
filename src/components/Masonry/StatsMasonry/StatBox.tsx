@@ -1,11 +1,20 @@
 import Counter from "@/components/counter/Counter";
-import { Flex, Text, useTheme, VStack } from "@chakra-ui/react";
+import {
+  Flex,
+  Text,
+  useTheme,
+  VStack,
+  Image,
+  Box,
+  HStack,
+} from "@chakra-ui/react";
 
 interface StatBoxProps {
   bgColor: string;
   data: string;
   title: string;
   counterColor?: string;
+  titleImage?: string;
 }
 
 export const StatBox: React.FC<StatBoxProps> = ({
@@ -13,6 +22,7 @@ export const StatBox: React.FC<StatBoxProps> = ({
   title,
   data,
   counterColor,
+  titleImage,
 }) => {
   const theme = useTheme();
 
@@ -34,11 +44,24 @@ export const StatBox: React.FC<StatBoxProps> = ({
           p={8}
         />
       </Flex>
-      <Flex bg={bgColor} flex={2} w="100%" justifyContent="center" p={2}>
+      <HStack
+        bg={bgColor}
+        flex={2}
+        w="100%"
+        justifyContent="center"
+        p={2}
+        alignItems="center"
+        gap={2}
+      >
+        {titleImage && (
+          <Box w="40px">
+            <Image src={titleImage} />
+          </Box>
+        )}
         <Text color="white" fontWeight="bold" fontSize={[20, 25]}>
           {title}
         </Text>
-      </Flex>
+      </HStack>
     </VStack>
   );
 };
