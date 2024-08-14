@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { perygonTheme } from "../theme/theme";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import "../styles/fonts.css";
 

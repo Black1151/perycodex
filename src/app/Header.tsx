@@ -1,4 +1,4 @@
-import { HStack, Box, Text, Image } from "@chakra-ui/react";
+import { HStack, Box, Image } from "@chakra-ui/react";
 import { Menu } from "@mui/icons-material";
 import { motion } from "framer-motion";
 
