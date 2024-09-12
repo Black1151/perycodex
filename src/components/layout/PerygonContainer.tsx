@@ -1,3 +1,5 @@
+"use client";
+
 import { useTheme, VStack } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
@@ -15,6 +17,7 @@ export const PerygonContainer: React.FC<PerygonContatinerProps> = ({
       minH="100vh"
       width="100%"
       overflowX="hidden"
+      p={10}
       flex={1}
       bgGradient={`linear(to-br, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`}
     >

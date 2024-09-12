@@ -14,4 +14,23 @@ export const perygonTheme = extendTheme({
     body: "Metropolis, sans-serif",
     bonfire: "Bonfire, sans-serif",
   },
+  components: {
+    Button: {
+      variants: {
+        primary: {
+          mt: 5,
+          backgroundColor: "perygonPink",
+          w: "full",
+          height: 12,
+          color: "white",
+          _hover: {
+            color: "perygonPink",
+            border: "1px solid",
+            borderColor: "perygonPink",
+            backgroundColor: "white",
+          },
+        },
+      },
+    },
+  },
 });

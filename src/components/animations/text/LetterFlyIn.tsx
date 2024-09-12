@@ -1,4 +1,4 @@
-"use-client";
+"use client";
 
 import { Text, Box, BoxProps } from "@chakra-ui/react";
 import { motion } from "framer-motion";
@@ -9,11 +9,13 @@ const MotionBox = motion(Box);
 interface LetterFlyInProps extends BoxProps {
   children: ReactNode;
   delay?: number;
+  fontSize?: number;
 }
 
 export const LetterFlyIn: FC<LetterFlyInProps> = ({
   children,
   delay = 0,
+  fontSize = 81,
   ...rest
 }) => {
   const text = children as string;
@@ -25,7 +27,7 @@ export const LetterFlyIn: FC<LetterFlyInProps> = ({
       color="white"
       fontFamily="bonfire"
       whiteSpace="nowrap"
-      fontSize={81}
+      fontSize={fontSize}
       lineHeight={1}
       {...rest}
     >

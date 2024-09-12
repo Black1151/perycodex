@@ -1,0 +1,60 @@
+import { Center, VStack } from "@chakra-ui/react";
+import { PerygonContainer } from "@/components/layout/PerygonContainer";
+import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
+import { LoginCard } from "../../components/login/LoginCard";
+import { ProfileCompletionForm } from "@/components/forms/ProfileCompletionForm";
+import axios from "axios";
+import { cookies } from "next/headers";
+
+const typesArray = ["role_type", "job_type", "title", "team", "dept"];
+
+export default async function ProfileSetup() {
+  let apiResponse;
+
+  try {
+    const cookieStore = cookies();
+    const authToken = cookieStore.get("auth_token")?.value;
+
+    const response = await axios.post(
+      `${process.env.BE_URL}/selectItem/allBy`,
+      {
+        type: typesArray,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+
+    apiResponse = response.data.resource;
+  } catch (error: any) {
+    console.error("Error fetching profile setup data:", error);
+  }
+
+  return (
+    <PerygonContainer>
+      <Center flex={1}>
+        <LoginCard
+          height={1500}
+          imageOffset={-1200}
+          titleComponent={
+            <VStack position="absolute" top="100px">
+              <LetterFlyIn fontSize={32}>
+                Please set up your profile
+              </LetterFlyIn>
+              <LetterFlyIn fontSize={22}>Then you are all done!</LetterFlyIn>
+            </VStack>
+          }
+        >
+          <ProfileCompletionForm
+            isSubmitting={false}
+            errors={{}}
+            dropdowns={apiResponse}
+          />
+        </LoginCard>
+      </Center>
+    </PerygonContainer>
+  );
+}

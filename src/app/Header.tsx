@@ -1,3 +1,5 @@
+"use client";
+
 import { HStack, Box, Image } from "@chakra-ui/react";
 import { Menu } from "@mui/icons-material";
 import { motion } from "framer-motion";
@@ -22,9 +24,6 @@ export const Header = () => {
         transition={{ duration: 0.3 }}
         w="150px"
       >
-        {/* <Text lineHeight={0} fontFamily={"bonfire"} color="white">
-          Perygon
-        </Text> */}
         <Image
           src="/logoWhole.png"
           alt="profile pic"

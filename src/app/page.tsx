@@ -1,123 +1,41 @@
-"use client";
+import { cookies } from "next/headers";
+import HomePage from "./HomePage";
+import { redirect } from "next/navigation";
 
-import {
-  useTheme,
-  VStack,
-  Stack,
-  SimpleGrid,
-  GridItem,
-  Box,
-  Flex,
-} from "@chakra-ui/react";
-import { Header } from "./Header";
-import BarGraph from "@/components/graphs/BarGraph";
-import { StatBox } from "@/components/Masonry/StatsMasonry/StatBox";
-import { SpringScale } from "@/components/animations/SpringScale";
-import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
-import { SplashScreen } from "@/components/SplashScreen/SplashScreen";
-import { useState, useEffect } from "react";
+export default async function Home() {
+  const cookieStore = cookies();
+  const uniqueId = cookieStore.get("user_uuid")?.value;
+  const authToken = cookieStore.get("auth_token")?.value;
 
-export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
+  let isProfileRegistered = false;
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, []);
+  if (uniqueId && authToken) {
+    try {
+      const response = await fetch(
+        `${process.env.BE_URL}/user/isProfileComplete`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({ uniqueId }),
+        }
+      );
 
-  const theme = useTheme();
+      if (!response.ok) {
+        throw new Error("Failed to fetch profile registration status");
+      }
+      const data = await response.json();
+      isProfileRegistered = data.resource.isProfileRegistered;
+    } catch (error) {
+      console.error("Error checking profile status:", error);
+    }
+  }
 
-  return (
-    <VStack
-      minH="100vh"
-      width="100%"
-      overflowX="hidden"
-      flex={1}
-      bgGradient={`linear(to-br, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`}
-    >
-      {isLoading ? (
-        <SplashScreen />
-      ) : (
-        <>
-          <Header />
-          <Stack
-            flexDirection={["column-reverse", null, null, "row"]}
-            gap={5}
-            width="100%"
-            maxW={1200}
-            p={6}
-          >
-            <VStack w="100%" flex={1}>
-              <SpringScale delay={0.2}>
-                <Box mb={2}>
-                  <SectionHeader>Happiness by Individuals</SectionHeader>
-                </Box>
-              </SpringScale>
-              <SimpleGrid gap={5} columns={[2]} flex={1} w="100%">
-                <SpringScale delay={0}>
-                  <StatBox
-                    bgColor={theme.colors.red}
-                    data="22"
-                    title={"1-2"}
-                    titleImage="/faces/happiness_score_2.png"
-                  />
-                </SpringScale>
-                <SpringScale delay={0.5}>
-                  <StatBox
-                    bgColor={theme.colors.yellow}
-                    data={"153"}
-                    title={"3-5"}
-                    titleImage="/faces/happiness_score_6.png"
-                  />
-                </SpringScale>
-                <SpringScale delay={0.7}>
-                  <StatBox
-                    bgColor={theme.colors.lightGreen}
-                    data={"6"}
-                    title={"6-8"}
-                    titleImage="/faces/happiness_score_8.png"
-                  />
-                </SpringScale>
-                <SpringScale delay={1.2}>
-                  <StatBox
-                    bgColor={theme.colors.green}
-                    data={"220"}
-                    title={"9-10"}
-                    titleImage="/faces/happiness_score_9.png"
-                  />
-                </SpringScale>
-                <GridItem colSpan={2}>
-                  <SpringScale delay={0.3}>
-                    <StatBox
-                      bgColor="lightGray"
-                      data={"7"}
-                      title={"Did not participate"}
-                      counterColor={"lightGray"}
-                    />
-                  </SpringScale>
-                </GridItem>
-              </SimpleGrid>
-            </VStack>
-            <SpringScale delay={0.1} style={{ flex: 2 }}>
-              <Flex mb={4} width="100%" justifyContent="center">
-                <SectionHeader>Happiness by Group</SectionHeader>
-              </Flex>
-              <BarGraph
-                DataPoints={[
-                  { value: 9, title: "Leeds" },
-                  { value: 7, title: "Manchester" },
-                  { value: 2, title: "Birmingham" },
-                  { value: 7, title: "London" },
-                  { value: 10, title: "Edinburgh" },
-                  { value: 3, title: "Dublin" },
-                ]}
-              />
-            </SpringScale>
-          </Stack>
-        </>
-      )}
-    </VStack>
-  );
+  if (!isProfileRegistered) {
+    return redirect("/profile-setup");
+  }
+
+  return <HomePage />;
 }

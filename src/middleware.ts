@@ -6,13 +6,11 @@ import apiClient from "./lib/apiClient";
 
 export async function middleware(request: NextRequest) {
   const apiToken = request.cookies.get("auth_token")?.value;
-
   if (!apiToken) {
     return NextResponse.redirect(
       new URL(`${process.env.NEXT_PUBLIC_BASE_URL}/login`, request.url)
     );
   }
-
   try {
     await apiClient.get(`/authentication/check`, {
       headers: { Authorization: `Bearer ${apiToken}` },
