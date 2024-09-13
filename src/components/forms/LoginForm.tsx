@@ -45,9 +45,9 @@ export function LoginForm({ isSubmitting }: LoginFormProps) {
 
   const handleFormSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
     try {
-      const response = await axios.post("/api/auth/sign-in", data);
+      await axios.post("/api/auth/sign-in", data);
 
-      router.push(response.data.redirectUrl);
+      router.push("/");
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.error ||

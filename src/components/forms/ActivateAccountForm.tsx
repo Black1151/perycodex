@@ -117,7 +117,7 @@ export function ActivateAccountForm({
             focusBorderColor={theme.colors.perygonPink}
           />
           <Button
-            mt={0}
+            mt="60px"
             backgroundColor={theme.colors.perygonPink}
             type="submit"
             w="full"

@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm, SubmitHandler, FieldError } from "react-hook-form";
-import { Button, VStack, useTheme } from "@chakra-ui/react";
+import { Box, Button, VStack, useTheme } from "@chakra-ui/react";
 import EmailIcon from "@mui/icons-material/Email";
 import { InputField } from "./InputField";
 import { emailValidation } from "./validationSchema/validationSchema";
@@ -40,7 +40,7 @@ export function PasswordRecoveryForm({
       style={{ width: "100%", maxWidth: "md" }}
     >
       <VStack spacing={4} w={500} p={6}>
-        <VStack spacing={0} w={300}>
+        <VStack gap="70px" w={300}>
           <InputField
             name="email"
             placeholder="Email"

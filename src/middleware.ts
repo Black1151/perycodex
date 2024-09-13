@@ -7,9 +7,6 @@ import apiClient from "./lib/apiClient";
 export async function middleware(request: NextRequest) {
   const apiToken = request.cookies.get("auth_token")?.value;
 
-  // Determine if we are in development or production
-  const isDev = process.env.NODE_ENV === "development";
-
   if (!apiToken) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
