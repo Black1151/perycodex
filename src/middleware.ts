@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
   const isDev = process.env.NODE_ENV === "development";
 
   if (!apiToken) {
-    return NextResponse.redirect(new URL("/horse", request.url));
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   try {
@@ -24,7 +24,7 @@ export async function middleware(request: NextRequest) {
       axios.isAxiosError(error) &&
       (error.response?.status === 401 || error.response?.status === 403)
     ) {
-      return NextResponse.redirect(new URL("/horse", request.url));
+      return NextResponse.redirect(new URL("/login", request.url));
     }
     return NextResponse.redirect(new URL("/error", request.url));
   }
