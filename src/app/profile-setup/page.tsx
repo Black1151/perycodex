@@ -3,8 +3,9 @@ import { PerygonContainer } from "@/components/layout/PerygonContainer";
 import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
 import { LoginCard } from "../../components/login/LoginCard";
 import { ProfileCompletionForm } from "@/components/forms/ProfileCompletionForm";
-import axios from "axios";
 import { cookies } from "next/headers";
+
+export const dynamic = "force-dynamic"; // Force dynamic rendering - used as aparently cant fetch cookies in the page and have it render statically. Does not seem to be an issue when getting the cookies in a server route but calling a server route from a server page seemed to cause issues. - TODO look into more and find a way to preserve static rendering
 
 const typesArray = ["role_type", "job_type", "title", "team", "dept"];
 
@@ -15,20 +16,22 @@ export default async function ProfileSetup() {
     const cookieStore = cookies();
     const authToken = cookieStore.get("auth_token")?.value;
 
-    const response = await axios.post(
-      `${process.env.BE_URL}/selectItem/allBy`,
-      {
-        type: typesArray,
+    // Use fetch instead of axios for better integration with server components
+    const response = await fetch(`${process.env.BE_URL}/selectItem/allBy`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
       },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-      }
-    );
+      body: JSON.stringify({ type: typesArray }),
+    });
 
-    apiResponse = response.data.resource;
+    if (!response.ok) {
+      throw new Error("Failed to fetch profile setup data");
+    }
+
+    const data = await response.json();
+    apiResponse = data.resource;
   } catch (error: any) {
     console.error("Error fetching profile setup data:", error);
   }

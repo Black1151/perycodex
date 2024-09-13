@@ -9,8 +9,6 @@ export async function POST(req: NextRequest) {
   console.log("uniqueId>>", uniqueId);
 
   try {
-    console.log(">>>>>>>>>>>>>>>>>>TRYING");
-
     const response = await fetch(
       `${process.env.BE_URL}/user/isProfileComplete`,
       {
@@ -29,8 +27,6 @@ export async function POST(req: NextRequest) {
     }
 
     const data = await response.json();
-    console.log(">>>>>>>>>>>>>>>>>>>DATA", data);
-
     const isProfileRegistered = data.resource.isProfileRegistered;
     return NextResponse.json({ isProfileRegistered });
   } catch (error: any) {

@@ -1,19 +1,34 @@
-// app/api/user/route.ts
+//// Currently unused
+
 import { NextResponse } from "next/server";
-import apiClient from "@/lib/apiClient";
+import { cookies } from "next/headers";
+
+export const dynamic = "force-dynamic";
 
 export async function GET() {
+  const cookieStore = cookies();
+  const authToken = cookieStore.get("auth_token")?.value;
+
+  if (!authToken) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
-    const response = await apiClient.get("/user");
-    if (response.status === 200) {
-      const userData = response.data;
-      return NextResponse.json(userData);
-    } else {
-      return NextResponse.json(
-        { error: "Failed to fetch user data" },
-        { status: response.status }
-      );
+    const response = await fetch(`${process.env.BE_URL}/user`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch user data");
     }
+
+    const userData = await response.json();
+
+    return NextResponse.json(userData);
   } catch (error) {
     console.error("Error fetching user data:", error);
     return NextResponse.json(
