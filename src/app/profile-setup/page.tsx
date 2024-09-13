@@ -5,7 +5,7 @@ import { LoginCard } from "../../components/login/LoginCard";
 import { ProfileCompletionForm } from "@/components/forms/ProfileCompletionForm";
 import { cookies } from "next/headers";
 
-export const dynamic = "force-dynamic"; // Force dynamic rendering - used as aparently cant fetch cookies in the page and have it render statically. Does not seem to be an issue when getting the cookies in a server route but calling a server route from a server page seemed to cause issues. - TODO look into more and find a way to preserve static rendering
+export const dynamic = "force-dynamic"; // Force dynamic rendering - used as apparently cant fetch cookies in the page and have it render statically. Does not seem to be an issue when getting the cookies in a server route but calling a server route from a server page seemed to cause issues. - TODO look into more and find a way to preserve static rendering
 
 const typesArray = ["role_type", "job_type", "title", "team", "dept"];
 
@@ -16,7 +16,6 @@ export default async function ProfileSetup() {
     const cookieStore = cookies();
     const authToken = cookieStore.get("auth_token")?.value;
 
-    // Use fetch instead of axios for better integration with server components
     const response = await fetch(`${process.env.BE_URL}/selectItem/allBy`, {
       method: "POST",
       headers: {
