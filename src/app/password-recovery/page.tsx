@@ -7,15 +7,7 @@ import { LoginCard } from "@/components/login/LoginCard";
 import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
 import { PasswordRecoveryPageClient } from "./PasswordRecoveryPageClient";
 
-export default function PasswordRecoveryPage({
-  searchParams,
-}: {
-  searchParams: { token?: string };
-}) {
-  if (!searchParams?.token) {
-    redirect("/login");
-  }
-
+export default function PasswordRecoveryPage() {
   return (
     <PerygonContainer>
       <Center flex={1}>
