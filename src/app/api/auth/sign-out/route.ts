@@ -15,9 +15,11 @@ export async function POST() {
     const res = NextResponse.redirect(
       `${process.env.NEXT_PUBLIC_BASE_URL}/login`
     );
-    res.cookies.delete("auth_token");
     if (cookieStore.get("auth_token")) {
       res.cookies.delete("auth_token");
+    }
+    if (cookieStore.get("user_uuid")) {
+      res.cookies.delete("user_uuid");
     }
     return res;
   } catch (error: any) {

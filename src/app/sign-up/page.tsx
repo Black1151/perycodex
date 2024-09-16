@@ -12,9 +12,10 @@ export default function SignUpPage() {
       <Center flex={1}>
         <LoginCard
           titleComponent={
-            <VStack position="absolute" top="90px">
-              <LetterFlyIn fontSize={70}>Create</LetterFlyIn>
-              <LetterFlyIn fontSize={70}>Account</LetterFlyIn>
+            <VStack position="absolute" top="60px">
+              <LetterFlyIn fontSize={90}>Perygon</LetterFlyIn>
+              <LetterFlyIn fontSize={50}>Create</LetterFlyIn>
+              <LetterFlyIn fontSize={50}>Account</LetterFlyIn>
             </VStack>
           }
         >

@@ -1,6 +1,5 @@
 // PasswordRecoveryPage.tsx (Server Component)
 
-import { redirect } from "next/navigation";
 import { Center, VStack } from "@chakra-ui/react";
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
 import { LoginCard } from "@/components/login/LoginCard";
@@ -14,8 +13,9 @@ export default function PasswordRecoveryPage() {
         <LoginCard
           titleComponent={
             <VStack position="absolute" top="60px">
-              <LetterFlyIn fontSize={70}>Password</LetterFlyIn>
-              <LetterFlyIn fontSize={70}>Recovery</LetterFlyIn>
+              <LetterFlyIn fontSize={90}>Perygon</LetterFlyIn>
+              <LetterFlyIn fontSize={50}>Password</LetterFlyIn>
+              <LetterFlyIn fontSize={50}>Recovery</LetterFlyIn>
             </VStack>
           }
         >

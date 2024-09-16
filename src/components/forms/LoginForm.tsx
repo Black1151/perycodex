@@ -163,6 +163,9 @@ export function LoginForm({ isSubmitting }: LoginFormProps) {
           isOpen={false}
           onClose={() => {}}
         />
+        <Text pt="10px" fontSize="12px" color="gray">
+          Copyright @ 2024 Sedulo Limited (v0.1)
+        </Text>
       </VStack>
     </form>
   );

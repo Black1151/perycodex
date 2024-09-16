@@ -77,7 +77,7 @@ export function ActivateAccountForm({
         <VStack spacing={0} w={300}>
           <InputField
             name="password"
-            placeholder="Password"
+            placeholder="Enter password"
             type="password"
             error={formErrors.password}
             icon={
@@ -93,7 +93,7 @@ export function ActivateAccountForm({
           />
           <InputField
             name="repeatPassword"
-            placeholder="Repeat Password"
+            placeholder="Confirm password"
             type="password"
             error={formErrors.repeatPassword}
             icon={

@@ -23,8 +23,10 @@ export default function ActivateAccountPage({
       <Center flex={1}>
         <LoginCard
           titleComponent={
-            <VStack position="absolute" top="130px">
+            <VStack position="absolute" top="90px">
               <LetterFlyIn fontSize={40}>Welcome to Perygon!</LetterFlyIn>
+              <LetterFlyIn fontSize={35}>Please set up</LetterFlyIn>
+              <LetterFlyIn fontSize={35}>Your password</LetterFlyIn>
             </VStack>
           }
         >

@@ -40,9 +40,10 @@ export default async function ProfileSetup() {
       <Center flex={1}>
         <LoginCard
           height={1500}
-          imageOffset={-1200}
+          imageOffset={-1150}
           titleComponent={
             <VStack position="absolute" top="100px">
+              <LetterFlyIn fontSize={90}>Perygon</LetterFlyIn>
               <LetterFlyIn fontSize={32}>
                 Please set up your profile
               </LetterFlyIn>

@@ -24,6 +24,7 @@ export default function ResetPasswordPage({
         <LoginCard
           titleComponent={
             <VStack position="absolute" top="90px">
+              <LetterFlyIn fontSize={90}>Perygon</LetterFlyIn>
               <LetterFlyIn fontSize={40}>Please Enter</LetterFlyIn>
               <LetterFlyIn fontSize={40}>New Password!</LetterFlyIn>
             </VStack>

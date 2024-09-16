@@ -177,8 +177,6 @@ export function ProfileCompletionForm({
             }
             focusBorderColor={theme.colors.perygonPink}
           />
-
-          {/* Optional Fields */}
           <InputField
             name="departmentId"
             placeholder="Select Department"
