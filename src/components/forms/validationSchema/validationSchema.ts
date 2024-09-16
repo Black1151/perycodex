@@ -17,8 +17,10 @@ export const passwordValidation = {
     hasLowerCase: (value: string) =>
       /[a-z]/.test(value) ||
       "Password must contain at least one lowercase letter",
+    hasNumber: (value: string) =>
+      /[0-9]/.test(value) || "Password must contain at least one number",
     hasSpecialChar: (value: string) =>
-      /[!@#$%^&*(),.?":{}|<>]/.test(value) ||
+      /[!@#$%^&*(),.?":{}|<>;\[\]/\\~`+=_-]/.test(value) ||
       "Password must contain at least one special character",
     hasMinLength: (value: string) =>
       value.length >= 8 || "Password must be at least 8 characters long",

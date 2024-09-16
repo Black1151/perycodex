@@ -6,6 +6,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import { InputField } from "./InputField";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { passwordValidation } from "./validationSchema/validationSchema";
 
 export type ActivateAccountFormInputs = {
   password: string;
@@ -87,11 +88,7 @@ export function ActivateAccountForm({
                 }}
               />
             }
-            register={() =>
-              register("password", {
-                required: "Password is required",
-              })
-            }
+            register={() => register("password", passwordValidation)}
             focusBorderColor={theme.colors.perygonPink}
           />
           <InputField
