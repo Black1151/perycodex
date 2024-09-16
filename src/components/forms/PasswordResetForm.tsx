@@ -27,18 +27,13 @@ export type ActivateAccountFormInputs = {
 
 interface ActivateAccountFormProps {
   token: string;
-  isSubmitting: boolean;
   errors: {
     password?: FieldError;
     repeatPassword?: FieldError;
   };
 }
 
-export function PasswordResetForm({
-  token,
-  isSubmitting,
-  errors,
-}: ActivateAccountFormProps) {
+export function PasswordResetForm({ token, errors }: ActivateAccountFormProps) {
   const theme = useTheme();
   const toast = useToast();
   const router = useRouter();
@@ -125,7 +120,6 @@ export function PasswordResetForm({
               backgroundColor={theme.colors.perygonPink}
               type="submit"
               w="full"
-              isLoading={isSubmitting}
               height={12}
               color="white"
               _hover={{

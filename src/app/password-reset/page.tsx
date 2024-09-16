@@ -29,7 +29,7 @@ export default function ResetPasswordPage({
             </VStack>
           }
         >
-          <PasswordResetForm token={token} isSubmitting={false} errors={{}} />
+          <PasswordResetForm token={token} errors={{}} />
         </LoginCard>
       </Center>
     </PerygonContainer>
