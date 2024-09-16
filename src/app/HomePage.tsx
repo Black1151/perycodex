@@ -70,7 +70,7 @@ export default function Home() {
               <SimpleGrid gap={5} columns={[2]} flex={1} w="100%">
                 <SpringScale delay={0}>
                   <StatBox
-                    bgColor={theme.colors.red}
+                    bgColor={"red"}
                     data="22"
                     title={"1-2"}
                     titleImage="/faces/happiness_score_2.png"
