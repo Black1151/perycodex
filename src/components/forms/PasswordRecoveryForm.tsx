@@ -1,7 +1,9 @@
+// PasswordRecoveryForm.tsx (Client Component)
+
 "use client";
 
-import { useForm, SubmitHandler, FieldError } from "react-hook-form";
-import { Box, Button, VStack, useTheme } from "@chakra-ui/react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { VStack, Button, useTheme } from "@chakra-ui/react";
 import EmailIcon from "@mui/icons-material/Email";
 import { InputField } from "./InputField";
 import { emailValidation } from "./validationSchema/validationSchema";
@@ -10,33 +12,25 @@ export type SignUpFormInputs = {
   email: string;
 };
 
-interface SignUpFormProps {
+interface PasswordRecoveryFormProps {
   onSubmit: SubmitHandler<SignUpFormInputs>;
   isSubmitting: boolean;
-  errors: {
-    email?: FieldError;
-  };
 }
 
 export function PasswordRecoveryForm({
   onSubmit,
   isSubmitting,
-}: SignUpFormProps) {
+}: PasswordRecoveryFormProps) {
   const theme = useTheme();
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors: formErrors },
   } = useForm<SignUpFormInputs>();
 
-  const handleFormSubmit: SubmitHandler<SignUpFormInputs> = (data) => {
-    onSubmit(data);
-  };
-
   return (
     <form
-      onSubmit={handleSubmit(handleFormSubmit)}
+      onSubmit={handleSubmit(onSubmit)}
       style={{ width: "100%", maxWidth: "md" }}
     >
       <VStack spacing={4} w={500} p={6}>

@@ -75,7 +75,9 @@ export function ProfileCompletionForm({
       });
 
       if (response.status === 200) {
-        router.push("/");
+        setTimeout(() => {
+          router.push("/");
+        }, 3000);
       }
     } catch (error: any) {
       console.log("GGG", error);
