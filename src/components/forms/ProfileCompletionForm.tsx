@@ -104,7 +104,7 @@ export function ProfileCompletionForm({
         <VStack spacing={4} w={300}>
           <InputField
             name="titleId"
-            placeholder="Select Title"
+            placeholder="Select Title *"
             type="select"
             options={dropdowns.title}
             error={formErrors.titleId}
@@ -118,7 +118,7 @@ export function ProfileCompletionForm({
 
           <InputField
             name="firstName"
-            placeholder="First Name"
+            placeholder="Firstname *"
             type="text"
             error={formErrors.firstName}
             register={() =>
@@ -131,7 +131,7 @@ export function ProfileCompletionForm({
 
           <InputField
             name="lastName"
-            placeholder="Surname"
+            placeholder="Surnames *"
             type="text"
             error={formErrors.lastName}
             register={() =>
@@ -144,7 +144,7 @@ export function ProfileCompletionForm({
 
           <InputField
             name="mobile"
-            placeholder="Mobile"
+            placeholder="Mobile *"
             type="text"
             error={formErrors.mobile}
             register={() => register("mobile", phoneNumberValidation)}
@@ -153,7 +153,7 @@ export function ProfileCompletionForm({
 
           <InputField
             name="jobTitle"
-            placeholder="Job Title"
+            placeholder="Job Title *"
             type="text"
             error={formErrors.jobTitle}
             register={() =>
@@ -166,7 +166,7 @@ export function ProfileCompletionForm({
 
           <InputField
             name="siteId"
-            placeholder="Main Office Site"
+            placeholder="Main Office Site *"
             type="select"
             error={formErrors.siteId}
             options={[{ value: 1, label: "dummy site" }]}
@@ -178,17 +178,14 @@ export function ProfileCompletionForm({
             focusBorderColor={theme.colors.perygonPink}
           />
 
+          {/* Optional Fields */}
           <InputField
             name="departmentId"
             placeholder="Select Department"
             type="select"
             options={dropdowns.dept}
             error={formErrors.departmentId}
-            register={() =>
-              register("departmentId", {
-                required: "Department is required",
-              })
-            }
+            register={() => register("departmentId")}
             focusBorderColor={theme.colors.perygonPink}
           />
 
@@ -198,11 +195,7 @@ export function ProfileCompletionForm({
             type="select"
             options={[{ value: 18, label: "Dummy team" }]}
             error={formErrors.teamId}
-            register={() =>
-              register("teamId", {
-                required: "Team is required",
-              })
-            }
+            register={() => register("teamId")}
             focusBorderColor={theme.colors.perygonPink}
           />
 
@@ -212,11 +205,7 @@ export function ProfileCompletionForm({
             type="select"
             options={dropdowns.job_type}
             error={formErrors.contractId}
-            register={() =>
-              register("contractId", {
-                required: "Contract type is required",
-              })
-            }
+            register={() => register("contractId")}
             focusBorderColor={theme.colors.perygonPink}
           />
 
@@ -226,11 +215,7 @@ export function ProfileCompletionForm({
             type="select"
             options={dropdowns.role_type}
             error={formErrors.jobLevelId}
-            register={() =>
-              register("jobLevelId", {
-                required: "Job level is required",
-              })
-            }
+            register={() => register("jobLevelId")}
             focusBorderColor={theme.colors.perygonPink}
           />
 
@@ -239,11 +224,7 @@ export function ProfileCompletionForm({
             placeholder="Employment Start Date"
             type="date"
             error={formErrors.employStartDate}
-            register={() =>
-              register("employStartDate", {
-                required: "Employment start date is required",
-              })
-            }
+            register={() => register("employStartDate")}
             focusBorderColor={theme.colors.perygonPink}
           />
 
