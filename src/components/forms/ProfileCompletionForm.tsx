@@ -39,7 +39,7 @@ interface ProfileCompletionFormProps {
   dropdowns: {
     title: DropdownOption[];
     job_type: DropdownOption[];
-    role_type: DropdownOption[];
+    job_level: DropdownOption[];
     team: DropdownOption[];
     dept: DropdownOption[];
   };
@@ -118,7 +118,7 @@ export function ProfileCompletionForm({
 
           <InputField
             name="firstName"
-            placeholder="Firstname *"
+            placeholder="First name *"
             type="text"
             error={formErrors.firstName}
             register={() =>
@@ -211,7 +211,7 @@ export function ProfileCompletionForm({
             name="jobLevelId"
             placeholder="Select Job Level"
             type="select"
-            options={dropdowns.role_type}
+            options={dropdowns.job_level}
             error={formErrors.jobLevelId}
             register={() => register("jobLevelId")}
             focusBorderColor={theme.colors.perygonPink}

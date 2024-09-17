@@ -7,7 +7,7 @@ import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic"; // Force dynamic rendering - used as apparently cant fetch cookies in the page and have it render statically. Does not seem to be an issue when getting the cookies in a server route but calling a server route from a server page seemed to cause issues. - TODO look into more and find a way to preserve static rendering
 
-const typesArray = ["role_type", "job_type", "title", "team", "dept"];
+const typesArray = ["job_level", "job_type", "title", "team", "dept"];
 
 export default async function ProfileSetup() {
   let apiResponse;
