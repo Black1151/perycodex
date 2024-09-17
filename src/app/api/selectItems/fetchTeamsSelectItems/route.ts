@@ -1,21 +1,22 @@
+// src/app/api/teams/fetchTeamsByDepartment/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 export async function POST(req: NextRequest) {
-  const { type } = await req.json();
-
+  const { departmentId } = await req.json();
   const cookieStore = cookies();
   const authToken = cookieStore.get("auth_token")?.value;
 
   try {
-    const response = await fetch(`${process.env.BE_URL}/selectItem/allBy`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({ type }),
-    });
+    const response = await fetch(
+      `${process.env.BE_URL}/userTeam/allBy?selectColumns=id,name&parentTeamId=${departmentId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
 
     if (!response.ok) {
       const errorMessage = await response.text();

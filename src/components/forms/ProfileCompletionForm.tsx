@@ -6,6 +6,7 @@ import { DropdownOption, InputField } from "./InputField";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { phoneNumberValidation } from "./validationSchema/validationSchema";
+import { useState } from "react";
 
 export type ProfileCompletionFormInputs = {
   titleId: string;
@@ -18,7 +19,6 @@ export type ProfileCompletionFormInputs = {
   teamId: string;
   contractId: string;
   jobLevelId: string;
-  employStartDate: string;
 };
 
 interface ProfileCompletionFormProps {
@@ -34,7 +34,6 @@ interface ProfileCompletionFormProps {
     teamId?: FieldError;
     contractId?: FieldError;
     jobLevelId?: FieldError;
-    employStartDate?: FieldError;
   };
   dropdowns: {
     title: DropdownOption[];
@@ -43,27 +42,33 @@ interface ProfileCompletionFormProps {
     team: DropdownOption[];
     dept: DropdownOption[];
   };
+  departmentsDropdown: DropdownOption[];
+  sitesDropdown: DropdownOption[];
 }
 
 export function ProfileCompletionForm({
   isSubmitting,
   dropdowns,
+  departmentsDropdown,
+  sitesDropdown,
 }: ProfileCompletionFormProps) {
   const theme = useTheme();
   const toast = useToast();
   const router = useRouter();
 
+  const [teamOptions, setTeamOptions] = useState<DropdownOption[]>([]);
+  const [isTeamsLoading, setIsTeamsLoading] = useState(false);
+
   const {
     register,
     handleSubmit,
     formState: { errors: formErrors },
+    setValue,
   } = useForm<ProfileCompletionFormInputs>();
 
   const handleFormSubmit: SubmitHandler<ProfileCompletionFormInputs> = async (
     formData
   ) => {
-    console.log(formData);
-
     try {
       const updatedData = {
         ...formData,
@@ -80,8 +85,6 @@ export function ProfileCompletionForm({
         }, 3000);
       }
     } catch (error: any) {
-      console.log("GGG", error);
-
       const errorMessage =
         error.response?.data?.error || "Please contact administrator";
 
@@ -92,6 +95,44 @@ export function ProfileCompletionForm({
         duration: 5000,
         isClosable: true,
       });
+    }
+  };
+
+  const handleDepartmentChange = async (departmentId: string | number) => {
+    setValue(
+      "departmentId",
+      typeof departmentId === "string" ? departmentId : departmentId.toString()
+    );
+    setIsTeamsLoading(true);
+
+    try {
+      const response = await axios.post(
+        "/api/selectItems/fetchTeamsSelectItems",
+        {
+          departmentId,
+        }
+      );
+
+      const transformedTeams = response.data.resource.userTeams.map(
+        (team: { id: number; name: string }) => ({
+          value: team.id,
+          label: team.name,
+        })
+      );
+
+      console.log(transformedTeams);
+
+      setTeamOptions(transformedTeams);
+    } catch (error) {
+      toast({
+        title: "Error fetching teams",
+        description: "Could not fetch teams. Please try again.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    } finally {
+      setIsTeamsLoading(false);
     }
   };
 
@@ -166,10 +207,10 @@ export function ProfileCompletionForm({
 
           <InputField
             name="siteId"
-            placeholder="Main Office Site *"
+            placeholder="Select Main Office Site *"
             type="select"
             error={formErrors.siteId}
-            options={[{ value: 1, label: "dummy site" }]}
+            options={sitesDropdown}
             register={() =>
               register("siteId", {
                 required: "Main office site is required",
@@ -177,24 +218,27 @@ export function ProfileCompletionForm({
             }
             focusBorderColor={theme.colors.perygonPink}
           />
+
           <InputField
             name="departmentId"
             placeholder="Select Department"
             type="select"
-            options={dropdowns.dept}
+            options={departmentsDropdown}
             error={formErrors.departmentId}
-            register={() => register("departmentId")}
+            register={register}
             focusBorderColor={theme.colors.perygonPink}
+            onChange={(value) => handleDepartmentChange(value)}
           />
 
           <InputField
             name="teamId"
             placeholder="Select Team"
             type="select"
-            options={[{ value: 18, label: "Dummy team" }]}
+            options={teamOptions}
             error={formErrors.teamId}
             register={() => register("teamId")}
             focusBorderColor={theme.colors.perygonPink}
+            disabled={isTeamsLoading || teamOptions.length === 0}
           />
 
           <InputField
@@ -214,15 +258,6 @@ export function ProfileCompletionForm({
             options={dropdowns.job_level}
             error={formErrors.jobLevelId}
             register={() => register("jobLevelId")}
-            focusBorderColor={theme.colors.perygonPink}
-          />
-
-          <InputField
-            name="employStartDate"
-            placeholder="Employment Start Date"
-            type="date"
-            error={formErrors.employStartDate}
-            register={() => register("employStartDate")}
             focusBorderColor={theme.colors.perygonPink}
           />
 
