@@ -6,8 +6,6 @@ export async function POST(req: NextRequest) {
   const cookieStore = cookies();
   const authToken = cookieStore.get("auth_token")?.value;
 
-  console.log("uniqueId>>", uniqueId);
-
   try {
     const response = await fetch(
       `${process.env.BE_URL}/user/isProfileComplete`,
@@ -30,7 +28,6 @@ export async function POST(req: NextRequest) {
     const isProfileRegistered = data.resource.isProfileRegistered;
     return NextResponse.json({ isProfileRegistered });
   } catch (error: any) {
-    console.log("SSS", error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

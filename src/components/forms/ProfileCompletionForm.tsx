@@ -120,8 +120,6 @@ export function ProfileCompletionForm({
         })
       );
 
-      console.log(transformedTeams);
-
       setTeamOptions(transformedTeams);
     } catch (error) {
       toast({

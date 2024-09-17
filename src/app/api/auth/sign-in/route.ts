@@ -30,9 +30,6 @@ export async function POST(req: NextRequest) {
     return res;
   } catch (error: any) {
     const errorMessage = error.response?.data?.error || "An error occurred";
-
-    console.log(errorMessage);
-
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

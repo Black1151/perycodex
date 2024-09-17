@@ -74,8 +74,6 @@ export default async function ProfileSetup() {
     dropdowns = dropdownsData.resource;
     departments = transformTeams(departmentsData.resource.userTeams);
     sites = transformSites(sitesData.resource.sites);
-
-    console.log("KRULL", sitesData.resource.sites);
   } catch (error: any) {
     console.error("Error fetching profile setup data:", error);
   }

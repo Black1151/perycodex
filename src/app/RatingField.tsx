@@ -27,9 +27,7 @@ const icons = [
   icon10,
 ];
 
-// Function to submit the score to the backend
 const submitScore = (score: number) => {
-  // Implement your API call here
   console.log(`Score submitted: ${score}`);
 };
 
