@@ -48,7 +48,7 @@ export function ActivateAccountForm({
 
       toast({
         title: "Account Activated",
-        description: "Your accounth as been successfully activated.",
+        description: "Your account has been successfully activated.",
         status: "success",
         duration: 5000,
         isClosable: true,
