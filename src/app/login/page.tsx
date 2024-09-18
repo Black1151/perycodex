@@ -12,7 +12,7 @@ export default function LoginPage() {
           imageOffset={-421}
           titleComponent={
             <VStack position="absolute" top="100px">
-              <LetterFlyIn>Perygon</LetterFlyIn>
+              <LetterFlyIn>Perygonnnnz</LetterFlyIn>
             </VStack>
           }
         >
