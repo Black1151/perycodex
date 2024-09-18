@@ -145,7 +145,7 @@ export function ProfileCompletionForm({
             name="titleId"
             placeholder="Select Title *"
             type="select"
-            options={dropdowns.title}
+            options={dropdowns?.title}
             error={formErrors.titleId}
             register={() =>
               register("titleId", {
@@ -243,7 +243,7 @@ export function ProfileCompletionForm({
             name="contractId"
             placeholder="Select Contract Type"
             type="select"
-            options={dropdowns.job_type}
+            options={dropdowns?.job_type}
             error={formErrors.contractId}
             register={() => register("contractId")}
             focusBorderColor={theme.colors.perygonPink}
@@ -253,7 +253,7 @@ export function ProfileCompletionForm({
             name="jobLevelId"
             placeholder="Select Job Level"
             type="select"
-            options={dropdowns.job_level}
+            options={dropdowns?.job_level}
             error={formErrors.jobLevelId}
             register={() => register("jobLevelId")}
             focusBorderColor={theme.colors.perygonPink}
