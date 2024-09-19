@@ -6,8 +6,6 @@ export async function POST(req: NextRequest) {
   const cookieStore = cookies();
   const authToken = cookieStore.get("auth_token")?.value;
 
-  //test
-
   try {
     const response = await fetch(
       `${process.env.BE_URL}/user/isProfileComplete`,
