@@ -32,7 +32,10 @@ export default function Home() {
   }, []);
 
   const onClickLogout = async () => {
-    await axios.post("/api/auth/sign-out");
+    const res = await fetch("/api/auth/sign-out", {
+      method: "POST",
+    });
+    console.log(await res.json());
     router.push("/login");
   };
 
