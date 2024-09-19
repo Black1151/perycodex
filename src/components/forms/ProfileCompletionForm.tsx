@@ -4,7 +4,7 @@ import { useForm, SubmitHandler, FieldError } from "react-hook-form";
 import { Button, VStack, useTheme, useToast } from "@chakra-ui/react";
 import { DropdownOption, InputField } from "./InputField";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { phoneNumberValidation } from "./validationSchema/validationSchema";
 import { useState } from "react";
 
@@ -75,26 +75,15 @@ export function ProfileCompletionForm({
         isProfileRegistered: true,
       };
 
-      const response = await axios.put("/api/user/updateUserDetails", {
+      await axios.put("/api/user/updateUserDetails", {
         data: updatedData,
       });
 
-      if (response.status === 200) {
-        setTimeout(() => {
-          router.push("/");
-        }, 3000);
-      }
+      console.log("redirection");
+      // redirect("/");
+      router.push("/");
     } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.error || "Please contact administrator";
-
-      toast({
-        title: "Sorry there was an error with the form",
-        description: errorMessage,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+      redirect("/error");
     }
   };
 
@@ -122,13 +111,7 @@ export function ProfileCompletionForm({
 
       setTeamOptions(transformedTeams);
     } catch (error) {
-      toast({
-        title: "Error fetching teams",
-        description: "Could not fetch teams. Please try again.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+      redirect("/error");
     } finally {
       setIsTeamsLoading(false);
     }

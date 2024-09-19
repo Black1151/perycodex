@@ -37,7 +37,8 @@ export default async function Home() {
     }
   }
 
-  if (!isProfileRegistered) {
+  if (isProfileRegistered === false) {
+    console.log(isProfileRegistered);
     return redirect("/profile-setup");
   }
 
