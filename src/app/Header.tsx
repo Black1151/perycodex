@@ -1,6 +1,6 @@
 "use client";
 
-import { HStack, Box, Image } from "@chakra-ui/react";
+import { HStack, Box, Image, Text } from "@chakra-ui/react";
 import { Menu } from "@mui/icons-material";
 import { motion } from "framer-motion";
 
@@ -8,6 +8,8 @@ const MotionBox = motion(Box);
 const MotionHStack = motion(HStack);
 
 export const Header = () => {
+  const userName = "Brian";
+
   return (
     <HStack
       gap={[5, 20]}
@@ -36,7 +38,19 @@ export const Header = () => {
         initial={{ x: "5vw", opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.3 }}
+        justifyContent="center"
+        alignItems="center"
+        gap={8}
       >
+        <Text
+          display={["none", null, "block"]}
+          fontFamily="Bonfire"
+          color="white"
+          fontSize={30}
+          pt={3}
+        >
+          Hello {userName}!
+        </Text>
         <Box borderRadius="50%" overflow="hidden" width="40px" height="40px">
           <Image
             src="/profile.webp"
@@ -46,7 +60,6 @@ export const Header = () => {
             objectFit="cover"
           />
         </Box>
-        <Menu style={{ color: "white" }} />
       </MotionHStack>
     </HStack>
   );

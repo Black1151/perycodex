@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
-import HomePage from "./HomePage";
+
 import { redirect } from "next/navigation";
+import HomePage from "./HomePage";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
