@@ -78,9 +78,6 @@ export function ProfileCompletionForm({
       await axios.put("/api/user/updateUserDetails", {
         data: updatedData,
       });
-
-      console.log("redirection");
-      // redirect("/");
       router.push("/");
     } catch (error: any) {
       redirect("/error");
