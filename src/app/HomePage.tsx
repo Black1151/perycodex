@@ -36,7 +36,7 @@ export default function Home() {
       await axios.post("/api/auth/sign-out");
       router.push("/login");
     } catch (error) {
-      console.error(error);
+      router.push("/error");
     }
   };
 
