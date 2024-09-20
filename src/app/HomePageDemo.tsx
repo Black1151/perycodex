@@ -10,7 +10,7 @@ import {
   Flex,
   Button,
 } from "@chakra-ui/react";
-import { Header } from "./Header";
+
 import BarGraph from "@/components/graphs/BarGraph";
 import { StatBox } from "@/components/Masonry/StatsMasonry/StatBox";
 import { SpringScale } from "@/components/animations/SpringScale";
@@ -52,7 +52,7 @@ export default function Home() {
         <SplashScreen />
       ) : (
         <>
-          <Header />
+          {/* <Header /> */}
           <Button onClick={onClickLogout}>LOG OUT</Button>
           <Stack
             flexDirection={["column-reverse", null, null, "row"]}
