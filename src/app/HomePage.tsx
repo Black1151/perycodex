@@ -1,28 +1,25 @@
 "use client";
 
-import { Button, useTheme, VStack } from "@chakra-ui/react";
-import { Header } from "./Header";
+import { useTheme, VStack } from "@chakra-ui/react";
 import { SplashScreen } from "@/components/SplashScreen/SplashScreen";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { NavBar, NavBarProps } from "./NavBar";
+import { Tool } from "@/types/types";
 
-export default function Home() {
+interface HomePageProps {
+  navBarProps: NavBarProps;
+  toolsList: Tool[];
+}
+
+export default function Home({ navBarProps, toolsList }: HomePageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const theme = useTheme();
-  const router = useRouter();
 
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
     }, 5000);
   }, []);
-
-  const onClickLogout = async () => {
-    await fetch("/api/auth/sign-out", {
-      method: "POST",
-    });
-    router.push("/login");
-  };
 
   return (
     <VStack
@@ -36,8 +33,7 @@ export default function Home() {
         <SplashScreen />
       ) : (
         <>
-          <Header />
-          <Button onClick={onClickLogout}>LOG OUT</Button>
+          <NavBar {...navBarProps} />
         </>
       )}
     </VStack>

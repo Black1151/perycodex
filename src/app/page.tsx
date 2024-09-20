@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
-
 import { redirect } from "next/navigation";
 import HomePage from "./HomePage";
+import { NavBarProps } from "./NavBar";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -13,34 +13,68 @@ export default async function Home() {
   const authToken = cookieStore.get("auth_token")?.value;
 
   let isProfileRegistered = false;
+  let userIdentity = null;
+  let toolsList = null;
 
   if (uniqueId && authToken) {
     try {
-      const response = await fetch(
-        `${process.env.BE_URL}/user/isProfileComplete`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify({ uniqueId }),
-        }
-      );
+      const [profileResponse, identityResponse, toolsResponse] =
+        await Promise.all([
+          // Fetch profile registration status
+          fetch(`${process.env.BE_URL}/user/isProfileComplete`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+            body: JSON.stringify({ uniqueId }),
+          }),
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch profile registration status");
-      }
-      const data = await response.json();
-      isProfileRegistered = data.resource.isProfileRegistered;
+          // Fetch user identity
+          fetch(
+            `${process.env.BE_URL}/getView?view=vwLoggedInUserIdentity&userUniqueId=${uniqueId}&selectColumns=userImageUrl,firstname,role`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${authToken}`,
+              },
+            }
+          ),
+
+          // Fetch tools list
+          fetch(`${process.env.BE_URL}/getAllView?view=vwToolsList`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }),
+        ]);
+
+      const profileData = await profileResponse.json();
+      const identityData = await identityResponse.json();
+      const toolsData = await toolsResponse.json();
+
+      isProfileRegistered = profileData.resource.isProfileRegistered;
+      userIdentity = identityData.resource;
+      toolsList = toolsData.resource;
+
+      console.log(userIdentity);
     } catch (error) {
-      console.error("Error checking profile status:", error);
+      redirect("/error");
     }
   }
+
+  const navBarProps: NavBarProps = {
+    userFirstName: userIdentity?.firstname,
+    userImageUrl: userIdentity?.userImageUrl,
+    userRole: userIdentity?.role,
+  };
+
+  console.log(navBarProps);
 
   if (isProfileRegistered === false) {
     return redirect("/profile-setup");
   }
 
-  return <HomePage />;
+  return <HomePage navBarProps={navBarProps} toolsList={toolsList} />;
 }
