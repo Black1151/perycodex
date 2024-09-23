@@ -44,7 +44,7 @@ export default function Sidebar() {
                     color:
                     theme.colors.perygonPink
                 }}
-                onClick={() => console.log("Sites Clicked")}>
+                onClick={() => router.push('/sites')}>
                 Sites
             </Text>
             <Text
