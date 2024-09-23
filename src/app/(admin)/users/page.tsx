@@ -5,13 +5,13 @@ import {Heading} from "@chakra-ui/react";
 // AG Grids
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import DataGridComponentClient from "@/components/agGrids/DataGridComponentClient";
-import {customerFields} from "@/components/agGrids/dataFields/customerFields";
+import {userFields} from "@/components/agGrids/dataFields/userFields";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
-export default async function CustomersPage() {
+export default async function UsersPage() {
     const cookieStore = cookies();
     const authToken = cookieStore.get("auth_token")?.value;
 
@@ -19,8 +19,8 @@ export default async function CustomersPage() {
         return redirect("/login");
     }
 
-    // Fetch customer data from the backend
-    const res = await fetch(`${process.env.BE_URL}/customer/allBy?selectColumns=id,name,customer_code,is_active,uniqueId`, {
+    // Fetch users data from the backend
+    const res = await fetch(`${process.env.BE_URL}/user/allBy?selectColumns=id,email,role,is_active,uniqueId`, {
         headers: {
             Authorization: `Bearer ${authToken}`,
         },
@@ -30,26 +30,26 @@ export default async function CustomersPage() {
         return redirect("/error");
     }
 
-    const customers = await res.json();
-    const customerData = customers.resource;
+    const users = await res.json();
+    const userData = users.resource;
 
-    // Check if customerData exists and has data
-    if (customerData && customerData.length > 0) {
+    // Check if userData exists and has data
+    if (userData && userData.length > 0) {
         return (
             <>
                 <Heading>Server Fetched Data</Heading>
-                <DataGridComponent data={customerData} initialFields={customerFields}
-                                   createNewUrl={'/customers/create'}/>
+                <DataGridComponent data={userData} initialFields={userFields}
+                                   createNewUrl={'/users/create'}/>
                 
                 <Heading mt={4}>Client Fetched Data with Server Route</Heading>
-                <DataGridComponentClient endpoint={'api/customer/allBy'} initialFields={customerFields}
-                                         createNewUrl={'/customers/create'}/>
+                <DataGridComponentClient endpoint={'api/user/allBy'} initialFields={userFields}
+                                         createNewUrl={'/users/create'}/>
             </>
         );
     } else {
         return (
             <>
-                <h1>No Customers Found</h1>
+                <h1>No Users Found</h1>
             </>
         );
     }

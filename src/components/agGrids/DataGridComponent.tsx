@@ -25,7 +25,6 @@ import {Box, Button, Flex, Input, useBreakpointValue} from '@chakra-ui/react';
 interface DataGridComponentProps<T> {
     data: T[] | null;
     initialFields: string[];
-    initialConfig?: { [key: string]: any };
     createNewUrl?: string | null;
 }
 

@@ -35,7 +35,7 @@ export default function Sidebar() {
                     color:
                     theme.colors.perygonPink
                 }}
-                onClick={() => console.log("Users Clicked")}>
+                onClick={() => router.push('/users')}>
                 Users
             </Text>
             <Text
