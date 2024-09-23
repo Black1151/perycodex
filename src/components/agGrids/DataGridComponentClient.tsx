@@ -6,23 +6,21 @@ import {useRouter} from 'next/navigation';
 
 // Import AG Grids
 import {AgGridReact} from 'ag-grid-react';
-import "ag-grid-charts-enterprise";
-import {LicenseManager} from "ag-grid-charts-enterprise";
+import 'ag-grid-charts-enterprise';
+import {LicenseManager} from 'ag-grid-charts-enterprise';
 
 // AG Grids Theming
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
 
-import NoDataOverlay from "@/components/agGrids/NoDataOverlay";
-import CustomGridBottomPagination from "@/components/agGrids/CustomGridBottomPagination";
+import NoDataOverlay from '@/components/agGrids/NoDataOverlay';
+import CustomGridBottomPagination from '@/components/agGrids/CustomGridBottomPagination';
 
-// Icons
-import {Add} from "@mui/icons-material"
+// Icons from MUI
+import {Add, Clear} from '@mui/icons-material';
 
 // Chakra Elements
 import {Box, Button, Flex, Input, useBreakpointValue} from '@chakra-ui/react';
-import {RxCross2} from "react-icons/rx";
-
 
 interface DataGridComponentClientProps<T> {
     endpoint: string;
@@ -137,46 +135,44 @@ const DataGridComponentClient = <T, >({
                     <Flex w={'full'} justify={'flex-start'} align={'center'} mb={2} gap={2}>
                         {/* Quick Filter */}
                         <Input
-                            variant="text_box"
+                            variant="outline"
                             id="filter-text-box"
                             placeholder="Search..."
                             onInput={onFilterTextBoxChanged}
                             w={256}
+                            bg="white"
+                            borderColor="gray.300"
+                            _hover={{borderColor: 'gray.400'}}
+                            _focus={{borderColor: 'perygonPink', boxShadow: '0 0 0 1px #ff0070'}}
                         />
 
                         <Button
                             variant="solid"
-                            colorScheme="red"
-                            aria-label='reset-filters'
+                            bg="seduloRed" // Using the custom Sedulo Red color for reset button
+                            aria-label="reset-filters"
                             onClick={resetFilter}
                             ml={'auto'}
                             size="md"
-                            _hover={{bg: "red.500"}}
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
+                            color="white"
+                            leftIcon={<Clear/>}
+                            _hover={{bg: 'perygonPink'}} // Hover effect matches the Perygon Pink
                         >
-                            <RxCross2 style={{marginRight: resetFiltersButtonText ? '8px' : '0'}}/>
                             {resetFiltersButtonText}
                         </Button>
-
-
-                        {createNewUrl &&
+                        {createNewUrl && (
                             <Button
-                                variant='solid'
-                                colorScheme="teal"
-                                aria-label={`create-new`}
+                                variant="solid"
+                                bg="perygonPink" // Using Perygon Pink for the create new button
+                                aria-label="create-new"
                                 onClick={() => router.push(createNewUrl)}
                                 size="md"
-                                _hover={{bg: "teal.500"}}
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
+                                color="white"
+                                leftIcon={<Add/>}
+                                _hover={{bg: 'lightGreen'}} // Hover with the Light Green from theme
                             >
-                                <Add style={{marginRight: createNewUrlButtonText ? '8px' : '0'}}/>
                                 {createNewUrlButtonText}
                             </Button>
-                        }
+                        )}
                     </Flex>
                     <Flex direction={'column'} height={'500px'}>
                         <AgGridReact
