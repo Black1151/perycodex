@@ -62,9 +62,8 @@ export default function Sidebar() {
                     color:
                     theme.colors.perygonPink
                 }}
-                onClick={() => console.log("User Groups Clicked")}>
-                User
-                Groups
+                onClick={() => router.push('/userGroups')}>
+                User Groups
             </Text>
             <Text
                 cursor="pointer"
