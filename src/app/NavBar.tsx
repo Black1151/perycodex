@@ -73,7 +73,7 @@ export const NavBar: React.FC<NavBarProps> = ({
         },
         ...commonMenuItems,
       ]);
-    } else if (userRole === "CU") {
+    } else if (["CU", "CS", "CL"].includes(userRole)) {
       setMenuItems([...commonMenuItems]);
     }
   }, [userRole]);
