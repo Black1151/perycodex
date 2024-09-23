@@ -32,7 +32,6 @@ export default async function UsersPage() {
 
     const userGroups = await res.json();
     const userGroupData = userGroups.resource;
-    console.log(userGroupData);
 
     // Check if userGroupData exists and has data
     if (userGroupData && userGroupData.length > 0) {
