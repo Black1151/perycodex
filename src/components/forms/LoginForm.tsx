@@ -136,11 +136,11 @@ export function LoginForm({ isSubmitting }: LoginFormProps) {
           </Button>
         </VStack>
         <HStack>
-          <Box borderBottom="1px solid lightGray" width="220px" />
+          <Box borderBottom="1px solid lightGray" width="100px" />
           <Text color="lightGray" fontSize="xs">
             OR
           </Text>
-          <Box borderBottom="1px solid lightGray" width="100%" />
+          <Box borderBottom="1px solid lightGray" width="100px" />
         </HStack>
         <VStack w={300}>
           <Button
