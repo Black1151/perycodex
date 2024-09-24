@@ -25,7 +25,6 @@ export async function POST() {
 
     return res;
   } catch (error: any) {
-    console.log(error);
     const errorMessage =
       error.response?.error || "An error occurred during logout";
     return NextResponse.json(

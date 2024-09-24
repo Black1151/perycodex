@@ -68,8 +68,6 @@ export default async function Home() {
     userRole: userIdentity?.role,
   };
 
-  console.log(navBarProps);
-
   if (isProfileRegistered === false) {
     return redirect("/profile-setup");
   }
