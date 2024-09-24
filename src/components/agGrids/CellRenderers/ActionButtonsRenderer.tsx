@@ -6,7 +6,7 @@ import {Visibility} from '@mui/icons-material'; // MUI icons
 import {useRouter} from 'next/navigation';
 
 interface ActionButtonsRendererProps {
-    node: { data: { id: string } }; // Ensure proper typing for node
+    node: { data: { uniqueId: string } }; // Ensure proper typing for node
     redirectUrl: string;
 }
 
@@ -18,11 +18,12 @@ const ActionButtonsRenderer: React.FC<ActionButtonsRendererProps> = ({
 
     // Handle View Button Click
     const handleViewClick = () => {
-        if (node && node.data && node.data.id) {
-            const id = node.data.id;
-            router.push(`${redirectUrl}/${id}`);
+        if (node && node.data && node.data.uniqueId) {
+            const uniqueId = node.data.uniqueId;
+            router.push(`${redirectUrl}/${uniqueId}`);
         } else {
             console.error('Node or ID is not defined.');
+            window.alert("Node or ID is not defined.")
         }
     };
 

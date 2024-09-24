@@ -44,7 +44,7 @@ export default function NotFoundPage() {
                         {/* 404 Error text with animated effect */}
                         <Box position="relative" textAlign="center">
                             <LetterFlyIn color="perygonPink">
-                                404
+                                Help me...
                             </LetterFlyIn>
                             <Text
                                 fontSize={{ base: "xl", md: "2xl" }}
