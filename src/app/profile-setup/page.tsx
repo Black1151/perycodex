@@ -72,7 +72,7 @@ export default async function ProfileSetup() {
     );
 
     const fetchSites = fetch(
-      `${process.env.BE_URL}/site/allBy?selectColumns=id,site_name`,
+      `${process.env.BE_URL}/site/allBy?selectColumns=id,siteName`,
       {
         method: "GET",
         headers: {
@@ -104,8 +104,8 @@ export default async function ProfileSetup() {
     };
 
     dropdowns = dropdownsData.resource;
-    departments = transformTeams(departmentsData.resource.userTeams);
-    sites = transformSites(sitesData.resource.sites);
+    departments = transformTeams(departmentsData.resource);
+    sites = transformSites(sitesData.resource);
   } catch (error: any) {
     redirect("/error");
   }
