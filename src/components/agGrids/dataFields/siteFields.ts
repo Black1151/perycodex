@@ -18,6 +18,12 @@ export const siteFields: ColDef[] | any = [
         flex: 3
     },
     {
+        field: 'uniqueId',
+        headerName: 'Unique ID',
+        filter: "agTextColumnFilter",
+        flex: 3
+    },
+    {
         field: 'postcode',
         headerName: 'Postcode',
         filter: "agTextColumnFilter",

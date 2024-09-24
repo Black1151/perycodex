@@ -1,10 +1,8 @@
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
-import {Heading} from "@chakra-ui/react";
 
 // AG Grids
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
-import DataGridComponentClient from "@/components/agGrids/DataGridComponentClient";
 import {customerFields} from "@/components/agGrids/dataFields/customerFields";
 
 export const dynamic = "force-dynamic";
@@ -37,13 +35,12 @@ export default async function CustomersPage() {
     if (customerData && customerData.length > 0) {
         return (
             <>
-                <Heading>Server Fetched Data</Heading>
                 <DataGridComponent data={customerData} initialFields={customerFields}
                                    createNewUrl={'/customers/create'}/>
-                
-                <Heading mt={4}>Client Fetched Data with Server Route</Heading>
-                <DataGridComponentClient endpoint={'api/customer/allBy'} initialFields={customerFields}
-                                         createNewUrl={'/customers/create'}/>
+
+                {/*<Heading mt={4}>Client Fetched Data with Server Route</Heading>*/}
+                {/*<DataGridComponentClient endpoint={'api/customer/allBy'} initialFields={customerFields}*/}
+                {/*                         createNewUrl={'/customers/create'}/>*/}
             </>
         );
     } else {

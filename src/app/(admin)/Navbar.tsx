@@ -1,18 +1,8 @@
 "use client";
 
-import {
-    HStack,
-    Box,
-    Image,
-    Text,
-    Menu,
-    MenuButton,
-    MenuList,
-    MenuItem,
-    useTheme,
-} from "@chakra-ui/react";
+import {Box, HStack, Image, Menu, MenuButton, MenuItem, MenuList, Text, useTheme,} from "@chakra-ui/react";
 import {motion} from "framer-motion";
-import {useState, useEffect} from "react";
+import {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 
 const MotionBox = motion(Box);
@@ -50,7 +40,12 @@ const NavBar: React.FC<NavBarProps> = ({
     useEffect(() => {
         const commonMenuItems: MenuItemProps[] = [
             {label: "Options", onClick: () => console.log("Options clicked")},
-            {label: "My Tools", onClick: () => {console.log("My Tools clicked"); router.push('/');}},
+            {
+                label: "My Tools", onClick: () => {
+                    console.log("My Tools clicked");
+                    router.push('/');
+                }
+            },
             {label: "My Profile", onClick: () => console.log("Profile clicked")},
             {label: "My Company", onClick: () => console.log("My Company clicked")},
             {

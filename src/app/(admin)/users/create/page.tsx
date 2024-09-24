@@ -3,6 +3,8 @@ import {redirect} from "next/navigation";
 import {Heading} from "@chakra-ui/react";
 
 // SurveyJS
+import SurveyJsComponent from "@/components/surveyJs/SurveyJsComponent";
+import {userJson} from "@/components/surveyJs/forms/user"
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -19,7 +21,7 @@ export default async function CustomersPage() {
     return (
         <>
             <Heading>Create User</Heading>
-
+            <SurveyJsComponent jsonSchema={userJson} endpoint={'/helper'} isNew={true} />
         </>
     );
 }
