@@ -99,7 +99,7 @@ export function ProfileCompletionForm({
         }
       );
 
-      const transformedTeams = response.data.resource.userTeams.map(
+      const transformedTeams = response.data.resource.map(
         (team: { id: number; name: string }) => ({
           value: team.id,
           label: team.name,
