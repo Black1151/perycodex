@@ -57,8 +57,6 @@ export default async function Home() {
       isProfileRegistered = profileData.resource.isProfileRegistered;
       userIdentity = identityData.resource;
       toolsList = toolsData.resource;
-
-      console.log(userIdentity);
     } catch (error) {
       redirect("/error");
     }
