@@ -43,7 +43,7 @@ export default function NotFoundPage() {
                     >
                         {/* 404 Error text with animated effect */}
                         <Box position="relative" textAlign="center">
-                            <LetterFlyIn fontSize={{ base: "6xl", md: "9xl" }} color="perygonPink">
+                            <LetterFlyIn color="perygonPink">
                                 404
                             </LetterFlyIn>
                             <Text
@@ -59,7 +59,7 @@ export default function NotFoundPage() {
 
                         {/* Supporting text */}
                         <Text fontSize="lg" textAlign="center" color="gray.500" maxW="md">
-                            The page you are looking for doesn't exist or may have been moved. Let's get you back on track.
+                            The page you are looking for doesn&apos;t exist or may have been moved. Let&apos;s get you back on track.
                         </Text>
 
                         {/* Button with smooth animation */}

@@ -53,7 +53,7 @@ export default function Sidebar() {
                     color:
                     theme.colors.perygonPink
                 }}
-                onClick={() => console.log("Teams Clicked")}>
+                onClick={() => router.push('/teams')}>
                 Teams
             </Text>
             <Text
