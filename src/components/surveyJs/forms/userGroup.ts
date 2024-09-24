@@ -19,42 +19,6 @@ export const userGroupJson = {
                     swapOrder: true,
                     readOnly: false
                 },
-
-                {
-                    type: "dropdown",
-                    name: "customerId",
-                    title: "Customer",
-                    titleLocation: "top",
-                    placeholder: "Select Customer",
-                    isRequired: true,
-                    description: "Customer this user group belongs to",
-                    descriptionLocation: "underInput",
-                    choices: [
-                        {
-                            value: "0",
-                            text: "Platform"
-                        },
-                        {
-                            value: "1",
-                            text: "Customer 1"
-                        },
-                        {
-                            value: "2",
-                            text: "Customer 2"
-                        },
-                        {
-                            value: "3",
-                            text: "Customer 3"
-                        },
-                        {
-                            value: "4",
-                            text: "Customer 4"
-                        }
-                    ],
-                    defaultValue: "0"
-
-
-                },
                 {
                     type: "text",
                     name: "name",
@@ -75,9 +39,7 @@ export const userGroupJson = {
                     placeholder: "Enter description",
                     readOnly: false
                 },
-
-
-
+                // TODO: Different component for add people to Groups like Teams/Departments
                 {
                     type: "checkbox",
                     name: "users",
@@ -122,20 +84,6 @@ export const userGroupJson = {
                     colCount: 2
                 },
 
-                {
-                    type: "ranking",
-                    name: "userId",
-                    startWithNewLine: false,
-                    //visibleIf: "{users.length} > 0",
-                    title: "Team Members",
-                    isRequired: true,
-                    choicesFromQuestion: "users",
-                    choicesFromQuestionMode: "selected",
-                    placeholder: "Selected users",
-                    readOnly: true,
-                    colCount: 2
-
-                }
 
 
             ]

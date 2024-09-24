@@ -29,10 +29,6 @@ export const customerJson = {
                     isRequired: true,
                     placeholder: "Name"
                 },
-
-
-
-
                 {
                     type: "text",
                     name: "webAddress",
@@ -45,10 +41,6 @@ export const customerJson = {
                     inputType: "url",
                     placeholder: "Web Address"
                 },
-
-
-
-
                 {
                     type: "dropdown",
                     name: "businessTypeId",
@@ -60,35 +52,19 @@ export const customerJson = {
                     descriptionLocation: "underInput",
                     isRequired: true,
                     "renderAs": "select",
-                    choices: [
-                        {
-                            value: "1",
-                            text: "Limited Company"
-                        },
-                        {
-                            value: "2",
-                            text: "Private Individual"
-                        },
-                        {
-                            value: "3",
-                            text: "Sole Trader"
-                        },
-                        {
-                            value: "4",
-                            text: "Charity"
-                        },
-                        {
-                            value: "5",
-                            text: "Partnership"
-                        }
-                    ],
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=business_type`,  // The API endpoint to fetch choices from
+                        path: "business_type",
+                        valueName: "value",
+                        titleName: "label"
+                    },
                     placeholder: "Select Business Type",
                     allowClear: false
                 },
                 {
                     type: "text",
                     name: "companyNo",
-                    visibleIf: "{businessTypeId} = 1",
+                    visibleIf: "{businessTypeId} = 3",
                     minWidth: "256px",
                     title: "Company Number",
                     titleLocation: "top",
@@ -109,7 +85,7 @@ export const customerJson = {
                 {
                     type: "text",
                     name: "sicCode",
-                    visibleIf: "{businessTypeId} = 1",
+                    visibleIf: "{businessTypeId} = 3",
                     minWidth: "256px",
                     startWithNewLine: false,
                     title: "SIC Code",
@@ -128,43 +104,25 @@ export const customerJson = {
                     maxLength: 5,
                     placeholder: "SIC Code"
                 },
-
-
                 {
-                    type: "dropdown",
+                    type: "boolean",
                     name: "multiSite",
-                    width: "64%",
-                    minWidth: "192px",
                     title: "Single or Multiple Sites",
                     titleLocation: "top",
                     description: "Select if this a single or multiple site business.",
                     descriptionLocation: "underInput",
+                    defaultValue: true,
                     isRequired: true,
-                    searchEnabled: false,
-                    choices: [
-                        {
-                            value: "1",
-                            text: "Single"
-                        },
-                        {
-                            value: "2",
-                            text: "Multiple"
-                        }
-
-                    ],
-                    placeholder: "Select",
-                    defaultValue: "1",
-                    allowClear: false
-                },
-
-
+                    labelTrue: "Single",
+                    labelFalse: "Multiple",
+                    swapOrder: true
+                }
             ]
         },
         {
             name: "customer-business-details",
             title: "Business Details",
             elements: [
-
                 {
                     type: "dropdown",
                     name: "sectorId",
@@ -176,84 +134,12 @@ export const customerJson = {
                     descriptionLocation: "underInput",
                     isRequired: true,
                     "renderA": "select",
-                    choices: [
-                        {
-                            value: "1",
-                            text: "Retail & Wholesale"
-                        },
-                        {
-                            value: "2",
-                            text: "Transport & Storage"
-                        },
-                        {
-                            value: "3",
-                            text: "Accommodation & Food"
-                        },
-                        {
-                            value: "4",
-                            text: "IT & Communications"
-                        },
-                        {
-                            value: "5",
-                            text: "Finance & Insurance"
-                        },
-                        {
-                            value: "6",
-                            text: "Real Estate"
-                        },
-                        {
-                            value: "7",
-                            text: "Professional & Technical"
-                        },
-                        {
-                            value: "8",
-                            text: "Business Administration & Support"
-                        },
-                        {
-                            value: "9",
-                            text: "Public Administration & Defence"
-                        },
-                        {
-                            value: "10",
-                            text: "Education"
-                        },
-                        {
-                            value: "11",
-                            text: "Health & Social Care"
-                        },
-                        {
-                            value: "12",
-                            text: "Charity"
-                        },
-                        {
-                            value: "13",
-                            text: "Arts, Entertainment & Recreation"
-                        },
-                        {
-                            value: "14",
-                            text: "Agriculture, Forestry & Fishing"
-                        },
-                        {
-                            value: "15",
-                            text: "Mining & Extractives"
-                        },
-                        {
-                            value: "16",
-                            text: "Manufacturing"
-                        },
-                        {
-                            value: "17",
-                            text: "Construction"
-                        },
-                        {
-                            value: "18",
-                            text: "Utilities"
-                        },
-                        {
-                            value: "19",
-                            text: "Other"
-                        }
-                    ],
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=sector`,
+                        path: "sector",
+                        valueName: "value",
+                        titleName: "label"
+                    },
                     placeholder: "Select Sector",
                     allowClear: false
                 },
@@ -268,24 +154,12 @@ export const customerJson = {
                     descriptionLocation: "underInput",
                     isRequired: true,
                     searchEnabled: false,
-                    choices: [
-                        {
-                            value: "1",
-                            text: "UK"
-                        },
-                        {
-                            value: "2",
-                            text: "EU Wide"
-                        },
-                        {
-                            value: "3",
-                            text: "EMEA Region"
-                        },
-                        {
-                            value: "4",
-                            text: "World Wide"
-                        }
-                    ],
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=region`,  // The API endpoint to fetch choices from
+                        path: "region",
+                        valueName: "value",
+                        titleName: "label"
+                    },
                     placeholder: "Select Region",
                     allowClear: false
                 },
@@ -298,24 +172,12 @@ export const customerJson = {
                     description: "Select the company size.",
                     descriptionLocation: "underInput",
                     isRequired: true,
-                    choices: [
-                        {
-                            value: "1",
-                            text: "Micro (1 - 10 Employees)"
-                        },
-                        {
-                            value: "2",
-                            text: "Small (11 - 50 Employees)"
-                        },
-                        {
-                            value: "3",
-                            text: "Medium (51 - 250 Employees)"
-                        },
-                        {
-                            value: "4",
-                            text: "Large (251+ Employees)"
-                        }
-                    ],
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=company_size`,  // The API endpoint to fetch choices from
+                        path: "company_size",
+                        valueName: "value",
+                        titleName: "label"
+                    },
                     placeholder: "Select Company Size",
                     allowClear: false
                 },
@@ -336,20 +198,17 @@ export const customerJson = {
                         {
                             type: "expression",
                             text: "Not within the selected Company Size employee range",
-                            expression: "({companySizeId} = 1 and {numberOfEmployees} <= 10) or ({companySizeId} = 2 and {numberOfEmployees} > 10 and {numberOfEmployees} <= 50) or ({companySizeId} = 3 and {numberOfEmployees} > 51 and {numberOfEmployees} <= 250) or ({companySizeId} = 4 and {numberOfEmployees} > 250)"
+                            expression: "({companySizeId} = 51 and {numberOfEmployees} <= 10) or ({companySizeId} = 52 and {numberOfEmployees} > 10 and {numberOfEmployees} <= 50) or ({companySizeId} = 53 and {numberOfEmployees} > 51 and {numberOfEmployees} <= 250) or ({companySizeId} = 54 and {numberOfEmployees} > 250)"
                         }
                     ],
                     placeholder: "Number of Employees"
                 },
-
             ]
         },
         {
             name: "customer-settings",
             title: "Settings",
             elements: [
-
-
                 {
                     type: "text",
                     name: "customerCode",
@@ -362,7 +221,6 @@ export const customerJson = {
                     isRequired: true,
                     placeholder: "Customer Code"
                 },
-
                 {
                     type: "matrixdynamic",
                     name: "domains",
@@ -376,9 +234,7 @@ export const customerJson = {
                             maxLength: 80,
                             placeholder: "Enter domain",
                         }
-
                     ],
-
                     rowCount: 0,
                     confirmDelete: true,
                     confirmDeleteText: "Are you sure you want to delete this domain?",
@@ -387,15 +243,12 @@ export const customerJson = {
                     hideColumnsIfEmpty: true,
                     emptyRowsText: "No domains entered yet.\nClick 'Add a Domain' to add a new one.\nClick the delete icon to remove an existing entry."
                 }
-
             ]
         },
         {
             name: "customer-address-site",
             title: "Business Primary Location",
             elements: [
-
-
                 {
                     type: "text",
                     name: "address1",
@@ -450,12 +303,21 @@ export const customerJson = {
                         valueName: "cca2",
                         titleName: "name"
                     },
+                    // { TODO: Rocco will scrape
+                    //     name: "choicesByUrlTest",
+                    //     type: "dropdown",
+                    //     choicesByUrl: {
+                    //         url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=country_code`,  // The API endpoint to fetch choices from
+                    //         path: "country_code",
+                    //         valueName: "value",
+                    //         titleName: "label"
+                    //     }
+                    // },
                     placeholder: "Country",
                     allowClear: false,
                     defaultValue: "GB",
                     choicesOrder: "asc"
                 },
-
                 {
                     type: "panel",
                     name: "primarySite",
@@ -552,7 +414,7 @@ export const customerJson = {
                             minWidth: "256px",
                             title: "Latitude",
                             titleLocation: "top",
-                            isRequired: true,
+                            isRequired: false,
                             readOnly: true,
                             inputType: "number",
                             placeholder: "Latitude"
@@ -564,7 +426,7 @@ export const customerJson = {
                             startWithNewLine: false,
                             title: "Longitude",
                             titleLocation: "top",
-                            isRequired: true,
+                            isRequired: false,
                             readOnly: true,
                             inputType: "number",
                             placeholder: "Longitude"
@@ -576,7 +438,7 @@ export const customerJson = {
                             minWidth: "192px",
                             title: "Site Tel.",
                             titleLocation: "top",
-                            isRequired: true,
+                            isRequired: false,
                             inputType: "tel",
                             maskType: "pattern",
                             maskSettings: {
@@ -592,13 +454,6 @@ export const customerJson = {
                             title: "Site Email",
                             titleLocation: "top",
                             isRequired: true,
-                            validators: [
-                                {
-                                    type: "regex",
-                                    regex: "^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-](:[a-zA-Z0-9-]{0,61}[a-zA-Z0-])?(:\.[a-zA-Z0-](:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
-                                    text: "Please enter a valid email address."
-                                }
-                            ],
                             placeholder: "Enter site email"
                         }
                     ]
@@ -606,116 +461,6 @@ export const customerJson = {
 
             ]
         },
-        {
-            name: "customer-additional-info",
-            title: "Additional Information",
-            elements: [
-
-                {
-                    type: "text",
-                    name: "contactInformation1",
-                    maxLength: 150,
-                    minWidth: "256px",
-                    title: "Contact Info 1",
-                    titleLocation: "top",
-                    isRequired: false,
-                    placeholder: "Extra text data"
-                },
-                {
-                    type: "text",
-                    name: "customerInformation2",
-                    maxLength: 150,
-                    minWidth: "256px",
-                    title: "Customer Info 2",
-                    titleLocation: "top",
-                    startWithNewLine: false,
-                    isRequired: false,
-                    placeholder: "Extra text data"
-                },
-
-
-                {
-                    type: "text",
-                    inputType: "number",
-                    name: "customerInformation3",
-                    minWidth: "256px",
-                    title: "Customer Info 3",
-                    titleLocation: "top",
-                    isRequired: false,
-                    placeholder: "Extra numeric data"
-                },
-                {
-                    type: "text",
-                    inputType: "number",
-                    name: "customerInformation4",
-                    minWidth: "256px",
-                    title: "Customer Info 4",
-                    titleLocation: "top",
-                    startWithNewLine: false,
-                    isRequired: false,
-                    placeholder: "Extra numeric data"
-                },
-
-                {
-                    type: "text",
-                    inputType: "date",
-                    name: "customerInformation5",
-                    minWidth: "256px",
-                    title: "Customer Info 5",
-                    titleLocation: "top",
-                    isRequired: false,
-                    placeholder: "Extra date data"
-                },
-                {
-                    type: "text",
-                    inputType: "date",
-                    name: "customerInformation6",
-                    minWidth: "256px",
-                    title: "Customer Info 6",
-                    titleLocation: "top",
-                    startWithNewLine: false,
-                    isRequired: false,
-                    placeholder: "Extra date data"
-                }
-
-
-            ]
-        },
-        {
-            name: "customer-tools",
-            title: "Subscribed to Tools",
-            elements: [
-
-                {
-                    type: "tagbox",
-                    name: "workflows",
-                    title: "Tools",
-                    titleLocation: "top",
-                    isRequired: false,
-                    choices: [
-                        {
-                            value: "1",
-                            text: "Tool 1"
-                        },
-                        {
-                            value: "2",
-                            text: "Tool 2"
-                        },
-                        {
-                            value: "3",
-                            text: "Tool 3"
-                        },
-                        {
-                            value: "4",
-                            text: "Tool 4"
-                        }
-                    ],
-                    placeholder: "Select subscribed to tools"
-                }
-
-
-            ]
-        }
     ],
     showPrevButton: true,
     showTOC: false,
@@ -727,7 +472,6 @@ export const customerJson = {
     completeText: "Save Customer",
     widthMode: "static",
     width: "900",
-
     showProgressBar: "belowheader",
     progressBarShowPageTitles: true,
     progressBarShowPageNumbers: true,

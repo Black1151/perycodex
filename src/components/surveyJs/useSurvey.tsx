@@ -1,9 +1,11 @@
+"use client";
+
 import {Model, Serializer, settings, SurveyModel,} from "survey-core";
 import {
-    registerSurveyJsFunctionsWithSurvey,
-    registerSurveyFunctionsWithoutSurvey
+    registerSurveyFunctionsWithoutSurvey,
+    registerSurveyJsFunctionsWithSurvey
 } from "@/components/surveyJs/customSurveyJsFunctions";
-import {Box, Button, Flex, Select, useToast, VStack, Text} from "@chakra-ui/react";
+import {Box, Button, Flex, Select, Text, useToast, VStack} from "@chakra-ui/react";
 import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 
@@ -69,7 +71,7 @@ const useSurvey = ({
         Serializer.findProperty("choicesByUrl", "allowEmptyResponse").defaultValue = true;
 
         // Disable caching of previous responses
-        settings.useCachingForChoicesRestful = false;
+        // settings.useCachingForChoicesRestful = false;
     };
 
     // Create the survey model from the JSON schema
@@ -115,11 +117,29 @@ const useSurvey = ({
         return survey;
     };
 
+    async function sendSurveyData(requestType: 'POST' | 'PUT', endpoint: string, filteredSurveyData: object) {
+        const response = await fetch(`/api/surveyjs${endpoint}`, {
+            method: requestType,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(filteredSurveyData)
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Failed to send survey data');
+        }
+
+        return response.json();
+    }
 
     // How to handle the survey submission
     const handleSurveySubmission = async (sender: SurveyModel) => {
         // Needs to check what type of method to use i.e. new=post, update=put
-        const requestType = isNew ? 'post' : 'put';
+        const requestType = isNew ? 'POST' : 'PUT';
+        console.log(requestType);
+        console.log(sender.data);
 
         let filteredSurveyData = {...sender.data};
 
@@ -136,7 +156,7 @@ const useSurvey = ({
         try {
             // Send data to the specified endpoint using the appropriate HTTP method
             // const response = await nexusApi[requestType](endpoint, filteredSurveyData);
-            window.alert("Record go to place of fun");
+            sendSurveyData(requestType, endpoint, filteredSurveyData);
 
 
             // Show success toast notification
@@ -155,9 +175,9 @@ const useSurvey = ({
             }
 
             // Redirect to the specified URL if provided
-            if (redirectUrl) {
-                router.push(redirectUrl);
-            }
+            // if (redirectUrl) {
+            //     router.push(redirectUrl);
+            // }
 
         } catch (error: unknown) {
             const apiError = error as ApiError;
@@ -198,7 +218,6 @@ const useSurvey = ({
     survey.onCurrentPageChanged.add((_, options) => {
         setPageNo(options.newCurrentPage.visibleIndex);
     });
-
 
 
     // Page Navigations
@@ -255,7 +274,7 @@ const useSurvey = ({
             survey.clear(false, false);
             survey.render();
             setIsEditing(false);
-            survey.mode = "display";
+            // survey.mode = "display";
         } else {
             // If there are errors, focus on the first page with an error
             survey.focusOnFirstError;

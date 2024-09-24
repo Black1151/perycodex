@@ -19,7 +19,6 @@ export const userTeamJson = {
                     swapOrder: true,
                     readOnly: false
                 },
-
                 {
                     type: "dropdown",
                     name: "customerId",
@@ -29,6 +28,7 @@ export const userTeamJson = {
                     isRequired: true,
                     description: "Customer this team belongs to",
                     descriptionLocation: "underInput",
+                    // TODO: Update to customers
                     choices: [
                         {
                             value: "1",
@@ -47,8 +47,6 @@ export const userTeamJson = {
                             text: "Customer 4"
                         }
                     ]
-
-
                 },
                 {
                     type: "text",
@@ -70,7 +68,7 @@ export const userTeamJson = {
                     placeholder: "Enter description",
                     readOnly: false
                 },
-
+                // TODO: Rocco to figure out Team vs Department
                 {
                     type: "dropdown",
                     name: "parentTeamId",
@@ -80,6 +78,7 @@ export const userTeamJson = {
                     isRequired: true,
                     description: "Parent of this team, normally a department, service or division.",
                     descriptionLocation: "underInput",
+                    // TODO: Pulls from userTeam APIallBy
                     choices: [
                         {
                             value: "1",
@@ -101,8 +100,6 @@ export const userTeamJson = {
 
 
                 },
-
-
                 {
                     type: "dropdown",
                     name: "managerId",
@@ -112,6 +109,7 @@ export const userTeamJson = {
                     isRequired: true,
                     description: "Manager of this team",
                     descriptionLocation: "underInput",
+                    // TODO: Pulls from Users
                     choices: [
                         {
                             value: "1",
@@ -133,7 +131,7 @@ export const userTeamJson = {
 
 
                 },
-
+                // TODO: Could be a separate component after the team is created
                 {
                     type: "checkbox",
                     name: "users",
@@ -177,23 +175,6 @@ export const userTeamJson = {
                     placeholder: "Select 1+ users",
                     colCount: 2
                 },
-
-                {
-                    type: "ranking",
-                    name: "userId",
-                    startWithNewLine: false,
-                    //visibleIf: "{users.length} > 0",
-                    title: "Team Members",
-                    isRequired: true,
-                    choicesFromQuestion: "users",
-                    choicesFromQuestionMode: "selected",
-                    placeholder: "Selected users",
-                    readOnly: true,
-                    colCount: 2
-
-                }
-
-
             ]
         }
     ],
@@ -207,7 +188,6 @@ export const userTeamJson = {
     completeText: "Save Team",
     widthMode: "static",
     width: "1024",
-
     showProgressBar1: "belowheader",
     progressBarShowPageTitles1: true,
     progressBarShowPageNumbers1: true,

@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
 
     try {
         const response = await fetch(
-            `${process.env.BE_URL}/user/allBy?selectColumns=id,email,role,is_active,uniqueId`,
+            `${process.env.BE_URL}/user/allBy?selectColumns=id,email,role,isActive,uniqueId`,
             {
                 method: "GET",
                 headers: {

@@ -1,7 +1,5 @@
 export const siteJson = {
-
     pages: [
-
         {
             name: "customer-address-site",
             title: "Site Details",
@@ -20,7 +18,6 @@ export const siteJson = {
                     labelFalse: "No",
                     swapOrder: true
                 },
-
                 {
                     type: "text",
                     name: "siteName",
@@ -31,7 +28,6 @@ export const siteJson = {
                     isRequired: true,
                     placeholder: "Enter site Name"
                 },
-
                 {
                     type: "dropdown",
                     name: "siteTypeId",
@@ -42,33 +38,16 @@ export const siteJson = {
                     descriptionLocation: "underInput",
                     isRequired: true,
                     renderAs1: "select",
-                    choices: [
-                        {
-                            value: "1",
-                            text: "Office"
-                        },
-                        {
-                            value: "2",
-                            text: "Head Office"
-                        },
-                        {
-                            value: "3",
-                            text: "Warehouse"
-                        },
-                        {
-                            value: "4",
-                            text: "Distribution Centre"
-                        },
-                        {
-                            value: "5",
-                            text: "Other"
-                        }
-                    ],
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=site_type`,  // The API endpoint to fetch choices from
+                        path: "site_type",
+                        valueName: "value",
+                        titleName: "label"
+                    },
                     placeholder: "Select Site Type",
                     allowClear: false,
                     defaultValue: "1"
                 },
-
                 {
                     type: "text",
                     name: "address1",
@@ -118,6 +97,7 @@ export const siteJson = {
                     startWithNewLine: false,
                     titleLocation: "hidden",
                     isRequired: true,
+                    // TODO: Rocco to scrape data for Countries
                     choicesByUrl: {
                         url: "http://surveyjs.io/api/CountriesExample?region=Europe",
                         valueName: "cca2",
@@ -128,14 +108,13 @@ export const siteJson = {
                     defaultValue: "GB",
                     choicesOrder: "asc"
                 },
-
                 {
                     type: "text",
                     name: "latitude",
                     minWidth: "256px",
                     title: "Latitude",
                     titleLocation: "top",
-                    isRequired: true,
+                    isRequired: false,
                     readOnly: true,
                     inputType: "number",
                     placeholder: "Latitude"
@@ -147,20 +126,17 @@ export const siteJson = {
                     startWithNewLine: false,
                     title: "Longitude",
                     titleLocation: "top",
-                    isRequired: true,
+                    isRequired: false,
                     readOnly: true,
                     inputType: "number",
                     placeholder: "Longitude"
                 }
-
             ]
         },
         {
             name: "sitecontact-details-section",
             title: "Contact Details",
             elements: [
-
-
                 {
                     type: "dropdown",
                     name: "primaryContactId",
@@ -170,7 +146,7 @@ export const siteJson = {
                     description: "Select the primary contact at this site",
                     descriptionLocation: "underInput",
                     isRequired: true,
-
+                    // TODO: Use the USERS allBy route server
                     choices: [
                         {
                             value: "1",
@@ -220,7 +196,6 @@ export const siteJson = {
 
             ]
         }
-
     ],
     showPrevButton: true,
     showTOC: false,
@@ -232,7 +207,6 @@ export const siteJson = {
     completeText: "Save Site",
     widthMode: "static",
     width: "900",
-
     showProgressBar: "belowheader",
     progressBarShowPageTitles: true,
     progressBarShowPageNumbers: true,

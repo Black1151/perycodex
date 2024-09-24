@@ -1,10 +1,9 @@
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
-
-// AG Grids
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {customerFields} from "@/components/agGrids/dataFields/customerFields";
 
+// AG Grids
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const fetchCache = "force-no-store";
@@ -18,15 +17,18 @@ export default async function CustomersPage() {
     }
 
     // Fetch customer data from the backend
-    const res = await fetch(`${process.env.BE_URL}/customer/allBy?selectColumns=id,name,customer_code,is_active,uniqueId`, {
+    const res = await fetch(`${process.env.BE_URL}/customer/allBy?selectColumns=id,name,customerCode,isActive,uniqueId`, {
         headers: {
             Authorization: `Bearer ${authToken}`,
         },
     });
 
+    console.log(res);
+
     if (!res.ok) {
         return redirect("/error");
     }
+
 
     const customers = await res.json();
     const customerData = customers.resource;
@@ -35,12 +37,7 @@ export default async function CustomersPage() {
     if (customerData && customerData.length > 0) {
         return (
             <>
-                <DataGridComponent data={customerData} initialFields={customerFields}
-                                   createNewUrl={'/customers/create'}/>
-
-                {/*<Heading mt={4}>Client Fetched Data with Server Route</Heading>*/}
-                {/*<DataGridComponentClient endpoint={'api/customer/allBy'} initialFields={customerFields}*/}
-                {/*                         createNewUrl={'/customers/create'}/>*/}
+                <DataGridComponent data={customerData} initialFields={customerFields} createNewUrl={'/customers/create'}/>
             </>
         );
     } else {

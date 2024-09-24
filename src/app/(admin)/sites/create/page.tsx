@@ -21,7 +21,7 @@ export default async function CustomersPage() {
     return (
         <>
             <Heading>Create Site</Heading>
-            <SurveyJsComponent jsonSchema={siteJson} endpoint={'help'} isNew={true} />
+            <SurveyJsComponent jsonSchema={siteJson} endpoint={'/site'} isNew={true} />
         </>
     );
 }

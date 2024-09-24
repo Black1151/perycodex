@@ -30,7 +30,7 @@ export default async function Layout({ children }: LayoutProps) {
     try {
         const [identityResponse] = await Promise.all([
             fetch(
-                `${process.env.BE_URL}/getView?view=vwLoggedInUserIdentity&userUniqueId=${uniqueId}&selectColumns=userImageUrl,firstname,role`,
+                `${process.env.BE_URL}/getView?view=vwLoggedInUserIdentity&userUniqueId=${uniqueId}&selectColumns=userImageUrl,firstName,role`,
                 {
                     method: "GET",
                     headers: {
@@ -46,7 +46,7 @@ export default async function Layout({ children }: LayoutProps) {
     }
 
     const navBarProps: NavBarProps = {
-        userFirstName: userIdentity?.firstname,
+        userFirstName: userIdentity?.firstName,
         userImageUrl: userIdentity?.userImageUrl,
         userRole: userIdentity?.role,
     };

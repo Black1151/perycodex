@@ -21,7 +21,7 @@ export default async function CustomersPage() {
     return (
         <>
             <Heading>Create Customer</Heading>
-            <SurveyJsComponent jsonSchema={customerJson} endpoint={'/help'} isNew={true} />
+            <SurveyJsComponent jsonSchema={customerJson} endpoint={'/customer'} isNew={true} />
         </>
     );
 }
