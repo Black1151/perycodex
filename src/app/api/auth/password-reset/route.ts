@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const response = await apiClient.post(`/authentication/passwordReset`, {
-      remember_token: token,
+      rememberToken: token,
       password,
     });
     const redirectUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/login`;
