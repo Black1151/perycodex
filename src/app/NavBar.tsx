@@ -57,7 +57,6 @@ export const NavBar: React.FC<NavBarProps> = ({
   const [menuItems, setMenuItems] = useState<MenuItemProps[]>([]);
   const [greeting, setGreeting] = useState("");
 
-  // Time-based greeting logic
   useEffect(() => {
     const currentTime = new Date();
     const currentHour = currentTime.getHours();
@@ -132,6 +131,7 @@ export const NavBar: React.FC<NavBarProps> = ({
       justifyContent="space-between"
       alignItems="center"
       pt={5}
+      position="fixed"
     >
       <MotionBox
         initial={{ x: "-5vw", opacity: 0 }}
