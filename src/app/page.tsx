@@ -32,7 +32,7 @@ export default async function Home() {
 
           // Fetch user identity
           fetch(
-            `${process.env.BE_URL}/getView?view=vwLoggedInUserIdentity&userUniqueId=${uniqueId}&selectColumns=userImageUrl,firstname,role`,
+            `${process.env.BE_URL}/getView?view=vwLoggedInUserIdentity&userUniqueId=${uniqueId}&selectColumns=userImageUrl,firstName,role`,
             {
               method: "GET",
               headers: {
@@ -65,7 +65,7 @@ export default async function Home() {
   }
 
   const navBarProps: NavBarProps = {
-    userFirstName: userIdentity?.firstname,
+    userFirstName: userIdentity?.firstName,
     userImageUrl: userIdentity?.userImageUrl,
     userRole: userIdentity?.role,
   };
