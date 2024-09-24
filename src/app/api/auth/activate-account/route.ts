@@ -5,8 +5,8 @@ export async function POST(req: NextRequest) {
   const { token, password } = await req.json();
 
   try {
-    const response = await apiClient.post(`/authentication/verify-account`, {
-      verification_token: token,
+    const response = await apiClient.post(`/authentication/verifyAccount`, {
+      verificationToken: token,
       password,
     });
 

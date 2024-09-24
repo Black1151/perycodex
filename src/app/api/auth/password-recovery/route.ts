@@ -5,7 +5,7 @@ export async function POST(req: NextRequest) {
   const { email } = await req.json();
 
   try {
-    await apiClient.post("/authentication/passwordReminder", {
+    await apiClient.post("/authentication/forgotPassword", {
       email,
     });
 
