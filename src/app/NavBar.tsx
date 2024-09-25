@@ -62,14 +62,14 @@ export const NavBar: React.FC<NavBarProps> = ({
 
     if (userRole === "PA") {
       setMenuItems([
-        { label: "Admin", onClick: () => router.push("/customers") },
+        { label: "Admin", onClick: () => console.log("Admin clicked") },
         ...commonMenuItems,
       ]);
     } else if (userRole === "CA") {
       setMenuItems([
         {
           label: "Admin Tools",
-          onClick: () => router.push("/customers"),
+          onClick: () => console.log("Admin Tools clicked"),
         },
         ...commonMenuItems,
       ]);
