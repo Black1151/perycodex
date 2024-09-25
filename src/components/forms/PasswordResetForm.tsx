@@ -18,6 +18,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import { InputField } from "./InputField";
 import { useRouter } from "next/navigation";
 import { passwordValidation } from "./validationSchema/validationSchema";
+import { useFetchClient } from "@/hooks/useFetchClient"; // Import the custom hook
 
 export type ActivateAccountFormInputs = {
   password: string;
@@ -34,9 +35,9 @@ interface ActivateAccountFormProps {
 
 export function PasswordResetForm({ token, errors }: ActivateAccountFormProps) {
   const theme = useTheme();
-  const toast = useToast();
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { fetchClient, loading } = useFetchClient(); // Use the custom hook
 
   const {
     register,
@@ -48,32 +49,17 @@ export function PasswordResetForm({ token, errors }: ActivateAccountFormProps) {
   const handleFormSubmit: SubmitHandler<ActivateAccountFormInputs> = async (
     data
   ) => {
-    try {
-      const response = await fetch("/api/auth/password-reset", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token,
-          password: data.password,
-        }),
-      });
+    const result = await fetchClient("/api/auth/password-reset", {
+      method: "POST",
+      body: {
+        token,
+        password: data.password,
+      },
+      errorMessage: "There was an error updating the password",
+    });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData?.error || "An unexpected error occurred.");
-      }
-
+    if (result) {
       onOpen();
-    } catch (error: any) {
-      toast({
-        title: "There was an error updating the password",
-        description: error.message || "An unexpected error occurred.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
     }
   };
 
@@ -128,6 +114,7 @@ export function PasswordResetForm({ token, errors }: ActivateAccountFormProps) {
               backgroundColor={theme.colors.perygonPink}
               type="submit"
               w="full"
+              isLoading={loading} // Use loading state from the hook
               height={12}
               color="white"
               _hover={{

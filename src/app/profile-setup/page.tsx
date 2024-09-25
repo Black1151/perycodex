@@ -8,8 +8,7 @@ import { DropdownOption } from "@/components/forms/InputField";
 import { transformTeams } from "../api/selectItems/fetchTeamsSelectItems/transformTeams";
 import { redirect } from "next/navigation";
 
-export const dynamic = "force-dynamic"; // Ensures dynamic rendering due to the use of cookies
-//// prevents the user from navigating back to the page after leaving
+export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const fetchCache = "force-no-store";
 ////

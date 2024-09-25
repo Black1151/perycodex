@@ -9,66 +9,40 @@ import {
   Flex,
   Box,
   HStack,
-  useToast,
 } from "@chakra-ui/react";
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
 import { InputField } from "./InputField";
-import { FieldError } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { PerygonModal } from "../modals/PerygonModal";
 import { emailValidation } from "./validationSchema/validationSchema";
+import { useFetchClient } from "@/hooks/useFetchClient";
 
 export type LoginFormInputs = {
   email: string;
   password: string;
 };
 
-interface LoginFormProps {
-  isSubmitting: boolean;
-  errors: {
-    email?: FieldError;
-    password?: FieldError;
-  };
-}
-
-export function LoginForm({ isSubmitting }: LoginFormProps) {
+export function LoginForm() {
   const theme = useTheme();
-  const toast = useToast();
+  const router = useRouter();
+  const { fetchClient, loading } = useFetchClient();
   const {
     register,
     handleSubmit,
     formState: { errors: formErrors },
   } = useForm<LoginFormInputs>();
-  const router = useRouter();
 
   const handleFormSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
-    try {
-      const response = await fetch("/api/auth/sign-in", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+    const result = await fetchClient("/api/auth/sign-in", {
+      method: "POST",
+      body: data,
+      successMessage: "Successfully logged in!",
+      errorMessage: "Login failure - please contact administrator",
+    });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData?.error || "Login failure - please contact administrator"
-        );
-      }
-
+    if (result) {
       router.push("/");
-    } catch (error: any) {
-      toast({
-        title: "Sorry, we couldn't log you in!",
-        description:
-          error.message || "Login failure - please contact administrator",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
     }
   };
 
@@ -131,7 +105,7 @@ export function LoginForm({ isSubmitting }: LoginFormProps) {
             backgroundColor={theme.colors.perygonPink}
             type="submit"
             w="full"
-            isLoading={isSubmitting}
+            isLoading={loading} // Use loading state from hook
             height={12}
             color="white"
             _hover={{
@@ -155,7 +129,7 @@ export function LoginForm({ isSubmitting }: LoginFormProps) {
             bgColor="none"
             w="full"
             height={12}
-            isLoading={isSubmitting}
+            isLoading={loading} // Use loading state here as well
             color="lightGray"
             backgroundColor="white"
             border="1px solid lightGray"

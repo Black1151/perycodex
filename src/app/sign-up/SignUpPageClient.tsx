@@ -1,56 +1,37 @@
 "use client";
 
-import { useState } from "react";
-import { useDisclosure, useToast } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import { SubmitHandler } from "react-hook-form";
 import { SignUpForm, SignUpFormInputs } from "@/components/forms/SignUpForm";
 import { useRouter } from "next/navigation";
 import { SignUpSuccessModal } from "./SignUpSuccessModal";
+import { useFetchClient } from "@/hooks/useFetchClient"; // Import the custom hook
 
 export const SignUpPageClient = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
-  const toast = useToast();
+  const { fetchClient, loading } = useFetchClient(); // Use the custom hook
 
   const onSubmit: SubmitHandler<SignUpFormInputs> = async (data) => {
-    setIsSubmitting(true);
-    try {
-      const response = await fetch("/api/auth/sign-up", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+    const result = await fetchClient("/api/auth/sign-up", {
+      method: "POST",
+      body: data,
+      errorMessage: "Account creation failed.",
+    });
 
-      if (response.ok) {
-        onOpen();
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData?.error || "Account creation failed.");
-      }
-    } catch (error: any) {
-      toast({
-        title: "Sorry, sign up failed!",
-        description: error.message || "Account creation failed.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    } finally {
-      setIsSubmitting(false);
+    if (result) {
+      onOpen();
     }
   };
 
   const handleClose = () => {
     onClose();
-    router.push("/login");
+    router.push("/login"); // Redirect to login after closing the modal
   };
 
   return (
     <>
-      <SignUpForm onSubmit={onSubmit} isSubmitting={isSubmitting} errors={{}} />
+      <SignUpForm onSubmit={onSubmit} isSubmitting={loading} errors={{}} />
       <SignUpSuccessModal isOpen={isOpen} onClose={handleClose} />
     </>
   );

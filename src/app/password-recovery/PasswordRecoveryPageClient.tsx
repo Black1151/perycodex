@@ -1,34 +1,22 @@
 "use client";
 
-import { useState } from "react";
 import { useDisclosure } from "@chakra-ui/react";
 import { PasswordRecoveryForm } from "@/components/forms/PasswordRecoveryForm";
 import { PasswordRecoveryModal } from "./PasswordRecoveryModal";
 import { SignUpFormInputs } from "@/components/forms/SignUpForm";
+import { useFetchClient } from "@/hooks/useFetchClient";
 
 export const PasswordRecoveryPageClient = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { fetchClient, loading } = useFetchClient();
 
   const handleFormSubmit = async (data: SignUpFormInputs) => {
-    setIsSubmitting(true);
-    try {
-      const response = await fetch("/api/auth/password-recovery", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error("Password recovery request failed");
-      }
+    const result = await fetchClient("/api/auth/password-recovery", {
+      method: "POST",
+      body: data,
+    });
+    if (result) {
       onOpen();
-    } catch (error) {
-      console.error("Password recovery request failed:", error);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -36,7 +24,7 @@ export const PasswordRecoveryPageClient = () => {
     <>
       <PasswordRecoveryForm
         onSubmit={handleFormSubmit}
-        isSubmitting={isSubmitting}
+        isSubmitting={loading}
       />
       <PasswordRecoveryModal isOpen={isOpen} onClose={onClose} />
     </>

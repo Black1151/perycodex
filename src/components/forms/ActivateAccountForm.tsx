@@ -6,6 +6,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import { InputField } from "./InputField";
 import { useRouter } from "next/navigation";
 import { passwordValidation } from "./validationSchema/validationSchema";
+import { useFetchClient } from "@/hooks/useFetchClient"; // Import the custom hook
 
 export type ActivateAccountFormInputs = {
   password: string;
@@ -14,21 +15,16 @@ export type ActivateAccountFormInputs = {
 
 interface ActivateAccountFormProps {
   token: string;
-  isSubmitting: boolean;
   errors: {
     password?: FieldError;
     repeatPassword?: FieldError;
   };
 }
 
-export function ActivateAccountForm({
-  token,
-  isSubmitting,
-}: ActivateAccountFormProps) {
+export function ActivateAccountForm({ token }: ActivateAccountFormProps) {
   const theme = useTheme();
-  const toast = useToast();
   const router = useRouter();
-
+  const { fetchClient, loading } = useFetchClient(); // Use the custom hook
   const {
     register,
     handleSubmit,
@@ -39,40 +35,19 @@ export function ActivateAccountForm({
   const handleFormSubmit: SubmitHandler<ActivateAccountFormInputs> = async (
     data
   ) => {
-    try {
-      const response = await fetch("/api/auth/activate-account", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token,
-          password: data.password,
-        }),
-      });
+    const result = await fetchClient("/api/auth/activate-account", {
+      method: "POST",
+      body: {
+        token,
+        password: data.password,
+      },
+      successMessage:
+        "Account Activated. Your account has been successfully activated.",
+      errorMessage: "There was an error activating your account!",
+    });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData?.error || "An unexpected error occurred.");
-      }
-
-      toast({
-        title: "Account Activated",
-        description: "Your account has been successfully activated.",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
-
+    if (result) {
       router.push("/login");
-    } catch (error: any) {
-      toast({
-        title: "There was an error activating your account!",
-        description: error.message || "An unexpected error occurred.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
     }
   };
 
@@ -126,7 +101,7 @@ export function ActivateAccountForm({
             backgroundColor={theme.colors.perygonPink}
             type="submit"
             w="full"
-            isLoading={isSubmitting}
+            isLoading={loading}
             height={12}
             color="white"
             _hover={{
