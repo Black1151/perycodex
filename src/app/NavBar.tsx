@@ -14,6 +14,14 @@ import {
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import {
+  Settings as SettingsIcon,
+  Build as BuildIcon,
+  Person as PersonIcon,
+  Business as BusinessIcon,
+  Lock as LockIcon,
+  ExitToApp as ExitToAppIcon,
+} from "@mui/icons-material";
 
 const MotionBox = motion(Box);
 const MotionHStack = motion(HStack);
@@ -26,6 +34,7 @@ export interface NavBarProps {
 
 interface MenuItemProps {
   label: string;
+  icon: React.ReactNode;
   onClick: () => void;
 }
 
@@ -46,34 +55,69 @@ export const NavBar: React.FC<NavBarProps> = ({
   };
 
   const [menuItems, setMenuItems] = useState<MenuItemProps[]>([]);
+  const [greeting, setGreeting] = useState("");
+
+  useEffect(() => {
+    const currentTime = new Date();
+    const currentHour = currentTime.getHours();
+
+    if (currentHour >= 6 && currentHour < 12) {
+      setGreeting("Good Morning");
+    } else if (currentHour >= 12 && currentHour < 18) {
+      setGreeting("Good Afternoon");
+    } else {
+      setGreeting("Good Evening");
+    }
+  }, []);
 
   useEffect(() => {
     const commonMenuItems: MenuItemProps[] = [
-      { label: "Options", onClick: () => console.log("Options clicked") },
-      { label: "My Tools", onClick: () => console.log("My Tools clicked") },
-      { label: "My Profile", onClick: () => console.log("Profile clicked") },
-      { label: "My Company", onClick: () => console.log("My Company clicked") },
+      {
+        label: "My Tools",
+        icon: <BuildIcon />,
+        onClick: () => console.log("My Tools clicked"),
+      },
+      {
+        label: "My Profile",
+        icon: <PersonIcon />,
+        onClick: () => console.log("Profile clicked"),
+      },
+      {
+        label: "My Company",
+        icon: <BusinessIcon />,
+        onClick: () => console.log("My Company clicked"),
+      },
       {
         label: "Change Password",
+        icon: <LockIcon />,
         onClick: () => console.log("Change Password clicked"),
       },
-      { label: "Logout", onClick: handleLogout },
+      {
+        label: "Logout",
+        icon: <ExitToAppIcon />,
+        onClick: handleLogout,
+      },
     ];
 
     if (userRole === "PA") {
       setMenuItems([
-        { label: "Admin", onClick: () => console.log("Admin clicked") },
+        {
+          label: "Admin",
+          icon: <SettingsIcon />,
+          onClick: () => console.log("Admin clicked"),
+        },
         ...commonMenuItems,
       ]);
     } else if (userRole === "CA") {
       setMenuItems([
         {
           label: "Admin Tools",
+          icon: <BuildIcon />,
           onClick: () => console.log("Admin Tools clicked"),
         },
         ...commonMenuItems,
       ]);
-    } else if (userRole === "CU") {
+    } else if (["CU", "CS", "CL"].includes(userRole)) {
       setMenuItems([...commonMenuItems]);
     }
   }, [userRole]);
@@ -87,6 +131,7 @@ export const NavBar: React.FC<NavBarProps> = ({
       justifyContent="space-between"
       alignItems="center"
       pt={5}
+      position="fixed"
     >
       <MotionBox
         initial={{ x: "-5vw", opacity: 0 }}
@@ -110,14 +155,8 @@ export const NavBar: React.FC<NavBarProps> = ({
         alignItems="center"
         gap={8}
       >
-        <Text
-          display={["none", null, "block"]}
-          fontFamily="Bonfire"
-          color="white"
-          fontSize={30}
-          pt={3}
-        >
-          Hello {userFirstName}!
+        <Text display={["none", null, "block"]} color="white" fontSize={18}>
+          {greeting}, {userFirstName}!
         </Text>
 
         <Menu>
@@ -137,46 +176,25 @@ export const NavBar: React.FC<NavBarProps> = ({
               objectFit="cover"
             />
           </MenuButton>
-          <MenuList bg="white" color={theme.colors.perygonPink}>
+          <MenuList bg="white" color={theme.colors.perygonPink} px={2}>
             {menuItems.map((item) => (
               <MenuItem
                 key={item.label}
-                fontSize={25}
+                fontSize={18}
                 display="flex"
+                alignItems="center"
                 position="relative"
                 overflow="hidden"
-                _before={{
-                  content: '""',
-                  position: "absolute",
-                  top: 0,
-                  left: "-100%",
-                  width: "100%",
-                  height: "100%",
-                  backgroundColor: theme.colors.perygonPink,
-                  transition: "left 0.3s ease",
-                  zIndex: 1,
-                }}
+                bg="white"
+                borderRadius="md"
                 _hover={{
-                  color: "white",
-                  _before: {
-                    left: 0,
-                  },
-                }}
-                _after={{
-                  content: '""',
-                  position: "absolute",
-                  top: 0,
-                  left: "100%",
-                  width: "100%",
-                  height: "100%",
                   backgroundColor: theme.colors.perygonPink,
-                  transition: "left 0.3s ease",
-                  zIndex: 1,
+                  color: "white",
                 }}
-                zIndex={2}
                 onClick={item.onClick}
               >
-                <Text display="flex" flex={1} zIndex={2}>
+                {item.icon}
+                <Text flex={1} zIndex={2} ml={2}>
                   {item.label}
                 </Text>
               </MenuItem>
