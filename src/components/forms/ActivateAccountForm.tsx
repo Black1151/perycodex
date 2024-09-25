@@ -6,7 +6,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import { InputField } from "./InputField";
 import { useRouter } from "next/navigation";
 import { passwordValidation } from "./validationSchema/validationSchema";
-import { useFetchClient } from "@/hooks/useFetchClient"; // Import the custom hook
+import { useFetchClient } from "@/hooks/useFetchClient";
 
 export type ActivateAccountFormInputs = {
   password: string;
@@ -24,7 +24,7 @@ interface ActivateAccountFormProps {
 export function ActivateAccountForm({ token }: ActivateAccountFormProps) {
   const theme = useTheme();
   const router = useRouter();
-  const { fetchClient, loading } = useFetchClient(); // Use the custom hook
+  const { fetchClient, loading } = useFetchClient();
   const {
     register,
     handleSubmit,

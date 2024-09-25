@@ -16,7 +16,7 @@ export default function LoginPage() {
             </VStack>
           }
         >
-          <LoginForm isSubmitting={false} errors={{}} />
+          <LoginForm />
         </LoginCard>
       </Center>
     </PerygonContainer>

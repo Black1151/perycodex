@@ -30,7 +30,7 @@ export default function ActivateAccountPage({
             </VStack>
           }
         >
-          <ActivateAccountForm token={token} isSubmitting={false} errors={{}} />
+          <ActivateAccountForm token={token} errors={{}} />
         </LoginCard>
       </Center>
     </PerygonContainer>
