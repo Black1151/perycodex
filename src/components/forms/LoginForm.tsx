@@ -15,7 +15,6 @@ import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
 import { InputField } from "./InputField";
 import { FieldError } from "react-hook-form";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { PerygonModal } from "../modals/PerygonModal";
 import { emailValidation } from "./validationSchema/validationSchema";
@@ -45,16 +44,27 @@ export function LoginForm({ isSubmitting }: LoginFormProps) {
 
   const handleFormSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
     try {
-      await axios.post("/api/auth/sign-in", data);
+      const response = await fetch("/api/auth/sign-in", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData?.error || "Login failure - please contact administrator"
+        );
+      }
 
       router.push("/");
     } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.error ||
-        "Login failure - please contact administrator";
       toast({
         title: "Sorry, we couldn't log you in!",
-        description: errorMessage,
+        description:
+          error.message || "Login failure - please contact administrator",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -110,9 +120,7 @@ export function LoginForm({ isSubmitting }: LoginFormProps) {
               fontSize="2xs"
               cursor="pointer"
               color={theme.colors.perygonPink}
-              _hover={{
-                cursor: "pointer",
-              }}
+              _hover={{ cursor: "pointer" }}
               onClick={() => router.push("/password-recovery")}
             >
               Forgot password?

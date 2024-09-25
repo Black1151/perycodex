@@ -4,7 +4,6 @@ import { useForm, SubmitHandler, FieldError } from "react-hook-form";
 import { Button, VStack, useTheme, useToast } from "@chakra-ui/react";
 import LockIcon from "@mui/icons-material/Lock";
 import { InputField } from "./InputField";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { passwordValidation } from "./validationSchema/validationSchema";
 
@@ -41,10 +40,21 @@ export function ActivateAccountForm({
     data
   ) => {
     try {
-      await axios.post("/api/auth/activate-account", {
-        token,
-        password: data.password,
+      const response = await fetch("/api/auth/activate-account", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token,
+          password: data.password,
+        }),
       });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData?.error || "An unexpected error occurred.");
+      }
 
       toast({
         title: "Account Activated",
@@ -53,14 +63,12 @@ export function ActivateAccountForm({
         duration: 5000,
         isClosable: true,
       });
+
       router.push("/login");
     } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.error || "An unexpected error occurred.";
-
       toast({
         title: "There was an error activating your account!",
-        description: errorMessage,
+        description: error.message || "An unexpected error occurred.",
         status: "error",
         duration: 5000,
         isClosable: true,

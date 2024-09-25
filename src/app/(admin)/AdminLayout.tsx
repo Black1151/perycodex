@@ -6,42 +6,42 @@ import Sidebar from "./Sidebar";
 import NavBar from "./Navbar";
 
 interface AdminLayoutProps {
-    children: ReactNode;
-    navBarProps: {
-        userFirstName: string;
-        userImageUrl: string;
-        userRole: string;
-    };
+  children: ReactNode;
+  navBarProps: {
+    userFirstName: string;
+    userImageUrl: string;
+    userRole: string;
+  };
 }
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({
-                                                            children,
-                                                            navBarProps,
-                                                        }) => {
-    const theme = useTheme();
+  children,
+  navBarProps,
+}) => {
+  const theme = useTheme();
 
-    return (
-        <Box
-            minH="100vh"
-            width="100%"
-            overflowX="hidden"
-            bgGradient={`linear(to-br, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`}
-        >
-            {/* Fixed Navbar */}
-            <Box position="fixed" top={0} left={0} width="100%" zIndex={1000}>
-                <NavBar {...navBarProps} />
-            </Box>
+  return (
+    <Box
+      minH="100vh"
+      width="100%"
+      overflowX="hidden"
+      bgGradient={`linear(to-br, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`}
+    >
+      {/* Fixed Navbar */}
+      <Box position="fixed" top={0} left={0} width="100%" zIndex={1000}>
+        <NavBar {...navBarProps} />
+      </Box>
 
-            {/* Sidebar and content container */}
-            <Flex marginTop="80px" width="100%" height="calc(100vh - 80px)">
-                {/* Sidebar */}
-                <Sidebar />
+      {/* Sidebar and content container */}
+      <Flex marginTop="80px" width="100%" height="calc(100vh - 80px)">
+        {/* Sidebar */}
+        <Sidebar />
 
-                {/* Content Area */}
-                <Box flex={1} p={5} overflowY="auto">
-                    {children}
-                </Box>
-            </Flex>
+        {/* Content Area */}
+        <Box flex={1} p={5} overflowY="auto">
+          {children}
         </Box>
-    );
+      </Flex>
+    </Box>
+  );
 };

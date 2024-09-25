@@ -5,16 +5,21 @@ export async function POST(req: NextRequest) {
   const { token, password } = await req.json();
 
   try {
-    const response = await apiClient.post(`/authentication/verifyAccount`, {
-      verificationToken: token,
-      password,
+    // Use apiClient with fetch and the POST method
+    const response = await apiClient(`/authentication/verifyAccount`, {
+      method: "POST",
+      body: JSON.stringify({
+        verificationToken: token,
+        password,
+      }),
     });
 
+    // Handle success, generate the redirect URL
     const redirectUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/login`;
     const res = NextResponse.json({ redirectUrl });
     return res;
   } catch (error: any) {
-    const errorMessage = error.response?.data?.error;
+    const errorMessage = error.message || "An error occurred.";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

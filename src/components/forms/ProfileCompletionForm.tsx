@@ -3,7 +3,6 @@
 import { useForm, SubmitHandler, FieldError } from "react-hook-form";
 import { Button, VStack, useTheme, useToast } from "@chakra-ui/react";
 import { DropdownOption, InputField } from "./InputField";
-import axios from "axios";
 import { redirect, useRouter } from "next/navigation";
 import { phoneNumberValidation } from "./validationSchema/validationSchema";
 import { useState } from "react";
@@ -75,11 +74,20 @@ export function ProfileCompletionForm({
         isProfileRegistered: true,
       };
 
-      await axios.put("/api/user/updateUserDetails", {
-        data: updatedData,
+      const response = await fetch("/api/user/updateUserDetails", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ data: updatedData }),
       });
+
+      if (!response.ok) {
+        throw new Error("Failed to update user details.");
+      }
+
       router.push("/");
-    } catch (error: any) {
+    } catch (error) {
       redirect("/error");
     }
   };
@@ -92,14 +100,21 @@ export function ProfileCompletionForm({
     setIsTeamsLoading(true);
 
     try {
-      const response = await axios.post(
-        "/api/selectItems/fetchTeamsSelectItems",
-        {
-          departmentId,
-        }
-      );
+      const response = await fetch("/api/selectItems/fetchTeamsSelectItems", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ departmentId }),
+      });
 
-      const transformedTeams = response.data.resource.map(
+      if (!response.ok) {
+        throw new Error("Failed to fetch teams.");
+      }
+
+      const data = await response.json();
+
+      const transformedTeams = data.resource.map(
         (team: { id: number; name: string }) => ({
           value: team.id,
           label: team.name,

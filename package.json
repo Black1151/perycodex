@@ -17,7 +17,6 @@
     "@prisma/client": "^5.17.0",
     "ag-grid-charts-enterprise": "^32.2.0",
     "ag-grid-react": "^32.2.0",
-    "axios": "^1.7.2",
     "framer-motion": "^11.3.17",
     "next": "14.2.5",
     "react": "^18",

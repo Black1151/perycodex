@@ -8,7 +8,9 @@ export async function POST() {
     const cookieStore = cookies();
     const apiToken = cookieStore.get("auth_token")?.value;
 
-    await apiClient.get("/authentication/logout", {
+    // Use apiClient with a GET request for logout
+    await apiClient("/authentication/logout", {
+      method: "GET",
       headers: {
         Authorization: `Bearer ${apiToken}`,
       },
@@ -16,17 +18,14 @@ export async function POST() {
 
     const res = NextResponse.json({ success: true });
 
-    if (cookieStore.get("auth_token")) {
-      res.cookies.delete("auth_token");
-    }
-    if (cookieStore.get("user_uuid")) {
-      res.cookies.delete("user_uuid");
-    }
+    // Delete auth_token and user_uuid cookies
+    res.cookies.delete("auth_token");
+    res.cookies.delete("user_uuid");
 
     return res;
   } catch (error: any) {
-    const errorMessage =
-      error.response?.error || "An error occurred during logout";
+    // Adjusted error handling for fetch
+    const errorMessage = error.message || "An error occurred during logout";
     return NextResponse.json(
       { error: errorMessage },
       { status: error.status || 500 }

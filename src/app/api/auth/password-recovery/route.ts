@@ -5,8 +5,11 @@ export async function POST(req: NextRequest) {
   const { email } = await req.json();
 
   try {
-    await apiClient.post("/authentication/forgotPassword", {
-      email,
+    await apiClient("/authentication/forgotPassword", {
+      method: "POST",
+      body: JSON.stringify({
+        email,
+      }),
     });
 
     const res = NextResponse.json(

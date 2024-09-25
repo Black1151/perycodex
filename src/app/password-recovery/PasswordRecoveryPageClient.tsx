@@ -1,10 +1,7 @@
-// PasswordRecoveryPageClient.tsx
-
 "use client";
 
 import { useState } from "react";
 import { useDisclosure } from "@chakra-ui/react";
-import axios from "axios";
 import { PasswordRecoveryForm } from "@/components/forms/PasswordRecoveryForm";
 import { PasswordRecoveryModal } from "./PasswordRecoveryModal";
 import { SignUpFormInputs } from "@/components/forms/SignUpForm";
@@ -16,7 +13,17 @@ export const PasswordRecoveryPageClient = () => {
   const handleFormSubmit = async (data: SignUpFormInputs) => {
     setIsSubmitting(true);
     try {
-      await axios.post("/api/auth/password-recovery", data);
+      const response = await fetch("/api/auth/password-recovery", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Password recovery request failed");
+      }
       onOpen();
     } catch (error) {
       console.error("Password recovery request failed:", error);

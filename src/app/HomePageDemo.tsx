@@ -17,7 +17,6 @@ import { SpringScale } from "@/components/animations/SpringScale";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import { SplashScreen } from "@/components/SplashScreen/SplashScreen";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -33,9 +32,20 @@ export default function Home() {
 
   const onClickLogout = async () => {
     try {
-      await axios.post("/api/auth/sign-out");
+      const response = await fetch("/api/auth/sign-out", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Logout failed");
+      }
+
       router.push("/login");
     } catch (error) {
+      console.error("Logout failed:", error);
       router.push("/error");
     }
   };
@@ -52,7 +62,6 @@ export default function Home() {
         <SplashScreen />
       ) : (
         <>
-          {/* <Header /> */}
           <Button onClick={onClickLogout}>LOG OUT</Button>
           <Stack
             flexDirection={["column-reverse", null, null, "row"]}

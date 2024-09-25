@@ -16,7 +16,6 @@ import {
 } from "@chakra-ui/react";
 import LockIcon from "@mui/icons-material/Lock";
 import { InputField } from "./InputField";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { passwordValidation } from "./validationSchema/validationSchema";
 
@@ -50,18 +49,27 @@ export function PasswordResetForm({ token, errors }: ActivateAccountFormProps) {
     data
   ) => {
     try {
-      await axios.post("/api/auth/password-reset", {
-        token,
-        password: data.password,
+      const response = await fetch("/api/auth/password-reset", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token,
+          password: data.password,
+        }),
       });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData?.error || "An unexpected error occurred.");
+      }
+
       onOpen();
     } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.error || "An unexpected error occurred.";
-
       toast({
         title: "There was an error updating the password",
-        description: errorMessage,
+        description: error.message || "An unexpected error occurred.",
         status: "error",
         duration: 5000,
         isClosable: true,

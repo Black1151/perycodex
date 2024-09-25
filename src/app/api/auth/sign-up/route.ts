@@ -8,15 +8,19 @@ export async function POST(req: NextRequest) {
     const formData = new URLSearchParams();
     formData.append("email", email);
 
-    await apiClient.post("/authentication/register", formData.toString(), {
+    await apiClient("/authentication/register", {
+      method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
+      body: formData.toString(),
     });
 
     return NextResponse.json({ status: 200 });
   } catch (error: any) {
-    const errorMessage = error.response?.data.error;
+    // Adjusted error handling for fetch
+    const errorMessage =
+      error.message || "An error occurred during registration";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

@@ -1,31 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
+import apiClient from "@/lib/apiClient";
 import { cookies } from "next/headers";
 
 export async function GET(req: NextRequest) {
-    const cookieStore = cookies();
-    const authToken = cookieStore.get("auth_token")?.value;
+  const cookieStore = cookies();
+  const authToken = cookieStore.get("auth_token")?.value;
 
-    try {
-        const response = await fetch(
-            `${process.env.BE_URL}/customer/allBy?selectColumns=id,name,customerCode,isActive,uniqueId`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: authToken ? `Bearer ${authToken}` : "",
-                }
-            }
-        );
+  try {
+    const response = await apiClient(
+      `/customer/allBy?selectColumns=id,name,customerCode,isActive,uniqueId`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: authToken ? `Bearer ${authToken}` : "",
+        },
+      }
+    );
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData?.error || "Something went wrong");
-        }
-
-        const data = await response.json();
-        const resource = data.resource;
-        return NextResponse.json({ resource });
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+    const resource = response.resource;
+    return NextResponse.json({ resource });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }

@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import HomePage from "./HomePage";
 import { NavBarProps } from "./NavBar";
+import { Text } from "@chakra-ui/react";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;

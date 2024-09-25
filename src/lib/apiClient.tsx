@@ -1,24 +1,36 @@
-import axios from "axios";
 import { cookies } from "next/headers";
 
-const apiClient = axios.create({
-  baseURL: process.env.BE_URL,
-});
+type FetchOptions = RequestInit & {
+  headers?: HeadersInit;
+};
 
-apiClient.interceptors.request.use((config) => {
+const apiClient = async (url: string, options: FetchOptions = {}) => {
   const cookieStore = cookies();
   const authToken = cookieStore.get("auth_token")?.value;
 
-  if (config.headers) {
-    config.headers["Content-Type"] =
-      config.headers["Content-Type"] || "application/json";
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    ...options.headers,
+  };
 
-    if (authToken) {
-      config.headers["Authorization"] = `Bearer ${authToken}`;
-    }
+  if (authToken) {
+    (headers as Record<string, string>)[
+      "Authorization"
+    ] = `Bearer ${authToken}`;
   }
 
-  return config;
-});
+  const fetchOptions: FetchOptions = {
+    ...options,
+    headers,
+  };
+
+  const response = await fetch(`${process.env.BE_URL}${url}`, fetchOptions);
+
+  if (!response.ok) {
+    throw new Error(`Error: ${response.statusText}`);
+  }
+
+  return response.json();
+};
 
 export default apiClient;

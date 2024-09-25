@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import apiClient from "@/lib/apiClient";
 import { cookies } from "next/headers";
 
 export async function POST(req: NextRequest) {
@@ -8,27 +9,18 @@ export async function POST(req: NextRequest) {
   const authToken = cookieStore.get("auth_token")?.value;
 
   try {
-    const response = await fetch(`${process.env.BE_URL}/selectItem/allBy`, {
+    const response = await apiClient(`/selectItem/allBy`, {
       method: "POST",
       headers: {
+        Authorization: authToken ? `Bearer ${authToken}` : "",
         "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify({ type }),
     });
-
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      return NextResponse.json({ error: errorMessage }, { status: 500 });
-    }
-
-    const data = await response.json();
-    return NextResponse.json(data);
-  } catch (error) {
+    return NextResponse.json(response);
+  } catch (error: any) {
     console.error("Error during fetch request:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    const errorMessage = error.message || "Internal Server Error";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
