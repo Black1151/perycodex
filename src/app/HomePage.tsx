@@ -3,7 +3,7 @@
 import { useTheme, VStack } from "@chakra-ui/react";
 import { SplashScreen } from "@/components/SplashScreen/SplashScreen";
 import { useState, useEffect } from "react";
-import { NavBar, NavBarProps } from "./NavBar";
+import { NavBar, NavBarProps } from "../components/layout/NavBar";
 import { Tool } from "@/types/types";
 
 interface HomePageProps {

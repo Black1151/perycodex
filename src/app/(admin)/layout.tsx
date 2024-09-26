@@ -1,14 +1,13 @@
-import { ReactNode } from "react"; // Import ReactNode
+import { ReactNode } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { AdminLayout } from "@/app/(admin)/AdminLayout";
-import { NavBarProps } from "@/app/NavBar";
+import { NavBarProps } from "@/components/layout/NavBar";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
-// Define props type with children
 interface LayoutProps {
   children: ReactNode;
 }
@@ -22,7 +21,6 @@ export default async function Layout({ children }: LayoutProps) {
     return redirect("/login");
   }
 
-  // Fetch user data
   let userIdentity = null;
 
   try {
@@ -49,10 +47,5 @@ export default async function Layout({ children }: LayoutProps) {
     userRole: userIdentity?.role,
   };
 
-  return (
-    <AdminLayout navBarProps={navBarProps}>
-      {/* Page-specific content */}
-      {children}
-    </AdminLayout>
-  );
+  return <AdminLayout navBarProps={navBarProps}>{children}</AdminLayout>;
 }

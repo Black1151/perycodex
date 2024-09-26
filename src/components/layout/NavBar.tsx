@@ -46,7 +46,6 @@ export const NavBar: React.FC<NavBarProps> = ({
   const router = useRouter();
   const theme = useTheme();
 
-  // Logout function
   const handleLogout = async () => {
     await fetch("/api/auth/sign-out", {
       method: "POST",
@@ -176,7 +175,13 @@ export const NavBar: React.FC<NavBarProps> = ({
               objectFit="cover"
             />
           </MenuButton>
-          <MenuList bg="white" color={theme.colors.perygonPink} px={2}>
+          <MenuList
+            bg="white"
+            color={theme.colors.perygonPink}
+            px={2}
+            zIndex={10}
+            position="absolute"
+          >
             {menuItems.map((item) => (
               <MenuItem
                 key={item.label}
@@ -191,10 +196,11 @@ export const NavBar: React.FC<NavBarProps> = ({
                   backgroundColor: theme.colors.perygonPink,
                   color: "white",
                 }}
+                zIndex={2}
                 onClick={item.onClick}
               >
                 {item.icon}
-                <Text flex={1} zIndex={2} ml={2}>
+                <Text zIndex={2} ml={2}>
                   {item.label}
                 </Text>
               </MenuItem>
