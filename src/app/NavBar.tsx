@@ -132,6 +132,9 @@ export const NavBar: React.FC<NavBarProps> = ({
       alignItems="center"
       pt={5}
       position="fixed"
+      top={0}
+      left={0}
+      right={0}
     >
       <MotionBox
         initial={{ x: "-5vw", opacity: 0 }}

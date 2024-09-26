@@ -1,10 +1,12 @@
 "use client";
 
-import { useTheme, VStack } from "@chakra-ui/react";
+import { Box, useTheme, VStack } from "@chakra-ui/react";
 import { SplashScreen } from "@/components/SplashScreen/SplashScreen";
 import { useState, useEffect } from "react";
 import { NavBar, NavBarProps } from "./NavBar";
 import { Tool } from "@/types/types";
+import { PerygonContainer } from "@/components/layout/PerygonContainer";
+import { Footer } from "@/components/layout/Footer";
 
 interface HomePageProps {
   navBarProps: NavBarProps;
@@ -22,20 +24,18 @@ export default function Home({ navBarProps, toolsList }: HomePageProps) {
   }, []);
 
   return (
-    <VStack
-      minH="100vh"
-      width="100%"
-      overflowX="hidden"
-      flex={1}
-      bgGradient={`linear(to-br, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`}
-    >
+    <PerygonContainer>
       {isLoading ? (
         <SplashScreen />
       ) : (
         <>
-          <NavBar {...navBarProps} />
+          <VStack minH="100vh">
+            <NavBar {...navBarProps} />
+            {/* <Box width="10px" height="1000vw" bg="green"></Box> */}
+            <Footer />
+          </VStack>
         </>
       )}
-    </VStack>
+    </PerygonContainer>
   );
 }
