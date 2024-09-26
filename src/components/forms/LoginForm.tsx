@@ -38,7 +38,8 @@ export function LoginForm() {
       method: "POST",
       body: data,
       successMessage: "Successfully logged in!",
-      errorMessage: "Login failure - please contact administrator",
+      errorMessage: "Incorrect user or password",
+      redirectOnError: false,
     });
 
     if (result) {
@@ -105,7 +106,7 @@ export function LoginForm() {
             backgroundColor={theme.colors.perygonPink}
             type="submit"
             w="full"
-            isLoading={loading} // Use loading state from hook
+            isLoading={loading}
             height={12}
             color="white"
             _hover={{
@@ -129,7 +130,7 @@ export function LoginForm() {
             bgColor="none"
             w="full"
             height={12}
-            isLoading={loading} // Use loading state here as well
+            isLoading={loading}
             color="lightGray"
             backgroundColor="white"
             border="1px solid lightGray"

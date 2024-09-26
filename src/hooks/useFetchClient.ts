@@ -57,7 +57,7 @@ export const useFetchClient = () => {
       if (errorMessage) {
         toast({
           title: "Error",
-          description: error.message || errorMessage,
+          description: errorMessage,
           status: "error",
           duration: 5000,
           isClosable: true,
