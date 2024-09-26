@@ -146,7 +146,7 @@ export function LoginForm() {
           onClose={() => {}}
         />
         <Text pt="10px" fontSize="12px" color="gray">
-          Copyright &copy; 2024 Sedulo Limited (v0.1)
+          Copyright &copy; 2024 Sedulo Limited (v0.2)
         </Text>
       </VStack>
     </form>
