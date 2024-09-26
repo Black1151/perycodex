@@ -180,12 +180,11 @@ export const NavBar: React.FC<NavBarProps> = ({
             color={theme.colors.perygonPink}
             px={2}
             zIndex={10}
-            position="absolute"
           >
             {menuItems.map((item) => (
               <MenuItem
                 key={item.label}
-                fontSize={18}
+                fontSize={16}
                 display="flex"
                 alignItems="center"
                 position="relative"
