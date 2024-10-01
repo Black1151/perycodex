@@ -25,8 +25,14 @@ const apiClient = async (url: string, options: FetchOptions = {}) => {
   };
 
   const response = await fetch(`${process.env.BE_URL}${url}`, fetchOptions);
+  const data = await response.json();
 
-  return response.json();
+  return {
+    status: response.status,
+    ok: response.ok,
+    statusText: response.statusText,
+    data,
+  };
 };
 
 export default apiClient;

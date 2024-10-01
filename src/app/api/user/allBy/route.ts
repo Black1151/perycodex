@@ -17,10 +17,16 @@ export async function GET(req: NextRequest) {
       }
     );
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData?.error || "Something went wrong");
+    }
+
     const data = await response.json();
     const resource = data.resource;
     return NextResponse.json({ resource });
   } catch (error: any) {
+    console.error(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

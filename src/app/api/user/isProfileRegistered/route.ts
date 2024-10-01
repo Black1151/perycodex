@@ -18,11 +18,15 @@ export async function POST(req: NextRequest) {
         body: JSON.stringify({ uniqueId }),
       }
     );
-
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData?.error || "Something went wrong");
+    }
     const data = await response.json();
     const isProfileRegistered = data.resource.isProfileRegistered;
     return NextResponse.json({ isProfileRegistered });
   } catch (error: any) {
+    console.error(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

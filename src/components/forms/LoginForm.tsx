@@ -14,7 +14,6 @@ import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
 import { InputField } from "./InputField";
 import { useRouter } from "next/navigation";
-import { PerygonModal } from "../modals/PerygonModal";
 import { emailValidation } from "./validationSchema/validationSchema";
 import { useFetchClient } from "@/hooks/useFetchClient";
 
@@ -140,12 +139,6 @@ export function LoginForm() {
             Sign-up
           </Button>
         </VStack>
-        <PerygonModal
-          title={"Account activation successful"}
-          body={"Please login to complete your account set up process"}
-          isOpen={false}
-          onClose={() => {}}
-        />
         <Text pt="10px" fontSize="12px" color="gray">
           Copyright &copy; 2024 Sedulo Limited (v0.2)
         </Text>

@@ -52,7 +52,6 @@ export function ProfileCompletionForm({
   sitesDropdown,
 }: ProfileCompletionFormProps) {
   const theme = useTheme();
-  const toast = useToast();
   const router = useRouter();
 
   const [teamOptions, setTeamOptions] = useState<DropdownOption[]>([]);
@@ -79,7 +78,7 @@ export function ProfileCompletionForm({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ data: updatedData }),
+        body: JSON.stringify(updatedData),
       });
 
       router.push("/");

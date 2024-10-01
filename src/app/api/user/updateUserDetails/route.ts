@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import apiClient from "@/lib/apiClient";
+import { cookies } from "next/headers";
 
 export async function PUT(req: NextRequest) {
   const cookieStore = cookies();
@@ -13,20 +13,26 @@ export async function PUT(req: NextRequest) {
     );
   }
 
-  let { data } = await req.json();
+  const data = await req.json();
 
   try {
-    const response = await apiClient(`/user/${uniqueId}`, {
+    const {
+      status,
+      ok,
+      data: userData,
+    } = await apiClient(`/user/${uniqueId}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(data),
     });
 
-    const userData = await response.json();
+    if (!ok || status !== 200) {
+      const errorMessage = userData?.error || "Failed to update user data.";
+      return NextResponse.json({ error: errorMessage }, { status });
+    }
+
     return NextResponse.json({ userData });
   } catch (error: any) {
+    console.error(error);
     return NextResponse.json(
       { error: error.message || "Internal Server Error" },
       { status: 500 }

@@ -5,18 +5,19 @@ import { SubmitHandler } from "react-hook-form";
 import { SignUpForm, SignUpFormInputs } from "@/components/forms/SignUpForm";
 import { useRouter } from "next/navigation";
 import { SignUpSuccessModal } from "./SignUpSuccessModal";
-import { useFetchClient } from "@/hooks/useFetchClient"; // Import the custom hook
+import { useFetchClient } from "@/hooks/useFetchClient";
 
 export const SignUpPageClient = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
-  const { fetchClient, loading } = useFetchClient(); // Use the custom hook
+  const { fetchClient, loading } = useFetchClient();
 
   const onSubmit: SubmitHandler<SignUpFormInputs> = async (data) => {
     const result = await fetchClient("/api/auth/sign-up", {
       method: "POST",
       body: data,
-      errorMessage: "Account creation failed.",
+      errorMessage: "Email already in use",
+      redirectOnError: false,
     });
 
     if (result) {
@@ -26,7 +27,7 @@ export const SignUpPageClient = () => {
 
   const handleClose = () => {
     onClose();
-    router.push("/login"); // Redirect to login after closing the modal
+    router.push("/login");
   };
 
   return (

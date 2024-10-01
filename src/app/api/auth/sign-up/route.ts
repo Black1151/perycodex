@@ -1,26 +1,35 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import apiClient from "@/lib/apiClient";
+import { cookies } from "next/headers";
 
-export async function POST(req: NextRequest) {
-  const { email } = await req.json();
-
+export async function POST() {
   try {
-    const formData = new URLSearchParams();
-    formData.append("email", email);
+    const cookieStore = cookies();
+    const apiToken = cookieStore.get("auth_token")?.value;
 
-    await apiClient("/authentication/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: formData.toString(),
+    if (!apiToken) {
+      return NextResponse.json(
+        { error: "No authentication token found." },
+        { status: 401 }
+      );
+    }
+
+    const { status, ok, data } = await apiClient("/authentication/logout", {
+      method: "GET",
     });
 
-    return NextResponse.json({ status: 200 });
+    if (!ok || status !== 200) {
+      const errorMessage = data?.error || "Logout failed.";
+      return NextResponse.json({ error: errorMessage }, { status });
+    }
+    const res = NextResponse.json({ success: true });
+    return res;
   } catch (error: any) {
-    // Adjusted error handling for fetch
-    const errorMessage =
-      error.message || "An error occurred during registration";
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    console.error(error);
+    const errorMessage = error.message || "An error occurred during logout.";
+    return NextResponse.json(
+      { error: errorMessage },
+      { status: error.status || 500 }
+    );
   }
 }

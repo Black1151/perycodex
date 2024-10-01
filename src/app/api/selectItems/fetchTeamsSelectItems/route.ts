@@ -1,4 +1,3 @@
-// src/app/api/teams/fetchTeamsByDepartment/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import apiClient from "@/lib/apiClient";
 import { cookies } from "next/headers";

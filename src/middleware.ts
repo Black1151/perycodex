@@ -17,10 +17,22 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    await apiClient(`/authentication/check`, {
+    const { status, ok } = await apiClient(`/authentication/check`, {
       method: "GET",
       headers: { Authorization: `Bearer ${apiToken}` },
     });
+
+    if (!ok || status !== 200) {
+      const response = NextResponse.redirect(new URL("/login", request.url));
+      response.cookies.delete("auth_token");
+      response.cookies.delete("user_uuid");
+      response.headers.set(
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate"
+      );
+      return response;
+    }
+
     const response = NextResponse.next();
     response.headers.set(
       "Cache-Control",

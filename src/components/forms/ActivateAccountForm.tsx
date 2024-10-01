@@ -36,7 +36,7 @@ export function ActivateAccountForm({ token }: ActivateAccountFormProps) {
     data
   ) => {
     const result = await fetchClient("/api/auth/activate-account", {
-      method: "POST",
+      method: "PUT",
       body: {
         token,
         password: data.password,
@@ -44,6 +44,7 @@ export function ActivateAccountForm({ token }: ActivateAccountFormProps) {
       successMessage:
         "Account Activated. Your account has been successfully activated.",
       errorMessage: "There was an error activating your account!",
+      redirectOnError: false,
     });
 
     if (result) {
