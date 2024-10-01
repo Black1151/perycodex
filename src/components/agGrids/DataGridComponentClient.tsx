@@ -57,8 +57,6 @@ const DataGridComponentClient = <T,>({
         });
 
         const result = await response.json();
-
-        console.log(result);
         setRowData(result.resource); // Update state with the fetched data
       } catch (err) {
         console.error(err);

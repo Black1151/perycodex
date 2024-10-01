@@ -12,9 +12,6 @@ export async function GET(req: NextRequest) {
     // Grab the "type" parameter from the query string
     const type = searchParams.get("type");
 
-    // Log the type to the console
-    console.log("Type:", type);
-
     // Fetch more fun data
     const response = await fetch(`${process.env.BE_URL}/selectItem/allBy`, {
       method: "POST",
