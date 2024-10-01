@@ -145,8 +145,6 @@ const useSurvey = ({
   const handleSurveySubmission = async (sender: SurveyModel) => {
     // Needs to check what type of method to use i.e. new=post, update=put
     const requestType = isNew ? "POST" : "PUT";
-    console.log(requestType);
-    console.log(sender.data);
 
     let filteredSurveyData = { ...sender.data };
 

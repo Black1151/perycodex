@@ -84,9 +84,6 @@ export function ProfileCompletionForm({
 
       router.push("/");
     } catch (error) {
-      console.log(error);
-      console.error(error);
-
       redirect("/error");
     }
   };
