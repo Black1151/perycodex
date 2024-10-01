@@ -16,7 +16,7 @@ export type ProfileCompletionFormInputs = {
   siteId: string;
   departmentId: string;
   teamId: string;
-  contractId: string;
+  contractTypeId: string;
   jobLevelId: string;
 };
 
@@ -31,7 +31,7 @@ interface ProfileCompletionFormProps {
     siteId?: FieldError;
     departmentId?: FieldError;
     teamId?: FieldError;
-    contractId?: FieldError;
+    contractTypeId?: FieldError;
     jobLevelId?: FieldError;
   };
   dropdowns: {
@@ -74,6 +74,8 @@ export function ProfileCompletionForm({
         isProfileRegistered: true,
       };
 
+      console.log();
+
       const response = await fetch("/api/user/updateUserDetails", {
         method: "PUT",
         headers: {
@@ -88,6 +90,9 @@ export function ProfileCompletionForm({
 
       router.push("/");
     } catch (error) {
+      console.log(error);
+      console.error(error);
+
       redirect("/error");
     }
   };
@@ -235,12 +240,12 @@ export function ProfileCompletionForm({
           />
 
           <InputField
-            name="contractId"
+            name="contractTypeId"
             placeholder="Select Contract Type"
             type="select"
             options={dropdowns?.job_type}
-            error={formErrors.contractId}
-            register={() => register("contractId")}
+            error={formErrors.contractTypeId}
+            register={() => register("contractTypeId")}
             focusBorderColor={theme.colors.perygonPink}
           />
 

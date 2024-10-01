@@ -2,7 +2,6 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import HomePage from "./HomePage";
 import { NavBarProps } from "./NavBar";
-import { Text } from "@chakra-ui/react";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -58,6 +57,7 @@ export default async function Home() {
       isProfileRegistered = profileData.resource.isProfileRegistered;
       userIdentity = identityData.resource;
       toolsList = toolsData.resource;
+      console.log(isProfileRegistered);
     } catch (error) {
       redirect("/error");
     }
