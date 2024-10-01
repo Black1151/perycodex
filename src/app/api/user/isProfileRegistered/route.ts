@@ -19,11 +19,6 @@ export async function POST(req: NextRequest) {
       }
     );
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData?.error || "Something went wrong");
-    }
-
     const data = await response.json();
     const isProfileRegistered = data.resource.isProfileRegistered;
     return NextResponse.json({ isProfileRegistered });

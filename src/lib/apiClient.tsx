@@ -26,10 +26,6 @@ const apiClient = async (url: string, options: FetchOptions = {}) => {
 
   const response = await fetch(`${process.env.BE_URL}${url}`, fetchOptions);
 
-  if (!response.ok) {
-    throw new Error(`Error: ${response.statusText}`);
-  }
-
   return response.json();
 };
 

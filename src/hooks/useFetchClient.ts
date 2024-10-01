@@ -36,11 +36,6 @@ export const useFetchClient = () => {
         ...(body ? { body: JSON.stringify(body) } : {}),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData?.error || "An unexpected error occurred.");
-      }
-
       const data = await response.json();
 
       if (successMessage) {

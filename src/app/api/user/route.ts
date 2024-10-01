@@ -22,10 +22,6 @@ export async function GET() {
       },
     });
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch user data");
-    }
-
     const userData = await response.json();
 
     return NextResponse.json(userData);

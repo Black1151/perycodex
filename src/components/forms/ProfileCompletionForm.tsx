@@ -74,19 +74,13 @@ export function ProfileCompletionForm({
         isProfileRegistered: true,
       };
 
-      console.log();
-
-      const response = await fetch("/api/user/updateUserDetails", {
+      await fetch("/api/user/updateUserDetails", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ data: updatedData }),
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to update user details.");
-      }
 
       router.push("/");
     } catch (error) {
@@ -112,10 +106,6 @@ export function ProfileCompletionForm({
         },
         body: JSON.stringify({ departmentId }),
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch teams.");
-      }
 
       const data = await response.json();
 

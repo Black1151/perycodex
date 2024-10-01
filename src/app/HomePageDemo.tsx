@@ -32,16 +32,12 @@ export default function Home() {
 
   const onClickLogout = async () => {
     try {
-      const response = await fetch("/api/auth/sign-out", {
+      await fetch("/api/auth/sign-out", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
       });
-
-      if (!response.ok) {
-        throw new Error("Logout failed");
-      }
 
       router.push("/login");
     } catch (error) {
