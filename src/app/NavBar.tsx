@@ -135,6 +135,7 @@ export const NavBar: React.FC<NavBarProps> = ({
       top={0}
       left={0}
       right={0}
+      zIndex={100}
     >
       <MotionBox
         initial={{ x: "-5vw", opacity: 0 }}
@@ -172,7 +173,11 @@ export const NavBar: React.FC<NavBarProps> = ({
             _hover={{ cursor: "pointer" }}
           >
             <Image
-              src={userImageUrl ?? "blank-profile-picture.webp"}
+              src={
+                userImageUrl !== ""
+                  ? userImageUrl
+                  : "blank-profile-picture.webp"
+              }
               alt="profile pic"
               width="100%"
               height="100%"
