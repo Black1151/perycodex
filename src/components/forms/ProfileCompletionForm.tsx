@@ -80,19 +80,13 @@ export function ProfileCompletionForm({
     };
 
     try {
-      // Call the API and wait for the response
-      const response = await fetchClient("/api/user/updateUserDetails", {
+      await fetchClient("/api/user/updateUserDetails", {
         method: "PUT",
         body: updatedData,
         successMessage: "Profile updated successfully",
       });
-
-      // If the response was successful, redirect to "/"
-      if (response) {
-        router.push("/");
-      }
+      router.push("/");
     } catch (error) {
-      // Handle any potential error, if needed
       console.error("Failed to update profile:", error);
     }
   };
