@@ -1,35 +1,37 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import apiClient from "@/lib/apiClient";
-import { cookies } from "next/headers";
 
-export async function POST() {
+export async function POST(req: NextRequest) {
+  const { email } = await req.json();
+
   try {
-    const cookieStore = cookies();
-    const apiToken = cookieStore.get("auth_token")?.value;
+    // Convert form data into JSON instead of URLSearchParams
+    const requestBody = JSON.stringify({ email });
 
-    if (!apiToken) {
+    // Using apiClient with JSON content type
+    const response = await apiClient("/authentication/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: requestBody, // Pass the JSON request body
+    });
+
+    if (!response.ok) {
+      const errorMessage =
+        response.data?.error || "An error occurred during registration";
       return NextResponse.json(
-        { error: "No authentication token found." },
-        { status: 401 }
+        { error: errorMessage },
+        { status: response.status }
       );
     }
 
-    const { status, ok, data } = await apiClient("/authentication/logout", {
-      method: "GET",
-    });
-
-    if (!ok || status !== 200) {
-      const errorMessage = data?.error || "Logout failed.";
-      return NextResponse.json({ error: errorMessage }, { status });
-    }
-    const res = NextResponse.json({ success: true });
-    return res;
+    return NextResponse.json({ status: 200 });
   } catch (error: any) {
     console.error(error);
-    const errorMessage = error.message || "An error occurred during logout.";
-    return NextResponse.json(
-      { error: errorMessage },
-      { status: error.status || 500 }
-    );
+
+    const errorMessage =
+      error.message || "An error occurred during registration";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
