@@ -3,9 +3,14 @@
 import { useForm, SubmitHandler, FieldError } from "react-hook-form";
 import { Button, VStack, useTheme, useToast } from "@chakra-ui/react";
 import { DropdownOption, InputField } from "./InputField";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { phoneNumberValidation } from "./validationSchema/validationSchema";
 import { useState } from "react";
+import { useFetchClient } from "@/hooks/useFetchClient";
+import {
+  TeamFromBE,
+  transformTeams,
+} from "@/app/api/selectItems/fetchTeamsSelectItems/transformTeams";
 
 export type ProfileCompletionFormInputs = {
   titleId: string;
@@ -53,6 +58,8 @@ export function ProfileCompletionForm({
 }: ProfileCompletionFormProps) {
   const theme = useTheme();
   const router = useRouter();
+  const toast = useToast();
+  const { fetchClient, loading } = useFetchClient();
 
   const [teamOptions, setTeamOptions] = useState<DropdownOption[]>([]);
   const [isTeamsLoading, setIsTeamsLoading] = useState(false);
@@ -67,23 +74,26 @@ export function ProfileCompletionForm({
   const handleFormSubmit: SubmitHandler<ProfileCompletionFormInputs> = async (
     formData
   ) => {
-    try {
-      const updatedData = {
-        ...formData,
-        isProfileRegistered: true,
-      };
+    const updatedData = {
+      ...formData,
+      isProfileRegistered: true,
+    };
 
-      await fetch("/api/user/updateUserDetails", {
+    try {
+      // Call the API and wait for the response
+      const response = await fetchClient("/api/user/updateUserDetails", {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedData),
+        body: updatedData,
+        successMessage: "Profile updated successfully",
       });
 
-      router.push("/");
+      // If the response was successful, redirect to "/"
+      if (response) {
+        router.push("/");
+      }
     } catch (error) {
-      redirect("/error");
+      // Handle any potential error, if needed
+      console.error("Failed to update profile:", error);
     }
   };
 
@@ -95,26 +105,27 @@ export function ProfileCompletionForm({
     setIsTeamsLoading(true);
 
     try {
-      const response = await fetch("/api/selectItems/fetchTeamsSelectItems", {
+      const data = await fetchClient("/api/selectItems/fetchTeamsSelectItems", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ departmentId }),
+        body: { departmentId },
+        errorMessage: "Failed to fetch teams for the selected department",
       });
 
-      const data = await response.json();
+      console.log("DATA", data);
 
-      const transformedTeams = data.resource.map(
-        (team: { id: number; name: string }) => ({
-          value: team.id,
-          label: team.name,
-        })
+      const transformedTeams = transformTeams(
+        (data as { resource: TeamFromBE[] }).resource || []
       );
 
       setTeamOptions(transformedTeams);
     } catch (error) {
-      redirect("/error");
+      toast({
+        title: "Error",
+        description: "Failed to fetch teams for the selected department.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
     } finally {
       setIsTeamsLoading(false);
     }
@@ -250,7 +261,7 @@ export function ProfileCompletionForm({
             backgroundColor={theme.colors.perygonPink}
             type="submit"
             w="full"
-            isLoading={isSubmitting}
+            isLoading={isSubmitting || loading}
             height={12}
             color="white"
             _hover={{

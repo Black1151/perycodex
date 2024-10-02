@@ -5,7 +5,7 @@ export async function POST(req: NextRequest) {
   const { email, password } = await req.json();
 
   try {
-    const { status, ok, data } = await apiClient("/authentication/login", {
+    const response = await apiClient("/authentication/login", {
       method: "POST",
       body: JSON.stringify({
         email,
@@ -13,9 +13,14 @@ export async function POST(req: NextRequest) {
       }),
     });
 
-    if (!ok || status !== 200) {
+    const data = await response.json();
+
+    if (!response.ok || response.status !== 200) {
       const errorMessage = data?.error || "Invalid login credentials";
-      return NextResponse.json({ error: errorMessage }, { status });
+      return NextResponse.json(
+        { error: errorMessage },
+        { status: response.status }
+      );
     }
 
     const { token, UUID } = data.resource;
@@ -38,7 +43,7 @@ export async function POST(req: NextRequest) {
     return res;
   } catch (error: any) {
     console.error(error);
-    const errorMessage = error.message || "An error occurred";
+    const errorMessage = error.message || "An error occurred during login";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

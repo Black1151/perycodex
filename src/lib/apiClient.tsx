@@ -24,15 +24,7 @@ const apiClient = async (url: string, options: FetchOptions = {}) => {
     headers,
   };
 
-  const response = await fetch(`${process.env.BE_URL}${url}`, fetchOptions);
-  const data = await response.json();
-
-  return {
-    status: response.status,
-    ok: response.ok,
-    statusText: response.statusText,
-    data,
-  };
+  return await fetch(`${process.env.BE_URL}${url}`, fetchOptions);
 };
 
 export default apiClient;

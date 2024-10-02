@@ -26,7 +26,6 @@ export default async function ProfileSetup() {
   let isProfileRegistered = false;
 
   try {
-    //// can these fetches be abstracted to SEPARATE FILE AND REUSED TO CLEAN UP THE PAGE COMPONENT??
     const profileCheckFetch = await fetch(
       `${process.env.BE_URL}/user/isProfileComplete`,
       {
@@ -43,7 +42,6 @@ export default async function ProfileSetup() {
   } catch {
     redirect("/error");
   }
-  ///////// END
 
   if (isProfileRegistered) {
     redirect("/");
@@ -89,7 +87,6 @@ export default async function ProfileSetup() {
     const departmentsData = await fetchDepartmentsResponse.json();
     const sitesData = await fetchSitesResponse.json();
 
-    //// conversion of data to correct shape for dropdown - consider handling on the backend
     type SiteFromBE = {
       id: number;
       siteName: string;

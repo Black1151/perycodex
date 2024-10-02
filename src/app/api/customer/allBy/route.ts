@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   const authToken = cookieStore.get("auth_token")?.value;
 
   try {
-    const { status, ok, data } = await apiClient(
+    const response = await apiClient(
       `/customer/allBy?selectColumns=id,name,customerCode,isActive,uniqueId`,
       {
         method: "GET",
@@ -17,12 +17,22 @@ export async function GET(req: NextRequest) {
       }
     );
 
-    if (!ok || status !== 200) {
+    const data = await response.json();
+
+    if (!response.ok || response.status !== 200) {
       const errorMessage = data?.error || "Failed to fetch customer data.";
-      return NextResponse.json({ error: errorMessage }, { status });
+      return NextResponse.json(
+        { error: errorMessage },
+        { status: response.status }
+      );
     }
+
     return NextResponse.json({ resource: data.resource });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error(error);
+    return NextResponse.json(
+      { error: error.message || "An error occurred." },
+      { status: 500 }
+    );
   }
 }

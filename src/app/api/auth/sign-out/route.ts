@@ -13,16 +13,24 @@ export async function POST() {
         { status: 401 }
       );
     }
-    const { status, ok, data } = await apiClient("/authentication/logout", {
+
+    const response = await apiClient("/authentication/logout", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${apiToken}`,
       },
     });
-    if (!ok || status !== 200) {
+
+    const data = await response.json();
+
+    if (!response.ok || response.status !== 200) {
       const errorMessage = data?.error || "Logout failed.";
-      return NextResponse.json({ error: errorMessage }, { status });
+      return NextResponse.json(
+        { error: errorMessage },
+        { status: response.status }
+      );
     }
+
     const res = NextResponse.json({ success: true });
     res.cookies.delete("auth_token");
     res.cookies.delete("user_uuid");

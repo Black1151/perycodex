@@ -14,6 +14,7 @@ export const PasswordRecoveryPageClient = () => {
     const result = await fetchClient("/api/auth/password-recovery", {
       method: "POST",
       body: data,
+      redirectOnError: false,
     });
     if (result) {
       onOpen();

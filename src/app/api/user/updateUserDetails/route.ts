@@ -13,24 +13,28 @@ export async function PUT(req: NextRequest) {
     );
   }
 
-  const data = await req.json();
+  const requestData = await req.json();
 
   try {
-    const {
-      status,
-      ok,
-      data: userData,
-    } = await apiClient(`/user/${uniqueId}`, {
+    const response = await apiClient(`/user/${uniqueId}`, {
       method: "PUT",
-      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestData),
     });
 
-    if (!ok || status !== 200) {
-      const errorMessage = userData?.error || "Failed to update user data.";
-      return NextResponse.json({ error: errorMessage }, { status });
+    const data = await response.json();
+
+    if (!response.ok || response.status !== 200) {
+      const errorMessage = data?.error || "Failed to update user data.";
+      return NextResponse.json(
+        { error: errorMessage },
+        { status: response.status }
+      );
     }
 
-    return NextResponse.json({ userData });
+    return NextResponse.json({ userData: data });
   } catch (error: any) {
     console.error(error);
     return NextResponse.json(

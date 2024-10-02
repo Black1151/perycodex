@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
   const authToken = cookieStore.get("auth_token")?.value;
 
   try {
-    const { status, ok, data } = await apiClient(`/selectItem/allBy`, {
+    const response = await apiClient(`/selectItem/allBy`, {
       method: "POST",
       headers: {
         Authorization: authToken ? `Bearer ${authToken}` : "",
@@ -18,10 +18,16 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({ type }),
     });
 
-    if (!ok || status !== 200) {
+    const data = await response.json();
+
+    if (!response.ok || response.status !== 200) {
       const errorMessage = data?.error || "Failed to fetch select items.";
-      return NextResponse.json({ error: errorMessage }, { status });
+      return NextResponse.json(
+        { error: errorMessage },
+        { status: response.status }
+      );
     }
+
     return NextResponse.json(data);
   } catch (error: any) {
     console.error("Error during fetch request:", error);

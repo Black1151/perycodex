@@ -17,7 +17,18 @@ export async function POST(req: NextRequest) {
         },
       }
     );
-    return NextResponse.json(response);
+
+    const data = await response.json();
+
+    if (!response.ok || response.status !== 200) {
+      const errorMessage = data?.error || "Failed to fetch user teams.";
+      return NextResponse.json(
+        { error: errorMessage },
+        { status: response.status }
+      );
+    }
+
+    return NextResponse.json(data);
   } catch (error: any) {
     console.error("Error during fetch request:", error);
     const errorMessage = error.message || "Internal Server Error";

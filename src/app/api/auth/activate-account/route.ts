@@ -5,21 +5,23 @@ export async function PUT(req: NextRequest) {
   const { token, password } = await req.json();
 
   try {
-    const { status, ok, data } = await apiClient(
-      `/authentication/verifyAccount`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          verificationToken: token,
-          password,
-        }),
-      }
-    );
+    const response = await apiClient(`/authentication/verifyAccount`, {
+      method: "POST",
+      body: JSON.stringify({
+        verificationToken: token,
+        password,
+      }),
+    });
 
-    if (!ok || status !== 200) {
+    const data = await response.json();
+
+    if (!response.ok || response.status !== 200) {
       const errorMessage =
         data?.error || "Verification failed - please try again.";
-      return NextResponse.json({ error: errorMessage }, { status });
+      return NextResponse.json(
+        { error: errorMessage },
+        { status: response.status }
+      );
     }
 
     const redirectUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/login`;

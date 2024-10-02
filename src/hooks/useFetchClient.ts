@@ -23,7 +23,7 @@ export const useFetchClient = () => {
       headers = { "Content-Type": "application/json" },
       body,
       successMessage,
-      errorMessage,
+      errorMessage = "An unexpected error occurred.",
       redirectOnError = true,
     }: FetchOptions = {}
   ): Promise<T | null> => {
@@ -35,15 +35,13 @@ export const useFetchClient = () => {
         headers,
         ...(body ? { body: JSON.stringify(body) } : {}),
       });
-      if (!response.ok || response.status !== 200) {
-        console.log(response.status, response.statusText, response.ok);
 
+      if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData?.error || "An unexpected error occurred.");
+        throw new Error(errorData?.error || errorMessage);
       }
 
       const data = await response.json();
-
       if (successMessage) {
         toast({
           title: successMessage,
@@ -55,15 +53,13 @@ export const useFetchClient = () => {
 
       return data;
     } catch (error: any) {
-      if (errorMessage) {
-        toast({
-          title: "Error",
-          description: errorMessage,
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-      }
+      toast({
+        title: "Error",
+        description: error.message || errorMessage,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
 
       if (redirectOnError) {
         router.push("/error");
