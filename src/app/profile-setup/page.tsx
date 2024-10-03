@@ -11,7 +11,6 @@ import { redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const fetchCache = "force-no-store";
-////
 
 const typesArray = ["job_level", "job_type", "title", "team", "dept"];
 
@@ -45,7 +44,6 @@ export default async function ProfileSetup() {
 
   if (isProfileRegistered) {
     redirect("/");
-    return null;
   }
 
   try {
