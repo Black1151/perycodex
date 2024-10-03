@@ -1,13 +1,14 @@
-import React from "react"
-import { Box, Image, Text, VStack } from "@chakra-ui/react"
+import React from "react";
+import { Box, Image, Text, VStack } from "@chakra-ui/react";
 
 export interface CarouselItemProps {
-  logoImage: string
-  backgroundImage: string
-  alt: string
-  name: string
-  description: string
-  isSelected?: boolean
+  logoImage: string;
+  backgroundImage: string;
+  alt: string;
+  name: string;
+  description: string;
+  isSelected?: boolean;
+  appUrl: string;
 }
 
 const CarouselItem: React.FC<CarouselItemProps> = ({
@@ -40,7 +41,7 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
         </Text>
       </Box>
     </VStack>
-  )
-}
+  );
+};
 
-export default CarouselItem
+export default CarouselItem;

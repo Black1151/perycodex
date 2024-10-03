@@ -30,6 +30,7 @@ export interface NavBarProps {
   userFirstName: string;
   userImageUrl: string;
   userRole: string;
+  logoUrl?: string;
 }
 
 interface MenuItemProps {
@@ -42,11 +43,11 @@ export const NavBar: React.FC<NavBarProps> = ({
   userFirstName,
   userImageUrl,
   userRole,
+  logoUrl,
 }) => {
   const router = useRouter();
   const theme = useTheme();
 
-  // Logout function
   const handleLogout = async () => {
     await fetch("/api/auth/sign-out", {
       method: "POST",
@@ -143,13 +144,19 @@ export const NavBar: React.FC<NavBarProps> = ({
         transition={{ duration: 0.3 }}
         w="150px"
       >
-        <Image
-          src="/logoWhole.png"
-          alt="logo"
-          width="100%"
-          height="100%"
-          objectFit="cover"
-        />
+        {logoUrl && logoUrl !== "" ? (
+          <Image
+            src={logoUrl}
+            alt="logo"
+            width="100%"
+            height="100%"
+            objectFit="cover"
+          />
+        ) : (
+          <Text fontFamily="bonfire" color="white">
+            Perygon
+          </Text>
+        )}
       </MotionBox>
       <MotionHStack
         initial={{ x: "5vw", opacity: 0 }}
@@ -174,7 +181,7 @@ export const NavBar: React.FC<NavBarProps> = ({
           >
             <Image
               src={
-                userImageUrl !== ""
+                userImageUrl && userImageUrl !== ""
                   ? userImageUrl
                   : "blank-profile-picture.webp"
               }

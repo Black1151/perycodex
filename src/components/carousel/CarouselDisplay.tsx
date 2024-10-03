@@ -4,18 +4,26 @@ import { Box, VStack, Text, Button, useTheme } from "@chakra-ui/react";
 import Carousel from "./Carousel";
 import { useState, useEffect } from "react";
 import { CarouselItemProps } from "./CarouselItem";
+import { useRouter } from "next/navigation";
 
-export interface carouselDisplayProps {
+export interface CarouselDisplayProps {
   carouselItems: CarouselItemProps[];
 }
 
-const CarouselDisplay = ({ carouselItems }: carouselDisplayProps) => {
+const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
+  const fallbackImage = "/assets/apps/invoicePro/invoiceProBG.png";
   const [layers, setLayers] = useState([
-    { id: 0, image: carouselItems[1].backgroundImage, opacity: 1 },
+    {
+      id: 0,
+      image: carouselItems[1].backgroundImage || fallbackImage,
+      opacity: 1,
+    },
   ]);
   const [nextLayerId, setNextLayerId] = useState(1);
   const [currentIndex, setCurrentIndex] = useState(1);
   const [showInfoBox, setShowInfoBox] = useState(true);
+
+  const router = useRouter();
 
   const setIndex = (index: number) => {
     setShowInfoBox(false);
@@ -23,7 +31,7 @@ const CarouselDisplay = ({ carouselItems }: carouselDisplayProps) => {
     setTimeout(() => {
       const newLayer = {
         id: nextLayerId,
-        image: carouselItems[index].backgroundImage,
+        image: carouselItems[index].backgroundImage || fallbackImage,
         opacity: 0,
       };
       setLayers([...layers, newLayer]);
@@ -52,7 +60,7 @@ const CarouselDisplay = ({ carouselItems }: carouselDisplayProps) => {
     setShowInfoBox(true);
   }, []);
 
-  // const theme = useTheme();
+  const theme = useTheme();
 
   return (
     <VStack height="1000px" position="relative">
@@ -76,7 +84,7 @@ const CarouselDisplay = ({ carouselItems }: carouselDisplayProps) => {
       <VStack
         position="absolute"
         spacing={8}
-        top={120}
+        top={350}
         left={showInfoBox ? [0, 300] : -500}
         maxW={"450px"}
         transition="left 0.5s"
@@ -90,11 +98,12 @@ const CarouselDisplay = ({ carouselItems }: carouselDisplayProps) => {
         <Text fontSize="3xl">{carouselItems[currentIndex].name}</Text>
         <Text fontSize="md">{carouselItems[currentIndex].description}</Text>
         <Button
-          bg="red"
+          bg={theme.colors.seduloRed}
           color="white"
           _hover={{
-            bg: "green",
+            bg: theme.colors.perygonPink,
           }}
+          onClick={() => router.push(carouselItems[currentIndex].appUrl)}
         >
           Open {carouselItems[currentIndex].name}
         </Button>
