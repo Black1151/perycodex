@@ -10,12 +10,14 @@ interface LetterFlyInProps extends BoxProps {
   children: ReactNode;
   delay?: number;
   fontSize?: number;
+  duration?: number;
 }
 
 export const LetterFlyIn: FC<LetterFlyInProps> = ({
   children,
   delay = 0,
   fontSize = 81,
+  duration = 0.1,
   ...rest
 }) => {
   const text = children as string;
@@ -38,7 +40,7 @@ export const LetterFlyIn: FC<LetterFlyInProps> = ({
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{
-            duration: 0.1,
+            duration: duration,
             delay: index * 0.1 + delay,
           }}
         >
