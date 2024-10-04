@@ -27,6 +27,7 @@ export default async function PerygonMain() {
     userImageUrl: "",
     userRole: "",
   };
+  let isProfileRegistered = false;
 
   if (authToken) {
     try {
@@ -58,21 +59,13 @@ export default async function PerygonMain() {
           }),
         ]);
 
-      if (
-        !fetchCarouselItems.ok ||
-        !fetchUserInfo.ok ||
-        !fetchProfileStatus.ok
-      ) {
-        throw new Error("Failed to fetch data: Non-OK response");
-      }
+      // if (!fetchCarouselItems.ok || !fetchUserInfo.ok || !fetchProfileStatus.ok) {
+      //   throw new Error("Failed to fetch data: Non-OK response");
+      // }
 
       const carouselItemsData = await fetchCarouselItems.json();
       const userInfoData = await fetchUserInfo.json();
       const profileStatusData = await fetchProfileStatus.json();
-
-      if (!profileStatusData.resource.isProfileRegistered) {
-        redirect("/profile-setup");
-      }
 
       carouselItems = transformCarouselItems(carouselItemsData.resource);
 
@@ -81,12 +74,18 @@ export default async function PerygonMain() {
         userImageUrl: userInfoData.resource.profilePictureUrl,
         userRole: userInfoData.resource.role,
       };
+
+      isProfileRegistered = profileStatusData.resource.isProfileRegistered;
     } catch (error: any) {
       console.error("Error details:", error);
       redirect("/error");
     }
   } else {
     redirect("/login");
+  }
+
+  if (isProfileRegistered === false) {
+    return redirect("/profile-setup");
   }
 
   return (
