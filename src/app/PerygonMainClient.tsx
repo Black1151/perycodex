@@ -2,7 +2,7 @@
 
 import CarouselDisplay from "@/components/carousel/CarouselDisplay";
 import { CarouselItemProps } from "@/components/carousel/CarouselItem";
-import { Box, useTheme, VStack } from "@chakra-ui/react";
+import { Box, useTheme } from "@chakra-ui/react";
 import { NavBar, NavBarProps } from "./NavBar";
 import { Footer } from "@/components/layout/Footer";
 
@@ -18,15 +18,17 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
   const theme = useTheme();
   return (
     <Box
-      minH="100vh"
+      display="flex"
+      flexDirection="column"
+      minHeight="100vh"
       width="100%"
-      overflowX="hidden"
-      p={10}
-      flex={1}
+      overflow="hidden"
       bgGradient={`linear(to-br, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`}
     >
       <NavBar {...navbarProps} />
-      <CarouselDisplay carouselItems={carouselItems} />;
+      <Box flexGrow={1} mt="80px" mb={[0, null, "53px"]} display="flex">
+        <CarouselDisplay carouselItems={carouselItems} />
+      </Box>
       <Footer />
     </Box>
   );

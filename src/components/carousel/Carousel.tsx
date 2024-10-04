@@ -20,12 +20,13 @@ const Carousel: React.FC<CarouselProps> = ({
   );
 
   return (
-    <Box position={"relative"} height={"240px"} mx={30}>
+    <Box position={"relative"} height={["150px", "300px", "350px"]} mx={30}>
       <CarouselControls onPrev={prevSlide} onNext={nextSlide} />
+
       <Box>
         <HStack
-          spacing={0}
-          justifyContent="space-between"
+          spacing={5}
+          justifyContent="center"
           alignItems="center"
           height={"240px"}
           width={`${(carouselItems.length * 100) / 3}%`}
@@ -69,7 +70,6 @@ const Carousel: React.FC<CarouselProps> = ({
             );
           })}
         </HStack>
-
         <CarouselDots
           itemsCount={carouselItems.length}
           currentIndex={currentIndex}

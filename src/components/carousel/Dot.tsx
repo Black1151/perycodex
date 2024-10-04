@@ -1,19 +1,24 @@
-import { Box } from "@chakra-ui/react"
+import { Box, useTheme } from "@chakra-ui/react";
 
 interface DotProps {
-  isActive: boolean
-  onClick: () => void
+  isActive: boolean;
+  onClick: () => void;
 }
 
-const Dot: React.FC<DotProps> = ({ isActive, onClick }) => (
-  <Box
-    w={2}
-    h={2}
-    borderRadius="full"
-    bg={isActive ? "white" : "black"}
-    cursor="pointer"
-    onClick={onClick}
-  />
-)
+const Dot: React.FC<DotProps> = ({ isActive, onClick }) => {
+  const theme = useTheme();
 
-export default Dot
+  return (
+    <Box
+      w={[2, 4, 8]}
+      h={[2, 4, 8]}
+      borderRadius="full"
+      bg={isActive ? theme.colors.perygonPink : "white"}
+      cursor="pointer"
+      onClick={onClick}
+      transition="background-color 0.3s ease"
+    />
+  );
+};
+
+export default Dot;

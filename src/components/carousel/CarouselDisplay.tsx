@@ -1,10 +1,10 @@
 "use client";
 
 import { Box, VStack, Text, Button, useTheme } from "@chakra-ui/react";
-import Carousel from "./Carousel";
 import { useState, useEffect } from "react";
 import { CarouselItemProps } from "./CarouselItem";
 import { useRouter } from "next/navigation";
+import Carousel from "./Carousel"; // Make sure to import the Carousel component
 
 export interface CarouselDisplayProps {
   carouselItems: CarouselItemProps[];
@@ -15,7 +15,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
   const [layers, setLayers] = useState([
     {
       id: 0,
-      image: carouselItems[1].backgroundImage || fallbackImage,
+      image: carouselItems[1]?.backgroundImage || fallbackImage,
       opacity: 1,
     },
   ]);
@@ -52,7 +52,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
       setTimeout(() => {
         setLayers((prevLayers) => prevLayers.slice(1));
         setShowInfoBox(true);
-      }, 1000);
+      }, 300);
     }, 500);
   };
 
@@ -63,56 +63,81 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
   const theme = useTheme();
 
   return (
-    <VStack height="1000px" position="relative">
+    <Box
+      flex={1}
+      display="flex"
+      flexDirection="column"
+      position="relative"
+      overflow="hidden"
+    >
       {layers.map((layer) => (
         <Box
           key={layer.id}
-          position="absolute"
-          top={100}
-          left={0}
-          right={0}
-          bottom={0}
+          flex="1"
           backgroundImage={layer.image}
           backgroundPosition="center"
           backgroundRepeat="no-repeat"
           backgroundSize="cover"
           opacity={layer.opacity}
-          transition="opacity 1s"
+          zIndex={1}
+          transition="opacity 1s ease-in-out"
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
         />
       ))}
-
-      <VStack
-        position="absolute"
-        spacing={8}
-        top={350}
-        left={showInfoBox ? [0, 300] : -500}
-        maxW={"450px"}
-        transition="left 0.5s"
-        padding="10px"
-        backgroundColor="rgba(0, 0, 0, 0.7)"
-        color="white"
-        borderRadius="md"
+      <Box
         zIndex={2}
-        p={5}
+        display="flex"
+        flex="1"
+        flexDirection="column"
+        mt={[20, null, 0]}
+        position={["static", "absolute"]}
+        top={200}
+        left={[0, 300]}
       >
-        <Text fontSize="3xl">{carouselItems[currentIndex].name}</Text>
-        <Text fontSize="md">{carouselItems[currentIndex].description}</Text>
-        <Button
-          bg={theme.colors.seduloRed}
+        <VStack
+          spacing={8}
+          padding="10px"
+          background={`linear-gradient(to bottom right, rgba(255, 0, 0, 0.6), rgba(255, 192, 203, 0.6))`}
           color="white"
-          _hover={{
-            bg: theme.colors.perygonPink,
-          }}
-          onClick={() => router.push(carouselItems[currentIndex].appUrl)}
+          borderRadius="md"
+          maxW="600px"
+          mx="auto"
+          textAlign="center"
+          position="relative"
+          transition="left 0.4s ease-in-out"
+          left={showInfoBox ? ["0", "0"] : ["-600px", "-2000px"]}
+          p={12}
         >
-          Open {carouselItems[currentIndex].name}
-        </Button>
-      </VStack>
+          <Text fontSize="3xl">{carouselItems[currentIndex].name}</Text>
+          <Text fontSize="md">{carouselItems[currentIndex].description}</Text>
+          <Button
+            bg={theme.colors.seduloRed}
+            color="white"
+            _hover={{
+              bg: theme.colors.perygonPink,
+            }}
+            onClick={() => router.push(carouselItems[currentIndex].appUrl)}
+          >
+            Open {carouselItems[currentIndex].name}
+          </Button>
+        </VStack>
+      </Box>
 
-      <Box zIndex={3} position="absolute" bottom={10}>
+      <Box
+        zIndex={3}
+        position="absolute"
+        bottom={10}
+        width="100%"
+        display="flex"
+        justifyContent="center"
+      >
         <Carousel carouselItems={carouselItems} setParentIndex={setIndex} />
       </Box>
-    </VStack>
+    </Box>
   );
 };
 

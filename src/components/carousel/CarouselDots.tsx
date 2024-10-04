@@ -1,11 +1,11 @@
-import React from "react"
-import { HStack } from "@chakra-ui/react"
-import Dot from "./Dot"
+import React from "react";
+import { HStack } from "@chakra-ui/react";
+import Dot from "./Dot";
 
 interface CarouselDotsProps {
-  itemsCount: number
-  currentIndex: number
-  onDotClick: (index: number) => void
+  itemsCount: number;
+  currentIndex: number;
+  onDotClick: (index: number) => void;
 }
 
 const CarouselDots: React.FC<CarouselDotsProps> = ({
@@ -14,13 +14,14 @@ const CarouselDots: React.FC<CarouselDotsProps> = ({
   onDotClick,
 }) => (
   <HStack
-    spacing={4}
+    spacing={[2, 4, 8]}
     justifyContent="center"
     alignItems="center"
     position="absolute"
     bottom="20px"
     width="full"
     zIndex={2}
+    display={["none", null, "flex"]}
   >
     {Array.from({ length: itemsCount }).map((_, index) => (
       <Dot
@@ -30,6 +31,6 @@ const CarouselDots: React.FC<CarouselDotsProps> = ({
       />
     ))}
   </HStack>
-)
+);
 
-export default CarouselDots
+export default CarouselDots;

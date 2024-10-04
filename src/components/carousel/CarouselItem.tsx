@@ -29,7 +29,7 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
           src={logoImage}
           alt={alt}
           height={
-            isSelected ? ["75px", null, "125px"] : ["50px", null, "100px"]
+            isSelected ? ["75px", null, "200px"] : ["50px", null, "100px"]
           }
           objectFit="contain"
           transition="height 0.5s ease-in-out"

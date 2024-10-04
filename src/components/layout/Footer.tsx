@@ -11,6 +11,7 @@ export const Footer = () => {
       bottom={0}
       left={0}
       right={0}
+      display={["none", "flex"]}
     >
       <HStack color="white" py={2} px={5} fontSize={18}>
         <Text>Powered by</Text>
