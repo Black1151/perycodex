@@ -67,36 +67,21 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
       flex={1}
       display="flex"
       flexDirection="column"
-      position="relative"
       overflow="hidden"
+      backgroundImage={layers[layers.length - 1].image}
+      backgroundPosition="center"
+      backgroundRepeat="no-repeat"
+      backgroundSize="cover"
+      transition="background-image 1s ease-in-out"
     >
-      {layers.map((layer) => (
-        <Box
-          key={layer.id}
-          flex="1"
-          backgroundImage={layer.image}
-          backgroundPosition="center"
-          backgroundRepeat="no-repeat"
-          backgroundSize="cover"
-          opacity={layer.opacity}
-          zIndex={1}
-          transition="opacity 1s ease-in-out"
-          position="absolute"
-          top={0}
-          left={0}
-          right={0}
-          bottom={0}
-        />
-      ))}
       <Box
         zIndex={2}
         display="flex"
         flex="1"
         flexDirection="column"
         mt={[20, null, 0]}
-        position={["static", "absolute"]}
-        top={200}
-        left={[0, 300]}
+        alignItems="center"
+        justifyContent="center"
       >
         <VStack
           spacing={8}
@@ -107,9 +92,8 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
           maxW="600px"
           mx="auto"
           textAlign="center"
-          position="relative"
-          transition="left 0.4s ease-in-out"
-          left={showInfoBox ? ["0", "0"] : ["-600px", "-2000px"]}
+          transition="transform 0.4s ease-in-out"
+          transform={showInfoBox ? "translateX(0)" : "translateX(-2000px)"}
           p={12}
         >
           <Text fontSize="3xl">{carouselItems[currentIndex].name}</Text>
@@ -129,11 +113,10 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
 
       <Box
         zIndex={3}
-        position="absolute"
-        bottom={10}
         width="100%"
         display="flex"
         justifyContent="center"
+        mt={10}
       >
         <Carousel carouselItems={carouselItems} setParentIndex={setIndex} />
       </Box>
