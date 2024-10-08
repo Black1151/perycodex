@@ -19,8 +19,7 @@ const ActionButtonsRenderer: React.FC<ActionButtonsRendererProps> = ({
                                                                      }) => {
         const router = useRouter();
         const [isActive, setIsActive] = useState(node?.data?.isActive);
-        const {fetchClient, loading} = useFetchClient();
-        const theme = useTheme();
+        const {fetchClient} = useFetchClient();
 
         // Handle View Button Click
         const handleViewClick = () => {
