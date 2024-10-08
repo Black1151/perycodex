@@ -1,17 +1,21 @@
-import { HStack, Text } from "@chakra-ui/react";
+import { Box, HStack, Text, useTheme } from "@chakra-ui/react";
 
 export const Footer = () => {
+  const theme = useTheme();
   return (
-    <HStack
+    <Box
+      position="absolute"
       justifyContent="center"
       alignItems="center"
       width="100%"
+      maxHeight={30}
       borderTop="white 1px solid"
-      position="fixed"
       bottom={0}
       left={0}
       right={0}
       display={["none", "flex"]}
+      overflow="hidden"
+      bgGradient={`linear(to-br, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`}
     >
       <HStack color="white" py={2} px={5} fontSize={18}>
         <Text>Powered by</Text>
@@ -20,6 +24,6 @@ export const Footer = () => {
         </Text>
         <Text>Copyright © 2024</Text>
       </HStack>
-    </HStack>
+    </Box>
   );
 };

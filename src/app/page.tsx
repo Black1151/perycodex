@@ -8,6 +8,7 @@ type CarouselItemWithoutIsSelected = Omit<CarouselItemProps, "isSelected">;
 function transformCarouselItems(data: any[]): CarouselItemWithoutIsSelected[] {
   return data.map((item) => ({
     logoImage: item.logoImageUrl,
+    iconImage: item.iconImageUrl,
     backgroundImage: item.previewImageUrl,
     alt: item.displayName,
     name: item.displayName,
@@ -59,15 +60,13 @@ export default async function PerygonMain() {
           }),
         ]);
 
-      // if (!fetchCarouselItems.ok || !fetchUserInfo.ok || !fetchProfileStatus.ok) {
-      //   throw new Error("Failed to fetch data: Non-OK response");
-      // }
-
       const carouselItemsData = await fetchCarouselItems.json();
       const userInfoData = await fetchUserInfo.json();
       const profileStatusData = await fetchProfileStatus.json();
 
       carouselItems = transformCarouselItems(carouselItemsData.resource);
+
+      console.log(carouselItems);
 
       navbarProps = {
         userFirstName: userInfoData.resource.firstName,
@@ -89,11 +88,9 @@ export default async function PerygonMain() {
   }
 
   return (
-    <>
-      <PerygonMainClient
-        navbarProps={navbarProps}
-        carouselItems={carouselItems}
-      />
-    </>
+    <PerygonMainClient
+      navbarProps={navbarProps}
+      carouselItems={carouselItems}
+    />
   );
 }
