@@ -18,17 +18,13 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
   const theme = useTheme();
   return (
     <Box
-      display="flex"
-      flexDirection="column"
       minHeight="100vh"
       width="100%"
       overflow="hidden"
       bgGradient={`linear(to-br, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`}
     >
       <NavBar {...navbarProps} />
-      <Box flexGrow={1} mt="80px" mb={[0, null, "53px"]} display="flex">
-        <CarouselDisplay carouselItems={carouselItems} />
-      </Box>
+      <CarouselDisplay carouselItems={carouselItems} />
       <Footer />
     </Box>
   );
