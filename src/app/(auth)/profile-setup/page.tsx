@@ -1,11 +1,11 @@
 import { Center, VStack, Text } from "@chakra-ui/react";
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
 import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
-import { LoginCard } from "../../components/login/LoginCard";
+import { LoginCard } from "../../../components/login/LoginCard";
 import { ProfileCompletionForm } from "@/components/forms/ProfileCompletionForm";
 import { cookies } from "next/headers";
 import { DropdownOption } from "@/components/forms/InputField";
-import { transformTeams } from "../api/selectItems/fetchTeamsSelectItems/transformTeams";
+import { transformTeams } from "../../api/selectItems/fetchTeamsSelectItems/transformTeams";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";

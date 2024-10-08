@@ -1,8 +1,8 @@
 import { Center, VStack } from "@chakra-ui/react";
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
-import { LoginForm } from "../../components/forms/LoginForm";
+import { LoginForm } from "../../../components/forms/LoginForm";
 import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
-import { LoginCard } from "../../components/login/LoginCard";
+import { LoginCard } from "../../../components/login/LoginCard";
 
 export default function LoginPage() {
   return (
