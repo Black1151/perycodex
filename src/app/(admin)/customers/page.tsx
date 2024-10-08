@@ -2,7 +2,7 @@ import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {customerFields} from "@/components/agGrids/dataFields/customerFields";
-import {Heading, Text} from "@chakra-ui/react";
+import AdminHeader from "@/components/AdminHeader";
 
 // AG Grids
 export const dynamic = "force-dynamic";
@@ -41,9 +41,7 @@ export default async function CustomersPage() {
     if (customerData && customerCount > 0) {
         return (
             <>
-                <Heading as="h1" size="lg" color={'white'} width={'full'} borderBottom={'2px solid white'}>
-                    CUSTOMERS <Text as="sup" size={'sm'}>{customerCount}</Text>
-                </Heading>
+                <AdminHeader headingText={'CUSTOMERS'} dataCount={customerCount} />
                 <DataGridComponent
                     data={customerData}
                     initialFields={customerFields}
