@@ -1,5 +1,5 @@
 import { Center, Box, Flex, keyframes, Image, VStack } from "@chakra-ui/react";
-import LoadingBar from "../LoadingBar/LoadingBar";
+import LoadingBar from "../../../components/LoadingBar/LoadingBar";
 import { motion } from "framer-motion";
 
 const fadeIn = keyframes`
@@ -24,7 +24,7 @@ const pulsate = keyframes`
   100% { transform: scale(1) rotate(0); }
 `;
 
-export const SplashScreen = () => {
+export const HappinessScoreSplashScreen = () => {
   const MotionVStack = motion(VStack);
   return (
     <Center flex={1}>
@@ -34,7 +34,7 @@ export const SplashScreen = () => {
         transition={{ delay: 3.5, duration: 1, ease: "easeInOut" }}
       >
         <Box
-          bgImage="url('/logoBG.png')"
+          bgImage="url('/assets/splash-screens/happiness-score/logoBG.png')"
           bgSize="contain"
           bgRepeat="no-repeat"
           bgPosition="center"
@@ -50,7 +50,10 @@ export const SplashScreen = () => {
             transformOrigin="center"
           >
             <Box animation={`${pulsate} 2s ease-in-out 1.2s`}>
-              <Image src="/logoFace.png" w="48px" />
+              <Image
+                src="/assets/splash-screens/happiness-score/logoFace.png"
+                w="48px"
+              />
             </Box>
           </Flex>
         </Box>

@@ -7,12 +7,14 @@ type CarouselItemWithoutIsSelected = Omit<CarouselItemProps, "isSelected">;
 
 function transformCarouselItems(data: any[]): CarouselItemWithoutIsSelected[] {
   return data.map((item) => ({
+    toolId: item.toolId,
     logoImage: item.logoImageUrl,
+    iconImage: item.iconImageUrl,
     backgroundImage: item.previewImageUrl,
     alt: item.displayName,
     name: item.displayName,
     description: item.previewText,
-    appUrl: "/happiness-score",
+    appUrl: item.appUrl,
   }));
 }
 
@@ -27,42 +29,53 @@ export default async function PerygonMain() {
     userImageUrl: "",
     userRole: "",
   };
+  let isProfileRegistered = false;
 
   if (authToken) {
     try {
-      const [fetchCarouselItems, fetchUserInfo] = await Promise.all([
-        fetch(`${process.env.BE_URL}/getAllView?view=vwToolsCarouselList`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-        }),
-        fetch(
-          `${process.env.BE_URL}/getView?view=vwLoggedInUserIdentity&userUniqueId=${uniqueId}&selectColumns=userImageUrl,firstName,role`,
-          {
+      const [fetchCarouselItems, fetchUserInfo, fetchProfileStatus] =
+        await Promise.all([
+          fetch(`${process.env.BE_URL}/getAllView?view=vwToolsCarouselList`, {
             method: "GET",
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${authToken}`,
             },
-          }
-        ),
-      ]);
-
-      if (!fetchCarouselItems.ok || !fetchUserInfo.ok) {
-        throw new Error("Failed to fetch data: Non-OK response");
-      }
+          }),
+          fetch(
+            `${process.env.BE_URL}/getView?view=vwLoggedInUserIdentity&userUniqueId=${uniqueId}&selectColumns=userImageUrl,firstName,role`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${authToken}`,
+              },
+            }
+          ),
+          fetch(`${process.env.BE_URL}/user/isProfileComplete`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+            body: JSON.stringify({ uniqueId }),
+          }),
+        ]);
 
       const carouselItemsData = await fetchCarouselItems.json();
       const userInfoData = await fetchUserInfo.json();
+      const profileStatusData = await fetchProfileStatus.json();
 
       carouselItems = transformCarouselItems(carouselItemsData.resource);
+
+      console.log(carouselItemsData.resource);
 
       navbarProps = {
         userFirstName: userInfoData.resource.firstName,
         userImageUrl: userInfoData.resource.profilePictureUrl,
         userRole: userInfoData.resource.role,
       };
+
+      isProfileRegistered = profileStatusData.resource.isProfileRegistered;
     } catch (error: any) {
       console.error("Error details:", error);
       redirect("/error");
@@ -71,12 +84,14 @@ export default async function PerygonMain() {
     redirect("/login");
   }
 
+  if (isProfileRegistered === false) {
+    return redirect("/profile-setup");
+  }
+
   return (
-    <>
-      <PerygonMainClient
-        navbarProps={navbarProps}
-        carouselItems={carouselItems}
-      />
-    </>
+    <PerygonMainClient
+      navbarProps={navbarProps}
+      carouselItems={carouselItems}
+    />
   );
 }

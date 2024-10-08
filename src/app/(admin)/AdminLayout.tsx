@@ -3,7 +3,7 @@
 import { useTheme, Box, Flex } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import Sidebar from "./Sidebar";
-import NavBar from "./Navbar";
+import { NavBar } from "../NavBar";
 
 interface AdminLayoutProps {
   children: ReactNode;

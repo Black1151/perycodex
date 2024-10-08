@@ -30,7 +30,7 @@ export interface NavBarProps {
   userFirstName: string;
   userImageUrl: string;
   userRole: string;
-  logoUrl?: string;
+  logoImageUrl?: string;
 }
 
 interface MenuItemProps {
@@ -43,7 +43,7 @@ export const NavBar: React.FC<NavBarProps> = ({
   userFirstName,
   userImageUrl,
   userRole,
-  logoUrl,
+  logoImageUrl,
 }) => {
   const router = useRouter();
   const theme = useTheme();
@@ -131,29 +131,37 @@ export const NavBar: React.FC<NavBarProps> = ({
       fontSize={[20, 40]}
       justifyContent="space-between"
       alignItems="center"
-      pt={5}
+      minHeight="60px"
       position="fixed"
       top={0}
       left={0}
       right={0}
       zIndex={100}
+      bgGradient={`linear(to-br, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`}
+      borderBottom="white 1px solid"
     >
       <MotionBox
         initial={{ x: "-5vw", opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.3 }}
         w="150px"
+        mt={3}
       >
-        {logoUrl && logoUrl !== "" ? (
+        {logoImageUrl && logoImageUrl !== "" ? (
           <Image
-            src={logoUrl}
+            src={logoImageUrl}
             alt="logo"
             width="100%"
             height="100%"
             objectFit="cover"
           />
         ) : (
-          <Text fontFamily="bonfire" color="white">
+          <Text
+            fontFamily="bonfire"
+            fontSize={[30, 40]}
+            bgClip="text"
+            color="white"
+          >
             Perygon
           </Text>
         )}

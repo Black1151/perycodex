@@ -1,10 +1,19 @@
 "use client";
 
-import { Box, VStack, Text, Button, useTheme } from "@chakra-ui/react";
-import Carousel from "./Carousel";
+import {
+  Box,
+  VStack,
+  Text,
+  Button,
+  useTheme,
+  Flex,
+  HStack,
+  Image,
+} from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { CarouselItemProps } from "./CarouselItem";
 import { useRouter } from "next/navigation";
+import Carousel from "./Carousel";
 
 export interface CarouselDisplayProps {
   carouselItems: CarouselItemProps[];
@@ -15,7 +24,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
   const [layers, setLayers] = useState([
     {
       id: 0,
-      image: carouselItems[1].backgroundImage || fallbackImage,
+      image: carouselItems[1]?.backgroundImage || fallbackImage,
       opacity: 1,
     },
   ]);
@@ -52,7 +61,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
       setTimeout(() => {
         setLayers((prevLayers) => prevLayers.slice(1));
         setShowInfoBox(true);
-      }, 1000);
+      }, 300);
     }, 500);
   };
 
@@ -63,39 +72,45 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
   const theme = useTheme();
 
   return (
-    <VStack height="1000px" position="relative">
-      {layers.map((layer) => (
-        <Box
-          key={layer.id}
-          position="absolute"
-          top={100}
-          left={0}
-          right={0}
-          bottom={0}
-          backgroundImage={layer.image}
-          backgroundPosition="center"
-          backgroundRepeat="no-repeat"
-          backgroundSize="cover"
-          opacity={layer.opacity}
-          transition="opacity 1s"
-        />
-      ))}
-
-      <VStack
-        position="absolute"
-        spacing={8}
-        top={350}
-        left={showInfoBox ? [0, 300] : -500}
-        maxW={"450px"}
-        transition="left 0.5s"
+    <VStack
+      mt="60px"
+      flex={1}
+      justifyContent="space-around"
+      minHeight="90vh"
+      overflow="hidden"
+      backgroundImage={layers[layers.length - 1].image}
+      backgroundPosition="center"
+      backgroundRepeat="no-repeat"
+      backgroundSize="cover"
+      transition="background-image 1s ease-in-out"
+    >
+      <Flex
+        flexDirection="column"
+        gap={10}
+        alignItems="flex-start"
+        mt={[5, 20]}
         padding="10px"
-        backgroundColor="rgba(0, 0, 0, 0.7)"
+        justifyContent="flex-start"
+        background={`linear-gradient(to bottom right, rgba(255, 0, 0, 0.6), rgba(255, 192, 203, 0.6))`}
         color="white"
         borderRadius="md"
-        zIndex={2}
-        p={5}
+        maxW="600px"
+        textAlign="left"
+        transition="transform 0.4s ease-in-out"
+        transform={showInfoBox ? "translateX(0)" : "translateX(-2000px)"}
+        p={12}
+        minHeight={320}
       >
-        <Text fontSize="3xl">{carouselItems[currentIndex].name}</Text>
+        <HStack>
+          <Image
+            src={carouselItems[currentIndex].iconImage}
+            alt={carouselItems[currentIndex].name}
+            height={100}
+            width={100}
+          />
+
+          <Text fontSize="3xl">{carouselItems[currentIndex].name}</Text>
+        </HStack>
         <Text fontSize="md">{carouselItems[currentIndex].description}</Text>
         <Button
           bg={theme.colors.seduloRed}
@@ -103,13 +118,22 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
           _hover={{
             bg: theme.colors.perygonPink,
           }}
-          onClick={() => router.push(carouselItems[currentIndex].appUrl)}
+          onClick={() =>
+            router.push(
+              `${carouselItems[currentIndex].appUrl}?toolId=${carouselItems[currentIndex].toolId}`
+            )
+          }
         >
           Open {carouselItems[currentIndex].name}
         </Button>
-      </VStack>
-
-      <Box zIndex={3} position="absolute" bottom={10}>
+      </Flex>
+      <Box
+        zIndex={3}
+        width="100%"
+        display="flex"
+        justifyContent="center"
+        mt={10}
+      >
         <Carousel carouselItems={carouselItems} setParentIndex={setIndex} />
       </Box>
     </VStack>

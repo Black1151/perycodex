@@ -3,12 +3,14 @@ import { Box, Image, Text, VStack } from "@chakra-ui/react";
 
 export interface CarouselItemProps {
   logoImage: string;
+  iconImage: string;
   backgroundImage: string;
   alt: string;
   name: string;
   description: string;
   isSelected?: boolean;
   appUrl: string;
+  toolId: string;
 }
 
 const CarouselItem: React.FC<CarouselItemProps> = ({
@@ -28,9 +30,7 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
         <Image
           src={logoImage}
           alt={alt}
-          height={
-            isSelected ? ["75px", null, "125px"] : ["50px", null, "100px"]
-          }
+          height={isSelected ? ["75px", null, "125px"] : ["50px", null, "75px"]}
           objectFit="contain"
           transition="height 0.5s ease-in-out"
         />
