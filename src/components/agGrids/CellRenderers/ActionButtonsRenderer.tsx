@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useState} from 'react';
-import {Box, IconButton, Switch, useTheme} from "@chakra-ui/react";
+import {Box, IconButton, Switch} from "@chakra-ui/react";
 import {Visibility} from '@mui/icons-material'; // MUI icons
 import {useRouter} from 'next/navigation';
 import {useFetchClient} from "@/hooks/useFetchClient";
