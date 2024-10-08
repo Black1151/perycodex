@@ -5,7 +5,7 @@ export interface UserIdentity {
   customerUniqueId: string;
   customerImageUrl: string;
   role: string;
-  firstname: string;
+  firstName: string;
   lastname: string;
   userAccessGroups: (string | null)[];
   department: string | null;
@@ -24,10 +24,11 @@ export interface Tool {
   description: string;
   previewText: string;
   showInSeeMoreList: boolean;
-  iconImageUrl: string | null;
-  thumbnailImageUrl: string | null;
-  previewImageUrl: string | null;
-  splashscreen: string;
+  iconImageUrl: string;
+  thumbnailImageUrl: string;
+  previewImageUrl: string;
+  logoImageUrl: string;
+  appUrl: string;
   toolCat: string;
   toolWfId: number;
   toolWfReadOnly: boolean;

@@ -30,7 +30,7 @@ export interface NavBarProps {
   userFirstName: string;
   userImageUrl: string;
   userRole: string;
-  logoUrl?: string;
+  logoImageUrl?: string;
 }
 
 interface MenuItemProps {
@@ -43,7 +43,7 @@ export const NavBar: React.FC<NavBarProps> = ({
   userFirstName,
   userImageUrl,
   userRole,
-  logoUrl,
+  logoImageUrl,
 }) => {
   const router = useRouter();
   const theme = useTheme();
@@ -147,9 +147,9 @@ export const NavBar: React.FC<NavBarProps> = ({
         w="150px"
         mt={3}
       >
-        {logoUrl && logoUrl !== "" ? (
+        {logoImageUrl && logoImageUrl !== "" ? (
           <Image
-            src={logoUrl}
+            src={logoImageUrl}
             alt="logo"
             width="100%"
             height="100%"

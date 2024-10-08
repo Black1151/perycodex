@@ -10,6 +10,7 @@ export interface CarouselItemProps {
   description: string;
   isSelected?: boolean;
   appUrl: string;
+  toolId: string;
 }
 
 const CarouselItem: React.FC<CarouselItemProps> = ({

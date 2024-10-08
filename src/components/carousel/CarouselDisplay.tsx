@@ -118,7 +118,11 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
           _hover={{
             bg: theme.colors.perygonPink,
           }}
-          onClick={() => router.push(carouselItems[currentIndex].appUrl)}
+          onClick={() =>
+            router.push(
+              `${carouselItems[currentIndex].appUrl}?toolId=${carouselItems[currentIndex].toolId}`
+            )
+          }
         >
           Open {carouselItems[currentIndex].name}
         </Button>

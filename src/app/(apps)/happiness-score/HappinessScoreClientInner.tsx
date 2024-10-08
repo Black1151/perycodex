@@ -1,15 +1,17 @@
 "use client";
 
 import { VStack } from "@chakra-ui/react";
-import { SplashScreen } from "@/components/SplashScreen/SplashScreen";
 import { useState, useEffect } from "react";
 
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
 import { Footer } from "@/components/layout/Footer";
-import { NavBarProps, NavBar } from "../NavBar";
+import { NavBarProps, NavBar } from "../../NavBar";
+import { Tool } from "@/types/types";
+import { HappinessScoreSplashScreen } from "./HappinessScoreSplashScreen";
 
 interface HappinessScoreClientInnerProps {
   navBarProps: NavBarProps;
+  toolData: Tool;
 }
 
 export default function HappinessScoreClientInner({
@@ -26,7 +28,7 @@ export default function HappinessScoreClientInner({
   return (
     <PerygonContainer>
       {isLoading ? (
-        <SplashScreen />
+        <HappinessScoreSplashScreen />
       ) : (
         <>
           <VStack minH="100vh">

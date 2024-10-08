@@ -7,13 +7,14 @@ type CarouselItemWithoutIsSelected = Omit<CarouselItemProps, "isSelected">;
 
 function transformCarouselItems(data: any[]): CarouselItemWithoutIsSelected[] {
   return data.map((item) => ({
+    toolId: item.toolId,
     logoImage: item.logoImageUrl,
     iconImage: item.iconImageUrl,
     backgroundImage: item.previewImageUrl,
     alt: item.displayName,
     name: item.displayName,
     description: item.previewText,
-    appUrl: "/happiness-score",
+    appUrl: item.appUrl,
   }));
 }
 
@@ -66,7 +67,7 @@ export default async function PerygonMain() {
 
       carouselItems = transformCarouselItems(carouselItemsData.resource);
 
-      console.log(carouselItems);
+      console.log(carouselItemsData.resource);
 
       navbarProps = {
         userFirstName: userInfoData.resource.firstName,

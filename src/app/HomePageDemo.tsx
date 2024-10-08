@@ -15,7 +15,7 @@ import BarGraph from "@/components/graphs/BarGraph";
 import { StatBox } from "@/components/Masonry/StatsMasonry/StatBox";
 import { SpringScale } from "@/components/animations/SpringScale";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
-import { SplashScreen } from "@/components/SplashScreen/SplashScreen";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -55,7 +55,8 @@ export default function Home() {
       bgGradient={`linear(to-br, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`}
     >
       {isLoading ? (
-        <SplashScreen />
+        // <SplashScreen />
+        <div>saddappayaface</div>
       ) : (
         <>
           <Button onClick={onClickLogout}>LOG OUT</Button>
