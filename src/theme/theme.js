@@ -56,7 +56,7 @@ export const perygonTheme = extendTheme({
                 primary: {
                     track: {
                         _checked: {
-                            bg: "perygonPink",
+                            bg: "lightGreen",
                         },
                         bg: "#ccc",
                     },
