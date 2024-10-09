@@ -67,8 +67,6 @@ export default async function PerygonMain() {
 
       carouselItems = transformCarouselItems(carouselItemsData.resource);
 
-      console.log(carouselItemsData.resource);
-
       navbarProps = {
         userFirstName: userInfoData.resource.firstName,
         userImageUrl: userInfoData.resource.profilePictureUrl,
@@ -76,6 +74,11 @@ export default async function PerygonMain() {
       };
 
       isProfileRegistered = profileStatusData.resource.isProfileRegistered;
+
+      if (carouselItems.length === 1) {
+        const singleItem = carouselItems[0];
+        redirect(`${singleItem.appUrl}?toolId=${singleItem.toolId}`);
+      }
     } catch (error: any) {
       console.error("Error details:", error);
       redirect("/error");
@@ -92,6 +95,7 @@ export default async function PerygonMain() {
     <PerygonMainClient
       navbarProps={navbarProps}
       carouselItems={carouselItems}
+      showNoToolsModal={carouselItems.length === 0}
     />
   );
 }
