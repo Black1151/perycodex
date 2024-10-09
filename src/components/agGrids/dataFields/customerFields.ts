@@ -1,5 +1,5 @@
-import { ColDef } from "ag-grid-community";
-import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonsRenderer";
+import {ColDef} from "ag-grid-community";
+import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
 import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/OrganisationLogoRenderer";
 
 // Updated AgGrids fields
@@ -21,7 +21,7 @@ export const customerFields: ColDef[] | any = [
         field: 'address3',
         headerName: 'City',
         filter: "agMultiColumnFilter",
-        flex: 2,
+        flex: 1,
     },
     {
         field: 'country',
@@ -30,8 +30,20 @@ export const customerFields: ColDef[] | any = [
         flex: 1,
     },
     {
-        field: 'numberOfEmployees',
-        headerName: '# of Employees',
+        field: 'noOfUsers',
+        headerName: '# Users',
+        filter: "agNumberColumnFilter",
+        flex: 1,
+    },
+    {
+        field: 'sectorName',
+        headerName: 'Sector',
+        filter: "agMultiColumnFilter",
+        flex: 1,
+    },
+    {
+        field: 'customerType',
+        headerName: 'Customer Type',
         filter: "agMultiColumnFilter",
         flex: 1,
     },
@@ -42,7 +54,9 @@ export const customerFields: ColDef[] | any = [
         cellRenderer: ActionButtonRenderer,
         cellRendererParams: {
             redirectUrl: '/customers',
-            updateUrl: '/api/customer/'
+            updateUrl: '/api/customer/',
+            idField: 'custId',
         }
     },
 ];
+
