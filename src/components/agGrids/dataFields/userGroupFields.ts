@@ -1,5 +1,5 @@
 import { ColDef } from "ag-grid-community";
-import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonsRenderer";
+import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
 
 export const groupFields: ColDef[] | any = [
     {
