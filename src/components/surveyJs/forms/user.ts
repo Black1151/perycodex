@@ -5,20 +5,6 @@ export const userJson = {
                 title: "User Main Details",
                 elements: [
                     {
-                        type: "boolean",
-                        name: "userTypePaying",
-                        title: "User Type",
-                        titleLocation: "top",
-                        startWithNewLine: true,
-                        description: "Paying or Guest user?",
-                        descriptionLocation: "underInput",
-                        defaultValue: true,
-                        isRequired: true,
-                        labelTrue: "Paying (Int)",
-                        labelFalse: "Guest (Ext)",
-                        swapOrder: true
-                    },
-                    {
                         type: "dropdown",
                         name: "role",
                         title: "User Role",
@@ -50,14 +36,12 @@ export const userJson = {
                                 text: "Customer Leader",
                                 visibleIf: "{userTypePaying} = true"
                             },
-
                             {
                                 value: "CA",
                                 text: "Customer Admin",
                                 visibleIf: "{userTypePaying} = true"
-                            }
+                            },
                         ],
-                        defaultValue: "CU",
                         placeholder: "Select Role",
                         allowClear: false
                     },
@@ -707,18 +691,12 @@ export const userJson = {
                     ]
             },
         ],
-        showPrevButton: true,
-        showTOC: false,
-        showTitle: false,
-        showCompletedPage: false,
-        checkErrorsMode: "onValueChanged",
-        showQuestionNumbers: "off",
-        questionErrorLocation: "bottom",
-        completeText: "Save User",
-        widthMode: "static",
-        width: "900",
-        showProgressBar: "belowheader",
-        progressBarShowPageTitles: true,
-        progressBarShowPageNumbers: true,
+        calculatedValues: [
+            {
+                name: "userTypePaying",
+                expression: "iif({role} = 'EU', false, true)",
+                includeIntoResult: false
+            }
+        ],
     }
 ;

@@ -8,9 +8,8 @@ export const customerJson = {
                     type: "boolean",
                     name: "isActive",
                     minWidth: "256px",
-                    title: "Active?",
+                    title: "Is this customer active?",
                     titleLocation: "top",
-                    description: "Is this customer active?",
                     descriptionLocation: "underInput",
                     defaultValue: false,
                     isRequired: true,
@@ -24,10 +23,8 @@ export const customerJson = {
                     width: "66%",
                     title: "Customer Name",
                     titleLocation: "top",
-                    description: "Enter the name of the customer",
-                    descriptionLocation: "underInput",
                     isRequired: true,
-                    placeholder: "Name"
+                    placeholder: "Enter the name of the customer"
                 },
                 {
                     type: "text",
@@ -36,10 +33,8 @@ export const customerJson = {
                     minWidth: "256px",
                     title: "Web Address",
                     titleLocation: "top",
-                    description: "Enter the web address of the client's website",
-                    descriptionLocation: "underInput",
                     inputType: "url",
-                    placeholder: "Web Address"
+                    placeholder: "Enter the web address of the client's website"
                 },
                 {
                     type: "dropdown",
@@ -48,8 +43,6 @@ export const customerJson = {
                     minWidth: "192px",
                     title: "Business Type",
                     titleLocation: "top",
-                    description: "What type of business is this?",
-                    descriptionLocation: "underInput",
                     isRequired: true,
                     "renderAs": "select",
                     choicesByUrl: {
@@ -68,8 +61,6 @@ export const customerJson = {
                     minWidth: "256px",
                     title: "Company Number",
                     titleLocation: "top",
-                    description: "In accordance with Companies House.",
-                    descriptionLocation: "underInput",
                     isRequired: true,
                     requiredErrorText: "Company No. must be a 9-digit number.",
                     validators: [
@@ -80,7 +71,7 @@ export const customerJson = {
                         }
                     ],
                     maxLength: 9,
-                    placeholder: "Company Number"
+                    placeholder: "Enter Company Number In accordance with Companies House"
                 },
                 {
                     type: "text",
@@ -90,8 +81,6 @@ export const customerJson = {
                     startWithNewLine: false,
                     title: "SIC Code",
                     titleLocation: "top",
-                    description: "Enter business SIC Code.",
-                    descriptionLocation: "underInput",
                     isRequired: true,
                     requiredErrorText: "The SIC code must be a 5-digit number.",
                     validators: [
@@ -102,15 +91,13 @@ export const customerJson = {
                         }
                     ],
                     maxLength: 5,
-                    placeholder: "SIC Code"
+                    placeholder: "Enter business SIC Code"
                 },
                 {
                     type: "boolean",
                     name: "multiSite",
-                    title: "Single or Multiple Sites",
+                    title: "Select if this a single or multiple site business",
                     titleLocation: "top",
-                    description: "Select if this a single or multiple site business.",
-                    descriptionLocation: "underInput",
                     defaultValue: true,
                     isRequired: true,
                     labelTrue: "Single",
@@ -131,7 +118,7 @@ export const customerJson = {
                     title: "Sector",
                     titleLocation: "top",
                     description: "Select the primary sector in which this business operates",
-                    descriptionLocation: "underInput",
+                    descriptionLocation: "underTitle",
                     isRequired: true,
                     "renderA": "select",
                     choicesByUrl: {
@@ -151,7 +138,7 @@ export const customerJson = {
                     title: "Region",
                     titleLocation: "top",
                     description: "Select the region in which this business operates.",
-                    descriptionLocation: "underInput",
+                    descriptionLocation: "underTitle",
                     isRequired: true,
                     searchEnabled: false,
                     choicesByUrl: {
@@ -170,7 +157,7 @@ export const customerJson = {
                     title: "Company Size",
                     titleLocation: "top",
                     description: "Select the company size.",
-                    descriptionLocation: "underInput",
+                    descriptionLocation: "underTitle",
                     isRequired: true,
                     choicesByUrl: {
                         url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=company_size`,  // The API endpoint to fetch choices from
@@ -188,8 +175,6 @@ export const customerJson = {
                     startWithNewLine: false,
                     title: "Number of Employees",
                     titleLocation: "top",
-                    description: "Enter the number of current employees.",
-                    descriptionLocation: "underInput",
                     isRequired: true,
                     inputType: "number",
                     min: 1,
@@ -201,7 +186,7 @@ export const customerJson = {
                             expression: "({companySizeId} = 51 and {numberOfEmployees} <= 10) or ({companySizeId} = 52 and {numberOfEmployees} > 10 and {numberOfEmployees} <= 50) or ({companySizeId} = 53 and {numberOfEmployees} > 51 and {numberOfEmployees} <= 250) or ({companySizeId} = 54 and {numberOfEmployees} > 250)"
                         }
                     ],
-                    placeholder: "Number of Employees"
+                    placeholder: "Enter the number of current Employees"
                 },
             ]
         },
@@ -216,10 +201,10 @@ export const customerJson = {
                     minWidth: "192px",
                     title: "Customer Code",
                     titleLocation: "top",
-                    description: "Enter a customer code for internal reference",
+                    description: "",
                     descriptionLocation: "underInput",
                     isRequired: true,
-                    placeholder: "Customer Code"
+                    placeholder: "Enter a customer code for internal reference"
                 },
                 {
                     type: "matrixdynamic",
@@ -458,21 +443,7 @@ export const customerJson = {
                         }
                     ]
                 }
-
             ]
         },
     ],
-    showPrevButton: true,
-    showTOC: false,
-    showTitle: false,
-    showCompletedPage: false,
-    checkErrorsMode: "onValueChanged",
-    showQuestionNumbers: "off",
-    questionErrorLocation: "bottom",
-    completeText: "Save Customer",
-    widthMode: "static",
-    width: "900",
-    showProgressBar: "belowheader",
-    progressBarShowPageTitles: true,
-    progressBarShowPageNumbers: true,
 };

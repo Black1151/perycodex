@@ -1,5 +1,6 @@
 import { ColDef } from "ag-grid-community";
-import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonsRenderer";
+import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
+import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/OrganisationLogoRenderer";
 
 // Updated AgGrids fields
 export const userFields: ColDef[] | any = [

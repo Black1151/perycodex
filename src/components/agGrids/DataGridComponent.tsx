@@ -1,7 +1,7 @@
 'use client';
 
 // React and Next.js
-import React, {useRef, useCallback, useState, useMemo} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {useRouter} from 'next/navigation';
 
 // Import AG Grids
@@ -20,12 +20,25 @@ import CustomGridBottomPagination from '@/components/agGrids/CustomGridBottomPag
 import {Add, Clear} from '@mui/icons-material';
 
 // Chakra Elements
-import {Box, Button, Flex, Input, useBreakpointValue} from '@chakra-ui/react';
+import {
+    Box,
+    Button,
+    Flex,
+    Input,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalOverlay,
+    useBreakpointValue,
+    useDisclosure
+} from '@chakra-ui/react';
 
 interface DataGridComponentProps<T> {
     data: T[] | null;
     initialFields: string[];
     createNewUrl?: string | null;
+    isModalEnabled?: boolean;
+    openModalComponent?: React.ReactNode;
 }
 
 LicenseManager.setLicenseKey(`${process.env.NEXT_PUBLIC_AG_GRID_LICENSE_KEY}`);
@@ -34,11 +47,14 @@ const DataGridComponent = <T, >({
                                     data,
                                     initialFields,
                                     createNewUrl,
+                                    isModalEnabled,
+                                    openModalComponent
                                 }: DataGridComponentProps<T>) => {
     const gridRef = useRef<AgGridReact>(null);
     const [rowData, setRowData] = useState<T[]>(data || []);
     const [fields, setFields] = useState<any[]>(initialFields);
     const router = useRouter();
+    const {isOpen, onOpen, onClose} = useDisclosure();
     const isMobile = useBreakpointValue({base: true, sm: true, md: false});
 
     // Memoize defaultColDef to avoid re-renders
@@ -93,11 +109,19 @@ const DataGridComponent = <T, >({
     const createNewUrlButtonText = useBreakpointValue({base: '', sm: '', md: 'Create New'});
     const resetFiltersButtonText = useBreakpointValue({base: '', sm: '', md: 'Reset Filters'});
 
+    const handleCreateNewClick = () => {
+        if (isModalEnabled && openModalComponent) {
+            onOpen();  // Open the modal if modal functionality is enabled
+        } else if (createNewUrl) {
+            router.push(createNewUrl);  // Navigate to the URL otherwise
+        }
+    };
+
     return (
-        <Box className={`ag-theme-alpine`} w={'full'} bg={'white'} p={2}>
+        <Box className={`ag-theme-alpine ag-theme-perygon`} w={'full'} py={2}>
             {data ? (
                 <>
-                    <Flex w={'full'} justify={'flex-start'} align={'center'} mb={2} gap={2}>
+                    <Flex w={'full'} justify={'flex-start'} align={'center'} my={4} gap={2}>
                         {/* Quick Filter */}
                         <Input
                             variant="outline"
@@ -113,14 +137,14 @@ const DataGridComponent = <T, >({
 
                         <Button
                             variant="solid"
-                            bg="seduloRed" // Using the custom Sedulo Red color for reset button
+                            bg="seduloRed"
                             aria-label="reset-filters"
                             onClick={resetFilter}
                             ml={'auto'}
                             size="md"
                             color="white"
                             leftIcon={<Clear/>}
-                            _hover={{bg: 'perygonPink'}} // Hover effect matches the Perygon Pink
+                            _hover={{bg: 'perygonPink'}}
                         >
                             {resetFiltersButtonText}
                         </Button>
@@ -128,13 +152,12 @@ const DataGridComponent = <T, >({
                         {createNewUrl && (
                             <Button
                                 variant="solid"
-                                bg="perygonPink" // Using Perygon Pink for the create new button
+                                bg="lightGreen"
                                 aria-label="create-new"
                                 onClick={() => router.push(createNewUrl)}
                                 size="md"
                                 color="white"
                                 leftIcon={<Add/>}
-                                _hover={{bg: 'lightGreen'}} // Hover with the Light Green from theme
                             >
                                 {createNewUrlButtonText}
                             </Button>
@@ -157,6 +180,15 @@ const DataGridComponent = <T, >({
                             onPageChange={updatePaginationInfo}
                         />
                     </Flex>
+
+                    {openModalComponent && isModalEnabled && (
+                        <Modal isOpen={isOpen} onClose={onClose} size="full">
+                            <ModalOverlay/>
+                            <ModalContent>
+                                <ModalBody>{openModalComponent}</ModalBody>
+                            </ModalContent>
+                        </Modal>
+                    )}
                 </>
             ) : (
                 <NoDataOverlay url={createNewUrl}/>
@@ -166,4 +198,3 @@ const DataGridComponent = <T, >({
 };
 
 export default DataGridComponent;
-

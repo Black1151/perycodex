@@ -1,48 +1,62 @@
-import { ColDef } from "ag-grid-community";
-import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonsRenderer";
+import {ColDef} from "ag-grid-community";
+import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
+import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/OrganisationLogoRenderer";
 
 // Updated AgGrids fields
 export const customerFields: ColDef[] | any = [
     {
-        field: 'id',
-        headerName: 'ID',
-        cellDataType: "number",
-        maxWidth: 128,
-        minWidth: 64,
-        filter: "agNumberColumnFilter"
-    },
-    {
         field: 'name',
         headerName: 'Name',
         filter: "agMultiColumnFilter",
-        flex: 3
+        flex: 2,
+        cellRenderer: OrganisationLogoRenderer,
     },
     {
         field: 'customerCode',
-        headerName: 'Customer Code',  // Renamed header to reflect 'customerCode' field
-        filter: "agMultiColumnFilter",  // This should be a text filter since it's a code
+        headerName: 'Customer Code',
+        filter: "agMultiColumnFilter",
+        flex: 1,
+    },
+    {
+        field: 'address3',
+        headerName: 'City',
+        filter: "agMultiColumnFilter",
+        flex: 1,
+    },
+    {
+        field: 'country',
+        headerName: 'Country',
+        filter: "agMultiColumnFilter",
+        flex: 1,
+    },
+    {
+        field: 'noOfUsers',
+        headerName: '# Users',
+        filter: "agNumberColumnFilter",
+        flex: 1,
+    },
+    {
+        field: 'sectorName',
+        headerName: 'Sector',
+        filter: "agMultiColumnFilter",
+        flex: 1,
+    },
+    {
+        field: 'customerType',
+        headerName: 'Customer Type',
+        filter: "agMultiColumnFilter",
         flex: 1,
     },
     {
         field: 'isActive',
-        headerName: 'Active',  // Changed header name to reflect active status
-        cellDataType: "boolean",  // Using boolean for true/false
-        filter: "agSetColumnFilter",  // You can filter by true/false
-        flex: 1,
-    },
-    {
-        field: 'uniqueId',
-        headerName: 'Unique ID',  // Display the unique ID
-        filter: "agTextColumnFilter",  // Text filter since it's a string
-        flex: 2,
-    },
-    {
-        field: 'nothing',
-        headerName: 'Actions',
+        headerName: '',
         flex: 1,
         cellRenderer: ActionButtonRenderer,
         cellRendererParams: {
-            redirectUrl: '/customers'
+            redirectUrl: '/customers',
+            updateUrl: '/api/customer/',
+            idField: 'custId',
         }
     },
 ];
+

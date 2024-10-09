@@ -47,7 +47,7 @@ const CustomGridBottomPagination: React.FC<CustomGridBottomPaginationProps> = ({
     const rowDisplay = `${paginationInfo.totalRows == 0 ? 0 : (paginationInfo.currentPage * paginationInfo.pageSize) - paginationInfo.pageSize + 1} to ${(paginationInfo.currentPage * paginationInfo.pageSize) < paginationInfo.totalRows ? (paginationInfo.currentPage * paginationInfo.pageSize) : paginationInfo.totalRows} of ${paginationInfo.totalRows}`;
 
     return (
-        <Box w={'full'} p={2} px={4} borderBottom={'1px solid black'}>
+        <Box w={'full'} px={4} borderTop={'1px solid white'} borderBottom={'1px solid white'} color={'white'}>
             <Flex
                 direction={isMobile ? 'column' : 'row'}
                 alignItems={isMobile ? 'stretch' : 'center'}
@@ -70,7 +70,8 @@ const CustomGridBottomPagination: React.FC<CustomGridBottomPaginationProps> = ({
                     <Button
                         size={isMobile ? 'sm' : 'md'}
                         onClick={goToFirstPage}
-                        variant="cta"
+                        variant="agPrimary"
+                        my={2}
                     >
                         <KeyboardArrowLeft />
                     </Button>
@@ -79,7 +80,8 @@ const CustomGridBottomPagination: React.FC<CustomGridBottomPaginationProps> = ({
                         icon={<ArrowBack />}
                         size={isMobile ? 'sm' : 'md'}
                         onClick={goToPreviousPage}
-                        variant="cta"
+                        variant="agPrimary"
+                        my={2}
                     />
 
                     <IconButton
@@ -87,12 +89,14 @@ const CustomGridBottomPagination: React.FC<CustomGridBottomPaginationProps> = ({
                         icon={<ArrowForward />}
                         size={isMobile ? 'sm' : 'md'}
                         onClick={goToNextPage}
-                        variant="cta"
+                        variant="agPrimary"
+                        my={2}
                     />
                     <Button
                         size={isMobile ? 'sm' : 'md'}
                         onClick={goToLastPage}
-                        variant="cta"
+                        variant="agPrimary"
+                        my={2}
                     >
                         <KeyboardArrowRight />
                     </Button>
