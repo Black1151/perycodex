@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Box, useTheme } from "@chakra-ui/react";
+import { useTheme } from "@chakra-ui/react";
 
 const randomize = (min: number, max: number) =>
   Math.random() * (max - min) + min;
