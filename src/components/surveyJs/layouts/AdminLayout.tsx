@@ -1,8 +1,12 @@
-import React from 'react';
-import {Box, Flex, Badge, Icon, Heading, IconButton} from "@chakra-ui/react";
+import React, {useEffect, useState} from 'react';
+import {Box, Flex} from "@chakra-ui/react";
 import {Survey} from "survey-react-ui";
-import {Check, ChevronLeft, ChevronRight, Close, Edit} from '@mui/icons-material';
-import {LayoutProps} from "@/components/surveyJs/LayoutProps"
+import {motion} from 'framer-motion'; // Import framer-motion for animations
+import TopAdminNavigation from "@/components/surveyJs/layouts/TopAdminNavigation";
+import {LayoutProps} from "@/components/surveyJs/LayoutProps";
+import BottomAdminNavigation from "@/components/surveyJs/layouts/BottomAdminNavigation";
+
+const MotionBox = motion(Box); // Create a motion-wrapped Box for animations
 
 const AdminLayout: React.FC<LayoutProps> = ({
                                                 survey,
@@ -12,6 +16,7 @@ const AdminLayout: React.FC<LayoutProps> = ({
                                                 setIsEditing,
                                                 pageNo,
                                                 setPageNo,
+                                                jumpToPage,
                                                 prevPage,
                                                 nextPage,
                                                 submitForm,
@@ -22,123 +27,81 @@ const AdminLayout: React.FC<LayoutProps> = ({
                                                 PageSelector,
                                                 pageListOptions
                                             }) => {
+    const [isAnimating, setIsAnimating] = useState(false); // State to control animation
+    const [direction, setDirection] = useState(1); // 1 for next page, -1 for previous page
 
+    useEffect(() => {
+        // Listen for SurveyJS page change event
+        const handlePageChange = () => {
+            setIsAnimating(true); // Start animation when page changes
+
+            // Set the direction based on whether the user is going to the next or previous page
+            if (survey.currentPageNo > pageNo) {
+                setDirection(1); // Slide from right for next page
+            } else {
+                setDirection(-1); // Slide from left for previous page
+            }
+
+            setTimeout(() => setIsAnimating(false), 500); // Stop animation after fade in/out duration
+        };
+
+        // Attach event to survey model
+        survey.onCurrentPageChanged.add(handlePageChange);
+
+        // Cleanup on unmount
+        return () => {
+            survey.onCurrentPageChanged.remove(handlePageChange);
+        };
+    }, [survey, pageNo]);
 
     return (
-        <Box overflow="auto" w="full" bg="background_2" borderRadius="md" px={4}>
-            {/* Top Navigation */}
-            <Flex
-                w="full"
-                flexDir="row"
-                mt={4}
-                alignItems="center"
-                pb={2}
-                gap={2}
-                borderBottom={"1px solid"}
-                wrap="wrap"
-                borderBottomColor="primary"
-            >
-                {title && <Heading size="lg">{title}</Heading>}
-                <Flex ml={'auto'} align={'center'} gap={3} w={'full'}>
-                    {isEditing && (
-                        <Badge
-                            colorScheme="green"
-                            variant="solid"
-                            fontSize="0.9em"
-                            px={3}
-                            py={1}
-                            borderRadius="full"
-                            display="flex"
-                            alignItems="center"
-                            ml={2} // Margin to the left for spacing if necessary
-                        >
-                            <Icon as={Edit} mr={1} boxSize="1em"/>
-                            Editing
-                        </Badge>
-                    )}
+        <>
+            <Flex w={'full'} justify={'center'} align={'center'} p={4} position={'relative'} direction={'column'}>
+                <Box maxW={'1300px'} w={'80%'} bg={'white'} borderRadius={'lg'} overflow={'hidden'}>
+                    {/*Top Navigation*/}
+                    <TopAdminNavigation
+                        pageListOptions={pageListOptions}
+                        pageNo={pageNo}
+                        jumpToPage={jumpToPage}
+                        isEditing={isEditing}
+                        handleToggleEdit={handleToggleEdit}
+                        cancelForm={cancelForm}
+                    />
 
-                    {PageSelector}
-                    {pageNo !== 0 &&
-                        < IconButton
-                            variant={"solid"}
-                            onClick={prevPage}
-                            icon={<ChevronLeft/>}
-                            aria-label="previous-page"
-                            display={['none', 'none', 'block']}
+                    {/* Motion-animated Survey component with slide transition */}
+                    <MotionBox
+                        key={pageNo} // Key to ensure it re-renders on page change
+                        initial={{
+                            x: direction === 1 ? 1000 : -1000,
+                            opacity: 0
+                        }} // Slide from right if direction is 1 (next), from left if -1 (previous)
+                        animate={{x: 0, opacity: 1}} // Animate into place
+                        exit={{
+                            x: direction === 1 ? -1000 : 1000,
+                            opacity: 0
+                        }} // Slide out to left if direction is 1 (next), to right if -1 (previous)
+                        transition={{duration: 0.5}} // Duration for the slide and fade-in/out
+                    >
+                        <Survey
+                            model={survey}
+                            currentPageNo={pageNo}
                         />
-                    }
-                    {pageNo !== survey.visiblePageCount - 1 &&
-                        <IconButton
-                            variant={"solid"}
-                            onClick={nextPage}
-                            icon={<ChevronRight/>}
-                            aria-label="next-page"
-                            display={['none', 'none', 'block']}
-                        />
-                    }
-                    {canEdit && !isNew && !isEditing && (
-                        <IconButton
-                            variant={"solid"}
-                            colorScheme={"teal"}
-                            onClick={handleToggleEdit}
-                            icon={<Edit/>}
-                            aria-label="edit-form"
-                        />
-                    )}
-                    {canEdit && isEditing && !isNew && (
-                        <IconButton
-                            variant={"solid"}
-                            colorScheme={"red"}
-                            onClick={cancelForm}
-                            icon={<Close/>}
-                            aria-label="save-form"
-                        />
-                    )}
-                    {canEdit && isEditing && (
-                        <IconButton
-                            variant={"solid"}
-                            colorScheme={"teal"}
-                            onClick={submitForm}
-                            icon={<Check/>}
-                            aria-label="save-form"
-                        />
-                    )}
-                </Flex>
-            </Flex>
-            <Flex height="100%" gap={2}>
-                <Box borderRight="1px solid" borderRightColor="primary" p={2}
-                     display={['none', 'none', 'none', 'block']} overflow={''}>
-                    <Flex ml={'auto'} align={'center'} gap={4} direction={'column'}>
-                        <Flex align={'center'} justify={'space-between'} gap={2} w={'full'}>
-                            {pageNo !== 0 &&
-                                < IconButton
-                                    mr={'auto'}
-                                    variant={"solid"}
-                                    onClick={prevPage}
-                                    icon={<ChevronLeft/>}
-                                    aria-label="previous-page"
-                                />
-                            }
-                            {pageNo !== survey.visiblePageCount - 1 &&
-                                <IconButton
-                                    ml={'auto'}
-                                    variant={"solid"}
-                                    onClick={nextPage}
-                                    icon={<ChevronRight/>}
-                                    aria-label="next-page"
-                                />
-                            }
+                    </MotionBox>
 
-                        </Flex>
-                        {PageList}
-                    </Flex>
+                    {/* Bottom Navigation */}
+                    <BottomAdminNavigation
+                        pageNo={pageNo}
+                        prevPage={prevPage}
+                        nextPage={nextPage}
+                        canSubmit={survey.isLastPage} // Only show submit on the last page
+                        submitForm={submitForm}
+                        saveForm={() => { /* handle save logic here */
+                        }}
+                        totalPageCount={survey.pageCount}
+                    />
                 </Box>
-                <Survey
-                    model={survey}
-                    currentPageNo={pageNo}
-                />
             </Flex>
-        </Box>
+        </>
     );
 };
 
