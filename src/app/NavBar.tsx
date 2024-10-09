@@ -131,7 +131,7 @@ export const NavBar: React.FC<NavBarProps> = ({
       fontSize={[20, 40]}
       justifyContent="space-between"
       alignItems="center"
-      minHeight="60px"
+      height="60px"
       position="fixed"
       top={0}
       left={0}
@@ -145,15 +145,14 @@ export const NavBar: React.FC<NavBarProps> = ({
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.3 }}
         w="150px"
-        mt={3}
+        display="flex"
       >
         {logoImageUrl && logoImageUrl !== "" ? (
           <Image
             src={logoImageUrl}
             alt="logo"
-            width="100%"
-            height="100%"
-            objectFit="cover"
+            height="50px"
+            objectFit="contain"
           />
         ) : (
           <Text
