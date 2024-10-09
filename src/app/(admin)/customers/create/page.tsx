@@ -21,7 +21,12 @@ export default async function CustomersPage() {
     return (
         <>
             <AdminHeader headingText={'CREATE CUSTOMER'}/>
-            <SurveyJsComponent jsonSchema={customerJson} endpoint={'/customer'} isNew={true}/>
+            <SurveyJsComponent
+                jsonSchema={customerJson}
+                endpoint={'/customer'}
+                isNew={true}
+                redirectUrl={'/customers'}
+            />
         </>
     );
 }
