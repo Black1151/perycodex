@@ -19,7 +19,7 @@ export default async function CustomersPage() {
 
     // Fetch customer data from the backend
     const res = await fetch(
-        `${process.env.BE_URL}/customer/allBy?selectColumns=name,uniqueId,address3,country,customerCode,numberOfEmployees,imageUrl,isActive`,
+        `${process.env.BE_URL}/getAllView?view=vwCustomersList&selectColumns=name,custId,address3,country,customerCode,numberOfEmployees,imageUrl,isActive,noOfUsers,sectorName,customerType`,
         {
             headers: {
                 Authorization: `Bearer ${authToken}`,
