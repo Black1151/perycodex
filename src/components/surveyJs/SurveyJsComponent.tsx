@@ -2,11 +2,8 @@
 
 import React, {useState} from "react";
 import AdminLayout from "@/components/surveyJs/layouts/AdminLayout";
-// import UserLayout from "@/components/surveyJS/layouts/UserLayout";
 import useSurvey from "@/components/surveyJs/useSurvey";
 import "survey-core/defaultV2.min.css";
-
-// import {useAuth} from "@/contexts/AuthContext";
 
 interface SurveyJsComponentProps {
     jsonSchema: any;
@@ -84,25 +81,9 @@ const SurveyJsComponent: React.FC<SurveyJsComponentProps> = ({
         redirectUrl: redirectUrl,
     });
 
-    // LayoutComponent will be assigned based on the layout prop
-    let LayoutComponent;
-
-    // Using switch statement to conditionally assign layout and props
-    switch (layout) {
-        case "admin":
-            LayoutComponent = AdminLayout;
-            break;
-        // case "user":
-        //     LayoutComponent = UserLayout;
-        //     break;
-        default:
-            LayoutComponent = AdminLayout; // Default fallback layout if no valid layout is provided
-            break;
-    }
-
     // Return the selected layout and pass the survey and isEditing props
     return (
-        <LayoutComponent
+        <AdminLayout
             survey={survey}
             isEditing={isEditing}
             isNew={isNew}
