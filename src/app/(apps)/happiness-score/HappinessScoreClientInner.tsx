@@ -42,7 +42,6 @@ export default function HappinessScoreClientInner({
             <Footer />
           </VStack>
           <NavigationDrawer drawerHeader="Left Menu" placement="left" />
-
           <NavigationDrawer drawerHeader="Right Menu" placement="right" />
         </>
       )}

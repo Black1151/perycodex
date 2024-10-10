@@ -21,14 +21,14 @@ export const RotatingChevron: React.FC<RotatingChevronProps> = ({
       position="fixed"
       left={placement === "left" ? 0 : "auto"}
       right={placement === "right" ? 0 : "auto"}
-      top="50%"
+      top={59}
       zIndex={1}
       cursor="pointer"
       color="white"
       display="flex"
       alignItems="center"
       justifyContent="center"
-      boxSize="80px"
+      boxSize="60px"
       opacity={0.7}
       whileHover={{
         opacity: 1,
@@ -44,9 +44,9 @@ export const RotatingChevron: React.FC<RotatingChevronProps> = ({
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
       >
         {placement === "left" ? (
-          <ChevronLeft style={{ fontSize: "4rem" }} />
+          <ChevronLeft style={{ fontSize: "3rem" }} />
         ) : (
-          <ChevronRight style={{ fontSize: "4rem" }} />
+          <ChevronRight style={{ fontSize: "3rem" }} />
         )}
       </MotionBox>
     </MotionBox>
