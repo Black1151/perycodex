@@ -69,7 +69,7 @@ export default async function PerygonMain() {
 
       navbarProps = {
         userFirstName: userInfoData.resource.firstName,
-        userImageUrl: userInfoData.resource.profilePictureUrl,
+        userImageUrl: userInfoData.resource.userImageUrl,
         userRole: userInfoData.resource.role,
       };
 
