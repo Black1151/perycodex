@@ -1,11 +1,11 @@
 import React from 'react';
 import SurveyJsComponent from "@/components/surveyJs/SurveyJsComponent";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { userTeamJson } from "@/components/surveyJs/forms/userTeam";
-import { Heading, Spinner, Box } from "@chakra-ui/react";
+import {cookies} from "next/headers";
+import {redirect} from "next/navigation";
+import {userTeamJson} from "@/components/surveyJs/forms/userTeam";
+import {UserTeamDetailsBanner} from "@/components/AdminDetailsBanners/UserTeamDetailsBanner";
 
-export default async function UserTeamPage({ params }: { params: { uniqueId: string } }) {
+export default async function UserTeamPage({params}: { params: { uniqueId: string } }) {
     const cookieStore = cookies();
     const authToken = cookieStore.get("auth_token")?.value;
 
@@ -30,7 +30,7 @@ export default async function UserTeamPage({ params }: { params: { uniqueId: str
 
     return (
         <div>
-            <Heading>This is a Team Details Banner</Heading>
+            <UserTeamDetailsBanner team={userTeamData}/>
             <SurveyJsComponent
                 jsonSchema={userTeamJson}
                 endpoint={`/userTeam/${params.uniqueId}`}
