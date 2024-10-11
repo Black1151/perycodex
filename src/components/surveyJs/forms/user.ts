@@ -5,13 +5,17 @@ export const userJson = {
                 title: "User Main Details",
                 elements: [
                     {
+                        type: "text",
+                        name: "customerId",
+                    },
+                    {
                         type: "dropdown",
                         name: "role",
                         title: "User Role",
                         titleLocation: "top",
                         startWithNewLine: false,
-                        description: "Select role",
-                        descriptionLocation: "underInput",
+                        placeholder: "Select Role",
+                        allowClear: true,
                         setValueIf: "{userTypePaying} = false",
                         setValueExpression: "'EU'",
                         isRequired: true,
@@ -42,17 +46,13 @@ export const userJson = {
                                 visibleIf: "{userTypePaying} = true"
                             },
                         ],
-                        placeholder: "Select Role",
-                        allowClear: false
                     },
                     {
                         type: "boolean",
                         name: "isActive",
-                        title: "Active?",
+                        title: "Is this contact active?",
                         titleLocation: "top",
                         startWithNewLine: false,
-                        description: "Is this contact active?",
-                        descriptionLocation: "underInput",
                         defaultValue: true,
                         isRequired: true,
                         labelTrue: "Yes",
@@ -64,8 +64,6 @@ export const userJson = {
                         name: "titleId",
                         title: "Title",
                         titleLocation: "top",
-                        description: "Enter title",
-                        descriptionLocation: "underInput",
                         isRequired: true,
                         choicesByUrl: {
                             url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=title`,  // The API endpoint to fetch choices from
@@ -74,7 +72,7 @@ export const userJson = {
                             titleName: "label"
                         },
                         placeholder: "Select title",
-                        allowClear: false
+                        allowClear: true
                     },
                     {
                         type: "text",
@@ -83,10 +81,8 @@ export const userJson = {
                         // minWidth: "192px",
                         title: "First name",
                         titleLocation: "top",
-                        description: "Enter the first name of user",
-                        descriptionLocation: "underInput",
                         isRequired: true,
-                        placeholder: "First name"
+                        placeholder: "Enter the first name of user"
                     },
                     {
                         type: "text",
@@ -95,11 +91,9 @@ export const userJson = {
                         // minWidth: "192px",
                         title: "Surname",
                         titleLocation: "top",
-                        description: "Enter the surname of user",
-                        descriptionLocation: "underInput",
                         startWithNewLine: false,
                         isRequired: true,
-                        placeholder: "Surname"
+                        placeholder: "Enter the surname of user"
                     },
                     {
                         type: "text",
@@ -108,87 +102,48 @@ export const userJson = {
                         minWidth: "256px",
                         title: "Job Title",
                         titleLocation: "top",
-                        description: "Enter the job title of contact",
-                        descriptionLocation: "underInput",
                         inputType: "url",
-                        placeholder: "Job title"
+                        placeholder: "Enter the job title of contact"
                     },
                     {
                         type: "dropdown",
                         name: "departmentId",
-                        // width: "64%",
-                        // minWidth: "192px",
                         title: "Department",
                         titleLocation: "top",
-                        description: "Enter (customer) department / service user works in",
-                        descriptionLocation: "underInput",
+                        placeholder: "Select (customer) department / service user works in",
+                        allowClear: true,
                         isRequired: true,
                         visibleIf: "{userTypePaying} = true",
-                        // TODO Route for userTeam based on null
-                        choices: [
-                            {
-                                value: "1",
-                                text: "Dept1"
-                            },
-                            {
-                                value: "2",
-                                text: "Dept2"
-                            },
-                            {
-                                value: "3",
-                                text: "Dept3"
-                            },
-                            {
-                                value: "4",
-                                text: "Dept4"
-                            }
-                        ],
-                        placeholder: "Select Dept / Service",
-                        allowClear: false
+                        choicesByUrl: {
+                            url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/userTeam/allBy?customerId={customerId}&parentTeamId=null`,  // The API endpoint to fetch choices from
+                            path: "resource",
+                            valueName: "id",
+                            titleName: "name"
+                        },
                     },
                     {
                         type: "dropdown",
                         name: "teamId",
-                        //width: "64%",
-                        // minWidth: "192px",
                         title: "Team",
                         titleLocation: "top",
-                        description: "Enter (customer) team user works in",
-                        descriptionLocation: "underInput",
                         startWithNewLine: false,
                         isRequired: true,
                         visibleIf: "{userTypePaying} = true",
-                        // TODO: Route for userTeam where parentId = not-null
-                        choices: [
-                            {
-                                value: "1",
-                                text: "Team1"
-                            },
-                            {
-                                value: "2",
-                                text: "Team2"
-                            },
-                            {
-                                value: "3",
-                                text: "Team3"
-                            },
-                            {
-                                value: "4",
-                                text: "Team4"
-                            }
-                        ],
-                        placeholder: "Select team",
-                        allowClear: false
+                        placeholder: "Select (customer) team user works in",
+                        allowClear: true,
+                        choicesByUrl: {
+                            url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/userTeam/allBy?customerId={customerId}&parentTeamId={departmentId}`,  // The API endpoint to fetch choices from
+                            path: "resource",
+                            valueName: "id",
+                            titleName: "name"
+                        },
+
                     },
                     {
                         type: "dropdown",
                         name: "contractTypeId",
-                        // width: "64%",
-                        // minWidth: "192px",
                         title: "Contract Type",
                         titleLocation: "top",
-                        description: "Enter contract type",
-                        descriptionLocation: "underInput",
                         isRequired: false,
                         visibleIf: "{userTypePaying} = true",
                         choicesByUrl: {
@@ -198,17 +153,13 @@ export const userJson = {
                             titleName: "label"
                         },
                         placeholder: "Select Contract type",
-                        allowClear: false
+                        allowClear: true
                     },
                     {
                         type: "dropdown",
                         name: "jobLevelId",
-                        // width: "64%",
-                        // minWidth: "192px",
                         title: "Job Level",
                         titleLocation: "top",
-                        description: "Enter job level",
-                        descriptionLocation: "underInput",
                         startWithNewLine: false,
                         isRequired: false,
                         choicesByUrl: {
@@ -218,7 +169,7 @@ export const userJson = {
                             titleName: "label"
                         },
                         placeholder: "Select Job Level",
-                        allowClear: false
+                        allowClear: true
                     },
                     {
                         type: "text",
@@ -243,17 +194,14 @@ export const userJson = {
                         inputType: "email",
                         title: "Email",
                         titleLocation: "top",
-                        description: "Enter the email of the user",
-                        descriptionLocation: "underInput",
                         isRequired: true,
-                        placeholder: "name@email.com"
+                        placeholder: "Enter the email of the user"
                     },
                     {
                         type: "text",
                         name: "mobile",
-                        title: "Mobile",
+                        title: "Mobile Number",
                         minWidth: "256px",
-                        description: "Enter the mobile of the user",
                         descriptionLocation: "underInput",
                         isRequired: true,
                         inputType: "tel",
@@ -265,11 +213,9 @@ export const userJson = {
                     {
                         type: "text",
                         name: "telephone",
-                        title: "Telephone",
+                        title: "Telephone Number",
                         minWidth: "256px",
                         startWithNewLine: false,
-                        description: "Enter the telephone of the user",
-                        descriptionLocation: "underInput",
                         isRequired: false,
                         inputType: "tel",
                         maskType: "pattern",
@@ -282,10 +228,9 @@ export const userJson = {
                         name: "vehicleRegistration",
                         title: "Vehicle Registration",
                         titleLocation: "top",
-                        description: "Enter vehicle reg of the user",
-                        descriptionLocation: "underInput",
+                        placeholder: "Enter vehicle reg of the user",
                         isRequired: false,
-                        visibleIf: "{userTypePaying} = true"
+                        visibleIf: "{userTypePaying} = true",
                     },
                     {
                         type: "boolean",
@@ -306,47 +251,16 @@ export const userJson = {
                         minWidth: "256px",
                         title: "Main Office Base (Site)",
                         titleLocation: "top",
-                        description: "Select your company site / office you are based at",
-                        descriptionLocation: "underInput",
+                        placeholder: "Select your company site / office you are based at",
+                        allowClear: true,
+                        visibleIf: "{remoteWorker} = false",
                         isRequired: true,
-                        // TODO: Need to route from site / allBy
-                        choices: [
-                            {
-                                value: "1",
-                                text: "Site1"
-                            },
-                            {
-                                value: "2",
-                                text: "Site2"
-                            },
-                            {
-                                value: "3",
-                                text: "Site3"
-                            }
-                        ],
-                        placeholder: "Select user site / office",
-                        allowClear: false,
-                        "visibleI": "{remoteWorker} = false"
-                    },
-                    {
-                        type: "dropdown",
-                        name: "siteId",
-                        minWidth: "256px",
-                        title: "Main Work Location",
-                        titleLocation: "top",
-                        description: "You are a remote worker",
-                        descriptionLocation: "underInput",
-                        isRequired: true,
-                        choices: [
-                            {
-                                value: "0",
-                                text: "Remote Worker"
-                            }
-                        ],
-                        allowClear: false,
-                        defaultValue: "0",
-                        readOnly: true,
-                        visibleIf: "{remoteWorker} = true"
+                        choicesByUrl: {
+                            url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/site/allBy?customerId={customerId}`,  // The API endpoint to fetch choices from
+                            path: "resource",
+                            valueName: "id",
+                            titleName: "siteName"
+                        },
                     },
                     {
                         type: "dropdown",
@@ -365,7 +279,7 @@ export const userJson = {
                             titleName: "label"
                         },
                         placeholder: "Select appropriate option",
-                        allowClear: false
+                        allowClear: true
                     }
                 ]
             },
@@ -485,7 +399,7 @@ export const userJson = {
                                         titleName: "label"
                                     },
                                     placeholder: "Select level",
-                                    allowClear: false
+                                    allowClear: true
                                 }
                             ],
                             panelCount: 0,
@@ -573,7 +487,7 @@ export const userJson = {
                                         titleName: "label"
                                     },
                                     placeholder: "Select Sector",
-                                    allowClear: false
+                                    allowClear: true
                                 },
                                 {
                                     type: "comment",
@@ -623,7 +537,7 @@ export const userJson = {
                                         titleName: "label"
                                     },
                                     placeholder: "Select language",
-                                    allowClear: false
+                                    allowClear: true
                                 },
                                 {
                                     type: "dropdown",
@@ -640,7 +554,7 @@ export const userJson = {
                                         titleName: "label"
                                     },
                                     placeholder: "Select level",
-                                    allowClear: false
+                                    allowClear: true
                                 }
                             ],
                             panelCount: 0,
