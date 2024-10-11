@@ -1,4 +1,4 @@
-import { ColDef } from "ag-grid-community";
+import {ColDef} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
 
 export const teamFields: ColDef[] | any = [
@@ -12,20 +12,27 @@ export const teamFields: ColDef[] | any = [
     },
     {
         field: 'name',
-        headerName: 'Team Name',
+        headerName: 'Name',
         filter: "agMultiColumnFilter",
         flex: 3
     },
     {
         field: 'custName',
-        headerName: 'Customer ID',
+        headerName: 'Customer',
         cellDataType: "text",
         filter: "agMultiColumnFilter",
         flex: 2
     },
     {
         field: 'parentTeamName',
-        headerName: 'Parent Team ID',
+        headerName: 'Parent Team',
+        cellDataType: "text",
+        filter: "agMultiColumnFilter",
+        flex: 2
+    },
+    {
+        field: 'managerFullname',
+        headerName: 'Manager',
         cellDataType: "text",
         filter: "agMultiColumnFilter",
         flex: 2

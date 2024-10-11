@@ -1,6 +1,9 @@
 "use client";
 
-import {Model, Serializer, settings, SurveyModel} from "survey-core";
+import {Model, Serializer, settings, SurveyModel, SvgRegistry} from "survey-core";
+
+import {icon1, icon2, icon3, icon4, icon5, icon6, icon7, icon8, icon9, icon10 } from "@/components/surveyJs/happiness/happinessIndex";
+
 import {
     registerSurveyFunctionsWithoutSurvey,
     registerSurveyJsFunctionsWithSurvey,
@@ -11,6 +14,8 @@ import {useEffect, useState} from "react";
 
 // Theme for now
 import {lightSurveyTheme} from "@/theme/surveyJsTheme";
+import {themeJson} from "@/components/surveyJs/happiness/happinessTheme";
+
 
 interface UseSurveyProps {
     jsonSchema: any; // Type should ideally be defined based on SurveyJS JSON schema
@@ -87,8 +92,8 @@ const useSurvey = ({
             focusOnFirstError: true,
             checkErrorsMode: "onValueChanged",
             backgroundOpacity: 0,
-            showNavigationButtons: false,
-            showCompletedPage: false,
+            // showNavigationButtons: false,
+            showCompletedPage: true,
             showPageTitles: false
         };
 
@@ -116,6 +121,7 @@ const useSurvey = ({
 
         // Applying a theme mapping based on SurveyJS Variables
         survey.applyTheme(lightSurveyTheme);
+        survey.applyTheme(themeJson);
 
         // If data exists then apply it here
         if (dataset) {
@@ -262,6 +268,17 @@ const useSurvey = ({
     const [survey] = useState(createSurveyModel());
 
     registerSurveyJsFunctionsWithSurvey(survey);
+
+    SvgRegistry.registerIconFromSvg("icon-terrible", icon1);
+    SvgRegistry.registerIconFromSvg("icon-very-poor", icon2);
+    SvgRegistry.registerIconFromSvg("icon-poor", icon3);
+    SvgRegistry.registerIconFromSvg("icon-not-good", icon4);
+    SvgRegistry.registerIconFromSvg("icon-average", icon5);
+    SvgRegistry.registerIconFromSvg("icon-normal", icon6);
+    SvgRegistry.registerIconFromSvg("icon-good", icon7);
+    SvgRegistry.registerIconFromSvg("icon-very-good", icon8);
+    SvgRegistry.registerIconFromSvg("icon-excellent", icon9);
+    SvgRegistry.registerIconFromSvg("icon-perfect", icon10);
 
     useEffect(() => {
         survey.onComplete.add(handleSurveySubmission);
