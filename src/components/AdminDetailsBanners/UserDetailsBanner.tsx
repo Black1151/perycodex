@@ -190,7 +190,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
     const isUploading = false; // TODO: Add logic to upload a new photo
 
     return (
-        <Flex mb={4} p={4} borderRadius={8} color={'text'} overflow={'hidden'}>
+        <Flex mb={4} p={4} borderRadius={8} color={'white'} overflow={'hidden'}>
             {/*Image Upload*/}
             <FormControl w={'100px'} h={'100px'} aspectRatio={1} borderRadius={'full'}>
                 <Box
@@ -300,7 +300,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
             </VStack>
             {/* Organisation Details*/}
             <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-end'} display={['none', 'none', 'flex']}>
-                <Text> ID: {user.id} </Text>
+                <Text fontSize="lg">  ID: {user.id} </Text>
                 {/* Organisation's Logo */}
                 {user.customer && (
                     <Image

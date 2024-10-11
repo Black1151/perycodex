@@ -93,7 +93,7 @@ const AdminLayout: React.FC<LayoutProps> = ({
                         pageNo={pageNo}
                         prevPage={prevPage}
                         nextPage={nextPage}
-                        canSubmit={survey.isLastPage} // Only show submit on the last page
+                        isEditing={isEditing}
                         submitForm={submitForm}
                         saveForm={() => { /* handle save logic here */
                         }}

@@ -17,13 +17,13 @@ export const siteFields: ColDef[] | any = [
     },
     {
         field: 'siteTypeName',
-        headerName: 'Site Type',
+        headerName: 'Type',
         filter: "agTextColumnFilter",
         flex: 1
     },
     {
         field: 'address1',
-        headerName: 'St Name',
+        headerName: 'St. Name',
         filter: "agTextColumnFilter",
         flex: 1
     },

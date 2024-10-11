@@ -12,7 +12,7 @@ interface BottomAdminNavigationProps {
     pageNo: number;
     prevPage: () => void;
     nextPage: () => void;
-    canSubmit: boolean;
+    isEditing: boolean;
     submitForm: () => void;
     saveForm: () => void;
     totalPageCount: number;
@@ -24,7 +24,7 @@ const BottomAdminNavigation: React.FC<BottomAdminNavigationProps> = ({
                                                                          pageNo,
                                                                          prevPage,
                                                                          nextPage,
-                                                                         canSubmit,
+                                                                         isEditing,
                                                                          submitForm,
                                                                          saveForm,
                                                                          totalPageCount,
@@ -69,7 +69,7 @@ const BottomAdminNavigation: React.FC<BottomAdminNavigationProps> = ({
                         Save
                     </MotionButton>
 
-                    {canSubmit && (
+                    {isEditing && (
                         <MotionButton
                             fontSize={'sm'}
                             onClick={submitForm}

@@ -51,7 +51,7 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
     const isUploading = false;
 
     return (
-        <Flex mb={4} p={4} borderRadius={8} color={'text'} overflow={'hidden'}>
+        <Flex mb={4} p={4} borderRadius={8} color={'white'} overflow={'hidden'}>
             {/* Customer Logo Upload */}
             <FormControl w={'100px'} h={'100px'} aspectRatio={1} borderRadius={'full'}>
                 <Box
@@ -150,7 +150,7 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
 
             {/* Customer ID */}
             <VStack ml={'auto'} display={['none', 'none', 'flex']}>
-                <Text> ID: {customer.id} </Text>
+                <Text fontSize="lg"> ID: {customer.id} </Text> {/* Increase font size here */}
             </VStack>
         </Flex>
     );
