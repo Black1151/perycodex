@@ -7,7 +7,7 @@ export const customerFields: ColDef[] | any = [
     {
         field: "id",
         headerName: "ID",
-        filter: "agMultiColumnFilter",
+        filter: "agNumberColumnFilter",
         flex: 1
     },
     {
