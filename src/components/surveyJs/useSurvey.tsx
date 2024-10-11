@@ -2,7 +2,18 @@
 
 import {Model, Serializer, settings, SurveyModel, SvgRegistry} from "survey-core";
 
-import {icon1, icon2, icon3, icon4, icon5, icon6, icon7, icon8, icon9, icon10 } from "@/components/surveyJs/happiness/happinessIndex";
+import {
+    icon1,
+    icon2,
+    icon3,
+    icon4,
+    icon5,
+    icon6,
+    icon7,
+    icon8,
+    icon9,
+    icon10
+} from "@/components/surveyJs/happiness/happinessIndex";
 
 import {
     registerSurveyFunctionsWithoutSurvey,
@@ -14,7 +25,6 @@ import {useEffect, useState} from "react";
 
 // Theme for now
 import {lightSurveyTheme} from "@/theme/surveyJsTheme";
-import {themeJson} from "@/components/surveyJs/happiness/happinessTheme";
 
 
 interface UseSurveyProps {
@@ -27,6 +37,8 @@ interface UseSurveyProps {
     excludeKeys?: string[];
     onSurveyComplete?: () => void;
     redirectUrl?: string;
+    cssPath?: string;
+    sjsPath?: string
 }
 
 interface ApiError {
@@ -57,6 +69,8 @@ const useSurvey = ({
                        excludeKeys,
                        onSurveyComplete,
                        redirectUrl,
+                       cssPath,
+                       sjsPath
                    }: UseSurveyProps) => {
     const user = {
         userTypeId: 1,
@@ -82,6 +96,21 @@ const useSurvey = ({
         // settings.useCachingForChoicesRestful = false;
     };
 
+    // Dynamically inject CSS if `cssPath` is provided
+    useEffect(() => {
+        if (cssPath) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = cssPath;
+            document.head.appendChild(link);
+
+            // Cleanup function to remove the CSS when the component unmounts or cssPath changes
+            return () => {
+                document.head.removeChild(link);
+            };
+        }
+    }, [cssPath]); // Trigger effect when `cssPath` changes
+
     // Create the survey model from the JSON schema
     const createSurveyModel = () => {
         const defaultSurveyOptions = {
@@ -92,8 +121,8 @@ const useSurvey = ({
             focusOnFirstError: true,
             checkErrorsMode: "onValueChanged",
             backgroundOpacity: 0,
-            // showNavigationButtons: false,
-            showCompletedPage: true,
+            showNavigationButtons: false,
+            showCompletedPage: false,
             showPageTitles: false
         };
 
@@ -121,7 +150,18 @@ const useSurvey = ({
 
         // Applying a theme mapping based on SurveyJS Variables
         survey.applyTheme(lightSurveyTheme);
-        survey.applyTheme(themeJson);
+
+        // Dynamically import and apply `themeJson` based on `sjsPath` prop
+        if (sjsPath) {
+            console.log("sjsPath", sjsPath);
+            import(`${sjsPath}`)
+                .then((themeModule) => {
+                    survey.applyTheme(themeModule.themeJson);
+                })
+                .catch((error) => {
+                    console.error(`Error loading SurveyJS theme from path: ${sjsPath}`, error);
+                });
+        }
 
         // If data exists then apply it here
         if (dataset) {
