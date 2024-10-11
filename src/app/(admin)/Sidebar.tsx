@@ -2,7 +2,7 @@
 import {
     VStack,
     Text,
-    useTheme
+    useTheme, Divider
 } from "@chakra-ui/react";
 import {useRouter} from "next/navigation";
 
@@ -62,7 +62,7 @@ export default function Sidebar() {
                     color:
                     theme.colors.perygonPink
                 }}
-                onClick={() => router.push('/userGroups')}>
+                onClick={() => router.push('/user-groups')}>
                 User Groups
             </Text>
             <Text
@@ -73,6 +73,16 @@ export default function Sidebar() {
                 }}
                 onClick={() => console.log("Tags Clicked")}>
                 Tags
+            </Text>
+            <Divider/>
+            <Text
+                cursor="pointer"
+                _hover={{
+                    color:
+                    theme.colors.perygonPink
+                }}
+                onClick={() => router.push('/test-happiness-score')}>
+                Happiness Score
             </Text>
         </VStack>
     );
