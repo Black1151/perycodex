@@ -1,5 +1,6 @@
 import {ColDef} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
+import UserImageRenderer from "@/components/agGrids/CellRenderers/UserImageRenderer";
 
 // Updated AgGrids fields
 export const userFields: ColDef[] | any = [
@@ -13,7 +14,8 @@ export const userFields: ColDef[] | any = [
         field: 'fullName',
         headerName: 'Name',
         filter: "agMultiColumnFilter",
-        flex: 2
+        flex: 2,
+        cellRenderer: UserImageRenderer,
     },
     {
         field: 'email',
