@@ -11,7 +11,7 @@ export const customerJson = {
                     title: "Is this customer active?",
                     titleLocation: "top",
                     descriptionLocation: "underInput",
-                    defaultValue: false,
+                    defaultValue: true,
                     isRequired: true,
                     labelTrue: "Yes",
                     labelFalse: "No",
@@ -44,7 +44,6 @@ export const customerJson = {
                     title: "Business Type",
                     titleLocation: "top",
                     isRequired: true,
-                    "renderAs": "select",
                     choicesByUrl: {
                         url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=business_type`,  // The API endpoint to fetch choices from
                         path: "business_type",
@@ -52,7 +51,7 @@ export const customerJson = {
                         titleName: "label"
                     },
                     placeholder: "Select Business Type",
-                    allowClear: false
+                    allowClear: true
                 },
                 {
                     type: "text",
@@ -117,18 +116,16 @@ export const customerJson = {
                     minWidth: "192px",
                     title: "Sector",
                     titleLocation: "top",
-                    description: "Select the primary sector in which this business operates",
-                    descriptionLocation: "underTitle",
                     isRequired: true,
-                    "renderA": "select",
+                    placeholder: "Select the primary sector in which this business operates",
+                    allowClear: true,
                     choicesByUrl: {
                         url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=sector`,
                         path: "sector",
                         valueName: "value",
                         titleName: "label"
                     },
-                    placeholder: "Select Sector",
-                    allowClear: false
+
                 },
                 {
                     type: "dropdown",
@@ -137,8 +134,6 @@ export const customerJson = {
                     minWidth: "192px",
                     title: "Region",
                     titleLocation: "top",
-                    description: "Select the region in which this business operates.",
-                    descriptionLocation: "underTitle",
                     isRequired: true,
                     searchEnabled: false,
                     choicesByUrl: {
@@ -147,8 +142,8 @@ export const customerJson = {
                         valueName: "value",
                         titleName: "label"
                     },
-                    placeholder: "Select Region",
-                    allowClear: false
+                    placeholder: "Select the region in which this business operates",
+                    allowClear: true
                 },
                 {
                     type: "dropdown",
@@ -156,8 +151,6 @@ export const customerJson = {
                     minWidth: "256px",
                     title: "Company Size",
                     titleLocation: "top",
-                    description: "Select the company size.",
-                    descriptionLocation: "underTitle",
                     isRequired: true,
                     choicesByUrl: {
                         url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=company_size`,  // The API endpoint to fetch choices from
@@ -166,7 +159,7 @@ export const customerJson = {
                         titleName: "label"
                     },
                     placeholder: "Select Company Size",
-                    allowClear: false
+                    allowClear: true
                 },
                 {
                     type: "text",
@@ -208,7 +201,7 @@ export const customerJson = {
                 },
                 {
                     type: "matrixdynamic",
-                    name: "domains",
+                    name: "domain",
                     title: "Add Domains",
                     columns: [
                         {
@@ -236,77 +229,67 @@ export const customerJson = {
             elements: [
                 {
                     type: "text",
+                    title: "No. / Name & Street",
                     name: "address1",
                     minWidth: "256px",
-                    titleLocation: "hidden",
                     isRequired: true,
                     placeholder: "No. / Name & Street"
                 },
                 {
                     type: "text",
+                    title: "Area",
                     name: "address2",
                     minWidth: "256px",
                     startWithNewLine: false,
-                    titleLocation: "hidden",
                     isRequired: true,
                     placeholder: "Area"
                 },
                 {
                     type: "text",
+                    title: "Town / City",
                     name: "address3",
                     minWidth: "256px",
-                    titleLocation: "hidden",
                     isRequired: true,
                     placeholder: "Town / City"
                 },
                 {
                     type: "text",
+                    title: "Region",
                     name: "address4",
                     minWidth: "256px",
                     startWithNewLine: false,
-                    titleLocation: "hidden",
                     isRequired: true,
                     placeholder: "Region"
                 },
                 {
                     type: "text",
                     name: "postcode",
+                    title: "Postcode",
                     minWidth: "256px",
-                    titleLocation: "hidden",
                     isRequired: true,
                     placeholder: "Postcode"
                 },
                 {
                     type: "dropdown",
+                    title: "Country",
                     name: "country",
                     minWidth: "256px",
                     startWithNewLine: false,
-                    titleLocation: "hidden",
                     isRequired: true,
-                    choicesByUrl: {
-                        url: "http://surveyjs.io/api/CountriesExample?region=Europe",
-                        valueName: "cca2",
-                        titleName: "name"
-                    },
-                    // { TODO: Rocco will scrape
-                    //     name: "choicesByUrlTest",
-                    //     type: "dropdown",
-                    //     choicesByUrl: {
-                    //         url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=country_code`,  // The API endpoint to fetch choices from
-                    //         path: "country_code",
-                    //         valueName: "value",
-                    //         titleName: "label"
-                    //     }
-                    // },
                     placeholder: "Country",
-                    allowClear: false,
-                    defaultValue: "GB",
-                    choicesOrder: "asc"
+                    allowClear: true,
+                    choicesOrder: "asc",
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=country`,
+                        path: "country",
+                        valueName: "value",
+                        titleName: "label"
+                    },
                 },
                 {
                     type: "panel",
                     name: "primarySite",
-                    visibleIf: "{address1} notempty and {address2} notempty and {address3} notempty and {address4} notempty and {country} notempty and {postcode} notempty",
+                    visibleIf: "{address1} notempty and {address2} notempty and {address3} notempty and {address4} notempty and {country} notempty and {postcode} notempty and {formMode} = 'new'",
                     title: "Primary Location Details",
                     isRequired: true,
                     elements: [
@@ -391,7 +374,7 @@ export const customerJson = {
                                 url: "http://surveyjs.io/api/CountriesExample"
                             },
                             placeholder: "Country",
-                            allowClear: false
+                            allowClear: true
                         },
                         {
                             type: "text",
