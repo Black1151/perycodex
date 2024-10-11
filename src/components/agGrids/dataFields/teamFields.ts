@@ -13,43 +13,32 @@ export const teamFields: ColDef[] | any = [
     {
         field: 'name',
         headerName: 'Team Name',
-        filter: "agTextColumnFilter",
+        filter: "agMultiColumnFilter",
         flex: 3
     },
     {
-        field: 'description',
-        headerName: 'Description',
-        filter: "agTextColumnFilter",
-        flex: 4
-    },
-    {
-        field: 'customerId',
+        field: 'custName',
         headerName: 'Customer ID',
-        cellDataType: "number",
-        filter: "agNumberColumnFilter",
+        cellDataType: "text",
+        filter: "agMultiColumnFilter",
         flex: 2
     },
     {
-        field: 'parentTeamId',
+        field: 'parentTeamName',
         headerName: 'Parent Team ID',
-        cellDataType: "number",
-        filter: "agNumberColumnFilter",
+        cellDataType: "text",
+        filter: "agMultiColumnFilter",
         flex: 2
     },
     {
         field: 'isActive',
-        headerName: 'Active',
-        cellDataType: "boolean",
-        filter: "agSetColumnFilter",
-        flex: 1
-    },
-    {
-        field: 'nothing',
         headerName: 'Actions',
         flex: 1,
         cellRenderer: ActionButtonRenderer,
         cellRendererParams: {
-            redirectUrl: '/teams'
+            redirectUrl: '/teams',
+            updateUrl: '/api/userTeam/',
+            idField: 'userTeamUniqueId',
         }
     },
 ];
