@@ -7,11 +7,8 @@ export const siteJson = {
                 {
                     type: "boolean",
                     name: "isActive",
-                    minWidth: "256px",
-                    title: "Active?",
+                    title: "Is this site active?",
                     titleLocation: "top",
-                    description: "Is this site active?",
-                    descriptionLocation: "underInput",
                     defaultValue: true,
                     isRequired: true,
                     labelTrue: "Yes",
@@ -19,10 +16,19 @@ export const siteJson = {
                     swapOrder: true
                 },
                 {
+                    type: "dropdown",
+                    name: "customerId",
+                    title: "Customer",
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/customer/allBy`,
+                        path: "resource",
+                        valueName: "id",
+                        titleName: "name"
+                    },
+                },
+                {
                     type: "text",
                     name: "siteName",
-                    width: "64%",
-                    minWidth: "192px",
                     title: "Site Name",
                     titleLocation: "top",
                     isRequired: true,
@@ -34,24 +40,20 @@ export const siteJson = {
                     startWithNewLine: false,
                     title: "Site Type",
                     titleLocation: "top",
-                    description: "What type of site is this?",
-                    descriptionLocation: "underInput",
                     isRequired: true,
                     renderAs1: "select",
+                    placeholder: "What type of site is this",
+                    allowClear: true,
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=site_type`,  // The API endpoint to fetch choices from
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=site_type`,
                         path: "site_type",
                         valueName: "value",
                         titleName: "label"
                     },
-                    placeholder: "Select Site Type",
-                    allowClear: false,
-                    defaultValue: "1"
                 },
                 {
                     type: "text",
                     name: "address1",
-                    minWidth: "256px",
                     titleLocation: "hidden",
                     isRequired: true,
                     placeholder: "No. / Name & Street"
@@ -59,7 +61,6 @@ export const siteJson = {
                 {
                     type: "text",
                     name: "address2",
-                    minWidth: "256px",
                     startWithNewLine: false,
                     titleLocation: "hidden",
                     isRequired: false,
@@ -68,7 +69,6 @@ export const siteJson = {
                 {
                     type: "text",
                     name: "address3",
-                    minWidth: "256px",
                     titleLocation: "hidden",
                     isRequired: true,
                     placeholder: "Town / City"
@@ -76,7 +76,6 @@ export const siteJson = {
                 {
                     type: "text",
                     name: "address4",
-                    minWidth: "256px",
                     startWithNewLine: false,
                     titleLocation: "hidden",
                     isRequired: true,
@@ -85,7 +84,6 @@ export const siteJson = {
                 {
                     type: "text",
                     name: "postcode",
-                    minWidth: "256px",
                     titleLocation: "hidden",
                     isRequired: true,
                     placeholder: "Postcode"
@@ -93,25 +91,22 @@ export const siteJson = {
                 {
                     type: "dropdown",
                     name: "country",
-                    minWidth: "256px",
                     startWithNewLine: false,
                     titleLocation: "hidden",
                     isRequired: true,
-                    // TODO: Rocco to scrape data for Countries
-                    choicesByUrl: {
-                        url: "http://surveyjs.io/api/CountriesExample?region=Europe",
-                        valueName: "cca2",
-                        titleName: "name"
-                    },
                     placeholder: "Country",
-                    allowClear: false,
                     defaultValue: "GB",
-                    choicesOrder: "asc"
+                    choicesOrder: "asc",
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=country`,
+                        path: "country",
+                        valueName: "value",
+                        titleName: "label"
+                    },
                 },
                 {
                     type: "text",
                     name: "latitude",
-                    minWidth: "256px",
                     title: "Latitude",
                     titleLocation: "top",
                     isRequired: false,
@@ -122,7 +117,6 @@ export const siteJson = {
                 {
                     type: "text",
                     name: "longitude",
-                    minWidth: "256px",
                     startWithNewLine: false,
                     title: "Longitude",
                     titleLocation: "top",
@@ -140,11 +134,8 @@ export const siteJson = {
                 {
                     type: "dropdown",
                     name: "primaryContactId",
-                    minWidth: "256px",
                     title: "Primary Contact (Site)",
                     titleLocation: "top",
-                    description: "Select the primary contact at this site",
-                    descriptionLocation: "underInput",
                     isRequired: true,
                     // TODO: Use the USERS allBy route server
                     choices: [
@@ -162,14 +153,10 @@ export const siteJson = {
                         }
                     ],
                     placeholder: "Select primary contact at this site / office",
-                    allowClear: false
                 },
-
                 {
                     type: "text",
                     name: "siteTel",
-                    width: "64%",
-                    minWidth: "192px",
                     title: "Site Tel.",
                     titleLocation: "top",
                     isRequired: true,
@@ -183,31 +170,13 @@ export const siteJson = {
                 {
                     type: "text",
                     name: "siteEmail",
-                    width: "64%",
-                    minWidth: "192px",
                     title: "Site Email",
                     titleLocation: "top",
                     isRequired: true,
                     inputType: "email",
                     placeholder: "Enter site email"
                 }
-
-
-
             ]
         }
     ],
-    showPrevButton: true,
-    showTOC: false,
-    showTitle: true,
-    showCompletedPage: false,
-    checkErrorsMode: "onValueChanged",
-    showQuestionNumbers: "off",
-    questionErrorLocation: "bottom",
-    completeText: "Save Site",
-    widthMode: "static",
-    width: "900",
-    showProgressBar: "belowheader",
-    progressBarShowPageTitles: true,
-    progressBarShowPageNumbers: true,
 };
