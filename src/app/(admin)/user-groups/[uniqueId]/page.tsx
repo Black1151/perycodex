@@ -3,8 +3,9 @@ import SurveyJsComponent from "@/components/surveyJs/SurveyJsComponent";
 import {userGroupJson} from "@/components/surveyJs/forms/userGroup";
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
+import {UserGroupDetailsBanner} from "@/components/AdminDetailsBanners/UserGroupDetailsBanner";
 
-export default async function CustomerPage ({ params }: { params: { uniqueId: string } }) {
+export default async function CustomerPage({params}: { params: { uniqueId: string } }) {
     const cookieStore = cookies();
     const authToken = cookieStore.get("auth_token")?.value;
 
@@ -29,7 +30,13 @@ export default async function CustomerPage ({ params }: { params: { uniqueId: st
 
     return (
         <div>
-            <SurveyJsComponent jsonSchema={userGroupJson} endpoint={'/userGroup'} isNew={false} dataset={userGroupData} />
+            <UserGroupDetailsBanner userGroup={userGroupData}/>
+            <SurveyJsComponent
+                jsonSchema={userGroupJson}
+                endpoint={`/userGroup/${params.uniqueId}`}
+                isNew={false}
+                dataset={userGroupData}
+            />
         </div>
     );
 };
