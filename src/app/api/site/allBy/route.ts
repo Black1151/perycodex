@@ -27,6 +27,11 @@ export async function GET(req: NextRequest) {
       },
     });
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData?.error || "Something went wrong");
+    }
+
     const data = await response.json();
     const resource = data.resource;
 
