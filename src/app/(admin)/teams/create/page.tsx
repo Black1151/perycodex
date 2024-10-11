@@ -5,6 +5,7 @@ import {Heading} from "@chakra-ui/react";
 // SurveyJS
 import SurveyJsComponent from "@/components/surveyJs/SurveyJsComponent";
 import {userTeamJson} from "@/components/surveyJs/forms/userTeam";
+import AdminHeader from "@/components/AdminHeader";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -20,8 +21,13 @@ export default async function CustomersPage() {
 
     return (
         <>
-            <Heading>Create Team</Heading>
-            <SurveyJsComponent jsonSchema={userTeamJson} endpoint={'help'} isNew={true} />
+            <AdminHeader headingText={'CREATE DEPARTMENT / TEAM'} />
+            <SurveyJsComponent
+                jsonSchema={userTeamJson}
+                endpoint={'/userTeam'}
+                isNew={true}
+                redirectUrl={'/teams'}
+            />
         </>
     );
 }
