@@ -69,7 +69,7 @@ export const SiteDetailsBanner: React.FC<SiteDetailsBannerProps> = ({ site }) =>
 
             {/* Site ID on the right */}
             <VStack ml={'auto'} display={['none', 'none', 'flex']}>
-                <Text>ID: {site.id}</Text>
+                <Text fontSize="lg"> ID: {site.id}</Text>
             </VStack>
         </Flex>
     );

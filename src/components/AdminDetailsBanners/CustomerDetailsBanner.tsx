@@ -150,7 +150,7 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
 
             {/* Customer ID */}
             <VStack ml={'auto'} display={['none', 'none', 'flex']}>
-                <Text> ID: {customer.id} </Text>
+                <Text fontSize="lg"> ID: {customer.id} </Text> {/* Increase font size here */}
             </VStack>
         </Flex>
     );

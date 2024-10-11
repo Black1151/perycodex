@@ -128,67 +128,9 @@ export const userTeamJson = {
                             text: "User 4"
                         }
                     ]
-
-
-                },
-                // TODO: Could be a separate component after the team is created
-                {
-                    type: "checkbox",
-                    name: "users",
-                    title: "Select Users [BUT WE WILL USE A GRID - THIS IS FOR TESTING ONLY]",
-                    titleLocation: "top",
-                    isRequired: true,
-                    choices: [
-                        {
-                            value: "1",
-                            text: "User 1"
-                        },
-                        {
-                            value: "2",
-                            text: "User 2"
-                        },
-                        {
-                            value: "3",
-                            text: "User 3"
-                        },
-                        {
-                            value: "4",
-                            text: "User 4"
-                        },
-                        {
-                            value: "5",
-                            text: "User 5"
-                        },
-                        {
-                            value: "6",
-                            text: "User 6"
-                        },
-                        {
-                            value: "7",
-                            text: "User 7"
-                        },
-                        {
-                            value: "8",
-                            text: "User 8"
-                        }
-                    ],
-                    placeholder: "Select 1+ users",
-                    colCount: 2
                 },
             ]
         }
     ],
-    showPrevButton: true,
-    showTOC: false,
-    showTitle: true,
-    showCompletedPage: false,
-    checkErrorsMode: "onValueChanged",
-    showQuestionNumbers: "off",
-    questionErrorLocation: "bottom",
-    completeText: "Save Team",
-    widthMode: "static",
-    width: "1024",
-    showProgressBar1: "belowheader",
-    progressBarShowPageTitles1: true,
-    progressBarShowPageNumbers1: true,
+
 };

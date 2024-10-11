@@ -300,7 +300,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
             </VStack>
             {/* Organisation Details*/}
             <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-end'} display={['none', 'none', 'flex']}>
-                <Text> ID: {user.id} </Text>
+                <Text fontSize="lg">  ID: {user.id} </Text>
                 {/* Organisation's Logo */}
                 {user.customer && (
                     <Image
