@@ -99,8 +99,20 @@ const useSurvey = ({
 
         const survey = new Model(surveyModel); // Instantiate SurveyJS Model
 
+
+        survey.onOpenDropdownMenu.add((_, options) => {
+            options.menuType = "dropdown"
+        });
+
+
         // Set Common Variables that will be needed within the survey
         survey.setVariable("setUserDetails", user);
+
+        if (!isNew) {
+            survey.setVariable("formMode", "edit");
+        } else {
+            survey.setVariable("formMode", "new");
+        }
 
         // Applying a theme mapping based on SurveyJS Variables
         survey.applyTheme(lightSurveyTheme);
@@ -126,43 +138,59 @@ const useSurvey = ({
         endpoint: string,
         filteredSurveyData: object
     ) {
-        if (requestType === "POST") {
-            // POST request to /api/surveyjs/<endpoint>
-            const response = await fetch(`/api/surveyjs${endpoint}`, {
-                method: requestType,
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(filteredSurveyData),
-            });
+        try {
+            if (requestType === "POST") {
+                // POST request to /api/surveyjs/<endpoint>
+                const response = await fetch(`/api/surveyjs${endpoint}`, {
+                    method: requestType,
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(filteredSurveyData),
+                });
 
-            return response.json();
-        }
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || "Failed to submit data");
+                }
 
-        if (requestType === "PUT") {
-            // Handle PUT request
-            const parts = endpoint.split('/');
-            if (parts.length < 3) {
-                throw new Error("Invalid endpoint format for PUT request");
+                return await response.json();
             }
 
-            const endpointPath = `/${parts[1]}`; // Assuming 'endpoint' is the second part
-            const uniqueId = parts[2]; // Extracting the unique ID
+            if (requestType === "PUT") {
+                // Handle PUT request
+                const parts = endpoint.split('/');
+                if (parts.length < 3) {
+                    throw new Error("Invalid endpoint format for PUT request");
+                }
 
-            const response = await fetch(`/api/surveyjs${endpointPath}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    uniqueId,
-                    data: filteredSurveyData
-                }),
-            });
+                const endpointPath = `/${parts[1]}`; // Assuming 'endpoint' is the second part
+                const uniqueId = parts[2]; // Extracting the unique ID
 
-            return response.json();
+                const response = await fetch(`/api/surveyjs${endpointPath}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        uniqueId,
+                        data: filteredSurveyData
+                    }),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || "Failed to update data");
+                }
+
+                return await response.json();
+            }
+        } catch (error: any) {
+            console.error("Error in sendSurveyData:", error.message);
+            throw new Error(error.message || "Error while sending survey data");
         }
     }
+
 
     // How to handle the survey submission
     const handleSurveySubmission = async (sender: SurveyModel) => {
