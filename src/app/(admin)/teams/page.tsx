@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 // AG Grids
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import { teamFields } from "@/components/agGrids/dataFields/teamFields";
+import AdminHeader from "@/components/AdminHeader";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -19,7 +20,7 @@ export default async function SitesPage() {
 
   // Fetch teams data from the backend
   const res = await fetch(
-    `${process.env.BE_URL}/userTeam/allBy?selectColumns=id,name,description,customerId,parentTeamId,uniqueId,isActive`,
+    `${process.env.BE_URL}/getAllView?view=vwUserTeamsList`,
     {
       headers: {
         Authorization: `Bearer ${authToken}`,
@@ -35,20 +36,18 @@ export default async function SitesPage() {
   const teamData = teams.resource;
 
   // Check if teamData exists and has data
-  if (teamData && teamData.length > 0) {
+  const teamCount = teamData ? teamData.length : 0;
+
+  // Check if teamData exists and has data
+  if (teamData && teamCount > 0) {
     return (
       <>
+        <AdminHeader headingText={'DEPARTMENTS / TEAMS'} dataCount={teamCount} />
         <DataGridComponent
           data={teamData}
           initialFields={teamFields}
           createNewUrl={"/teams/create"}
         />
-
-        {/*<Heading mt={4}>Client Fetched Data with Server Route</Heading>*/}
-        {/*<DataGridComponentClient*/}
-        {/*    endpoint={'api/userTeam/allBy?selectColumns=id,name,description,customerId,parentTeamId,uniqueId,isActive'}*/}
-        {/*    initialFields={teamFields}*/}
-        {/*    createNewUrl={'/teams/create'}/>*/}
       </>
     );
   } else {
