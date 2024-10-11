@@ -1,101 +1,105 @@
-import { CarouselItemProps } from "@/components/carousel/CarouselItem";
-import { cookies } from "next/headers";
-import { PerygonMainClient } from "./PerygonMainClient";
-import { redirect } from "next/navigation";
+import {CarouselItemProps} from "@/components/carousel/CarouselItem";
+import {cookies} from "next/headers";
+import {PerygonMainClient} from "./PerygonMainClient";
+import {redirect} from "next/navigation";
 
 type CarouselItemWithoutIsSelected = Omit<CarouselItemProps, "isSelected">;
 
 function transformCarouselItems(data: any[]): CarouselItemWithoutIsSelected[] {
-  return data.map((item) => ({
-    toolId: item.toolId,
-    logoImage: item.logoImageUrl,
-    iconImage: item.iconImageUrl,
-    backgroundImage: item.previewImageUrl,
-    alt: item.displayName,
-    name: item.displayName,
-    description: item.previewText,
-    appUrl: item.appUrl,
-  }));
+    return data.map((item) => ({
+        toolId: item.toolId,
+        logoImage: item.logoImageUrl,
+        iconImage: item.iconImageUrl,
+        backgroundImage: item.previewImageUrl,
+        alt: item.displayName,
+        name: item.displayName,
+        description: item.previewText,
+        appUrl: item.appUrl,
+    }));
 }
 
 export default async function PerygonMain() {
-  const cookieStore = cookies();
-  const authToken = cookieStore.get("auth_token")?.value;
-  const uniqueId = cookieStore.get("user_uuid")?.value;
+    const cookieStore = cookies();
+    const authToken = cookieStore.get("auth_token")?.value;
+    const uniqueId = cookieStore.get("user_uuid")?.value;
 
-  let carouselItems: CarouselItemWithoutIsSelected[] = [];
-  let navbarProps = {
-    userFirstName: "",
-    userImageUrl: "",
-    userRole: "",
-  };
-  let isProfileRegistered = false;
+    let carouselItems: CarouselItemWithoutIsSelected[] = [];
+    let navbarProps = {
+        userFirstName: "",
+        userImageUrl: "",
+        userRole: "",
+    };
+    let isProfileRegistered = false;
 
-  if (authToken) {
-    try {
-      const [fetchCarouselItems, fetchUserInfo, fetchProfileStatus] =
-        await Promise.all([
-          fetch(`${process.env.BE_URL}/getAllView?view=vwToolsCarouselList`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${authToken}`,
-            },
-          }),
-          fetch(
-            `${process.env.BE_URL}/getView?view=vwLoggedInUserIdentity&userUniqueId=${uniqueId}&selectColumns=userImageUrl,firstName,role`,
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${authToken}`,
-              },
-            }
-          ),
-          fetch(`${process.env.BE_URL}/user/isProfileComplete`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${authToken}`,
-            },
-            body: JSON.stringify({ uniqueId }),
-          }),
-        ]);
+    if (authToken) {
+        try {
+            const [fetchCarouselItems, fetchUserInfo, fetchProfileStatus] =
+                await Promise.all([
+                    fetch(`${process.env.BE_URL}/getAllView?view=vwToolsCarouselList`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${authToken}`,
+                        },
+                    }),
+                    fetch(
+                        `${process.env.BE_URL}/getView?view=vwLoggedInUserIdentity&userUniqueId=${uniqueId}&selectColumns=userImageUrl,firstName,role`,
+                        {
+                            method: "GET",
+                            headers: {
+                                Authorization: `Bearer ${authToken}`,
+                            },
+                        }
+                    ),
+                    fetch(`${process.env.BE_URL}/user/isProfileComplete`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${authToken}`,
+                        },
+                        body: JSON.stringify({uniqueId}),
+                    }),
+                ]);
 
-      const carouselItemsData = await fetchCarouselItems.json();
-      const userInfoData = await fetchUserInfo.json();
-      const profileStatusData = await fetchProfileStatus.json();
+            const carouselItemsData = await fetchCarouselItems.json();
+            const userInfoData = await fetchUserInfo.json();
+            const profileStatusData = await fetchProfileStatus.json();
 
-      carouselItems = transformCarouselItems(carouselItemsData.resource);
+            carouselItems = transformCarouselItems(carouselItemsData.resource ?? []);
 
-      navbarProps = {
-        userFirstName: userInfoData.resource.firstName,
-        userImageUrl: userInfoData.resource.profilePictureUrl,
-        userRole: userInfoData.resource.role,
-      };
+            navbarProps = {
+                userFirstName: userInfoData.resource.firstName,
+                userImageUrl: userInfoData.resource.profilePictureUrl,
+                userRole: userInfoData.resource.role,
+            };
 
-      isProfileRegistered = profileStatusData.resource.isProfileRegistered;
+            isProfileRegistered = profileStatusData.resource.isProfileRegistered;
 
-      if (carouselItems.length === 1) {
-        const singleItem = carouselItems[0];
-        redirect(`${singleItem.appUrl}?toolId=${singleItem.toolId}`);
-      }
-    } catch (error: any) {
-      console.error("Error details:", error);
-      redirect("/error");
+        } catch (error: any) {
+            console.error("Error details:", error);
+            redirect("/error");
+        }
+    } else {
+        redirect("/login");
     }
-  } else {
-    redirect("/login");
-  }
 
-  if (isProfileRegistered === false) {
-    return redirect("/profile-setup");
-  }
+    if (navbarProps.userRole === 'PA') {
+        return redirect("/customers");
+    }
 
-  return (
-    <PerygonMainClient
-      navbarProps={navbarProps}
-      carouselItems={carouselItems}
-      showNoToolsModal={carouselItems.length === 0}
-    />
-  );
+    if (!isProfileRegistered) {
+        return redirect("/profile-setup");
+    }
+
+    if (carouselItems.length === 1) {
+        return redirect(`${carouselItems[0].appUrl}?toolId=${carouselItems[0].toolId}`);
+    }
+
+    return (
+        <PerygonMainClient
+            navbarProps={navbarProps}
+            carouselItems={carouselItems}
+            showNoToolsModal={carouselItems.length === 0}
+        />
+    );
 }
