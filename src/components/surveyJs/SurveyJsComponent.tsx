@@ -5,7 +5,6 @@ import AdminLayout from "@/components/surveyJs/layouts/AdminLayout";
 import useSurvey from "@/components/surveyJs/useSurvey";
 import "survey-core/defaultV2.min.css";
 
-import "../../components/surveyJs/happiness/index.css"
 
 interface SurveyJsComponentProps {
     jsonSchema: any;
@@ -19,6 +18,8 @@ interface SurveyJsComponentProps {
     redirectUrl?: string;
     userTypeIdAllowedToEdit?: number[];
     userAllowedToEditCheck?: () => boolean;
+    cssPath?: string;
+    sjsPath?: string;
 }
 
 const SurveyJsComponent: React.FC<SurveyJsComponentProps> = ({
@@ -33,6 +34,8 @@ const SurveyJsComponent: React.FC<SurveyJsComponentProps> = ({
                                                                  redirectUrl,
                                                                  userTypeIdAllowedToEdit,
                                                                  userAllowedToEditCheck,
+                                                                 cssPath,
+                                                                 sjsPath,
                                                              }) => {
     const user = {
         userTypeId: 1,
@@ -81,8 +84,9 @@ const SurveyJsComponent: React.FC<SurveyJsComponentProps> = ({
         onSurveyComplete: onSurveyComplete,
         excludeKeys: excludeKeys,
         redirectUrl: redirectUrl,
+        cssPath: cssPath,
+        sjsPath: sjsPath,
     });
-
 
 
     // Return the selected layout and pass the survey and isEditing props
