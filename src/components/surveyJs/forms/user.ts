@@ -137,7 +137,6 @@ export const userJson = {
                             valueName: "id",
                             titleName: "name"
                         },
-
                     },
                     {
                         type: "dropdown",

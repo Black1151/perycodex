@@ -2,56 +2,66 @@ export const userTeamJson = {
     pages: [
         {
             name: "user-team-details",
-            title: "Team",
+            title: "Department / Team",
             elements: [
                 {
                     type: "boolean",
                     name: "isActive",
-                    minWidth: "256px",
-                    title: "Active?",
+                    title: "Is {teamTypeName} active?",
                     titleLocation: "top",
-                    description: "Is team active?",
-                    descriptionLocation: "underInput",
-                    defaultValue: false,
+                    defaultValue: true,
                     isRequired: true,
                     labelTrue: "Yes",
                     labelFalse: "No",
                     swapOrder: true,
-                    readOnly: false
                 },
                 {
                     type: "dropdown",
                     name: "customerId",
-                    title: "Customer",
-                    titleLocation: "top",
-                    placeholder: "Select Customer",
                     isRequired: true,
-                    description: "Customer this team belongs to",
+                    title: "Customer",
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/customer/allBy`,
+                        path: "resource",
+                        valueName: "id",
+                        titleName: "name"
+                    },
+                },
+                {
+                    type: "boolean",
+                    name: "isDepartment",
+                    title: "Department or Team?",
+                    titleLocation: "top",
+                    defaultValue: true,
+                    swapOrder: true,
+                    isRequired: true,
+                    labelTrue: "Department",
+                    labelFalse: "Team",
+                },
+                {
+                    type: "dropdown",
+                    name: "parentTeamId",
+                    title: "Parent Department",
+                    titleLocation: "top",
+                    startswithNewLine: true,
+                    isRequired: true,
+                    visibleIf: "{isDepartment} != true",
+                    enableIf: "{customerId} notempty",
+                    placeholder: "Select the department this team is in",
+                    description: "If there is a parent department, this record becomes a team",
                     descriptionLocation: "underInput",
-                    // TODO: Update to customers
-                    choices: [
-                        {
-                            value: "1",
-                            text: "Customer 1"
-                        },
-                        {
-                            value: "2",
-                            text: "Customer 2"
-                        },
-                        {
-                            value: "3",
-                            text: "Customer 3"
-                        },
-                        {
-                            value: "4",
-                            text: "Customer 4"
-                        }
-                    ]
+                    allowClear: true,
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/userTeam/allBy?customerId={customerId}&parentTeamId=null`,
+                        path: "resource",
+                        valueName: "id",
+                        titleName: "name"
+                    },
                 },
                 {
                     type: "text",
                     name: "name",
-                    title: "Team Name",
+                    title: "{teamTypeName} Name",
                     titleLocation: "top",
                     isRequired: true,
                     maxLength: 200,
@@ -68,69 +78,28 @@ export const userTeamJson = {
                     placeholder: "Enter description",
                     readOnly: false
                 },
-                // TODO: Rocco to figure out Team vs Department
-                {
-                    type: "dropdown",
-                    name: "parentTeamId",
-                    title: "Parent Team",
-                    titleLocation: "top",
-                    placeholder: "Select Team",
-                    isRequired: true,
-                    description: "Parent of this team, normally a department, service or division.",
-                    descriptionLocation: "underInput",
-                    // TODO: Pulls from userTeam APIallBy
-                    choices: [
-                        {
-                            value: "1",
-                            text: "Dept 1"
-                        },
-                        {
-                            value: "2",
-                            text: "Dept 2"
-                        },
-                        {
-                            value: "3",
-                            text: "Dept 3"
-                        },
-                        {
-                            value: "4",
-                            text: "Dept 4"
-                        }
-                    ]
-
-
-                },
                 {
                     type: "dropdown",
                     name: "managerId",
-                    title: "Manager",
+                    title: "Manager of this {teamTypeName}",
                     titleLocation: "top",
                     placeholder: "Select Manager",
                     isRequired: true,
-                    description: "Manager of this team",
-                    descriptionLocation: "underInput",
-                    // TODO: Pulls from Users
-                    choices: [
-                        {
-                            value: "1",
-                            text: "User 1"
-                        },
-                        {
-                            value: "2",
-                            text: "User 2"
-                        },
-                        {
-                            value: "3",
-                            text: "User 3"
-                        },
-                        {
-                            value: "4",
-                            text: "User 4"
-                        }
-                    ]
+                    enableIf: "{customerId} notempty",
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/user/allBy?selectColumns=id,email,customerId&customerId={customerId}`,
+                        path: "resource",
+                        valueName: "id",
+                        titleName: "email"
+                    },
                 },
             ]
         }
     ],
-
+    calculatedValues: [
+        {
+            name: "teamTypeName",
+            expression: "iif({teamType}, 'Department', 'Team')"
+        }
+    ]
 };
