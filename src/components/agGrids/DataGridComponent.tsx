@@ -65,9 +65,6 @@ const DataGridComponent = <T, >({
             filter: true,
             floatingFilter: false,
             resizable: true,
-            autoSizeStrategy: {
-                type: 'fitCellContents',
-            },
         }),
         [isMobile]
     );
