@@ -137,22 +137,14 @@ export const siteJson = {
                     title: "Primary Contact (Site)",
                     titleLocation: "top",
                     isRequired: true,
-                    // TODO: Use the USERS allBy route server
-                    choices: [
-                        {
-                            value: "1",
-                            text: "User1"
-                        },
-                        {
-                            value: "2",
-                            text: "User2"
-                        },
-                        {
-                            value: "3",
-                            text: "User3"
-                        }
-                    ],
+                    enableIf: "{customerId} notempty",
                     placeholder: "Select primary contact at this site / office",
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/user/allBy?selectColumns=id,email,customerId&customerId={customerId}`,
+                        path: "resource",
+                        valueName: "id",
+                        titleName: "email"
+                    },
                 },
                 {
                     type: "text",
