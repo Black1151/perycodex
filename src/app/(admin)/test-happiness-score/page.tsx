@@ -24,8 +24,16 @@ export default async function UsersPage() {
     return (
         <>
             <AdminHeader headingText={'Test Happiness Score'}/>
-            <SurveyJsComponent jsonSchema={happinessJson} endpoint={'/helper'} isNew={true}/>
+            <SurveyJsComponent
+                jsonSchema={happinessJson}
+                endpoint={'/helper'}
+                isNew={true}
+                cssPath={'/css/happiness.css'}
+                sjsPath={"@/components/surveyJs/happiness/happiness"}
+            />
         </>
     );
 }
+
+import "../../../components/surveyJs/happiness/index.css";
 
