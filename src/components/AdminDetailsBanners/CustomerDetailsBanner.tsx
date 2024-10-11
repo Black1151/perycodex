@@ -4,6 +4,7 @@ import React from 'react';
 import {Box, Flex, FormControl, Heading, IconButton, Image, Input, Spinner, Text, VStack,} from '@chakra-ui/react';
 import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+import moment from "moment/moment";
 
 interface Customer {
     id: number;
@@ -43,8 +44,8 @@ interface CustomerDetailsBannerProps {
 }
 
 export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
-                                                                  customer,
-                                                              }) => {
+                                                                                customer,
+                                                                            }) => {
 
 
     const allowUpload = true;
@@ -101,7 +102,7 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
                             transition="opacity 0.3s ease"
                         >
                             <IconButton
-                                icon={<AddAPhotoOutlinedIcon />}
+                                icon={<AddAPhotoOutlinedIcon/>}
                                 aria-label="Upload Photo"
                                 colorScheme="whiteAlpha"
                                 onClick={() => document.getElementById('photo-upload')?.click()}
@@ -130,7 +131,9 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
                         type="file"
                         name="photo"
                         mb={4}
-                        onChange={() => {window.alert("Uploading file FAKE")}}
+                        onChange={() => {
+                            window.alert("Uploading file FAKE")
+                        }}
                         disabled={isUploading}
                         display="none"
                     />
@@ -139,18 +142,31 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
 
             {/* Customer Details */}
             <VStack align="start" ml={4} minW={'300px'}>
-                <Heading fontWeight={100}>{customer.name}</Heading>
+                <Flex alignItems="center">
+                    <Heading fontWeight={300}>{customer.name}</Heading>
+                    <Box
+                        ml={2}
+                        w={4}
+                        h={4}
+                        borderRadius="full"
+                        border={'white 1px solid'}
+                        bg={customer.isActive ? 'green.500' : 'red.500'}
+                    />
+                </Flex>
                 {customer.address1 && (
                     <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
-                        <LocationOnOutlinedIcon />
-                        <Text fontSize="sm">{customer.address1}, {customer.address2}, {customer.address3}, {customer.address4}, {customer.postcode}</Text>
+                        <LocationOnOutlinedIcon/>
+                        <Text
+                            fontSize="sm">{customer.address1}, {customer.address2}, {customer.address3}, {customer.address4}, {customer.postcode}</Text>
                     </Flex>
                 )}
             </VStack>
 
             {/* Customer ID */}
-            <VStack ml={'auto'} display={['none', 'none', 'flex']}>
-                <Text fontSize="lg"> ID: {customer.id} </Text> {/* Increase font size here */}
+            <VStack ml={'auto'} display={['none', 'none', 'flex']} alignItems="flex-end">
+                <Text fontSize="2xl" fontWeight={300}>ID: {customer.id}</Text>
+                <Text fontSize="sm">Created At: {moment(customer.createdAt).format('D/MM/YYYY, h:mm:ss a')}</Text>
+                <Text fontSize="sm">Updated At: {moment(customer.updatedAt).format('D/MM/YYYY, h:mm:ss a')}</Text>
             </VStack>
         </Flex>
     );

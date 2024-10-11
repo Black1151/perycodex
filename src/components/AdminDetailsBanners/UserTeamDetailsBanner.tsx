@@ -4,7 +4,8 @@ import React from 'react';
 import {Box, Flex, FormControl, Heading, Text, VStack, Badge} from '@chakra-ui/react';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import GroupIcon from '@mui/icons-material/Group';
-import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined'; // For fallback or general case icon
+import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
+import moment from "moment/moment"; // For fallback or general case icon
 
 interface Team {
     id: number;
@@ -54,7 +55,17 @@ export const UserTeamDetailsBanner: React.FC<UserTeamDetailsBannerProps> = ({tea
 
             {/* Team/Department Information */}
             <VStack align="start" ml={4} minW={'300px'} spacing={3}>
-                <Heading fontWeight={600}>{team.name}</Heading>
+                <Flex alignItems="center">
+                    <Heading fontWeight={300}>{team.name}</Heading>
+                    <Box
+                        ml={2}
+                        w={4}
+                        h={4}
+                        borderRadius="full"
+                        border={'white 1px solid'}
+                        bg={team.isActive ? 'green.500' : 'red.500'}
+                    />
+                </Flex>
 
                 {/* Department or Team Badge */}
                 <Badge
@@ -69,8 +80,10 @@ export const UserTeamDetailsBanner: React.FC<UserTeamDetailsBannerProps> = ({tea
             </VStack>
 
             {/* Unique ID and Manager ID */}
-            <VStack ml={'auto'} display={['none', 'none', 'flex']}>
-                <Text fontSize="lg">ID: {team.id}</Text>
+            <VStack ml={'auto'} display={['none', 'none', 'flex']} alignItems="flex-end">
+                <Text fontSize="2xl" fontWeight={300}>ID: {team.id}</Text>
+                <Text fontSize="sm">Created At: {moment(team.createdAt).format('D/MM/YYYY, h:mm:ss a')}</Text>
+                <Text fontSize="sm">Updated At: {moment(team.updatedAt).format('D/MM/YYYY, h:mm:ss a')}</Text>
             </VStack>
         </Flex>
     );

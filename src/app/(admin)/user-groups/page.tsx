@@ -4,6 +4,7 @@ import {redirect} from "next/navigation";
 // AG Grids
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {groupFields} from "@/components/agGrids/dataFields/userGroupFields";
+import AdminHeader from "@/components/AdminHeader";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -17,8 +18,8 @@ export default async function UsersPage() {
         return redirect("/login");
     }
 
-    // Fetch userGroups data from the backend
-    const res = await fetch(`${process.env.BE_URL}/userGroup/allBy?selectColumns=id,name,customerId,description,isActive,uniqueId`, {
+    // Fetch user-groups data from the backend
+    const res = await fetch(`${process.env.BE_URL}/getAllView?view=vwUserGroupsList`, {
         headers: {
             Authorization: `Bearer ${authToken}`,
         },
@@ -31,18 +32,19 @@ export default async function UsersPage() {
     const userGroups = await res.json();
     const userGroupData = userGroups.resource;
 
+    // Check if teamData exists and has data
+    const userGroupCount = userGroupData ? userGroupData.length : 0;
+
     // Check if userGroupData exists and has data
-    if (userGroupData && userGroupData.length > 0) {
+    if (userGroupData && userGroupCount > 0) {
         return (
             <>
-                <DataGridComponent data={userGroupData} initialFields={groupFields}
-                                   createNewUrl={'/userGroups/create'}/>
-
-                {/*<Heading mt={4}>Client Fetched Data with Server Route</Heading>*/}
-                {/*<DataGridComponentClient*/}
-                {/*    endpoint={'api/userGroup/allBy?selectColumns=id,name,customerId,description,isActive,uniqueId'}*/}
-                {/*    initialFields={groupFields}*/}
-                {/*    createNewUrl={'/userGroups/create'}/>*/}
+                <AdminHeader headingText={'USER GROUPS'} dataCount={userGroupCount} />
+                <DataGridComponent
+                    data={userGroupData}
+                    initialFields={groupFields}
+                    createNewUrl={'/user-groups/create'}
+                />
             </>
         );
     } else {
