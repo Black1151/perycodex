@@ -4,7 +4,7 @@ import {redirect} from "next/navigation";
 // AG Grids
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {userFields} from "@/components/agGrids/dataFields/userFields";
-import InviteNewUserModal from "@/components/AdminDetailsBanners/InviteNewUserModal";
+import AdminHeader from "@/components/AdminHeader";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -20,42 +20,25 @@ export default async function UsersPage() {
     }
 
     // Fetch users data from the backend
-    const res = await fetch(`${process.env.BE_URL}/user/allBy?selectColumns=id,email,role,is_active,uniqueId`, {
+    const res = await fetch(`${process.env.BE_URL}/getAllView?view=vwUsersList&selectColumns=id,userUniqueId,email,role,fullName,jobTitle,imageUrl,custName,siteName,isActive`, {
         headers: {
             Authorization: `Bearer ${authToken}`,
         },
     });
 
-    if (!res.ok) {
-        return redirect("/error");
-    }
-
-    const userRes = await fetch(
-            `${process.env.BE_URL}/getView?view=vwLoggedInUserIdentity&userUniqueId=${uniqueId}`,
-            {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${authToken}`,
-                },
-            }
-        );
-
-    const signedInUser = await userRes.json();
-    const signedInUserData = signedInUser.resource;
-
     const users = await res.json();
     const userData = users.resource;
 
+    const userCount = userData ? userData.length : 0;
 
     // Check if userData exists and has data
-    if (userData && userData.length > 0) {
+    if (userData && userCount > 0) {
         return (
             <>
+                <AdminHeader headingText={'USERS'} dataCount={userCount}/>
                 <DataGridComponent data={userData}
                                    initialFields={userFields}
                                    createNewUrl={'/users/create'}
-                                   isModalEnabled={signedInUserData.role == 'PA'}
-                                   openModalComponent={<InviteNewUserModal />}
                 />
             </>
         );
