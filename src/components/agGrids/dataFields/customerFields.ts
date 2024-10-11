@@ -5,6 +5,12 @@ import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/Organis
 // Updated AgGrids fields
 export const customerFields: ColDef[] | any = [
     {
+        field: "id",
+        headerName: "ID",
+        filter: "agMultiColumnFilter",
+        flex: 1
+    },
+    {
         field: 'name',
         headerName: 'Name',
         filter: "agMultiColumnFilter",
@@ -32,6 +38,12 @@ export const customerFields: ColDef[] | any = [
     {
         field: 'noOfUsers',
         headerName: '# Users',
+        filter: "agNumberColumnFilter",
+        flex: 1,
+    },
+    {
+        field: 'noOfSites',
+        headerName: '# Sites',
         filter: "agNumberColumnFilter",
         flex: 1,
     },

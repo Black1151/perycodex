@@ -4,6 +4,7 @@ import {redirect} from "next/navigation";
 // AG Grids
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {siteFields} from "@/components/agGrids/dataFields/siteFields";
+import AdminHeader from "@/components/AdminHeader";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -18,7 +19,7 @@ export default async function SitesPage() {
     }
 
     // Fetch sites data from the backend
-    const res = await fetch(`${process.env.BE_URL}/site/allBy?selectColumns=id,site_name,postcode,customer_id,is_active,uniqueId`, {
+    const res = await fetch(`${process.env.BE_URL}/getAllView?view=vwSitesList&customerId=not-null&selectColumns=id,siteName,siteUniqueId,customerId,custName,siteTypeName,address1,postcode,isActive`, {
         headers: {
             Authorization: `Bearer ${authToken}`,
         },
@@ -32,18 +33,17 @@ export default async function SitesPage() {
     const siteData = sites.resource;
 
     // Check if siteData exists and has data
-    if (siteData && siteData.length > 0) {
+    const siteCount = siteData ? siteData.length : 0;
+
+    // Check if siteData exists and has data
+    if (siteData && siteCount > 0) {
         return (
             <>
+                <AdminHeader headingText={'SITES'} dataCount={siteCount} />
                 <DataGridComponent data={siteData}
                                    initialFields={siteFields}
                                    createNewUrl={'/sites/create'}/>
 
-                {/*<Heading mt={4}>Client Fetched Data with Server Route</Heading>*/}
-                {/*<DataGridComponentClient*/}
-                {/*    endpoint={'api/site/allBy?selectColumns=id,site_name,postcode,customer_id,is_active,uniqueId'}*/}
-                {/*    initialFields={siteFields}*/}
-                {/*    createNewUrl={'/sites/create'}/>*/}
             </>
         );
     } else {

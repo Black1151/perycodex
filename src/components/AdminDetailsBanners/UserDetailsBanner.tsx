@@ -190,7 +190,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
     const isUploading = false; // TODO: Add logic to upload a new photo
 
     return (
-        <Flex mb={4} background={'perygonPink'} p={4} borderRadius={8} color={'text'} overflow={'hidden'}>
+        <Flex mb={4} p={4} borderRadius={8} color={'text'} overflow={'hidden'}>
             {/*Image Upload*/}
             <FormControl w={'100px'} h={'100px'} aspectRatio={1} borderRadius={'full'}>
                 <Box

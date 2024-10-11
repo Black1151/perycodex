@@ -1,10 +1,11 @@
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
+
+// AG Grids
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {customerFields} from "@/components/agGrids/dataFields/customerFields";
 import AdminHeader from "@/components/AdminHeader";
 
-// AG Grids
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const fetchCache = "force-no-store";
@@ -19,7 +20,7 @@ export default async function CustomersPage() {
 
     // Fetch customer data from the backend
     const res = await fetch(
-        `${process.env.BE_URL}/getAllView?view=vwCustomersList&selectColumns=name,custId,address3,country,customerCode,numberOfEmployees,imageUrl,isActive,noOfUsers,sectorName,customerType`,
+        `${process.env.BE_URL}/getAllView?view=vwCustomersList&selectColumns=id,name,custId,address3,country,customerCode,numberOfEmployees,imageUrl,isActive,noOfUsers,noOfSites,sectorName,customerType`,
         {
             headers: {
                 Authorization: `Bearer ${authToken}`,

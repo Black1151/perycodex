@@ -87,7 +87,7 @@ export const lightSurveyTheme = {
         // Background of SurveyJS colors
         "--sjs-general-backcolor": "#E5E5E500", // Unsure what this one is doing
         "--sjs-general-backcolor-dark": "#FFFFFF00", // Unsure what this one is doing
-        "--sjs-general-backcolor-dim": "#FFFFFF00", // Background of SurveyJS if no image / Also used for background of the dropdown selections
+        "--sjs-general-backcolor-dim": "#FFFFFF", // Background of SurveyJS if no image / Also used for background of the dropdown selections
         "--sjs-general-backcolor-dim-light": "#FFFFFF00", // Unsure what this one is doing
         "--sjs-general-backcolor-dim-dark": "#FFFFFF00", // Unsure what this one is doing
 

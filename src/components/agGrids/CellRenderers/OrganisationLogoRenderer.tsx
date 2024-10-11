@@ -30,7 +30,7 @@ const CustomerLogoRenderer: React.FC<CustomerLogoRendererProps> = (props) => {
 
     return (
         <Link href={link} passHref>
-            <Flex alignItems="center" as={'a'} justifyContent="flex-start" w="full" h="full" maxW="full" gap={4}>
+            <Flex alignItems="center" justifyContent="flex-start" w="full" h="full" maxW="full" gap={4}>
                 {imageUrl ? (
                     <Box
                         flexShrink={0}
