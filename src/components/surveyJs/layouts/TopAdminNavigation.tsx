@@ -51,76 +51,66 @@ const TopAdminNavigation: React.FC<TopAdminNavigationProps> = ({
                     </Box>
 
                     {/* Page List Options */}
-                    {pageListOptions.map((pageOption) => {
-                        const isFilled = pageNo >= pageOption.index;
-                        const isGoingForward = pageNo > previousPageNo.current;
-                        const isGoingBackward = pageNo < previousPageNo.current;
+                    <Flex justifyContent="space-between" alignItems="flex-start" w="100%">
+                        {pageListOptions.map((pageOption) => {
+                            const isFilled = pageNo >= pageOption.index;
+                            const isGoingForward = pageNo > previousPageNo.current;
+                            const isGoingBackward = pageNo < previousPageNo.current;
 
-                        // Calculate delay for forward and backward animations
-                        const forwardDelay = pageOption.index * animationDuration; // Delay for forward animation
-                        const backwardDelay = (pageListOptions.length - pageOption.index - 1) * animationDuration; // Reverse delay for backward
+                            const forwardDelay = pageOption.index * animationDuration;
+                            const backwardDelay = (pageListOptions.length - pageOption.index - 1) * animationDuration;
 
-                        const delay = isGoingForward
-                            ? forwardDelay // Delay increases for forward animation
-                            : isGoingBackward
-                                ? backwardDelay // Delay increases for reverse animation
-                                : 0;
+                            const delay = isGoingForward
+                                ? forwardDelay
+                                : isGoingBackward
+                                    ? backwardDelay
+                                    : 0;
 
-                        return (
-                            <Flex
-                                key={pageOption.index}
-                                textAlign="center"
-                                flex={1}
-                                mx={2}
-                                px={4}
-                                flexDirection="column"
-                                alignItems="center"
-                                justifyContent="center"
-                                minW="85px"
-                                maxW="90%"
-                            >
-                                {/* Static Gray Background Bar */}
-                                <Box
-                                    position="relative"
-                                    w="100%"
-                                    h="4px"
-                                    bg="gray.300" // Static gray background
-                                    borderRadius="lg"
-                                    mb={2}
+                            return (
+                                <Flex
+                                    key={pageOption.index}
+                                    textAlign="center"
+                                    flex={1}
+                                    mx={2}
+                                    px={4}
+                                    flexDirection="column"
+                                    alignItems="center"
+                                    justifyContent="flex-start"
+                                    minW="85px"
+                                    maxW="95%"
+                                    height="full"
                                 >
-                                    {/* Animated Green Filling Bar */}
-                                    <MotionBox
-                                        position="absolute"
-                                        top={0}
-                                        left={0}
-                                        h="100%"
-                                        bg="green.400" // The filling green color
-                                        borderRadius="lg"
-                                        initial={{width: 0}}
-                                        animate={{
-                                            width: isFilled ? '100%' : '0%',
-                                        }} // Animate fill or un-fill
-                                        transition={{
-                                            duration: animationDuration,
-                                            ease: 'linear', // Remove easing
-                                            delay, // Stagger the animation with calculated delay
-                                        }}
-                                    />
-                                </Box>
+                                    <Box position="relative" w="100%" h="16px" bg="gray.300" borderRadius="lg" mb={2}>
+                                        <MotionBox
+                                            position="absolute"
+                                            top={0}
+                                            left={0}
+                                            h="100%"
+                                            bg="green.400"
+                                            borderRadius="lg"
+                                            initial={{width: 0}}
+                                            animate={{width: isFilled ? '100%' : '0%'}}
+                                            transition={{
+                                                duration: animationDuration,
+                                                ease: 'linear',
+                                                delay,
+                                            }}
+                                        />
+                                    </Box>
 
-                                {/* Page Option Name */}
-                                <Text
-                                    cursor="pointer"
-                                    color={pageNo === pageOption.index ? 'perygonPink' : 'gray.500'}
-                                    fontWeight={pageNo === pageOption.index ? 'bold' : 'normal'}
-                                    fontSize={'xs'}
-                                    onClick={() => jumpToPage(pageOption.index)}
-                                >
-                                    {pageOption.name}
-                                </Text>
-                            </Flex>
-                        );
-                    })}
+                                    <Text
+                                        cursor="pointer"
+                                        color={pageNo === pageOption.index ? 'perygonPink' : 'gray.500'}
+                                        fontWeight={pageNo === pageOption.index ? 'bold' : 'normal'}
+                                        fontSize="xs"
+                                        onClick={() => jumpToPage(pageOption.index)}
+                                    >
+                                        {pageOption.name}
+                                    </Text>
+                                </Flex>
+                            );
+                        })}
+                    </Flex>
 
                     {/* Right Icon - Attach onClick to the icons */}
                     <Box maxW={'50px'}>
