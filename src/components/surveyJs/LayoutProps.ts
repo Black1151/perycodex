@@ -21,7 +21,5 @@ export interface LayoutProps {
     cancelForm: () => void;
     handleToggleEdit: () => void;
     canEdit: boolean;
-    PageList: React.ReactNode;
-    PageSelector: React.ReactNode;
     pageListOptions: PageOption[];
 }
