@@ -72,8 +72,6 @@ const SurveyJsComponent: React.FC<SurveyJsComponentProps> = ({
         submitForm,
         cancelForm,
         handleToggleEdit,
-        PageList,
-        PageSelector,
     } = useSurvey({
         jsonSchema: jsonSchema,
         isEditing: isEditing,
@@ -106,8 +104,6 @@ const SurveyJsComponent: React.FC<SurveyJsComponentProps> = ({
             cancelForm={cancelForm}
             handleToggleEdit={handleToggleEdit}
             canEdit={canEdit}
-            PageList={PageList}
-            PageSelector={PageSelector}
             pageListOptions={pageListOptions}
         />
     );
