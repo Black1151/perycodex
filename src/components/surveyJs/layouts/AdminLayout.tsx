@@ -23,8 +23,6 @@ const AdminLayout: React.FC<LayoutProps> = ({
                                                 cancelForm,
                                                 canEdit,
                                                 handleToggleEdit,
-                                                PageList,
-                                                PageSelector,
                                                 pageListOptions
                                             }) => {
     const [isAnimating, setIsAnimating] = useState(false); // State to control animation
