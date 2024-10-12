@@ -1,5 +1,4 @@
 import {SurveyModel} from "survey-core"
-import React from "react";
 
 interface PageOption {
     name: string;

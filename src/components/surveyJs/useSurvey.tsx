@@ -19,7 +19,7 @@ import {
     registerSurveyFunctionsWithoutSurvey,
     registerSurveyJsFunctionsWithSurvey,
 } from "@/components/surveyJs/customSurveyJsFunctions";
-import {Box, Button, Flex, Select, Text, useToast, VStack,} from "@chakra-ui/react";
+import {useToast} from "@chakra-ui/react";
 import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 
