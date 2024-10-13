@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Survey} from 'survey-react-ui';
-import TopNavigation from "@/components/surveyjs-new/layout/default/TopNavigation";
+import TopNavigation from "@/components/surveyjs/layout/default/TopNavigation";
 import {Box, Flex} from "@chakra-ui/react";
 import {motion} from "framer-motion";
-import useSurveyNavigation from "@/components/surveyjs-new/useSurveyNavigation";
-import BottomNavigation from "@/components/surveyjs-new/layout/default/BottomNavigation";
-import {LayoutProps} from "@/components/surveyjs-new/SurveyProps";
+import useSurveyNavigation from "@/components/surveyjs/useSurveyNavigation";
+import BottomNavigation from "@/components/surveyjs/layout/default/BottomNavigation";
+import {LayoutProps} from "@/components/surveyjs/SurveyProps";
 
 const MotionBox = motion(Box); // Create a motion-wrapped Box for animations
 

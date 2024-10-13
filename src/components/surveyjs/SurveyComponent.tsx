@@ -2,10 +2,10 @@
 
 import React from 'react';
 import 'survey-core/defaultV2.css';
-import Layout from '@/components/surveyjs-new/layout/default/Layout';
-import {LayoutProps, SurveyComponentProps} from '@/components/surveyjs-new/SurveyProps';
-import useSurvey from './useSurvey';
-import useSurveySubmission from "@/components/surveyjs-new/useSurveySubmission"; // Import the custom hook
+import Layout from '@/components/surveyjs/layout/default/Layout';
+import {LayoutProps, SurveyComponentProps} from '@/components/surveyjs/SurveyProps';
+import useSurvey from '@/components/surveyjs/useSurvey';
+import useSurveySubmission from "@/components/surveyjs/useSurveySubmission"; // Import the custom hook
 
 type LayoutMap = {
     [key: string]: React.FC<LayoutProps>;

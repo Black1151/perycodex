@@ -1,8 +1,8 @@
 "use client";
 
 import React, {useState} from "react";
-import AdminLayout from "@/components/surveyJs/layouts/AdminLayout";
-import useSurvey from "@/components/surveyJs/useSurvey";
+import AdminLayout from "@/components/Z_surveyJs/layouts/AdminLayout";
+import useSurvey from "@/components/Z_surveyJs/useSurvey";
 import "survey-core/defaultV2.min.css";
 
 

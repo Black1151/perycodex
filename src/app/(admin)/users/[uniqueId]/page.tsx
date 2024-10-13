@@ -1,9 +1,9 @@
 import React from 'react';
 import {UserDetailsBanner} from "@/components/AdminDetailsBanners/UserDetailsBanner";
-import {userJson} from "@/components/surveyJs/forms/user";
+import {userJson} from "@/components/Z_surveyJs/forms/user";
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
-import SurveyComponent from "@/components/surveyjs-new/SurveyComponent";
+import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 
 export default async function UserPage({params}: { params: { uniqueId: string } }) {
     const cookieStore = cookies();

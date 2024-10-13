@@ -2,9 +2,9 @@ import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
 
 // SurveyJS
-import {customerJson} from "@/components/surveyJs/forms/customer";
+import {customerJson} from "@/components/Z_surveyJs/forms/customer";
 import AdminHeader from "@/components/AdminHeader";
-import SurveyComponent from "@/components/surveyjs-new/SurveyComponent";
+import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;

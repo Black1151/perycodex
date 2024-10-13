@@ -2,9 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {Box, Flex} from "@chakra-ui/react";
 import {Survey} from "survey-react-ui";
 import {motion} from 'framer-motion'; // Import framer-motion for animations
-import TopAdminNavigation from "@/components/surveyJs/layouts/TopAdminNavigation";
-import {LayoutProps} from "@/components/surveyJs/LayoutProps";
-import BottomAdminNavigation from "@/components/surveyJs/layouts/BottomAdminNavigation";
+import TopAdminNavigation from "@/components/Z_surveyJs/layouts/TopAdminNavigation";
+import {LayoutProps} from "@/components/Z_surveyJs/LayoutProps";
+import BottomAdminNavigation from "@/components/Z_surveyJs/layouts/BottomAdminNavigation";
 
 const MotionBox = motion(Box); // Create a motion-wrapped Box for animations
 

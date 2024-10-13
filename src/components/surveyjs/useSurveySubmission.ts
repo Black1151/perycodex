@@ -4,7 +4,7 @@ import {useEffect} from 'react';
 import {SurveyModel} from 'survey-core';
 import {useToast} from '@chakra-ui/react'; // Assuming Chakra UI's toast is used for notifications
 import {useRouter} from 'next/navigation';
-import {UseSurveySubmissionProps} from "@/components/surveyjs-new/SurveyProps"; // For redirection after submission (if needed)
+import {UseSurveySubmissionProps} from "@/components/surveyjs/SurveyProps"; // For redirection after submission (if needed)
 
 const useSurveySubmission = ({
                                  model,

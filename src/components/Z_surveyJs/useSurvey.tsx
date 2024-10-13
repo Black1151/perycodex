@@ -13,12 +13,12 @@ import {
     icon8,
     icon9,
     icon10
-} from "@/components/surveyJs/happiness/happinessIndex";
+} from "@/components/Z_surveyJs/happiness/happinessIndex";
 
 import {
     registerSurveyFunctionsWithoutSurvey,
     registerSurveyJsFunctionsWithSurvey,
-} from "@/components/surveyJs/customSurveyJsFunctions";
+} from "@/components/Z_surveyJs/customSurveyJsFunctions";
 import {useToast} from "@chakra-ui/react";
 import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";

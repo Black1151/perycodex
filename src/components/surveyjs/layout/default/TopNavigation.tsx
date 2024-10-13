@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Flex, Box, Text, Stack} from "@chakra-ui/react";
-import SurveyModal from "@/components/surveyjs-new/layout/default/SurveyModal";
-import {NavigationProps} from "@/components/surveyjs-new/SurveyProps";
-import useModal from "@/components/surveyjs-new/useModal";
+import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
+import {NavigationProps} from "@/components/surveyjs/SurveyProps";
+import useModal from "@/components/surveyjs/useModal";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import CancelIcon from "@mui/icons-material/Cancel";

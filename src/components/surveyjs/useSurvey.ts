@@ -4,9 +4,9 @@ import {Model, Serializer, settings, SurveyModel, SvgRegistry} from 'survey-core
 import {
     registerSurveyFunctionsWithoutSurvey,
     registerSurveyJsFunctionsWithSurvey
-} from "@/components/surveyjs-new/customSurveyJsFunctions";
-import {registerSeduloSvgIcons} from "@/components/surveyjs-new/registerSvgIcons";
-import {UseSurveyProps} from "@/components/surveyjs-new/SurveyProps";
+} from "@/components/surveyjs/customSurveyJsFunctions";
+import {registerSeduloSvgIcons} from "@/components/surveyjs/registerSvgIcons";
+import {UseSurveyProps} from "@/components/surveyjs/SurveyProps";
 import {lightSurveyTheme} from "@/theme/surveyJsTheme";
 
 

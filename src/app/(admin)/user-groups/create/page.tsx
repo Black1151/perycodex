@@ -3,9 +3,9 @@ import {redirect} from "next/navigation";
 import {Heading} from "@chakra-ui/react";
 
 // SurveyJS
-import {userGroupJson} from "@/components/surveyJs/forms/userGroup";
+import {userGroupJson} from "@/components/Z_surveyJs/forms/userGroup";
 import AdminHeader from "@/components/AdminHeader";
-import SurveyComponent from "@/components/surveyjs-new/SurveyComponent";
+import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
