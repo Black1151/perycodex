@@ -114,6 +114,7 @@ export const userJson = {
                         allowClear: true,
                         isRequired: true,
                         visibleIf: "{userTypePaying} = true",
+                        enableIf: "{customerID} notempty",
                         choicesByUrl: {
                             url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/userTeam/allBy?customerId={customerId}&parentTeamId=null`,  // The API endpoint to fetch choices from
                             path: "resource",
@@ -131,6 +132,7 @@ export const userJson = {
                         visibleIf: "{userTypePaying} = true",
                         placeholder: "Select (customer) team user works in",
                         allowClear: true,
+                        enableIf: "{customerID} notempty and {departmentId} notempty",
                         choicesByUrl: {
                             url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/userTeam/allBy?customerId={customerId}&parentTeamId={departmentId}`,  // The API endpoint to fetch choices from
                             path: "resource",
@@ -254,6 +256,7 @@ export const userJson = {
                         allowClear: true,
                         visibleIf: "{remoteWorker} = false",
                         isRequired: true,
+                        enableIf: "{customerID} notempty",
                         choicesByUrl: {
                             url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/site/allBy?customerId={customerId}`,  // The API endpoint to fetch choices from
                             path: "resource",
