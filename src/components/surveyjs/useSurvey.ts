@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {Model, Serializer, settings, SurveyModel, SvgRegistry} from 'survey-core';
+import {Model, Serializer, settings, SurveyModel } from 'survey-core';
 
 import {
     registerSurveyFunctionsWithoutSurvey,

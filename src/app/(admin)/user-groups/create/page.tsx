@@ -1,6 +1,5 @@
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
-import {Heading} from "@chakra-ui/react";
 
 // SurveyJS
 import {userGroupJson} from "@/components/Z_surveyJs/forms/userGroup";

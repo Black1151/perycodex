@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {Flex, Box, Text, Stack} from "@chakra-ui/react";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import {NavigationProps} from "@/components/surveyjs/SurveyProps";
