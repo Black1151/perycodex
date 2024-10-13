@@ -2,7 +2,7 @@ export const userTeamJson = {
     pages: [
         {
             name: "user-team-details",
-            title: "Department / Team",
+            title: "{teamTypeName}",
             elements: [
                 {
                     type: "boolean",
@@ -99,7 +99,7 @@ export const userTeamJson = {
     calculatedValues: [
         {
             name: "teamTypeName",
-            expression: "iif({teamType}, 'Department', 'Team')"
+            expression: "iif({isDepartment}, 'Department', 'Team')"
         }
     ]
 };

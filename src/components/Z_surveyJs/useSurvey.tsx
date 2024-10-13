@@ -13,13 +13,13 @@ import {
     icon8,
     icon9,
     icon10
-} from "@/components/surveyJs/happiness/happinessIndex";
+} from "@/components/Z_surveyJs/happiness/happinessIndex";
 
 import {
     registerSurveyFunctionsWithoutSurvey,
     registerSurveyJsFunctionsWithSurvey,
-} from "@/components/surveyJs/customSurveyJsFunctions";
-import {Box, Button, Flex, Select, Text, useToast, VStack,} from "@chakra-ui/react";
+} from "@/components/Z_surveyJs/customSurveyJsFunctions";
+import {useToast} from "@chakra-ui/react";
 import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 
@@ -348,11 +348,30 @@ const useSurvey = ({
 
     // Get page list options
     const getPageListOptions = (): PageOption[] => {
-        return survey.visiblePages.map((page: SurveyPage, i: number) => ({
-            name: page.title || `Page ${i + 1}`,
-            index: i,
-        }));
+        // Helper function to replace variables in a string with their corresponding values
+        const replaceVariables = (str: string, survey: Model) => {
+            return str.replace(/\{([^}]+)\}/g, (match, variableName) => {
+                // Retrieve the value of the variable from the survey model
+                const value = survey.getVariable(variableName) || survey.data[variableName];
+
+                // If the variable exists, replace it with its value; otherwise, return the original match
+                return value !== undefined ? value : match;
+            });
+        };
+
+
+        // Map through visible pages and replace any variables found in their titles
+        return survey.visiblePages.map((page: SurveyPage, i: number) => {
+            // If the page has a title, replace variables in it, otherwise use a default name
+            const pageTitle = page.title ? replaceVariables(page.title, survey) : `Page ${i + 1}`;
+
+            return {
+                name: pageTitle,
+                index: i,
+            };
+        });
     };
+
     const [pageListOptions, setPageListOptions] = useState(getPageListOptions());
 
     const updatePageListOptions = () => {
@@ -401,48 +420,7 @@ const useSurvey = ({
         survey.mode = "display";
     };
 
-    const PageSelector = (
-        <Select
-            value={pageNo}
-            onChange={(evt) => {
-                jumpToPage(parseInt(evt.target.value));
-            }}
-            width={["", "", "full"]}
-        >
-            {pageListOptions.map((page) => (
-                <option key={page.index} value={page.index}>
-                    {page.name}
-                </option>
-            ))}
-        </Select>
-    );
 
-    // Page list component
-    const PageList = (
-        <VStack align="stretch" w={"full"}>
-            {pageListOptions.map((page) => (
-                <Button
-                    border={page.index === pageNo ? "1px solid green" : ""}
-                    variant={"navbar"}
-                    key={page.index}
-                    onClick={() => jumpToPage(page.index)}
-                >
-                    <Flex align={"center"} justify={"flex-start"}>
-                        <Box
-                            w={2} // Set a fixed width
-                            h={2} // Set a fixed height
-                            bg={page.index === pageNo ? "green" : ""}
-                            borderRadius={"full"}
-                            mr={2} // Add some margin to the right for spacing
-                        />
-                        <Text m={0} p={0}>
-                            {page.name}
-                        </Text>
-                    </Flex>
-                </Button>
-            ))}
-        </VStack>
-    );
 
     return {
         survey,
@@ -453,8 +431,6 @@ const useSurvey = ({
         handleToggleEdit,
         submitForm,
         cancelForm,
-        PageSelector,
-        PageList,
         pageNo,
         setPageNo,
     };

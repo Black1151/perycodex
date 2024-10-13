@@ -1,9 +1,9 @@
 import React from 'react';
-import SurveyJsComponent from "@/components/surveyJs/SurveyJsComponent";
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
-import {userTeamJson} from "@/components/surveyJs/forms/userTeam";
+import {userTeamJson} from "@/components/Z_surveyJs/forms/userTeam";
 import {UserTeamDetailsBanner} from "@/components/AdminDetailsBanners/UserTeamDetailsBanner";
+import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 
 export default async function UserTeamPage({params}: { params: { uniqueId: string } }) {
     const cookieStore = cookies();
@@ -31,8 +31,8 @@ export default async function UserTeamPage({params}: { params: { uniqueId: strin
     return (
         <div>
             <UserTeamDetailsBanner team={userTeamData}/>
-            <SurveyJsComponent
-                jsonSchema={userTeamJson}
+            <SurveyComponent
+                surveyJson={userTeamJson}
                 endpoint={`/userTeam/${params.uniqueId}`}
                 isNew={false}
                 dataset={userTeamData}

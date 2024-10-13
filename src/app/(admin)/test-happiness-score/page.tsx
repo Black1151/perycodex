@@ -5,8 +5,8 @@ import {redirect} from "next/navigation";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {groupFields} from "@/components/agGrids/dataFields/userGroupFields";
 import AdminHeader from "@/components/AdminHeader";
-import SurveyJsComponent from "@/components/surveyJs/SurveyJsComponent";
-import {happinessJson} from "@/components/surveyJs/forms/happiness";
+import SurveyJsComponent from "@/components/Z_surveyJs/SurveyJsComponent";
+import {happinessJson} from "@/components/Z_surveyJs/forms/happiness";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -29,11 +29,11 @@ export default async function UsersPage() {
                 endpoint={'/helper'}
                 isNew={true}
                 cssPath={'/css/happiness.css'}
-                sjsPath={"@/components/surveyJs/happiness/happiness"}
+                sjsPath={"@/components/Z_surveyJs/happiness/happiness"}
             />
         </>
     );
 }
 
-import "../../../components/surveyJs/happiness/index.css";
+import "@/components/Z_surveyJs/happiness/index.css";
 

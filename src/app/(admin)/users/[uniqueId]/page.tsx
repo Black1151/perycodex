@@ -1,11 +1,11 @@
 import React from 'react';
-import SurveyJsComponent from "@/components/surveyJs/SurveyJsComponent";
 import {UserDetailsBanner} from "@/components/AdminDetailsBanners/UserDetailsBanner";
-import {userJson} from "@/components/surveyJs/forms/user";
+import {userJson} from "@/components/Z_surveyJs/forms/user";
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
+import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 
-export default async function UserPage ({ params }: { params: { uniqueId: string } }) {
+export default async function UserPage({params}: { params: { uniqueId: string } }) {
     const cookieStore = cookies();
     const authToken = cookieStore.get("auth_token")?.value;
 
@@ -30,9 +30,9 @@ export default async function UserPage ({ params }: { params: { uniqueId: string
 
     return (
         <>
-            <UserDetailsBanner user={userData} />
-            <SurveyJsComponent
-                jsonSchema={userJson}
+            <UserDetailsBanner user={userData}/>
+            <SurveyComponent
+                surveyJson={userJson}
                 endpoint={`/user/${params.uniqueId}`}
                 isNew={false}
                 dataset={userData}

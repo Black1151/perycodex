@@ -1,5 +1,4 @@
 import {SurveyModel} from "survey-core"
-import React from "react";
 
 interface PageOption {
     name: string;
@@ -21,7 +20,5 @@ export interface LayoutProps {
     cancelForm: () => void;
     handleToggleEdit: () => void;
     canEdit: boolean;
-    PageList: React.ReactNode;
-    PageSelector: React.ReactNode;
     pageListOptions: PageOption[];
 }

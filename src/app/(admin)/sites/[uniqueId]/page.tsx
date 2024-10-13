@@ -1,9 +1,9 @@
 import React from "react";
-import SurveyJsComponent from "@/components/surveyJs/SurveyJsComponent";
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
-import {siteJson} from "@/components/surveyJs/forms/site";
+import {siteJson} from "@/components/Z_surveyJs/forms/site";
 import {SiteDetailsBanner} from "@/components/AdminDetailsBanners/SiteDetailsBanner";
+import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 
 export default async function SitePage({
                                            params,
@@ -38,8 +38,8 @@ export default async function SitePage({
     return (
         <div>
             <SiteDetailsBanner site={siteData}/>
-            <SurveyJsComponent
-                jsonSchema={siteJson}
+            <SurveyComponent
+                surveyJson={siteJson}
                 endpoint={`/site/${params.uniqueId}`}
                 isNew={false}
                 dataset={siteData}
