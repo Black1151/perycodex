@@ -2,8 +2,9 @@ import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
 
 // SurveyJS
-import SurveyJsComponent from "@/components/surveyJs/SurveyJsComponent";
 import {userJson} from "@/components/surveyJs/forms/user"
+import SurveyComponent from "@/components/surveyjs-new/SurveyComponent";
+import AdminHeader from "@/components/AdminHeader";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -18,11 +19,14 @@ export default async function CustomersPage() {
     }
 
     return (
-        <SurveyJsComponent
-            jsonSchema={userJson}
-            endpoint={'/user'}
-            isNew={true}
-            redirectUrl={'/users'}
-        />
+        <>
+            <AdminHeader headingText={'CREATE USER'}/>
+            <SurveyComponent
+                surveyJson={userJson}
+                endpoint={'/user'}
+                isNew={true}
+                redirectUrl={'/users'}
+            />
+        </>
     );
 }

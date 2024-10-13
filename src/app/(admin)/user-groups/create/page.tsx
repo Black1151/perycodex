@@ -3,9 +3,9 @@ import {redirect} from "next/navigation";
 import {Heading} from "@chakra-ui/react";
 
 // SurveyJS
-import SurveyJsComponent from "@/components/surveyJs/SurveyJsComponent";
 import {userGroupJson} from "@/components/surveyJs/forms/userGroup";
 import AdminHeader from "@/components/AdminHeader";
+import SurveyComponent from "@/components/surveyjs-new/SurveyComponent";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -22,8 +22,8 @@ export default async function CustomersPage() {
     return (
         <>
             <AdminHeader headingText={'CREATE USER GROUP'}/>
-            <SurveyJsComponent
-                jsonSchema={userGroupJson}
+            <SurveyComponent
+                surveyJson={userGroupJson}
                 endpoint={'/userGroup'}
                 isNew={true}
                 redirectUrl={'/user-groups'}

@@ -2,9 +2,9 @@ import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
 
 // SurveyJS
-import SurveyJsComponent from "@/components/surveyJs/SurveyJsComponent";
 import {customerJson} from "@/components/surveyJs/forms/customer";
 import AdminHeader from "@/components/AdminHeader";
+import SurveyComponent from "@/components/surveyjs-new/SurveyComponent";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -21,8 +21,8 @@ export default async function CustomersPage() {
     return (
         <>
             <AdminHeader headingText={'CREATE CUSTOMER'}/>
-            <SurveyJsComponent
-                jsonSchema={customerJson}
+            <SurveyComponent
+                surveyJson={customerJson}
                 endpoint={'/customer'}
                 isNew={true}
                 redirectUrl={'/customers'}

@@ -1,9 +1,9 @@
 import React from 'react';
-import SurveyJsComponent from "@/components/surveyJs/SurveyJsComponent";
 import {CustomerDetailsBanner} from "@/components/AdminDetailsBanners/CustomerDetailsBanner"
 import {customerJson} from "@/components/surveyJs/forms/customer";
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
+import SurveyComponent from "@/components/surveyjs-new/SurveyComponent";
 
 export default async function CustomerPage({params}: { params: { uniqueId: string } }) {
     const cookieStore = cookies();
@@ -31,8 +31,8 @@ export default async function CustomerPage({params}: { params: { uniqueId: strin
     return (
         <div>
             <CustomerDetailsBanner customer={customerData}/>
-            <SurveyJsComponent
-                jsonSchema={customerJson}
+            <SurveyComponent
+                surveyJson={customerJson}
                 endpoint={`/customer/${params.uniqueId}`}
                 isNew={false}
                 dataset={customerData}
