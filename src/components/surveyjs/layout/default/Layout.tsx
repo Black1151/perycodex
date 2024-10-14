@@ -9,7 +9,7 @@ import {LayoutProps} from "@/components/surveyjs/SurveyProps";
 
 const MotionBox = motion(Box); // Create a motion-wrapped Box for animations
 
-const Layout: React.FC<LayoutProps> = ({model, dataset}) => {
+const DefaultLayout: React.FC<LayoutProps> = ({model, dataset}) => {
     const {
         currentPage,
         setCurrentPage,
@@ -114,4 +114,4 @@ const Layout: React.FC<LayoutProps> = ({model, dataset}) => {
     );
 };
 
-export default Layout;
+export default DefaultLayout;

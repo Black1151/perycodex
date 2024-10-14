@@ -1,19 +1,23 @@
 import {useState, useEffect} from 'react';
-import {Model, Serializer, settings, SurveyModel } from 'survey-core';
+import {Model, Serializer, settings, SurveyModel} from 'survey-core';
 
 import {
     registerSurveyFunctionsWithoutSurvey,
     registerSurveyJsFunctionsWithSurvey
-} from "@/components/surveyjs/customSurveyJsFunctions";
-import {registerSeduloSvgIcons} from "@/components/surveyjs/registerSvgIcons";
-import {UseSurveyProps} from "@/components/surveyjs/SurveyProps";
-import {lightSurveyTheme} from "@/theme/surveyJsTheme";
+} from "@/components/surveyjs/globalJsFunctions";
+import {ThemeModule, UseSurveyProps} from "@/components/surveyjs/SurveyProps";
 
+const useSurvey = ({
+                       surveyJson,
+                       isNew,
+                       dataset,
+                       cssPath,
+                       sjsPath,
+                       jsPath
+                   }: UseSurveyProps) => {
 
-// TODO: Theming with CSS and SJS Variables
-
-const useSurvey = ({surveyJson, isNew, dataset}: UseSurveyProps) => {
     const [model, setModel] = useState<SurveyModel | null>(null);
+    const [isLoading, setIsLoading] = useState(true);  // New loading state
 
     // ? Global Setting
 
@@ -27,32 +31,10 @@ const useSurvey = ({surveyJson, isNew, dataset}: UseSurveyProps) => {
     Serializer.findProperty("choicesByUrl", "allowEmptyResponse").defaultValue =
         true;
 
-    // Disable caching of previous responses
-    // settings.useCachingForChoicesRestful = false;
-
     useEffect(() => {
         if (!surveyJson) return;
 
-        // Initialize the Survey model with the provided JSON
-        const defaultSurveyOptions = {
-            widthMode: "responsive",
-            fitToContainer: true,
-            showQuestionNumbers: false,
-            questionErrorLocation: "bottom",
-            focusOnFirstError: true,
-            checkErrorsMode: "onValueChanged",
-            backgroundOpacity: 0,
-            showNavigationButtons: false,
-            showCompletedPage: false,
-            showPageTitles: false
-        };
-
-        const model = new Model(
-            {
-                ...defaultSurveyOptions,
-                ...surveyJson
-            }
-        );
+        const model = new Model(surveyJson);
 
         // Custom Sedulo Functions that need to be registered
         registerSurveyFunctionsWithoutSurvey();
@@ -61,10 +43,55 @@ const useSurvey = ({surveyJson, isNew, dataset}: UseSurveyProps) => {
         registerSurveyJsFunctionsWithSurvey(model);
 
         // Register all the custom SVG Icons
-        registerSeduloSvgIcons();
+        const applyJsPath = async (): Promise<void> => {
+            if (jsPath) {
+                try {
+                    // Dynamically import the module based on the jsPath
+                    const jsModule = await import(`@/components/surveyjs/jsPath/${jsPath}`);
 
-        // Applying a theme mapping based on SurveyJS Variables
-        model.applyTheme(lightSurveyTheme);
+                    // Check and apply the exported functions if they exist
+                    if (jsModule?.applyJsWithoutSurvey) {
+                        await jsModule.applyJsWithoutSurvey(); // Execute the function
+                    } else {
+                        console.error(`applyJsWithoutSurvey function not found in module at path: ${jsPath}`);
+                    }
+
+                    if (jsModule?.applyJsWithSurvey) {
+                        await jsModule.applyJsWithSurvey(model); // Pass the survey object if necessary
+                    } else {
+                        console.error(`applyJsWithSurvey function not found in module at path: ${jsPath}`);
+                    }
+
+                } catch (error) {
+                    console.error(`Error loading JS functions from path: ${jsPath}`, error);
+                }
+            } else {
+                console.log("No JS path supplied")
+            }
+        };
+
+        applyJsPath();
+
+        // Dynamically import and apply `themeJson` based on `sjsPath` prop
+        const applyTheme = async (): Promise<void> => {
+            if (sjsPath) {
+                try {
+                    const themeModule: ThemeModule = await import(`@/theme/sjsPath/${sjsPath}`); // Construct the path dynamically
+                    if (themeModule.themeJson) {
+                        await model.applyTheme(themeModule.themeJson);
+                    } else {
+                        console.error(`themeJson not found in module at path: ${sjsPath}`);
+                    }
+                } catch (error) {
+                    console.error(`Error loading SurveyJS theme from path: ${sjsPath}`, error);
+                }
+            }
+
+            setIsLoading(false);  // Set loading state to false once theme is applied
+        };
+
+        // Call applyTheme to ensure it's applied asynchronously
+        applyTheme();
 
         model.onOpenDropdownMenu.add((_, options) => {
             options.menuType = "dropdown"
@@ -73,11 +100,11 @@ const useSurvey = ({surveyJson, isNew, dataset}: UseSurveyProps) => {
         const user = {
             name: "Oliver",
             number: "07375851855"
-        } // TODO: Make this a PROP or able to get this from state
+        }; // TODO: Make this a PROP or able to get this from state
         // Set Common Variables that will be needed within the survey
         model.setVariable("setUserDetails", user);
 
-        // Set survey to read only mode depending on state of isEditing
+        // Set survey to read-only mode depending on state of isEditing
         if (isNew) {
             model.mode = "edit";
         } else {
@@ -99,11 +126,11 @@ const useSurvey = ({surveyJson, isNew, dataset}: UseSurveyProps) => {
         // Survey dataset to include fields that are hidden (not default)
         model.clearInvisibleValues = false;
 
-        setModel(model);
+        setModel(model);  // Set the model after everything is initialized
 
     }, [surveyJson]);
 
-    return {model};
+    return {model, isLoading};  // Return loading state to control rendering
 };
 
 export default useSurvey;
