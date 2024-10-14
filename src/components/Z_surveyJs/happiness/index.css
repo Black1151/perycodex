@@ -1,5 +1,5 @@
-/* You can add your custom css here.*/
-/* This bit of css centers rating questions */
+/* You can add your custom cssPath here.*/
+/* This bit of cssPath centers rating questions */
 .sd-scrollable-container:not(.sd-scrollable-container--compact) {
     width: max-content;
     overflow: visible;
