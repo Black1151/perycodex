@@ -36,6 +36,7 @@ export default async function UserTeamPage({params}: { params: { uniqueId: strin
                 endpoint={`/userTeam/${params.uniqueId}`}
                 isNew={false}
                 dataset={userTeamData}
+                sjsPath={'admin'}
             />
         </div>
     );

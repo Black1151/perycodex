@@ -20,12 +20,13 @@ export default async function CustomersPage() {
 
     return (
         <>
-            <AdminHeader headingText={'CREATE DEPARTMENT / TEAM'} />
+            <AdminHeader headingText={'CREATE DEPARTMENT / TEAM'}/>
             <SurveyComponent
                 surveyJson={userTeamJson}
                 endpoint={'/userTeam'}
                 isNew={true}
                 redirectUrl={'/teams'}
+                sjsPath={'admin'}
             />
         </>
     );

@@ -2,11 +2,9 @@ import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
 
 // AG Grids
-import DataGridComponent from "@/components/agGrids/DataGridComponent";
-import {groupFields} from "@/components/agGrids/dataFields/userGroupFields";
 import AdminHeader from "@/components/AdminHeader";
-import SurveyJsComponent from "@/components/Z_surveyJs/SurveyJsComponent";
 import {happinessJson} from "@/components/Z_surveyJs/forms/happiness";
+import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -20,20 +18,22 @@ export default async function UsersPage() {
     if (!authToken) {
         return redirect("/login");
     }
-    
+
     return (
         <>
             <AdminHeader headingText={'Test Happiness Score'}/>
-            <SurveyJsComponent
-                jsonSchema={happinessJson}
-                endpoint={'/helper'}
+            <SurveyComponent
+                surveyJson={happinessJson}
+                endpoint={'/test'}
                 isNew={true}
-                cssPath={'/css/happiness.css'}
-                sjsPath={"@/components/Z_surveyJs/happiness/happiness"}
+                layout={'happiness'}
+                redirectUrl={'/customers'}
+                jsPath={'registerSvgIcons'}
+                cssPath={'happiness'}
+                sjsPath={'happiness'}
             />
         </>
     );
 }
 
-import "@/components/Z_surveyJs/happiness/index.css";
 

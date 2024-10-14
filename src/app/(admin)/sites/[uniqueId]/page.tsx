@@ -43,6 +43,7 @@ export default async function SitePage({
                 endpoint={`/site/${params.uniqueId}`}
                 isNew={false}
                 dataset={siteData}
+                sjsPath={'admin'}
             />
         </div>
     );

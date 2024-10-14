@@ -25,7 +25,9 @@ export default async function CustomersPage() {
                 surveyJson={customerJson}
                 endpoint={'/customer'}
                 isNew={true}
+                layout={'default'}
                 redirectUrl={'/customers'}
+                sjsPath={'admin'}
             />
         </>
     );
