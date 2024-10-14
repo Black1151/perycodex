@@ -24,7 +24,7 @@ import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 
 // Theme for now
-import {lightSurveyTheme} from "@/theme/sjsPath/admin";
+// import {lightSurveyTheme} from "@/theme/sjsPath/admin";
 
 
 interface UseSurveyProps {
@@ -149,7 +149,7 @@ const useSurvey = ({
         }
 
         // Applying a theme mapping based on SurveyJS Variables
-        survey.applyTheme(lightSurveyTheme);
+        // survey.applyTheme(lightSurveyTheme);
 
         // Dynamically import and apply `themeJson` based on `sjsPath` prop
         if (sjsPath) {
