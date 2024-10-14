@@ -26,6 +26,7 @@ export default async function CustomersPage() {
                 endpoint={'/userGroup'}
                 isNew={true}
                 redirectUrl={'/user-groups'}
+                sjsPath={'admin'}
             />
         </>
     );

@@ -1,4 +1,4 @@
-import {SurveyModel} from "survey-core";
+import {ITheme, SurveyModel} from "survey-core";
 
 export interface SurveyComponentProps {
     surveyJson: any;
@@ -6,12 +6,12 @@ export interface SurveyComponentProps {
     isNew: boolean;
     layout?: string;
     dataset?: Record<string, any>;
-    title?: string;
     onSurveyComplete?: () => void;
     excludeKeys?: string[];
     redirectUrl?: string;
     cssPath?: string;
     sjsPath?: string;
+    jsPath?: string;
 }
 
 export interface LayoutProps {
@@ -23,6 +23,9 @@ export interface UseSurveyProps {
     surveyJson: any;   // You can replace `any` with a more specific type if you have one for your survey JSON structure
     isNew: boolean;    // Flag to indicate if the survey is new
     dataset?: any;     // Optional dataset, you can specify the type if you have a specific structure
+    cssPath?: string;
+    sjsPath?: string;
+    jsPath?: string;
 }
 
 export interface UseSurveySubmissionProps {
@@ -47,4 +50,13 @@ export interface NavigationProps {
     isFirstPage: boolean;
     isLastPage: boolean;
     isEditing: boolean;
+}
+
+export interface ThemeModule {
+    themeJson: ITheme
+}
+
+export interface JsModule {
+    applyJsWithoutSurvey?: () => void;
+    applyJsWithSurvey?: (survey: SurveyModel) => void;
 }

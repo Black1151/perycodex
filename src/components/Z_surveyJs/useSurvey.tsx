@@ -24,7 +24,7 @@ import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 
 // Theme for now
-import {lightSurveyTheme} from "@/theme/surveyJsTheme";
+import {lightSurveyTheme} from "@/theme/sjsPath/admin";
 
 
 interface UseSurveyProps {

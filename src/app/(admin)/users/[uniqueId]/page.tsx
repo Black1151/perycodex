@@ -36,6 +36,7 @@ export default async function UserPage({params}: { params: { uniqueId: string } 
                 endpoint={`/user/${params.uniqueId}`}
                 isNew={false}
                 dataset={userData}
+                sjsPath={'admin'}
             />
         </>
     );
