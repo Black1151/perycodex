@@ -1,73 +1,53 @@
 'use client';
 
-// React and Next.js
-import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {useRouter} from 'next/navigation';
-
-// Import AG Grids
-import {AgGridReact} from 'ag-grid-react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-charts-enterprise';
-import {LicenseManager} from 'ag-grid-charts-enterprise';
-
-// AG Grids Theming
+import { LicenseManager } from 'ag-grid-charts-enterprise';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-
+import { Box, Button, Flex, Input, useBreakpointValue, useDisclosure } from '@chakra-ui/react';
+import { Add, Clear } from '@mui/icons-material';
 import NoDataOverlay from '@/components/agGrids/NoDataOverlay';
 import CustomGridBottomPagination from '@/components/agGrids/CustomGridBottomPagination';
-
-// Icons from MUI
-import {Add, Clear} from '@mui/icons-material';
-
-// Chakra Elements
-import {
-    Box,
-    Button,
-    Flex,
-    Input,
-    Modal,
-    ModalBody,
-    ModalContent,
-    ModalOverlay,
-    useBreakpointValue,
-    useDisclosure
-} from '@chakra-ui/react';
 
 interface DataGridComponentProps<T> {
     data: T[] | null;
     initialFields: string[];
-    createNewUrl?: string | null;
+    createNewUrl?: string;
+    createNewUrlButtonText?: string;
     isModalEnabled?: boolean;
-    openModalComponent?: React.ReactNode;
+    openModalComponent?: React.ElementType; // Pass the modal component as a React component type
 }
 
 LicenseManager.setLicenseKey(`${process.env.NEXT_PUBLIC_AG_GRID_LICENSE_KEY}`);
 
-const DataGridComponent = <T, >({
-                                    data,
-                                    initialFields,
-                                    createNewUrl,
-                                    isModalEnabled,
-                                    openModalComponent
-                                }: DataGridComponentProps<T>) => {
+const DataGridComponent = <T,>({
+                                   data,
+                                   initialFields,
+                                   createNewUrl,
+                                   createNewUrlButtonText,
+                                   isModalEnabled,
+                                   openModalComponent: ModalComponent, // Accept the component directly as a React element type
+                               }: DataGridComponentProps<T>) => {
     const gridRef = useRef<AgGridReact>(null);
     const [rowData, setRowData] = useState<T[]>(data || []);
     const [fields, setFields] = useState<any[]>(initialFields);
     const router = useRouter();
-    const {isOpen, onOpen, onClose} = useDisclosure();
-    const isMobile = useBreakpointValue({base: true, sm: true, md: false});
+    const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
+
+    // Modal disclosure state for Chakra UI
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     // Memoize defaultColDef to avoid re-renders
-    const defaultColDef = useMemo(
-        () => ({
-            flex: isMobile ? 0 : 1,
-            sortable: true,
-            filter: true,
-            floatingFilter: false,
-            resizable: true,
-        }),
-        [isMobile]
-    );
+    const defaultColDef = useMemo(() => ({
+        flex: isMobile ? 0 : 1,
+        sortable: true,
+        filter: true,
+        floatingFilter: false,
+        resizable: true,
+    }), [isMobile]);
 
     const [paginationInfo, setPaginationInfo] = useState({
         currentPage: 1,
@@ -88,31 +68,17 @@ const DataGridComponent = <T, >({
         }
     }, []);
 
-
-// Quick Filter
-    const onFilterTextBoxChanged = useCallback(() => {
-        gridRef.current!.api.setGridOption(
-            "quickFilterText",
-            (document.getElementById("filter-text-box") as HTMLInputElement).value,
-        );
-    }, [])
-
-// Reset all filters and quick filter
-    const resetFilter = useCallback(() => {
-        gridRef.current?.api.setFilterModel(null);
-        gridRef.current?.api.setGridOption('quickFilterText',
-            (document.getElementById('filter-text-box') as HTMLInputElement).value = '');
-    }, []);
-    const createNewUrlButtonText = useBreakpointValue({base: '', sm: '', md: 'Create New'});
-    const resetFiltersButtonText = useBreakpointValue({base: '', sm: '', md: 'Reset Filters'});
-
+    // Handle the click for creating new items
     const handleCreateNewClick = () => {
-        if (isModalEnabled && openModalComponent) {
-            onOpen();  // Open the modal if modal functionality is enabled
+        if (isModalEnabled && ModalComponent) {
+            onOpen();  // Open the modal if enabled
         } else if (createNewUrl) {
-            router.push(createNewUrl);  // Navigate to the URL otherwise
+            router.push(createNewUrl); // Navigate to the URL if modal is not enabled
         }
     };
+
+    createNewUrlButtonText = useBreakpointValue({ base: '', sm: '', md: createNewUrlButtonText ?? 'Create New' });
+    const resetFiltersButtonText = useBreakpointValue({ base: '', sm: '', md: 'Reset Filters' });
 
     return (
         <Box className={`ag-theme-alpine ag-theme-perygon`} w={'full'} py={2}>
@@ -124,42 +90,41 @@ const DataGridComponent = <T, >({
                             variant="outline"
                             id="filter-text-box"
                             placeholder="Search..."
-                            onInput={onFilterTextBoxChanged}
                             w={256}
                             bg="white"
                             borderColor="gray.300"
-                            _hover={{borderColor: 'gray.400'}}
-                            _focus={{borderColor: 'perygonPink', boxShadow: '0 0 0 1px #ff0070'}}
+                            _hover={{ borderColor: 'gray.400' }}
+                            _focus={{ borderColor: 'perygonPink', boxShadow: '0 0 0 1px #ff0070' }}
                         />
 
                         <Button
                             variant="solid"
                             bg="seduloRed"
                             aria-label="reset-filters"
-                            onClick={resetFilter}
+                            onClick={() => gridRef.current?.api.setFilterModel(null)}
                             ml={'auto'}
                             size="md"
                             color="white"
-                            leftIcon={<Clear/>}
-                            _hover={{bg: 'perygonPink'}}
+                            leftIcon={<Clear />}
+                            _hover={{ bg: 'perygonPink' }}
                         >
                             {resetFiltersButtonText}
                         </Button>
 
-                        {createNewUrl && (
-                            <Button
-                                variant="solid"
-                                bg="lightGreen"
-                                aria-label="create-new"
-                                onClick={() => router.push(createNewUrl)}
-                                size="md"
-                                color="white"
-                                leftIcon={<Add/>}
-                            >
-                                {createNewUrlButtonText}
-                            </Button>
-                        )}
+                        {/* Create New Button */}
+                        <Button
+                            variant="solid"
+                            bg="lightGreen"
+                            aria-label="create-new"
+                            onClick={handleCreateNewClick}
+                            size="md"
+                            color="white"
+                            leftIcon={<Add />}
+                        >
+                            {createNewUrlButtonText}
+                        </Button>
                     </Flex>
+
                     <Flex direction={'column'} height={'500px'}>
                         <AgGridReact
                             ref={gridRef}
@@ -178,17 +143,13 @@ const DataGridComponent = <T, >({
                         />
                     </Flex>
 
-                    {openModalComponent && isModalEnabled && (
-                        <Modal isOpen={isOpen} onClose={onClose} size="full">
-                            <ModalOverlay/>
-                            <ModalContent>
-                                <ModalBody>{openModalComponent}</ModalBody>
-                            </ModalContent>
-                        </Modal>
+                    {/* Render the modal component with modal state control */}
+                    {isModalEnabled && ModalComponent && (
+                        <ModalComponent isOpen={isOpen} onClose={onClose} />
                     )}
                 </>
             ) : (
-                <NoDataOverlay url={createNewUrl}/>
+                <NoDataOverlay url={createNewUrl} />
             )}
         </Box>
     );

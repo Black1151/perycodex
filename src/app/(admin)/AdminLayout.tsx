@@ -1,12 +1,14 @@
 "use client";
 
-import {useTheme, Box, Flex} from "@chakra-ui/react";
+import {useTheme, Box, Flex, Container} from "@chakra-ui/react";
 import React, {ReactNode} from "react";
-import Sidebar from "./Sidebar";
 import {NavBar} from "../NavBar";
 import {Footer} from "@/components/layout/Footer";
 import {UserProvider} from "@/context/AdminUserContext";
 import {Business, Domain, EmojiPeople, GroupWork, People, PeopleAlt, Tag} from "@mui/icons-material";
+import {useRouter} from "next/navigation";
+import {LeftHandNavigationDrawer} from "@/components/layout/LeftHandNavigationDrawer";
+import {RightHandNavigationDrawer} from "@/components/layout/RightHandNavigationDrawer";
 
 interface AdminLayoutProps {
     children: ReactNode;
@@ -19,45 +21,114 @@ interface AdminLayoutProps {
     };
 }
 
-
-// Helper to generate sidebar items based on userRole
-const generateSidebarItems = (userRole: string) => {
-    if (userRole === 'CA') {
-        return [
-            {label: "My Company", icon: <Business fontSize="small"/>, path: '/my-company', category: "Internal"},
-            {label: "My Company Users", icon: <People fontSize="small"/>, path: '/users', category: "Internal"},
-            {label: "My Company Sites", icon: <Domain fontSize="small"/>, path: '/sites', category: "Internal"},
-            {label: "Teams", icon: <GroupWork fontSize="small"/>, path: '/teams', category: "Internal"},
-            {label: "User Groups", icon: <PeopleAlt fontSize="small"/>, path: '/user-groups', category: "Internal"},
-            {label: "Tags", icon: <Tag fontSize="small"/>, path: '/tags', category: "Internal"},
-            {label: "Our Clients", icon: <Business fontSize="small"/>, path: '/customers', category: "External"},
-            {label: "Our Clients Users", icon: <People fontSize="small"/>, path: '/users', category: "External"},
-            {label: "Our Clients Sites", icon: <Domain fontSize="small"/>, path: '/sites', category: "External"},
-        ];
-    } else if (userRole === 'PA') {
-        return [
-            {label: "Customers", icon: <EmojiPeople fontSize="small"/>, path: '/customers', category: "Platform"},
-            {label: "Users", icon: <People fontSize="small"/>, path: '/users', category: "Platform"},
-            {label: "Sites", icon: <Domain fontSize="small"/>, path: '/sites', category: "Platform"},
-            {label: "User Groups", icon: <PeopleAlt fontSize="small"/>, path: '/user-groups', category: "Platform"},
-            {label: "Tags", icon: <Tag fontSize="small"/>, path: '/tags', category: "Platform"},
-            {
-                label: "Other Workflow Admin",
-                icon: <GroupWork fontSize="small"/>,
-                path: '/customers',
-                category: "Workflow"
-            },
-        ];
-    }
-    return [];
-};
-
-
 export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) => {
     const theme = useTheme();
+    const router = useRouter();
 
-    // Generate sidebar items based on userRole
-    const sidebarItems = generateSidebarItems(userProps.userRole);
+
+    // Helper to generate menu items based on userRole
+    const generateSidebarItemsDrawer = (userRole: string) => {
+        if (userRole === 'CA') {
+            return [
+                {
+                    label: "My Company",
+                    icon: <Business sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/my-company'),
+                    category: "Internal"
+                },
+                {
+                    label: "My Company Users",
+                    icon: <People sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/users'),
+                    category: "Internal"
+                },
+                {
+                    label: "My Company Sites",
+                    icon: <Domain sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/sites'),
+                    category: "Internal"
+                },
+                {
+                    label: "Teams",
+                    icon: <GroupWork sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/teams'),
+                    category: "Internal"
+                },
+                {
+                    label: "User Groups",
+                    icon: <PeopleAlt sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/user-groups'),
+                    category: "Internal"
+                },
+                {
+                    label: "Tags",
+                    icon: <Tag sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/tags'),
+                    category: "Internal"
+                },
+                {
+                    label: "Our Clients",
+                    icon: <Business sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/customers'),
+                    category: "External"
+                },
+                {
+                    label: "Our Clients Users",
+                    icon: <People sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/users'),
+                    category: "External"
+                },
+                {
+                    label: "Our Clients Sites",
+                    icon: <Domain sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/sites'),
+                    category: "External"
+                }
+            ];
+        } else if (userRole === 'PA') {
+            return [
+                {
+                    label: "Customers",
+                    icon: <EmojiPeople sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/customers'),
+                    category: "Platform"
+                },
+                {
+                    label: "Users",
+                    icon: <People sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/users'),
+                    category: "Platform"
+                },
+                {
+                    label: "Sites",
+                    icon: <Domain sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/sites'),
+                    category: "Platform"
+                },
+                {
+                    label: "User Groups",
+                    icon: <PeopleAlt sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/user-groups'),
+                    category: "Platform"
+                },
+                {
+                    label: "Tags",
+                    icon: <Tag sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/tags'),
+                    category: "Platform"
+                },
+                {
+                    label: "Workflow Admin",
+                    icon: <GroupWork sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => console.log("Other Workflow Admin Clicked"),
+                    category: "Workflow"
+                },
+            ];
+        }
+        return [];
+    };
+
+    const menuItems = generateSidebarItemsDrawer(userProps.userRole);
 
     return (
         <UserProvider value={userProps}>
@@ -66,6 +137,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
                 height={'100svh'}
                 width="100%"
                 overflowX="hidden"
+                justifyContent={'center'}
                 bgGradient={`linear(to-br, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`}
             >
                 <NavBar {...userProps} />
@@ -73,12 +145,12 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
                 {/* Sidebar and content container */}
                 <Flex flex={1} width="100%" mt={'60px'} mb={'30px'}>
                     {/* Sidebar */}
-                    <Sidebar items={sidebarItems}/>
-
+                    <LeftHandNavigationDrawer menuItems={menuItems} defaultDrawerState={'half-open'}/>
                     {/* Content Area */}
-                    <Box flex={1} p={5} overflowY="auto">
+                    <Box flex={1} overflowY="auto" px={230} py={5}>
                         {children}
                     </Box>
+                    <RightHandNavigationDrawer menuItems={menuItems}/>
                 </Flex>
                 <Footer/>
             </Flex>

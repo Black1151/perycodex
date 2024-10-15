@@ -11,46 +11,49 @@ import DoneIcon from "@mui/icons-material/Done"; // Import the custom hook
 const MotionButton = motion(Button);
 
 const BottomNavigation: React.FC<NavigationProps> = ({
-                                                                currentPage,
-                                                                setCurrentPage,
-                                                                nextPage,
-                                                                prevPage,
-                                                                jumpToPage,
-                                                                submitSurvey,
-                                                                switchToDisplayMode,
-                                                                switchToEditMode,
-                                                                pageListOptions,
-                                                                isFirstPage,
-                                                                isLastPage,
-                                                                isEditing,
-                                                            }) => {
+                                                         currentPage,
+                                                         setCurrentPage,
+                                                         nextPage,
+                                                         prevPage,
+                                                         jumpToPage,
+                                                         submitSurvey,
+                                                         switchToDisplayMode,
+                                                         switchToEditMode,
+                                                         pageListOptions,
+                                                         isFirstPage,
+                                                         isLastPage,
+                                                         isEditing,
+                                                     }) => {
     return (
         <Box p={4} borderRadius="lg" w="100%">
             <Flex justify="space-between" align="center" w="100%">
                 {/* Left section: Previous and Next buttons */}
-                <Stack direction="row" spacing={4}>
-                    <MotionButton
-                        fontSize={'sm'}
-                        onClick={prevPage}
-                        disabled={isFirstPage}
-                        leftIcon={<ArrowBackIcon/>}
-                        whileHover={{scale: 1.05}}
-                        whileTap={{scale: 0.95}}
-                    >
-                        Previous
-                    </MotionButton>
+                {pageListOptions.length > 1 && (
+                    <Stack direction="row" spacing={4}>
+                        <MotionButton
+                            fontSize={'sm'}
+                            onClick={prevPage}
+                            disabled={isFirstPage}
+                            leftIcon={<ArrowBackIcon/>}
+                            whileHover={{scale: 1.05}}
+                            whileTap={{scale: 0.95}}
+                        >
+                            Previous
+                        </MotionButton>
 
-                    <MotionButton
-                        fontSize={'sm'}
-                        onClick={nextPage}
-                        rightIcon={<ArrowForwardIcon/>}
-                        disabled={isLastPage}
-                        whileHover={{scale: 1.05}}
-                        whileTap={{scale: 0.95}}
-                    >
-                        Next
-                    </MotionButton>
-                </Stack>
+                        <MotionButton
+                            fontSize={'sm'}
+                            onClick={nextPage}
+                            rightIcon={<ArrowForwardIcon/>}
+                            disabled={isLastPage}
+                            whileHover={{scale: 1.05}}
+                            whileTap={{scale: 0.95}}
+                        >
+                            Next
+                        </MotionButton>
+                    </Stack>
+                )
+                }
 
                 {/* Right section: Save and Submit buttons */}
                 <Stack direction="row" spacing={4}>

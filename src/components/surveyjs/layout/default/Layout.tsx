@@ -53,8 +53,8 @@ const DefaultLayout: React.FC<LayoutProps> = ({model, dataset}) => {
     }, [model, currentPage]);
 
     return (
-        <Flex w="full" justify="center" align="center" p={4} position="relative" direction="column">
-            <Box maxW="1300px" w="80%" bg="white" borderRadius="lg" overflow="hidden">
+        <Flex w="full" justify="center" align="center" py={4} position="relative" direction="column">
+            <Box maxW="1300px" w="100%" bg="white" borderRadius="lg" overflow="hidden">
                 {/* Navigation Component */}
                 <TopNavigation
                     currentPage={currentPage}
@@ -88,7 +88,7 @@ const DefaultLayout: React.FC<LayoutProps> = ({model, dataset}) => {
                     }}
                     transition={{duration: 0.5}} // Duration for slide and fade-in/out
                 >
-                    <Box minH={'600px'}>
+                    <Box>
                         <Survey model={model}/>
                     </Box>
                 </MotionBox>
