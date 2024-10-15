@@ -1,31 +1,34 @@
 "use client";
-import {
-    VStack,
-    Text,
-    Divider,
-    useTheme
-} from "@chakra-ui/react";
-import {useRouter} from "next/navigation";
-import {
-    Business,
-    People,
-    GroupWork,
-    Tag,
-    PeopleAlt,
-    Domain,
-    EmojiPeople
-} from '@mui/icons-material';
-import {useUser} from "@/context/AdminUserContext"; // Import MUI icons
 
+import { VStack, Text, Divider, useTheme } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/context/AdminUserContext"; // Import useUser hook
 
-interface SidebarProps {
-    userRole?: string;  // Optional userRole prop
+interface SidebarItem {
+    label: string;
+    icon: React.ReactNode;
+    path?: string;
+    action?: () => void;
+    category: string;  // Grouping by category
 }
 
-export default function Sidebar() {
+interface SidebarProps {
+    items: SidebarItem[];
+}
+
+export default function Sidebar({ items }: SidebarProps) {
     const theme = useTheme();
     const router = useRouter();
-    const {userRole} = useUser();
+    const { userRole } = useUser(); // Use the user context
+
+    // Group items by category
+    const groupedItems = items.reduce((acc, item) => {
+        if (!acc[item.category]) {
+            acc[item.category] = [];
+        }
+        acc[item.category].push(item);
+        return acc;
+    }, {} as Record<string, SidebarItem[]>);  // Using a Record to group by category
 
     return (
         <VStack
@@ -37,149 +40,30 @@ export default function Sidebar() {
             p={4}
             flexShrink={1}
         >
-            <Text>User Role: {userRole}</Text>
-            {!userRole && (
-                <Text>No role</Text>
-            )}
-            {/* Conditional rendering based on userRole */}
-            {userRole === 'CA' && (
-                <>
-                    <Text
-                        cursor="pointer"
-                        _hover={{color: theme.colors.perygonPink}}
-                        onClick={() => router.push('/my-company')}
-                    >
-                        <Business fontSize="small" style={{marginRight: '8px'}}/>
-                        My Company
-                    </Text>
-                    <Text
-                        cursor="pointer"
-                        _hover={{color: theme.colors.perygonPink}}
-                        onClick={() => router.push('/my-company-users')}
-                    >
-                        <People fontSize="small" style={{marginRight: '8px'}}/>
-                        My Company Users
-                    </Text>
-                    <Text
-                        cursor="pointer"
-                        _hover={{color: theme.colors.perygonPink}}
-                        onClick={() => router.push('/my-company-sites')}
-                    >
-                        <Domain fontSize="small" style={{marginRight: '8px'}}/>
-                        My Company Sites
-                    </Text>
-                    <Text
-                        cursor="pointer"
-                        _hover={{color: theme.colors.perygonPink}}
-                        onClick={() => router.push('/teams')}
-                    >
-                        <GroupWork fontSize="small" style={{marginRight: '8px'}}/>
-                        Teams
-                    </Text>
-                    <Text
-                        cursor="pointer"
-                        _hover={{color: theme.colors.perygonPink}}
-                        onClick={() => router.push('/user-groups')}
-                    >
-                        <PeopleAlt fontSize="small" style={{marginRight: '8px'}}/>
-                        User Groups
-                    </Text>
-                    <Text
-                        cursor="pointer"
-                        _hover={{color: theme.colors.perygonPink}}
-                        onClick={() => console.log("Tags Clicked")}
-                    >
-                        <Tag fontSize="small" style={{marginRight: '8px'}}/>
-                        Tags
-                    </Text>
+            <Text>User Role: {userRole}</Text> {/* Display user role from context */}
 
-                    {/* Divider between sections */}
-                    <Divider borderColor={theme.colors.gray[600]}/>
+            {Object.entries(groupedItems).map(([category, itemsInCategory], categoryIndex) => (
+                <VStack key={categoryIndex} align="start" width="100%" spacing={4}>
+                    {/* Optional: Category Title */}
+                    <Text fontWeight="bold" color={theme.colors.gray[300]}>{category}</Text>
 
-                    <Text
-                        cursor="pointer"
-                        _hover={{color: theme.colors.perygonPink}}
-                        onClick={() => router.push('/our-clients')}
-                    >
-                        <EmojiPeople fontSize="small" style={{marginRight: '8px'}}/>
-                        Our Clients
-                    </Text>
-                    <Text
-                        cursor="pointer"
-                        _hover={{color: theme.colors.perygonPink}}
-                        onClick={() => router.push('/our-client-users')}
-                    >
-                        <People fontSize="small" style={{marginRight: '8px'}}/>
-                        Our Client Users
-                    </Text>
-                    <Text
-                        cursor="pointer"
-                        _hover={{color: theme.colors.perygonPink}}
-                        onClick={() => router.push('/our-client-sites')}
-                    >
-                        <Domain fontSize="small" style={{marginRight: '8px'}}/>
-                        Our Client Sites
-                    </Text>
-                </>
-            )}
+                    {itemsInCategory.map((item, index) => (
+                        <Text
+                            key={index}
+                            cursor="pointer"
+                            _hover={{ color: theme.colors.perygonPink }}
+                            onClick={item.action ? item.action : () => router.push(item.path || '')}
+                        >
+                            {item.icon} {item.label}
+                        </Text>
+                    ))}
 
-            {userRole === 'PA' && (
-                <>
-                    <Text
-                        cursor="pointer"
-                        _hover={{color: theme.colors.perygonPink}}
-                        onClick={() => router.push('/customers')}
-                    >
-                        <EmojiPeople fontSize="small" style={{marginRight: '8px'}}/>
-                        Customers
-                    </Text>
-                    <Text
-                        cursor="pointer"
-                        _hover={{color: theme.colors.perygonPink}}
-                        onClick={() => router.push('/users')}
-                    >
-                        <People fontSize="small" style={{marginRight: '8px'}}/>
-                        Users
-                    </Text>
-                    <Text
-                        cursor="pointer"
-                        _hover={{color: theme.colors.perygonPink}}
-                        onClick={() => router.push('/sites')}
-                    >
-                        <Domain fontSize="small" style={{marginRight: '8px'}}/>
-                        Sites
-                    </Text>
-                    <Text
-                        cursor="pointer"
-                        _hover={{color: theme.colors.perygonPink}}
-                        onClick={() => router.push('/user-groups')}
-                    >
-                        <PeopleAlt fontSize="small" style={{marginRight: '8px'}}/>
-                        User Groups
-                    </Text>
-                    <Text
-                        cursor="pointer"
-                        _hover={{color: theme.colors.perygonPink}}
-                        onClick={() => window.alert('Tags Clicked')}
-                    >
-                        <Tag fontSize="small" style={{marginRight: '8px'}}/>
-                        Tags
-                    </Text>
-
-                    {/* Divider for another section if needed */}
-                    <Divider borderColor={theme.colors.gray[600]}/>
-
-                    <Text
-                        cursor="pointer"
-                        _hover={{color: theme.colors.perygonPink}}
-                        onClick={() => window.alert('Other Admin')}
-                    >
-                        <GroupWork fontSize="small" style={{marginRight: '8px'}}/>
-                        Other Workflow Admin
-                    </Text>
-                </>
-            )}
+                    {/* Add Divider after each category except the last one */}
+                    {categoryIndex < Object.keys(groupedItems).length - 1 && (
+                        <Divider borderColor={theme.colors.gray[600]} />
+                    )}
+                </VStack>
+            ))}
         </VStack>
     );
 }
-
