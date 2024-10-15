@@ -137,7 +137,7 @@ export const NavBar: React.FC<NavBarProps> = ({
       left={0}
       right={0}
       zIndex={100}
-      bgGradient={`linear(to-br, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`}
+      bgGradient={theme.gradients.perygonBackground}
       borderBottom="white 1px solid"
     >
       <MotionBox

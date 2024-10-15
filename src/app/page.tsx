@@ -10,6 +10,7 @@ function transformCarouselItems(data: any[]): CarouselItemWithoutIsSelected[] {
     toolId: item.toolId,
     logoImage: item.logoImageUrl,
     iconImage: item.iconImageUrl,
+    thumbNailImage: item.thumbnailImageUrl,
     backgroundImage: item.previewImageUrl,
     alt: item.displayName,
     name: item.displayName,
@@ -64,6 +65,8 @@ export default async function PerygonMain() {
       const carouselItemsData = await fetchCarouselItems.json();
       const userInfoData = await fetchUserInfo.json();
       const profileStatusData = await fetchProfileStatus.json();
+
+      console.log(carouselItemsData.resource);
 
       carouselItems = transformCarouselItems(carouselItemsData.resource);
 

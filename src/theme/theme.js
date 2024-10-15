@@ -31,4 +31,7 @@ export const perygonTheme = extendTheme({
       },
     },
   },
+  gradients: {
+    perygonBackground: "linear(to-br, seduloRed 60%, perygonPink 100%)",
+  },
 });

@@ -1,5 +1,5 @@
 import React from "react";
-import { HStack, Text, Box, useTheme } from "@chakra-ui/react";
+import { HStack, Text, Box, useTheme, Flex } from "@chakra-ui/react";
 
 interface SideBarMenuItemProps {
   label: string;
@@ -7,29 +7,33 @@ interface SideBarMenuItemProps {
   onClick: () => void;
   iconSize?: string | number;
   showIconOnly?: boolean;
+  hoverStyles?: React.CSSProperties;
+  isLeft?: boolean;
 }
 
 const SideBarMenuItem: React.FC<SideBarMenuItemProps> = ({
   label,
   icon,
   onClick,
-  iconSize = "32px",
+  iconSize = "18px",
   showIconOnly = false,
+  hoverStyles,
+  isLeft = false,
 }) => {
   const theme = useTheme();
 
   return (
-    <HStack
-      fontSize={18}
-      display="flex"
+    <Flex
+      fontSize={16}
+      flexDirection={isLeft ? "column" : "row"}
       alignItems="center"
       position="relative"
       overflow="hidden"
       color={theme.colors.perygonPink}
       borderRadius="md"
+      border="1px solid transparent"
       _hover={{
-        backgroundColor: theme.colors.perygonPink,
-        color: "white",
+        ...hoverStyles,
         cursor: "pointer",
       }}
       onClick={onClick}
@@ -49,7 +53,7 @@ const SideBarMenuItem: React.FC<SideBarMenuItemProps> = ({
           {label}
         </Text>
       )}
-    </HStack>
+    </Flex>
   );
 };
 

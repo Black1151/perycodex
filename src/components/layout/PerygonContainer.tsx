@@ -19,7 +19,7 @@ export const PerygonContainer: React.FC<PerygonContatinerProps> = ({
       overflowX="hidden"
       p={10}
       flex={1}
-      bgGradient={`linear(to-br, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`}
+      bgGradient={theme.gradients.perygonBackground}
     >
       {children}
     </VStack>
