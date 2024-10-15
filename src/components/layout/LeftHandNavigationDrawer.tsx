@@ -14,13 +14,18 @@ export interface MenuItem {
 
 interface LeftHandNavigationDrawerProps {
     title?: string;
+    defaultDrawerState?: "closed" | "half-open" | "fully-open";
     menuItems?: MenuItem[];
 }
 
-export function LeftHandNavigationDrawer({menuItems, title}: LeftHandNavigationDrawerProps) {
+export function LeftHandNavigationDrawer({
+                                             menuItems,
+                                             title,
+                                             defaultDrawerState = 'closed'
+                                         }: LeftHandNavigationDrawerProps) {
     const [drawerState, setDrawerState] = useState<
         "closed" | "half-open" | "fully-open"
-    >("closed");
+    >(defaultDrawerState);
     const theme = useTheme();
 
     const MotionBox = motion(Box);
