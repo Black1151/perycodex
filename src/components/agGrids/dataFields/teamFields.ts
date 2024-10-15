@@ -1,5 +1,9 @@
-import {ColDef} from "ag-grid-community";
+'use client';
+
+import {ColDef, ValueFormatterParams} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
+import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/OrganisationLogoRenderer";
+import UserImageRenderer from "@/components/agGrids/CellRenderers/UserImageRenderer";
 
 export const teamFields: ColDef[] | any = [
     {
@@ -21,21 +25,37 @@ export const teamFields: ColDef[] | any = [
         headerName: 'Customer',
         cellDataType: "text",
         filter: "agMultiColumnFilter",
-        flex: 2
+        flex: 2,
+        cellRenderer: OrganisationLogoRenderer,
+        cellRendererParams: {
+            nameField: 'custName',
+            uniqueIdField: 'custUniqueId',
+            imageUrlField: 'custImageUrl',
+        }
     },
     {
         field: 'parentTeamName',
-        headerName: 'Parent Team',
+        headerName: 'Parent Department',
         cellDataType: "text",
         filter: "agMultiColumnFilter",
-        flex: 2
+        flex: 2,
+        valueFormatter: (params: ValueFormatterParams) => {
+            // Check if parentTeamName exists, otherwise show 'Department'
+            return params.value && params.value !== '' ? params.value : 'Department';
+        },
     },
     {
         field: 'managerFullname',
         headerName: 'Manager',
         cellDataType: "text",
         filter: "agMultiColumnFilter",
-        flex: 2
+        flex: 2,
+        cellRenderer: UserImageRenderer,
+        cellRendererParams: {
+            nameField: 'managerFullName',
+            uniqueIdField: 'managerUniqueId',
+            imageUrlField: 'managerImageUrl',
+        }
     },
     {
         field: 'isActive',

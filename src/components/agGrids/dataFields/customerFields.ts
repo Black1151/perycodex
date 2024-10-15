@@ -8,6 +8,8 @@ export const customerFields: ColDef[] | any = [
         field: "id",
         headerName: "ID",
         filter: "agNumberColumnFilter",
+        maxWidth: 128,
+        minWidth: 64,
         flex: 1
     },
     {
@@ -16,10 +18,15 @@ export const customerFields: ColDef[] | any = [
         filter: "agMultiColumnFilter",
         flex: 2,
         cellRenderer: OrganisationLogoRenderer,
+        cellRendererParams: {
+            idField: 'custId',
+            nameField: 'name',
+            imageUrlField: 'imageUrl'
+        }
     },
     {
         field: 'customerCode',
-        headerName: 'Customer Code',
+        headerName: 'Code',
         filter: "agMultiColumnFilter",
         flex: 1,
     },
