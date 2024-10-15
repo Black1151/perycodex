@@ -1,13 +1,14 @@
 "use client";
 
-import { VStack, Text, Divider, useTheme } from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
-import { useUser } from "@/context/AdminUserContext"; // Import useUser hook
+import {VStack, Text, Divider, useTheme} from "@chakra-ui/react";
+import {useRouter} from "next/navigation";
+import {useUser} from "@/context/AdminUserContext";
+import Link from "next/link";
 
 interface SidebarItem {
     label: string;
     icon: React.ReactNode;
-    path?: string;
+    path: string;
     action?: () => void;
     category: string;  // Grouping by category
 }
@@ -16,10 +17,10 @@ interface SidebarProps {
     items: SidebarItem[];
 }
 
-export default function Sidebar({ items }: SidebarProps) {
+export default function Sidebar({items}: SidebarProps) {
     const theme = useTheme();
     const router = useRouter();
-    const { userRole } = useUser(); // Use the user context
+    const {userRole} = useUser(); // Use the user context
 
     // Group items by category
     const groupedItems = items.reduce((acc, item) => {
@@ -48,19 +49,21 @@ export default function Sidebar({ items }: SidebarProps) {
                     <Text fontWeight="bold" color={theme.colors.gray[300]}>{category}</Text>
 
                     {itemsInCategory.map((item, index) => (
-                        <Text
-                            key={index}
-                            cursor="pointer"
-                            _hover={{ color: theme.colors.perygonPink }}
-                            onClick={item.action ? item.action : () => router.push(item.path || '')}
-                        >
-                            {item.icon} {item.label}
-                        </Text>
+                        <Link href={item.path}>
+                            <Text
+                                key={index}
+                                cursor="pointer"
+                                _hover={{color: theme.colors.perygonPink}}
+                                onClick={item.action ? item.action : () => router.push(item.path || '')}
+                            >
+                                {item.icon} {item.label}
+                            </Text>
+                        </Link>
                     ))}
 
                     {/* Add Divider after each category except the last one */}
                     {categoryIndex < Object.keys(groupedItems).length - 1 && (
-                        <Divider borderColor={theme.colors.gray[600]} />
+                        <Divider borderColor={theme.colors.gray[600]}/>
                     )}
                 </VStack>
             ))}
