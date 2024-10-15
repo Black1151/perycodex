@@ -1,6 +1,6 @@
 export const baseSurveyCssVariablesTheme = {
     // Padding and Corners
-    "--sjs-base-unit": "4px",
+    "--sjs-base-unit": "8px",
     "--sjs-corner-radius": "8px",
 
     // Font Family
@@ -10,7 +10,7 @@ export const baseSurveyCssVariablesTheme = {
     "--sjs-questionpanel-cornerRadius": "12px",
 
     // Question Titles
-    "--sjs-font-questiontitle-weight": "700",
+    "--sjs-font-questiontitle-weight": "300",
     "--sjs-font-questiontitle-size": "14px",
 
     // Question Description
