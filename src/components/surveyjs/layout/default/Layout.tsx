@@ -88,7 +88,7 @@ const DefaultLayout: React.FC<LayoutProps> = ({model, dataset}) => {
                     }}
                     transition={{duration: 0.5}} // Duration for slide and fade-in/out
                 >
-                    <Box minH={'600px'}>
+                    <Box>
                         <Survey model={model}/>
                     </Box>
                 </MotionBox>
