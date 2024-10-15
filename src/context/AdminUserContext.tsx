@@ -4,7 +4,8 @@ interface UserContextProps {
     userFirstName: string;
     userImageUrl: string;
     userRole: string;
-    userCustomerId: number | null; // Make sure this matches the type from AdminLayoutProps
+    userCustomerId: string;
+    logoImageUrl?: string;
 }
 
 const UserContext = createContext<UserContextProps | undefined>(undefined);
