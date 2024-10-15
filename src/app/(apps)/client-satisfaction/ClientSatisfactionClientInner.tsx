@@ -32,7 +32,7 @@ export default function ClientSatisfactionClientInner({
           <NavBar {...navBarProps} />
           <Footer />
         </VStack>
-        <LeftHandNavigationDrawer />
+        <LeftHandNavigationDrawer title={'User Menu'} />
         <RightHandNavigationDrawer />
       </>
     </PerygonContainer>
