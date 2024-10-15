@@ -27,7 +27,6 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
   navbarProps,
   showNoToolsModal,
 }) => {
-  const theme = useTheme();
   const [countdown, setCountdown] = useState(5);
 
   useEffect(() => {
@@ -60,16 +59,10 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
   };
 
   return (
-    <Box
-      minHeight="100vh"
-      width="100%"
-      overflow="hidden"
-      bgGradient={`linear(to-br, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`}
-    >
+    <Box minHeight="100vh" width="100%" overflow="hidden">
       <NavBar {...navbarProps} />
       {!showNoToolsModal && <CarouselDisplay carouselItems={carouselItems} />}
       <Footer />
-
       <Modal
         isOpen={showNoToolsModal}
         onClose={() => {}}

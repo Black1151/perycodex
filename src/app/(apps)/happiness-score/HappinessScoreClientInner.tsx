@@ -1,16 +1,14 @@
 "use client";
 
-import { Box, Button, Center, Flex, VStack } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
 import { Footer } from "@/components/layout/Footer";
 import { NavBarProps, NavBar } from "../../NavBar";
 import { Tool } from "@/types/types";
 import { HappinessScoreSplashScreen } from "./HappinessScoreSplashScreen";
-import { NavigationDrawer } from "@/components/layout/navigationDrawer";
-import { Build, Business, ExitToApp, Person, Lock } from "@mui/icons-material";
-import { handleLogout } from "@auth0/nextjs-auth0";
-import SideBarMenuItem from "@/components/layout/SideBarMenuItem";
+import { LeftHandNavigationDrawer } from "@/components/layout/LeftHandNavigationDrawer";
+import { RightHandNavigationDrawer } from "@/components/layout/RightHandNavigationDrawer";
 
 interface HappinessScoreClientInnerProps {
   navBarProps: NavBarProps;
@@ -20,7 +18,7 @@ interface HappinessScoreClientInnerProps {
 export default function HappinessScoreClientInner({
   navBarProps,
 }: HappinessScoreClientInnerProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
@@ -36,14 +34,9 @@ export default function HappinessScoreClientInner({
         <>
           <VStack minH="100vh">
             <NavBar {...navBarProps} />
-            <VStack mt={10} flex={1} width="100%" bg="red">
-              PAGE CONTENT HERE
-            </VStack>
+            <VStack mt={10} flex={1} width="100%" bg="red"></VStack>
             <Footer />
           </VStack>
-          <NavigationDrawer drawerHeader="Left Menu" placement="left" />
-
-          <NavigationDrawer drawerHeader="Right Menu" placement="right" />
         </>
       )}
     </PerygonContainer>

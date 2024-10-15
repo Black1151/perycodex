@@ -6,6 +6,8 @@ import { PerygonContainer } from "@/components/layout/PerygonContainer";
 import { Footer } from "@/components/layout/Footer";
 import { NavBarProps, NavBar } from "../../NavBar";
 import { Tool } from "@/types/types";
+import { LeftHandNavigationDrawer } from "@/components/layout/LeftHandNavigationDrawer";
+import { RightHandNavigationDrawer } from "@/components/layout/RightHandNavigationDrawer";
 
 interface ClientSatisfactionClientInnerProps {
   navBarProps: NavBarProps;
@@ -30,6 +32,8 @@ export default function ClientSatisfactionClientInner({
           <NavBar {...navBarProps} />
           <Footer />
         </VStack>
+        <LeftHandNavigationDrawer />
+        <RightHandNavigationDrawer />
       </>
     </PerygonContainer>
   );

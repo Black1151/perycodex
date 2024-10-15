@@ -1,14 +1,12 @@
-import { Box, VStack, useTheme, HStack, IconButton } from "@chakra-ui/react";
+import { Box, VStack, useTheme, IconButton, Divider } from "@chakra-ui/react";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-
-import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
-import ShapeAnimation from "./ShapeAnimation";
 import React from "react";
 import { RotatingChevron } from "./RotatingChevron";
 import SideBarMenuItem from "./SideBarMenuItem";
 import { Build, Person, Business, Lock } from "@mui/icons-material";
+import { LetterFlyIn } from "../animations/text/LetterFlyIn";
 
 interface NavigationDrawerProps {
   drawerHeader: string;
@@ -26,54 +24,48 @@ export function NavigationDrawer({
 
   const MotionBox = motion(Box);
 
+  // Updated toggleDrawer logic
   const toggleDrawer = () => {
-    if (drawerState === "closed") setDrawerState("half-open");
-    else if (drawerState === "half-open") setDrawerState("fully-open");
-    else setDrawerState("closed");
+    if (drawerState === "closed") {
+      setDrawerState("fully-open");
+    } else if (drawerState === "fully-open") {
+      setDrawerState("half-open");
+    } else {
+      setDrawerState("closed");
+    }
   };
 
   const menuItems = [
     {
       label: "My Tools",
-      icon: (
-        <Build
-          sx={{ display: "flex", flex: 1, width: "100%", height: "100%" }}
-        />
-      ),
+      icon: <Build sx={{ width: "100%", height: "100%" }} />,
       onClick: () => console.log("My Tools clicked"),
     },
     {
       label: "My Profile",
-      icon: (
-        <Person
-          sx={{ display: "flex", flex: 1, width: "100%", height: "100%" }}
-        />
-      ),
+      icon: <Person sx={{ width: "100%", height: "100%" }} />,
       onClick: () => console.log("Profile clicked"),
     },
     {
       label: "My Company",
-      icon: (
-        <Business
-          sx={{ display: "flex", flex: 1, width: "100%", height: "100%" }}
-        />
-      ),
+      icon: <Business sx={{ width: "100%", height: "100%" }} />,
       onClick: () => console.log("My Company clicked"),
     },
     {
       label: "Change Password",
-      icon: (
-        <Lock
-          sx={{ display: "flex", flex: 1, width: "100%", height: "100%" }}
-        />
-      ),
+      icon: <Lock sx={{ width: "100%", height: "100%" }} />,
       onClick: () => console.log("Change Password clicked"),
     },
   ];
 
   return (
     <>
-      <RotatingChevron placement={placement} onClick={toggleDrawer} />
+      {/* RotatingChevron now takes the drawerState */}
+      <RotatingChevron
+        placement={placement}
+        onClick={toggleDrawer}
+        drawerState={drawerState}
+      />
 
       <AnimatePresence>
         {drawerState !== "closed" && (
@@ -83,7 +75,7 @@ export function NavigationDrawer({
             left={placement === "left" ? 0 : "auto"}
             right={placement === "right" ? 0 : "auto"}
             bottom={0}
-            width={drawerState === "fully-open" ? 300 : 75}
+            width={drawerState === "fully-open" ? 225 : 75} // Full width for fully-open
             zIndex={5}
             bg="white"
             boxShadow="xl"
@@ -105,12 +97,12 @@ export function NavigationDrawer({
               damping: 30,
             }}
           >
-            <VStack spacing={4} align="stretch" height="100%" mt={20}>
+            <VStack align="stretch" height="100%" mt={20}>
               {drawerState === "fully-open" && (
-                <Box p={4}>
+                <Box px={4}>
                   <LetterFlyIn
                     duration={0.03}
-                    fontSize={30}
+                    fontSize={26}
                     color={theme.colors.perygonPink}
                   >
                     {drawerHeader}
@@ -119,17 +111,6 @@ export function NavigationDrawer({
               )}
 
               <Box
-                position="absolute"
-                top={0}
-                left={0}
-                right={0}
-                bottom={0}
-                zIndex={0}
-                overflow="hidden"
-              >
-                <ShapeAnimation />
-              </Box>
-              <Box
                 flex={1}
                 position="relative"
                 zIndex={1}
@@ -137,45 +118,64 @@ export function NavigationDrawer({
                 overflowY="auto"
               >
                 {drawerState === "fully-open" ? (
-                  menuItems.map((item) => (
-                    <SideBarMenuItem
-                      key={item.label}
-                      label={item.label}
-                      icon={item.icon}
-                      onClick={item.onClick}
-                      showIconOnly={false}
-                    />
-                  ))
+                  <VStack spacing={0} align="stretch" width="100%">
+                    {menuItems.map((item, index) => (
+                      <React.Fragment key={item.label}>
+                        <SideBarMenuItem
+                          label={item.label}
+                          icon={item.icon}
+                          onClick={item.onClick}
+                          showIconOnly={false}
+                        />
+                        {index < menuItems.length - 1 && (
+                          <Divider
+                            borderColor={theme.colors.perygonPink}
+                            opacity={0.2}
+                            my={2}
+                          />
+                        )}
+                      </React.Fragment>
+                    ))}
+                  </VStack>
                 ) : (
-                  <VStack spacing={4}>
-                    {menuItems.map((item) => (
-                      <SideBarMenuItem
-                        key={item.label}
-                        label={item.label}
-                        icon={item.icon}
-                        onClick={item.onClick}
-                        showIconOnly={true}
-                        iconSize="50px"
-                      />
+                  <VStack spacing={0} align="stretch" width="100%">
+                    {menuItems.map((item, index) => (
+                      <React.Fragment key={item.label}>
+                        <SideBarMenuItem
+                          label={item.label}
+                          icon={item.icon}
+                          onClick={item.onClick}
+                          showIconOnly={true}
+                          iconSize="50px"
+                        />
+                        {index < menuItems.length - 1 && (
+                          <Divider
+                            borderColor={theme.colors.perygonPink}
+                            opacity={0.2}
+                            my={2}
+                          />
+                        )}
+                      </React.Fragment>
                     ))}
                   </VStack>
                 )}
               </Box>
             </VStack>
+
             <IconButton
               aria-label="Toggle Drawer"
               icon={
                 placement === "left" ? (
-                  drawerState === "half-open" ? (
-                    <ChevronRight />
-                  ) : drawerState === "fully-open" ? (
+                  drawerState === "fully-open" ? (
+                    <ChevronLeft />
+                  ) : drawerState === "half-open" ? (
                     <ChevronLeft />
                   ) : (
                     <ChevronRight />
                   )
-                ) : drawerState === "half-open" ? (
-                  <ChevronLeft />
                 ) : drawerState === "fully-open" ? (
+                  <ChevronRight />
+                ) : drawerState === "half-open" ? (
                   <ChevronRight />
                 ) : (
                   <ChevronLeft />

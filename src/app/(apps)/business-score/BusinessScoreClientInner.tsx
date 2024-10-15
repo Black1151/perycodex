@@ -7,6 +7,8 @@ import { Footer } from "@/components/layout/Footer";
 import { NavBarProps, NavBar } from "../../NavBar";
 import { Tool } from "@/types/types";
 import BusinessScoreSplashScreen from "./BusinessScoreSplashScreen";
+import { LeftHandNavigationDrawer } from "@/components/layout/LeftHandNavigationDrawer";
+import { RightHandNavigationDrawer } from "@/components/layout/RightHandNavigationDrawer";
 
 interface HappinessScoreClientInnerProps {
   navBarProps: NavBarProps;
@@ -34,6 +36,8 @@ export default function BusinessScoreClientInner({
             <NavBar {...navBarProps} />
             <Footer />
           </VStack>
+          <LeftHandNavigationDrawer />
+          <RightHandNavigationDrawer />
         </>
       )}
     </PerygonContainer>
