@@ -82,7 +82,7 @@ export function RightHandNavigationDrawer({
                                 overflowY="auto"
                             >
                                 <VStack spacing={0} align="stretch" width="100%">
-                                    {menuItems && menuItems.length > 0 ? menuItems.map((item, index) => (
+                                    {menuItems && menuItems.length > 0 && menuItems.map((item, index) => (
                                         <React.Fragment key={item.label}>
                                             <SideBarMenuItem
                                                 label={item.label}
@@ -103,7 +103,11 @@ export function RightHandNavigationDrawer({
                                                 />
                                             )}
                                         </React.Fragment>
-                                    )) : <Text>No menu items supplied</Text>}
+                                    ))}
+                                    {/* If no menu items */}
+                                    {!menuItems && drawerState === 'fully-open' && (
+                                        <Text>No menu items supplied</Text>
+                                    )}
                                 </VStack>
                             </Box>
                         </VStack>
