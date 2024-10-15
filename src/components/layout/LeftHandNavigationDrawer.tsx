@@ -139,20 +139,20 @@ export function LeftHandNavigationDrawer({
 
                                                     </React.Fragment>
                                                 ))}
-                                                {/* Divider between categories */}
-                                                {/*{categoryIndex < Object.keys(groupedItems).length - 1 && (*/}
-                                                {/*    <Divider*/}
-                                                {/*        borderColor={theme.colors.perygonPink}*/}
-                                                {/*        opacity={0.8}*/}
-                                                {/*        my={6} // Add more margin for clearer separation*/}
-                                                {/*    />*/}
-                                                {/*)}*/}
+                                                Divider between categories
+                                                {categoryIndex < Object.keys(groupedItems).length - 1 && (
+                                                    <Divider
+                                                        borderColor={theme.colors.perygonPink}
+                                                        opacity={0.8}
+                                                        my={6} // Add more margin for clearer separation
+                                                    />
+                                                )}
                                             </React.Fragment>
                                         )
                                     )}
 
                                     {/* If no menu items */}
-                                    {menuItems && menuItems.length === 0 && (
+                                    {!menuItems && drawerState === 'fully-open' && (
                                         <Text>No menu items supplied</Text>
                                     )}
                                 </VStack>
