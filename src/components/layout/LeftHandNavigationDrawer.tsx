@@ -21,7 +21,7 @@ interface LeftHandNavigationDrawerProps {
 export function LeftHandNavigationDrawer({
                                              menuItems,
                                              title,
-                                             defaultDrawerState = 'closed'
+                                             defaultDrawerState = "closed",
                                          }: LeftHandNavigationDrawerProps) {
     const [drawerState, setDrawerState] = useState<
         "closed" | "half-open" | "fully-open"
@@ -39,6 +39,16 @@ export function LeftHandNavigationDrawer({
             setDrawerState("closed");
         }
     };
+
+    // Group menu items by category
+    const groupedItems = menuItems?.reduce((acc, item) => {
+        const category = item.category || "uncategorized";
+        if (!acc[category]) {
+            acc[category] = [];
+        }
+        acc[category].push(item);
+        return acc;
+    }, {} as Record<string, MenuItem[]>) || {};
 
     return (
         <>
@@ -66,7 +76,7 @@ export function LeftHandNavigationDrawer({
                         exit={{x: "-100%", opacity: 0}}
                         transition={{type: "spring", stiffness: 300, damping: 30}}
                     >
-                        <VStack align="stretch" height="100%" mt={20}>
+                        <VStack align="stretch" height="100%" mt={'80px'}>
                             {drawerState === "fully-open" && (
                                 <Box px={4}>
                                     <h2 style={{color: theme.colors.perygonPink}}>{title}</h2>
@@ -81,29 +91,70 @@ export function LeftHandNavigationDrawer({
                                 overflowY="auto"
                             >
                                 <VStack spacing={0} align="stretch" width="100%">
-                                    {menuItems && menuItems.length > 0 ? menuItems.map((item, index) => (
-                                        <React.Fragment key={item.label}>
-                                            <SideBarMenuItem
-                                                label={item.label}
-                                                icon={item.icon}
-                                                onClick={item.onClick}
-                                                showIconOnly={drawerState !== "fully-open"}
-                                                iconSize={6}
-                                                isLeft={true}
-                                                hoverStyles={{
-                                                    background: `linear-gradient(45deg, ${theme.colors.perygonPink}, ${theme.colors.seduloRed})`,
-                                                    color: "white",
-                                                }}
-                                            />
-                                            {index < menuItems.length - 1 && (
-                                                <Divider
-                                                    borderColor={theme.colors.perygonPink}
-                                                    opacity={0.2}
-                                                    my={2}
-                                                />
-                                            )}
-                                        </React.Fragment>
-                                    )) : <Text>No menu items supplied</Text>}
+                                    {Object.entries(groupedItems).map(
+                                        ([category, itemsInCategory], categoryIndex) => (
+                                            <React.Fragment key={categoryIndex}>
+                                                {/* Category Name */}
+                                                {category !== "uncategorized" && drawerState === "fully-open" && (
+                                                    <Box
+                                                        borderRadius="md"
+                                                        mb={4} // Margin below category for spacing
+                                                    >
+                                                        <Text
+                                                            fontWeight="bold"
+                                                            fontSize="lg"
+                                                            color={theme.colors.gray[600]} // Darker color for better contrast
+                                                            mb={2}
+                                                        >
+                                                            {category}
+                                                        </Text>
+
+                                                        {/* Divider below category title */}
+                                                        <Divider borderColor={theme.colors.perygonPink} opacity={0.5}/>
+                                                    </Box>
+                                                )}
+
+                                                {/* Menu Items in the Category */}
+                                                {itemsInCategory.map((item, index) => (
+                                                    <React.Fragment key={item.label}>
+                                                        <SideBarMenuItem
+                                                            label={item.label}
+                                                            icon={item.icon}
+                                                            onClick={item.onClick}
+                                                            showIconOnly={drawerState !== "fully-open"}
+                                                            iconSize={6}
+                                                            isLeft={true}
+                                                            hoverStyles={{
+                                                                background: `linear-gradient(45deg, ${theme.colors.perygonPink}, ${theme.colors.seduloRed})`,
+                                                                color: "white",
+                                                            }}
+                                                        />
+                                                        {index < itemsInCategory.length - 1 && (
+                                                            <Divider
+                                                                borderColor={theme.colors.perygonPink}
+                                                                opacity={0.2}
+                                                                my={2}
+                                                            />
+                                                        )}
+
+                                                    </React.Fragment>
+                                                ))}
+                                                {/* Divider between categories */}
+                                                {/*{categoryIndex < Object.keys(groupedItems).length - 1 && (*/}
+                                                {/*    <Divider*/}
+                                                {/*        borderColor={theme.colors.perygonPink}*/}
+                                                {/*        opacity={0.8}*/}
+                                                {/*        my={6} // Add more margin for clearer separation*/}
+                                                {/*    />*/}
+                                                {/*)}*/}
+                                            </React.Fragment>
+                                        )
+                                    )}
+
+                                    {/* If no menu items */}
+                                    {menuItems && menuItems.length === 0 && (
+                                        <Text>No menu items supplied</Text>
+                                    )}
                                 </VStack>
                             </Box>
                         </VStack>
