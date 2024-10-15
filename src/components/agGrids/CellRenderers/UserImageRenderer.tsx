@@ -11,48 +11,49 @@ interface UserImageRendererProps extends CustomCellRendererProps {
 }
 
 interface Contact {
-    id?: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    number: string;
-    email_verified_at: string;
-    isActive: boolean;
-    userTypeId: number;
-    organisationId: number;
-    photoUrl: string | null;
-    created_at: string;
-    updated_at: string;
+    id: number;
+    userUniqueId: string;
+    fullName?: string
+    email?: string,
+    role?: string,
+    jobTitle?: string,
+    imageUrl?: string,
+    custName?: string,
+    siteName?: string,
+    isActive?: boolean
 }
 
 const UserImageRenderer: React.FC<UserImageRendererProps> = (props) => {
-    const {contact} = props;
+    const {data: contact} = props;
 
     if (!contact) {
-        return <Text>N/A</Text>; // Fallback if no contact is passed
+        return null;
     }
 
-    const link = contact.id ? `/users/${contact.id}` : null;
+    const {userUniqueId, imageUrl, fullName} = contact;
+
+    const link = userUniqueId ? `/users/${userUniqueId}` : null;
+
 
     const userContent = (
         <Flex alignItems="center" textDecoration="none" justifyContent="flex-start" height="100%" width="100%" py={1}
               gap={2}>
-            {contact.photoUrl ? (
-                <Image
-                    alt={`${contact.firstName} ${contact.lastName}`}
-                    src={contact.photoUrl}
-                    height="100%"
-                    aspectRatio={1}
-                    borderRadius="50%"
-                    boxShadow="md"
-                />
-            ) : (
-                <Box height={'100%'} aspectRatio={1} borderRadius={'50%'}>
-                    <FaUser size={'100%'}/>
-                </Box>
-            )}
+            <Image
+                alt={`${fullName}`}
+                src={
+                    imageUrl && imageUrl !== ""
+                        ? imageUrl
+                        : "blank-profile-picture.webp"
+                }
+                height="100%"
+                aspectRatio={1}
+                borderRadius="50%"
+                objectFit={'cover'}
+                boxShadow="md"
+                fallbackSrc={"blank-profile-picture.webp"}
+            />
             <Text fontSize={'14px'}>
-                {contact.firstName} {contact.lastName}
+                {fullName}
             </Text>
         </Flex>
     );

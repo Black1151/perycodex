@@ -1,5 +1,5 @@
 import { ColDef } from "ag-grid-community";
-import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonsRenderer";
+import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
 
 // Updated AgGrids fields for Sites
 export const siteFields: ColDef[] | any = [
@@ -7,21 +7,25 @@ export const siteFields: ColDef[] | any = [
         field: 'id',
         headerName: 'ID',
         cellDataType: "number",
-        maxWidth: 128,
-        minWidth: 64,
         filter: "agNumberColumnFilter"
     },
     {
         field: 'siteName',
         headerName: 'Site Name',
         filter: "agTextColumnFilter",
-        flex: 3
+        flex: 2
     },
     {
-        field: 'uniqueId',
-        headerName: 'Unique ID',
+        field: 'siteTypeName',
+        headerName: 'Type',
         filter: "agTextColumnFilter",
-        flex: 3
+        flex: 1
+    },
+    {
+        field: 'address1',
+        headerName: 'St. Name',
+        filter: "agTextColumnFilter",
+        flex: 1
     },
     {
         field: 'postcode',
@@ -30,26 +34,20 @@ export const siteFields: ColDef[] | any = [
         flex: 1
     },
     {
-        field: 'customerId',
-        headerName: 'Customer ID',
-        cellDataType: "number",
-        filter: "agNumberColumnFilter",
+        field: 'custName',
+        headerName: 'Customer',
+        filter: "agTextColumnFilter",
         flex: 1
     },
     {
         field: 'isActive',
-        headerName: 'Active',
-        cellDataType: "boolean",
-        filter: "agSetColumnFilter",
-        flex: 1
-    },
-    {
-        field: 'nothing',
         headerName: 'Actions',
         flex: 1,
         cellRenderer: ActionButtonRenderer,
         cellRendererParams: {
-            redirectUrl: '/sites'
+            redirectUrl: '/sites',
+            updateUrl: '/api/site/',
+            idField: 'siteUniqueId'
         }
     },
 ];

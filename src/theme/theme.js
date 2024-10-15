@@ -1,4 +1,5 @@
 import { extendTheme } from "@chakra-ui/react";
+import { agGridStyles } from "./agGridStyles";
 
 export const perygonTheme = extendTheme({
   colors: {
@@ -11,6 +12,11 @@ export const perygonTheme = extendTheme({
     heading: "Metropolis, sans-serif",
     body: "Metropolis, sans-serif",
     bonfire: "Bonfire, sans-serif",
+  },
+  styles: {
+    global: {
+      ...agGridStyles,
+    },
   },
   components: {
     Button: {
@@ -26,6 +32,34 @@ export const perygonTheme = extendTheme({
             border: "1px solid",
             borderColor: "perygonPink",
             backgroundColor: "white",
+          },
+        },
+        agPrimary: {
+          bg: "transparent",
+          color: "white",
+          border: "1px solid rgba(255, 255, 255, 0.2)",
+          _hover: {
+            color: "perygonPink",
+            bg: "white",
+            boxShadow: "md",
+          },
+          _focus: {
+            boxShadow: "outline",
+          },
+        },
+      },
+    },
+    Switch: {
+      variants: {
+        primary: {
+          track: {
+            _checked: {
+              bg: "lightGreen",
+            },
+            bg: "#ccc",
+          },
+          thumb: {
+            bg: "white",
           },
         },
       },

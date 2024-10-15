@@ -2,36 +2,36 @@
 
 import React from 'react';
 import {Box, Image, Text, Flex} from '@chakra-ui/react';
-import {MdBusiness} from 'react-icons/md';
+import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
 import Link from 'next/link';
 
-// Define the interface for organisation data
-interface Organisation {
-    id: number
+// Define the interface for customer data
+interface Customer {
+    uniqueId: string
     name: string;
-    logoUrl?: string; // Optional property
+    imageUrl: string;
 }
 
 // Define the interface for the props expected by the component
-interface OrganisationLogoRendererProps {
-    data: Organisation; // Organisation data is required
+interface CustomerLogoRendererProps {
+    data: Customer; // Customer data is required
 }
 
-const OrganisationLogoRenderer: React.FC<OrganisationLogoRendererProps> = (props) => {
-    const {data: organisation} = props;
+const CustomerLogoRenderer: React.FC<CustomerLogoRendererProps> = (props) => {
+    const {data: customer} = props;
 
-    if (!organisation) {
+    if (!customer) {
         return null;
     }
 
 
-    const {name, logoUrl} = organisation;
-    const link = `/organisations/${organisation.id}`;
+    const {name, imageUrl, uniqueId} = customer;
+    const link = `/customers/${uniqueId}`;
 
     return (
         <Link href={link} passHref>
-            <Flex alignItems="center" as={'a'} justifyContent="flex-start" w="full" h="full" maxW="full" gap={4}>
-                {logoUrl ? (
+            <Flex alignItems="center" justifyContent="flex-start" w="full" h="full" maxW="full" gap={4}>
+                {imageUrl ? (
                     <Box
                         flexShrink={0}
                         width="50px"
@@ -42,7 +42,7 @@ const OrganisationLogoRenderer: React.FC<OrganisationLogoRendererProps> = (props
                         padding={1}
                     >
                         <Image
-                            src={logoUrl}
+                            src={imageUrl}
                             alt={name}
                             maxW="100%"
                             maxH="100%"
@@ -59,9 +59,9 @@ const OrganisationLogoRenderer: React.FC<OrganisationLogoRendererProps> = (props
                         alignItems="center"
                         justifyContent="center"
                     >
-                        <MdBusiness size="30px"/>
+                        <BusinessOutlinedIcon/>
                     </Box>)}
-                <Text fontSize={'14px'} fontWeight="medium" flex={1} overflow="hidden" textOverflow="ellipsis"
+                <Text fontSize={'14px'} flex={1} overflow="hidden" textOverflow="ellipsis"
                       whiteSpace="nowrap">
                     {name}
                 </Text>
@@ -70,4 +70,4 @@ const OrganisationLogoRenderer: React.FC<OrganisationLogoRendererProps> = (props
     );
 };
 
-export default OrganisationLogoRenderer;
+export default CustomerLogoRenderer;

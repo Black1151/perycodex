@@ -1,10 +1,10 @@
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
-import {Heading} from "@chakra-ui/react";
 
 // SurveyJS
-import SurveyJsComponent from "@/components/surveyJs/SurveyJsComponent";
-import {customerJson} from "@/components/surveyJs/forms/customer";
+import {customerJson} from "@/components/Z_surveyJs/forms/customer";
+import AdminHeader from "@/components/AdminHeader";
+import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -20,8 +20,15 @@ export default async function CustomersPage() {
 
     return (
         <>
-            <Heading>Create Customer</Heading>
-            <SurveyJsComponent jsonSchema={customerJson} endpoint={'/customer'} isNew={true} />
+            <AdminHeader headingText={'CREATE CUSTOMER'}/>
+            <SurveyComponent
+                surveyJson={customerJson}
+                endpoint={'/customer'}
+                isNew={true}
+                layout={'default'}
+                redirectUrl={'/customers'}
+                sjsPath={'admin'}
+            />
         </>
     );
 }

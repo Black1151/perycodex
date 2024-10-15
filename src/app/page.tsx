@@ -66,9 +66,7 @@ export default async function PerygonMain() {
       const userInfoData = await fetchUserInfo.json();
       const profileStatusData = await fetchProfileStatus.json();
 
-      console.log(carouselItemsData.resource);
-
-      carouselItems = transformCarouselItems(carouselItemsData.resource);
+      carouselItems = transformCarouselItems(carouselItemsData.resource ?? []);
 
       navbarProps = {
         userFirstName: userInfoData.resource.firstName,
@@ -77,11 +75,6 @@ export default async function PerygonMain() {
       };
 
       isProfileRegistered = profileStatusData.resource.isProfileRegistered;
-
-      if (carouselItems.length === 1) {
-        const singleItem = carouselItems[0];
-        redirect(`${singleItem.appUrl}?toolId=${singleItem.toolId}`);
-      }
     } catch (error: any) {
       console.error("Error details:", error);
       redirect("/error");
@@ -90,8 +83,18 @@ export default async function PerygonMain() {
     redirect("/login");
   }
 
-  if (isProfileRegistered === false) {
+  if (navbarProps.userRole === "PA") {
+    return redirect("/customers");
+  }
+
+  if (!isProfileRegistered) {
     return redirect("/profile-setup");
+  }
+
+  if (carouselItems.length === 1) {
+    return redirect(
+      `${carouselItems[0].appUrl}?toolId=${carouselItems[0].toolId}`
+    );
   }
 
   return (
