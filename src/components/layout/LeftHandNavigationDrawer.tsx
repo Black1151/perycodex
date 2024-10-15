@@ -139,7 +139,7 @@ export function LeftHandNavigationDrawer({
 
                                                     </React.Fragment>
                                                 ))}
-                                                Divider between categories
+                                                {/*Divider between categories*/}
                                                 {categoryIndex < Object.keys(groupedItems).length - 1 && (
                                                     <Divider
                                                         borderColor={theme.colors.perygonPink}
