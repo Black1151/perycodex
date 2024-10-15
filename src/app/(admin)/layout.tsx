@@ -67,9 +67,6 @@ export default async function Layout({ children }: LayoutProps) {
         userCustomerId: userIdentity?.customerId,
     };
 
-    // Log the final props being passed to AdminLayout
-    console.log("Rendering AdminLayout with userProps:", userProps);
-
     return (
         <AdminLayout userProps={userProps}>
             {children}
