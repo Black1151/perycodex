@@ -19,7 +19,7 @@ export default async function SitesPage() {
     }
 
     // Fetch sites data from the backend
-    const res = await fetch(`${process.env.BE_URL}/getAllView?view=vwSitesList&customerId=not-null&selectColumns=id,siteName,siteUniqueId,customerId,custName,siteTypeName,address1,postcode,isActive`, {
+    const res = await fetch(`${process.env.BE_URL}/getAllView?view=vwSitesList&customerId=not-null&selectColumns=id,siteName,siteUniqueId,custName,custUniqueId,custImageUrl,siteTypeName,address1,address3,postcode,isActive,primaryContactUniqueId,primaryContactFullName,primaryContactImageUrl`, {
         headers: {
             Authorization: `Bearer ${authToken}`,
         },
@@ -39,7 +39,7 @@ export default async function SitesPage() {
     if (siteData && siteCount > 0) {
         return (
             <>
-                <AdminHeader headingText={'SITES'} dataCount={siteCount} />
+                <AdminHeader headingText={'SITES'} dataCount={siteCount}/>
                 <DataGridComponent data={siteData}
                                    initialFields={siteFields}
                                    createNewUrl={'/sites/create'}/>

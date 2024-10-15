@@ -20,7 +20,7 @@ export default async function UsersPage() {
     }
 
     // Fetch users data from the backend
-    const res = await fetch(`${process.env.BE_URL}/getAllView?view=vwUsersList&selectColumns=id,userUniqueId,email,role,fullName,jobTitle,imageUrl,custName,siteName,isActive`, {
+    const res = await fetch(`${process.env.BE_URL}/getAllView?view=vwUsersList&selectColumns=id,userUniqueId,email,role,fullName,jobTitle,imageUrl,custName,custUniqueId,custImageUrl,siteName,isActive`, {
         headers: {
             Authorization: `Bearer ${authToken}`,
         },

@@ -1,5 +1,6 @@
 import {ColDef} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
+import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/OrganisationLogoRenderer";
 
 export const groupFields: ColDef[] | any = [
     {
@@ -7,6 +8,8 @@ export const groupFields: ColDef[] | any = [
         headerName: 'ID',
         cellDataType: "number",
         filter: "agNumberColumnFilter",
+        maxWidth: 128,
+        minWidth: 64,
         flex: 1
     },
     {
@@ -25,7 +28,13 @@ export const groupFields: ColDef[] | any = [
         field: 'custName',
         headerName: 'Customer',
         filter: "agMultiColumnFilter",
-        flex: 2
+        flex: 2,
+        cellRenderer: OrganisationLogoRenderer,
+        cellRendererParams: {
+            nameField: 'custName',
+            uniqueIdField: 'custUniqueId',
+            imageUrlField: 'custImageUrl',
+        }
     },
     {
         field: 'isActive',

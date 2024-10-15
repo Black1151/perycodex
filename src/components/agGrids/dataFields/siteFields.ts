@@ -1,5 +1,7 @@
-import { ColDef } from "ag-grid-community";
+import {ColDef} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
+import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/OrganisationLogoRenderer";
+import UserImageRenderer from "@/components/agGrids/CellRenderers/UserImageRenderer";
 
 // Updated AgGrids fields for Sites
 export const siteFields: ColDef[] | any = [
@@ -7,37 +9,64 @@ export const siteFields: ColDef[] | any = [
         field: 'id',
         headerName: 'ID',
         cellDataType: "number",
-        filter: "agNumberColumnFilter"
+        filter: "agNumberColumnFilter",
+        maxWidth: 128,
+        minWidth: 64,
+        flex: 1,
     },
     {
         field: 'siteName',
         headerName: 'Site Name',
-        filter: "agTextColumnFilter",
-        flex: 2
+        filter: "agMultiColumnFilter",
+        flex: 1
     },
     {
         field: 'siteTypeName',
         headerName: 'Type',
-        filter: "agTextColumnFilter",
+        filter: "agMultiColumnFilter",
         flex: 1
     },
     {
         field: 'address1',
         headerName: 'St. Name',
-        filter: "agTextColumnFilter",
+        filter: "agMultiColumnFilter",
+        flex: 1
+    },
+    {
+        field: 'address3',
+        headerName: 'City',
+        filter: "agMultiColumnFilter",
         flex: 1
     },
     {
         field: 'postcode',
         headerName: 'Postcode',
-        filter: "agTextColumnFilter",
+        filter: "agMultiColumnFilter",
         flex: 1
     },
     {
         field: 'custName',
         headerName: 'Customer',
-        filter: "agTextColumnFilter",
-        flex: 1
+        filter: "agMultiColumnFilter",
+        flex: 1,
+        cellRenderer: OrganisationLogoRenderer,
+        cellRendererParams: {
+            idField: 'custUniqueId',
+            nameField: 'custName',
+            imageUrlField: 'custImageUrl',
+        }
+    },
+    {
+        field: 'primaryContactFullName',
+        headerName: 'Primary Contact',
+        filter: "agMultiColumnFilter",
+        flex: 1,
+        cellRenderer: UserImageRenderer,
+        cellRendererParams: {
+            uniqueIdField: 'primaryContactUniqueId',
+            nameField: 'primaryContactFullName',
+            imageUrlField: 'primaryContactImageUrl',
+        }
     },
     {
         field: 'isActive',

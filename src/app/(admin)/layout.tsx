@@ -2,11 +2,18 @@ import { ReactNode } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { AdminLayout } from "@/app/(admin)/AdminLayout";
-import { NavBarProps } from "@/app/NavBar";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const fetchCache = "force-no-store";
+
+export interface NavBarProps {
+    userFirstName: string;
+    userImageUrl: string;
+    userRole: string;
+    userCustomerId: string;
+    logoImageUrl?: string;
+}
 
 interface LayoutProps {
     children: ReactNode;
