@@ -49,9 +49,9 @@ export default function Sidebar({items}: SidebarProps) {
                     <Text fontWeight="bold" color={theme.colors.gray[300]}>{category}</Text>
 
                     {itemsInCategory.map((item, index) => (
-                        <Link href={item.path}>
+                        <Link href={item.path} key={index}>
                             <Text
-                                key={index}
+
                                 cursor="pointer"
                                 _hover={{color: theme.colors.perygonPink}}
                                 onClick={item.action ? item.action : () => router.push(item.path || '')}
