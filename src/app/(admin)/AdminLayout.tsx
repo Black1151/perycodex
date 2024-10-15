@@ -32,55 +32,55 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
             return [
                 {
                     label: "My Company",
-                    icon: <Business fontSize="small"/>,
+                    icon: <Business sx={{height:'100%', width:'100%'}}/>,
                     onClick: () => router.push('/my-company'),
                     category: "Internal"
                 },
                 {
                     label: "My Company Users",
-                    icon: <People fontSize="small"/>,
+                    icon: <People sx={{height:'100%', width:'100%'}}/>,
                     onClick: () => router.push('/users'),
                     category: "Internal"
                 },
                 {
                     label: "My Company Sites",
-                    icon: <Domain fontSize="small"/>,
+                    icon: <Domain sx={{height:'100%', width:'100%'}}/>,
                     onClick: () => router.push('/sites'),
                     category: "Internal"
                 },
                 {
                     label: "Teams",
-                    icon: <GroupWork fontSize="small"/>,
+                    icon: <GroupWork sx={{height:'100%', width:'100%'}}/>,
                     onClick: () => router.push('/teams'),
                     category: "Internal"
                 },
                 {
                     label: "User Groups",
-                    icon: <PeopleAlt fontSize="small"/>,
+                    icon: <PeopleAlt sx={{height:'100%', width:'100%'}}/>,
                     onClick: () => router.push('/user-groups'),
                     category: "Internal"
                 },
                 {
                     label: "Tags",
-                    icon: <Tag fontSize="small"/>,
+                    icon: <Tag sx={{height:'100%', width:'100%'}}/>,
                     onClick: () => router.push('/tags'),
                     category: "Internal"
                 },
                 {
                     label: "Our Clients",
-                    icon: <Business fontSize="small"/>,
+                    icon: <Business sx={{height:'100%', width:'100%'}}/>,
                     onClick: () => router.push('/customers'),
                     category: "External"
                 },
                 {
                     label: "Our Clients Users",
-                    icon: <People fontSize="small"/>,
+                    icon: <People sx={{height:'100%', width:'100%'}}/>,
                     onClick: () => router.push('/users'),
                     category: "External"
                 },
                 {
                     label: "Our Clients Sites",
-                    icon: <Domain fontSize="small"/>,
+                    icon: <Domain sx={{height:'100%', width:'100%'}}/>,
                     onClick: () => router.push('/sites'),
                     category: "External"
                 },
@@ -89,37 +89,37 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
             return [
                 {
                     label: "Customers",
-                    icon: <EmojiPeople fontSize="small"/>,
+                    icon: <EmojiPeople sx={{height:'100%', width:'100%'}}/>,
                     onClick: () => router.push('/customers'),
                     category: "Platform"
                 },
                 {
                     label: "Users",
-                    icon: <People fontSize="small"/>,
+                    icon: <People sx={{height:'100%', width:'100%'}}/>,
                     onClick: () => router.push('/users'),
                     category: "Platform"
                 },
                 {
                     label: "Sites",
-                    icon: <Domain fontSize="small"/>,
+                    icon: <Domain sx={{height:'100%', width:'100%'}}/>,
                     onClick: () => router.push('/sites'),
                     category: "Platform"
                 },
                 {
                     label: "User Groups",
-                    icon: <PeopleAlt fontSize="small"/>,
+                    icon: <PeopleAlt sx={{height:'100%', width:'100%'}}/>,
                     onClick: () => router.push('/user-groups'),
                     category: "Platform"
                 },
                 {
                     label: "Tags",
-                    icon: <Tag fontSize="small"/>,
+                    icon: <Tag sx={{height:'100%', width:'100%'}}/>,
                     onClick: () => router.push('/tags'),
                     category: "Platform"
                 },
                 {
-                    label: "Other Workflow Admin",
-                    icon: <GroupWork fontSize="small"/>,
+                    label: "Workflow Admin",
+                    icon: <GroupWork sx={{height:'100%', width:'100%'}}/>,
                     onClick: () => console.log("Other Workflow Admin Clicked"),
                     category: "Workflow"
                 },
