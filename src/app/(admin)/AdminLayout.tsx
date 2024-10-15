@@ -5,7 +5,7 @@ import React, {ReactNode} from "react";
 import {NavBar} from "../NavBar";
 import {Footer} from "@/components/layout/Footer";
 import {UserProvider} from "@/context/AdminUserContext";
-import {Business, Domain, EmojiPeople, GroupWork, People, PeopleAlt, Tag} from "@mui/icons-material";
+import {Business, Domain, EmojiPeople, GroupWork, People, PeopleAlt, Tag, EmojiEmotions} from "@mui/icons-material";
 import {useRouter} from "next/navigation";
 import {LeftHandNavigationDrawer} from "@/components/layout/LeftHandNavigationDrawer";
 import {RightHandNavigationDrawer} from "@/components/layout/RightHandNavigationDrawer";
@@ -118,10 +118,16 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
                     category: "Platform"
                 },
                 {
+                    label: "Test Happiness",
+                    icon: <EmojiEmotions sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/test-happiness-score'),
+                    category: "Workflows"
+                },
+                {
                     label: "Workflow Admin",
                     icon: <GroupWork sx={{height: '100%', width: '100%'}}/>,
                     onClick: () => console.log("Other Workflow Admin Clicked"),
-                    category: "Workflow"
+                    category: "Workflows"
                 },
             ];
         }
