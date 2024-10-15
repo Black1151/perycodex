@@ -144,8 +144,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
                 {/* Sidebar and content container */}
                 <Flex flex={1} width="100%" mt={'60px'} mb={'30px'}>
                     {/* Sidebar */}
-                    <LeftHandNavigationDrawer menuItems={menuItems} title={'User Menu'}/>
-                    <RightHandNavigationDrawer menuItems={menuItems}/>
+                    <LeftHandNavigationDrawer menuItems={menuItems} title={'User Menu'} defaultDrawerState={'half-open'}/>
+                    <RightHandNavigationDrawer menuItems={menuItems} />
                     {/* Content Area */}
                     <Box flex={1} p={5} overflowY="auto" mx={225}>
                         {children}
