@@ -5,6 +5,7 @@ import {redirect} from "next/navigation";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {userFields} from "@/components/agGrids/dataFields/userFields";
 import AdminHeader from "@/components/AdminHeader";
+import InviteNewUserModalForPA from "@/app/(admin)/users/InviteUser";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -18,6 +19,31 @@ export default async function UsersPage() {
     if (!authToken) {
         return redirect("/login");
     }
+
+    // Fetch user data
+    let userIdentity = null;
+
+    try {
+        const identityResponse = await fetch(
+            `${process.env.BE_URL}/getView?view=vwLoggedInUserIdentity&userUniqueId=${uniqueId}&selectColumns=customerId,role,userImageUrl,firstName`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                },
+            }
+        );
+
+        if (!identityResponse.ok) {
+            throw new Error('Failed to fetch user identity');
+        }
+
+        userIdentity = (await identityResponse.json()).resource;
+    } catch (error) {
+        console.error("Error fetching user identity:", error);
+        return redirect("/error");
+    }
+
 
     // Fetch users data from the backend
     const res = await fetch(`${process.env.BE_URL}/getAllView?view=vwUsersList&selectColumns=id,userUniqueId,email,role,fullName,jobTitle,imageUrl,custName,custUniqueId,custImageUrl,siteName,isActive`, {
@@ -39,6 +65,9 @@ export default async function UsersPage() {
                 <DataGridComponent data={userData}
                                    initialFields={userFields}
                                    createNewUrl={'/users/create'}
+                                   createNewUrlButtonText={userIdentity.role === "PA" ? 'Invite New' : 'Create New'}
+                                   isModalEnabled={userIdentity.role === "PA"}
+                                   openModalComponent={InviteNewUserModalForPA}
                 />
             </>
         );
