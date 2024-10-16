@@ -10,7 +10,11 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
-export default async function CustomersPage({searchParams}: { searchParams: [key: string] }) {
+interface SearchParams {
+    customerType?: string
+}
+
+export default async function CustomersPage({searchParams}: { searchParams: SearchParams }) {
     const cookieStore = cookies();
     const authToken = cookieStore.get("auth_token")?.value;
     const uniqueId = cookieStore.get("user_uuid")?.value;
@@ -51,7 +55,7 @@ export default async function CustomersPage({searchParams}: { searchParams: [key
     // Dynamically apply filters based on the role and customerTypeParam
     if (userIdentity.role === 'CA') {
         // Default customerTypeParam to 'internal' if it's not 'internal' or 'external'
-        if (!['external'].includes(customerTypeParam)) {
+        if (!['external'].includes(customerTypeParam || '')) {
             customerTypeParam = 'external';
             headerTitle = 'Our Clients';
         } else if (customerTypeParam === 'external') {

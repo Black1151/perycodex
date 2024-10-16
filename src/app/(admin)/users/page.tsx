@@ -11,7 +11,11 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
-export default async function UsersPage({searchParams}: { searchParams: [key: string] }) {
+interface SearchParams {
+    userType?: string
+}
+
+export default async function UsersPage({searchParams}: { searchParams: SearchParams }) {
     const cookieStore = cookies();
     const authToken = cookieStore.get("auth_token")?.value;
     const uniqueId = cookieStore.get("user_uuid")?.value;
@@ -54,7 +58,7 @@ export default async function UsersPage({searchParams}: { searchParams: [key: st
     // Dynamically apply filters based on the role and userTypeParam
     if (userIdentity.role === 'CA') {
         // Default userTypeParam to 'internal' if it's not 'internal' or 'external'
-        if (!['internal', 'external'].includes(userTypeParam)) {
+        if (!['internal', 'external'].includes(userTypeParam || '')) {
             userTypeParam = 'internal';
         }
 
@@ -79,7 +83,6 @@ export default async function UsersPage({searchParams}: { searchParams: [key: st
             Authorization: `Bearer ${authToken}`,
         },
     });
-
 
 
     const users = await res.json();
