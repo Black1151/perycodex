@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { AgGridReact } from 'ag-grid-react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {useRouter} from 'next/navigation';
+import {AgGridReact} from 'ag-grid-react';
 import 'ag-grid-charts-enterprise';
-import { LicenseManager } from 'ag-grid-charts-enterprise';
+import {LicenseManager} from 'ag-grid-charts-enterprise';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { Box, Button, Flex, Input, useBreakpointValue, useDisclosure } from '@chakra-ui/react';
-import { Add, Clear } from '@mui/icons-material';
+import {Box, Button, Flex, Input, useBreakpointValue, useDisclosure} from '@chakra-ui/react';
+import {Add, Clear} from '@mui/icons-material';
 import NoDataOverlay from '@/components/agGrids/NoDataOverlay';
 import CustomGridBottomPagination from '@/components/agGrids/CustomGridBottomPagination';
 
@@ -23,22 +23,22 @@ interface DataGridComponentProps<T> {
 
 LicenseManager.setLicenseKey(`${process.env.NEXT_PUBLIC_AG_GRID_LICENSE_KEY}`);
 
-const DataGridComponent = <T,>({
-                                   data,
-                                   initialFields,
-                                   createNewUrl,
-                                   createNewUrlButtonText,
-                                   isModalEnabled,
-                                   openModalComponent: ModalComponent, // Accept the component directly as a React element type
-                               }: DataGridComponentProps<T>) => {
+const DataGridComponent = <T, >({
+                                    data,
+                                    initialFields,
+                                    createNewUrl,
+                                    createNewUrlButtonText,
+                                    isModalEnabled,
+                                    openModalComponent: ModalComponent, // Accept the component directly as a React element type
+                                }: DataGridComponentProps<T>) => {
     const gridRef = useRef<AgGridReact>(null);
     const [rowData, setRowData] = useState<T[]>(data || []);
     const [fields, setFields] = useState<any[]>(initialFields);
     const router = useRouter();
-    const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
+    const isMobile = useBreakpointValue({base: true, sm: true, md: false});
 
     // Modal disclosure state for Chakra UI
-    const { isOpen, onOpen, onClose } = useDisclosure();
+    const {isOpen, onOpen, onClose} = useDisclosure();
 
     // Memoize defaultColDef to avoid re-renders
     const defaultColDef = useMemo(() => ({
@@ -77,8 +77,17 @@ const DataGridComponent = <T,>({
         }
     };
 
-    createNewUrlButtonText = useBreakpointValue({ base: '', sm: '', md: createNewUrlButtonText ?? 'Create New' });
-    const resetFiltersButtonText = useBreakpointValue({ base: '', sm: '', md: 'Reset Filters' });
+    createNewUrlButtonText = useBreakpointValue({base: '', sm: '', md: createNewUrlButtonText ?? 'Create New'});
+    const resetFiltersButtonText = useBreakpointValue({base: '', sm: '', md: 'Reset Filters'});
+
+
+    // TODO: Check for any unintended consequences
+    // Effect to update rowData when the prop `data` changes
+    useEffect(() => {
+        if (data) {
+            setRowData(data);
+        }
+    }, [data]); // Run this effect whenever the data prop changes
 
     return (
         <Box className={`ag-theme-alpine ag-theme-perygon`} w={'full'} py={2}>
@@ -93,8 +102,8 @@ const DataGridComponent = <T,>({
                             w={256}
                             bg="white"
                             borderColor="gray.300"
-                            _hover={{ borderColor: 'gray.400' }}
-                            _focus={{ borderColor: 'perygonPink', boxShadow: '0 0 0 1px #ff0070' }}
+                            _hover={{borderColor: 'gray.400'}}
+                            _focus={{borderColor: 'perygonPink', boxShadow: '0 0 0 1px #ff0070'}}
                         />
 
                         <Button
@@ -105,8 +114,8 @@ const DataGridComponent = <T,>({
                             ml={'auto'}
                             size="md"
                             color="white"
-                            leftIcon={<Clear />}
-                            _hover={{ bg: 'perygonPink' }}
+                            leftIcon={<Clear/>}
+                            _hover={{bg: 'perygonPink'}}
                         >
                             {resetFiltersButtonText}
                         </Button>
@@ -119,7 +128,7 @@ const DataGridComponent = <T,>({
                             onClick={handleCreateNewClick}
                             size="md"
                             color="white"
-                            leftIcon={<Add />}
+                            leftIcon={<Add/>}
                         >
                             {createNewUrlButtonText}
                         </Button>
@@ -145,11 +154,11 @@ const DataGridComponent = <T,>({
 
                     {/* Render the modal component with modal state control */}
                     {isModalEnabled && ModalComponent && (
-                        <ModalComponent isOpen={isOpen} onClose={onClose} />
+                        <ModalComponent isOpen={isOpen} onClose={onClose}/>
                     )}
                 </>
             ) : (
-                <NoDataOverlay url={createNewUrl} />
+                <NoDataOverlay url={createNewUrl}/>
             )}
         </Box>
     );
