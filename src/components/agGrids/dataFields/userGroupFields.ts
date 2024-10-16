@@ -10,25 +10,25 @@ export const groupFields: ColDef[] | any = [
         filter: "agNumberColumnFilter",
         maxWidth: 128,
         minWidth: 64,
-        flex: 1
+        // flex: 1
     },
     {
         field: 'name',
         headerName: 'Group Name',
         filter: "agMultiColumnFilter",
-        flex: 1
+        // flex: 1
     },
     {
         field: 'description',
         headerName: 'Description',
         filter: "agMultiColumnFilter",
-        flex: 3
+        // flex: 3
     },
     {
         field: 'custName',
         headerName: 'Customer',
         filter: "agMultiColumnFilter",
-        flex: 2,
+        // flex: 2,
         cellRenderer: OrganisationLogoRenderer,
         cellRendererParams: {
             nameField: 'custName',
@@ -39,7 +39,7 @@ export const groupFields: ColDef[] | any = [
     {
         field: 'isActive',
         headerName: 'Actions',
-        flex: 1,
+        // flex: 1,
         cellRenderer: ActionButtonRenderer,
         cellRendererParams: {
             redirectUrl: '/user-groups',
