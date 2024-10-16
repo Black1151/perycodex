@@ -10,17 +10,62 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
-export default async function CustomersPage() {
+export default async function CustomersPage({searchParams}: { searchParams: [key: string] }) {
     const cookieStore = cookies();
     const authToken = cookieStore.get("auth_token")?.value;
+    const uniqueId = cookieStore.get("user_uuid")?.value;
 
     if (!authToken) {
         return redirect("/login");
     }
 
+    // Fetch user data
+    let userIdentity = null;
+
+    try {
+        const identityResponse = await fetch(
+            `${process.env.BE_URL}/getView?view=vwLoggedInUserIdentity&userUniqueId=${uniqueId}&selectColumns=customerId,role,userImageUrl,firstName`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${authToken}`,
+                },
+            }
+        );
+
+        if (!identityResponse.ok) {
+            throw new Error('Failed to fetch user identity');
+        }
+
+        userIdentity = (await identityResponse.json()).resource;
+    } catch (error) {
+        console.error("Error fetching user identity:", error);
+        return redirect("/error");
+    }
+
+
+    let url = `${process.env.BE_URL}/getAllView?view=vwCustomersList&selectColumns=id,name,custId,address3,country,customerCode,numberOfEmployees,imageUrl,isActive,noOfUsers,noOfSites,sectorName,customerType`;
+    let headerTitle;
+    let customerTypeParam = searchParams.customerType;
+
+    // Dynamically apply filters based on the role and customerTypeParam
+    if (userIdentity.role === 'CA') {
+        // Default customerTypeParam to 'internal' if it's not 'internal' or 'external'
+        if (!['external'].includes(customerTypeParam)) {
+            customerTypeParam = 'external';
+            headerTitle = 'Our Clients';
+        } else if (customerTypeParam === 'external') {
+            headerTitle = 'Our Clients';
+        }
+    } else if (userIdentity.role === 'PA') {
+        headerTitle = 'Customers';
+        // No additional filters for PA, the base URL is sufficient
+    }
+
+
     // Fetch customer data from the backend
     const res = await fetch(
-        `${process.env.BE_URL}/getAllView?view=vwCustomersList&selectColumns=id,name,custId,address3,country,customerCode,numberOfEmployees,imageUrl,isActive,noOfUsers,noOfSites,sectorName,customerType`,
+        url,
         {
             headers: {
                 Authorization: `Bearer ${authToken}`,
@@ -42,7 +87,7 @@ export default async function CustomersPage() {
     if (customerData && customerCount > 0) {
         return (
             <>
-                <AdminHeader headingText={'CUSTOMERS'} dataCount={customerCount} />
+                <AdminHeader headingText={headerTitle} dataCount={customerCount}/>
                 <DataGridComponent
                     data={customerData}
                     initialFields={customerFields}

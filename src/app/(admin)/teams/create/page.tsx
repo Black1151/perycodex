@@ -20,7 +20,7 @@ export default async function CustomersPage() {
 
     return (
         <>
-            <AdminHeader headingText={'CREATE DEPARTMENT / TEAM'}/>
+            <AdminHeader headingText={'Create Department / Team'}/>
             <SurveyComponent
                 surveyJson={userTeamJson}
                 endpoint={'/userTeam'}

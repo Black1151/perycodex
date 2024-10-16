@@ -20,7 +20,7 @@ export default async function CustomersPage() {
 
     return (
         <>
-            <AdminHeader headingText={'CREATE USER'}/>
+            <AdminHeader headingText={'Create User'}/>
             <SurveyComponent
                 surveyJson={userJson}
                 endpoint={'/user'}
