@@ -39,7 +39,7 @@ export default async function UsersPage() {
     if (userGroupData && userGroupCount > 0) {
         return (
             <>
-                <AdminHeader headingText={'USER GROUPS'} dataCount={userGroupCount} />
+                <AdminHeader headingText={'User Groups'} dataCount={userGroupCount} />
                 <DataGridComponent
                     data={userGroupData}
                     initialFields={groupFields}

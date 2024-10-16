@@ -42,7 +42,7 @@ export default async function SitesPage() {
   if (teamData && teamCount > 0) {
     return (
       <>
-        <AdminHeader headingText={'DEPARTMENTS / TEAMS'} dataCount={teamCount} />
+        <AdminHeader headingText={'Departments / Teams'} dataCount={teamCount} />
         <DataGridComponent
           data={teamData}
           initialFields={teamFields}

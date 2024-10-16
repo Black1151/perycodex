@@ -149,7 +149,7 @@ export const themeJson = {
         // Editor Panel - This looks like the background of a field
         "--sjs-editor-background": "rgba(255,255,255,0)", // Background of the question input field
         "--sjs-editorpanel-backcolor": "rgba(255, 255, 255, 0)", // Background of the question input field
-        "--sjs-editorpanel-hovercolor": "#B6203BCC", // Hover over boolean switch
+        "--sjs-editorpanel-hovercolor": "#E5E5E5", // Hover over boolean switch
 
 
         // Font Editor

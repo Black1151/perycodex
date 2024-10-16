@@ -2,8 +2,10 @@
 
 import React from 'react';
 import {Box, Flex, FormControl, Heading, Text, VStack} from '@chakra-ui/react';
-import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
-import moment from 'moment';  // Import moment.js to format the date
+import {Groups} from "@mui/icons-material";
+import moment from 'moment';
+import CreateIcon from "@mui/icons-material/Create";
+import UpdateIcon from "@mui/icons-material/Update";  // Import moment.js to format the date
 
 interface UserGroup {
     id: number;
@@ -37,7 +39,7 @@ export const UserGroupDetailsBanner: React.FC<UserGroupDetailsBannerProps> = ({u
                     justifyContent="center"
                     alignItems="center"
                 >
-                    <BusinessOutlinedIcon fontSize="large" style={{fontSize: '48px', color: 'gray'}}/>
+                    <Groups fontSize="large" style={{fontSize: '48px', color: 'gray'}}/>
                 </Box>
             </FormControl>
 
@@ -57,10 +59,17 @@ export const UserGroupDetailsBanner: React.FC<UserGroupDetailsBannerProps> = ({u
             </VStack>
 
             {/* ID, CreatedAt, and UpdatedAt */}
-            <VStack ml={'auto'} display={['none', 'none', 'flex']} alignItems="flex-end">
-                <Text fontSize="2xl" fontWeight={300}>ID: {userGroup.id}</Text>
-                <Text fontSize="sm">Created At: {moment(userGroup.createdAt).format('D/MM/YYYY, h:mm:ss a')}</Text>
-                <Text fontSize="sm">Updated At: {moment(userGroup.updatedAt).format('D/MM/YYYY, h:mm:ss a')}</Text>
+            <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-start'} display={['none', 'none', 'flex']}>
+                <Heading size="lg" fontWeight={100}>ID: {userGroup.id}</Heading>
+                <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
+                    <CreateIcon/>
+                    <Text fontSize="sm">{moment(userGroup.createdAt).format('D/MM/YYYY')}</Text>
+                </Flex>
+                <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
+                    <UpdateIcon/>
+                    <Text fontSize="sm">{moment(userGroup.updatedAt).format('D/MM/YYYY')}</Text>
+                </Flex>
+
             </VStack>
         </Flex>
     );

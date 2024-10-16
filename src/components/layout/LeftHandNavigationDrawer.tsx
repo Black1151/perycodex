@@ -64,19 +64,20 @@ export function LeftHandNavigationDrawer({
                 {drawerState !== "closed" && (
                     <MotionBox
                         position="fixed"
-                        top={drawerState === "half-open" ? -6 : 0}
+                        top={0}
                         left={0}
                         bottom={0}
-                        width={drawerState === "fully-open" ? 225 : 75}
+                        width={drawerState === "fully-open" ? 225 : 61}
                         zIndex={5}
                         bg="white"
                         boxShadow="xl"
+                        gap={0}
                         initial={{x: "-100%", opacity: 0}}
                         animate={{x: 0, opacity: 1}}
                         exit={{x: "-100%", opacity: 0}}
                         transition={{type: "spring", stiffness: 300, damping: 30}}
                     >
-                        <VStack align="stretch" height="100%" mt={'80px'}>
+                        <VStack align="stretch" height="100%" pt={'60px'}>
                             {drawerState === "fully-open" && (
                                 <Box px={4}>
                                     <h2 style={{color: theme.colors.perygonPink}}>{title}</h2>
@@ -162,7 +163,7 @@ export function LeftHandNavigationDrawer({
                         <Box
                             position="absolute"
                             bottom={55}
-                            left={drawerState === "fully-open" ? 160 : 5}
+                            left={drawerState === "fully-open" ? 160 : 0}
                             zIndex={6}
                         >
                             <RotatingChevron
