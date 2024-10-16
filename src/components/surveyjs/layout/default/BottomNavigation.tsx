@@ -1,11 +1,10 @@
 import React from 'react';
-import {Flex, Box, Stack, Button} from "@chakra-ui/react";
+import {Flex, Box, Stack, Button, useBreakpointValue} from "@chakra-ui/react";
 import {NavigationProps} from "@/components/surveyjs/SurveyProps";
 import {motion} from "framer-motion";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import SaveIcon from "@mui/icons-material/Save";
-import DoneIcon from "@mui/icons-material/Done"; // Import the custom hook
+import DoneIcon from "@mui/icons-material/Done";
 
 // Create a motion.div to animate the filling of the progress bar
 const MotionButton = motion(Button);
@@ -24,6 +23,11 @@ const BottomNavigation: React.FC<NavigationProps> = ({
                                                          isLastPage,
                                                          isEditing,
                                                      }) => {
+    // Responsive value for the button text; hides text on mobile
+    const buttonText = useBreakpointValue({ base: '', md: 'Previous' });
+    const nextButtonText = useBreakpointValue({ base: '', md: 'Next' });
+    const submitButtonText = useBreakpointValue({ base: '', md: 'Submit' });
+
     return (
         <Box p={4} borderRadius="lg" w="100%">
             <Flex justify="space-between" align="center" w="100%">
@@ -34,50 +38,55 @@ const BottomNavigation: React.FC<NavigationProps> = ({
                             fontSize={'sm'}
                             onClick={prevPage}
                             disabled={isFirstPage}
-                            leftIcon={<ArrowBackIcon/>}
-                            whileHover={{scale: 1.05}}
-                            whileTap={{scale: 0.95}}
+                            leftIcon={<ArrowBackIcon />}
+                            bgColor="darkGray"
+                            w="full"
+                            height={12}
+                            border="1px solid darkGray"
+                            color="white"
+                            _hover={{ color: "darkGray", backgroundColor: "white" }}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                         >
-                            Previous
+                            {buttonText}
                         </MotionButton>
 
                         <MotionButton
                             fontSize={'sm'}
                             onClick={nextPage}
-                            rightIcon={<ArrowForwardIcon/>}
+                            rightIcon={<ArrowForwardIcon />}
                             disabled={isLastPage}
-                            whileHover={{scale: 1.05}}
-                            whileTap={{scale: 0.95}}
+                            bgColor="darkGray"
+                            w="full"
+                            height={12}
+                            border="1px solid darkGray"
+                            color="white"
+                            _hover={{ color: "darkGray", backgroundColor: "white" }}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                         >
-                            Next
+                            {nextButtonText}
                         </MotionButton>
                     </Stack>
-                )
-                }
+                )}
 
-                {/* Right section: Save and Submit buttons */}
+                {/* Right section: Submit button */}
                 <Stack direction="row" spacing={4}>
-                    <MotionButton
-                        fontSize={'sm'}
-                        onClick={() => {
-                            window.alert("Implement Saving")
-                        }}
-                        leftIcon={<SaveIcon/>}
-                        whileHover={{scale: 1.05}}
-                        whileTap={{scale: 0.95}}
-                    >
-                        Save
-                    </MotionButton>
-
                     {isEditing && (
                         <MotionButton
                             fontSize={'sm'}
                             onClick={submitSurvey}
-                            leftIcon={<DoneIcon/>}
-                            whileHover={{scale: 1.05}}
-                            whileTap={{scale: 0.95}}
+                            leftIcon={<DoneIcon />}
+                            bgColor="green"
+                            w="full"
+                            height={12}
+                            border="1px solid lightGray"
+                            color="white"
+                            _hover={{ color: "green", backgroundColor: "white" }}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                         >
-                            Submit
+                            {submitButtonText}
                         </MotionButton>
                     )}
                 </Stack>

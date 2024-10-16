@@ -9,6 +9,8 @@ import {
     Button,
     Heading, Flex
 } from '@chakra-ui/react';
+import DoneIcon from "@mui/icons-material/Done";
+import CloseIcon from '@mui/icons-material/Close';
 
 interface ModalProps {
     isOpen: boolean;
@@ -40,8 +42,18 @@ const SurveyModal: React.FC<ModalProps> = ({
                 </ModalHeader>
                 <ModalBody>{bodyContent}</ModalBody>
                 <ModalFooter>
-                    <Button mr={3} onClick={onClose}>{cancelLabel}</Button>
-                    <Button colorScheme="green" onClick={onConfirm}>
+                    <Button mr={3} onClick={onClose}
+                            bgColor="darkGray"
+                            border="1px solid darkGray"
+                            leftIcon={<CloseIcon />}
+                            color="white"
+                            _hover={{color: "darkGray", backgroundColor: "white"}}>{cancelLabel}</Button>
+                    <Button bgColor="green"
+                            border="1px solid lightGray"
+                            color="white"
+                            leftIcon={<DoneIcon />}
+                            _hover={{color: "green", backgroundColor: "white"}}
+                            onClick={onConfirm}>
                         {confirmLabel}
                     </Button>
                 </ModalFooter>
