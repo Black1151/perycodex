@@ -1,11 +1,11 @@
 "use client";
 
-import {useTheme, Box, Flex, Container} from "@chakra-ui/react";
+import {useTheme, Box, Flex} from "@chakra-ui/react";
 import React, {ReactNode} from "react";
 import {NavBar} from "../NavBar";
 import {Footer} from "@/components/layout/Footer";
 import {UserProvider} from "@/context/AdminUserContext";
-import {Business, Domain, EmojiPeople, GroupWork, People, PeopleAlt, Tag, EmojiEmotions} from "@mui/icons-material";
+import {Domain, GroupWork, People, EmojiEmotions, LocationOn, Sell, Person, Groups} from "@mui/icons-material";
 import {useRouter} from "next/navigation";
 import {LeftHandNavigationDrawer} from "@/components/layout/LeftHandNavigationDrawer";
 import {RightHandNavigationDrawer} from "@/components/layout/RightHandNavigationDrawer";
@@ -32,56 +32,56 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
             return [
                 {
                     label: "My Company",
-                    icon: <Business sx={{height: '100%', width: '100%'}}/>,
+                    icon: <Domain sx={{height: '100%', width: '100%'}}/>,
                     onClick: () => router.push('/my-company'),
                     category: "Internal"
                 },
                 {
                     label: "My Company Users",
-                    icon: <People sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/users'),
+                    icon: <Person sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/users?userType=internal'),
                     category: "Internal"
                 },
                 {
                     label: "My Company Sites",
-                    icon: <Domain sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/sites'),
+                    icon: <LocationOn sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/sites?siteType=internal'),
                     category: "Internal"
                 },
                 {
                     label: "Teams",
-                    icon: <GroupWork sx={{height: '100%', width: '100%'}}/>,
+                    icon: <People sx={{height: '100%', width: '100%'}}/>,
                     onClick: () => router.push('/teams'),
                     category: "Internal"
                 },
                 {
                     label: "User Groups",
-                    icon: <PeopleAlt sx={{height: '100%', width: '100%'}}/>,
+                    icon: <Groups sx={{height: '100%', width: '100%'}}/>,
                     onClick: () => router.push('/user-groups'),
                     category: "Internal"
                 },
                 {
                     label: "Tags",
-                    icon: <Tag sx={{height: '100%', width: '100%'}}/>,
+                    icon: <Sell sx={{height: '100%', width: '100%'}}/>,
                     onClick: () => router.push('/tags'),
                     category: "Internal"
                 },
                 {
                     label: "Our Clients",
-                    icon: <Business sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/customers'),
+                    icon: <Domain sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/customers?customerType=external'),
                     category: "External"
                 },
                 {
                     label: "Our Clients Users",
-                    icon: <People sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/users'),
+                    icon: <Person sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/users?userType=external'),
                     category: "External"
                 },
                 {
                     label: "Our Clients Sites",
-                    icon: <Domain sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/sites'),
+                    icon: <LocationOn sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/sites?siteType=external'),
                     category: "External"
                 }
             ];
@@ -89,31 +89,31 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
             return [
                 {
                     label: "Customers",
-                    icon: <EmojiPeople sx={{height: '100%', width: '100%'}}/>,
+                    icon: <Domain sx={{height: '100%', width: '100%'}}/>,
                     onClick: () => router.push('/customers'),
                     category: "Platform"
                 },
                 {
                     label: "Users",
-                    icon: <People sx={{height: '100%', width: '100%'}}/>,
+                    icon: <Person sx={{height: '100%', width: '100%'}}/>,
                     onClick: () => router.push('/users'),
                     category: "Platform"
                 },
                 {
                     label: "Sites",
-                    icon: <Domain sx={{height: '100%', width: '100%'}}/>,
+                    icon: <LocationOn sx={{height: '100%', width: '100%'}}/>,
                     onClick: () => router.push('/sites'),
                     category: "Platform"
                 },
                 {
                     label: "User Groups",
-                    icon: <PeopleAlt sx={{height: '100%', width: '100%'}}/>,
+                    icon: <Groups sx={{height: '100%', width: '100%'}}/>,
                     onClick: () => router.push('/user-groups'),
                     category: "Platform"
                 },
                 {
                     label: "Tags",
-                    icon: <Tag sx={{height: '100%', width: '100%'}}/>,
+                    icon: <Sell sx={{height: '100%', width: '100%'}}/>,
                     onClick: () => router.push('/tags'),
                     category: "Platform"
                 },
@@ -153,7 +153,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
                     {/* Sidebar */}
                     <LeftHandNavigationDrawer menuItems={menuItems} defaultDrawerState={'half-open'}/>
                     {/* Content Area */}
-                    <Box flex={1} overflowY="auto" px={[5, 5, 65]} py={5}>
+                    <Box flex={1} overflowY="auto" px={[5, 5, 78]} py={5}>
                         {children}
                     </Box>
                     <RightHandNavigationDrawer menuItems={menuItems}/>
