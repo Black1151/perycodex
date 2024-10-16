@@ -153,7 +153,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
                     {/* Sidebar */}
                     <LeftHandNavigationDrawer menuItems={menuItems} defaultDrawerState={'half-open'}/>
                     {/* Content Area */}
-                    <Box flex={1} overflowY="auto" px={230} py={5}>
+                    <Box flex={1} overflowY="auto" px={[5, 5, 65]} py={5}>
                         {children}
                     </Box>
                     <RightHandNavigationDrawer menuItems={menuItems}/>
