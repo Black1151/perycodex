@@ -49,7 +49,7 @@ export default async function SitesPage({searchParams}: { searchParams: SearchPa
 
     // Decide what  the title should be and data being asked for
     let url = `${process.env.BE_URL}/getAllView?view=vwSitesList&customerId=not-null&selectColumns=id,siteName,siteUniqueId,custName,custUniqueId,custImageUrl,siteTypeName,address1,address3,postcode,isActive,primaryContactUniqueId,primaryContactFullName,primaryContactImageUrl`;
-    let headerTitle;
+    let headerTitle = 'Sites';
     let siteTypeParam = searchParams.siteType;
 
     // Dynamically apply filters based on the role and siteTypeParam
