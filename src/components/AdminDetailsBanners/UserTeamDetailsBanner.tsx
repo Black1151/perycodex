@@ -2,10 +2,10 @@
 
 import React from 'react';
 import {Box, Flex, FormControl, Heading, Text, VStack, Badge} from '@chakra-ui/react';
-import ApartmentIcon from '@mui/icons-material/Apartment';
-import GroupIcon from '@mui/icons-material/Group';
-import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
-import moment from "moment/moment"; // For fallback or general case icon
+import {People} from "@mui/icons-material";
+import moment from "moment/moment";
+import CreateIcon from "@mui/icons-material/Create";
+import UpdateIcon from "@mui/icons-material/Update"; // For fallback or general case icon
 
 interface Team {
     id: number;
@@ -45,11 +45,7 @@ export const UserTeamDetailsBanner: React.FC<UserTeamDetailsBannerProps> = ({tea
                     justifyContent="center"
                     alignItems="center"
                 >
-                    {isDepartment ? (
-                        <ApartmentIcon fontSize="large" style={{fontSize: '48px', color: 'gray'}}/>
-                    ) : (
-                        <GroupIcon fontSize="large" style={{fontSize: '48px', color: 'gray'}}/>
-                    )}
+                    <People fontSize="large" style={{fontSize: '48px', color: 'gray'}}/>
                 </Box>
             </FormControl>
 
@@ -80,10 +76,17 @@ export const UserTeamDetailsBanner: React.FC<UserTeamDetailsBannerProps> = ({tea
             </VStack>
 
             {/* Unique ID and Manager ID */}
-            <VStack ml={'auto'} display={['none', 'none', 'flex']} alignItems="flex-end">
-                <Text fontSize="2xl" fontWeight={300}>ID: {team.id}</Text>
-                <Text fontSize="sm">Created At: {moment(team.createdAt).format('D/MM/YYYY, h:mm:ss a')}</Text>
-                <Text fontSize="sm">Updated At: {moment(team.updatedAt).format('D/MM/YYYY, h:mm:ss a')}</Text>
+            <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-start'} display={['none', 'none', 'flex']}>
+                <Heading size="lg" fontWeight={100}>ID: {team.id}</Heading>
+                <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
+                    <CreateIcon/>
+                    <Text fontSize="sm">{moment(team.createdAt).format('D/MM/YYYY')}</Text>
+                </Flex>
+                <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
+                    <UpdateIcon/>
+                    <Text fontSize="sm">{moment(team.updatedAt).format('D/MM/YYYY')}</Text>
+                </Flex>
+
             </VStack>
         </Flex>
     );

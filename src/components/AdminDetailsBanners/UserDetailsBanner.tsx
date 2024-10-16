@@ -8,6 +8,7 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import CreateIcon from '@mui/icons-material/Create';
 import UpdateIcon from '@mui/icons-material/Update';
 import moment from "moment/moment";
+import {useRouter} from "next/navigation"
 
 interface User {
     id: number;
@@ -191,6 +192,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
 
     const isCurrentUser = true; // TODO: Add logic to see if current user
     const isUploading = false; // TODO: Add logic to upload a new photo
+    const router = useRouter();
 
     return (
         <Flex mb={4} p={4} borderRadius={8} color={'white'} overflow={'hidden'}>
@@ -318,6 +320,8 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                         maxWidth={'150px'}
                         objectFit={'contain'}
                         src={user.customer?.imageUrl || ""}
+                        cursor={'pointer'}
+                        onClick={() => router.push(`/customers/${user.customer?.uniqueId}`)}
                         alt={`${user.customer.name} Logo`}
                         fallback={
                             <Flex
@@ -339,7 +343,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                     />
                 )}
             </VStack>
-            {/* Organisation Details*/}
+            {/* User Details*/}
             <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-start'} display={['none', 'none', 'flex']}>
                 <Heading size="lg" fontWeight={100}>ID: {user.id}</Heading>
                 <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
