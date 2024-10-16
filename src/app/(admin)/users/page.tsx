@@ -51,7 +51,7 @@ export default async function UsersPage({searchParams}: { searchParams: SearchPa
     // Decide what  the title should be and data being asked for
 
     let url = `${process.env.BE_URL}/getAllView?view=vwUsersList&selectColumns=id,userUniqueId,email,role,fullName,jobTitle,imageUrl,customerId,custName,custUniqueId,custImageUrl,custParentId,siteName,isActive`;
-    let headerTitle;
+    let headerTitle = 'Users';
     let userTypeParam = searchParams.userType;
 
 

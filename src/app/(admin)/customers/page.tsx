@@ -49,7 +49,7 @@ export default async function CustomersPage({searchParams}: { searchParams: Sear
 
 
     let url = `${process.env.BE_URL}/getAllView?view=vwCustomersList&selectColumns=id,name,custId,address3,country,customerCode,numberOfEmployees,imageUrl,isActive,noOfUsers,noOfSites,sectorName,customerType`;
-    let headerTitle;
+    let headerTitle = 'Customers';
     let customerTypeParam = searchParams.customerType;
 
     // Dynamically apply filters based on the role and customerTypeParam
