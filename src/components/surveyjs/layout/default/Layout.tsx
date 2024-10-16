@@ -54,7 +54,7 @@ const DefaultLayout: React.FC<LayoutProps> = ({model, dataset}) => {
 
     return (
         <Flex w="full" justify="center" align="center" py={4} position="relative" direction="column">
-            <Box maxW={['98%', '98%', '90%']} w="100%" bg="white" borderRadius="lg" overflow="hidden">
+            <Box maxW={['98%', '98%', '98%']} w="100%" bg="white" borderRadius="lg" overflow="hidden">
                 {/* Navigation Component */}
                 <TopNavigation
                     currentPage={currentPage}
