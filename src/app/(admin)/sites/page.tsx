@@ -10,7 +10,11 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
-export default async function SitesPage({searchParams}: { searchParams: [key: string] }) {
+interface SearchParams {
+    siteType?: string
+}
+
+export default async function SitesPage({searchParams}: { searchParams: SearchParams }) {
     const cookieStore = cookies();
     const authToken = cookieStore.get("auth_token")?.value;
     const uniqueId = cookieStore.get("user_uuid")?.value;
@@ -51,7 +55,7 @@ export default async function SitesPage({searchParams}: { searchParams: [key: st
     // Dynamically apply filters based on the role and siteTypeParam
     if (userIdentity.role === 'CA') {
         // Default siteTypeParam to 'internal' if it's not 'internal' or 'external'
-        if (!['internal', 'external'].includes(siteTypeParam)) {
+        if (!['internal', 'external'].includes(siteTypeParam || '')) {
             siteTypeParam = 'internal';
             headerTitle = 'My Company Sites'
         }
