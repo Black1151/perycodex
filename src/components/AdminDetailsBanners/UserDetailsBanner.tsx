@@ -5,6 +5,8 @@ import {Box, Flex, FormControl, Heading, IconButton, Image, Input, Spinner, Text
 import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+import CreateIcon from '@mui/icons-material/Create';
+import UpdateIcon from '@mui/icons-material/Update';
 import moment from "moment/moment";
 
 interface User {
@@ -308,12 +310,6 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                         {user.site ? user.site.siteName : "Unknown"}
                     </Text>
                 </Flex>
-            </VStack>
-            {/* Organisation Details*/}
-            <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-end'} display={['none', 'none', 'flex']}>
-                <Text fontSize="2xl" fontWeight={300}>ID: {user.id}</Text>
-                <Text fontSize="sm">Created At: {moment(user.createdAt).format('D/MM/YYYY, h:mm:ss a')}</Text>
-                <Text fontSize="sm">Updated At: {moment(user.updatedAt).format('D/MM/YYYY, h:mm:ss a')}</Text>
                 {/* Organisation's Logo */}
                 {user.customer && (
                     <Image
@@ -342,6 +338,19 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                         }
                     />
                 )}
+            </VStack>
+            {/* Organisation Details*/}
+            <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-start'} display={['none', 'none', 'flex']}>
+                <Heading size="lg" fontWeight={100}>ID: {user.id}</Heading>
+                <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
+                    <CreateIcon/>
+                    <Text fontSize="sm">{moment(user.createdAt).format('D/MM/YYYY')}</Text>
+                </Flex>
+                <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
+                    <UpdateIcon/>
+                    <Text fontSize="sm">{moment(user.updatedAt).format('D/MM/YYYY')}</Text>
+                </Flex>
+
             </VStack>
         </Flex>
     );
