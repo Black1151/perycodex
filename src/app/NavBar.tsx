@@ -75,6 +75,26 @@ export const NavBar: React.FC<NavBarProps> = ({
     useEffect(() => {
         const commonMenuItems: MenuItemProps[] = [
             {
+                label: "My Tools",
+                icon: <HomeIcon/>,
+                onClick: () => router.push('/'),
+            },
+            {
+                label: "My Profile",
+                icon: <PersonIcon/>,
+                onClick: () => router.push("/my-profile"),
+            },
+            {
+                label: "My Company",
+                icon: <BusinessIcon/>,
+                onClick: () => router.push('/my-company'),
+            },
+            {
+                label: "Change Password",
+                icon: <LockIcon/>,
+                onClick: () => console.log("Change Password clicked"),
+            },
+            {
                 label: "Logout",
                 icon: <ExitToAppIcon/>,
                 onClick: handleLogout,
@@ -96,26 +116,6 @@ export const NavBar: React.FC<NavBarProps> = ({
                     label: "Admin Tools",
                     icon: <SettingsIcon/>,
                     onClick: () => router.push("/customers"),
-                },
-                {
-                    label: "My Tools",
-                    icon: <HomeIcon/>,
-                    onClick: () => router.push('/'),
-                },
-                {
-                    label: "My Profile",
-                    icon: <PersonIcon/>,
-                    onClick: () => router.push("/my-profile"),
-                },
-                {
-                    label: "My Company",
-                    icon: <BusinessIcon/>,
-                    onClick: () => router.push('/my-company'),
-                },
-                {
-                    label: "Change Password",
-                    icon: <LockIcon/>,
-                    onClick: () => console.log("Change Password clicked"),
                 },
                 ...commonMenuItems,
             ]);
