@@ -22,8 +22,6 @@ const useSurveySubmission = ({
 
             // Handle survey submission
             const handleSurveySubmission = async (sender: SurveyModel) => {
-                console.log(endpoint);
-
                 const requestType = isNew ? "POST" : "PUT";
                 let filteredSurveyData = {...sender.data};
 
