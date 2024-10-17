@@ -27,6 +27,7 @@ export default async function CustomersDetailsPage({params}: { params: { uniqueI
                 endpoint={`/customer/${params.uniqueId}`}
                 isNew={false}
                 dataset={customerData}
+                layout={'default'}
                 sjsPath={'admin'}
             />
         </div>
