@@ -5,7 +5,7 @@ import React, {ReactNode} from "react";
 import {NavBar} from "../NavBar";
 import {Footer} from "@/components/layout/Footer";
 import {UserProvider} from "@/context/AdminUserContext";
-import {Domain, GroupWork, People, EmojiEmotions, LocationOn, Sell, Person, Groups} from "@mui/icons-material";
+import {Domain, GroupWork, People, EmojiEmotions, AddReaction , LocationOn, Sell, Person, Groups} from "@mui/icons-material";
 import {useRouter} from "next/navigation";
 import {LeftHandNavigationDrawer} from "@/components/layout/LeftHandNavigationDrawer";
 import {RightHandNavigationDrawer} from "@/components/layout/RightHandNavigationDrawer";
@@ -119,9 +119,15 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
                     category: "Platform"
                 },
                 {
-                    label: "Test Happiness",
+                    label: "Test Happiness (Hard Coded)",
                     icon: <EmojiEmotions sx={{height: '100%', width: '100%'}}/>,
                     onClick: () => router.push('/test-happiness-score'),
+                    category: "Workflows"
+                },
+                {
+                    label: "Test Happiness (API)",
+                    icon: <AddReaction sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/test-happiness-score-by-api'),
                     category: "Workflows"
                 },
                 {
