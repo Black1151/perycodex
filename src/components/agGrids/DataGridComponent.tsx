@@ -80,6 +80,20 @@ const DataGridComponent = <T, >({
     createNewUrlButtonText = useBreakpointValue({base: '', sm: '', md: createNewUrlButtonText ?? 'Create New'});
     const resetFiltersButtonText = useBreakpointValue({base: '', sm: '', md: 'Reset Filters'});
 
+    // Quick Filter
+    const onFilterTextBoxChanged = useCallback(() => {
+        gridRef.current!.api.setGridOption(
+            "quickFilterText",
+            (document.getElementById("filter-text-box") as HTMLInputElement).value,
+        );
+    }, [])
+
+    // Reset all filters and quick filter
+    const resetFilter = useCallback(() => {
+        gridRef.current?.api.setFilterModel(null);
+        gridRef.current?.api.setGridOption('quickFilterText',
+            (document.getElementById('filter-text-box') as HTMLInputElement).value = '');
+    }, []);
 
     // TODO: Check for any unintended consequences
     // Effect to update rowData when the prop `data` changes
@@ -99,6 +113,7 @@ const DataGridComponent = <T, >({
                             variant="outline"
                             id="filter-text-box"
                             placeholder="Search..."
+                            onInput={onFilterTextBoxChanged}
                             w={256}
                             bg="white"
                             borderColor="gray.300"
@@ -110,7 +125,7 @@ const DataGridComponent = <T, >({
                             variant="solid"
                             bg="seduloRed"
                             aria-label="reset-filters"
-                            onClick={() => gridRef.current?.api.setFilterModel(null)}
+                            onClick={resetFilter}
                             ml={'auto'}
                             size="md"
                             color="white"
