@@ -15,6 +15,7 @@ type LayoutMap = {
 const SurveyComponent: React.FC<SurveyComponentProps> = ({
                                                              surveyJson,
                                                              layout = 'default',
+                                                             layoutOptions,
                                                              endpoint,
                                                              isNew,
                                                              dataset,
@@ -118,7 +119,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
         return <div>Loading Survey (Model State)...</div>; // Loading state
     }
 
-    return <SurveyLayout model={model} dataset={dataset}/>;
+    return <SurveyLayout model={model} dataset={dataset} {...layoutOptions}/>;
 };
 
 export default SurveyComponent;
