@@ -28,7 +28,7 @@ export const userFields: ColDef[] | any = [
     {
         field: 'email',
         headerName: 'Email',
-        filter: "agTextColumnFilter",
+        filter: "agMultiColumnFilter",
         // flex: 1
     },
     {
