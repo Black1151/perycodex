@@ -5,6 +5,7 @@ export interface SurveyComponentProps {
     endpoint: string;
     isNew: boolean;
     layout?: string;
+    layoutOptions?: Record<string, any>;
     dataset?: Record<string, any>;
     onSurveyComplete?: () => void;
     excludeKeys?: string[];
@@ -17,6 +18,15 @@ export interface SurveyComponentProps {
 export interface LayoutProps {
     model: any;
     dataset: any;
+}
+
+export interface DefaultLayoutProps extends LayoutProps {
+    showTopNavigation?: boolean;
+    showBottomNavigation?: boolean;
+}
+
+export interface HappinessLayoutProps extends LayoutProps {
+    showTitle?: boolean
 }
 
 export interface UseSurveyProps {
