@@ -41,7 +41,8 @@ const roleBasedRoutes: { [key: string]: string[] } = {
         "/user-groups/create",
         "/users",
         "/users/[dynamicSegment]",
-        "/test-happiness-score"
+        "/test-happiness-score",
+        "/test-happiness-score-by-api",
     ],
     // Add more roles and routes as needed
 };
