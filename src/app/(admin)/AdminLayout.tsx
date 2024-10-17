@@ -9,6 +9,7 @@ import {Domain, GroupWork, People, EmojiEmotions, LocationOn, Sell, Person, Grou
 import {useRouter} from "next/navigation";
 import {LeftHandNavigationDrawer} from "@/components/layout/LeftHandNavigationDrawer";
 import {RightHandNavigationDrawer} from "@/components/layout/RightHandNavigationDrawer";
+import {PerygonContainer} from "@/components/layout/PerygonContainer";
 
 interface AdminLayoutProps {
     children: ReactNode;
@@ -138,16 +139,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
 
     return (
         <UserProvider value={userProps}>
-            <Flex
-                minH="100vh"
-                height={'100svh'}
-                width="100%"
-                overflowX="hidden"
-                justifyContent={'center'}
-                bgGradient={`linear(to-br, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`}
-            >
+            <PerygonContainer>
                 <NavBar {...userProps} />
-
                 {/* Sidebar and content container */}
                 <Flex flex={1} width="100%" mt={'60px'} mb={'30px'}>
                     {/* Sidebar */}
@@ -159,7 +152,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
                     <RightHandNavigationDrawer menuItems={menuItems}/>
                 </Flex>
                 <Footer/>
-            </Flex>
+            </PerygonContainer>
         </UserProvider>
     );
 };
