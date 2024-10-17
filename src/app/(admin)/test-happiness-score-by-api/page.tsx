@@ -35,6 +35,7 @@ export default async function TestHappinessScorePage() {
                 jsPath={jsAdditionalFileUrl}
                 cssPath={cssThemeFileUrl}
                 sjsPath={sjsThemeFileUrl}
+                layoutOptions={{showTitle: true}}
             />
         </>
     );
