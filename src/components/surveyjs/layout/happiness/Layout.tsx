@@ -22,7 +22,7 @@ const HappinessLayout: React.FC<LayoutProps> = ({model, dataset}) => {
     } = useSurveyNavigation(model, dataset);
 
     return (
-        <Flex w="full" justify="center" align="center" pt={8} position="fixed" direction="column" top={0} left={0}
+        <Flex w="full" justify="center" align="center" pt={'60px'} position="fixed" direction="column" top={0} left={0}
               height={'100svh'} width={'100svw'}>
             <Survey model={model}/>
         </Flex>
