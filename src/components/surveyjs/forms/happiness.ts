@@ -1,4 +1,9 @@
-const unHappyhtml = `
+export const happinessJson = {
+    completedHtmlOnCondition: [
+        {
+            "expression": "{happinessScore} < 4",
+            "html": {
+                default: `
 <table width=100%>
     <tr>
         <td>
@@ -17,42 +22,24 @@ const unHappyhtml = `
             </center>
         </td>
     </tr>
-    <tr>
-        <td>
-            <center>
-                <button onClick={()=>{console.log("Does this display")}}>Navigate</button>
-            </center>
-        </td>
-    </tr>
 </table>
 `
-
-const mediumHappyHtml = `
-<table width=100%><tr><td><center><img src='images/Happiness_Score__Icon_6_100px.png' width='120px' /></center></td><tr><tr><td><center><center><span style='font-size:20.0pt;color:white;line-height:107%;font-family:Metropolis'>So you seem </span> <b><i><span style='font-size:30.0pt;color:white;line-height:107%;font-family:Bonfire'>OK!</span></i></b><span> </span><span style='font-size:20.0pt;color:white;line-height:107%;font-family:Metropolis'> What can we do to up your rating?</span></center></center></td></tr></table>
-`
-
-const happyHtml = `
-<table width=100%><tr><td><center><img src='images/Happiness_Score__Icon_1_100px.png' width='120px' /></center></td><tr><tr><td><center><center><span style='font-size:20.0pt;color:white;line-height:107%;font-family:Metropolis'>Oh really </span> <b><i><span style='font-size:30.0pt;color:white;line-height:107%;font-family:Bonfire'>HAPPY!</span></i></b><span> </span><span style='font-size:20.0pt;color:white;line-height:107%;font-family:Metropolis'>I am so thrilled for you.. What is so good this week?</span></center></center></td></tr></table>
-`
-
-export const happinessJson = {
-    completedHtmlOnCondition: [
-        {
-            "expression": "{happinessScore} < 4",
-            "html": {
-                default: unHappyhtml
             }
         },
         {
             "expression": "{happinessScore} = 4 or {happinessScore} = 5 or {happinessScore} = 6",
             "html": {
-                default: mediumHappyHtml
+                default: `
+<table width=100%><tr><td><center><img src='images/Happiness_Score__Icon_6_100px.png' width='120px' /></center></td><tr><tr><td><center><center><span style='font-size:20.0pt;color:white;line-height:107%;font-family:Metropolis'>So you seem </span> <b><i><span style='font-size:30.0pt;color:white;line-height:107%;font-family:Bonfire'>OK!</span></i></b><span> </span><span style='font-size:20.0pt;color:white;line-height:107%;font-family:Metropolis'> What can we do to up your rating?</span></center></center></td></tr></table>
+`
             }
         },
         {
             "expression": "{happinessScore} >= 7",
             "html": {
-                "default": happyHtml
+                "default": `
+<table width=100%><tr><td><center><img src='images/Happiness_Score__Icon_1_100px.png' width='120px' /></center></td><tr><tr><td><center><center><span style='font-size:20.0pt;color:white;line-height:107%;font-family:Metropolis'>Oh really </span> <b><i><span style='font-size:30.0pt;color:white;line-height:107%;font-family:Bonfire'>HAPPY!</span></i></b><span> </span><span style='font-size:20.0pt;color:white;line-height:107%;font-family:Metropolis'>I am so thrilled for you.. What is so good this week?</span></center></center></td></tr></table>
+`
             }
         }
     ],
