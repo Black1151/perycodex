@@ -49,6 +49,7 @@ const ActionButtonRenderer: React.FC<ActionButtonRendererProps> = ({
                     uniqueId,  // Include uniqueId in the body
                     data: {isActive: newIsActive},  // Add the new isActive state as part of data
                 },
+                successMessage: "Updated record successfully.",
                 errorMessage: "Unable to update record. Please try again.",
                 redirectOnError: false,
             });
