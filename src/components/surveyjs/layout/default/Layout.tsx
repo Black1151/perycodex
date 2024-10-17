@@ -30,17 +30,12 @@ const DefaultLayout: React.FC<LayoutProps> = ({model, dataset}) => {
     useEffect(() => {
         // Listen for SurveyJS page change event
         const handlePageChange = () => {
-            console.log('Current Page:', currentPage);
-            console.log('Direction:', direction);
-
             // Set the direction based on whether the user is going to the next or previous page
             if (model.currentPageNo > currentPage) {
                 setDirection(1); // Slide from right for next page
             } else {
                 setDirection(-1); // Slide from left for previous page
             }
-            console.log('Direction:', direction);
-
         };
 
         // Attach event to the model
