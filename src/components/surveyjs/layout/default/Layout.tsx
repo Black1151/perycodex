@@ -5,11 +5,16 @@ import {Box, Flex} from "@chakra-ui/react";
 import {motion} from "framer-motion";
 import useSurveyNavigation from "@/components/surveyjs/useSurveyNavigation";
 import BottomNavigation from "@/components/surveyjs/layout/default/BottomNavigation";
-import {LayoutProps} from "@/components/surveyjs/SurveyProps";
+import {DefaultLayoutProps, LayoutProps} from "@/components/surveyjs/SurveyProps";
 
 const MotionBox = motion(Box); // Create a motion-wrapped Box for animations
 
-const DefaultLayout: React.FC<LayoutProps> = ({model, dataset}) => {
+const DefaultLayout: React.FC<DefaultLayoutProps> = ({
+                                                         model,
+                                                         dataset,
+                                                         showTopNavigation = true,
+                                                         showBottomNavigation = true,
+                                                     }) => {
     const {
         currentPage,
         setCurrentPage,
@@ -51,20 +56,22 @@ const DefaultLayout: React.FC<LayoutProps> = ({model, dataset}) => {
         <Flex w="full" justify="center" align="center" py={4} position="relative" direction="column">
             <Box maxW={['98%', '98%', '98%']} w="100%" bg="white" borderRadius="lg" overflow="hidden">
                 {/* Navigation Component */}
-                <TopNavigation
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                    nextPage={nextPage}
-                    prevPage={prevPage}
-                    jumpToPage={jumpToPage}
-                    submitSurvey={submitSurvey}
-                    switchToDisplayMode={switchToDisplayMode}
-                    switchToEditMode={switchToEditMode}
-                    pageListOptions={pageListOptions}
-                    isFirstPage={isFirstPage}
-                    isLastPage={isLastPage}
-                    isEditing={isEditing}
-                />
+                {showTopNavigation &&
+                    <TopNavigation
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        nextPage={nextPage}
+                        prevPage={prevPage}
+                        jumpToPage={jumpToPage}
+                        submitSurvey={submitSurvey}
+                        switchToDisplayMode={switchToDisplayMode}
+                        switchToEditMode={switchToEditMode}
+                        pageListOptions={pageListOptions}
+                        isFirstPage={isFirstPage}
+                        isLastPage={isLastPage}
+                        isEditing={isEditing}
+                    />
+                }
 
                 {/* Motion-animated Survey component with slide transition */}
                 <MotionBox
@@ -90,20 +97,22 @@ const DefaultLayout: React.FC<LayoutProps> = ({model, dataset}) => {
 
 
                 {/*    Bottom Navigation*/}
-                <BottomNavigation
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                    nextPage={nextPage}
-                    prevPage={prevPage}
-                    jumpToPage={jumpToPage}
-                    submitSurvey={submitSurvey}
-                    switchToDisplayMode={switchToDisplayMode}
-                    switchToEditMode={switchToEditMode}
-                    pageListOptions={pageListOptions}
-                    isFirstPage={isFirstPage}
-                    isLastPage={isLastPage}
-                    isEditing={isEditing}
-                />
+                {showBottomNavigation &&
+                    <BottomNavigation
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        nextPage={nextPage}
+                        prevPage={prevPage}
+                        jumpToPage={jumpToPage}
+                        submitSurvey={submitSurvey}
+                        switchToDisplayMode={switchToDisplayMode}
+                        switchToEditMode={switchToEditMode}
+                        pageListOptions={pageListOptions}
+                        isFirstPage={isFirstPage}
+                        isLastPage={isLastPage}
+                        isEditing={isEditing}
+                    />
+                }
             </Box>
         </Flex>
     );
