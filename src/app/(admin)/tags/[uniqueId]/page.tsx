@@ -1,22 +1,13 @@
-import React from "react";
-import {cookies} from "next/headers";
-import {redirect} from "next/navigation";
-import {siteJson} from "@/components/Z_surveyJs/forms/site";
-import {SiteDetailsBanner} from "@/components/AdminDetailsBanners/SiteDetailsBanner";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+import {getUserIdentity} from "@/lib/getUserIdentity";
+import {checkUserRole} from "@/lib/checkUserRole";
 
-export default async function SitePage({
+export default async function TagsDetailPage({
                                            params,
                                        }: {
     params: { uniqueId: string };
 }) {
-    const cookieStore = cookies();
-    const authToken = cookieStore.get("auth_token")?.value;
-
-    if (!authToken) {
-        return redirect("/login");
-    }
-
+    const userIdentity = await getUserIdentity();
+    checkUserRole(userIdentity, `/tags/${params.uniqueId}`);
 
     return (
         <div>

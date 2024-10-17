@@ -13,7 +13,6 @@ interface InviteNewUserModalForPAProps {
 const InviteNewUserModalForPA = ({isOpen, onClose}: InviteNewUserModalForPAProps) => {
     // Function to handle the form completion event
     const handleSurveyComplete = () => {
-        console.log('Survey completed!');
         onClose();  // Close the modal after survey completion
     };
 

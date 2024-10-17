@@ -1,22 +1,9 @@
-import {cookies} from "next/headers";
-import {redirect} from "next/navigation";
+import {getUserIdentity} from "@/lib/getUserIdentity";
+import {checkUserRole} from "@/lib/checkUserRole";
 
-// AG Grids
-import DataGridComponent from "@/components/agGrids/DataGridComponent";
-import {siteFields} from "@/components/agGrids/dataFields/siteFields";
-import AdminHeader from "@/components/AdminHeader";
-
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-export const fetchCache = "force-no-store";
-
-export default async function SitesPage() {
-    const cookieStore = cookies();
-    const authToken = cookieStore.get("auth_token")?.value;
-
-    if (!authToken) {
-        return redirect("/login");
-    }
+export default async function TagsPage() {
+    const userIdentity = await getUserIdentity();
+    checkUserRole(userIdentity, "/tags");
 
     return (
         <>

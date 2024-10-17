@@ -1,25 +1,16 @@
-import React from 'react';
-import {userGroupJson} from "@/components/Z_surveyJs/forms/userGroup";
-import {cookies} from "next/headers";
+import {userGroupJson} from "@/components/surveyjs/forms/userGroup";
 import {redirect} from "next/navigation";
 import {UserGroupDetailsBanner} from "@/components/AdminDetailsBanners/UserGroupDetailsBanner";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+import {getUserIdentity} from "@/lib/getUserIdentity";
+import {checkUserRole} from "@/lib/checkUserRole";
+import apiClient from "@/lib/apiClient";
 
-export default async function CustomerPage({params}: { params: { uniqueId: string } }) {
-    const cookieStore = cookies();
-    const authToken = cookieStore.get("auth_token")?.value;
+export default async function UserGroupsDetailPage({params}: { params: { uniqueId: string } }) {
+    const userIdentity = await getUserIdentity();
+    checkUserRole(userIdentity, `/user-groups/${params.uniqueId}`);
 
-    if (!authToken) {
-        return redirect("/login");
-    }
-
-    // Fetch userGroup data from the backend
-    const res = await fetch(`${process.env.BE_URL}/userGroup/findBy?uniqueId=${params.uniqueId}`, {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${authToken}`,
-        },
-    });
+    const res = await apiClient(`/userGroup/findBy?uniqueId=${params.uniqueId}`);
 
     if (!res.ok) {
         return redirect("/error");

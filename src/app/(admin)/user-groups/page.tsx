@@ -1,29 +1,16 @@
-import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
-
-// AG Grids
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {groupFields} from "@/components/agGrids/dataFields/userGroupFields";
 import AdminHeader from "@/components/AdminHeader";
+import {getUserIdentity} from "@/lib/getUserIdentity";
+import {checkUserRole} from "@/lib/checkUserRole";
+import apiClient from "@/lib/apiClient";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-export const fetchCache = "force-no-store";
+export default async function UserGroupsPage() {
+    const userIdentity = await getUserIdentity();
+    checkUserRole(userIdentity, "/user-groups");
 
-export default async function UsersPage() {
-    const cookieStore = cookies();
-    const authToken = cookieStore.get("auth_token")?.value;
-
-    if (!authToken) {
-        return redirect("/login");
-    }
-
-    // Fetch user-groups data from the backend
-    const res = await fetch(`${process.env.BE_URL}/getAllView?view=vwUserGroupsList`, {
-        headers: {
-            Authorization: `Bearer ${authToken}`,
-        },
-    });
+    const res = await apiClient(`/getAllView?view=vwUserGroupsList`);
 
     if (!res.ok) {
         return redirect("/error");
@@ -32,14 +19,12 @@ export default async function UsersPage() {
     const userGroups = await res.json();
     const userGroupData = userGroups.resource;
 
-    // Check if teamData exists and has data
     const userGroupCount = userGroupData ? userGroupData.length : 0;
 
-    // Check if userGroupData exists and has data
     if (userGroupData && userGroupCount > 0) {
         return (
             <>
-                <AdminHeader headingText={'User Groups'} dataCount={userGroupCount} />
+                <AdminHeader headingText={'User Groups'} dataCount={userGroupCount}/>
                 <DataGridComponent
                     data={userGroupData}
                     initialFields={groupFields}

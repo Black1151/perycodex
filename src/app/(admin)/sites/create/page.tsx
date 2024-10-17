@@ -1,22 +1,12 @@
-import {cookies} from "next/headers";
-import {redirect} from "next/navigation";
-
-// SurveyJS
-import {siteJson} from "@/components/Z_surveyJs/forms/site";
+import {siteJson} from "@/components/surveyjs/forms/site";
 import AdminHeader from "@/components/AdminHeader";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+import {getUserIdentity} from "@/lib/getUserIdentity";
+import {checkUserRole} from "@/lib/checkUserRole";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-export const fetchCache = "force-no-store";
-
-export default async function CustomersPage() {
-    const cookieStore = cookies();
-    const authToken = cookieStore.get("auth_token")?.value;
-
-    if (!authToken) {
-        return redirect("/login");
-    }
+export default async function SitesCreatePage() {
+    const userIdentity = await getUserIdentity();
+    checkUserRole(userIdentity, `/sites/create`);
 
     return (
         <>

@@ -1,23 +1,13 @@
-import {cookies} from "next/headers";
-import {redirect} from "next/navigation";
-
-// AG Grids
 import AdminHeader from "@/components/AdminHeader";
-import {happinessJson} from "@/components/Z_surveyJs/forms/happiness";
+import {happinessJson} from "@/components/surveyjs/forms/happiness";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
-
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-export const fetchCache = "force-no-store";
+import {getUserIdentity} from "@/lib/getUserIdentity";
+import {checkUserRole} from "@/lib/checkUserRole";
 
 
-export default async function UsersPage() {
-    const cookieStore = cookies();
-    const authToken = cookieStore.get("auth_token")?.value;
-
-    if (!authToken) {
-        return redirect("/login");
-    }
+export default async function TestHappinessScorePage() {
+    const userIdentity = await getUserIdentity();
+    checkUserRole(userIdentity, `/test-happiness-score`);
 
     return (
         <>
