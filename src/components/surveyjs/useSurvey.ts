@@ -6,6 +6,7 @@ import {
     registerSurveyJsFunctionsWithSurvey
 } from "@/components/surveyjs/globalJsFunctions";
 import {ThemeModule, UseSurveyProps} from "@/components/surveyjs/SurveyProps";
+import {useUser} from "@/context/AdminUserContext";
 
 const useSurvey = ({
                        surveyJson,
@@ -18,6 +19,7 @@ const useSurvey = ({
 
     const [model, setModel] = useState<SurveyModel | null>(null);
     const [isLoading, setIsLoading] = useState(true);  // New loading state
+    const user = useUser();
 
     // ? Global Setting
 
@@ -38,8 +40,6 @@ const useSurvey = ({
 
         // Custom Sedulo Functions that need to be registered
         registerSurveyFunctionsWithoutSurvey();
-
-        // Custom Sedulo Functions that need to be registered
         registerSurveyJsFunctionsWithSurvey(model);
 
         // Register all the custom SVG Icons
@@ -66,11 +66,9 @@ const useSurvey = ({
                     console.error(`Error loading JS functions from path: ${jsPath}`, error);
                 }
             } else {
-                console.log("No JS path supplied")
+                // console.log("No JS path supplied")
             }
         };
-
-        applyJsPath();
 
         // Dynamically import and apply `themeJson` based on `sjsPath` prop
         const applyTheme = async (): Promise<void> => {
@@ -90,43 +88,37 @@ const useSurvey = ({
             setIsLoading(false);  // Set loading state to false once theme is applied
         };
 
-        // Call applyTheme to ensure it's applied asynchronously
-        applyTheme();
+        const initializeSurvey = async () => {
+            await applyJsPath();
+            await applyTheme();
 
-        model.onOpenDropdownMenu.add((_, options) => {
-            options.menuType = "dropdown"
-        });
+            model.onOpenDropdownMenu.add((_, options) => {
+                options.menuType = "dropdown"
+            });
 
-        const user = {
-            name: "Oliver",
-            number: "07375851855"
-        }; // TODO: Make this a PROP or able to get this from state
-        // Set Common Variables that will be needed within the survey
-        model.setVariable("setUserDetails", user);
+            // Set Common Variables that will be needed within the survey
+            model.setVariable("currentUser", user);
 
-        // Set survey to read-only mode depending on state of isEditing
-        if (isNew) {
-            model.mode = "edit";
-        } else {
-            model.mode = "display";
+
+            // Set survey to read-only mode depending on state of isEditing
+            model.mode = isNew ? "edit" : "display";
+
+            // Allow form to know if formMode is in edit or display mode
+            model.setVariable("formMode", isNew ? "new" : "edit");
+
+            // If data exists then apply it here
+            if (dataset) {
+                model.data = dataset;
+            }
+
+            // Survey dataset to include fields that are hidden (not default)
+            model.clearInvisibleValues = false;
+
+            setModel(model);  // Set the model after everything is initialized
+            setIsLoading(false);  // Set loading state to false
         }
 
-        // Allow form to know if formMode is in edit or display mode
-        if (!isNew) {
-            model.setVariable("formMode", "edit");
-        } else {
-            model.setVariable("formMode", "new");
-        }
-
-        // If data exists then apply it here
-        if (dataset) {
-            model.data = dataset;
-        }
-
-        // Survey dataset to include fields that are hidden (not default)
-        model.clearInvisibleValues = false;
-
-        setModel(model);  // Set the model after everything is initialized
+        initializeSurvey()
 
     }, [surveyJson]);
 
