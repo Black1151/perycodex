@@ -87,7 +87,6 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
         if (cssPath) {
             // Build the correct path for the CSS file inside the public folder
             const cssHref = `/cssPath/${cssPath}.css`;
-            console.log(cssHref);
             // Create a link element and append it to the head
             linkElement = document.createElement('link');
             linkElement.rel = 'stylesheet';
