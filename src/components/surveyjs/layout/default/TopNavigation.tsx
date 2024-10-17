@@ -18,6 +18,7 @@ const TopNavigation: React.FC<NavigationProps> = ({
                                                       prevPage,
                                                       jumpToPage,
                                                       submitSurvey,
+                                                      cancelSurvey,
                                                       switchToDisplayMode,
                                                       switchToEditMode,
                                                       pageListOptions,
@@ -29,7 +30,7 @@ const TopNavigation: React.FC<NavigationProps> = ({
     const previousPageNo = React.useRef(currentPage);
 
     const handleCancelEdit = () => {
-        switchToDisplayMode();
+        cancelSurvey();
         closeModal();
     };
 

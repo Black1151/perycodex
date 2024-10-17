@@ -128,10 +128,16 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
     const switchToDisplayMode = () => {
         if (model) {
             setIsEditing(false);
-            model.data = dataset
             model.mode = "display";
         }
     };
+
+    const cancelSurvey = () => {
+        if (model) {
+            model.data = dataset;
+            switchToDisplayMode();
+        }
+    }
 
     return {
         currentPage,
@@ -140,6 +146,7 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
         prevPage,
         jumpToPage,
         submitSurvey,
+        cancelSurvey,
         switchToEditMode,
         switchToDisplayMode,
         pageListOptions,

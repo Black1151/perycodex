@@ -69,17 +69,18 @@ const useSurveySubmission = ({
                     onSurveySuccess?.(); // Call if provided
 
 
-                    // TODO: Change back so it is dynamic (Currently just for demo)
-                    const handleRedirection = () => {
-                        redirectUrl && router.push(redirectUrl); // Redirect if a URL is provided
+                    // Update the model data with the newly submitted data
+                    model.data = result.data || filteredSurveyData;
+
+                    // Rerender the survey with the updated data
+                    model.clear(false,false);
+                    model.render();
+
+
+                    // Handle redirection if a URL is provided
+                    if (redirectUrl) {
+                        setTimeout(() => router.push(redirectUrl), 1000);
                     }
-
-                    setTimeout(handleRedirection, 1000);
-
-
-                    // Clear and rerender the survey
-                    // model.clear(false, false);
-                    // model.render();
 
                     return result;
 

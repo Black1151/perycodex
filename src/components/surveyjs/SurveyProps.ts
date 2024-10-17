@@ -54,6 +54,7 @@ export interface NavigationProps {
     prevPage: () => void;
     jumpToPage: (page: any) => void; // Adjust 'any' to the proper type (like PageModel) if necessary
     submitSurvey: () => void;
+    cancelSurvey: () => void;
     switchToDisplayMode: () => void;
     switchToEditMode: () => void;
     pageListOptions: Array<any>; // Adjust 'any' to the type of your pages if necessary

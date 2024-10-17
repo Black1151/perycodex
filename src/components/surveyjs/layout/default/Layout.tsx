@@ -22,6 +22,7 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({
         prevPage,
         jumpToPage,
         submitSurvey,
+        cancelSurvey,
         switchToDisplayMode,
         switchToEditMode,
         pageListOptions,
@@ -64,6 +65,7 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({
                         prevPage={prevPage}
                         jumpToPage={jumpToPage}
                         submitSurvey={submitSurvey}
+                        cancelSurvey={cancelSurvey}
                         switchToDisplayMode={switchToDisplayMode}
                         switchToEditMode={switchToEditMode}
                         pageListOptions={pageListOptions}
@@ -105,6 +107,7 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({
                         prevPage={prevPage}
                         jumpToPage={jumpToPage}
                         submitSurvey={submitSurvey}
+                        cancelSurvey={cancelSurvey}
                         switchToDisplayMode={switchToDisplayMode}
                         switchToEditMode={switchToEditMode}
                         pageListOptions={pageListOptions}

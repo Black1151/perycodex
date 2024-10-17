@@ -16,6 +16,7 @@ const BottomNavigation: React.FC<NavigationProps> = ({
                                                          prevPage,
                                                          jumpToPage,
                                                          submitSurvey,
+                                                         cancelSurvey,
                                                          switchToDisplayMode,
                                                          switchToEditMode,
                                                          pageListOptions,
