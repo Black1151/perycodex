@@ -11,16 +11,14 @@ const useSurveySubmission = ({
                                  isNew,
                                  endpoint,
                                  excludeKeys = [],
-                                 onSurveyComplete,
+                                 onSurveySuccess,
                                  redirectUrl,
                              }: UseSurveySubmissionProps) => {
-    const toast = useToast(); // For showing success and error notifications
-    const router = useRouter(); // For redirection after survey completion
+    const toast = useToast();
+    const router = useRouter();
 
     useEffect(() => {
             if (!model) return;
-
-            // Handle survey submission
             const handleSurveySubmission = async (sender: SurveyModel) => {
                 const requestType = isNew ? "POST" : "PUT";
                 let filteredSurveyData = {...sender.data};
@@ -68,7 +66,8 @@ const useSurveySubmission = ({
                         position: "bottom-right",
                     });
 
-                    onSurveyComplete?.(); // Call if provided
+                    onSurveySuccess?.(); // Call if provided
+
 
                     // TODO: Change back so it is dynamic (Currently just for demo)
                     const handleRedirection = () => {
@@ -97,7 +96,6 @@ const useSurveySubmission = ({
                 }
             };
 
-
             // Attach the `handleSurveySubmission` function to the survey's onComplete event
             model.onComplete.add(handleSurveySubmission);
 
@@ -105,7 +103,7 @@ const useSurveySubmission = ({
             return () => {
                 model.onComplete.remove(handleSurveySubmission);
             };
-        }, [model, isNew, endpoint, excludeKeys, onSurveyComplete, redirectUrl, toast, router]
+        }, [model, isNew, endpoint, excludeKeys, onSurveySuccess, redirectUrl, toast, router]
     )
     ;
 

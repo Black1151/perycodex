@@ -19,7 +19,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
                                                              endpoint,
                                                              isNew,
                                                              dataset,
-                                                             onSurveyComplete,
+                                                             onSurveySuccess,
                                                              excludeKeys,
                                                              redirectUrl,
                                                              cssPath,
@@ -69,7 +69,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
         endpoint: endpoint,
         redirectUrl: redirectUrl,
         excludeKeys: excludeKeys,
-        onSurveyComplete: onSurveyComplete
+        onSurveySuccess: onSurveySuccess
     });
 
     // Dynamically load CSS file and remove it when the component unmounts

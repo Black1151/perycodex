@@ -28,7 +28,7 @@ const InviteNewUserModalForPA = ({isOpen, onClose}: InviteNewUserModalForPAProps
                         isNew={true}
                         layout={'default'}
                         sjsPath={'admin'}
-                        onSurveyComplete={handleSurveyComplete}
+                        onSurveySuccess={handleSurveyComplete}
                         layoutOptions={{showTopNavigation: false, showBottomNavigation: true}}
                     />
                 </ModalBody>
