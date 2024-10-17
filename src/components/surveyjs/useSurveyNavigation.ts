@@ -4,7 +4,8 @@ import {PageModel} from 'survey-core/typings/packages/survey-core/src/page';
 
 const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
     const [currentPage, setCurrentPage] = useState<number>(0);
-    const [isEditing, setIsEditing] = useState<boolean>(model?.mode === 'edit'); // Track the current mode
+    const [isEditing, setIsEditing] = useState<boolean>(model?.mode === 'edit')
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
     const [pageListOptions, setPageListOptions] = useState<{ page: PageModel, title: string }[]>([]);
 
     useEffect(() => {
@@ -91,16 +92,19 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
 
     const submitSurvey = () => {
         if (model && isEditing) {
+            setIsSubmitting(true);
 
             // Validate the entire survey before submitting
             if (!model.validate(true, true)) {
                 model.focusOnFirstError;
-                return 0;
+                setIsSubmitting(false);
+                return;
             }
 
             if (!model.isCurrentPageHasErrors) {
                 if (!model.completeLastPage()) {
                     model.focusOnFirstError;
+                    setIsSubmitting(false);
                     return;
                 }
 
@@ -114,6 +118,8 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
                 // If there are errors, focus on the first page with an error
                 model.focusOnFirstError;
             }
+
+            setIsSubmitting(false);
         }
     };
 
@@ -153,6 +159,7 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
         isFirstPage: model?.isFirstPage || false,
         isLastPage: model?.isLastPage || false,
         isEditing,
+        isSubmitting,
     };
 };
 

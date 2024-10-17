@@ -23,6 +23,7 @@ const BottomNavigation: React.FC<NavigationProps> = ({
                                                          isFirstPage,
                                                          isLastPage,
                                                          isEditing,
+                                                         isSubmitting
                                                      }) => {
     // Responsive value for the button text; hides text on mobile
     const buttonText = useBreakpointValue({base: '', md: 'Previous'});

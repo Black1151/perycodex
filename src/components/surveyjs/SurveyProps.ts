@@ -61,6 +61,7 @@ export interface NavigationProps {
     isFirstPage: boolean;
     isLastPage: boolean;
     isEditing: boolean;
+    isSubmitting: boolean;
 }
 
 export interface ThemeModule {

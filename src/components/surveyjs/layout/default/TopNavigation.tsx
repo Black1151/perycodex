@@ -25,6 +25,7 @@ const TopNavigation: React.FC<NavigationProps> = ({
                                                       isFirstPage,
                                                       isLastPage,
                                                       isEditing,
+                                                      isSubmitting
                                                   }) => {
     const {isOpen, openModal, closeModal} = useModal(); // Use the hook
     const previousPageNo = React.useRef(currentPage);

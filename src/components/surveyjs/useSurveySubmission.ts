@@ -73,8 +73,10 @@ const useSurveySubmission = ({
                     model.data = result.data || filteredSurveyData;
 
                     // Rerender the survey with the updated data
-                    model.clear(false,false);
-                    model.render();
+                    if (!isNew) {
+                        model.clear(false, false);
+                        model.render();
+                    }
 
 
                     // Handle redirection if a URL is provided

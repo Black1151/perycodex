@@ -29,6 +29,7 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({
         isFirstPage,
         isLastPage,
         isEditing,
+        isSubmitting
     } = useSurveyNavigation(model, dataset);
 
     const [direction, setDirection] = useState(1); // 1 for next page, -1 for previous page
@@ -72,6 +73,7 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({
                         isFirstPage={isFirstPage}
                         isLastPage={isLastPage}
                         isEditing={isEditing}
+                        isSubmitting={isSubmitting}
                     />
                 }
 
@@ -114,6 +116,7 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({
                         isFirstPage={isFirstPage}
                         isLastPage={isLastPage}
                         isEditing={isEditing}
+                        isSubmitting={isSubmitting}
                     />
                 }
             </Box>
