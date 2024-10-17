@@ -1,6 +1,8 @@
+'use client';
+
 import React from 'react';
-import {Badge, Flex} from "@chakra-ui/react";
-import {ICellRendererParams} from "ag-grid-community";
+import {Box, Flex} from '@chakra-ui/react';
+import {ICellRendererParams} from 'ag-grid-community';
 
 // Define the interface for the specific parameters used in this cell renderer
 interface TeamCellRendererParams extends ICellRendererParams {
@@ -15,24 +17,30 @@ const TeamCellRenderer: React.FC<TeamCellRendererParams> = ({data}) => {
     const isDepartment = data?.parentTeamId === null;
 
     return (
-        <Flex
-            justify="flex-start"
-            align="center"
-            width="auto" // Set the width to auto to fit content
-            height="auto" // Set the height to auto to fit content
+        <Box
+            display="flex"
+            alignItems="center"
+            h="100%"
+            px={3}
+            py={1}
         >
-            {/*<Badge*/}
-            {/*    colorScheme={isDepartment ? 'purple' : 'blue'}*/}
-            {/*    variant="solid"*/}
-            {/*    borderRadius="md"*/}
-            {/*    fontSize="xs"*/}
-            {/*    px={2} // Optional: Add padding to better fit content*/}
-            {/*    py={0.5} // Optional: Add padding to better fit content*/}
-            {/*>*/}
-            {/*    {isDepartment ? 'Department' : 'Team'}*/}
-            {/*</Badge>*/}
-            {isDepartment ? 'Department' : 'Team'}
-        </Flex>
+            <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                h="80%"
+                backgroundColor={isDepartment ? 'purple.500' : 'blue.500'}
+                color="white"
+                px={3}
+                py={1}
+                borderRadius="lg"
+                whiteSpace="nowrap"
+                sx={{
+                    alignSelf: "center",
+                }}>
+                {isDepartment ? 'Department' : 'Team'}
+            </Box>
+        </Box>
     );
 };
 
