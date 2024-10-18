@@ -371,7 +371,10 @@ export const customerJson = {
                             isRequired: true,
                             readOnly: true,
                             choicesByUrl: {
-                                url: "http://surveyjs.io/api/CountriesExample"
+                                url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=country`,
+                                path: "country",
+                                valueName: "value",
+                                titleName: "label"
                             },
                             placeholder: "Country",
                             allowClear: true
@@ -379,25 +382,23 @@ export const customerJson = {
                         {
                             type: "text",
                             name: "latitude",
-                            minWidth: "256px",
                             title: "Latitude",
+                            setValueExpression: "fetchPostcodeData({postcode},'result.latitude')",
                             titleLocation: "top",
                             isRequired: false,
                             readOnly: true,
-                            inputType: "number",
                             placeholder: "Latitude"
                         },
                         {
                             type: "text",
                             name: "longitude",
-                            minWidth: "256px",
-                            startWithNewLine: false,
                             title: "Longitude",
+                            setValueExpression: "fetchPostcodeData({postcode},'result.longitude')",
                             titleLocation: "top",
                             isRequired: false,
                             readOnly: true,
-                            inputType: "number",
-                            placeholder: "Longitude"
+                            placeholder: "Longitude",
+                            startWithNewLine: false,
                         },
                         {
                             type: "text",
