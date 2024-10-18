@@ -1,6 +1,6 @@
 "use client";
 
-import {Box, Flex, useTheme, VStack} from "@chakra-ui/react";
+import {Box, Flex, useTheme} from "@chakra-ui/react";
 import React, {ReactNode} from "react";
 import {NavBar} from "../NavBar";
 import {Footer} from "@/components/layout/Footer";
@@ -16,7 +16,10 @@ import {
     Groups,
     FormatAlignCenter,
     FormatListNumbered,
-    Checklist
+    Checklist,
+    Construction,
+    AccountTree,
+    Schema
 } from "@mui/icons-material";
 import {useRouter} from "next/navigation";
 import {LeftHandNavigationDrawer} from "@/components/layout/LeftHandNavigationDrawer";
@@ -141,6 +144,24 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
                     icon: <Checklist sx={{height: '100%', width: '100%'}}/>,
                     onClick: () => router.push('/select-items'),
                     category: "Platform"
+                },
+                {
+                    label: "Tool",
+                    icon: <Construction sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => window.alert("Tool TO DO"),
+                    category: "Workflows"
+                },
+                {
+                    label: "Workflow",
+                    icon: <AccountTree sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => window.alert("Workflow TO DO"),
+                    category: "Workflows"
+                },
+                {
+                    label: "Business Process",
+                    icon: <Schema sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => window.alert("Business Process TO DO"),
+                    category: "Workflows"
                 },
                 {
                     label: "Forms",

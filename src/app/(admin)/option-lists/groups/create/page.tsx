@@ -2,18 +2,18 @@ import {getUserIdentity} from "@/lib/getUserIdentity";
 import {checkUserRole} from "@/lib/checkUserRole";
 import AdminHeader from "@/components/AdminHeader";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
-import {optionListJson} from "@/components/surveyjs/forms/optionLists";
+import {optionListGroupsJson} from "@/components/surveyjs/forms/optionListGroups";
 
 export default async function OptionListsCreatePage() {
     const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, "/option-lists/create");
+    checkUserRole(userIdentity, "/option-lists/groups/create");
 
     return (
         <>
-            <AdminHeader headingText="Create Option List"/>
+            <AdminHeader headingText="Create Option List Group"/>
             <SurveyComponent
-                surveyJson={optionListJson}
-                endpoint={'/optionList'}
+                surveyJson={optionListGroupsJson}
+                endpoint={'/test'}
                 isNew={true}
                 layout={'default'}
                 redirectUrl={'/option-lists'}
