@@ -1,9 +1,12 @@
 'use client';
 
-import {ColDef, ValueFormatterParams} from "ag-grid-community";
+import {ColDef, ICellRendererParams, ValueFormatterParams} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
 import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/OrganisationLogoRenderer";
 import UserImageRenderer from "@/components/agGrids/CellRenderers/UserImageRenderer";
+import {Badge} from "@chakra-ui/react";
+import React from "react";
+import TeamCellRenderer from "@/components/agGrids/CellRenderers/TeamCellRenderer";
 
 export const teamFields: ColDef[] | any = [
     {
@@ -18,14 +21,14 @@ export const teamFields: ColDef[] | any = [
         field: 'name',
         headerName: 'Name',
         filter: "agMultiColumnFilter",
-        flex: 3
+        // flex: 3
     },
     {
         field: 'custName',
         headerName: 'Customer',
         cellDataType: "text",
         filter: "agMultiColumnFilter",
-        flex: 2,
+        // flex: 2,
         cellRenderer: OrganisationLogoRenderer,
         cellRendererParams: {
             nameField: 'custName',
@@ -38,18 +41,22 @@ export const teamFields: ColDef[] | any = [
         headerName: 'Parent Department',
         cellDataType: "text",
         filter: "agMultiColumnFilter",
-        flex: 2,
-        valueFormatter: (params: ValueFormatterParams) => {
-            // Check if parentTeamName exists, otherwise show 'Department'
-            return params.value && params.value !== '' ? params.value : 'Department';
-        },
+        // flex: 2,
+    },
+    {
+        field: 'parentTeamName',
+        headerName: 'Type',
+        cellDataType: "text",
+        filter: "agMultiColumnFilter",
+        // flex: 1,
+        cellRenderer: TeamCellRenderer,
     },
     {
         field: 'managerFullname',
         headerName: 'Manager',
         cellDataType: "text",
         filter: "agMultiColumnFilter",
-        flex: 2,
+        // flex: 2,
         cellRenderer: UserImageRenderer,
         cellRendererParams: {
             nameField: 'managerFullName',
@@ -60,7 +67,7 @@ export const teamFields: ColDef[] | any = [
     {
         field: 'isActive',
         headerName: 'Actions',
-        flex: 1,
+        // flex: 1,
         cellRenderer: ActionButtonRenderer,
         cellRendererParams: {
             redirectUrl: '/teams',

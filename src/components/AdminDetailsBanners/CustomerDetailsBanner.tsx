@@ -4,7 +4,10 @@ import React from 'react';
 import {Box, Flex, FormControl, Heading, IconButton, Image, Input, Spinner, Text, VStack,} from '@chakra-ui/react';
 import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+import LanguageIcon from "@mui/icons-material/Language"
 import moment from "moment/moment";
+import CreateIcon from "@mui/icons-material/Create";
+import UpdateIcon from "@mui/icons-material/Update";
 
 interface Customer {
     id: number;
@@ -54,18 +57,17 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
     return (
         <Flex mb={4} p={4} borderRadius={8} color={'white'} overflow={'hidden'}>
             {/* Customer Logo Upload */}
-            <FormControl w={'100px'} h={'100px'} aspectRatio={1} borderRadius={'full'}>
+            <FormControl w={'200px'} h={'100px'} aspectRatio={1} borderRadius={'full'}>
                 <Box
                     position="relative"
-                    w={'100px'}
+                    w={'200px'}
                     h={'100px'}
-                    borderRadius="full"
                     overflow="hidden"
                     _hover={{'.overlay': {opacity: allowUpload ? 1 : 0}}} // Only show overlay if upload is allowed
                 >
                     <Image
-                        boxSize="100px"
-                        borderRadius="full"
+                        w={'200px'}
+                        h={'100px'}
                         objectFit={'contain'}
                         src={customer.imageUrl}
                         alt={customer.name}
@@ -73,9 +75,8 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
                             <Flex
                                 align={'center'}
                                 justify={'center'}
-                                w={'100px'}
+                                w={'200px'}
                                 h={'100px'}
-                                borderRadius="full"
                                 bg="gray.200"
                                 cursor={allowUpload ? 'pointer' : 'default'} // Allow pointer only if upload is allowed
                             >
@@ -97,7 +98,6 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
                             display="flex"
                             justifyContent="center"
                             alignItems="center"
-                            borderRadius="full"
                             opacity={0}
                             transition="opacity 0.3s ease"
                         >
@@ -119,7 +119,6 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
                             justifyContent="center"
                             alignItems="center"
                             bg="rgba(0, 0, 0, 0.5)" // Optional: Add a background overlay during uploading
-                            borderRadius="full"
                         >
                             <Spinner size="md"/>
                         </Flex>
@@ -153,6 +152,21 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
                         bg={customer.isActive ? 'green.500' : 'red.500'}
                     />
                 </Flex>
+                {customer.webAddress &&
+                    <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
+                        <LanguageIcon/>
+                        <Text
+                            as="a"
+                            fontSize="md"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href={customer.webAddress.startsWith('http') ? customer.webAddress : `https://${customer.webAddress}`}
+                            _hover={{textDecoration: 'underline'}}
+                        >
+                            {customer.webAddress}
+                        </Text>
+                    </Flex>
+                }
                 {customer.address1 && (
                     <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
                         <LocationOnOutlinedIcon/>
@@ -163,10 +177,16 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
             </VStack>
 
             {/* Customer ID */}
-            <VStack ml={'auto'} display={['none', 'none', 'flex']} alignItems="flex-end">
-                <Text fontSize="2xl" fontWeight={300}>ID: {customer.id}</Text>
-                <Text fontSize="sm">Created At: {moment(customer.createdAt).format('D/MM/YYYY, h:mm:ss a')}</Text>
-                <Text fontSize="sm">Updated At: {moment(customer.updatedAt).format('D/MM/YYYY, h:mm:ss a')}</Text>
+            <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-start'} display={['none', 'none', 'flex']}>
+                <Heading size="lg" fontWeight={100}>ID: {customer.id}</Heading>
+                <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
+                    <CreateIcon/>
+                    <Text fontSize="sm">{moment(customer.createdAt).format('D/MM/YYYY')}</Text>
+                </Flex>
+                <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
+                    <UpdateIcon/>
+                    <Text fontSize="sm">{moment(customer.updatedAt).format('D/MM/YYYY')}</Text>
+                </Flex>
             </VStack>
         </Flex>
     );

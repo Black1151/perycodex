@@ -6,7 +6,7 @@ import DefaultLayout from '@/components/surveyjs/layout/default/Layout';
 import HappinessLayout from "@/components/surveyjs/layout/happiness/Layout";
 import {LayoutProps, SurveyComponentProps} from '@/components/surveyjs/SurveyProps';
 import useSurvey from '@/components/surveyjs/useSurvey';
-import useSurveySubmission from "@/components/surveyjs/useSurveySubmission"; // Import the custom hook
+import useSurveySubmission from "@/components/surveyjs/useSurveySubmission";
 
 type LayoutMap = {
     [key: string]: React.FC<LayoutProps>;
@@ -74,6 +74,15 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
     // Dynamically load CSS file and remove it when the component unmounts
     useEffect(() => {
         let linkElement: HTMLLinkElement | null = null;
+
+        if (!cssPath) {
+            const cssHref = `/cssPath/admin.css`;
+            // Create a link element and append it to the head
+            linkElement = document.createElement('link');
+            linkElement.rel = 'stylesheet';
+            linkElement.href = cssHref;
+            document.head.appendChild(linkElement);
+        }
 
         if (cssPath) {
             // Build the correct path for the CSS file inside the public folder

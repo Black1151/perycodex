@@ -1,5 +1,16 @@
 import React from 'react';
-import {Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, Button} from '@chakra-ui/react';
+import {
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    Button,
+    Heading, Flex
+} from '@chakra-ui/react';
+import DoneIcon from "@mui/icons-material/Done";
+import CloseIcon from '@mui/icons-material/Close';
 
 interface ModalProps {
     isOpen: boolean;
@@ -21,14 +32,28 @@ const SurveyModal: React.FC<ModalProps> = ({
                                                cancelLabel = "Cancel",
                                            }) => {
     return (
-        <Modal isOpen={isOpen} onClose={onClose} isCentered> {/* 'isCentered' ensures the modal is centered */}
+        <Modal isOpen={isOpen} onClose={onClose}> {/* 'isCentered' ensures the modal is centered */}
             <ModalOverlay/>
             <ModalContent>
-                <ModalHeader>{title}</ModalHeader>
+                <ModalHeader>
+                    <Flex justifyContent={'center'} alignItems={'center'} width={'100%'}>
+                        {title}
+                    </Flex>
+                </ModalHeader>
                 <ModalBody>{bodyContent}</ModalBody>
                 <ModalFooter>
-                    <Button mr={3} onClick={onClose}>{cancelLabel}</Button>
-                    <Button colorScheme="blue" onClick={onConfirm}>
+                    <Button mr={3} onClick={onClose}
+                            bgColor="darkGray"
+                            border="1px solid darkGray"
+                            leftIcon={<CloseIcon />}
+                            color="white"
+                            _hover={{color: "darkGray", backgroundColor: "white"}}>{cancelLabel}</Button>
+                    <Button bgColor="green"
+                            border="1px solid lightGray"
+                            color="white"
+                            leftIcon={<DoneIcon />}
+                            _hover={{color: "green", backgroundColor: "white"}}
+                            onClick={onConfirm}>
                         {confirmLabel}
                     </Button>
                 </ModalFooter>

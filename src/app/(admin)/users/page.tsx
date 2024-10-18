@@ -11,7 +11,11 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const fetchCache = "force-no-store";
 
-export default async function UsersPage() {
+interface SearchParams {
+    userType?: string
+}
+
+export default async function UsersPage({searchParams}: { searchParams: SearchParams }) {
     const cookieStore = cookies();
     const authToken = cookieStore.get("auth_token")?.value;
     const uniqueId = cookieStore.get("user_uuid")?.value;
@@ -44,13 +48,42 @@ export default async function UsersPage() {
         return redirect("/error");
     }
 
+    // Decide what  the title should be and data being asked for
+
+    let url = `${process.env.BE_URL}/getAllView?view=vwUsersList&selectColumns=id,userUniqueId,email,role,fullName,jobTitle,imageUrl,customerId,custName,custUniqueId,custImageUrl,custParentId,siteName,isActive`;
+    let headerTitle = 'Users';
+    let userTypeParam = searchParams.userType;
+
+
+    // Dynamically apply filters based on the role and userTypeParam
+    if (userIdentity.role === 'CA') {
+        // Default userTypeParam to 'internal' if it's not 'internal' or 'external'
+        if (!['internal', 'external'].includes(userTypeParam || '')) {
+            userTypeParam = 'internal';
+        }
+
+        // Apply the appropriate query parameters based on the userTypeParam
+        if (userTypeParam === 'internal') {
+            headerTitle = 'My Company Users';
+            url += `&customerId=${userIdentity.customerId}`;
+        } else if (userTypeParam === 'external') {
+            headerTitle = 'My Client Users';
+            url += `&custParentId=${userIdentity.customerId}`;
+        }
+    } else if (userIdentity.role === 'PA') {
+        headerTitle = 'Users';
+        // No additional filters for PA, the base URL is sufficient
+    }
+
 
     // Fetch users data from the backend
-    const res = await fetch(`${process.env.BE_URL}/getAllView?view=vwUsersList&selectColumns=id,userUniqueId,email,role,fullName,jobTitle,imageUrl,custName,custUniqueId,custImageUrl,siteName,isActive`, {
+    const res = await fetch(url, {
+        cache: 'no-store',
         headers: {
             Authorization: `Bearer ${authToken}`,
         },
     });
+
 
     const users = await res.json();
     const userData = users.resource;
@@ -61,7 +94,7 @@ export default async function UsersPage() {
     if (userData && userCount > 0) {
         return (
             <>
-                <AdminHeader headingText={'USERS'} dataCount={userCount}/>
+                <AdminHeader headingText={headerTitle ?? 'Users'} dataCount={userCount}/>
                 <DataGridComponent data={userData}
                                    initialFields={userFields}
                                    createNewUrl={'/users/create'}

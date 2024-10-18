@@ -5,10 +5,10 @@ import {Box, Flex, FormControl, Heading, IconButton, Image, Text, VStack} from '
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
-import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
+import {LocationOn} from "@mui/icons-material";
 import moment from "moment/moment";
+import CreateIcon from "@mui/icons-material/Create";
+import UpdateIcon from "@mui/icons-material/Update";
 
 interface Site {
     id: number;
@@ -44,7 +44,7 @@ export const SiteDetailsBanner: React.FC<SiteDetailsBannerProps> = ({site}) => {
                     justifyContent="center"
                     alignItems="center"
                 >
-                    <BusinessOutlinedIcon fontSize="large" style={{fontSize: '48px', color: 'gray'}}/>
+                    <LocationOn fontSize="large" style={{fontSize: '48px', color: 'gray'}}/>
                 </Box>
             </FormControl>
 
@@ -81,10 +81,17 @@ export const SiteDetailsBanner: React.FC<SiteDetailsBannerProps> = ({site}) => {
             </VStack>
 
             {/* Site ID on the right */}
-            <VStack ml={'auto'} display={['none', 'none', 'flex']} alignItems="flex-end">
-                <Text fontSize="2xl" fontWeight={300}>ID: {site.id}</Text>
-                <Text fontSize="sm">Created At: {moment(site.createdAt).format('D/MM/YYYY, h:mm:ss a')}</Text>
-                <Text fontSize="sm">Updated At: {moment(site.updatedAt).format('D/MM/YYYY, h:mm:ss a')}</Text>
+            <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-start'} display={['none', 'none', 'flex']}>
+                <Heading size="lg" fontWeight={100}>ID: {site.id}</Heading>
+                <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
+                    <CreateIcon/>
+                    <Text fontSize="sm">{moment(site.createdAt).format('D/MM/YYYY')}</Text>
+                </Flex>
+                <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
+                    <UpdateIcon/>
+                    <Text fontSize="sm">{moment(site.updatedAt).format('D/MM/YYYY')}</Text>
+                </Flex>
+
             </VStack>
         </Flex>
     );

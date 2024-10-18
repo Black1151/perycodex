@@ -7,7 +7,7 @@ interface AdminHeadingProps {
 
 const AdminHeading: React.FC<AdminHeadingProps> = ({ headingText, dataCount }) => {
     return (
-        <Heading as="h1" size="lg" color="white" width="full" borderBottom="2px solid white">
+        <Heading as="h1" size="lg" color="white" width="full" borderBottom="1px solid white">
             {headingText}{" "}
             {dataCount &&
             <Text as="sup" size="sm">
