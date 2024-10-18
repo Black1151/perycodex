@@ -1,5 +1,9 @@
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
+// AG Grids
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
-import {customerFields} from "@/components/agGrids/dataFields/customerFields";
+import { customerFields } from "@/components/agGrids/dataFields/customerFields";
 import AdminHeader from "@/components/AdminHeader";
 import {getUserIdentity} from "@/lib/getUserIdentity";
 import apiClient from "@/lib/apiClient";
@@ -7,7 +11,7 @@ import {checkUserRole} from "@/lib/checkUserRole";
 import {redirect} from "next/navigation";
 
 interface SearchParams {
-    customerType?: string
+  customerType?: string;
 }
 
 export default async function CustomersPage({searchParams}: { searchParams: SearchParams }) {
