@@ -1,176 +1,180 @@
 "use client";
 
-import {useTheme, Box, Flex} from "@chakra-ui/react";
-import React, {ReactNode} from "react";
-import {NavBar} from "../NavBar";
-import {Footer} from "@/components/layout/Footer";
-import {UserProvider} from "@/context/AdminUserContext";
+import { useTheme, Box, Flex, VStack } from "@chakra-ui/react";
+import React, { ReactNode } from "react";
+import { NavBar } from "../NavBar";
+import { Footer } from "@/components/layout/Footer";
+import { UserProvider } from "@/context/AdminUserContext";
 import {
-    Domain,
-    People,
-    EmojiEmotions,
-    AddReaction,
-    LocationOn,
-    Sell,
-    Person,
-    Groups,
-    FormatAlignCenter
+  Domain,
+  GroupWork,
+  People,
+  EmojiEmotions,
+  LocationOn,
+  Sell,
+  Person,
+  Groups,
 } from "@mui/icons-material";
-import {useRouter} from "next/navigation";
-import {LeftHandNavigationDrawer} from "@/components/layout/LeftHandNavigationDrawer";
-import {RightHandNavigationDrawer} from "@/components/layout/RightHandNavigationDrawer";
-import {PerygonContainer} from "@/components/layout/PerygonContainer";
+import { useRouter } from "next/navigation";
+import { LeftHandNavigationDrawer } from "@/components/layout/LeftHandNavigationDrawer";
+import { RightHandNavigationDrawer } from "@/components/layout/RightHandNavigationDrawer";
 
 interface AdminLayoutProps {
-    children: ReactNode;
-    userProps: {
-        userFirstName: string;
-        userImageUrl: string;
-        userRole: string;
-        userCustomerId: string;
-        logoImageUrl?: string;
-    };
+  children: ReactNode;
+  userProps: {
+    userFirstName: string;
+    userImageUrl: string;
+    userRole: string;
+    userCustomerId: string;
+    logoImageUrl?: string;
+  };
 }
 
-export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) => {
-    const theme = useTheme();
-    const router = useRouter();
+export const AdminLayout: React.FC<AdminLayoutProps> = ({
+  children,
+  userProps,
+}) => {
+  const theme = useTheme();
+  const router = useRouter();
 
+  // Helper to generate menu items based on userRole
+  const generateSidebarItemsDrawer = (userRole: string) => {
+    if (userRole === "CA") {
+      return [
+        {
+          label: "My Company",
+          icon: <Domain sx={{ height: "100%", width: "100%" }} />,
+          onClick: () => router.push("/my-company"),
+          category: "Internal",
+        },
+        {
+          label: "My Company Users",
+          icon: <Person sx={{ height: "100%", width: "100%" }} />,
+          onClick: () => router.push("/users?userType=internal"),
+          category: "Internal",
+        },
+        {
+          label: "My Company Sites",
+          icon: <LocationOn sx={{ height: "100%", width: "100%" }} />,
+          onClick: () => router.push("/sites?siteType=internal"),
+          category: "Internal",
+        },
+        {
+          label: "Teams",
+          icon: <People sx={{ height: "100%", width: "100%" }} />,
+          onClick: () => router.push("/teams"),
+          category: "Internal",
+        },
+        {
+          label: "User Groups",
+          icon: <Groups sx={{ height: "100%", width: "100%" }} />,
+          onClick: () => router.push("/user-groups"),
+          category: "Internal",
+        },
+        {
+          label: "Tags",
+          icon: <Sell sx={{ height: "100%", width: "100%" }} />,
+          onClick: () => router.push("/tags"),
+          category: "Internal",
+        },
+        {
+          label: "Our Clients",
+          icon: <Domain sx={{ height: "100%", width: "100%" }} />,
+          onClick: () => router.push("/customers?customerType=external"),
+          category: "External",
+        },
+        {
+          label: "Our Clients Users",
+          icon: <Person sx={{ height: "100%", width: "100%" }} />,
+          onClick: () => router.push("/users?userType=external"),
+          category: "External",
+        },
+        {
+          label: "Our Clients Sites",
+          icon: <LocationOn sx={{ height: "100%", width: "100%" }} />,
+          onClick: () => router.push("/sites?siteType=external"),
+          category: "External",
+        },
+      ];
+    } else if (userRole === "PA") {
+      return [
+        {
+          label: "Customers",
+          icon: <Domain sx={{ height: "100%", width: "100%" }} />,
+          onClick: () => router.push("/customers"),
+          category: "Platform",
+        },
+        {
+          label: "Users",
+          icon: <Person sx={{ height: "100%", width: "100%" }} />,
+          onClick: () => router.push("/users"),
+          category: "Platform",
+        },
+        {
+          label: "Sites",
+          icon: <LocationOn sx={{ height: "100%", width: "100%" }} />,
+          onClick: () => router.push("/sites"),
+          category: "Platform",
+        },
+        {
+          label: "User Groups",
+          icon: <Groups sx={{ height: "100%", width: "100%" }} />,
+          onClick: () => router.push("/user-groups"),
+          category: "Platform",
+        },
+        {
+          label: "Tags",
+          icon: <Sell sx={{ height: "100%", width: "100%" }} />,
+          onClick: () => router.push("/tags"),
+          category: "Platform",
+        },
+        {
+          label: "Test Happiness",
+          icon: <EmojiEmotions sx={{ height: "100%", width: "100%" }} />,
+          onClick: () => router.push("/test-happiness-score"),
+          category: "Workflows",
+        },
+        {
+          label: "Workflow Admin",
+          icon: <GroupWork sx={{ height: "100%", width: "100%" }} />,
+          onClick: () => console.log("Other Workflow Admin Clicked"),
+          category: "Workflows",
+        },
+      ];
+    }
+    return [];
+  };
 
-    // Helper to generate menu items based on userRole
-    const generateSidebarItemsDrawer = (userRole: string) => {
-        if (userRole === 'CA') {
-            return [
-                {
-                    label: "My Company",
-                    icon: <Domain sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/my-company'),
-                    category: "Internal"
-                },
-                {
-                    label: "My Company Users",
-                    icon: <Person sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/users?userType=internal'),
-                    category: "Internal"
-                },
-                {
-                    label: "My Company Sites",
-                    icon: <LocationOn sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/sites?siteType=internal'),
-                    category: "Internal"
-                },
-                {
-                    label: "Teams",
-                    icon: <People sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/teams'),
-                    category: "Internal"
-                },
-                {
-                    label: "User Groups",
-                    icon: <Groups sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/user-groups'),
-                    category: "Internal"
-                },
-                {
-                    label: "Tags",
-                    icon: <Sell sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/tags'),
-                    category: "Internal"
-                },
-                {
-                    label: "Our Clients",
-                    icon: <Domain sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/customers?customerType=external'),
-                    category: "External"
-                },
-                {
-                    label: "Our Clients Users",
-                    icon: <Person sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/users?userType=external'),
-                    category: "External"
-                },
-                {
-                    label: "Our Clients Sites",
-                    icon: <LocationOn sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/sites?siteType=external'),
-                    category: "External"
-                }
-            ];
-        } else if (userRole === 'PA') {
-            return [
-                {
-                    label: "Customers",
-                    icon: <Domain sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/customers'),
-                    category: "Platform"
-                },
-                {
-                    label: "Users",
-                    icon: <Person sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/users'),
-                    category: "Platform"
-                },
-                {
-                    label: "Sites",
-                    icon: <LocationOn sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/sites'),
-                    category: "Platform"
-                },
-                {
-                    label: "User Groups",
-                    icon: <Groups sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/user-groups'),
-                    category: "Platform"
-                },
-                {
-                    label: "Tags",
-                    icon: <Sell sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/tags'),
-                    category: "Platform"
-                },
-                {
-                    label: "Forms",
-                    icon: <FormatAlignCenter sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/forms'),
-                    category: "Workflows"
-                },
-                {
-                    label: "Test Happiness (Hard Coded)",
-                    icon: <EmojiEmotions sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/test-happiness-score'),
-                    category: "Test Survey"
-                },
+  const menuItems = generateSidebarItemsDrawer(userProps.userRole);
 
-                {
-                    label: "Test Happiness (API)",
-                    icon: <AddReaction sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/test-happiness-score-by-api'),
-                    category: "Test Survey"
-                },
+  return (
+    <UserProvider value={userProps}>
+      <VStack
+        bg="green"
+        minH="100vh"
+        height={"100svh"}
+        width="100%"
+        overflowX="hidden"
+        justifyContent={"center"}
+        bgGradient={`linear(to-br, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`}
+      >
+        <NavBar {...userProps} />
 
-            ];
-        }
-        return [];
-    };
-
-    const menuItems = generateSidebarItemsDrawer(userProps.userRole);
-
-    return (
-        <UserProvider value={userProps}>
-            <PerygonContainer>
-                <NavBar {...userProps} />
-                {/* Sidebar and content container */}
-                <Flex flex={1} width="100%" mt={'60px'} mb={'30px'}>
-                    {/* Sidebar */}
-                    <LeftHandNavigationDrawer menuItems={menuItems} defaultDrawerState={'half-open'}/>
-                    {/* Content Area */}
-                    <Box flex={1} overflowY="auto" px={[5, 5, 78]} py={5}>
-                        {children}
-                    </Box>
-                    <RightHandNavigationDrawer menuItems={menuItems}/>
-                </Flex>
-                <Footer/>
-            </PerygonContainer>
-        </UserProvider>
-    );
+        {/* Sidebar and content container */}
+        <Flex flex={1} width="100%" mt={"60px"} mb={"30px"}>
+          {/* Sidebar */}
+          <LeftHandNavigationDrawer
+            menuItems={menuItems}
+            defaultDrawerState={"half-open"}
+          />
+          {/* Content Area */}
+          <Box flex={1} overflowY="auto" px={[5, 5, 78]} py={5}>
+            {children}
+          </Box>
+          <RightHandNavigationDrawer menuItems={menuItems} />
+        </Flex>
+        <Footer />
+      </VStack>
+    </UserProvider>
+  );
 };
