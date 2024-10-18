@@ -64,14 +64,16 @@ const ActionButtonRenderer: React.FC<ActionButtonRendererProps> = ({
 
     return (
         <Box display="flex" justifyContent="flex-end" alignItems="center" gap={2} height="100%">
-            <Switch
-                isChecked={isActive}
-                onChange={handleToggle}
-                variant={'primary'}
-                sx={{
-                    alignSelf: "center",
-                }}
-            />
+            {updateUrl &&
+                <Switch
+                    isChecked={isActive}
+                    onChange={handleToggle}
+                    variant={'primary'}
+                    sx={{
+                        alignSelf: "center",
+                    }}
+                />
+            }
             <IconButton
                 aria-label="View"
                 aspectRatio={1}
