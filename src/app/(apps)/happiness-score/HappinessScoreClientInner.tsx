@@ -24,7 +24,7 @@ interface HappinessScoreClientInnerProps {
 export default function HappinessScoreClientInner({
   navBarProps,
 }: HappinessScoreClientInnerProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
@@ -42,8 +42,8 @@ export default function HappinessScoreClientInner({
           <HappinessScoreSplashScreen />
         ) : (
           <>
-            <HStack justifyContent="space-between" mt={16} w="100%">
-              <Text color="white" fontSize={["lg", "2xl"]} fontWeight="bold">
+            <HStack justifyContent="space-between" mt={12} w="100%">
+              <Text color="white" fontSize={["lg", "3xl"]} fontWeight="bold">
                 Happiness Score
               </Text>
               <AddButton
@@ -97,7 +97,7 @@ export default function HappinessScoreClientInner({
                     <SpringScale delay={0.1} style={{ height: "100%" }}>
                       <Flex flex={1} flexDirection="column" w="100%" h="100%">
                         <Flex mb={4} width="100%" justifyContent="center">
-                          <SectionHeader>Happiness by Group</SectionHeader>
+                          <SectionHeader>Happiness by Team</SectionHeader>
                         </Flex>
                         <BarGraph
                           DataPoints={[

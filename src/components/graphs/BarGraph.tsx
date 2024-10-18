@@ -8,6 +8,7 @@ import {
   keyframes,
   Tooltip,
   useMediaQuery,
+  useTheme,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import useColor from "@/hooks/useColor";
@@ -121,6 +122,8 @@ const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({ DataPoints }) => {
     }
   };
 
+  const theme = useTheme();
+
   return (
     <VStack
       bg="white"
@@ -150,6 +153,7 @@ const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({ DataPoints }) => {
             <Tooltip
               key={index}
               label={dataPoint.title}
+              bgColor={theme.colors.peryugonPink }
               placement="top"
               isOpen={isTouchDevice ? activeTooltip === index : undefined}
             >
