@@ -43,7 +43,7 @@ export default function HappinessScoreClientInner({
         ) : (
           <>
             <HStack justifyContent="space-between" mt={16} w="100%">
-              <Text color="white" fontSize="2xl" fontWeight="bold">
+              <Text color="white" fontSize={["lg", "2xl"]} fontWeight="bold">
                 Happiness Score
               </Text>
               <AddButton
