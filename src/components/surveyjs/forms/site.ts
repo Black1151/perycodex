@@ -108,22 +108,22 @@ export const siteJson = {
                     type: "text",
                     name: "latitude",
                     title: "Latitude",
+                    setValueExpression: "fetchPostcodeData({postcode},'result.latitude')",
                     titleLocation: "top",
                     isRequired: false,
                     readOnly: true,
-                    inputType: "number",
                     placeholder: "Latitude"
                 },
                 {
                     type: "text",
                     name: "longitude",
-                    startWithNewLine: false,
                     title: "Longitude",
+                    setValueExpression: "fetchPostcodeData({postcode},'result.longitude')",
                     titleLocation: "top",
                     isRequired: false,
                     readOnly: true,
-                    inputType: "number",
-                    placeholder: "Longitude"
+                    placeholder: "Longitude",
+                    startWithNewLine: false,
                 }
             ]
         },
