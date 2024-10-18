@@ -19,8 +19,6 @@ export default async function SelectItemsDetailPage({params}: { params: { unique
     const selectItem = await res.json();
     const selectItemData = selectItem.resource;
 
-    console.log(selectItemData);
-
     return (
         <>
             <SelectItemDetailsBanner selectItem={selectItemData}/>
