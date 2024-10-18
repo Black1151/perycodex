@@ -33,7 +33,6 @@ export default async function FormsDetailPage({
                 dataset={formData}
                 layout={'default'}
                 sjsPath={'admin'}
-                jsPath={'forms'}
             />
         </>
     );

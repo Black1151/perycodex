@@ -14,7 +14,8 @@ import {
     Sell,
     Person,
     Groups,
-    FormatAlignCenter
+    FormatAlignCenter,
+    FormatListNumbered
 } from "@mui/icons-material";
 import {useRouter} from "next/navigation";
 import {LeftHandNavigationDrawer} from "@/components/layout/LeftHandNavigationDrawer";
@@ -129,6 +130,12 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
                     category: "Platform"
                 },
                 {
+                    label: "Option Lists",
+                    icon: <FormatListNumbered sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/option-lists'),
+                    category: "Platform"
+                },
+                {
                     label: "Forms",
                     icon: <FormatAlignCenter sx={{height: '100%', width: '100%'}}/>,
                     onClick: () => router.push('/forms'),
@@ -169,8 +176,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
                     </Box>
                     <RightHandNavigationDrawer menuItems={menuItems}/>
                 </Flex>
-                <Footer/>
             </PerygonContainer>
+            <Footer/>
         </UserProvider>
     );
 };
