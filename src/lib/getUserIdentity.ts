@@ -1,5 +1,6 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import {cookies} from "next/headers";
+import {redirect} from "next/navigation";
+import apiClient from "@/lib/apiClient";
 
 export async function getUserIdentity() {
     const cookieStore = cookies();
@@ -12,14 +13,8 @@ export async function getUserIdentity() {
     }
 
     try {
-        const response = await fetch(
-            `${process.env.BE_URL}/getView?view=vwLoggedInUserIdentity&userUniqueId=${uniqueId}&selectColumns=customerId,customerUniqueId,role,userImageUrl,firstName,userUniqueId`,
-            {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${authToken}`,
-                },
-            }
+        const response = await apiClient(
+            `/getView?view=vwLoggedInUserIdentity&userUniqueId=${uniqueId}&selectColumns=customerId,customerUniqueId,role,userImageUrl,firstName,userUniqueId`,
         );
 
         if (!response.ok) {
