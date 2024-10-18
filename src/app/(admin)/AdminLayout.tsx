@@ -15,7 +15,8 @@ import {
     Person,
     Groups,
     FormatAlignCenter,
-    FormatListNumbered
+    FormatListNumbered,
+    Checklist
 } from "@mui/icons-material";
 import {useRouter} from "next/navigation";
 import {LeftHandNavigationDrawer} from "@/components/layout/LeftHandNavigationDrawer";
@@ -133,6 +134,12 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
                     label: "Option Lists",
                     icon: <FormatListNumbered sx={{height: '100%', width: '100%'}}/>,
                     onClick: () => router.push('/option-lists'),
+                    category: "Platform"
+                },
+                {
+                    label: "Select Items",
+                    icon: <Checklist sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/select-items'),
                     category: "Platform"
                 },
                 {
