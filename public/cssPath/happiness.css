@@ -1,4 +1,9 @@
 
+.sd-root-modern.sd-root-modern--full-container {
+    height: auto;
+}
+
+
 /* This bit of css centers rating questions */
 
 .sd-rating
