@@ -11,9 +11,9 @@ export default async function FormsPage() {
     checkUserRole(userIdentity, "/option-lists");
 
     let url = '/optionList/allBy';
-    let headerTitle = 'Forms';
+    let headerTitle = 'Option Lists';
 
-    const res = await apiClient(url);
+    const res = await apiClient(url, { cache: "no-store" });
 
     // if (!res.ok) {
     //     return redirect("/error");

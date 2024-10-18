@@ -29,7 +29,7 @@ export default async function CustomersPage({searchParams}: { searchParams: Sear
         headerTitle = 'Customers';
     }
 
-    const res = await apiClient(url);
+    const res = await apiClient(url, {cache: "no-store"});
 
     if (!res.ok) {
         return redirect("/error");

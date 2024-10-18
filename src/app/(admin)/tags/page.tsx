@@ -13,7 +13,7 @@ export default async function TagsPage() {
     let url = '/getAllView?view=vwTagsList';
     let headerTitle = 'Tags';
 
-    const res = await apiClient(url);
+    const res = await apiClient(url, { cache: "no-store" });
 
     if (!res.ok) {
         return redirect("/error");

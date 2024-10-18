@@ -36,7 +36,7 @@ export default async function UsersPage({searchParams}: { searchParams: SearchPa
     }
 
 
-    const res = await apiClient(url);
+    const res = await apiClient(url, { cache: "no-store" });
 
     const users = await res.json();
     const userData = users.resource;

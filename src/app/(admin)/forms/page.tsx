@@ -13,7 +13,7 @@ export default async function FormsPage() {
     let url = '/form/allBy';
     let headerTitle = 'Forms';
 
-    const res = await apiClient(url);
+    const res = await apiClient(url, { cache: "no-store" });
 
     if (!res.ok) {
         return redirect("/error");

@@ -34,7 +34,7 @@ export default async function SitesPage({searchParams}: { searchParams: SearchPa
         headerTitle = 'Sites';
     }
 
-    const res = await apiClient(url);
+    const res = await apiClient(url, { cache: "no-store" });
 
     if (!res.ok) {
         return redirect("/error");
