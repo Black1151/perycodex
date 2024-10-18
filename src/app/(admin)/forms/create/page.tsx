@@ -2,21 +2,21 @@ import {getUserIdentity} from "@/lib/getUserIdentity";
 import {checkUserRole} from "@/lib/checkUserRole";
 import AdminHeader from "@/components/AdminHeader";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
-import {tagsJson} from "@/components/surveyjs/forms/tags";
+import {formsJson} from "@/components/surveyjs/forms/forms";
 
-export default async function TagsCreatePage() {
+export default async function FormsCreatePage() {
     const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, "/tags/create");
+    checkUserRole(userIdentity, "/forms/create");
 
     return (
         <>
-            <AdminHeader headingText="Create Tag"/>
+            <AdminHeader headingText="Create Form"/>
             <SurveyComponent
-                surveyJson={tagsJson}
-                endpoint={'/tag'}
+                surveyJson={formsJson}
+                endpoint={'/form'}
                 isNew={true}
                 layout={'default'}
-                redirectUrl={'/tags'}
+                redirectUrl={'/forms'}
                 sjsPath={'admin'}
             />
         </>

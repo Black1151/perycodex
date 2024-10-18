@@ -5,7 +5,17 @@ import React, {ReactNode} from "react";
 import {NavBar} from "../NavBar";
 import {Footer} from "@/components/layout/Footer";
 import {UserProvider} from "@/context/AdminUserContext";
-import {Domain, GroupWork, People, EmojiEmotions, AddReaction , LocationOn, Sell, Person, Groups} from "@mui/icons-material";
+import {
+    Domain,
+    People,
+    EmojiEmotions,
+    AddReaction,
+    LocationOn,
+    Sell,
+    Person,
+    Groups,
+    FormatAlignCenter
+} from "@mui/icons-material";
 import {useRouter} from "next/navigation";
 import {LeftHandNavigationDrawer} from "@/components/layout/LeftHandNavigationDrawer";
 import {RightHandNavigationDrawer} from "@/components/layout/RightHandNavigationDrawer";
@@ -119,23 +129,25 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
                     category: "Platform"
                 },
                 {
+                    label: "Forms",
+                    icon: <FormatAlignCenter sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/forms'),
+                    category: "Workflows"
+                },
+                {
                     label: "Test Happiness (Hard Coded)",
                     icon: <EmojiEmotions sx={{height: '100%', width: '100%'}}/>,
                     onClick: () => router.push('/test-happiness-score'),
-                    category: "Workflows"
+                    category: "Test Survey"
                 },
+
                 {
                     label: "Test Happiness (API)",
                     icon: <AddReaction sx={{height: '100%', width: '100%'}}/>,
                     onClick: () => router.push('/test-happiness-score-by-api'),
-                    category: "Workflows"
+                    category: "Test Survey"
                 },
-                {
-                    label: "Workflow Admin",
-                    icon: <GroupWork sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => console.log("Other Workflow Admin Clicked"),
-                    category: "Workflows"
-                },
+
             ];
         }
         return [];
