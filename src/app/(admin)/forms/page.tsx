@@ -24,7 +24,7 @@ export default async function FormsPage() {
 
     const formCount = formData ? formData.length : 0;
 
-    if (formData && formCount > 0) {
+    if (formData) {
         return (
             <>
                 <AdminHeader headingText={headerTitle} dataCount={formCount}/>

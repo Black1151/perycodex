@@ -11,6 +11,7 @@ import {Box, Button, Flex, Input, useBreakpointValue, useDisclosure} from '@chak
 import {Add, Clear} from '@mui/icons-material';
 import NoDataOverlay from '@/components/agGrids/NoDataOverlay';
 import CustomGridBottomPagination from '@/components/agGrids/CustomGridBottomPagination';
+import LoadingOverlay from "@/components/agGrids/LoadingOverlay";
 
 interface DataGridComponentProps<T> {
     data: T[] | null;
@@ -105,75 +106,71 @@ const DataGridComponent = <T, >({
 
     return (
         <Box className={`ag-theme-alpine ag-theme-perygon`} w={'full'} py={2}>
-            {data ? (
-                <>
-                    <Flex w={'full'} justify={'flex-start'} align={'center'} my={4} gap={2}>
-                        {/* Quick Filter */}
-                        <Input
-                            variant="outline"
-                            id="filter-text-box"
-                            placeholder="Search..."
-                            onInput={onFilterTextBoxChanged}
-                            w={256}
-                            bg="white"
-                            borderColor="gray.300"
-                            _hover={{borderColor: 'gray.400'}}
-                            _focus={{borderColor: 'perygonPink', boxShadow: '0 0 0 1px #ff0070'}}
-                        />
+            <Flex w={'full'} justify={'flex-start'} align={'center'} my={4} gap={2}>
+                {/* Quick Filter */}
+                <Input
+                    variant="outline"
+                    id="filter-text-box"
+                    placeholder="Search..."
+                    onInput={onFilterTextBoxChanged}
+                    w={256}
+                    bg="white"
+                    borderColor="gray.300"
+                    _hover={{borderColor: 'gray.400'}}
+                    _focus={{borderColor: 'perygonPink', boxShadow: '0 0 0 1px #ff0070'}}
+                />
 
-                        <Button
-                            variant="solid"
-                            bg="seduloRed"
-                            aria-label="reset-filters"
-                            onClick={resetFilter}
-                            ml={'auto'}
-                            size="md"
-                            color="white"
-                            leftIcon={<Clear/>}
-                            _hover={{bg: 'perygonPink'}}
-                        >
-                            {resetFiltersButtonText}
-                        </Button>
+                <Button
+                    variant="solid"
+                    bg="seduloRed"
+                    aria-label="reset-filters"
+                    onClick={resetFilter}
+                    ml={'auto'}
+                    size="md"
+                    color="white"
+                    leftIcon={<Clear/>}
+                    _hover={{bg: 'perygonPink'}}
+                >
+                    {resetFiltersButtonText}
+                </Button>
 
-                        {/* Create New Button */}
-                        <Button
-                            variant="solid"
-                            bg="lightGreen"
-                            aria-label="create-new"
-                            onClick={handleCreateNewClick}
-                            size="md"
-                            color="white"
-                            leftIcon={<Add/>}
-                        >
-                            {createNewUrlButtonText}
-                        </Button>
-                    </Flex>
+                {/* Create New Button */}
+                <Button
+                    variant="solid"
+                    bg="lightGreen"
+                    aria-label="create-new"
+                    onClick={handleCreateNewClick}
+                    size="md"
+                    color="white"
+                    leftIcon={<Add/>}
+                >
+                    {createNewUrlButtonText}
+                </Button>
+            </Flex>
 
-                    <Flex direction={'column'} height={'500px'}>
-                        <AgGridReact
-                            ref={gridRef}
-                            rowData={rowData}
-                            columnDefs={fields}
-                            pagination={true}
-                            suppressPaginationPanel={true}
-                            onPaginationChanged={updatePaginationInfo}
-                            defaultColDef={defaultColDef}
-                            paginationPageSize={paginationInfo.pageSize}
-                        />
-                        <CustomGridBottomPagination
-                            gridRef={gridRef}
-                            paginationInfo={paginationInfo}
-                            onPageChange={updatePaginationInfo}
-                        />
-                    </Flex>
+            <Flex direction={'column'} height={'500px'}>
+                <AgGridReact
+                    ref={gridRef}
+                    rowData={rowData}
+                    columnDefs={fields}
+                    pagination={true}
+                    suppressPaginationPanel={true}
+                    onPaginationChanged={updatePaginationInfo}
+                    defaultColDef={defaultColDef}
+                    paginationPageSize={paginationInfo.pageSize}
+                    noRowsOverlayComponent={NoDataOverlay}
+                    loadingOverlayComponent={LoadingOverlay}
+                />
+                <CustomGridBottomPagination
+                    gridRef={gridRef}
+                    paginationInfo={paginationInfo}
+                    onPageChange={updatePaginationInfo}
+                />
+            </Flex>
 
-                    {/* Render the modal component with modal state control */}
-                    {isModalEnabled && ModalComponent && (
-                        <ModalComponent isOpen={isOpen} onClose={onClose}/>
-                    )}
-                </>
-            ) : (
-                <NoDataOverlay url={createNewUrl}/>
+            {/* Render the modal component with modal state control */}
+            {isModalEnabled && ModalComponent && (
+                <ModalComponent isOpen={isOpen} onClose={onClose}/>
             )}
         </Box>
     );

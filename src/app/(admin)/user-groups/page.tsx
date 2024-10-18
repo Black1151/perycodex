@@ -21,7 +21,7 @@ export default async function UserGroupsPage() {
 
     const userGroupCount = userGroupData ? userGroupData.length : 0;
 
-    if (userGroupData && userGroupCount > 0) {
+    if (userGroupData) {
         return (
             <>
                 <AdminHeader headingText={'User Groups'} dataCount={userGroupCount}/>

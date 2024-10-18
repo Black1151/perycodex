@@ -24,7 +24,7 @@ export default async function TagsPage() {
 
     const tagCount = tagData ? tagData.length : 0;
 
-    if (tagData && tagCount > 0) {
+    if (tagData) {
         return (
             <>
                 <AdminHeader headingText={headerTitle} dataCount={tagCount}/>

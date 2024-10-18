@@ -40,7 +40,7 @@ export default async function CustomersPage({searchParams}: { searchParams: Sear
 
     const customerCount = customerData ? customerData.length : 0;
 
-    if (customerData && customerCount > 0) {
+    if (customerData) {
         return (
             <>
                 <AdminHeader headingText={headerTitle} dataCount={customerCount}/>

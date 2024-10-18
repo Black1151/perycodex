@@ -45,7 +45,7 @@ export default async function SitesPage({searchParams}: { searchParams: SearchPa
 
     const siteCount = siteData ? siteData.length : 0;
 
-    if (siteData && siteCount > 0) {
+    if (siteData) {
         return (
             <>
                 <AdminHeader headingText={headerTitle} dataCount={siteCount}/>

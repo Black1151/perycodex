@@ -43,7 +43,7 @@ export default async function UsersPage({searchParams}: { searchParams: SearchPa
 
     const userCount = userData ? userData.length : 0;
 
-    if (userData && userCount > 0) {
+    if (userData) {
         return (
             <>
                 <AdminHeader headingText={headerTitle ?? 'Users'} dataCount={userCount}/>

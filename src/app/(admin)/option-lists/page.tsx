@@ -26,7 +26,7 @@ export default async function FormsPage() {
 
     const optionListCount = optionListData ? optionListData.length : 0;
 
-    if (optionListData && optionListCount > 0) {
+    if (optionListData) {
         return (
             <>
                 <AdminHeader headingText={headerTitle} dataCount={optionListCount}/>

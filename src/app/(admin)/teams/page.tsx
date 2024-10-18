@@ -21,7 +21,7 @@ export default async function TeamsPage() {
 
     const teamCount = teamData ? teamData.length : 0;
 
-    if (teamData && teamCount > 0) {
+    if (teamData) {
         return (
             <>
                 <AdminHeader headingText={'Departments / Teams'} dataCount={teamCount}/>

@@ -24,7 +24,7 @@ export default async function FormsPage() {
 
     const selectItemCount = selectItemData ? selectItemData.length : 0;
 
-    if (selectItemData && selectItemCount > 0) {
+    if (selectItemData) {
         return (
             <>
                 <AdminHeader headingText={headerTitle} dataCount={selectItemCount}/>
