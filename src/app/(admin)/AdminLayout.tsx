@@ -1,6 +1,6 @@
 "use client";
 
-import {useTheme, Box, Flex} from "@chakra-ui/react";
+import {Box, Flex} from "@chakra-ui/react";
 import React, {ReactNode} from "react";
 import {NavBar} from "../NavBar";
 import {Footer} from "@/components/layout/Footer";
@@ -35,7 +35,6 @@ interface AdminLayoutProps {
 }
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) => {
-    const theme = useTheme();
     const router = useRouter();
 
 
