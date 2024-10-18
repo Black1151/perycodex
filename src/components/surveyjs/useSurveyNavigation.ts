@@ -63,6 +63,21 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
         }
     };
 
+    // Function to find the first page with incomplete or invalid data
+    const findFirstIncompletePage = (): PageModel | null => {
+        if (!model) return null;
+
+        for (const page of model.visiblePages) {
+            // If the page is not valid or has errors, return it
+            if (!page.validate(true)) {
+                return page;
+            }
+        }
+
+        // If all pages are valid, return null
+        return null;
+    };
+
 
     // Function to replace variables dynamically in strings
     const replaceVariables = (str: string, survey: SurveyModel) => {
@@ -128,6 +143,13 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
         if (model) {
             setIsEditing(true);
             model.mode = "edit";
+
+            // Find the first page with incomplete data and navigate to it
+            const firstIncompletePage = findFirstIncompletePage();
+            if (firstIncompletePage) {
+                model.currentPage = firstIncompletePage; // Set the first incomplete page as the current page
+                setCurrentPage(model.currentPageNo); // Update the state
+            }
         }
     };
 
