@@ -7,7 +7,7 @@ const useColor = () => {
     if (progress <= 2) return "red";
     if (progress <= 6) return theme.colors.yellow;
     if (progress <= 8) return theme.colors.lightGreen;
-    return theme.colors.green;
+    return theme.colors.seduloGreen;
   };
 
   return { getColor };
