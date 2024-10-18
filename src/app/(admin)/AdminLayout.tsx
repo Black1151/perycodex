@@ -1,6 +1,6 @@
 "use client";
 
-import {Box, Flex, VStack} from "@chakra-ui/react";
+import {Box, Flex, useTheme, VStack} from "@chakra-ui/react";
 import React, {ReactNode} from "react";
 import {NavBar} from "../NavBar";
 import {Footer} from "@/components/layout/Footer";
@@ -169,34 +169,25 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
 
     const menuItems = generateSidebarItemsDrawer(userProps.userRole);
 
-  return (
-    <UserProvider value={userProps}>
-      <VStack
-        bg="green"
-        minH="100vh"
-        height={"100svh"}
-        width="100%"
-        overflowX="hidden"
-        justifyContent={"center"}
-        bgGradient={`linear(to-br, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`}
-      >
-        <NavBar {...userProps} />
-
-        {/* Sidebar and content container */}
-        <Flex flex={1} width="100%" mt={"60px"} mb={"30px"}>
-          {/* Sidebar */}
-          <LeftHandNavigationDrawer
-            menuItems={menuItems}
-            defaultDrawerState={"half-open"}
-          />
-          {/* Content Area */}
-          <Box flex={1} overflowY="auto" px={[5, 5, 78]} py={5}>
-            {children}
-          </Box>
-          <RightHandNavigationDrawer menuItems={menuItems} />
-        </Flex>
-        <Footer />
-      </VStack>
-    </UserProvider>
-  );
+    return (
+        <UserProvider value={userProps}>
+            <PerygonContainer>
+                <NavBar {...userProps} />
+                {/* Sidebar and content container */}
+                <Flex flex={1} width="100%" mt={"60px"} mb={"30px"}>
+                    {/* Sidebar */}
+                    <LeftHandNavigationDrawer
+                        menuItems={menuItems}
+                        defaultDrawerState={"half-open"}
+                    />
+                    {/* Content Area */}
+                    <Box flex={1} overflowY="auto" px={[5, 5, 78]} py={5}>
+                        {children}
+                    </Box>
+                    <RightHandNavigationDrawer menuItems={menuItems}/>
+                </Flex>
+            </PerygonContainer>
+            <Footer/>
+        </UserProvider>
+    );
 };
