@@ -1,8 +1,16 @@
-import React from "react";
-import { Box, Flex, VStack, HStack, Text, keyframes } from "@chakra-ui/react";
+import React, { useState } from "react";
+import {
+  Box,
+  Flex,
+  VStack,
+  HStack,
+  Text,
+  keyframes,
+  Tooltip,
+  useMediaQuery,
+} from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import useColor from "@/hooks/useColor";
-import { truncateText } from "../../utils/utils";
 
 interface DataPoint {
   value: number;
@@ -35,16 +43,9 @@ const Bar: React.FC<BarProps> = ({ value, delay }) => {
         width: "100%",
         display: "flex",
         justifyContent: "center",
-        height: "300px",
       }}
     >
-      <Box
-        minW="20px"
-        maxW="30px"
-        height="100%"
-        bg={getColor(value)}
-        overflow="hidden"
-      >
+      <Box width="100%" maxW={[3, 5, 10]} bg={getColor(value)}>
         <Box
           top={0}
           left={0}
@@ -69,7 +70,7 @@ interface AnimatedBarChartProps {
   DataPoints: DataPoint[];
 }
 
-const YAxis = () => {
+export const YAxis = () => {
   const yAxisVariants = {
     hidden: { opacity: 0, x: -20 },
     visible: (index: number) => ({
@@ -87,7 +88,7 @@ const YAxis = () => {
       as={motion.div}
       initial="hidden"
       animate="visible"
-      height="300px"
+      height="100%"
       justifyContent="space-between"
       width="100%"
     >
@@ -110,48 +111,81 @@ const YAxis = () => {
   );
 };
 
-/////////////////////
-
 const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({ DataPoints }) => {
+  const [isTouchDevice] = useMediaQuery("(hover: none) and (pointer: coarse)");
+  const [activeTooltip, setActiveTooltip] = useState<number | null>(null);
+
+  const handleBarClick = (index: number) => {
+    if (isTouchDevice) {
+      setActiveTooltip(activeTooltip === index ? null : index);
+    }
+  };
+
   return (
     <VStack
       bg="white"
       width="100%"
       flex={1}
-      borderRadius={8}
-      p={[2, 8]}
+      borderRadius="2xl"
+      px={[2, 8]}
       pb={10}
       pt={10}
       position="relative"
+      minH={300}
+      height={"100%"}
     >
-      <HStack alignItems="center" w="100%">
+      <HStack alignItems="center" w="100%" h="100%">
         <YAxis />
-        <HStack
-          height="300px"
+        <Flex
+          height="100%"
           position="absolute"
+          pb={10}
+          pt={10}
           left={[12, "60px"]}
+          right={[12, "60px"]}
           justifyContent="space-between"
-          w={[250, 350, 600, 480]}
+          alignItems="flex-end"
         >
           {DataPoints.map((dataPoint, index) => (
-            <VStack
+            <Tooltip
               key={index}
-              height="100%"
-              alignItems="center"
-              justifyContent="flex-end"
+              label={dataPoint.title}
+              placement="top"
+              isOpen={isTouchDevice ? activeTooltip === index : undefined}
             >
-              <Bar value={dataPoint.value} delay={index * 0.1} />
-              <Text
-                bottom={-3}
-                position="absolute"
-                lineHeight={0}
-                fontSize={10}
+              <VStack
+                height="100%"
+                alignItems="center"
+                justifyContent="flex-end"
+                flex={1}
+                position="relative"
+                onClick={() => handleBarClick(index)}
               >
-                {truncateText(dataPoint.title, 4)}
-              </Text>
-            </VStack>
+                <Bar value={dataPoint.value} delay={index * 0.1} />
+                <Flex
+                  position="absolute"
+                  bottom="-30px"
+                  height="30px"
+                  width="100%"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Text
+                    lineHeight={1}
+                    fontSize={10}
+                    textAlign="center"
+                    transform="rotate(-90deg)"
+                    whiteSpace="nowrap"
+                  >
+                    {dataPoint.title.length > 5
+                      ? dataPoint.title.slice(0, 5) + "..."
+                      : dataPoint.title}
+                  </Text>
+                </Flex>
+              </VStack>
+            </Tooltip>
           ))}
-        </HStack>
+        </Flex>
       </HStack>
     </VStack>
   );

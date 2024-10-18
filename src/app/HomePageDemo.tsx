@@ -11,16 +11,17 @@ import {
   Button,
 } from "@chakra-ui/react";
 
-import BarGraph from "@/components/graphs/BarGraph";
 import { StatBox } from "@/components/Masonry/StatsMasonry/StatBox";
 import { SpringScale } from "@/components/animations/SpringScale";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import BarGraph from "@/components/graphs/BarGraph";
+import LineGraph from "@/components/graphs/LineGraph";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const theme = useTheme();
   const router = useRouter();
 
@@ -59,7 +60,6 @@ export default function Home() {
         <div>saddappayaface</div>
       ) : (
         <>
-          <Button onClick={onClickLogout}>LOG OUT</Button>
           <Stack
             flexDirection={["column-reverse", null, null, "row"]}
             gap={5}
@@ -130,6 +130,16 @@ export default function Home() {
                   { value: 7, title: "London" },
                   { value: 10, title: "Edinburgh" },
                   { value: 3, title: "Dublin" },
+                ]}
+              />
+              <LineGraph
+                DataPoints={[
+                  { value: 2, title: "Jan" },
+                  { value: 7, title: "Feb" },
+                  { value: 3, title: "Mar" },
+                  { value: 8, title: "Apr" },
+                  { value: 6, title: "May" },
+                  { value: 10, title: "Jun" },
                 ]}
               />
             </SpringScale>

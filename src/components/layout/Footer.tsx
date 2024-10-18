@@ -4,7 +4,6 @@ export const Footer = () => {
   const theme = useTheme();
   return (
     <Box
-      position="absolute"
       justifyContent="center"
       alignItems="center"
       width="100%"

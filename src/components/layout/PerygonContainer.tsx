@@ -16,8 +16,7 @@ export const PerygonContainer: React.FC<PerygonContatinerProps> = ({
     <VStack
       minH="100vh"
       width="100%"
-      overflowX="hidden"
-      p={10}
+      p={[2, 6, 10]}
       flex={1}
       bgGradient={theme.gradients.perygonBackground}
     >
