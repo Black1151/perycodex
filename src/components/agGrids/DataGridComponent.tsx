@@ -35,6 +35,14 @@ interface DataGridComponentProps<T> {
     openModalComponent?: React.ElementType; // Pass the modal component as a React component type
 }
 
+// Define the type for pagination info
+interface PaginationInfo {
+    currentPage: number;
+    totalPages: number;
+    totalRows: number;
+    pageSize: number;
+}
+
 LicenseManager.setLicenseKey(`${process.env.NEXT_PUBLIC_AG_GRID_LICENSE_KEY}`);
 
 const DataGridComponent = <T, >({
@@ -70,17 +78,20 @@ const DataGridComponent = <T, >({
         pageSize: 25,
     });
 
-    // Memoize updatePaginationInfo to avoid re-renders
-    const updatePaginationInfo = useCallback(() => {
-        if (gridRef.current?.api) {
-            setPaginationInfo({
-                currentPage: gridRef.current.api.paginationGetCurrentPage() + 1,
-                totalPages: gridRef.current.api.paginationGetTotalPages(),
-                pageSize: gridRef.current.api.paginationGetPageSize(),
-                totalRows: gridRef.current.api.paginationGetRowCount(),
-            });
-        }
-    }, []);
+    // General function to update pagination info for both grids
+    const updatePaginationInfo = useCallback(
+        (gridRef: React.RefObject<AgGridReact<any>>, setPaginationInfo: React.Dispatch<React.SetStateAction<PaginationInfo>>) => {
+            if (gridRef.current?.api) {
+                setPaginationInfo({
+                    currentPage: gridRef.current.api.paginationGetCurrentPage() + 1,
+                    totalPages: gridRef.current.api.paginationGetTotalPages(),
+                    pageSize: gridRef.current.api.paginationGetPageSize(),
+                    totalRows: gridRef.current.api.paginationGetRowCount(),
+                });
+            }
+        },
+        []
+    );
 
     // Handle the click for creating new items
     const handleCreateNewClick = () => {
@@ -168,7 +179,7 @@ const DataGridComponent = <T, >({
                     columnDefs={fields}
                     pagination={true}
                     suppressPaginationPanel={true}
-                    onPaginationChanged={updatePaginationInfo}
+                    onPaginationChanged={() => {updatePaginationInfo(gridRef, setPaginationInfo)}}
                     defaultColDef={defaultColDef}
                     paginationPageSize={paginationInfo.pageSize}
                     noRowsOverlayComponent={NoDataOverlay}
@@ -177,7 +188,7 @@ const DataGridComponent = <T, >({
                 <CustomGridBottomPagination
                     gridRef={gridRef}
                     paginationInfo={paginationInfo}
-                    onPageChange={updatePaginationInfo}
+                    onPageChange={() => {updatePaginationInfo(gridRef, setPaginationInfo)}}
                 />
             </Flex>
 
