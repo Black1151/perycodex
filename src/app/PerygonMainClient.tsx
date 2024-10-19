@@ -12,8 +12,6 @@ import {
   ModalHeader,
   ModalBody,
   Text,
-  Flex,
-  VStack,
 } from "@chakra-ui/react";
 import { NavBar, NavBarProps } from "./NavBar";
 import { Footer } from "@/components/layout/Footer";
@@ -61,21 +59,10 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
   };
 
   return (
-    <Box width="100%" height="100vh">
-      <VStack
-        bgColor="red"
-        flex={1}
-        // mt={61}
-        minHeight="100%"
-        width="100%"
-        gap={0}
-        justifyContent="space-between"
-      >
-        <NavBar {...navbarProps} />
-        {!showNoToolsModal && <CarouselDisplay carouselItems={carouselItems} />}
-
-        <Footer />
-      </VStack>
+    <Box minHeight="100vh" width="100%" overflow="hidden">
+      <NavBar {...navbarProps} />
+      {!showNoToolsModal && <CarouselDisplay carouselItems={carouselItems} />}
+      <Footer />
       <Modal
         isOpen={showNoToolsModal}
         onClose={() => {}}
