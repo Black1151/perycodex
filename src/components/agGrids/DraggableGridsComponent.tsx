@@ -309,7 +309,8 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                                 />
                             </Flex>
                         </Flex>
-                        <Button my={4} p={4} onClick={handleSubmission} isDisabled={!!errorMessage}>Submit</Button>
+                        <Button my={4} p={4} onClick={handleSubmission} isDisabled={!!errorMessage}
+                                isLoading={loading}>Submit</Button>
                     </>)
                 :
                 <Box my={4} p={4} bg="red.100" color="red.800">
