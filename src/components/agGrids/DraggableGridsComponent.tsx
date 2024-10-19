@@ -13,12 +13,12 @@ import {
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import {Box, Button, Flex, Heading, Text, useBreakpointValue} from '@chakra-ui/react';
-import NoDataOverlay from '@/components/agGrids/NoDataOverlay';
 import CustomGridBottomPagination from '@/components/agGrids/CustomGridBottomPagination';
 import LoadingOverlay from '@/components/agGrids/LoadingOverlay';
 import DraggableNoDataOverlay from "@/components/agGrids/DraggableNoDataOverlay";
 import {useFetchClient} from "@/hooks/useFetchClient";
 import {ColDef} from "ag-grid-community";
+
 
 LicenseManager.setLicenseKey(`${process.env.NEXT_PUBLIC_AG_GRID_LICENSE_KEY}`);
 
@@ -257,7 +257,8 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                                     onPaginationChanged={() => updatePaginationInfo(populationGridRef, setPopulationPaginationInfo)}
                                     defaultColDef={defaultColDef}
                                     paginationPageSize={populationPaginationInfo.pageSize}
-                                    noRowsOverlayComponent={NoDataOverlay}
+                                    noRowsOverlayComponent={DraggableNoDataOverlay}
+                                    noRowsOverlayComponentParams={{gridType: 'population'}}
                                     loadingOverlayComponent={LoadingOverlay}
                                     onGridReady={(params) =>
                                         addDropZoneToGrid(
@@ -289,6 +290,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                                     defaultColDef={defaultColDef}
                                     paginationPageSize={samplePaginationInfo.pageSize}
                                     noRowsOverlayComponent={DraggableNoDataOverlay}
+                                    noRowsOverlayComponentParams={{gridType: 'sample'}}
                                     loadingOverlayComponent={LoadingOverlay}
                                     onGridReady={(params) =>
                                         addDropZoneToGrid(
@@ -307,10 +309,10 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                                 />
                             </Flex>
                         </Flex>
-                        <Button onClick={handleSubmission} isDisabled={!!errorMessage}>Submit</Button>
+                        <Button my={4} p={4} onClick={handleSubmission} isDisabled={!!errorMessage}>Submit</Button>
                     </>)
                 :
-                <Box mb={4} p={4} bg="red.100" color="red.800">
+                <Box my={4} p={4} bg="red.100" color="red.800">
                     <Text>{errorMessage}</Text>
                 </Box>
             }
