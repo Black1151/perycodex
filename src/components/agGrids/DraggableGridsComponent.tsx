@@ -12,13 +12,12 @@ import {
 } from 'ag-grid-charts-enterprise';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import {Box, Button, Flex, Heading, Text, useBreakpointValue} from '@chakra-ui/react';
+import {Box, Button, Flex, Heading, Text, useBreakpointValue, Stack} from '@chakra-ui/react';
 import CustomGridBottomPagination from '@/components/agGrids/CustomGridBottomPagination';
 import LoadingOverlay from '@/components/agGrids/LoadingOverlay';
 import DraggableNoDataOverlay from "@/components/agGrids/DraggableNoDataOverlay";
 import {useFetchClient} from "@/hooks/useFetchClient";
 import {ColDef} from "ag-grid-community";
-
 
 LicenseManager.setLicenseKey(`${process.env.NEXT_PUBLIC_AG_GRID_LICENSE_KEY}`);
 
@@ -46,12 +45,11 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                                                                              fieldDefs,
                                                                              dynamicIdField
                                                                          }) => {
-    const isMobile = useBreakpointValue({base: true, sm: true, md: false});
+    const isMobile = useBreakpointValue({base: true, md: false});
     const [populationRowData, setPopulationRowData] = useState<any[]>(populationData || []);
     const [sampleRowData, setSampleRowData] = useState<any[]>(sampleData || []);
     const {fetchClient, loading} = useFetchClient();
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
 
     const checkForDuplicateIds = useCallback(() => {
         const checkDuplicates = (data: any[], idField: string) => {
@@ -83,11 +81,9 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
         return false;
     }, [populationData, sampleData, dynamicIdField]);
 
-
     useEffect(() => {
         checkForDuplicateIds();
     }, [populationData, sampleData, dynamicIdField, checkForDuplicateIds]);
-
 
     useEffect(() => {
         if (!errorMessage && populationData && sampleData) {
@@ -111,10 +107,8 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
         pageSize: 25,
     };
 
-
     const [populationPaginationInfo, setPopulationPaginationInfo] = useState<PaginationInfo>(commonPaginationInfo);
     const [samplePaginationInfo, setSamplePaginationInfo] = useState<PaginationInfo>(commonPaginationInfo);
-
 
     const defaultColDef = useMemo(() => ({
         flex: isMobile ? 0 : 1,
@@ -122,8 +116,8 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
         filter: true,
         floatingFilter: false,
         resizable: true,
+        autoSize: true,
     }), [isMobile]);
-
 
     const updatePaginationInfo = useCallback(
         (gridRef: React.RefObject<AgGridReact>, setPaginationInfo: React.Dispatch<React.SetStateAction<PaginationInfo>>) => {
@@ -139,11 +133,9 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
         []
     );
 
-
     const getRowId = (params: GetRowIdParams) => String(params.data[dynamicIdField]);
 
     const addRecordToGrid = (oldGridApi: GridApi, newGridApi: GridApi, data: any) => {
-
         if (!data || data[dynamicIdField] == null) {
             return;
         }
@@ -172,9 +164,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
         };
 
         oldRowApi!.applyTransaction(oldTransaction);
-
     };
-
 
     const addDropZoneToGrid = useCallback(
         (
@@ -190,7 +180,6 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                 return;
             }
 
-
             if (!sourceGridRef.current?.api || !targetGridRef.current?.api) {
                 console.error("Grid references are null or API is not available.");
                 return;
@@ -199,7 +188,6 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
             const dropZone: RowDropZoneParams = {
                 getContainer: () => dropZoneContainer,
                 onDragStop: (draggedParams) => {
-
                     if (sourceGridRef.current?.api && targetGridRef.current?.api) {
                         addRecordToGrid(
                             sourceGridRef.current.api,
@@ -209,7 +197,6 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                     }
                 },
             };
-
 
             params.api.addRowDropZone(dropZone);
         },
@@ -222,10 +209,8 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
             return;
         }
 
-
         const rowData: any[] = [];
         sampleGridRef.current.api.forEachNode((node) => rowData.push(node.data));
-
 
         const result = await fetchClient(`/api/surveyjs/test`, {
             method: "PUT",
@@ -243,80 +228,84 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
     return (
         <Box className="ag-theme-alpine ag-theme-perygon" w="full" py={2}>
             {!errorMessage ? (
-                    <>
-                        <Flex w="full" align="center" gap={8}>
-                            {/* Population Grid Section */}
-                            <Flex direction="column" height="500px" flexGrow={1} mr={4} ref={populationDraggableBoxRef}>
-                                <Heading mb={2}>{populationTitle ?? 'Original Data'}</Heading>
-                                <AgGridReact
-                                    ref={populationGridRef}
-                                    rowData={populationRowData}
-                                    pagination
-                                    suppressPaginationPanel
-                                    getRowId={getRowId}
-                                    onPaginationChanged={() => updatePaginationInfo(populationGridRef, setPopulationPaginationInfo)}
-                                    defaultColDef={defaultColDef}
-                                    paginationPageSize={populationPaginationInfo.pageSize}
-                                    noRowsOverlayComponent={DraggableNoDataOverlay}
-                                    noRowsOverlayComponentParams={{gridType: 'population'}}
-                                    loadingOverlayComponent={LoadingOverlay}
-                                    onGridReady={(params) =>
-                                        addDropZoneToGrid(
-                                            params,
-                                            populationGridRef,
-                                            sampleGridRef,
-                                            sampleDraggableBoxRef
-                                        )
-                                    }
-                                    columnDefs={fieldDefs}
-                                />
-                                <CustomGridBottomPagination
-                                    gridRef={populationGridRef}
-                                    paginationInfo={populationPaginationInfo}
-                                    onPageChange={() => updatePaginationInfo(populationGridRef, setPopulationPaginationInfo)}
-                                />
-                            </Flex>
-
-                            {/* Sample Grid Section */}
-                            <Flex direction="column" height="500px" flexGrow={1} ref={sampleDraggableBoxRef}>
-                                <Heading mb={2}>{sampleTitle ?? 'New Data'}</Heading>
-                                <AgGridReact
-                                    ref={sampleGridRef}
-                                    rowData={sampleRowData}
-                                    pagination
-                                    getRowId={getRowId}
-                                    suppressPaginationPanel
-                                    onPaginationChanged={() => updatePaginationInfo(sampleGridRef, setSamplePaginationInfo)}
-                                    defaultColDef={defaultColDef}
-                                    paginationPageSize={samplePaginationInfo.pageSize}
-                                    noRowsOverlayComponent={DraggableNoDataOverlay}
-                                    noRowsOverlayComponentParams={{gridType: 'sample'}}
-                                    loadingOverlayComponent={LoadingOverlay}
-                                    onGridReady={(params) =>
-                                        addDropZoneToGrid(
-                                            params,
-                                            sampleGridRef,
-                                            populationGridRef,
-                                            populationDraggableBoxRef
-                                        )
-                                    }
-                                    columnDefs={fieldDefs}
-                                />
-                                <CustomGridBottomPagination
-                                    gridRef={sampleGridRef}
-                                    paginationInfo={samplePaginationInfo}
-                                    onPageChange={() => updatePaginationInfo(sampleGridRef, setSamplePaginationInfo)}
-                                />
-                            </Flex>
+                <>
+                    <Stack w="full" align="center" gap={8} direction={{base: 'column', md: 'row'}}>
+                        {/* Population Grid Section */}
+                        <Flex direction="column" minW={'400px'} height="500px" w={'full'} flexGrow={1}
+                              ref={populationDraggableBoxRef}>
+                            <Heading mb={2}
+                                     fontSize={isMobile ? 'lg' : '2xl'}>{populationTitle ?? 'Original Data'}</Heading>
+                            <AgGridReact
+                                ref={populationGridRef}
+                                rowData={populationRowData}
+                                pagination
+                                suppressPaginationPanel
+                                getRowId={getRowId}
+                                onPaginationChanged={() => updatePaginationInfo(populationGridRef, setPopulationPaginationInfo)}
+                                defaultColDef={defaultColDef}
+                                paginationPageSize={populationPaginationInfo.pageSize}
+                                noRowsOverlayComponent={DraggableNoDataOverlay}
+                                noRowsOverlayComponentParams={{gridType: 'population'}}
+                                loadingOverlayComponent={LoadingOverlay}
+                                onGridReady={(params) =>
+                                    addDropZoneToGrid(
+                                        params,
+                                        populationGridRef,
+                                        sampleGridRef,
+                                        sampleDraggableBoxRef
+                                    )
+                                }
+                                columnDefs={fieldDefs}
+                            />
+                            <CustomGridBottomPagination
+                                gridRef={populationGridRef}
+                                paginationInfo={populationPaginationInfo}
+                                onPageChange={() => updatePaginationInfo(populationGridRef, setPopulationPaginationInfo)}
+                            />
                         </Flex>
-                        <Button my={4} p={4} onClick={handleSubmission} isDisabled={!!errorMessage}
-                                isLoading={loading}>Submit</Button>
-                    </>)
-                :
+
+                        {/* Sample Grid Section */}
+                        <Flex direction="column" minW={'400px'} height="500px" w={'full'} flexGrow={1}
+                              ref={sampleDraggableBoxRef}>
+                            <Heading mb={2} fontSize={isMobile ? 'lg' : '2xl'}>{sampleTitle ?? 'New Data'}</Heading>
+                            <AgGridReact
+                                ref={sampleGridRef}
+                                rowData={sampleRowData}
+                                pagination
+                                getRowId={getRowId}
+                                suppressPaginationPanel
+                                onPaginationChanged={() => updatePaginationInfo(sampleGridRef, setSamplePaginationInfo)}
+                                defaultColDef={defaultColDef}
+                                paginationPageSize={samplePaginationInfo.pageSize}
+                                noRowsOverlayComponent={DraggableNoDataOverlay}
+                                noRowsOverlayComponentParams={{gridType: 'sample'}}
+                                loadingOverlayComponent={LoadingOverlay}
+                                onGridReady={(params) =>
+                                    addDropZoneToGrid(
+                                        params,
+                                        sampleGridRef,
+                                        populationGridRef,
+                                        populationDraggableBoxRef
+                                    )
+                                }
+                                columnDefs={fieldDefs}
+                            />
+                            <CustomGridBottomPagination
+                                gridRef={sampleGridRef}
+                                paginationInfo={samplePaginationInfo}
+                                onPageChange={() => updatePaginationInfo(sampleGridRef, setSamplePaginationInfo)}
+                            />
+                        </Flex>
+                    </Stack>
+                    <Button my={4} p={4} onClick={handleSubmission} isDisabled={!!errorMessage} isLoading={loading}>
+                        Submit
+                    </Button>
+                </>
+            ) : (
                 <Box my={4} p={4} bg="red.100" color="red.800">
                     <Text>{errorMessage}</Text>
                 </Box>
-            }
+            )}
         </Box>
     );
 };
