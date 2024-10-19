@@ -4,6 +4,7 @@ import {useState} from "react";
 import React from "react";
 import {RotatingChevron} from "./RotatingChevron";
 import SideBarMenuItem from "./SideBarMenuItem";
+import "./scrollbar.css"
 
 export interface MenuItem {
     label: string;
@@ -90,6 +91,7 @@ export function LeftHandNavigationDrawer({
                                 zIndex={1}
                                 p={4}
                                 overflowY="auto"
+                                className={"custom-scrollbar"}
                             >
                                 <VStack spacing={0} align="stretch" width="100%">
                                     {Object.entries(groupedItems).map(
