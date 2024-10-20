@@ -148,7 +148,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
                 {
                     label: "Tool",
                     icon: <Construction sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => window.alert("Tool TO DO"),
+                    onClick: () => router.push('/tools'),
                     category: "Workflows"
                 },
                 {

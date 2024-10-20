@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import {NextRequest, NextResponse} from "next/server";
+import {cookies} from "next/headers";
 
 // Handles the POST request
 export async function POST(
     req: NextRequest,
-    { params }: { params: { endpoint: string } }
+    {params}: { params: { endpoint: string } }
 ) {
     const cookieStore = cookies();
     const authToken = cookieStore.get("auth_token")?.value;
@@ -41,19 +41,19 @@ export async function POST(
         if (!response.ok) {
             console.error("POST request failed with status:", response.status);
             return NextResponse.json(
-                { error: responseData.message || "Request failed" },
-                { status: response.status }
+                {error: responseData.message || "Request failed"},
+                {status: response.status}
             );
         }
 
         // Return the successful response data
         console.log("POST request successful");
-        return NextResponse.json(responseData, { status: 200 });
+        return NextResponse.json(responseData, {status: 200});
     } catch (error: any) {
         console.error("Error in POST request:", error.message);
         return NextResponse.json(
-            { error: error.message || "Something went wrong" },
-            { status: 500 }
+            {error: error.message || "Something went wrong"},
+            {status: 500}
         );
     }
 }
@@ -61,7 +61,7 @@ export async function POST(
 // Handles the PUT request
 export async function PUT(
     req: NextRequest,
-    { params }: { params: { endpoint: string } }
+    {params}: { params: { endpoint: string } }
 ) {
     const cookieStore = cookies();
     const authToken = cookieStore.get("auth_token")?.value;
@@ -103,19 +103,19 @@ export async function PUT(
         if (!response.ok) {
             console.error("PUT request failed with status:", response.status);
             return NextResponse.json(
-                { error: responseData.message || "Request failed" },
-                { status: response.status }
+                {error: responseData.message || "Request failed"},
+                {status: response.status}
             );
         }
 
         // Return the successful response data
         console.log("PUT request successful");
-        return NextResponse.json(responseData, { status: 200 });
+        return NextResponse.json(responseData, {status: 200});
     } catch (error: any) {
         console.error("Error in PUT request:", error.message);
         return NextResponse.json(
-            { error: error.message || "Something went wrong" },
-            { status: 500 }
+            {error: error.message || "Something went wrong"},
+            {status: 500}
         );
     }
 }

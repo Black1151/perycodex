@@ -25,10 +25,11 @@ import {Add, Clear} from '@mui/icons-material';
 import NoDataOverlay from '@/components/agGrids/NoDataOverlay';
 import CustomGridBottomPagination from '@/components/agGrids/CustomGridBottomPagination';
 import LoadingOverlay from "@/components/agGrids/LoadingOverlay";
+import {ColDef} from "ag-grid-community";
 
 interface DataGridComponentProps<T> {
     data: T[] | null;
-    initialFields: string[];
+    initialFields: ColDef[];
     createNewUrl?: string;
     createNewUrlButtonText?: string;
     isModalEnabled?: boolean;
@@ -179,7 +180,9 @@ const DataGridComponent = <T, >({
                     columnDefs={fields}
                     pagination={true}
                     suppressPaginationPanel={true}
-                    onPaginationChanged={() => {updatePaginationInfo(gridRef, setPaginationInfo)}}
+                    onPaginationChanged={() => {
+                        updatePaginationInfo(gridRef, setPaginationInfo)
+                    }}
                     defaultColDef={defaultColDef}
                     paginationPageSize={paginationInfo.pageSize}
                     noRowsOverlayComponent={NoDataOverlay}
@@ -188,7 +191,9 @@ const DataGridComponent = <T, >({
                 <CustomGridBottomPagination
                     gridRef={gridRef}
                     paginationInfo={paginationInfo}
-                    onPageChange={() => {updatePaginationInfo(gridRef, setPaginationInfo)}}
+                    onPageChange={() => {
+                        updatePaginationInfo(gridRef, setPaginationInfo)
+                    }}
                 />
             </Flex>
 
