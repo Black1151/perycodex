@@ -220,9 +220,6 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
             redirectOnError: false,
         });
 
-        if (result) {
-            window.alert("YEY");
-        }
     };
 
     return (

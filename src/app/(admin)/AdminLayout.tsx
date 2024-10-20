@@ -160,7 +160,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
                 {
                     label: "Business Process",
                     icon: <Schema sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => window.alert("Business Process TO DO"),
+                    onClick: () =>  router.push('/business-processes'),
                     category: "Workflows"
                 },
                 {
