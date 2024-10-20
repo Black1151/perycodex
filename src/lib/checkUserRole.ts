@@ -69,6 +69,13 @@ const roleBasedRoutes: { [key: string]: string[] } = {
     // Add more roles and routes as needed
 };
 
+const redirectRoutes: { [key: string]: string } = {
+    PA: "/customers",
+    CA: "/customers",
+    // Add more role-based default redirect routes if needed
+};
+
+
 export function checkUserRole(userIdentity: { role: string }, targetPathname: string): boolean | void {
     if (!userIdentity || !userIdentity.role) {
         redirect("/error");
@@ -78,7 +85,7 @@ export function checkUserRole(userIdentity: { role: string }, targetPathname: st
     const allowedRoutes = roleBasedRoutes[userIdentity.role];
 
     if (!allowedRoutes) {
-        redirect("/unauthorized");
+        redirect('/');
         return;
     }
 
@@ -92,7 +99,8 @@ export function checkUserRole(userIdentity: { role: string }, targetPathname: st
     });
 
     if (!isAllowed) {
-        redirect("/unauthorized");
+        const fallBackRoute = redirectRoutes[userIdentity.role] || '/';
+        return redirect(fallBackRoute)
         return;
     }
 
