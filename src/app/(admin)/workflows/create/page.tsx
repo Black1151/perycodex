@@ -2,21 +2,21 @@ import {getUserIdentity} from "@/lib/getUserIdentity";
 import {checkUserRole} from "@/lib/checkUserRole";
 import AdminHeader from "@/components/AdminHeader";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
-import {toolsJson} from "@/components/surveyjs/forms/tools";
+import {workflowJson} from "@/components/surveyjs/forms/workflows";
 
-export default async function FormsCreatePage() {
+export default async function WorkflowsCreatePage() {
     const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, "/tools/create");
+    checkUserRole(userIdentity, "/workflows/create");
 
     return (
         <>
-            <AdminHeader headingText="Create Tool"/>
+            <AdminHeader headingText="Create Workflow"/>
             <SurveyComponent
-                surveyJson={toolsJson}
-                endpoint={'/form'}
+                surveyJson={workflowJson}
+                endpoint={'/workflow'}
                 isNew={true}
                 layout={'default'}
-                redirectUrl={'/tools'}
+                redirectUrl={'/workflows'}
                 sjsPath={'admin'}
             />
         </>

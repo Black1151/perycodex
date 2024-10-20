@@ -154,7 +154,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
                 {
                     label: "Workflow",
                     icon: <AccountTree sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => window.alert("Workflow TO DO"),
+                    onClick: () =>  router.push('/workflows'),
                     category: "Workflows"
                 },
                 {
