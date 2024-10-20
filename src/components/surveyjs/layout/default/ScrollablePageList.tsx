@@ -97,7 +97,7 @@ const ScrollablePageList: React.FC<ScrollablePageListProps> = ({
                 onScroll={handleScroll}
                 sx={{
                     scrollbarWidth: "none",
-                    "-ms-overflow-style": "none",
+                    msOverflowStyle: "none",
                     "&::-webkit-scrollbar": {
                         display: "none",
                     },
