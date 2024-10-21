@@ -6,7 +6,6 @@ export const Footer = () => {
         <Box
             justifyContent="center"
             alignItems="center"
-            position="fixed"
             bottom={0}
             left={0}
             right={0}
