@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {Model, Serializer, settings, SurveyModel} from 'survey-core';
 
 import {
@@ -97,14 +97,13 @@ const useSurvey = ({
             });
 
             // Set Common Variables that will be needed within the survey
-            model.setVariable("currentUser", user);
-
+            model.setVariable("pgv_currentUser", user);
 
             // Set survey to read-only mode depending on state of isEditing
             model.mode = isNew ? "edit" : "display";
 
             // Allow form to know if formMode is in edit or display mode
-            model.setVariable("formMode", isNew ? "new" : "edit");
+            model.setVariable("pgv_formMode", isNew ? "new" : "edit");
 
             // If data exists then apply it here
             if (dataset) {
