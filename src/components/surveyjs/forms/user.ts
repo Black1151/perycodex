@@ -110,7 +110,7 @@ export const userJson = {
                         name: "departmentId",
                         title: "Department",
                         titleLocation: "top",
-                        placeholder: "Select (customer) department / service user works in",
+                        placeholder: "Select department",
                         allowClear: true,
                         isRequired: true,
                         visibleIf: "{userTypePaying} = true",
@@ -130,7 +130,7 @@ export const userJson = {
                         startWithNewLine: false,
                         isRequired: true,
                         visibleIf: "{userTypePaying} = true",
-                        placeholder: "Select (customer) team user works in",
+                        placeholder: "Select team",
                         allowClear: true,
                         enableIf: "{customerID} notempty and {departmentId} notempty",
                         choicesByUrl: {
