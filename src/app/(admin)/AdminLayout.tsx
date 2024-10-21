@@ -6,21 +6,21 @@ import {NavBar} from "../NavBar";
 import {Footer} from "@/components/layout/Footer";
 import {UserProvider} from "@/context/AdminUserContext";
 import {
-    Domain,
-    People,
-    EmojiEmotions,
+    AccountTree,
     AddReaction,
-    LocationOn,
-    Sell,
-    Person,
-    Groups,
-    FormatAlignCenter,
-    FormatListNumbered,
     Checklist,
     Construction,
-    AccountTree,
+    Domain,
+    EmojiEmotions,
+    FormatAlignCenter,
+    FormatListNumbered,
+    Grid4x4,
+    Groups,
+    LocationOn,
+    People,
+    Person,
     Schema,
-    Grid4x4
+    Sell
 } from "@mui/icons-material";
 import {useRouter} from "next/navigation";
 import {LeftHandNavigationDrawer} from "@/components/layout/LeftHandNavigationDrawer";
@@ -36,9 +36,51 @@ interface AdminLayoutProps {
         userCustomerId: string;
         logoImageUrl?: string;
     };
+    userMetadata: {
+        userId: number;
+        userUniqueId: string;
+        email: string;
+        role: string;
+        firstName?: string;
+        lastName?: string;
+        fullName?: string;
+        siteId?: number;
+        siteName?: string;
+        remoteWorker?: boolean;
+        departmentId?: number;
+        deptName?: string;
+        teamId?: number;
+        teamName?: string;
+        jobLevelId?: number;
+        jobLevel?: string;
+        contractTypeId?: number;
+        contractType?: string;
+        employStartDate?: string;
+        userIsActive?: boolean;
+        customerId?: number;
+        customerName?: string;
+        customerCode?: string;
+        customerType?: string;
+        webAddress?: string;
+        noOfUsers?: number;
+        noOfSites?: number;
+        businessTypeId?: number;
+        businessTypeName?: string;
+        sectorId?: number;
+        sectorName?: string;
+        regionId?: number;
+        regionName?: string;
+        companySizeId?: number;
+        companyNo?: string;
+        numberOfEmployees?: number;
+        multiSite?: boolean;
+        customerParentId?: number | null;
+        customerParentName?: string | null;
+        customerIsActive?: boolean;
+    }
 }
 
-export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) => {
+export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps, userMetadata}) => {
     const router = useRouter();
 
 
@@ -166,13 +208,13 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
                 {
                     label: "Workflow",
                     icon: <AccountTree sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () =>  router.push('/workflows'),
+                    onClick: () => router.push('/workflows'),
                     category: "Workflows"
                 },
                 {
                     label: "Business Process",
                     icon: <Schema sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () =>  router.push('/business-processes'),
+                    onClick: () => router.push('/business-processes'),
                     category: "Workflows"
                 },
                 {
@@ -208,7 +250,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
     const menuItems = generateSidebarItemsDrawer(userProps.userRole);
 
     return (
-        <UserProvider value={userProps}>
+        <UserProvider value={userMetadata}>
             <PerygonContainer>
                 <NavBar {...userProps} />
                 {/* Sidebar and content container */}

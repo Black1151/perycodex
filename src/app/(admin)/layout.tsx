@@ -1,7 +1,7 @@
 import {ReactNode} from "react";
-import {redirect} from "next/navigation";
 import {AdminLayout} from "@/app/(admin)/AdminLayout";
 import {getUserIdentity} from "@/lib/getUserIdentity";
+import apiClient from "@/lib/apiClient";
 
 export interface NavBarProps {
     userFirstName: string;
@@ -18,6 +18,26 @@ interface LayoutProps {
 export default async function Layout({children}: LayoutProps) {
     const userIdentity = await getUserIdentity();
 
+    console.log(userIdentity)
+
+    const response = await apiClient(`/getUserMetadata`, {
+        method: "POST",
+        body: JSON.stringify({
+            p_userUniqueId: userIdentity.userUniqueId
+        })
+    });
+
+
+    if (!response.ok) {
+        const errorBody = await response.json();
+        console.error('Error response:', errorBody);
+        throw new Error(`Failed to fetch user metadata: ${errorBody?.message || 'Unknown error'}`);
+    }
+
+
+    let userMetadata = (await response.json()).resource;
+
+
     const userProps: NavBarProps = {
         userFirstName: userIdentity?.firstName,
         userImageUrl: userIdentity?.userImageUrl,
@@ -26,7 +46,7 @@ export default async function Layout({children}: LayoutProps) {
     };
 
     return (
-        <AdminLayout userProps={userProps}>
+        <AdminLayout userProps={userProps} userMetadata={userMetadata}>
             {children}
         </AdminLayout>
     );
