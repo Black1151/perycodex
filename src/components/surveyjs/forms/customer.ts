@@ -100,6 +100,7 @@ export const customerJson = {
                     titleLocation: "top",
                     defaultValue: true,
                     isRequired: true,
+                    visibleIf: "{pgv_currentUser.role} = 'PA'",
                     labelTrue: "Single",
                     labelFalse: "Multiple",
                     swapOrder: true
@@ -186,6 +187,7 @@ export const customerJson = {
         },
         {
             name: "customer-settings",
+            visibleIf: "{pgv_currentUser.role} = 'PA'",
             title: "Settings",
             elements: [
                 {

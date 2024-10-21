@@ -18,8 +18,6 @@ interface LayoutProps {
 export default async function Layout({children}: LayoutProps) {
     const userIdentity = await getUserIdentity();
 
-    console.log(userIdentity)
-
     const response = await apiClient(`/getUserMetadata`, {
         method: "POST",
         body: JSON.stringify({

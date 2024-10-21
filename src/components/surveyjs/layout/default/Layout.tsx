@@ -55,7 +55,8 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({
     }, [model, currentPage]);
 
     return (
-        <Flex w="full" maxW={['98%', '98%', '98%']} justify="center" align="center" py={4} position="relative"
+        <Flex w="full" maxW={['98%', '98%', '100%']} px={[0, 0, 4]} justify="center" align="center" py={4}
+              position="relative"
               direction="column">
             {/* Navigation Component */}
             {showTopNavigation &&

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Flex, Box, Stack, Button, useBreakpointValue} from "@chakra-ui/react";
+import {Box, Button, Flex, Stack, useBreakpointValue} from "@chakra-ui/react";
 import {NavigationProps} from "@/components/surveyjs/SurveyProps";
 import {motion} from "framer-motion";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -31,7 +31,7 @@ const BottomNavigation: React.FC<NavigationProps> = ({
     const submitButtonText = useBreakpointValue({base: '', md: 'Submit'});
 
     return (
-        <Box p={4} borderRadius="lg" w="100%">
+        <Box px={['24px', '24px', '40px']} py={'1em'} borderRadius="lg" w="100%">
             <Flex
                 justify={pageListOptions.length <= 1 ? "flex-end" : "space-between"}
                 align="center"
