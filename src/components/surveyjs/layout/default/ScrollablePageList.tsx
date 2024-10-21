@@ -139,7 +139,8 @@ const ScrollablePageList: React.FC<ScrollablePageListProps> = ({
                             alignItems="center"
                             justifyContent="flex-start"
                             minW="85px"
-                            maxW="95%"
+                            // maxW="95%"
+                            maxW="300px"
                             height="full"
                             cursor="pointer"
                             onClick={() => jumpToPage(pageOption.page)}
