@@ -7,6 +7,7 @@ import HappinessLayout from "@/components/surveyjs/layout/happiness/Layout";
 import {LayoutProps, SurveyComponentProps} from '@/components/surveyjs/SurveyProps';
 import useSurvey from '@/components/surveyjs/useSurvey';
 import useSurveySubmission from "@/components/surveyjs/useSurveySubmission";
+import {Flex, Spinner} from "@chakra-ui/react";
 
 type LayoutMap = {
     [key: string]: React.FC<LayoutProps>;
@@ -110,15 +111,13 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
 
     const SurveyLayout = layoutMap[layout];
 
-    if (isLoading) {
-        return <div>Loading Survey (Survey State)...</div>;
+    if (isLoading || !model) {
+        return (
+            <Flex justifyContent="center" alignItems="center">
+                <Spinner color={'white'}/>
+            </Flex>);
     }
-
-    // Ensure model is not null before rendering
-    if (!model) {
-        return <div>Loading Survey (Model State)...</div>; // Loading state
-    }
-
+    
     return <SurveyLayout model={model} dataset={dataset} {...layoutOptions}/>;
 };
 

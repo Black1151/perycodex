@@ -5,7 +5,7 @@ import {Box, Flex} from "@chakra-ui/react";
 import {motion} from "framer-motion";
 import useSurveyNavigation from "@/components/surveyjs/useSurveyNavigation";
 import BottomNavigation from "@/components/surveyjs/layout/default/BottomNavigation";
-import {DefaultLayoutProps, LayoutProps} from "@/components/surveyjs/SurveyProps";
+import {DefaultLayoutProps} from "@/components/surveyjs/SurveyProps";
 
 const MotionBox = motion(Box); // Create a motion-wrapped Box for animations
 
@@ -55,27 +55,28 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({
     }, [model, currentPage]);
 
     return (
-        <Flex w="full" justify="center" align="center" py={4} position="relative" direction="column">
-            <Box maxW={['98%', '98%', '98%']} w="100%" bg="white" borderRadius="lg" overflow="hidden">
-                {/* Navigation Component */}
-                {showTopNavigation &&
-                    <TopNavigation
-                        currentPage={currentPage}
-                        setCurrentPage={setCurrentPage}
-                        nextPage={nextPage}
-                        prevPage={prevPage}
-                        jumpToPage={jumpToPage}
-                        submitSurvey={submitSurvey}
-                        cancelSurvey={cancelSurvey}
-                        switchToDisplayMode={switchToDisplayMode}
-                        switchToEditMode={switchToEditMode}
-                        pageListOptions={pageListOptions}
-                        isFirstPage={isFirstPage}
-                        isLastPage={isLastPage}
-                        isEditing={isEditing}
-                        isSubmitting={isSubmitting}
-                    />
-                }
+        <Flex w="full" maxW={['98%', '98%', '98%']} justify="center" align="center" py={4} position="relative"
+              direction="column">
+            {/* Navigation Component */}
+            {showTopNavigation &&
+                <TopNavigation
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                    nextPage={nextPage}
+                    prevPage={prevPage}
+                    jumpToPage={jumpToPage}
+                    submitSurvey={submitSurvey}
+                    cancelSurvey={cancelSurvey}
+                    switchToDisplayMode={switchToDisplayMode}
+                    switchToEditMode={switchToEditMode}
+                    pageListOptions={pageListOptions}
+                    isFirstPage={isFirstPage}
+                    isLastPage={isLastPage}
+                    isEditing={isEditing}
+                    isSubmitting={isSubmitting}
+                />
+            }
+            <Box w="100%" overflow="hidden" bg={'white'}>
 
                 {/* Motion-animated Survey component with slide transition */}
                 <MotionBox

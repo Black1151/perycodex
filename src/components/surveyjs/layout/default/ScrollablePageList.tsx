@@ -1,7 +1,6 @@
-import React, {useRef, useState, useEffect} from 'react';
-import {Flex, Box, Text, IconButton} from "@chakra-ui/react";
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import React, {useEffect, useRef, useState} from 'react';
+import {Box, Flex, IconButton, Text, useBreakpointValue} from "@chakra-ui/react";
+import {ChevronLeft, ChevronRight} from "@mui/icons-material"
 import {motion} from "framer-motion";
 
 // Create a motion.div to animate the filling of the progress bar
@@ -19,6 +18,7 @@ interface ScrollablePageListProps {
     jumpToPage: (page: number) => void;
     animationDuration: number;
     previousPageNo: React.MutableRefObject<number>;
+    width?: string | number; // Width of the toggle switch
 }
 
 const ScrollablePageList: React.FC<ScrollablePageListProps> = ({
@@ -27,10 +27,22 @@ const ScrollablePageList: React.FC<ScrollablePageListProps> = ({
                                                                    jumpToPage,
                                                                    animationDuration,
                                                                    previousPageNo,
+                                                                   width
                                                                }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(false);
+
+    // Use responsive values for size of Chevron Arrows
+    const chevronSize = useBreakpointValue({
+        base: '28px', // For mobile screens (base breakpoint)
+        md: width || '40px', // Default width or prop width for medium and larger screens
+    });
+
+    const barHeight = useBreakpointValue({
+        base: 14,
+        md: 22
+    });
 
     const handleScroll = () => {
         if (containerRef.current) {
@@ -80,7 +92,7 @@ const ScrollablePageList: React.FC<ScrollablePageListProps> = ({
             {/* Scroll Left Arrow */}
             <IconButton
                 aria-label="Scroll Left"
-                icon={<ChevronLeftIcon sx={{fontSize: '40px'}}/>}
+                icon={<ChevronLeft sx={{fontSize: chevronSize}}/>}
                 position={'sticky'}
                 color={canScrollLeft ? 'perygonPink' : 'transparent'}
                 left="0"
@@ -122,7 +134,7 @@ const ScrollablePageList: React.FC<ScrollablePageListProps> = ({
                             key={pageOption.index}
                             textAlign="center"
                             flex={'1'}
-                            mx={2}
+                            mx={1}
                             flexDirection="column"
                             alignItems="center"
                             justifyContent="flex-start"
@@ -135,19 +147,23 @@ const ScrollablePageList: React.FC<ScrollablePageListProps> = ({
                             <Box
                                 position="relative"
                                 w="100%"
-                                h={["14px", "14px", "28px"]}
+                                h={`${barHeight}px`} // This is the height of the progress bar (you can customize)
                                 bg="gray.300"
-                                borderRadius="2xl"
                                 mb={2}
                                 overflow={'hidden'}
+                                display="flex"
+                                alignItems="center"
+                                borderRadius="md"
+                                style={{clipPath: 'polygon(0% 0%, 95% 0%, 100% 50%, 95% 100%, 0% 100%, 5% 50%, 0% 0%)'}}
                             >
+                                {/* Progress Bar */}
                                 <MotionBox
-                                    position="absolute"
+                                    position="relative"
                                     top={0}
                                     left={0}
                                     h="100%"
                                     bg="green.400"
-                                    borderRadius="2xl"
+                                    borderRadius="md"
                                     initial={{width: 0}}
                                     animate={{width: isFilled ? '100%' : '0%'}}
                                     transition={{
@@ -155,25 +171,16 @@ const ScrollablePageList: React.FC<ScrollablePageListProps> = ({
                                         ease: 'easeInOut',
                                         delay,
                                     }}
+                                    style={{clipPath: 'polygon(0% 0%, 95% 0%, 100% 50%, 95% 100%, 0% 100%, 5% 50%, 0% 0%)'}}
                                 />
-                                {currentPage === pageOption.index &&
-                                    <Box
-                                        position={'absolute'}
-                                        top={'50%'}
-                                        left={'50%'}
-                                        transform={"translate(-50%, -50%)"}
-                                        height={'25%'}
-                                        aspectRatio={1}
-                                        maxH={'15px'}
-                                        borderRadius={'full'}
-                                        bg={'white'}
-                                    />
-                                }
                             </Box>
+
+                            {/* Text Below Progress Bar */
+                            }
                             <Text
                                 color={currentPage === pageOption.index ? 'perygonPink' : 'gray.500'}
                                 fontWeight={currentPage === pageOption.index ? 'bold' : 'normal'}
-                                fontSize={currentPage === pageOption.index ? "md" : 'xs'}
+                                fontSize={currentPage === pageOption.index ? ["xs", "xs", "md"] : 'xs'}
                             >
                                 {pageOption.title}
                             </Text>
@@ -185,7 +192,7 @@ const ScrollablePageList: React.FC<ScrollablePageListProps> = ({
             }
             <IconButton
                 aria-label="Scroll Right"
-                icon={<ChevronRightIcon sx={{fontSize: '40px'}}/>}
+                icon={<ChevronRight sx={{fontSize: chevronSize}}/>}
                 position="sticky"
                 color={canScrollRight ? 'perygonPink' : 'transparent'}
                 right="0"
