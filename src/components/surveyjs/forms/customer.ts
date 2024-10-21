@@ -10,6 +10,7 @@ export const customerJson = {
                     minWidth: "256px",
                     title: "Is this customer active?",
                     titleLocation: "top",
+                    visibleIf: "{pgv_currentUser.role} = 'PA'",
                     descriptionLocation: "underInput",
                     defaultValue: true,
                     isRequired: true,
@@ -289,7 +290,7 @@ export const customerJson = {
                 {
                     type: "panel",
                     name: "primarySite",
-                    visibleIf: "{address1} notempty and {address2} notempty and {address3} notempty and {address4} notempty and {country} notempty and {postcode} notempty and {formMode} = 'new'",
+                    visibleIf: "{address1} notempty and {address2} notempty and {address3} notempty and {address4} notempty and {country} notempty and {postcode} notempty and {pgv_formMode} = 'new'",
                     title: "Primary Location Details",
                     isRequired: true,
                     elements: [
