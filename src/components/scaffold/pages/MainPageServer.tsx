@@ -68,7 +68,7 @@ export default async function MainPage<T extends Tool>({
       toolData = toolDataData.resource as T;
     } catch (error) {
       console.error(error);
-      redirect("/error");
+      redirect("/login");
     }
   }
 

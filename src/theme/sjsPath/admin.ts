@@ -101,7 +101,7 @@ export const themeJson = {
         "--sjs-primary-backcolor": "var(--chakra-colors-perygonPink)", // Main Accent Colour of things
         "--sjs-primary-backcolor-light": "#3182CE1A",
         "--sjs-primary-backcolor-dark": "#3182CE1A",
-        "--sjs-primary-forecolor": "#E5E5E500",
+        "--sjs-primary-forecolor": "#E5E5E5",
         "--sjs-primary-forecolor-light": "rgba(255, 255, 255, 0.25)",
 
         // Secondary Backcolour
