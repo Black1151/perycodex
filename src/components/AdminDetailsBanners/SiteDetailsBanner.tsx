@@ -9,6 +9,7 @@ import moment from "moment/moment";
 import CreateIcon from "@mui/icons-material/Create";
 import UpdateIcon from "@mui/icons-material/Update";
 import DomainIcon from "@mui/icons-material/Domain";
+import {useRouter} from "next/navigation";
 
 interface Site {
     id: number;
@@ -23,6 +24,12 @@ interface Site {
     isActive: boolean;
     createdAt: string;
     updatedAt: string;
+    customer: Customer
+}
+
+type Customer = {
+    name: string;
+    uniqueId: string;
 }
 
 interface SiteDetailsBannerProps {
@@ -30,6 +37,8 @@ interface SiteDetailsBannerProps {
 }
 
 export const SiteDetailsBanner: React.FC<SiteDetailsBannerProps> = ({site}) => {
+    const router = useRouter();
+
     return (
         <Flex mb={4} p={[0, 0, 4]} color={'white'} overflow={'hidden'}>
             {/* Site Icon and Name */}
@@ -72,7 +81,7 @@ export const SiteDetailsBanner: React.FC<SiteDetailsBannerProps> = ({site}) => {
                     <DomainIcon/>
                     <Text fontSize="sm"
                           _hover={{textDecoration: 'underline', cursor: 'pointer'}}
-                        // onClick={() => router.push(`/customers/${site.customer?.uniqueId}`)}
+                          onClick={() => router.push(`/customers/${site.customer?.uniqueId}`)}
                     >
                         {site.customer && site?.customer?.name}</Text>
                 </Flex>
