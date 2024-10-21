@@ -5,7 +5,7 @@ import {Box, Flex, FormControl, Heading, Text, VStack} from '@chakra-ui/react';
 import {Groups} from "@mui/icons-material";
 import moment from 'moment';
 import CreateIcon from "@mui/icons-material/Create";
-import UpdateIcon from "@mui/icons-material/Update";  // Import moment.js to format the date
+import UpdateIcon from "@mui/icons-material/Update"; // Import moment.js to format the date
 
 interface UserGroup {
     id: number;
@@ -45,16 +45,15 @@ export const UserGroupDetailsBanner: React.FC<UserGroupDetailsBannerProps> = ({u
 
             {/* User Group Information */}
             <VStack align="start" ml={4} minW={'300px'} spacing={3}>
-                <Flex alignItems="center">
-                    <Heading fontWeight={300}>{userGroup.name}</Heading>
+                <Flex alignItems="center" gap={2}>
                     <Box
-                        ml={2}
-                        w={4}
-                        h={4}
+                        w={'1.4rem'}
+                        h={'1.4rem'}
                         borderRadius="full"
                         border={'white 1px solid'}
                         bg={userGroup.isActive ? 'green.500' : 'red.500'}
                     />
+                    <Heading fontWeight={300} fontSize={['lg', 'lg', '2xl']}>{userGroup.name}</Heading>
                 </Flex>
             </VStack>
 

@@ -55,27 +55,30 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
     const isUploading = false;
 
     return (
-        <Flex mb={4} p={4} borderRadius={8} color={'white'} overflow={'hidden'}>
+        <Flex mb={4} p={[0, 0, 4]} borderRadius={8} color={'white'} overflow={'hidden'} align={'flex-start'}
+            // direction={['column', 'column', 'row']}
+        >
             {/* Customer Logo Upload */}
-            <FormControl w={'200px'} h={'100px'} aspectRatio={1} borderRadius={'full'}>
+            <FormControl w={['100px', '175px']} h={'100px'} aspectRatio={1} borderRadius={'full'}>
                 <Box
                     position="relative"
-                    w={'200px'}
+                    w={['100px', '175px']}
                     h={'100px'}
                     overflow="hidden"
                     _hover={{'.overlay': {opacity: allowUpload ? 1 : 0}}} // Only show overlay if upload is allowed
                 >
                     <Image
-                        w={'200px'}
+                        w={['100px', '175px']}
                         h={'100px'}
-                        objectFit={'contain'}
+                        objectFit={'scale-down'}
                         src={customer.imageUrl}
                         alt={customer.name}
+                        borderRadius={'lg'}
                         fallback={
                             <Flex
                                 align={'center'}
                                 justify={'center'}
-                                w={'200px'}
+                                w={['100px', '175px']}
                                 h={'100px'}
                                 bg="gray.200"
                                 cursor={allowUpload ? 'pointer' : 'default'} // Allow pointer only if upload is allowed
@@ -140,20 +143,19 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
             </FormControl>
 
             {/* Customer Details */}
-            <VStack align="start" ml={4} minW={'300px'}>
-                <Flex alignItems="center">
-                    <Heading fontWeight={300}>{customer.name}</Heading>
+            <VStack align="start" ml={4}>
+                <Flex alignItems="center" gap={2}>
                     <Box
-                        ml={2}
-                        w={4}
-                        h={4}
+                        w={'1.4rem'}
+                        h={'1.4rem'}
                         borderRadius="full"
                         border={'white 1px solid'}
                         bg={customer.isActive ? 'green.500' : 'red.500'}
                     />
+                    <Heading fontWeight={300} fontSize={['lg', 'lg', '2xl']}>{customer.name}</Heading>
                 </Flex>
                 {customer.webAddress &&
-                    <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
+                    <Flex direction={'row'} justify={'center'} align={'flex-start'} gap={2}>
                         <LanguageIcon/>
                         <Text
                             as="a"
@@ -168,7 +170,7 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
                     </Flex>
                 }
                 {customer.address1 && (
-                    <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
+                    <Flex direction={'row'} justify={'center'} align={'flex-start'} gap={2}>
                         <LocationOnOutlinedIcon/>
                         <Text
                             fontSize="sm">{customer.address1}, {customer.address2}, {customer.address3}, {customer.address4}, {customer.postcode}</Text>

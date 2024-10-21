@@ -3,6 +3,7 @@
 import React from 'react';
 import {Box, Flex, FormControl, Heading, IconButton, Image, Input, Spinner, Text, VStack} from "@chakra-ui/react";
 import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
+import DomainIcon from '@mui/icons-material/Domain';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import CreateIcon from '@mui/icons-material/Create';
@@ -195,7 +196,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
     const router = useRouter();
 
     return (
-        <Flex mb={4} p={4} borderRadius={8} color={'white'} overflow={'hidden'}>
+        <Flex mb={4} p={[0, 0, 4]} borderRadius={8} color={'white'} overflow={'hidden'}>
             {/*Image Upload*/}
             <FormControl w={'100px'} h={'100px'} aspectRatio={1} borderRadius={'full'}>
                 <Box
@@ -290,58 +291,68 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
             </FormControl>
             {/*User Details*/}
             <VStack align="start" ml={4}>
-                <Flex alignItems="center">
-                    <Heading size="lg" fontWeight={100}>{user.firstName} {user.lastName}</Heading>
+                <Flex alignItems="center" gap={2}>
                     <Box
-                        ml={2}
-                        w={4}
-                        h={4}
+                        w={'1.4rem'}
+                        h={'1.4rem'}
                         borderRadius="full"
                         border={'white 1px solid'}
                         bg={user.isActive ? 'green.500' : 'red.500'}
                     />
+                    <Heading size="lg" fontWeight={100}
+                             fontSize={['lg', 'lg', '2xl']}>{user.firstName} {user.lastName}</Heading>
                 </Flex>
 
-                <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
+                <Flex direction={'row'} justify={'center'} align={'flex-start'} gap={2}>
                     <EmailOutlinedIcon/>
-                    <Text fontSize="md">{user.email}</Text>
+                    <Text fontSize="sm" as={'a'} href={`mailto:${user.email}`}
+                          _hover={{textDecoration: 'underline', cursor: 'pointer'}}
+                    >{user.email}</Text>
+                </Flex>
+                <Flex direction={'row'} justify={'center'} align={'flex-start'} gap={2}>
+                    <DomainIcon/>
+                    <Text fontSize="sm"
+                          _hover={{textDecoration: 'underline', cursor: 'pointer'}}
+                          onClick={() => router.push(`/customers/${user.customer?.uniqueId}`)}>{user?.customer?.name}</Text>
                 </Flex>
                 <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
                     <LocationOnOutlinedIcon/>
-                    <Text fontSize="sm">
+                    <Text fontSize="sm"
+                          _hover={{textDecoration: 'underline', cursor: 'pointer'}}
+                          onClick={() => router.push(`/sites/${user.site?.uniqueId}`)}>
                         {user.site ? user.site.siteName : "Unknown"}
                     </Text>
                 </Flex>
                 {/* Organisation's Logo */}
-                {user.customer && (
-                    <Image
-                        mt={'auto'}
-                        maxHeight={'50px'}
-                        maxWidth={'150px'}
-                        objectFit={'contain'}
-                        src={user.customer?.imageUrl || ""}
-                        cursor={'pointer'}
-                        onClick={() => router.push(`/customers/${user.customer?.uniqueId}`)}
-                        alt={`${user.customer.name} Logo`}
-                        fallback={
-                            <Flex
-                                align={'center'}
-                                justify={'center'}
-                                minW={'100px'}
-                                h={'full'}
-                                bg="gray.200"
-                            >
-                                <Text
-                                    color="gray.500"
-                                    m={'auto'}
-                                    fontSize={'lg'}
-                                >
-                                    {user.customer.name[0]}
-                                </Text>
-                            </Flex>
-                        }
-                    />
-                )}
+                {/*{user.customer && (*/}
+                {/*    <Image*/}
+                {/*        mt={'auto'}*/}
+                {/*        maxHeight={'50px'}*/}
+                {/*        maxWidth={'150px'}*/}
+                {/*        objectFit={'contain'}*/}
+                {/*        src={user.customer?.imageUrl || ""}*/}
+                {/*        cursor={'pointer'}*/}
+                {/*        onClick={() => router.push(`/customers/${user.customer?.uniqueId}`)}*/}
+                {/*        alt={`${user.customer.name} Logo`}*/}
+                {/*        fallback={*/}
+                {/*            <Flex*/}
+                {/*                align={'center'}*/}
+                {/*                justify={'center'}*/}
+                {/*                minW={'100px'}*/}
+                {/*                h={'full'}*/}
+                {/*                bg="gray.200"*/}
+                {/*            >*/}
+                {/*                <Text*/}
+                {/*                    color="gray.500"*/}
+                {/*                    m={'auto'}*/}
+                {/*                    fontSize={'lg'}*/}
+                {/*                >*/}
+                {/*                    {user.customer.name[0]}*/}
+                {/*                </Text>*/}
+                {/*            </Flex>*/}
+                {/*        }*/}
+                {/*    />*/}
+                {/*)}*/}
             </VStack>
             {/* User Details*/}
             <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-start'} display={['none', 'none', 'flex']}>

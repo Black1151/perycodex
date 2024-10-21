@@ -1,10 +1,11 @@
 'use client';
 
 import React from 'react';
-import {Box, Flex, FormControl, Heading, Text, VStack, Badge, Image} from '@chakra-ui/react';
+import {Badge, Box, Flex, FormControl, Heading, Image, Text, VStack} from '@chakra-ui/react';
 import moment from 'moment';
 import CreateIcon from '@mui/icons-material/Create';
 import UpdateIcon from '@mui/icons-material/Update';
+import SellIcon from '@mui/icons-material/Sell'
 
 interface Tag {
     id: number;
@@ -43,35 +44,42 @@ export const TagDetailsBanner: React.FC<TagDetailsBannerProps> = ({tag}) => {
                     <Image
                         src={tag.icon}
                         alt={tag.name}
-                        boxSize="48px"
+                        w={'100px'}
+                        h={'100px'}
                         borderRadius="full"
                         objectFit="cover"
+                        fallback={
+                            <>
+                                <SellIcon fontSize="large" sx={{color: "var(--chakra-colors-perygonPink)"}}/>
+                            </>
+                        }
                     />
                 </Box>
             </FormControl>
 
             {/* Tag Information */}
             <VStack align="start" ml={4} minW={'300px'} spacing={3}>
-                <Flex alignItems="center">
-                    <Heading fontWeight={300}>{tag.name}</Heading>
+                <Flex alignItems="center" gap={2}>
                     <Box
-                        ml={2}
-                        w={4}
-                        h={4}
+                        w={'1.4rem'}
+                        h={'1.4rem'}
                         borderRadius="full"
                         border={'white 1px solid'}
                         bg={tag.isActive ? 'green.500' : 'red.500'}
                     />
+                    <Heading fontWeight={300} fontSize={['lg', 'lg', '2xl']}>{tag.name}</Heading>
+
                 </Flex>
 
                 {/* Tag Score and Weight */}
                 <Flex direction="row" gap={4}>
-                    Example:
                     <Badge
                         px={2}
                         py={1}
                         borderRadius="md"
                         backgroundColor={tag.colour} // Using the hex color from tag.colour for the background
+                        border={'1px solid'}
+                        borderColor={'white'}
                         color="white" // Assuming the text color should be white
                     >
                         {tag.name}

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import {Box, Flex, FormControl, Heading, Text, VStack, Badge} from '@chakra-ui/react';
+import {Badge, Box, Flex, FormControl, Heading, Text, VStack} from '@chakra-ui/react';
 import {People} from "@mui/icons-material";
 import moment from "moment/moment";
 import CreateIcon from "@mui/icons-material/Create";
@@ -32,7 +32,7 @@ export const UserTeamDetailsBanner: React.FC<UserTeamDetailsBannerProps> = ({tea
     const isDepartment = team.parentTeamId === null;
 
     return (
-        <Flex mb={4} p={4} color={'white'} overflow={'hidden'}>
+        <Flex mb={4} p={[0, 0, 4]} color={'white'} overflow={'hidden'}>
             {/* Team/Department Icon and Name */}
             <FormControl w={'100px'} h={'100px'} aspectRatio={1} borderRadius={'full'}>
                 <Box
@@ -51,16 +51,16 @@ export const UserTeamDetailsBanner: React.FC<UserTeamDetailsBannerProps> = ({tea
 
             {/* Team/Department Information */}
             <VStack align="start" ml={4} minW={'300px'} spacing={3}>
-                <Flex alignItems="center">
-                    <Heading fontWeight={300}>{team.name}</Heading>
+                <Flex alignItems="center" gap={2}>
                     <Box
-                        ml={2}
-                        w={4}
-                        h={4}
+                        w={'1.4rem'}
+                        h={'1.4rem'}
                         borderRadius="full"
                         border={'white 1px solid'}
                         bg={team.isActive ? 'green.500' : 'red.500'}
                     />
+                    <Heading fontWeight={300} fontSize={['lg', 'lg', '2xl']}>{team.name}</Heading>
+
                 </Flex>
 
                 {/* Department or Team Badge */}
