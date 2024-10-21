@@ -28,6 +28,7 @@ export default async function UserGroupsDetailPage({params}: { params: { uniqueI
                 isNew={false}
                 dataset={userGroupData}
                 sjsPath={'admin'}
+                reloadPageOnSuccess={true}
             />
         </div>
     );

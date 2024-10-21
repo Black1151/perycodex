@@ -29,6 +29,7 @@ export default async function CustomersDetailsPage({params}: { params: { uniqueI
                 dataset={customerData}
                 layout={'default'}
                 sjsPath={'admin'}
+                reloadPageOnSuccess={true}
             />
         </div>
     );

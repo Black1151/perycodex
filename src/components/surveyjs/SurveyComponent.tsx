@@ -21,6 +21,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
                                                              isNew,
                                                              dataset,
                                                              onSurveySuccess,
+                                                             reloadPageOnSuccess,
                                                              excludeKeys,
                                                              redirectUrl,
                                                              cssPath,
@@ -70,7 +71,8 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
         endpoint: endpoint,
         redirectUrl: redirectUrl,
         excludeKeys: excludeKeys,
-        onSurveySuccess: onSurveySuccess
+        onSurveySuccess: onSurveySuccess,
+        reloadPageOnSuccess: reloadPageOnSuccess
     });
 
     // Dynamically load CSS file and remove it when the component unmounts
@@ -117,7 +119,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
                 <Spinner color={'white'}/>
             </Flex>);
     }
-    
+
     return <SurveyLayout model={model} dataset={dataset} {...layoutOptions}/>;
 };
 

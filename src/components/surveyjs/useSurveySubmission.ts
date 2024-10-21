@@ -13,6 +13,7 @@ const useSurveySubmission = ({
                                  excludeKeys = [],
                                  onSurveySuccess,
                                  redirectUrl,
+                                 reloadPageOnSuccess = false
                              }: UseSurveySubmissionProps) => {
     const toast = useToast();
     const router = useRouter();
@@ -78,6 +79,9 @@ const useSurveySubmission = ({
                         model.render();
                     }
 
+                    if (reloadPageOnSuccess) {
+                        router.refresh()
+                    }
 
                     // Handle redirection if a URL is provided
                     if (redirectUrl) {

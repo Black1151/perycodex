@@ -32,6 +32,7 @@ export default async function SitesDetailPage({
                 isNew={false}
                 dataset={siteData}
                 sjsPath={'admin'}
+                reloadPageOnSuccess={true}
             />
         </div>
     );

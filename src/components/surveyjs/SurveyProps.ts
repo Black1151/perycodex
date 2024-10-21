@@ -8,6 +8,7 @@ export interface SurveyComponentProps {
     layoutOptions?: Record<string, any>;
     dataset?: Record<string, any>;
     onSurveySuccess?: () => void;
+    reloadPageOnSuccess?: boolean;
     excludeKeys?: string[];
     redirectUrl?: string;
     cssPath?: string;
@@ -45,6 +46,7 @@ export interface UseSurveySubmissionProps {
     excludeKeys?: string[]; // Keys to exclude from submission data
     onSurveySuccess?: () => void; // Callback after successful completion
     redirectUrl?: string; // URL to redirect after completion
+    reloadPageOnSuccess?: boolean
 }
 
 export interface NavigationProps {

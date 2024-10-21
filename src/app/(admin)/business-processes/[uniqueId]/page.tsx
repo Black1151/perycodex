@@ -33,6 +33,7 @@ export default async function BusinessProcessesDetailPage({
                 dataset={businessProcessData}
                 layout={'default'}
                 sjsPath={'admin'}
+                reloadPageOnSuccess={true}
             />
         </>
     );

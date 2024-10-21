@@ -28,6 +28,7 @@ export default async function UsersDetailPage({params}: { params: { uniqueId: st
                 isNew={false}
                 dataset={userData}
                 sjsPath={'admin'}
+                reloadPageOnSuccess={true}
             />
         </>
     );

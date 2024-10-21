@@ -28,6 +28,7 @@ export default async function SelectItemsDetailPage({params}: { params: { unique
                 isNew={false}
                 dataset={selectItemData}
                 sjsPath={'admin'}
+                reloadPageOnSuccess={true}
             />
         </>
     );

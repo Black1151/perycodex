@@ -41,6 +41,7 @@ export default async function OptionListsDetailPage({params}: { params: { unique
                 isNew={false}
                 dataset={optionListData}
                 sjsPath={'admin'}
+                reloadPageOnSuccess={true}
             />
         </>
     );

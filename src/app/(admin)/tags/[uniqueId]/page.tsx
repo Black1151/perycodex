@@ -33,6 +33,7 @@ export default async function TagsDetailPage({
                 dataset={tagData}
                 layout={'default'}
                 sjsPath={'admin'}
+                reloadPageOnSuccess={true}
             />
         </>
     );

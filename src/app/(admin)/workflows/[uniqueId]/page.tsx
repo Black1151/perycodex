@@ -33,6 +33,7 @@ export default async function WorkflowsDetailPage({
                 dataset={workflowData}
                 layout={'default'}
                 sjsPath={'admin'}
+                reloadPageOnSuccess={true}
             />
         </>
     );

@@ -28,6 +28,7 @@ export default async function TeamsDetailPage({params}: { params: { uniqueId: st
                 isNew={false}
                 dataset={userTeamData}
                 sjsPath={'admin'}
+                reloadPageOnSuccess={true}
             />
         </div>
     );

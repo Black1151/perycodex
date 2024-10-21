@@ -30,6 +30,7 @@ export default async function MyCustomerPage() {
                 isNew={false}
                 dataset={customerData}
                 sjsPath={'admin'}
+                reloadPageOnSuccess={true}
             />
         </div>
     );

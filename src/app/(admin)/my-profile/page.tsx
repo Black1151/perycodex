@@ -30,6 +30,7 @@ export default async function MyProfilePage() {
                 isNew={false}
                 dataset={userData}
                 sjsPath={'admin'}
+                reloadPageOnSuccess={true}
             />
         </div>
     );
