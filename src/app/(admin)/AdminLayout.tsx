@@ -99,7 +99,19 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps}) =
                     icon: <LocationOn sx={{height: '100%', width: '100%'}}/>,
                     onClick: () => router.push('/sites?siteType=external'),
                     category: "External"
-                }
+                },
+                {
+                    label: "Test Happiness (Hard Coded)",
+                    icon: <EmojiEmotions sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/test-happiness-score'),
+                    category: "Test Survey"
+                },
+                {
+                    label: "Test Happiness (API)",
+                    icon: <AddReaction sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/test-happiness-score-by-api'),
+                    category: "Test Survey"
+                },
             ];
         } else if (userRole === 'PA') {
             return [

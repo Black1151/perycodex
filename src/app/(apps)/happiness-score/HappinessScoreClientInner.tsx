@@ -1,6 +1,6 @@
 "use client";
 
-import { Flex, Grid, GridItem, HStack, Text } from "@chakra-ui/react";
+import {Flex, Grid, GridItem, Heading, HStack, Text} from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
 import { Footer } from "@/components/layout/Footer";
@@ -43,12 +43,12 @@ export default function HappinessScoreClientInner({
         ) : (
           <>
             <HStack justifyContent="space-between" mt={12} w="100%">
-              <Text color="white" fontSize={["lg", "3xl"]} fontWeight="bold">
-                Happiness Score
-              </Text>
+              <Heading as={'h1'} fontWeight={100} color="white" size={["lg", "xl"]} fontFamily={'Bonfire'}>
+                Happiness Scores
+              </Heading>
               <AddButton
                 label="Create New"
-                onClick={() => router.push("/test-happiness-score")}
+                onClick={() => router.push("/test-happiness-score-by-api")}
               />
             </HStack>
             <Grid

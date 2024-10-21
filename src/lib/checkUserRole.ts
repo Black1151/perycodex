@@ -22,6 +22,8 @@ const roleBasedRoutes: { [key: string]: string[] } = {
         "/users/create",
         "/my-company",
         "/my-profile",
+        "/test-happiness-score",
+        "/test-happiness-score-by-api",
     ],
     PA: [
         "/customers",
