@@ -23,6 +23,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
                                                              onSurveySuccess,
                                                              onSurveyFailure,
                                                              reloadPageOnSuccess,
+                                                             includeVariables,
                                                              excludeKeys,
                                                              redirectUrl,
                                                              cssPath,
@@ -60,6 +61,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
         surveyJson: updatedSurveyJson,
         isNew: isNew,
         dataset: dataset,
+        includeVariables: includeVariables,
         cssPath: cssPath,
         sjsPath: sjsPath,
         jsPath: jsPath

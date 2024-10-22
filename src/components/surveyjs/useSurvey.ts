@@ -13,6 +13,7 @@ const useSurvey = ({
                        isNew,
                        dataset,
                        cssPath,
+                       includeVariables,
                        sjsPath,
                        jsPath
                    }: UseSurveyProps) => {
@@ -104,6 +105,18 @@ const useSurvey = ({
 
             // Allow form to know if formMode is in edit or display mode
             model.setVariable("pgv_formMode", isNew ? "new" : "edit");
+
+            // Dynamically go through the list of objects and set the entire nested object as a variable
+            if (includeVariables && Array.isArray(includeVariables)) {
+                includeVariables.forEach(variableObject => {
+                    // Extract the top-level key (e.g., userDetails, companyInfo)
+                    Object.keys(variableObject).forEach(key => {
+                        // Set the entire nested object as a variable with the "pgv_" prefix
+                        const value = variableObject[key];
+                        model.setVariable(`wfv_${key}`, value);
+                    });
+                });
+            }
 
             // If data exists then apply it here
             if (dataset) {

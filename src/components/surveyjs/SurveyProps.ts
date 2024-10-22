@@ -10,6 +10,7 @@ export interface SurveyComponentProps {
     onSurveySuccess?: () => void;
     onSurveyFailure?: () => void;
     reloadPageOnSuccess?: boolean;
+    includeVariables?: Array<{ [key: string]: { [nestedKey: string]: any } }>;
     excludeKeys?: string[];
     redirectUrl?: string;
     cssPath?: string;
@@ -35,6 +36,7 @@ export interface UseSurveyProps {
     surveyJson: any;   // You can replace `any` with a more specific type if you have one for your survey JSON structure
     isNew: boolean;    // Flag to indicate if the survey is new
     dataset?: any;     // Optional dataset, you can specify the type if you have a specific structure
+    includeVariables?: Array<{ [key: string]: { [nestedKey: string]: any } }>;
     cssPath?: string;
     sjsPath?: string;
     jsPath?: string;
