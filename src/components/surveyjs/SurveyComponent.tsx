@@ -21,6 +21,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
                                                              isNew,
                                                              dataset,
                                                              onSurveySuccess,
+                                                             onSurveyFailure,
                                                              reloadPageOnSuccess,
                                                              excludeKeys,
                                                              redirectUrl,
@@ -72,6 +73,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
         redirectUrl: redirectUrl,
         excludeKeys: excludeKeys,
         onSurveySuccess: onSurveySuccess,
+        onSurveyFailure: onSurveyFailure,
         reloadPageOnSuccess: reloadPageOnSuccess
     });
 

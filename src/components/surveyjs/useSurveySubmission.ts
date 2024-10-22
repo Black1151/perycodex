@@ -12,6 +12,7 @@ const useSurveySubmission = ({
                                  endpoint,
                                  excludeKeys = [],
                                  onSurveySuccess,
+                                 onSurveyFailure,
                                  redirectUrl,
                                  reloadPageOnSuccess = false
                              }: UseSurveySubmissionProps) => {
@@ -100,6 +101,7 @@ const useSurveySubmission = ({
                         isClosable: true,
                         position: "bottom-right",
                     });
+                    onSurveyFailure?.();
                 }
             };
 
