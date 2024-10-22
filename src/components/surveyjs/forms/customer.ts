@@ -98,7 +98,7 @@ export const customerJson = {
                     name: "multiSite",
                     title: "Select if this a single or multiple site business",
                     titleLocation: "top",
-                    defaultValue: true,
+                    defaultValue: false,
                     isRequired: true,
                     visibleIf: "{pgv_currentUser.role} = 'PA'",
                     labelTrue: "Single",
@@ -183,47 +183,6 @@ export const customerJson = {
                     ],
                     placeholder: "Enter the number of current Employees"
                 },
-            ]
-        },
-        {
-            name: "customer-settings",
-            visibleIf: "{pgv_currentUser.role} = 'PA'",
-            title: "Settings",
-            elements: [
-                {
-                    type: "text",
-                    name: "customerCode",
-                    width: "64%",
-                    minWidth: "192px",
-                    title: "Customer Code",
-                    titleLocation: "top",
-                    description: "",
-                    descriptionLocation: "underInput",
-                    isRequired: true,
-                    placeholder: "Enter a customer code for internal reference"
-                },
-                {
-                    type: "matrixdynamic",
-                    name: "domain",
-                    title: "Add Domains",
-                    columns: [
-                        {
-                            name: "domain",
-                            title: "Domain",
-                            cellType: "text",
-                            isRequired: true,
-                            maxLength: 80,
-                            placeholder: "Enter domain",
-                        }
-                    ],
-                    rowCount: 0,
-                    confirmDelete: true,
-                    confirmDeleteText: "Are you sure you want to delete this domain?",
-                    addRowText: "Add a Domain",
-                    removeRowText: "Delete this Domain",
-                    hideColumnsIfEmpty: true,
-                    emptyRowsText: "No domains entered yet.\nClick 'Add a Domain' to add a new one.\nClick the delete icon to remove an existing entry."
-                }
             ]
         },
         {
@@ -429,6 +388,47 @@ export const customerJson = {
                             placeholder: "Enter site email"
                         }
                     ]
+                }
+            ]
+        },
+        {
+            name: "customer-settings",
+            visibleIf: "{pgv_currentUser.role} = 'PA'",
+            title: "Settings",
+            elements: [
+                {
+                    type: "text",
+                    name: "customerCode",
+                    width: "64%",
+                    minWidth: "192px",
+                    title: "Customer Code",
+                    titleLocation: "top",
+                    description: "",
+                    descriptionLocation: "underInput",
+                    isRequired: true,
+                    placeholder: "Enter a customer code for internal reference"
+                },
+                {
+                    type: "matrixdynamic",
+                    name: "domain",
+                    title: "Add Domains",
+                    columns: [
+                        {
+                            name: "domain",
+                            title: "Domain",
+                            cellType: "text",
+                            isRequired: true,
+                            maxLength: 80,
+                            placeholder: "Enter domain",
+                        }
+                    ],
+                    rowCount: 0,
+                    confirmDelete: true,
+                    confirmDeleteText: "Are you sure you want to delete this domain?",
+                    addRowText: "Add a Domain",
+                    removeRowText: "Delete this Domain",
+                    hideColumnsIfEmpty: true,
+                    emptyRowsText: "No domains entered yet.\nClick 'Add a Domain' to add a new one.\nClick the delete icon to remove an existing entry."
                 }
             ]
         },
