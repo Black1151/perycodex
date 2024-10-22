@@ -151,7 +151,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps, us
                 {
                     label: "Test Happiness (API)",
                     icon: <AddReaction sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/test-happiness-score-by-api'),
+                    onClick: () => router.push('/test-happiness-score-by-api?workflowId=1&toolId=1'),
                     category: "Test Survey"
                 },
             ];
@@ -232,7 +232,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps, us
                 {
                     label: "Test Happiness (API)",
                     icon: <AddReaction sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/test-happiness-score-by-api'),
+                    onClick: () => router.push('/test-happiness-score-by-api?workflowId=1&toolId=1'),
                     category: "Test Survey"
                 },
                 {
