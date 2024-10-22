@@ -258,12 +258,27 @@ export const customerJson = {
                         {
                             type: "text",
                             name: "siteName",
-                            width: "64%",
-                            minWidth: "192px",
                             title: "Site Name",
                             titleLocation: "top",
                             isRequired: true,
                             placeholder: "Enter site Name"
+                        },
+                        {
+                            type: "dropdown",
+                            name: "siteTypeId",
+                            startWithNewLine: false,
+                            title: "Site Type",
+                            titleLocation: "top",
+                            isRequired: true,
+                            renderAs1: "select",
+                            placeholder: "What type of site is this",
+                            allowClear: true,
+                            choicesByUrl: {
+                                url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=site_type`,
+                                path: "site_type",
+                                valueName: "value",
+                                titleName: "label"
+                            },
                         },
                         {
                             type: "text",
