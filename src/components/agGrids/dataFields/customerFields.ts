@@ -37,7 +37,7 @@ export const customerFields: ColDef[] | any = [
         // flex: 1,
     },
     {
-        field: 'country',
+        field: 'countryName',
         headerName: 'Country',
         filter: "agMultiColumnFilter",
         // flex: 1,
