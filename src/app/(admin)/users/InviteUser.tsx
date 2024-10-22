@@ -1,8 +1,9 @@
 'use client';
 
-import {Heading, Modal, ModalBody, ModalContent, ModalOverlay} from "@chakra-ui/react";
+import {Flex, Modal, ModalBody, ModalContent, ModalHeader, ModalOverlay} from "@chakra-ui/react";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import {inviteUserJson} from "@/components/surveyjs/forms/inviteUser";
+import React from "react";
 
 interface InviteNewUserModalForPAProps {
     isOpen: boolean;  // Controlled by the parent
@@ -19,9 +20,12 @@ const InviteNewUserModalForPA = ({isOpen, onClose}: InviteNewUserModalForPAProps
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay/>
             <ModalContent>
+                <ModalHeader>
+                    <Flex justifyContent={'center'} alignItems={'center'} width={'100%'}>
+                        Invite New User
+                    </Flex>
+                </ModalHeader>
                 <ModalBody>
-                    <Heading>New User</Heading>
-                    {/* Render the SurveyComponent with an onComplete handler */}
                     <SurveyComponent
                         surveyJson={inviteUserJson}
                         endpoint={'/registerByInvite'}
@@ -30,6 +34,7 @@ const InviteNewUserModalForPA = ({isOpen, onClose}: InviteNewUserModalForPAProps
                         sjsPath={'admin'}
                         onSurveySuccess={handleSurveyComplete}
                         layoutOptions={{showTopNavigation: false, showBottomNavigation: true}}
+                        reloadPageOnSuccess={true}
                     />
                 </ModalBody>
             </ModalContent>

@@ -4,17 +4,15 @@ export const inviteUserJson = {
             name: "invite-user-details",
             title: "Invite User",
             elements: [
-                // TODO: Change this to use view that checks if customer has a domain
                 {
                     type: "dropdown",
                     name: "customerId",
                     isRequired: true,
                     title: "Customer",
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/customer/allBy?parentId=null&isActive=true`,
-                        path: "resource",
-                        valueName: "id",
-                        titleName: "name"
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/surveyjs/view?view=vwInviteUserCustomersList`,
+                        valueName: "custId",
+                        titleName: "custName"
                     },
                 },
                 {
