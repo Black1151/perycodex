@@ -17,6 +17,7 @@ export default async function SitesPage({searchParams}: { searchParams: SearchPa
     let url = `/getAllView?view=vwSitesList&customerId=not-null&selectColumns=id,siteName,siteUniqueId,custName,custUniqueId,custImageUrl,siteTypeName,address1,address3,postcode,isActive,primaryContactUniqueId,primaryContactFullName,primaryContactImageUrl`;
     let headerTitle = 'Sites';
     let siteTypeParam = searchParams.siteType;
+    let createNewUrl = '/sites/create';
 
     if (userIdentity.role === 'CA') {
         if (!['internal', 'external'].includes(siteTypeParam || '')) {
@@ -26,15 +27,17 @@ export default async function SitesPage({searchParams}: { searchParams: SearchPa
         if (siteTypeParam === 'internal') {
             headerTitle = 'My Company Sites';
             url += `&customerId=${userIdentity.customerId}`;
+            createNewUrl += `?siteType=internal`;
         } else if (siteTypeParam === 'external') {
             headerTitle = 'Our Client Sites';
             url += `&custParentId=${userIdentity.customerId}`;
+            createNewUrl += `?siteType=external`;
         }
     } else if (userIdentity.role === 'PA') {
         headerTitle = 'Sites';
     }
 
-    const res = await apiClient(url, { cache: "no-store" });
+    const res = await apiClient(url, {cache: "no-store"});
 
     if (!res.ok) {
         return redirect("/error");
@@ -51,7 +54,7 @@ export default async function SitesPage({searchParams}: { searchParams: SearchPa
                 <AdminHeader headingText={headerTitle} dataCount={siteCount}/>
                 <DataGridComponent data={siteData}
                                    initialFields={siteFields}
-                                   createNewUrl={'/sites/create'}/>
+                                   createNewUrl={createNewUrl}/>
 
             </>
         );
