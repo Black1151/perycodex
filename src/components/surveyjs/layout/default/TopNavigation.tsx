@@ -18,6 +18,7 @@ const TopNavigation: React.FC<NavigationProps> = ({
                                                       jumpToPage,
                                                       submitSurvey,
                                                       cancelSurvey,
+                                                      canEdit,
                                                       switchToDisplayMode,
                                                       switchToEditMode,
                                                       pageListOptions,
@@ -71,11 +72,13 @@ const TopNavigation: React.FC<NavigationProps> = ({
                     borderTopRightRadius={'lg'}
                 >
 
+
                     {/* Custom Toggle in its own box above the ScrollablePageList */}
                     <CustomToggle
                         iconA={VisibilityIcon}
                         iconB={EditIcon}
                         isChecked={isEditing}
+                        canEdit={canEdit}
                         onToggle={handleToggle}
                     />
                 </Box>

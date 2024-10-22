@@ -12,6 +12,7 @@ const MotionBox = motion(Box); // Create a motion-wrapped Box for animations
 const DefaultLayout: React.FC<DefaultLayoutProps> = ({
                                                          model,
                                                          dataset,
+                                                         canEdit,
                                                          showTopNavigation = true,
                                                          showBottomNavigation = true,
                                                      }) => {
@@ -68,6 +69,7 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({
                     jumpToPage={jumpToPage}
                     submitSurvey={submitSurvey}
                     cancelSurvey={cancelSurvey}
+                    canEdit={canEdit}
                     switchToDisplayMode={switchToDisplayMode}
                     switchToEditMode={switchToEditMode}
                     pageListOptions={pageListOptions}

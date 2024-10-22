@@ -27,6 +27,7 @@ export default async function MyCustomerPage() {
             <SurveyComponent
                 surveyJson={customerJson}
                 endpoint={`/customer/${customerUniqueId}`}
+                rolesCanEdit={['CA', 'PA']}
                 isNew={false}
                 dataset={customerData}
                 sjsPath={'admin'}

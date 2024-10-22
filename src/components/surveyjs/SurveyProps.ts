@@ -1,5 +1,7 @@
 import {ITheme, SurveyModel} from "survey-core";
 
+type Role = 'CU' | 'CL' | 'CS' | 'CA' | 'PA' | 'EU';
+
 export interface SurveyComponentProps {
     surveyJson: any;
     endpoint: string;
@@ -7,6 +9,7 @@ export interface SurveyComponentProps {
     layout?: string;
     layoutOptions?: Record<string, any>;
     dataset?: Record<string, any>;
+    rolesCanEdit?: Role[];
     onSurveySuccess?: () => void;
     onSurveyFailure?: () => void;
     reloadPageOnSuccess?: boolean;
@@ -21,6 +24,7 @@ export interface SurveyComponentProps {
 export interface LayoutProps {
     model: any;
     dataset: any;
+    canEdit: boolean;
 }
 
 export interface DefaultLayoutProps extends LayoutProps {
@@ -60,6 +64,7 @@ export interface NavigationProps {
     prevPage: () => void;
     jumpToPage: (page: any) => void; // Adjust 'any' to the proper type (like PageModel) if necessary
     submitSurvey: () => void;
+    canEdit?: boolean;
     cancelSurvey: () => void;
     switchToDisplayMode: () => void;
     switchToEditMode: () => void;

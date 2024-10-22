@@ -8,10 +8,13 @@ import {LayoutProps, SurveyComponentProps} from '@/components/surveyjs/SurveyPro
 import useSurvey from '@/components/surveyjs/useSurvey';
 import useSurveySubmission from "@/components/surveyjs/useSurveySubmission";
 import {Flex, Spinner} from "@chakra-ui/react";
+import {useUser} from "@/context/AdminUserContext";
 
 type LayoutMap = {
     [key: string]: React.FC<LayoutProps>;
 }
+
+type Role = 'CU' | 'CL' | 'CS' | 'CA' | 'PA' | 'EU';
 
 const SurveyComponent: React.FC<SurveyComponentProps> = ({
                                                              surveyJson,
@@ -20,6 +23,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
                                                              endpoint,
                                                              isNew,
                                                              dataset,
+                                                             rolesCanEdit = ['CU', 'CL', 'CS', 'CA', 'PA', 'EU'],
                                                              onSurveySuccess,
                                                              onSurveyFailure,
                                                              reloadPageOnSuccess,
@@ -30,6 +34,9 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
                                                              sjsPath,
                                                              jsPath,
                                                          }) => {
+    const user = useUser();
+
+    const canEdit = rolesCanEdit?.includes(user.role as Role)
 
     // Memoize the updated surveyJson based on the layout
     const updatedSurveyJson = useMemo(() => {
@@ -124,7 +131,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
             </Flex>);
     }
 
-    return <SurveyLayout model={model} dataset={dataset} {...layoutOptions}/>;
+    return <SurveyLayout model={model} dataset={dataset} canEdit={canEdit} {...layoutOptions}/>;
 };
 
 export default SurveyComponent;

@@ -1,14 +1,15 @@
 import React from 'react';
 import {Survey} from 'survey-react-ui';
-import {Flex, Heading} from "@chakra-ui/react";
+import {Flex} from "@chakra-ui/react";
 import useSurveyNavigation from "@/components/surveyjs/useSurveyNavigation";
-import {HappinessLayoutProps, LayoutProps} from "@/components/surveyjs/SurveyProps";
+import {HappinessLayoutProps} from "@/components/surveyjs/SurveyProps";
 import {LetterFlyIn} from "@/components/animations/text/LetterFlyIn";
 
 
 const HappinessLayout: React.FC<HappinessLayoutProps> = ({
                                                              model,
                                                              dataset,
+                                                             rolesCanEdit,
                                                              showTitle = false
                                                          }) => {
     const {

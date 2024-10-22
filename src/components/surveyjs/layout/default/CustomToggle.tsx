@@ -1,6 +1,7 @@
 import React from 'react';
 import {Box, Flex, Icon, Switch, useBreakpointValue, useColorModeValue} from '@chakra-ui/react';
 
+
 interface CustomToggleProps {
     iconA: React.ElementType; // Icon for state A
     iconB: React.ElementType; // Icon for state B
@@ -8,9 +9,10 @@ interface CustomToggleProps {
     onToggle: () => void; // Function to handle the toggle action
     width?: string | number; // Width of the toggle switch
     height?: string | number; // Height of the toggle switch
+    canEdit?: boolean;
 }
 
-const CustomToggle: React.FC<CustomToggleProps> = ({iconA, iconB, isChecked, onToggle, width, height}) => {
+const CustomToggle: React.FC<CustomToggleProps> = ({iconA, iconB, isChecked, onToggle, width, height, canEdit}) => {
     const bgColor = useColorModeValue('gray.200', 'gray.700');
     const activeColor = useColorModeValue('perygonPink', 'blue.300');
 
@@ -50,6 +52,7 @@ const CustomToggle: React.FC<CustomToggleProps> = ({iconA, iconB, isChecked, onT
                     isChecked={isChecked}
                     onChange={onToggle}
                     size="md"
+                    isDisabled={!canEdit}
                     position="absolute"
                     opacity={0}
                     width="100%"
