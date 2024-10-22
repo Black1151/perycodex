@@ -5,8 +5,16 @@ export const inviteUserJson = {
             title: "Invite User",
             elements: [
                 {
+                    type: "text",
+                    name: "customerId",
+                    visible: false,
+                    defaultValueExpression: "{pgv_currentUser.customerId}",
+                    readOnly: true,
+                },
+                {
                     type: "dropdown",
                     name: "customerId",
+                    visibleIf: "{pgv_currentUser.userRole} = 'PA'",
                     isRequired: true,
                     title: "Customer",
                     choicesByUrl: {

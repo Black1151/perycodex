@@ -17,6 +17,7 @@ export default async function UsersPage({searchParams}: { searchParams: SearchPa
     let url = `/getAllView?view=vwUsersList&selectColumns=id,userUniqueId,email,role,fullName,jobTitle,imageUrl,customerId,custName,custUniqueId,custImageUrl,custParentId,siteName,isActive`;
     let headerTitle = 'Users';
     let userTypeParam = searchParams.userType;
+    let createNewUrl = '/users/create'
 
 
     if (userIdentity.role === 'CA') {
@@ -27,16 +28,18 @@ export default async function UsersPage({searchParams}: { searchParams: SearchPa
         if (userTypeParam === 'internal') {
             headerTitle = 'My Company Users';
             url += `&customerId=${userIdentity.customerId}`;
+            createNewUrl = '';
         } else if (userTypeParam === 'external') {
             headerTitle = 'My Client Users';
             url += `&custParentId=${userIdentity.customerId}`;
+            createNewUrl += `?userType=external`
         }
     } else if (userIdentity.role === 'PA') {
         headerTitle = 'Users';
     }
 
 
-    const res = await apiClient(url, { cache: "no-store" });
+    const res = await apiClient(url, {cache: "no-store"});
 
     const users = await res.json();
     const userData = users.resource;
@@ -49,9 +52,9 @@ export default async function UsersPage({searchParams}: { searchParams: SearchPa
                 <AdminHeader headingText={headerTitle ?? 'Users'} dataCount={userCount}/>
                 <DataGridComponent data={userData}
                                    initialFields={userFields}
-                                   createNewUrl={'/users/create'}
-                                   createNewUrlButtonText={userIdentity.role === "PA" ? 'Invite New' : 'Create New'}
-                                   isModalEnabled={userIdentity.role === "PA"}
+                                   createNewUrl={createNewUrl ? createNewUrl : undefined}
+                                   createNewUrlButtonText={userIdentity.role === "PA" || userIdentity.role === "CA" && userTypeParam === 'internal' ? 'Invite New' : 'Create New'}
+                                   isModalEnabled={userIdentity.role === "PA" || userIdentity.role === "CA" && userTypeParam === 'internal'}
                                    openModalComponent={InviteNewUserModalForPA}
                 />
             </>
