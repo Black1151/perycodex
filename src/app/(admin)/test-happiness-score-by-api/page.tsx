@@ -1,44 +1,28 @@
 import AdminHeader from "@/components/AdminHeader";
-import {happinessJson} from "@/components/surveyjs/forms/happiness";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import {getUserIdentity} from "@/lib/getUserIdentity";
 import {checkUserRole} from "@/lib/checkUserRole";
-import apiClient from "@/lib/apiClient";
+import CreateComponent from "@/app/(admin)/test-happiness-score-by-api/CreateComponent";
+import {Text} from "@chakra-ui/react";
 
-export default async function TestHappinessScorePage() {
+interface SearchParams {
+    toolId?: string;
+    workflowId?: string;
+}
+
+export default async function TestHappinessScorePage({searchParams}: { searchParams: SearchParams }) {
     const userIdentity = await getUserIdentity();
     checkUserRole(userIdentity, `/test-happiness-score-by-api`);
 
-
-    // Getting the workflow level data
-    const workflowData = await apiClient('/workflow/findBy?id=1');
-    const workflowDataResource = await workflowData.json();
-    const workflowDataSource = workflowDataResource.resource;
-    const {cssThemeFileUrl, jsAdditionalFileUrl , sjsThemeFileUrl} = workflowDataSource
-
-    // Getting the form level data
-    const formData = await apiClient('/form/findBy?id=1');
-    const formDataResource = await formData.json();
-    const formDataSource = formDataResource.resource;
-    const {jsonFile} = formDataSource;
-
+    const tId = searchParams.toolId;
+    const wfId = searchParams.workflowId;
 
     return (
         <>
-            <AdminHeader headingText={'Test Happiness Score (API)'}/>
-            <SurveyComponent
-                surveyJson={jsonFile}
-                endpoint={'/test'}
-                isNew={true}
-                layout={'happiness'}
-                redirectUrl={'/test-happiness-score-by-api'}
-                jsPath={jsAdditionalFileUrl}
-                cssPath={cssThemeFileUrl}
-                sjsPath={sjsThemeFileUrl}
-                layoutOptions={{showTitle: true}}
-            />
+            <AdminHeader headingText={'Start Test Happiness Score (API)'}/>
+            <Text>Workflow ID: {wfId}</Text>
+            <Text>Tool ID: {tId}</Text>
+            <CreateComponent wfId={wfId} tId={tId}/>
         </>
     );
 }
-
 
