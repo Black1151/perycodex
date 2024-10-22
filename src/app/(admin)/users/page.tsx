@@ -36,6 +36,7 @@ export default async function UsersPage({searchParams}: { searchParams: SearchPa
         }
     } else if (userIdentity.role === 'PA') {
         headerTitle = 'Users';
+        url += `&role=!=EU`
     }
 
 
