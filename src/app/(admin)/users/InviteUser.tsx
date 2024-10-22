@@ -25,7 +25,7 @@ const InviteNewUserModalForPA = ({isOpen, onClose}: InviteNewUserModalForPAProps
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay/>
             <ModalContent>
-                <ModalHeader>
+                <ModalHeader paddingBottom={0}>
                     <Flex justifyContent={'center'} alignItems={'center'} width={'100%'}>
                         Invite New User
                     </Flex>
