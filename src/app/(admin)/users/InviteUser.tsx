@@ -12,8 +12,13 @@ interface InviteNewUserModalForPAProps {
 
 const InviteNewUserModalForPA = ({isOpen, onClose}: InviteNewUserModalForPAProps) => {
     // Function to handle the form completion event
-    const handleSurveyComplete = () => {
-        onClose();  // Close the modal after survey completion
+    const handleSurveySuccess = () => {
+        onClose();  // Close the modal after survey success
+    };
+
+    // Function to handle the form completion event
+    const handleSurveyFailure = () => {
+        onClose();  // Close the modal after survey failure
     };
 
     return (
@@ -32,7 +37,8 @@ const InviteNewUserModalForPA = ({isOpen, onClose}: InviteNewUserModalForPAProps
                         isNew={true}
                         layout={'default'}
                         sjsPath={'admin'}
-                        onSurveySuccess={handleSurveyComplete}
+                        onSurveySuccess={handleSurveySuccess}
+                        onSurveyFailure={handleSurveyFailure}
                         layoutOptions={{showTopNavigation: false, showBottomNavigation: true}}
                         reloadPageOnSuccess={true}
                     />
