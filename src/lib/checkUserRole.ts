@@ -68,12 +68,32 @@ const roleBasedRoutes: { [key: string]: string[] } = {
         "/test-happiness-score",
         "/test-happiness-score-by-api",
     ],
+    CU: [
+        '/my-profile',
+        '/my-company'
+    ],
+    CM: [
+        '/my-profile',
+        '/my-company'
+    ],
+    CL: [
+        '/my-profile',
+        '/my-company'
+    ],
+    CS: [
+        '/my-profile',
+        '/my-company'
+    ]
     // Add more roles and routes as needed
 };
 
 const redirectRoutes: { [key: string]: string } = {
     PA: "/customers",
     CA: "/customers",
+    CU: "/",
+    CM: "/",
+    CL: "/",
+    CS: "/",
     // Add more role-based default redirect routes if needed
 };
 

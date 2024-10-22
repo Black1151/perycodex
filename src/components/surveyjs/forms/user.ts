@@ -25,6 +25,7 @@ export const userJson = {
                         startWithNewLine: false,
                         placeholder: "Select Role",
                         allowClear: true,
+                        enableIf: "{pgv_currentUser.role} = 'CA' or {pgv_currentUser.role} = 'PA'",
                         setValueIf: "{userTypePaying} = false",
                         setValueExpression: "iif({pgv_formMode} = 'new', 'EU', 'CU')",
                         defaultValueExpression: "iif({pgv_formMode} = 'new', 'EU', 'CU')",
@@ -60,6 +61,7 @@ export const userJson = {
                     {
                         type: "boolean",
                         name: "isActive",
+                        visibleIf: "{pgv_currentUser.role} = 'CA' or {pgv_currentUser.role} = 'PA'",
                         title: "Is this user active?",
                         titleLocation: "top",
                         startWithNewLine: false,

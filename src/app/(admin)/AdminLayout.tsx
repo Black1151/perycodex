@@ -22,7 +22,7 @@ import {
     Schema,
     Sell
 } from "@mui/icons-material";
-import {useRouter} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import {LeftHandNavigationDrawer} from "@/components/layout/LeftHandNavigationDrawer";
 import {RightHandNavigationDrawer} from "@/components/layout/RightHandNavigationDrawer";
 import {PerygonContainer} from "@/components/layout/PerygonContainer";
@@ -82,7 +82,7 @@ interface AdminLayoutProps {
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps, userMetadata}) => {
     const router = useRouter();
-
+    const pathname = usePathname();
 
     // Helper to generate menu items based on userRole
     const generateSidebarItemsDrawer = (userRole: string) => {
@@ -256,15 +256,19 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps, us
                 {/* Sidebar and content container */}
                 <Flex flex={1} width="100%" mt={"60px"} mb={"30px"}>
                     {/* Sidebar */}
-                    <LeftHandNavigationDrawer
-                        menuItems={menuItems}
-                        defaultDrawerState={"half-open"}
-                    />
                     {/* Content Area */}
+                    {!['/my-profile', '/my-company'].includes(pathname) &&
+                        <LeftHandNavigationDrawer
+                            menuItems={menuItems}
+                            defaultDrawerState={"half-open"}
+                        />
+                    }
                     <Box flex={1} overflowY="auto" px={[5, 5, 78]} py={5}>
                         {children}
                     </Box>
-                    <RightHandNavigationDrawer menuItems={menuItems}/>
+                    {!['/my-profile', '/my-company'].includes(pathname) &&
+                        <RightHandNavigationDrawer menuItems={menuItems} defaultDrawerState={'closed'}/>
+                    }
                 </Flex>
             </PerygonContainer>
             <Footer/>
