@@ -18,7 +18,6 @@ export const siteJson = {
                 {
                     type: "text",
                     name: "customerId",
-                    // visibleIf: "{wfv_siteType.siteTypeParam} = 'internal'",
                     visible: false,
                     defaultValueExpression: "{pgv_currentUser.customerId}",
                     readOnly: true,
@@ -28,6 +27,7 @@ export const siteJson = {
                     name: "customerId",
                     visibleIf: "{pgv_currentUser.userRole} = 'PA' or {wfv_siteType.siteTypeParam} = 'external'",
                     title: "Customer",
+                    isRequired: true,
                     choicesByUrl: {
                         url: `${process.env.NEXT_PUBLIC_BASE_URL}api/customer/allBy`,
                         path: "resource",
