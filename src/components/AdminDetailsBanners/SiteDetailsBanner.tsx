@@ -53,7 +53,7 @@ export const SiteDetailsBanner: React.FC<SiteDetailsBannerProps> = ({site}) => {
                     justifyContent="center"
                     alignItems="center"
                 >
-                    <LocationOn fontSize="large" style={{fontSize: '48px', color: 'gray'}}/>
+                    <LocationOn fontSize="large" sx={{color: "var(--chakra-colors-perygonPink)"}}/>
                 </Box>
             </FormControl>
 
@@ -68,7 +68,7 @@ export const SiteDetailsBanner: React.FC<SiteDetailsBannerProps> = ({site}) => {
                         bg={site.isActive ? 'green.500' : 'red.500'}
                     />
                     <Heading fontWeight={300}
-                             fontSize={['lg', 'lg', '2xl']}>{site.siteName}</Heading>
+                             size={['md', 'md', 'lg']}>{site.siteName}</Heading>
                 </Flex>
                 <Flex direction={'row'} align={'flex-start'} gap={2}>
                     <LocationOnOutlinedIcon/>
@@ -95,7 +95,7 @@ export const SiteDetailsBanner: React.FC<SiteDetailsBannerProps> = ({site}) => {
 
             {/* Site ID on the right */}
             <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-start'} display={['none', 'none', 'flex']}>
-                <Heading size="lg" fontWeight={100}>ID: {site.id}</Heading>
+                <Heading size={['md', 'md', 'lg']} fontWeight={100}>ID: {site.id}</Heading>
                 <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
                     <CreateIcon/>
                     <Text fontSize="sm">{moment(site.createdAt).format('D/MM/YYYY')}</Text>

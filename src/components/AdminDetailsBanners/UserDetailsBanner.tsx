@@ -252,7 +252,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                             transition="opacity 0.3s ease"
                         >
                             <IconButton
-                                icon={<AddAPhotoOutlinedIcon/>}
+                                icon={<AddAPhotoOutlinedIcon fontSize="large" sx={{color: "var(--chakra-colors-perygonPink)"}}/>}
                                 aria-label="Upload Photo"
                                 colorScheme="whiteAlpha"
                                 onClick={() => document.getElementById('photo-upload')?.click()}
@@ -299,8 +299,8 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                         border={'white 1px solid'}
                         bg={user.isActive ? 'green.500' : 'red.500'}
                     />
-                    <Heading size="lg" fontWeight={100}
-                             fontSize={['lg', 'lg', '2xl']}>{user.firstName} {user.lastName}</Heading>
+                    <Heading fontWeight={100}
+                             size={['md', 'md', 'lg']}>{user.firstName} {user.lastName}</Heading>
                 </Flex>
 
                 <Flex direction={'row'} justify={'center'} align={'flex-start'} gap={2}>
@@ -323,40 +323,10 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                         {user.site ? user.site.siteName : "Unknown"}
                     </Text>
                 </Flex>
-                {/* Organisation's Logo */}
-                {/*{user.customer && (*/}
-                {/*    <Image*/}
-                {/*        mt={'auto'}*/}
-                {/*        maxHeight={'50px'}*/}
-                {/*        maxWidth={'150px'}*/}
-                {/*        objectFit={'contain'}*/}
-                {/*        src={user.customer?.imageUrl || ""}*/}
-                {/*        cursor={'pointer'}*/}
-                {/*        onClick={() => router.push(`/customers/${user.customer?.uniqueId}`)}*/}
-                {/*        alt={`${user.customer.name} Logo`}*/}
-                {/*        fallback={*/}
-                {/*            <Flex*/}
-                {/*                align={'center'}*/}
-                {/*                justify={'center'}*/}
-                {/*                minW={'100px'}*/}
-                {/*                h={'full'}*/}
-                {/*                bg="gray.200"*/}
-                {/*            >*/}
-                {/*                <Text*/}
-                {/*                    color="gray.500"*/}
-                {/*                    m={'auto'}*/}
-                {/*                    fontSize={'lg'}*/}
-                {/*                >*/}
-                {/*                    {user.customer.name[0]}*/}
-                {/*                </Text>*/}
-                {/*            </Flex>*/}
-                {/*        }*/}
-                {/*    />*/}
-                {/*)}*/}
             </VStack>
             {/* User Details*/}
             <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-start'} display={['none', 'none', 'flex']}>
-                <Heading size="lg" fontWeight={100}>ID: {user.id}</Heading>
+                <Heading size={['md', 'md', 'lg']} fontWeight={100}>ID: {user.id}</Heading>
                 <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
                     <CreateIcon/>
                     <Text fontSize="sm">{moment(user.createdAt).format('D/MM/YYYY')}</Text>

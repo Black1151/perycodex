@@ -67,7 +67,7 @@ export const TagDetailsBanner: React.FC<TagDetailsBannerProps> = ({tag}) => {
                         border={'white 1px solid'}
                         bg={tag.isActive ? 'green.500' : 'red.500'}
                     />
-                    <Heading fontWeight={300} fontSize={['lg', 'lg', '2xl']}>{tag.name}</Heading>
+                    <Heading fontWeight={300} size={['md', 'md', 'lg']}>{tag.name}</Heading>
 
                 </Flex>
 
@@ -89,7 +89,7 @@ export const TagDetailsBanner: React.FC<TagDetailsBannerProps> = ({tag}) => {
 
             {/* Metadata Information */}
             <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-start'} display={['none', 'none', 'flex']}>
-                <Heading size="lg" fontWeight={100}>ID: {tag.id}</Heading>
+                <Heading size={['md', 'md', 'lg']} fontWeight={100}>ID: {tag.id}</Heading>
                 <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
                     <CreateIcon/>
                     <Text fontSize="sm">{moment(tag.createdAt).format('D/MM/YYYY')}</Text>

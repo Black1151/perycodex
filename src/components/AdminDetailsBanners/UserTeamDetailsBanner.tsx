@@ -45,7 +45,7 @@ export const UserTeamDetailsBanner: React.FC<UserTeamDetailsBannerProps> = ({tea
                     justifyContent="center"
                     alignItems="center"
                 >
-                    <People fontSize="large" style={{fontSize: '48px', color: 'gray'}}/>
+                    <People fontSize="large" sx={{color: "var(--chakra-colors-perygonPink)"}}/>
                 </Box>
             </FormControl>
 
@@ -59,7 +59,7 @@ export const UserTeamDetailsBanner: React.FC<UserTeamDetailsBannerProps> = ({tea
                         border={'white 1px solid'}
                         bg={team.isActive ? 'green.500' : 'red.500'}
                     />
-                    <Heading fontWeight={300} fontSize={['lg', 'lg', '2xl']}>{team.name}</Heading>
+                    <Heading fontWeight={300} size={['md', 'md', 'lg']}>{team.name}</Heading>
 
                 </Flex>
 
@@ -77,7 +77,7 @@ export const UserTeamDetailsBanner: React.FC<UserTeamDetailsBannerProps> = ({tea
 
             {/* Unique ID and Manager ID */}
             <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-start'} display={['none', 'none', 'flex']}>
-                <Heading size="lg" fontWeight={100}>ID: {team.id}</Heading>
+                <Heading size={['md', 'md', 'lg']} fontWeight={100}>ID: {team.id}</Heading>
                 <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
                     <CreateIcon/>
                     <Text fontSize="sm">{moment(team.createdAt).format('D/MM/YYYY')}</Text>

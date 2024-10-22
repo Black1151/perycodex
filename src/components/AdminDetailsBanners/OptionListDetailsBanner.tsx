@@ -3,9 +3,7 @@
 import React from 'react';
 import {Box, Flex, FormControl, Heading, Text, VStack} from '@chakra-ui/react';
 import moment from 'moment';
-import CreateIcon from '@mui/icons-material/Create';
-import UpdateIcon from '@mui/icons-material/Update';
-import {FormatAlignCenter} from "@mui/icons-material";
+import {Create, FormatListNumbered, Update} from "@mui/icons-material";
 
 interface OptionList {
     id: number;
@@ -40,7 +38,7 @@ export const OptionListDetailsBanner: React.FC<OptionListDetailsBannerProps> = (
                     justifyContent="center"
                     alignItems="center"
                 >
-                    <FormatAlignCenter fontSize="large" style={{fontSize: '48px', color: 'gray'}}/>
+                    <FormatListNumbered fontSize="large" sx={{color: "var(--chakra-colors-perygonPink)"}}/>
                 </Box>
             </FormControl>
 
@@ -65,11 +63,11 @@ export const OptionListDetailsBanner: React.FC<OptionListDetailsBannerProps> = (
             <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-start'} display={['none', 'none', 'flex']}>
                 <Heading size="lg" fontWeight={100}>ID: {optionList.id}</Heading>
                 <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
-                    <CreateIcon/>
+                    <Create/>
                     <Text fontSize="sm">{moment(optionList.createdAt).format('D/MM/YYYY')}</Text>
                 </Flex>
                 <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
-                    <UpdateIcon/>
+                    <Update/>
                     <Text fontSize="sm">{moment(optionList.updatedAt).format('D/MM/YYYY')}</Text>
                 </Flex>
             </VStack>

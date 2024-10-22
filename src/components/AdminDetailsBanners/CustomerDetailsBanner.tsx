@@ -105,7 +105,7 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
                             transition="opacity 0.3s ease"
                         >
                             <IconButton
-                                icon={<AddAPhotoOutlinedIcon/>}
+                                icon={<AddAPhotoOutlinedIcon fontSize="large" sx={{color: "var(--chakra-colors-perygonPink)"}}/>}
                                 aria-label="Upload Photo"
                                 colorScheme="whiteAlpha"
                                 onClick={() => document.getElementById('photo-upload')?.click()}
@@ -152,14 +152,14 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
                         border={'white 1px solid'}
                         bg={customer.isActive ? 'green.500' : 'red.500'}
                     />
-                    <Heading fontWeight={300} fontSize={['lg', 'lg', '2xl']}>{customer.name}</Heading>
+                    <Heading fontWeight={300} size={['md', 'md', 'lg']}>{customer.name}</Heading>
                 </Flex>
                 {customer.webAddress &&
                     <Flex direction={'row'} justify={'center'} align={'flex-start'} gap={2}>
                         <LanguageIcon/>
                         <Text
                             as="a"
-                            fontSize="md"
+                            fontSize="sm"
                             target="_blank"
                             rel="noopener noreferrer"
                             href={customer.webAddress.startsWith('http') ? customer.webAddress : `https://${customer.webAddress}`}
@@ -180,7 +180,7 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
 
             {/* Customer ID */}
             <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-start'} display={['none', 'none', 'flex']}>
-                <Heading size="lg" fontWeight={100}>ID: {customer.id}</Heading>
+                <Heading size={['md', 'md', 'lg']} fontWeight={100}>ID: {customer.id}</Heading>
                 <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
                     <CreateIcon/>
                     <Text fontSize="sm">{moment(customer.createdAt).format('D/MM/YYYY')}</Text>
