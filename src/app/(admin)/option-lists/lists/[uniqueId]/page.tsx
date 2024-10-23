@@ -10,27 +10,14 @@ export default async function OptionListsDetailPage({params}: { params: { unique
     const userIdentity = await getUserIdentity();
     checkUserRole(userIdentity, `/option-lists/lists/${params.uniqueId}`);
 
-    // const res = await apiClient(`/optionList/findBy?id=${params.uniqueId}`);
-    //
-    // if (!res.ok) {
-    //     return redirect("/error");
-    // }
-    //
-    // const optionList = await res.json();
-    // const optionListData = optionList.resource;
+    const res = await apiClient(`/optionList/findBy?id=${params.uniqueId}`);
 
-    const optionListData = {
-        "id": 1,
-        "name": "Colors",
-        "description": "List of available colors",
-        "isEditableByCustomer": true,
-        "optionListGroupId": 1,
-        "isActive": true,
-        "createdAt": "2023-10-01T10:00:00Z",
-        "updatedAt": "2023-10-10T10:00:00Z",
-        "createdBy": 1,
-        "updatedBy": 1
-    };
+    if (!res.ok) {
+        return redirect("/error");
+    }
+
+    const optionList = await res.json();
+    const optionListData = optionList.resource;
 
     return (
         <>

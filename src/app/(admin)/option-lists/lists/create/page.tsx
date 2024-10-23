@@ -13,7 +13,7 @@ export default async function OptionListsCreatePage() {
             <AdminHeader headingText="Create Option List"/>
             <SurveyComponent
                 surveyJson={optionListJson}
-                endpoint={'/test'}
+                endpoint={'/optionList'}
                 isNew={true}
                 layout={'default'}
                 redirectUrl={'/option-lists'}
