@@ -1,12 +1,14 @@
 'use client';
 
 import React from 'react';
-import { Box, Flex, FormControl, Heading, Text, VStack, Tag, Tooltip } from '@chakra-ui/react';
+import {Box, Flex, FormControl, Heading, Text, VStack, Tag, Tooltip} from '@chakra-ui/react';
 import moment from 'moment';
 import CreateIcon from '@mui/icons-material/Create';
 import UpdateIcon from '@mui/icons-material/Update';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import AccountTreeIcon from "@mui/icons-material/AccountTree"
+import {FormatListNumbered} from "@mui/icons-material";
 
 interface Workflow {
     id: number;
@@ -32,69 +34,82 @@ interface WorkflowDetailsBannerProps {
     workflow: Workflow;
 }
 
-export const WorkflowDetailsBanner: React.FC<WorkflowDetailsBannerProps> = ({ workflow }) => {
+export const WorkflowDetailsBanner: React.FC<WorkflowDetailsBannerProps> = ({workflow}) => {
     return (
-        <Flex mb={4} p={4} bg="gray.700" color="white" borderRadius="md" boxShadow="md" overflow="hidden">
+        <Flex mb={4} p={4} color={'white'} overflow={'hidden'}>
             {/* Workflow Status */}
-            <FormControl w="100px" h="100px" aspectRatio={1} borderRadius="full" mr={4}>
+            <FormControl w={'100px'} h={'100px'} aspectRatio={1} borderRadius={'full'}>
                 <Box
                     position="relative"
-                    w="100px"
-                    h="100px"
+                    w={'100px'}
+                    h={'100px'}
                     borderRadius="full"
-                    bg={workflow.isActive ? "green.500" : "red.500"}
+                    bg="gray.100"
                     display="flex"
                     justifyContent="center"
                     alignItems="center"
                 >
-                    <Tooltip title={workflow.isActive ? "Active Workflow" : "Inactive Workflow"}>
-                        {workflow.isActive ? (
-                            <CheckCircleIcon style={{ fontSize: '48px', color: 'white' }} />
-                        ) : (
-                            <ErrorOutlineIcon style={{ fontSize: '48px', color: 'white' }} />
-                        )}
-                    </Tooltip>
+                    <AccountTreeIcon fontSize="large" sx={{color: "var(--chakra-colors-perygonPink)"}}/>
                 </Box>
             </FormControl>
 
             {/* Workflow Information */}
-            <VStack align="start" spacing={3} flex="1">
-                <Heading fontWeight={500} size="lg">
-                    {workflow.name}
-                </Heading>
-                <Text fontSize="sm">{workflow.description}</Text>
+            <VStack align="start" ml={4} spacing={3}>
+                <Flex alignItems="center" gap={2}>
+                    <Box
+                        w={'1.4rem'}
+                        h={'1.4rem'}
+                        borderRadius="full"
+                        border={'white 1px solid'}
+                        bg={workflow.isActive ? 'green.500' : 'red.500'}
+                    />
+                    <Heading fontWeight={300} size={['md', 'md', 'lg']}>{workflow.name}</Heading>
 
-                {/* Workflow Metadata */}
-                <Flex align="center" justify="start" wrap="wrap" gap={4}>
-                    {workflow.enableStartNewInUi && (
-                        <Tag colorScheme="green">Start New Enabled</Tag>
-                    )}
-                    {workflow.caCanUpdateStartDate && (
-                        <Tag colorScheme="blue">Can Update Start Date</Tag>
-                    )}
-                    {workflow.caCanUpdateDuration && (
-                        <Tag colorScheme="purple">Can Update Duration</Tag>
-                    )}
-                    <Text fontSize="sm">
-                        {workflow.startDate
-                            ? `Start Date: ${moment(workflow.startDate).format('D MMM YYYY')}`
-                            : "Start Date: N/A"}
-                    </Text>
-                    {workflow.noOfDaysLiveAfterStart !== null && (
-                        <Text fontSize="sm">Live for {workflow.noOfDaysLiveAfterStart} Days</Text>
-                    )}
                 </Flex>
+                <Flex alignItems="center" gap={4}>
+                    {/* Check for jsAdditionalFileUrl */}
+                    <Flex alignItems="center" gap={1}>
+                        <Text>JS:</Text>
+                        {workflow.jsAdditionalFileUrl ? (
+                            <CheckCircleIcon sx={{color: "var(--chakra-colors-green-500)"}}/>
+                        ) : (
+                            <ErrorOutlineIcon sx={{color: "var(--chakra-colors-red-500)"}}/>
+                        )}
+                    </Flex>
+
+                    {/* Check for cssThemeFileUrl */}
+                    <Flex alignItems="center" gap={1}>
+                        <Text>CSS:</Text>
+                        {workflow.cssThemeFileUrl ? (
+                            <CheckCircleIcon sx={{color: "var(--chakra-colors-green-500)"}}/>
+                        ) : (
+                            <ErrorOutlineIcon sx={{color: "var(--chakra-colors-red-500)"}}/>
+                        )}
+                    </Flex>
+
+                    {/* Check for sjsThemeFileUrl */}
+                    <Flex alignItems="center" gap={1}>
+                        <Text>SJS:</Text>
+                        {workflow.sjsThemeFileUrl ? (
+                            <CheckCircleIcon sx={{color: "var(--chakra-colors-green-500)"}}/>
+                        ) : (
+                            <ErrorOutlineIcon sx={{color: "var(--chakra-colors-red-500)"}}/>
+                        )}
+                    </Flex>
+                </Flex>
+
+
             </VStack>
 
             {/* Metadata Information */}
             <VStack ml="auto" alignItems="end" justifyContent="flex-start" display={['none', 'none', 'flex']}>
-                <Heading size="lg" fontWeight={100}>ID: {workflow.id}</Heading>
+                <Heading size={['md', 'md', 'lg']} fontWeight={100}>ID: {workflow.id}</Heading>
                 <Flex direction="row" justify="center" align="center" gap={2}>
-                    <CreateIcon />
+                    <CreateIcon/>
                     <Text fontSize="sm">{moment(workflow.createdAt).format('D/MM/YYYY')}</Text>
                 </Flex>
                 <Flex direction="row" justify="center" align="center" gap={2}>
-                    <UpdateIcon />
+                    <UpdateIcon/>
                     <Text fontSize="sm">{moment(workflow.updatedAt).format('D/MM/YYYY')}</Text>
                 </Flex>
             </VStack>

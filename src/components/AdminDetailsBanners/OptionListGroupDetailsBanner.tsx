@@ -44,7 +44,7 @@ export const OptionListGroupDetailsBanner: React.FC<OptionListGroupDetailsBanner
             </FormControl>
 
             {/* OptionListGroup Information */}
-            <VStack align="start" ml={4} minW={'300px'} spacing={3}>
+            <VStack align="start" ml={4} spacing={3}>
                 <Flex alignItems="center" gap={2}>
                     <Box
                         w={'1.4rem'}

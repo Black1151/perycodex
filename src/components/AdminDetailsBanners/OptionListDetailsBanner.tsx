@@ -43,7 +43,7 @@ export const OptionListDetailsBanner: React.FC<OptionListDetailsBannerProps> = (
             </FormControl>
 
             {/* OptionList Information */}
-            <VStack align="start" ml={4} minW={'300px'} spacing={3}>
+            <VStack align="start" ml={4} spacing={3}>
                 <Flex alignItems="center" gap={2}>
                     <Box
                         w={'1.4rem'}
@@ -53,10 +53,7 @@ export const OptionListDetailsBanner: React.FC<OptionListDetailsBannerProps> = (
                         bg={optionList.isActive ? 'green.500' : 'red.500'}
                     />
                     <Heading fontWeight={300} size={['md', 'md', 'lg']}>{optionList.name}</Heading>
-
                 </Flex>
-
-
             </VStack>
 
             {/* Metadata Information */}
