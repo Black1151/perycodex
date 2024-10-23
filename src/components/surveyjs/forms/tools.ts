@@ -11,6 +11,7 @@ export const toolsJson = {
                     labelTrue: "Yes",
                     labelFalse: "No",
                     defaultValue: true,
+                    isRequired: true,
                     swapOrder: true,
                 },
                 {
@@ -35,6 +36,7 @@ export const toolsJson = {
                     name: "description",
                     title: "Description",
                     autoGrow: true,
+                    isRequired: true,
                     placeholder: "Enter toolConfig description",
                 },
                 {
@@ -42,7 +44,44 @@ export const toolsJson = {
                     name: "previewText",
                     title: "Preview Text",
                     autoGrow: true,
+                    isRequired: true,
                     placeholder: "Enter preview text",
+                },
+                {
+                    type: "boolean",
+                    name: "showInSeeMoreList",
+                    title: "Show in see more list?",
+                    titleLocation: "top",
+                    defaultValue: false,
+                    labelTrue: "Yes",
+                    labelFalse: "No",
+                    swapOrder: true,
+                    isRequired: true,
+                },
+                {
+                    type: "comment",
+                    name: "userAccessGroupNames",
+                    title: "User Access Group Names",
+                    autoGrow: true,
+                    titleLocation: "top",
+                    placeholder: "Enter user access group names",
+                    validators: [{
+                        type: "expression",
+                        text: "Must be valid JSON",
+                        expression: "validateJson({valueJson})"
+                    }]
+                },
+                {
+                    type: "dropdown",
+                    name: "categoryId",
+                    isRequired: true,
+                    title: "Tool Category",
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/toolCategory/allBy`,
+                        path: "resource",
+                        valueName: "id",
+                        titleName: "name"
+                    },
                 },
                 {
                     type: "text",
