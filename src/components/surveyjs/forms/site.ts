@@ -29,7 +29,7 @@ export const siteJson = {
                     title: "Customer",
                     isRequired: true,
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/customer/allBy`,
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/customer/allBy`,
                         path: "resource",
                         valueName: "id",
                         titleName: "name"
@@ -148,7 +148,7 @@ export const siteJson = {
                     enableIf: "{customerId} notempty",
                     placeholder: "Select primary contact at this site / office",
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/user/allBy?selectColumns=id,email,customerId&customerId={customerId}`,
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/allBy?selectColumns=id,email,customerId&customerId={customerId}`,
                         path: "resource",
                         valueName: "id",
                         titleName: "email"

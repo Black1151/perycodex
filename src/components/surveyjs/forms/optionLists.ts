@@ -51,7 +51,7 @@ export const optionListJson = {
                     isRequired: true,
                     title: "Option List Group",
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/optionListGroup/allBy`,
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/optionListGroup/allBy`,
                         path: "resource",
                         valueName: "id",
                         titleName: "name"

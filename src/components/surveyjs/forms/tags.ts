@@ -53,7 +53,7 @@ export const tagsJson = {
                     descriptionLocation: "underInput",
                     visibleIf: "{isPublic} = false and {pgv_currentUser.role} = 'PA'",
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/customer/allBy?parentId=null`,
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/customer/allBy?parentId=null`,
                         path: "resource",
                         valueName: "id",
                         titleName: "name"
