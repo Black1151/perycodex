@@ -26,11 +26,21 @@ export const tagsJson = {
                     description: "Is this Tag public and available for all customers?",
                     descriptionLocation: "underInput",
                     startWithNewLine: false,
-                    defaultValue: true,
+                    defaultValue: false,
+                    visibleIf: "{pgv_currentUser.role} = 'PA'",
                     isRequired: true,
                     labelTrue: "Yes",
                     labelFalse: "No",
                     swapOrder: true
+                },
+                {
+                    type: "text",
+                    name: "customerId",
+                    title: "Customer",
+                    titleLocation: "top",
+                    defaultValueExpression: "{pgv_currentUser.customerId}",
+                    visible: false,
+                    readOnly: true,
                 },
                 {
                     type: "dropdown",
@@ -41,7 +51,7 @@ export const tagsJson = {
                     isRequired: true,
                     description: "Customer this list is belongs to",
                     descriptionLocation: "underInput",
-                    visibleIf: "{isPublic} = false",
+                    visibleIf: "{isPublic} = false and {pgv_currentUser.role} = 'PA'",
                     choicesByUrl: {
                         url: `${process.env.NEXT_PUBLIC_BASE_URL}api/customer/allBy?parentId=null`,
                         path: "resource",
