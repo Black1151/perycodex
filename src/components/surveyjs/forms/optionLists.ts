@@ -26,7 +26,7 @@ export const optionListJson = {
                     titleLocation: "top",
                     description: "Is this Editable by Customer?",
                     descriptionLocation: "underInput",
-                    defaultValue: true,
+                    defaultValue: false,
                     isRequired: true,
                     startWithNewLine: false,
                     labelTrue: "Yes",
@@ -45,6 +45,7 @@ export const optionListJson = {
                     title: "Description",
                     isRequired: true,
                 },
+                // TODO: Change to pull a list of optionListGroups from the api
                 {
                     type: "text",
                     name: "optionListGroupId"
