@@ -30,9 +30,32 @@ export const workflowJson = {
                     placeholder: "Enter workflow description",
                 },
                 {
+                    type: "comment",
+                    name: "userAccessGroupNames",
+                    title: "User Access Group Names",
+                    autoGrow: true,
+                    titleLocation: "top",
+                    placeholder: "Enter user access group names",
+                    validators: [{
+                        type: "expression",
+                        text: "Must be valid JSON",
+                        expression: "validateJson({valueJson})"
+                    }]
+                },
+                {
+                    type: "text",
+                    inputType: "date",
+                    name: "startDate",
+                    title: "Start Date",
+                    titleLocation: "top",
+                    placeholder: "Workflow Start Date",
+                },
+
+                {
                     type: "boolean",
                     name: "enableStartNewInUi",
                     title: "Enable Start New in UI",
+                    isRequired: true,
                     labelTrue: "Yes",
                     labelFalse: "No",
                     defaultValue: true,
@@ -44,6 +67,15 @@ export const workflowJson = {
                     labelTrue: "Yes",
                     labelFalse: "No",
                     defaultValue: false,
+                },
+                {
+                    type: "text",
+                    name: "noOfDaysLiveAfterStart",
+                    startWithNewLine: false,
+                    title: "Number of days live after start",
+                    titleLocation: "top",
+                    inputType: "number",
+                    placeholder: "Number of days live after start"
                 },
                 {
                     type: "boolean",
