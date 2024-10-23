@@ -44,16 +44,16 @@ export const OptionListDetailsBanner: React.FC<OptionListDetailsBannerProps> = (
 
             {/* OptionList Information */}
             <VStack align="start" ml={4} minW={'300px'} spacing={3}>
-                <Flex alignItems="center">
-                    <Heading fontWeight={300}>{optionList.name}</Heading>
+                <Flex alignItems="center" gap={2}>
                     <Box
-                        ml={2}
-                        w={4}
-                        h={4}
+                        w={'1.4rem'}
+                        h={'1.4rem'}
                         borderRadius="full"
                         border={'white 1px solid'}
                         bg={optionList.isActive ? 'green.500' : 'red.500'}
                     />
+                    <Heading fontWeight={300} size={['md', 'md', 'lg']}>{optionList.name}</Heading>
+
                 </Flex>
 
 
@@ -61,7 +61,7 @@ export const OptionListDetailsBanner: React.FC<OptionListDetailsBannerProps> = (
 
             {/* Metadata Information */}
             <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-start'} display={['none', 'none', 'flex']}>
-                <Heading size="lg" fontWeight={100}>ID: {optionList.id}</Heading>
+                <Heading size={['md', 'md', 'lg']} fontWeight={100}>ID: {optionList.id}</Heading>
                 <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
                     <Create/>
                     <Text fontSize="sm">{moment(optionList.createdAt).format('D/MM/YYYY')}</Text>

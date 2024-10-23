@@ -38,14 +38,14 @@ export const SelectItemDetailsBanner: React.FC<SelectItemDetailsBannerProps> = (
                     justifyContent="center"
                     alignItems="center"
                 >
-                    <Checklist fontSize="large" style={{fontSize: '48px', color: 'gray'}}/>
+                    <Checklist fontSize="large" sx={{color: "var(--chakra-colors-perygonPink)"}}/>
                 </Box>
             </FormControl>
 
             {/* SelectItem Information */}
             <VStack align="start" ml={4} minW={'300px'} spacing={3}>
                 <Flex alignItems="center">
-                    <Heading fontWeight={300}>{selectItem.label}</Heading>
+                    <Heading fontWeight={300} size={['md', 'md', 'lg']}>{selectItem.label}</Heading>
                 </Flex>
 
 
@@ -53,7 +53,7 @@ export const SelectItemDetailsBanner: React.FC<SelectItemDetailsBannerProps> = (
 
             {/* Metadata Information */}
             <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-start'} display={['none', 'none', 'flex']}>
-                <Heading size="lg" fontWeight={100}>ID: {selectItem.id}</Heading>
+                <Heading size={['md', 'md', 'lg']} fontWeight={100}>ID: {selectItem.id}</Heading>
                 <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
                     <CreateIcon/>
                     <Text fontSize="sm">{moment(selectItem.createdAt).format('D/MM/YYYY')}</Text>

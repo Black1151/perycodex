@@ -51,16 +51,16 @@ export const OptionListItemDetailsBanner: React.FC<OptionListItemDetailsBannerPr
 
             {/* OptionList Information */}
             <VStack align="start" ml={4} minW={'300px'} spacing={3}>
-                <Flex alignItems="center">
-                    <Heading fontWeight={300} size={['md', 'md', 'lg']}>{optionListItem.value1}</Heading>
+                <Flex alignItems="center" gap={2}>
                     <Box
-                        ml={2}
-                        w={4}
-                        h={4}
+                        w={'1.4rem'}
+                        h={'1.4rem'}
                         borderRadius="full"
                         border={'white 1px solid'}
                         bg={optionListItem.isActive ? 'green.500' : 'red.500'}
                     />
+                    <Heading fontWeight={300} size={['md', 'md', 'lg']}>{optionListItem.value1}</Heading>
+
                 </Flex>
 
 
