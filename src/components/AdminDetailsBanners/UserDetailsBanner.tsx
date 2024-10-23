@@ -14,134 +14,134 @@ import {useRouter} from "next/navigation"
 interface User {
     id: number;
     email: string;
-    aboutMe: string | null;
-    jobTitle: string;
-    imageUrl: string;
-    customerId: number | null;
-    siteId: number;
-    teamId: number;
+    aboutMe?: string;
+    jobTitle?: string;
+    imageUrl?: string;
+    customerId?: number | null;
+    siteId?: number;
+    teamId?: number;
     role: string;
-    firstName: string;
-    lastName: string;
-    telephone: string;
-    mobile: string;
-    vehicleRegistration: string | null;
-    jobLevelId: number;
-    contractTypeId: number;
-    titleId: number;
-    lastLogin: string;
-    isVerified: boolean;
-    marketingOptOutId: number | null;
+    firstName?: string;
+    lastName?: string;
+    telephone?: string;
+    mobile?: string;
+    vehicleRegistration?: string;
+    jobLevelId?: number;
+    contractTypeId?: number;
+    titleId?: number;
+    lastLogin?: string;
+    isVerified?: boolean;
+    marketingOptOutId?: number;
     uniqueId: string;
-    emailVerifiedAt: string | null;
-    departmentId: number | null;
-    employStartDate: string | null;
-    isProfileRegistered: boolean;
-    remoteWorker: boolean;
-    rememberToken: string | null;
+    emailVerifiedAt?: string;
+    departmentId?: number;
+    employStartDate?: string;
+    isProfileRegistered?: boolean;
+    remoteWorker?: boolean;
+    rememberToken?: string;
     isActive: boolean;
     createdAt: string;
     updatedAt: string;
-    createdBy: number;
-    updatedBy: number;
-    createdByUser: UserMeta;
-    updatedByUser: UserMeta;
-    customer: Customer | null;
-    site: Site;
-    jobLevel: JobLevel;
-    contractType: ContractType;
-    title: Title;
-    marketingOptOut: string | null;
-    hobbies: string[];
-    languages: string[];
+    createdBy?: number;
+    updatedBy?: number;
+    createdByUser?: UserMeta;
+    updatedByUser?: UserMeta;
+    customer?: Customer;
+    site?: Site;
+    jobLevel?: JobLevel;
+    contractType?: ContractType;
+    title?: Title;
+    marketingOptOut?: string;
+    hobbies?: string[];
+    languages?: string[];
 }
 
 interface Customer {
     id: number;
     name: string;
     address1: string;
-    address2: string;
-    address3: string;
-    address4: string;
+    address2?: string;
+    address3?: string;
+    address4?: string;
     postcode: string;
-    country: string;
-    customerCode: string;
-    webAddress: string;
+    country?: string;
+    customerCode?: string;
+    webAddress?: string;
     singleSignOn: boolean;
-    primaryContactId: number | null;
+    primaryContactId?: number | null;
     businessTypeId: number;
     sectorId: number;
     regionId: number;
     companySizeId: number;
-    companyNo: string;
-    sicCode: string;
-    numberOfEmployees: number;
-    parentId: number | null;
-    licensedUsers: number | null;
-    contactLevelId: number | null;
-    imageUrl: string;
+    companyNo?: string;
+    sicCode?: string;
+    numberOfEmployees?: number;
+    parentId?: number | null;
+    licensedUsers?: number | null;
+    contactLevelId?: number | null;
+    imageUrl?: string;
     uniqueId: string;
     isActive: boolean;
     createdAt: string;
     updatedAt: string;
     createdBy: number;
     updatedBy: number;
-    multiSite: boolean;
+    multiSite?: boolean;
 }
 
 interface UserMeta {
     id: number;
     email: string;
-    aboutMe: string | null;
-    jobTitle: string;
-    imageUrl: string;
-    customerId: number | null;
-    siteId: number | null;
-    teamId: number | null;
+    aboutMe?: string | null;
+    jobTitle?: string;
+    imageUrl?: string;
+    customerId?: number | null;
+    siteId?: number | null;
+    teamId?: number | null;
     role: string;
-    firstName: string;
-    lastName: string;
-    telephone: string;
-    mobile: string | null;
-    vehicleRegistration: string | null;
-    jobLevelId: number | null;
-    contractTypeId: number | null;
-    titleId: number | null;
-    lastLogin: string;
-    isVerified: boolean;
-    marketingOptOutId: number | null;
+    firstName?: string;
+    lastName?: string;
+    telephone?: string;
+    mobile?: string | null;
+    vehicleRegistration?: string | null;
+    jobLevelId?: number | null;
+    contractTypeId?: number | null;
+    titleId?: number | null;
+    lastLogin?: string;
+    isVerified?: boolean;
+    marketingOptOutId?: number | null;
     uniqueId: string;
-    emailVerifiedAt: string | null;
-    departmentId: number | null;
-    employStartDate: string | null;
-    isProfileRegistered: boolean;
-    remoteWorker: boolean;
-    rememberToken: string | null;
+    emailVerifiedAt?: string | null;
+    departmentId?: number | null;
+    employStartDate?: string | null;
+    isProfileRegistered?: boolean;
+    remoteWorker?: boolean;
+    rememberToken?: string | null;
     isActive: boolean;
     createdAt: string;
     updatedAt: string;
-    createdBy: number;
-    updatedBy: number;
+    createdBy?: number;
+    updatedBy?: number;
 }
 
 interface Site {
     id: number;
     siteName: string;
-    siteEmail: string;
-    siteTel: string;
-    customerId: number;
-    primaryContactId: number | null;
+    siteEmail?: string;
+    siteTel?: string;
+    customerId?: number;
+    primaryContactId?: number | null;
     address1: string;
     address2: string;
-    address3: string;
-    address4: string;
+    address3?: string;
+    address4?: string;
     postcode: string;
-    country: string;
-    latitude: string;
-    longitude: string;
+    country?: string;
+    latitude?: string;
+    longitude?: string;
     uniqueId: string;
-    siteTypeId: number | null;
-    isActive: boolean;
+    siteTypeId?: number | null;
+    isActive?: boolean;
     createdAt: string;
     updatedAt: string;
     createdBy: number;
@@ -229,8 +229,8 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                                     m={'auto'}
                                     fontSize={'xx-large'}
                                 >
-                                    {user.firstName[0]}
-                                    {user.lastName[0]}
+                                    {user.firstName?.[0] ?? ''}
+                                    {user.lastName?.[0] ?? ''}
                                 </Text>
                             </Flex>
                         }
@@ -252,7 +252,8 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                             transition="opacity 0.3s ease"
                         >
                             <IconButton
-                                icon={<AddAPhotoOutlinedIcon fontSize="large" sx={{color: "var(--chakra-colors-perygonPink)"}}/>}
+                                icon={<AddAPhotoOutlinedIcon fontSize="large"
+                                                             sx={{color: "var(--chakra-colors-perygonPink)"}}/>}
                                 aria-label="Upload Photo"
                                 colorScheme="whiteAlpha"
                                 onClick={() => document.getElementById('photo-upload')?.click()}
@@ -300,7 +301,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                         bg={user.isActive ? 'green.500' : 'red.500'}
                     />
                     <Heading fontWeight={100}
-                             size={['md', 'md', 'lg']}>{user.firstName} {user.lastName}</Heading>
+                             size={['md', 'md', 'lg']}>{user.firstName ?? 'No Name'} {user.lastName ?? ''}</Heading>
                 </Flex>
 
                 <Flex direction={'row'} justify={'center'} align={'flex-start'} gap={2}>
@@ -311,17 +312,25 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                 </Flex>
                 <Flex direction={'row'} justify={'center'} align={'flex-start'} gap={2}>
                     <DomainIcon/>
-                    <Text fontSize="sm"
-                          _hover={{textDecoration: 'underline', cursor: 'pointer'}}
-                          onClick={() => router.push(`/customers/${user.customer?.uniqueId}`)}>{user?.customer?.name}</Text>
+                    {user.customer && (
+                        <Text fontSize="sm"
+                              _hover={{textDecoration: 'underline', cursor: 'pointer'}}
+                              onClick={() => router.push(`/customers/${user.customer?.uniqueId}`)}>
+                            {user.customer.name}
+                        </Text>
+                    )}
                 </Flex>
                 <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
                     <LocationOnOutlinedIcon/>
-                    <Text fontSize="sm"
-                          _hover={{textDecoration: 'underline', cursor: 'pointer'}}
-                          onClick={() => router.push(`/sites/${user.site?.uniqueId}`)}>
-                        {user.site ? user.site.siteName : "Unknown"}
-                    </Text>
+                    {user.site ? (
+                        <Text fontSize="sm"
+                              _hover={{textDecoration: 'underline', cursor: 'pointer'}}
+                              onClick={() => router.push(`/sites/${user.site?.uniqueId}`)}>
+                            {user.site.siteName}
+                        </Text>
+                    ) : (
+                        <Text fontSize="sm">Unknown</Text>
+                    )}
                 </Flex>
             </VStack>
             {/* User Details*/}
