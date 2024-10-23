@@ -16,16 +16,13 @@ export const userTeamJson = {
                     swapOrder: true,
                 },
                 {
-                    type: "dropdown",
+                    type: "text",
                     name: "customerId",
                     isRequired: true,
+                    visibleIf: "{pgv_currentUser.role} = 'PA'",
                     title: "Customer",
-                    choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/customer/allBy`,
-                        path: "resource",
-                        valueName: "id",
-                        titleName: "name"
-                    },
+                    enableIf: "{pgv_currentUser.role} = 'PA'",
+                    defaultValueExpression: "{pgv_currentUser.customerId}"
                 },
                 {
                     type: "boolean",
@@ -73,7 +70,6 @@ export const userTeamJson = {
                     name: "description",
                     title: "Description",
                     titleLocation: "top",
-                    isRequired: true,
                     maxLength: 300,
                     placeholder: "Enter description",
                     readOnly: false
@@ -84,10 +80,9 @@ export const userTeamJson = {
                     title: "Manager of this {teamTypeName}",
                     titleLocation: "top",
                     placeholder: "Select Manager",
-                    isRequired: true,
                     enableIf: "{customerId} notempty",
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/user/allBy?selectColumns=id,email,customerId&customerId={customerId}`,
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/user/allBy?customerId={customerId}`,
                         path: "resource",
                         valueName: "id",
                         titleName: "email"
