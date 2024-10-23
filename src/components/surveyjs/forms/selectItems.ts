@@ -18,6 +18,7 @@ export const selectItemsJson = {
                     type: "text",
                     name: "value",
                     startWithNewLine: false,
+                    isRequired: true,
                     title: "Value",
                     placeholder: "Value of this selection"
                 },
@@ -25,12 +26,14 @@ export const selectItemsJson = {
                     type: "text",
                     name: "type",
                     title: "Type",
+                    isRequired: true,
                     placeholder: "Type of item"
                 },
                 {
                     type: "text",
                     name: "sortOrder",
                     title: "Order",
+                    isRequired: true,
                     placeholder: "Order number",
                 },
 
