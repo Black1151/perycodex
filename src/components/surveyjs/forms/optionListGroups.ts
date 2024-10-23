@@ -29,13 +29,14 @@ export const optionListGroupsJson = {
         {
             type: "dropdown",
             name: "customerId",
-            title: "Customer",
             isRequired: true,
-            choices: [
-                {
-                    value: "1"
-                }
-            ]
+            title: "Customer",
+            choicesByUrl: {
+                url: `${process.env.NEXT_PUBLIC_BASE_URL}api/customer/allBy?parentId=null`,
+                path: "resource",
+                valueName: "id",
+                titleName: "name"
+            },
         },
     ]
 }

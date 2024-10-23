@@ -4,7 +4,7 @@ import AdminHeader from "@/components/AdminHeader";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import {optionListItemsJson} from "@/components/surveyjs/forms/optionListItems";
 
-export default async function OptionListsCreatePage() {
+export default async function OptionListItemsCreatePage() {
     const userIdentity = await getUserIdentity();
     checkUserRole(userIdentity, "/option-lists/items/create");
 
@@ -13,7 +13,7 @@ export default async function OptionListsCreatePage() {
             <AdminHeader headingText="Create Option List Item"/>
             <SurveyComponent
                 surveyJson={optionListItemsJson}
-                endpoint={'/test'}
+                endpoint={'/optionListItem'}
                 isNew={true}
                 layout={'default'}
                 redirectUrl={'/option-lists'}

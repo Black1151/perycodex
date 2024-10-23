@@ -21,7 +21,7 @@ export const optionListFields: ColDef[] | any = [
         cellRenderer: ActionButtonRenderer,
         cellRendererParams: {
             redirectUrl: '/option-lists/lists',
-            updateUrl: '/api/surveyjs/test',
+            updateUrl: '/api/optionList',
             idField: 'id',
         }
     },

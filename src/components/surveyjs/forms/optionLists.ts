@@ -45,11 +45,18 @@ export const optionListJson = {
                     title: "Description",
                     isRequired: true,
                 },
-                // TODO: Change to pull a list of optionListGroups from the api
                 {
-                    type: "text",
-                    name: "optionListGroupId"
-                }
+                    type: "dropdown",
+                    name: "optionListGroupId",
+                    isRequired: true,
+                    title: "Option List Group",
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/optionListGroup/allBy`,
+                        path: "resource",
+                        valueName: "id",
+                        titleName: "name"
+                    },
+                },
             ]
         },
         {

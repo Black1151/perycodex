@@ -8,7 +8,7 @@ import {optionListFields} from "@/components/agGrids/dataFields/optionListFields
 import {optionListGroupsFields} from "@/components/agGrids/dataFields/optionListGroupFields";
 import {optionListItemsFields} from "@/components/agGrids/dataFields/optionListItemFields";
 
-export default async function FormsPage() {
+export default async function OptionListsPage() {
     const userIdentity = await getUserIdentity();
     checkUserRole(userIdentity, "/option-lists");
 
@@ -19,9 +19,9 @@ export default async function FormsPage() {
     try {
         // Simulate fetching all data in parallel using fake promises
         const [optionListsRes, optionListItemsRes, optionListGroupsRes] = await Promise.all([
-            apiClient(optionListUrl),
-            apiClient(optionListItemsUrl),
-            apiClient(optionListGroupsUrl),
+            apiClient(optionListUrl, {cache: "no-store"}),
+            apiClient(optionListItemsUrl, {cache: "no-store"}),
+            apiClient(optionListGroupsUrl, {cache: "no-store"}),
         ]);
 
         const optionListsJson = await optionListsRes.json();

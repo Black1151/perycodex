@@ -14,7 +14,7 @@ export const optionListGroupsFields: ColDef[] | any = [
         cellRenderer: ActionButtonRenderer,
         cellRendererParams: {
             redirectUrl: '/option-lists/groups',
-            updateUrl: '/api/surveyjs/test',
+            updateUrl: '/api/optionListGroup',
             idField: 'id',
         }
     },
