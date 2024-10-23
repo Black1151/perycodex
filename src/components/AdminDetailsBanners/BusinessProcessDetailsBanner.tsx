@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import {Box, Flex, FormControl, Heading, Text, VStack, Tag, Tooltip} from '@chakra-ui/react';
+import {Box, Flex, FormControl, Heading, Text, VStack} from '@chakra-ui/react';
 import moment from 'moment';
 import CreateIcon from '@mui/icons-material/Create';
 import UpdateIcon from '@mui/icons-material/Update';

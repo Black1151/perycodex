@@ -121,7 +121,6 @@ export function checkUserRole(userIdentity: { role: string }, targetPathname: st
     if (!isAllowed) {
         const fallBackRoute = redirectRoutes[userIdentity.role] || '/';
         return redirect(fallBackRoute)
-        return;
     }
 
     return true;

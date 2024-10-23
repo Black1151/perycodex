@@ -5,7 +5,6 @@ import {redirect} from "next/navigation";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import {optionListItemsJson} from "@/components/surveyjs/forms/optionListItems";
 import {OptionListItemDetailsBanner} from "@/components/AdminDetailsBanners/OptionListItemDetailsBanner";
-import OptionListItemsCreatePage from "@/app/(admin)/option-lists/items/create/page";
 
 export default async function OptionListItemsDetailPage({params}: { params: { uniqueId: string }; }) {
     const userIdentity = await getUserIdentity();

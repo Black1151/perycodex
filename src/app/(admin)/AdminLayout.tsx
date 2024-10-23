@@ -11,7 +11,6 @@ import {
     Checklist,
     Construction,
     Domain,
-    EmojiEmotions,
     FormatAlignCenter,
     FormatListNumbered,
     Grid4x4,

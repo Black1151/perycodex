@@ -3,7 +3,6 @@ import {getUserIdentity} from "@/lib/getUserIdentity";
 import {checkUserRole} from "@/lib/checkUserRole";
 import CreateComponent from "@/app/(admin)/test-happiness-score/CreateComponent";
 import {Box, Flex, Grid, Text} from "@chakra-ui/react";
-import {LeftHandNavigationDrawer} from "@/components/layout/LeftHandNavigationDrawer";
 import DashboardLayout from "@/app/(admin)/test-happiness-score/DashboardLayout";
 
 interface SearchParams {

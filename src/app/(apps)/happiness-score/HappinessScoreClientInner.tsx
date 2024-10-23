@@ -1,6 +1,6 @@
 "use client";
 
-import {Flex, Grid, GridItem, Heading, HStack, Text} from "@chakra-ui/react";
+import {Flex, Grid, GridItem, Heading, HStack} from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
 import { Footer } from "@/components/layout/Footer";
