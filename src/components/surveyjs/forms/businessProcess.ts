@@ -35,7 +35,7 @@ export const businessProcessJson = {
                     isRequired: true,
                     title: "Survey JS Form",
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/form/allBy`,
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/form/allBy`,
                         path: "resource",
                         valueName: "id",
                         titleName: "name"

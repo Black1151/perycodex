@@ -82,7 +82,7 @@ export const userTeamJson = {
                     placeholder: "Select Manager",
                     enableIf: "{customerId} notempty",
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/user/allBy?customerId={customerId}`,
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/allBy?customerId={customerId}`,
                         path: "resource",
                         valueName: "id",
                         titleName: "email"

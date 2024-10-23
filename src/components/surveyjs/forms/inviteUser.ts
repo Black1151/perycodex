@@ -18,7 +18,7 @@ export const inviteUserJson = {
                     isRequired: true,
                     title: "Customer",
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/surveyjs/view?view=vwInviteUserCustomersList`,
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/view?view=vwInviteUserCustomersList`,
                         valueName: "custId",
                         titleName: "custName"
                     },

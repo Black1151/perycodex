@@ -77,7 +77,7 @@ export const toolsJson = {
                     isRequired: true,
                     title: "Tool Category",
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/toolCategory/allBy`,
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/toolCategory/allBy`,
                         path: "resource",
                         valueName: "id",
                         titleName: "name"

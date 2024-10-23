@@ -11,7 +11,7 @@ export const userJson = {
                         isRequired: true,
                         visibleIf: "{pgv_formMode} = 'new'",
                         choicesByUrl: {
-                            url: `${process.env.NEXT_PUBLIC_BASE_URL}api/customer/allBy`,
+                            url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/customer/allBy`,
                             path: "resource",
                             valueName: "id",
                             titleName: "name"
