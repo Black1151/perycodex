@@ -10,7 +10,7 @@ export default async function ToolsPage() {
     const userIdentity = await getUserIdentity();
     checkUserRole(userIdentity, "/tools");
 
-    let url = '/tool/allConfigsBy';
+    let url = '/toolConfig/allBy';
     let headerTitle = 'Tools';
 
     const res = await apiClient(url, { cache: "no-store" });
