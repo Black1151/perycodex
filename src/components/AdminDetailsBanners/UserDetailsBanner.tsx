@@ -203,8 +203,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
         `/api/user/uploadPhoto/${user.uniqueId}`,
         "imageUrl",
         () => {
-            // After successful upload, you can refresh user data or show some notification
-            console.log("Profile photo uploaded successfully.");
+            router.refresh()
         }
     );
 

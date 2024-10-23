@@ -8,6 +8,9 @@ import LanguageIcon from "@mui/icons-material/Language"
 import moment from "moment/moment";
 import CreateIcon from "@mui/icons-material/Create";
 import UpdateIcon from "@mui/icons-material/Update";
+import {useUser} from "@/context/AdminUserContext";
+import {useMediaUploader} from "@/hooks/useMediaUploader";
+import {useRouter} from "next/navigation";
 
 interface Customer {
     id: number;
@@ -49,10 +52,21 @@ interface CustomerDetailsBannerProps {
 export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
                                                                                 customer,
                                                                             }) => {
+    const currentUser = useUser();
+    const router = useRouter();
 
+    const allowedToUploadPhoto =
+        (currentUser.role === 'PA' ||
+            (currentUser.role === 'CA' && currentUser.customerId === customer.id));
 
-    const allowUpload = true;
-    const isUploading = false;
+    // Using the media uploader hook for profile photo
+    const {isUploading, handleFileChange} = useMediaUploader(
+        `/api/customer/uploadPhoto/${customer.uniqueId}`,
+        "imageUrl",
+        () => {
+            router.refresh()
+        }
+    );
 
     return (
         <Flex mb={4} p={[0, 0, 4]} borderRadius={8} color={'white'} overflow={'hidden'} align={'flex-start'}
@@ -65,7 +79,7 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
                     w={['100px', '175px']}
                     h={'100px'}
                     overflow="hidden"
-                    _hover={{'.overlay': {opacity: allowUpload ? 1 : 0}}} // Only show overlay if upload is allowed
+                    _hover={{'.overlay': {opacity: allowedToUploadPhoto ? 1 : 0}}} // Only show overlay if upload is allowed
                 >
                     <Image
                         w={['100px', '175px']}
@@ -81,7 +95,7 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
                                 w={['100px', '175px']}
                                 h={'100px'}
                                 bg="gray.200"
-                                cursor={allowUpload ? 'pointer' : 'default'} // Allow pointer only if upload is allowed
+                                cursor={allowedToUploadPhoto ? 'pointer' : 'default'} // Allow pointer only if upload is allowed
                             >
                                 <Text color="gray.500" m={'auto'} fontSize={'xx-large'}>
                                     {customer.name[0]}
@@ -89,7 +103,7 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
                             </Flex>
                         }
                     />
-                    {allowUpload && (
+                    {allowedToUploadPhoto && (
                         <Box
                             className="overlay"
                             position="absolute"
@@ -128,15 +142,13 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
                         </Flex>
                     )}
                 </Box>
-                {allowUpload && (
+                {allowedToUploadPhoto && (
                     <Input
                         id="photo-upload"
                         type="file"
-                        name="photo"
+                        name="imageUrl"
                         mb={4}
-                        onChange={() => {
-                            window.alert("Uploading file FAKE")
-                        }}
+                        onChange={handleFileChange}
                         disabled={isUploading}
                         display="none"
                     />
