@@ -24,7 +24,6 @@ import {
 } from "@mui/icons-material";
 import {usePathname, useRouter} from "next/navigation";
 import {LeftHandNavigationDrawer} from "@/components/layout/LeftHandNavigationDrawer";
-import {RightHandNavigationDrawer} from "@/components/layout/RightHandNavigationDrawer";
 import {PerygonContainer} from "@/components/layout/PerygonContainer";
 
 interface AdminLayoutProps {
@@ -254,9 +253,6 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps, us
                     <Box flex={1} overflowY="auto" px={[5, 5, 78]} py={5}>
                         {children}
                     </Box>
-                    {!['/my-profile', '/my-company'].includes(pathname) &&
-                        <RightHandNavigationDrawer menuItems={menuItems} defaultDrawerState={'closed'}/>
-                    }
                 </Flex>
             </PerygonContainer>
             <Footer/>
