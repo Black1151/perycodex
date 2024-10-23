@@ -413,6 +413,16 @@ export const customerJson = {
             elements: [
                 {
                     type: "text",
+                    name: "licensedUsers",
+                    title: "Licensed Users",
+                    titleLocation: "top",
+                    inputType: "number",
+                    min: 1,
+                    step: 1,
+                    placeholder: "Enter the number of users allowed to sign up"
+                },
+                {
+                    type: "text",
                     name: "customerCode",
                     width: "64%",
                     minWidth: "192px",
