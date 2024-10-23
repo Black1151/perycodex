@@ -23,7 +23,6 @@ const roleBasedRoutes: { [key: string]: string[] } = {
         "/my-company",
         "/my-profile",
         "/test-happiness-score",
-        "/test-happiness-score-by-api",
     ],
     PA: [
         "/customers",
@@ -66,7 +65,6 @@ const roleBasedRoutes: { [key: string]: string[] } = {
         "/users",
         "/users/[dynamicSegment]",
         "/test-happiness-score",
-        "/test-happiness-score-by-api",
     ],
     CU: [
         '/my-profile',

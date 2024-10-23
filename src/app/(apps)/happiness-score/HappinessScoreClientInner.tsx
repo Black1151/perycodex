@@ -48,7 +48,7 @@ export default function HappinessScoreClientInner({
               </Heading>
               <AddButton
                 label="Create New"
-                onClick={() => router.push("/test-happiness-score-by-api")}
+                onClick={() => router.push("/test-happiness-score")}
               />
             </HStack>
             <Grid

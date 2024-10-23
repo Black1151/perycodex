@@ -143,15 +143,9 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps, us
                     category: "External"
                 },
                 {
-                    label: "Test Happiness (Hard Coded)",
-                    icon: <EmojiEmotions sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/test-happiness-score'),
-                    category: "Test Survey"
-                },
-                {
-                    label: "Test Happiness (API)",
+                    label: "Test Happiness",
                     icon: <AddReaction sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/test-happiness-score-by-api?workflowId=1&toolId=1'),
+                    onClick: () => router.push('/test-happiness-score?workflowId=1&toolId=1'),
                     category: "Test Survey"
                 },
             ];
@@ -224,15 +218,9 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps, us
                     category: "Workflows"
                 },
                 {
-                    label: "Test Happiness (Hard Coded)",
-                    icon: <EmojiEmotions sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/test-happiness-score'),
-                    category: "Test Survey"
-                },
-                {
-                    label: "Test Happiness (API)",
+                    label: "Test Happiness",
                     icon: <AddReaction sx={{height: '100%', width: '100%'}}/>,
-                    onClick: () => router.push('/test-happiness-score-by-api?workflowId=1&toolId=1'),
+                    onClick: () => router.push('/test-happiness-score?workflowId=1&toolId=1'),
                     category: "Test Survey"
                 },
                 {

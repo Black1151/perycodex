@@ -28,7 +28,7 @@ interface SearchParams {
 
 export default async function TestHappinessScorePage({searchParams}: { searchParams: SearchParams }) {
     const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, `/test-happiness-score-by-api`);
+    checkUserRole(userIdentity, `/test-happiness-score`);
 
     const wfId = searchParams.workflowInstanceId || undefined;
 
@@ -64,7 +64,7 @@ export default async function TestHappinessScorePage({searchParams}: { searchPar
                     endpoint={'/test'}
                     isNew={true}
                     layout={'happiness'}
-                    redirectUrl={'/test-happiness-score-by-api?workflowId=1&toolId=1'}
+                    redirectUrl={'/test-happiness-score?workflowId=1&toolId=1'}
                     jsPath={jsPath}
                     cssPath={cssPath}
                     sjsPath={sjsPath}
