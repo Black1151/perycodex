@@ -1,7 +1,7 @@
 'use client';
 
 import {useEffect} from 'react';
-import {Question, SurveyModel} from 'survey-core';
+import {Question, QuestionHtmlModel, SurveyModel} from 'survey-core';
 import {useToast} from '@chakra-ui/react'; // Assuming Chakra UI's toast is used for notifications
 import {useRouter} from 'next/navigation';
 import {UseSurveySubmissionProps} from "@/components/surveyjs/SurveyProps"; // For redirection after submission (if needed)
@@ -31,6 +31,11 @@ const useSurveySubmission = ({
                 // Iterate through all questions, checking for missing data and setting it to `null`
                 allQuestions.forEach((question: Question) => {
                     const questionName = question.name;
+
+                    // Check if the question type is 'QuestionHtmlModel' and skip it if true
+                    if (question instanceof QuestionHtmlModel) {
+                        return; // Skip this iteration
+                    }
 
                     // If the question doesn't exist in the data, set it to null
                     if (!(questionName in surveyData)) {
