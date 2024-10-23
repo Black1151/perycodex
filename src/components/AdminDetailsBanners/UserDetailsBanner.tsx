@@ -10,6 +10,8 @@ import CreateIcon from '@mui/icons-material/Create';
 import UpdateIcon from '@mui/icons-material/Update';
 import moment from "moment/moment";
 import {useRouter} from "next/navigation"
+import {useUser} from "@/context/AdminUserContext";
+import {useMediaUploader} from "@/hooks/useMediaUploader";
 
 interface User {
     id: number;
@@ -190,10 +192,21 @@ interface UserDetailsBannerProps {
 }
 
 export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
-
-    const isCurrentUser = true; // TODO: Add logic to see if current user
-    const isUploading = false; // TODO: Add logic to upload a new photo
+    const currentUser = useUser();
     const router = useRouter();
+
+    const isCurrentUser = user.uniqueId === currentUser.userUniqueId;
+    const allowedToUploadPhoto = isCurrentUser || ['PA', 'CA'].includes(currentUser.role);
+
+    // Using the media uploader hook for profile photo
+    const {isUploading, handleFileChange} = useMediaUploader(
+        `/api/user/uploadPhoto/${user.uniqueId}`,
+        "imageUrl",
+        () => {
+            // After successful upload, you can refresh user data or show some notification
+            console.log("Profile photo uploaded successfully.");
+        }
+    );
 
     return (
         <Flex mb={4} p={[0, 0, 4]} borderRadius={8} color={'white'} overflow={'hidden'}>
@@ -205,7 +218,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                     h={'100px'}
                     borderRadius="full"
                     overflow="hidden"
-                    _hover={{'.overlay': {opacity: isCurrentUser ? 1 : 0}}} // Only show overlay if it's the current user
+                    _hover={{'.overlay': {opacity: allowedToUploadPhoto ? 1 : 0}}}
                 >
                     <Image
                         boxSize="100px"
@@ -213,7 +226,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                         objectFit={'cover'}
                         src={user.imageUrl}
                         alt={`${user.firstName} ${user.lastName}`}
-                        // cursor={isCurrentUser ? "pointer" : "default"}  // Only allow pointer if it's the current user
+                        cursor={allowedToUploadPhoto ? "pointer" : "default"}
                         fallback={
                             <Flex
                                 align={'center'}
@@ -222,7 +235,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                                 h={'100px'}
                                 borderRadius="full"
                                 bg="gray.200"
-                                // cursor={isCurrentUser ? "pointer" : "default"}  // Only allow pointer if it's the current user
+                                cursor={allowedToUploadPhoto ? "pointer" : "default"}
                             >
                                 <Text
                                     color="gray.500"
@@ -235,7 +248,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                             </Flex>
                         }
                     />
-                    {isCurrentUser && (
+                    {allowedToUploadPhoto && (
                         <Box
                             className="overlay"
                             position="absolute"
@@ -269,22 +282,20 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                             h="100%"
                             justifyContent="center"
                             alignItems="center"
-                            bg="rgba(0, 0, 0, 0.5)" // Optional: Add a background overlay during uploading
+                            bg="rgba(0, 0, 0, 0.5)"
                             borderRadius="full"
                         >
                             <Spinner size="md"/>
                         </Flex>
                     )}
                 </Box>
-                {isCurrentUser && (
+                {allowedToUploadPhoto && (
                     <Input
                         id="photo-upload"
                         type="file"
-                        name="photo"
+                        name="imageUrl"
                         mb={4}
-                        onChange={() => {
-                            window.alert("Uploading a photo FAKE")
-                        }}
+                        onChange={handleFileChange}  // Connect the file input to the uploader
                         disabled={isUploading}
                         display="none"
                     />
@@ -300,21 +311,22 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                         border={'white 1px solid'}
                         bg={user.isActive ? 'green.500' : 'red.500'}
                     />
-                    <Heading fontWeight={100}
-                             size={['md', 'md', 'lg']}>{user.firstName ?? 'No Name'} {user.lastName ?? ''}</Heading>
+                    <Heading fontWeight={100} size={['md', 'md', 'lg']}>
+                        {user.firstName ?? 'No Name'} {user.lastName ?? ''}
+                    </Heading>
                 </Flex>
 
                 <Flex direction={'row'} justify={'center'} align={'flex-start'} gap={2}>
                     <EmailOutlinedIcon/>
                     <Text fontSize="sm" as={'a'} href={`mailto:${user.email}`}
-                          _hover={{textDecoration: 'underline', cursor: 'pointer'}}
-                    >{user.email}</Text>
+                          _hover={{textDecoration: 'underline', cursor: 'pointer'}}>
+                        {user.email}
+                    </Text>
                 </Flex>
                 <Flex direction={'row'} justify={'center'} align={'flex-start'} gap={2}>
                     <DomainIcon/>
                     {user.customer && (
-                        <Text fontSize="sm"
-                              _hover={{textDecoration: 'underline', cursor: 'pointer'}}
+                        <Text fontSize="sm" _hover={{textDecoration: 'underline', cursor: 'pointer'}}
                               onClick={() => router.push(`/customers/${user.customer?.uniqueId}`)}>
                             {user.customer.name}
                         </Text>
@@ -323,8 +335,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                 <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
                     <LocationOnOutlinedIcon/>
                     {user.site ? (
-                        <Text fontSize="sm"
-                              _hover={{textDecoration: 'underline', cursor: 'pointer'}}
+                        <Text fontSize="sm" _hover={{textDecoration: 'underline', cursor: 'pointer'}}
                               onClick={() => router.push(`/sites/${user.site?.uniqueId}`)}>
                             {user.site.siteName}
                         </Text>
@@ -336,16 +347,15 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
             {/* User Details*/}
             <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-start'} display={['none', 'none', 'flex']}>
                 <Heading size={['md', 'md', 'lg']} fontWeight={100}>ID: {user.id}</Heading>
-                <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
+                <Flex direction="row" justify="center" align="center" gap={2}>
                     <CreateIcon/>
                     <Text fontSize="sm">{moment(user.createdAt).format('D/MM/YYYY')}</Text>
                 </Flex>
-                <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
+                <Flex direction="row" justify="center" align="center" gap={2}>
                     <UpdateIcon/>
                     <Text fontSize="sm">{moment(user.updatedAt).format('D/MM/YYYY')}</Text>
                 </Flex>
-
             </VStack>
         </Flex>
     );
-}
+};
