@@ -9,7 +9,7 @@ import {LetterFlyIn} from "@/components/animations/text/LetterFlyIn";
 const HappinessLayout: React.FC<HappinessLayoutProps> = ({
                                                              model,
                                                              dataset,
-                                                             rolesCanEdit,
+                                                             canEdit,
                                                              showTitle = false
                                                          }) => {
     const {
