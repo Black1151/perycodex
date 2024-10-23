@@ -14,7 +14,7 @@ export const inviteUserJson = {
                 {
                     type: "dropdown",
                     name: "customerId",
-                    visibleIf: "{pgv_currentUser.userRole} = 'PA'",
+                    visibleIf: "{pgv_currentUser.role} = 'PA'",
                     isRequired: true,
                     title: "Customer",
                     choicesByUrl: {
