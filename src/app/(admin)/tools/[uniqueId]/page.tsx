@@ -14,7 +14,7 @@ export default async function ToolsDetailPage({
     const userIdentity = await getUserIdentity();
     checkUserRole(userIdentity, `/tools/${params.uniqueId}`);
 
-    const res = await apiClient(`/tool/findConfigBy?id=${params.uniqueId}`);
+    const res = await apiClient(`/toolConfig/findBy?id=${params.uniqueId}`);
 
     if (!res.ok) {
         return redirect("/error");

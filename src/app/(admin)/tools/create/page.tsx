@@ -4,7 +4,7 @@ import AdminHeader from "@/components/AdminHeader";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import {toolsJson} from "@/components/surveyjs/forms/tools";
 
-export default async function FormsCreatePage() {
+export default async function ToolsCreatePage() {
     const userIdentity = await getUserIdentity();
     checkUserRole(userIdentity, "/tools/create");
 
@@ -13,7 +13,7 @@ export default async function FormsCreatePage() {
             <AdminHeader headingText="Create Tool"/>
             <SurveyComponent
                 surveyJson={toolsJson}
-                endpoint={'/form'}
+                endpoint={'/toolConfig'}
                 isNew={true}
                 layout={'default'}
                 redirectUrl={'/tools'}
