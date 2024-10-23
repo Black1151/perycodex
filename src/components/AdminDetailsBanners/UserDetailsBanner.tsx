@@ -196,7 +196,12 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
     const router = useRouter();
 
     const isCurrentUser = user.uniqueId === currentUser.userUniqueId;
-    const allowedToUploadPhoto = isCurrentUser || ['PA', 'CA'].includes(currentUser.role);
+    const allowedToUploadPhoto = (
+        isCurrentUser ||
+        (currentUser.role === 'PA') ||
+        (currentUser.role === 'CA' && currentUser.customerId === user.customerId) ||
+        (currentUser.role === 'CA' && currentUser.customerId === user?.customer?.parentId)
+    );
 
     // Using the media uploader hook for profile photo
     const {isUploading, handleFileChange} = useMediaUploader(
