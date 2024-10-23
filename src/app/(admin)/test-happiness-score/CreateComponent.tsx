@@ -33,7 +33,7 @@ const CreateComponent: React.FC<CreateComponentProps> = ({wfId, tId}) => {
             });
 
             if (response && response.new_wfinstid) {
-                router.push(`/test-happiness-score-by-api/start?workflowInstanceId=${response.new_wfinstid}`);
+                router.push(`/test-happiness-score/start?workflowInstanceId=${response.new_wfinstid}`);
             }
         } catch (error) {
             console.error("Error starting workflow:", error);
