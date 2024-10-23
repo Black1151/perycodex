@@ -42,6 +42,7 @@ export default async function UsersCreatePage({searchParams}: { searchParams: Se
                 surveyJson={userJson}
                 endpoint={'/user'}
                 isNew={true}
+                excludeKeys={['imageUrl']}
                 includeVariables={surveyVariables}
                 redirectUrl={'/users'}
                 sjsPath={'admin'}

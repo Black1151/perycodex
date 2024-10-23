@@ -30,6 +30,7 @@ export default async function MyCustomerPage() {
                 rolesCanEdit={['CA', 'PA']}
                 isNew={false}
                 dataset={customerData}
+                excludeKeys={['imageUrl']}
                 sjsPath={'admin'}
                 reloadPageOnSuccess={true}
             />

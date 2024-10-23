@@ -16,6 +16,7 @@ export default async function CustomersCreatePage() {
                 endpoint={'/customer'}
                 isNew={true}
                 layout={'default'}
+                excludeKeys={['imageUrl']}
                 redirectUrl={'/customers'}
                 sjsPath={'admin'}
             />

@@ -35,6 +35,7 @@ const InviteNewUserModalForPA = ({isOpen, onClose}: InviteNewUserModalForPAProps
                         surveyJson={inviteUserJson}
                         endpoint={'/registerByInvite'}
                         isNew={true}
+                        excludeKeys={['imageUrl']}
                         layout={'default'}
                         sjsPath={'admin'}
                         onSurveySuccess={handleSurveySuccess}

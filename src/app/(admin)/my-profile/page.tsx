@@ -28,6 +28,7 @@ export default async function MyProfilePage() {
                 surveyJson={userJson}
                 endpoint={`/user/${userUniqueId}`}
                 isNew={false}
+                excludeKeys={['imageUrl']}
                 dataset={userData}
                 sjsPath={'admin'}
                 reloadPageOnSuccess={true}

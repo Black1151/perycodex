@@ -27,6 +27,7 @@ export default async function UsersDetailPage({params}: { params: { uniqueId: st
                 endpoint={`/user/${params.uniqueId}`}
                 isNew={false}
                 dataset={userData}
+                excludeKeys={['imageUrl']}
                 sjsPath={'admin'}
                 reloadPageOnSuccess={true}
             />
