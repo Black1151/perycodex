@@ -1,6 +1,5 @@
 import {ChangeEvent, useState} from "react";
 import {useToast} from "@chakra-ui/react";
-import {useFetchClient} from "@/hooks/useFetchClient";
 
 interface UseMediaUploaderReturn {
     isUploading: boolean;
@@ -14,7 +13,6 @@ export const useMediaUploader = (
     maxFileSize: number = 2 * 1024 * 1024, // Default to 2MB
     allowedFileTypes: string[] = ["image/jpeg", "image/png", "image/jpg"] // Common file types for photos/logos
 ): UseMediaUploaderReturn => {
-    const {fetchClient, loading} = useFetchClient();
     const [isUploading, setIsUploading] = useState(false);
     const toast = useToast();
 
@@ -100,7 +98,7 @@ export const useMediaUploader = (
     };
 
     return {
-        isUploading: loading || isUploading,
+        isUploading: isUploading,
         handleFileChange,
     };
 };
