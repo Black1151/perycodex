@@ -25,7 +25,7 @@ export const siteJson = {
                 {
                     type: "dropdown",
                     name: "customerId",
-                    visibleIf: "{pgv_currentUser.userRole} = 'PA' or {wfv_siteType.siteTypeParam} = 'external'",
+                    visibleIf: "{pgv_currentUser.role} = 'PA' or {wfv_siteType.siteTypeParam} = 'external'",
                     title: "Customer",
                     isRequired: true,
                     choicesByUrl: {
@@ -145,7 +145,6 @@ export const siteJson = {
                     name: "primaryContactId",
                     title: "Primary Contact (Site)",
                     titleLocation: "top",
-                    isRequired: true,
                     enableIf: "{customerId} notempty",
                     placeholder: "Select primary contact at this site / office",
                     choicesByUrl: {
@@ -160,7 +159,6 @@ export const siteJson = {
                     name: "siteTel",
                     title: "Site Tel.",
                     titleLocation: "top",
-                    isRequired: true,
                     inputType: "tel",
                     maskType: "pattern",
                     maskSettings: {
