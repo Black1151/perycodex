@@ -14,17 +14,18 @@ import {useRouter} from "next/navigation";
 interface Site {
     id: number;
     siteName: string;
-    siteEmail: string;
-    siteTel: string;
+    siteEmail?: string;
+    siteTel?: string;
     address1: string;
     address2: string;
-    address3: string;
+    address3?: string;
     postcode: string;
-    country: string;
+    country?: string;
+    uniqueId: string;
     isActive: boolean;
     createdAt: string;
     updatedAt: string;
-    customer: Customer
+    customer?: Customer
 }
 
 type Customer = {

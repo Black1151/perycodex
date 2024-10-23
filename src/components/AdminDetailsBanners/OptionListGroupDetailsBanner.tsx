@@ -10,8 +10,8 @@ import {FormatListNumbered} from "@mui/icons-material";
 export interface OptionListGroup {
     id: number;
     name: string;
-    description: string;
-    customerId: number;
+    description?: string;
+    customerId?: number;
     isActive: boolean;
     createdAt: string; // ISO date string (e.g., "2023-09-01T10:00:00Z")
     updatedAt: string; // ISO date string (e.g., "2023-09-10T10:00:00Z")

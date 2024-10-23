@@ -11,13 +11,13 @@ export interface OptionListItem {
     id: number;
     optionListId: number;
     value1: string;
-    value2?: string | null;
+    value2: string | null;
     value3?: string | null;
     value4?: string | null;
     value5?: string | null;
     valueJson?: any; // JSON object, can be any structure
     imageUrl?: string | null; // URL to an image
-    sortOrder: number;
+    sortOrder?: number;
     isActive: boolean;
     createdAt: string; // ISO date string (e.g., "2023-10-01T12:00:00Z")
     updatedAt: string; // ISO date string (e.g., "2023-10-10T12:00:00Z")

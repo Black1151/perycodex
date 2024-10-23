@@ -10,8 +10,8 @@ import UpdateIcon from "@mui/icons-material/Update"; // Import moment.js to form
 interface UserGroup {
     id: number;
     name: string;
-    description: string;
-    customerId: number;
+    description?: string;
+    customerId?: number;
     isActive: boolean;
     createdAt: string;
     updatedAt: string;

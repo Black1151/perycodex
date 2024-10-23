@@ -11,10 +11,11 @@ interface Tag {
     id: number;
     name: string;
     colour: string;
-    icon: string;
-    score: number;
-    weight: string;
-    customerId: number;
+    icon?: string;
+    score?: number;
+    weight?: string;
+    customerId?: number;
+    isPublic?: boolean;
     isActive: boolean;
     createdAt: string;
     updatedAt: string;

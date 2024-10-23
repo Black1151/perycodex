@@ -8,9 +8,9 @@ import {Create, FormatListNumbered, Update} from "@mui/icons-material";
 interface OptionList {
     id: number;
     name: string;
-    description: string;
-    isEditableByCustomer: boolean;
-    optionListGroupId: number;
+    description?: string;
+    isEditableByCustomer?: boolean;
+    optionListGroupId?: number;
     isActive: boolean;
     createdAt: string;
     updatedAt: string;

@@ -13,33 +13,33 @@ interface Customer {
     id: number;
     name: string;
     address1: string;
-    address2: string;
-    address3: string;
-    address4: string;
+    address2?: string;
+    address3?: string;
+    address4?: string;
     postcode: string;
-    country: string;
-    customerCode: string | null;
-    webAddress: string;
+    country?: string;
+    customerCode?: string | null;
+    webAddress?: string;
     singleSignOn: false;
-    primaryContactId: number | null;
+    primaryContactId?: number | null;
     businessTypeId: number;
     sectorId: number;
     regionId: number;
     companySizeId: number;
-    companyNo: string | null;
-    sicCode: string | null;
-    numberOfEmployees: number;
-    parentId: number | null;
-    licensedUsers: number;
-    contactLevelId: number | null;
-    imageUrl: string;
+    companyNo?: string | null;
+    sicCode?: string | null;
+    numberOfEmployees?: number;
+    parentId?: number | null;
+    licensedUsers?: number;
+    contactLevelId?: number | null;
+    imageUrl?: string;
     uniqueId: string;
     isActive: boolean;
     createdAt: string;
     updatedAt: string;
     createdBy: number;
     updatedBy: number;
-    multiSite: boolean
+    multiSite?: boolean
 }
 
 interface CustomerDetailsBannerProps {
@@ -105,7 +105,8 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
                             transition="opacity 0.3s ease"
                         >
                             <IconButton
-                                icon={<AddAPhotoOutlinedIcon fontSize="large" sx={{color: "var(--chakra-colors-perygonPink)"}}/>}
+                                icon={<AddAPhotoOutlinedIcon fontSize="large"
+                                                             sx={{color: "var(--chakra-colors-perygonPink)"}}/>}
                                 aria-label="Upload Photo"
                                 colorScheme="whiteAlpha"
                                 onClick={() => document.getElementById('photo-upload')?.click()}
