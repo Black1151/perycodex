@@ -62,6 +62,8 @@ export const tagsJson = {
                 {
                     type: "text",
                     name: "colour",
+                    isRequired: true,
+                    defaultValue: "#000000",
                     title: "Select a colour",
                     inputType: "color",
                     placeholder: "Pick colour",
