@@ -5,13 +5,13 @@ import {Box, Flex, FormControl, Heading, Text, VStack} from '@chakra-ui/react';
 import {Groups} from "@mui/icons-material";
 import moment from 'moment';
 import CreateIcon from "@mui/icons-material/Create";
-import UpdateIcon from "@mui/icons-material/Update";  // Import moment.js to format the date
+import UpdateIcon from "@mui/icons-material/Update"; // Import moment.js to format the date
 
 interface UserGroup {
     id: number;
     name: string;
-    description: string;
-    customerId: number;
+    description?: string;
+    customerId?: number;
     isActive: boolean;
     createdAt: string;
     updatedAt: string;
@@ -39,28 +39,27 @@ export const UserGroupDetailsBanner: React.FC<UserGroupDetailsBannerProps> = ({u
                     justifyContent="center"
                     alignItems="center"
                 >
-                    <Groups fontSize="large" style={{fontSize: '48px', color: 'gray'}}/>
+                    <Groups fontSize="large" sx={{color: "var(--chakra-colors-perygonPink)"}}/>
                 </Box>
             </FormControl>
 
             {/* User Group Information */}
             <VStack align="start" ml={4} minW={'300px'} spacing={3}>
-                <Flex alignItems="center">
-                    <Heading fontWeight={300}>{userGroup.name}</Heading>
+                <Flex alignItems="center" gap={2}>
                     <Box
-                        ml={2}
-                        w={4}
-                        h={4}
+                        w={'1.4rem'}
+                        h={'1.4rem'}
                         borderRadius="full"
                         border={'white 1px solid'}
                         bg={userGroup.isActive ? 'green.500' : 'red.500'}
                     />
+                    <Heading fontWeight={300} size={['md', 'md', 'lg']}>{userGroup.name}</Heading>
                 </Flex>
             </VStack>
 
             {/* ID, CreatedAt, and UpdatedAt */}
             <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-start'} display={['none', 'none', 'flex']}>
-                <Heading size="lg" fontWeight={100}>ID: {userGroup.id}</Heading>
+                <Heading size={['md', 'md', 'lg']} fontWeight={100}>ID: {userGroup.id}</Heading>
                 <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
                     <CreateIcon/>
                     <Text fontSize="sm">{moment(userGroup.createdAt).format('D/MM/YYYY')}</Text>

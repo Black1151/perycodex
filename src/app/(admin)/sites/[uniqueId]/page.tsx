@@ -1,32 +1,20 @@
-import React from "react";
-import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
-import {siteJson} from "@/components/Z_surveyJs/forms/site";
+import {siteJson} from "@/components/surveyjs/forms/site";
 import {SiteDetailsBanner} from "@/components/AdminDetailsBanners/SiteDetailsBanner";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+import {getUserIdentity} from "@/lib/getUserIdentity";
+import {checkUserRole} from "@/lib/checkUserRole";
+import apiClient from "@/lib/apiClient";
 
-export default async function SitePage({
+export default async function SitesDetailPage({
                                            params,
                                        }: {
     params: { uniqueId: string };
 }) {
-    const cookieStore = cookies();
-    const authToken = cookieStore.get("auth_token")?.value;
+    const userIdentity = await getUserIdentity();
+    checkUserRole(userIdentity, `/sites/${params.uniqueId}`);
 
-    if (!authToken) {
-        return redirect("/login");
-    }
-
-    // Fetch site data from the backend
-    const res = await fetch(
-        `${process.env.BE_URL}/site/findBy?uniqueId=${params.uniqueId}`,
-        {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${authToken}`,
-            },
-        }
-    );
+    const res = await apiClient(`/site/findBy?uniqueId=${params.uniqueId}`);
 
     if (!res.ok) {
         return redirect("/error");
@@ -44,6 +32,7 @@ export default async function SitePage({
                 isNew={false}
                 dataset={siteData}
                 sjsPath={'admin'}
+                reloadPageOnSuccess={true}
             />
         </div>
     );

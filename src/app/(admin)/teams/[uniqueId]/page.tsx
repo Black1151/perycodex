@@ -1,25 +1,16 @@
-import React from 'react';
-import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
-import {userTeamJson} from "@/components/Z_surveyJs/forms/userTeam";
+import {userTeamJson} from "@/components/surveyjs/forms/userTeam";
 import {UserTeamDetailsBanner} from "@/components/AdminDetailsBanners/UserTeamDetailsBanner";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+import {getUserIdentity} from "@/lib/getUserIdentity";
+import {checkUserRole} from "@/lib/checkUserRole";
+import apiClient from "@/lib/apiClient";
 
-export default async function UserTeamPage({params}: { params: { uniqueId: string } }) {
-    const cookieStore = cookies();
-    const authToken = cookieStore.get("auth_token")?.value;
+export default async function TeamsDetailPage({params}: { params: { uniqueId: string } }) {
+    const userIdentity = await getUserIdentity();
+    checkUserRole(userIdentity, `/teams/${params.uniqueId}`);
 
-    if (!authToken) {
-        return redirect("/login");
-    }
-
-    // Fetch userTeam data from the backend
-    const res = await fetch(`${process.env.BE_URL}/userTeam/findBy?uniqueId=${params.uniqueId}`, {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${authToken}`,
-        },
-    });
+    const res = await apiClient(`/userTeam/findBy?uniqueId=${params.uniqueId}`);
 
     if (!res.ok) {
         return redirect("/error");
@@ -37,6 +28,7 @@ export default async function UserTeamPage({params}: { params: { uniqueId: strin
                 isNew={false}
                 dataset={userTeamData}
                 sjsPath={'admin'}
+                reloadPageOnSuccess={true}
             />
         </div>
     );

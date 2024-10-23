@@ -33,8 +33,6 @@ const UserImageRenderer: React.FC<UserImageRendererProps> = ({
     const imageUrl = contact[imageUrlField];
     const fullName = contact[nameField] ?? 'No Name';
 
-    console.log(uniqueId);
-
     // Conditionally create a link only if uniqueId exists
     const link = uniqueId ? `/users/${uniqueId}` : null;
 

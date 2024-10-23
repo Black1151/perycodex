@@ -16,9 +16,18 @@ export const siteJson = {
                     swapOrder: true
                 },
                 {
+                    type: "text",
+                    name: "customerId",
+                    visible: false,
+                    defaultValueExpression: "{pgv_currentUser.customerId}",
+                    readOnly: true,
+                },
+                {
                     type: "dropdown",
                     name: "customerId",
+                    visibleIf: "{pgv_currentUser.role} = 'PA' or {wfv_siteType.siteTypeParam} = 'external'",
                     title: "Customer",
+                    isRequired: true,
                     choicesByUrl: {
                         url: `${process.env.NEXT_PUBLIC_BASE_URL}api/customer/allBy`,
                         path: "resource",
@@ -108,22 +117,22 @@ export const siteJson = {
                     type: "text",
                     name: "latitude",
                     title: "Latitude",
+                    setValueExpression: "fetchPostcodeData({postcode},'result.latitude')",
                     titleLocation: "top",
                     isRequired: false,
                     readOnly: true,
-                    inputType: "number",
                     placeholder: "Latitude"
                 },
                 {
                     type: "text",
                     name: "longitude",
-                    startWithNewLine: false,
                     title: "Longitude",
+                    setValueExpression: "fetchPostcodeData({postcode},'result.longitude')",
                     titleLocation: "top",
                     isRequired: false,
                     readOnly: true,
-                    inputType: "number",
-                    placeholder: "Longitude"
+                    placeholder: "Longitude",
+                    startWithNewLine: false,
                 }
             ]
         },
@@ -136,7 +145,6 @@ export const siteJson = {
                     name: "primaryContactId",
                     title: "Primary Contact (Site)",
                     titleLocation: "top",
-                    isRequired: true,
                     enableIf: "{customerId} notempty",
                     placeholder: "Select primary contact at this site / office",
                     choicesByUrl: {
@@ -151,7 +159,6 @@ export const siteJson = {
                     name: "siteTel",
                     title: "Site Tel.",
                     titleLocation: "top",
-                    isRequired: true,
                     inputType: "tel",
                     maskType: "pattern",
                     maskSettings: {

@@ -13,16 +13,16 @@ const icon10 = '<svg id="Layer_5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink
 
 // Registers every function below with the appropriate name
 export const applyJsWithoutSurvey = async () => {
-    await SvgRegistry.registerIconFromSvg("icon-terrible", icon1);
-    await SvgRegistry.registerIconFromSvg("icon-very-poor", icon2);
-    await SvgRegistry.registerIconFromSvg("icon-poor", icon3);
-    await SvgRegistry.registerIconFromSvg("icon-not-good", icon4);
-    await SvgRegistry.registerIconFromSvg("icon-average", icon5);
-    await SvgRegistry.registerIconFromSvg("icon-normal", icon6);
-    await SvgRegistry.registerIconFromSvg("icon-good", icon7);
-    await SvgRegistry.registerIconFromSvg("icon-very-good", icon8);
-    await SvgRegistry.registerIconFromSvg("icon-excellent", icon9);
-    await SvgRegistry.registerIconFromSvg("icon-perfect", icon10);
+    SvgRegistry.registerIconFromSvg("icon-terrible", icon1);
+    SvgRegistry.registerIconFromSvg("icon-very-poor", icon2);
+    SvgRegistry.registerIconFromSvg("icon-poor", icon3);
+    SvgRegistry.registerIconFromSvg("icon-not-good", icon4);
+    SvgRegistry.registerIconFromSvg("icon-average", icon5);
+    SvgRegistry.registerIconFromSvg("icon-normal", icon6);
+    SvgRegistry.registerIconFromSvg("icon-good", icon7);
+    SvgRegistry.registerIconFromSvg("icon-very-good", icon8);
+    SvgRegistry.registerIconFromSvg("icon-excellent", icon9);
+    SvgRegistry.registerIconFromSvg("icon-perfect", icon10);
     return null;
 };
 

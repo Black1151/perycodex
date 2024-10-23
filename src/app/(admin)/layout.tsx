@@ -1,11 +1,7 @@
-import { ReactNode } from "react";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { AdminLayout } from "@/app/(admin)/AdminLayout";
-
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-export const fetchCache = "force-no-store";
+import {ReactNode} from "react";
+import {AdminLayout} from "@/app/(admin)/AdminLayout";
+import {getUserIdentity} from "@/lib/getUserIdentity";
+import apiClient from "@/lib/apiClient";
 
 export interface NavBarProps {
     userFirstName: string;
@@ -19,46 +15,26 @@ interface LayoutProps {
     children: ReactNode;
 }
 
-export default async function Layout({ children }: LayoutProps) {
-    const cookieStore = cookies();
-    const uniqueId = cookieStore.get("user_uuid")?.value;
-    const authToken = cookieStore.get("auth_token")?.value;
+export default async function Layout({children}: LayoutProps) {
+    const userIdentity = await getUserIdentity();
 
-    // Log cookie values
-    console.log("Fetched cookies:");
-    console.log("user_uuid:", uniqueId);
-    console.log("auth_token:", authToken);
+    const response = await apiClient(`/getUserMetadata`, {
+        method: "POST",
+        body: JSON.stringify({
+            p_userUniqueId: userIdentity.userUniqueId
+        })
+    });
 
-    if (!uniqueId || !authToken) {
-        console.log("Missing uniqueId or authToken, redirecting to login...");
-        return redirect("/login");
+
+    if (!response.ok) {
+        const errorBody = await response.json();
+        console.error('Error response:', errorBody);
+        throw new Error(`Failed to fetch user metadata: ${errorBody?.message || 'Unknown error'}`);
     }
 
-    // Fetch user data
-    let userIdentity = null;
 
-    try {
-        console.log("Fetching user identity...");
-        const identityResponse = await fetch(
-            `${process.env.BE_URL}/getView?view=vwLoggedInUserIdentity&userUniqueId=${uniqueId}&selectColumns=customerId,role,userImageUrl,firstName`,
-            {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${authToken}`,
-                },
-            }
-        );
+    let userMetadata = (await response.json()).resource;
 
-        if (!identityResponse.ok) {
-            throw new Error('Failed to fetch user identity');
-        }
-
-        userIdentity = (await identityResponse.json()).resource;
-        console.log("Fetched user identity:", userIdentity);
-    } catch (error) {
-        console.error("Error fetching user identity:", error);
-        return redirect("/error");
-    }
 
     const userProps: NavBarProps = {
         userFirstName: userIdentity?.firstName,
@@ -68,7 +44,7 @@ export default async function Layout({ children }: LayoutProps) {
     };
 
     return (
-        <AdminLayout userProps={userProps}>
+        <AdminLayout userProps={userProps} userMetadata={userMetadata}>
             {children}
         </AdminLayout>
     );

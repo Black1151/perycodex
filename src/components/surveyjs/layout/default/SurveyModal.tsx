@@ -1,14 +1,5 @@
 import React from 'react';
-import {
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    Button,
-    Heading, Flex
-} from '@chakra-ui/react';
+import {Button, Flex, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay} from '@chakra-ui/react';
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -45,13 +36,13 @@ const SurveyModal: React.FC<ModalProps> = ({
                     <Button mr={3} onClick={onClose}
                             bgColor="darkGray"
                             border="1px solid darkGray"
-                            leftIcon={<CloseIcon />}
+                            leftIcon={<CloseIcon/>}
                             color="white"
                             _hover={{color: "darkGray", backgroundColor: "white"}}>{cancelLabel}</Button>
                     <Button bgColor="green"
                             border="1px solid lightGray"
                             color="white"
-                            leftIcon={<DoneIcon />}
+                            leftIcon={<DoneIcon/>}
                             _hover={{color: "green", backgroundColor: "white"}}
                             onClick={onConfirm}>
                         {confirmLabel}

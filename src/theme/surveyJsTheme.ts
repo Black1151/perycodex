@@ -10,7 +10,7 @@ export const baseSurveyCssVariablesTheme = {
     "--sjs-questionpanel-cornerRadius": "12px",
 
     // Question Titles
-    "--sjs-font-questiontitle-weight": "700",
+    "--sjs-font-questiontitle-weight": "500",
     "--sjs-font-questiontitle-size": "14px",
 
     // Question Description

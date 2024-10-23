@@ -1,0 +1,123 @@
+export const toolsJson = {
+    pages: [
+        {
+            name: "toolConfig-creator-admin",
+            title: "Tool Creator",
+            elements: [
+                {
+                    type: "boolean",
+                    name: "isActive",
+                    title: "Is Active?",
+                    labelTrue: "Yes",
+                    labelFalse: "No",
+                    defaultValue: true,
+                    isRequired: true,
+                    swapOrder: true,
+                },
+                {
+                    type: "text",
+                    name: "name",
+                    title: "Tool Name",
+                    titleLocation: "top",
+                    isRequired: true,
+                    maxLength: 100,
+                    placeholder: "Enter toolConfig name",
+                },
+                {
+                    type: "text",
+                    name: "displayName",
+                    title: "Display Name",
+                    titleLocation: "top",
+                    isRequired: true,
+                    placeholder: "Enter display name",
+                },
+                {
+                    type: "comment",
+                    name: "description",
+                    title: "Description",
+                    autoGrow: true,
+                    isRequired: true,
+                    placeholder: "Enter toolConfig description",
+                },
+                {
+                    type: "comment",
+                    name: "previewText",
+                    title: "Preview Text",
+                    autoGrow: true,
+                    isRequired: true,
+                    placeholder: "Enter preview text",
+                },
+                {
+                    type: "boolean",
+                    name: "showInSeeMoreList",
+                    title: "Show in see more list?",
+                    titleLocation: "top",
+                    defaultValue: false,
+                    labelTrue: "Yes",
+                    labelFalse: "No",
+                    swapOrder: true,
+                    isRequired: true,
+                },
+                {
+                    type: "comment",
+                    name: "userAccessGroupNames",
+                    title: "User Access Group Names",
+                    autoGrow: true,
+                    titleLocation: "top",
+                    placeholder: "Enter user access group names",
+                    validators: [{
+                        type: "expression",
+                        text: "Must be valid JSON",
+                        expression: "validateJson({valueJson})"
+                    }]
+                },
+                {
+                    type: "dropdown",
+                    name: "categoryId",
+                    isRequired: true,
+                    title: "Tool Category",
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/toolCategory/allBy`,
+                        path: "resource",
+                        valueName: "id",
+                        titleName: "name"
+                    },
+                },
+                {
+                    type: "text",
+                    name: "iconImageUrl",
+                    title: "Icon Image URL",
+                    titleLocation: "top",
+                    placeholder: "Enter the URL for the icon image",
+                },
+                {
+                    type: "text",
+                    name: "thumbnailImageUrl",
+                    title: "Thumbnail Image URL",
+                    titleLocation: "top",
+                    placeholder: "Enter the URL for the thumbnail image",
+                },
+                {
+                    type: "text",
+                    name: "previewImageUrl",
+                    title: "Preview Image URL",
+                    titleLocation: "top",
+                    placeholder: "Enter the URL for the preview image",
+                },
+                {
+                    type: "text",
+                    name: "appUrl",
+                    title: "App URL",
+                    titleLocation: "top",
+                    placeholder: "Enter the app URL",
+                },
+                {
+                    type: "text",
+                    name: "logoImageUrl",
+                    title: "Logo Image URL",
+                    placeholder: "Enter the URL for the logo image",
+                },
+            ],
+        },
+    ],
+};

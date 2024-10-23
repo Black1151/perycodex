@@ -10,6 +10,7 @@ export const customerJson = {
                     minWidth: "256px",
                     title: "Is this customer active?",
                     titleLocation: "top",
+                    visibleIf: "{pgv_currentUser.role} = 'PA'",
                     descriptionLocation: "underInput",
                     defaultValue: true,
                     isRequired: true,
@@ -97,8 +98,9 @@ export const customerJson = {
                     name: "multiSite",
                     title: "Select if this a single or multiple site business",
                     titleLocation: "top",
-                    defaultValue: true,
+                    defaultValue: false,
                     isRequired: true,
+                    visibleIf: "{pgv_currentUser.role} = 'PA'",
                     labelTrue: "Single",
                     labelFalse: "Multiple",
                     swapOrder: true
@@ -184,46 +186,6 @@ export const customerJson = {
             ]
         },
         {
-            name: "customer-settings",
-            title: "Settings",
-            elements: [
-                {
-                    type: "text",
-                    name: "customerCode",
-                    width: "64%",
-                    minWidth: "192px",
-                    title: "Customer Code",
-                    titleLocation: "top",
-                    description: "",
-                    descriptionLocation: "underInput",
-                    isRequired: true,
-                    placeholder: "Enter a customer code for internal reference"
-                },
-                {
-                    type: "matrixdynamic",
-                    name: "domain",
-                    title: "Add Domains",
-                    columns: [
-                        {
-                            name: "domain",
-                            title: "Domain",
-                            cellType: "text",
-                            isRequired: true,
-                            maxLength: 80,
-                            placeholder: "Enter domain",
-                        }
-                    ],
-                    rowCount: 0,
-                    confirmDelete: true,
-                    confirmDeleteText: "Are you sure you want to delete this domain?",
-                    addRowText: "Add a Domain",
-                    removeRowText: "Delete this Domain",
-                    hideColumnsIfEmpty: true,
-                    emptyRowsText: "No domains entered yet.\nClick 'Add a Domain' to add a new one.\nClick the delete icon to remove an existing entry."
-                }
-            ]
-        },
-        {
             name: "customer-address-site",
             title: "Business Primary Location",
             elements: [
@@ -289,19 +251,34 @@ export const customerJson = {
                 {
                     type: "panel",
                     name: "primarySite",
-                    visibleIf: "{address1} notempty and {address2} notempty and {address3} notempty and {address4} notempty and {country} notempty and {postcode} notempty and {formMode} = 'new'",
+                    visibleIf: "{address1} notempty and {address2} notempty and {address3} notempty and {address4} notempty and {country} notempty and {postcode} notempty and {pgv_formMode} = 'new'",
                     title: "Primary Location Details",
                     isRequired: true,
                     elements: [
                         {
                             type: "text",
                             name: "siteName",
-                            width: "64%",
-                            minWidth: "192px",
                             title: "Site Name",
                             titleLocation: "top",
                             isRequired: true,
                             placeholder: "Enter site Name"
+                        },
+                        {
+                            type: "dropdown",
+                            name: "siteTypeId",
+                            startWithNewLine: false,
+                            title: "Site Type",
+                            titleLocation: "top",
+                            isRequired: true,
+                            renderAs1: "select",
+                            placeholder: "What type of site is this",
+                            allowClear: true,
+                            choicesByUrl: {
+                                url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=site_type`,
+                                path: "site_type",
+                                valueName: "value",
+                                titleName: "label"
+                            },
                         },
                         {
                             type: "text",
@@ -371,7 +348,10 @@ export const customerJson = {
                             isRequired: true,
                             readOnly: true,
                             choicesByUrl: {
-                                url: "http://surveyjs.io/api/CountriesExample"
+                                url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=country`,
+                                path: "country",
+                                valueName: "value",
+                                titleName: "label"
                             },
                             placeholder: "Country",
                             allowClear: true
@@ -379,25 +359,23 @@ export const customerJson = {
                         {
                             type: "text",
                             name: "latitude",
-                            minWidth: "256px",
                             title: "Latitude",
+                            setValueExpression: "fetchPostcodeData({postcode},'result.latitude')",
                             titleLocation: "top",
                             isRequired: false,
                             readOnly: true,
-                            inputType: "number",
                             placeholder: "Latitude"
                         },
                         {
                             type: "text",
                             name: "longitude",
-                            minWidth: "256px",
-                            startWithNewLine: false,
                             title: "Longitude",
+                            setValueExpression: "fetchPostcodeData({postcode},'result.longitude')",
                             titleLocation: "top",
                             isRequired: false,
                             readOnly: true,
-                            inputType: "number",
-                            placeholder: "Longitude"
+                            placeholder: "Longitude",
+                            startWithNewLine: false,
                         },
                         {
                             type: "text",
@@ -425,6 +403,57 @@ export const customerJson = {
                             placeholder: "Enter site email"
                         }
                     ]
+                }
+            ]
+        },
+        {
+            name: "customer-settings",
+            visibleIf: "{pgv_currentUser.role} = 'PA'",
+            title: "Settings",
+            elements: [
+                {
+                    type: "text",
+                    name: "licensedUsers",
+                    title: "Licensed Users",
+                    titleLocation: "top",
+                    inputType: "number",
+                    min: 1,
+                    step: 1,
+                    placeholder: "Enter the number of users allowed to sign up"
+                },
+                {
+                    type: "text",
+                    name: "customerCode",
+                    width: "64%",
+                    minWidth: "192px",
+                    title: "Customer Code",
+                    titleLocation: "top",
+                    description: "",
+                    descriptionLocation: "underInput",
+                    isRequired: true,
+                    placeholder: "Enter a customer code for internal reference"
+                },
+                {
+                    type: "matrixdynamic",
+                    name: "domain",
+                    title: "Add Domains",
+                    columns: [
+                        {
+                            name: "domain",
+                            title: "Domain",
+                            cellType: "text",
+                            isRequired: true,
+                            maxLength: 80,
+                            placeholder: "Enter domain",
+                        }
+                    ],
+                    rowCount: 0,
+                    confirmDelete: true,
+                    confirmDeleteText: "Are you sure you want to delete this domain?",
+                    addRowText: "Add a Domain",
+                    removeRowText: "Delete this Domain",
+                    hideColumnsIfEmpty: true,
+                    emptyRowsText: "No domains entered yet.\nClick 'Add a Domain' to add a new one.\nClick the delete icon to remove an existing entry."
                 }
             ]
         },

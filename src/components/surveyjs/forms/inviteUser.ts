@@ -5,15 +5,22 @@ export const inviteUserJson = {
             title: "Invite User",
             elements: [
                 {
+                    type: "text",
+                    name: "customerId",
+                    visible: false,
+                    defaultValueExpression: "{pgv_currentUser.customerId}",
+                    readOnly: true,
+                },
+                {
                     type: "dropdown",
                     name: "customerId",
+                    visibleIf: "{pgv_currentUser.role} = 'PA'",
                     isRequired: true,
                     title: "Customer",
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/customer/allBy?parentId=null`,
-                        path: "resource",
-                        valueName: "id",
-                        titleName: "name"
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/surveyjs/view?view=vwInviteUserCustomersList`,
+                        valueName: "custId",
+                        titleName: "custName"
                     },
                 },
                 {

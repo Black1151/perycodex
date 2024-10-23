@@ -1,11 +1,10 @@
 import React, {useEffect} from 'react';
-import {Flex, Box, Text, Stack, Button, Icon, Switch, Divider, Center} from "@chakra-ui/react";
+import {Box, Flex} from "@chakra-ui/react";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import {NavigationProps} from "@/components/surveyjs/SurveyProps";
 import useModal from "@/components/surveyjs/useModal";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import CancelIcon from "@mui/icons-material/Cancel";
 import ScrollablePageList from "@/components/surveyjs/layout/default/ScrollablePageList";
 import CustomToggle from "@/components/surveyjs/layout/default/CustomToggle";
 
@@ -18,18 +17,21 @@ const TopNavigation: React.FC<NavigationProps> = ({
                                                       prevPage,
                                                       jumpToPage,
                                                       submitSurvey,
+                                                      cancelSurvey,
+                                                      canEdit,
                                                       switchToDisplayMode,
                                                       switchToEditMode,
                                                       pageListOptions,
                                                       isFirstPage,
                                                       isLastPage,
                                                       isEditing,
+                                                      isSubmitting
                                                   }) => {
     const {isOpen, openModal, closeModal} = useModal(); // Use the hook
     const previousPageNo = React.useRef(currentPage);
 
     const handleCancelEdit = () => {
-        switchToDisplayMode();
+        cancelSurvey();
         closeModal();
     };
 
@@ -50,34 +52,65 @@ const TopNavigation: React.FC<NavigationProps> = ({
     }, [currentPage]);
 
     return (
-        <Box bg="white" p={4} borderRadius="lg" w="100%">
-            <Stack spacing={4}>
-                <Flex justifyContent="space-between" alignItems="center" flex={'1 1 auto'}>
+        <Box w="100%">
+            {/* Custom Toggle Tab Container */}
+            <Box
+                borderRadius="lg"
+                display="flex"
+                justifyContent="flex-end"
+                alignItems="center"
+                position="relative"
+                zIndex={1}
+            >
+                <Box
+                    bg="white"
+                    py={2}
+                    px={4}
+                    borderBottomLeftRadius={'none'}
+                    borderBottomRightRadius={'none'}
+                    borderTopLeftRadius={'lg'}
+                    borderTopRightRadius={'lg'}
+                >
 
 
-                    {/* Scrollable Page List */}
-                    <ScrollablePageList
-                        pageListOptions={pageListOptions}
-                        currentPage={currentPage}
-                        jumpToPage={jumpToPage}
-                        animationDuration={animationDuration}
-                        previousPageNo={previousPageNo}
+                    {/* Custom Toggle in its own box above the ScrollablePageList */}
+                    <CustomToggle
+                        iconA={VisibilityIcon}
+                        iconB={EditIcon}
+                        isChecked={isEditing}
+                        canEdit={canEdit}
+                        onToggle={handleToggle}
                     />
+                </Box>
+            </Box>
+            <Box bg="white" py={4} px={2}
+                 borderBottomLeftRadius={'none'}
+                 borderBottomRightRadius={'none'}
+                 borderTopLeftRadius={'lg'}
+                 borderTopRightRadius={'none'}
+                 w="100%">
 
-                    <CustomToggle iconA={VisibilityIcon} iconB={EditIcon} isChecked={isEditing}
-                                  onToggle={handleToggle}/>
-
+                <Flex gap={2} flexWrap={'wrap'} align={'center'} justify={'flex-end'}>
+                    <Box w={'100%'}>
+                        <ScrollablePageList
+                            pageListOptions={pageListOptions}
+                            currentPage={currentPage}
+                            jumpToPage={jumpToPage}
+                            animationDuration={animationDuration}
+                            previousPageNo={previousPageNo}
+                        />
+                    </Box>
                 </Flex>
-            </Stack>
-            <SurveyModal
-                isOpen={isOpen}
-                onClose={closeModal}
-                onConfirm={handleCancelEdit}
-                title="Confirm Edit Cancellation"
-                bodyContent="Are you sure you want to cancel editing? Any unsaved changes will be lost."
-                confirmLabel="Cancel"
-                cancelLabel="Go Back"
-            />
+                <SurveyModal
+                    isOpen={isOpen}
+                    onClose={closeModal}
+                    onConfirm={handleCancelEdit}
+                    title="Confirm Edit Cancellation"
+                    bodyContent="Are you sure you want to cancel editing? Any unsaved changes will be lost."
+                    confirmLabel="Cancel"
+                    cancelLabel="Go Back"
+                />
+            </Box>
         </Box>
     );
 };

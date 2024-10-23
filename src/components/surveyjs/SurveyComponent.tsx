@@ -7,24 +7,36 @@ import HappinessLayout from "@/components/surveyjs/layout/happiness/Layout";
 import {LayoutProps, SurveyComponentProps} from '@/components/surveyjs/SurveyProps';
 import useSurvey from '@/components/surveyjs/useSurvey';
 import useSurveySubmission from "@/components/surveyjs/useSurveySubmission";
+import {Flex, Spinner} from "@chakra-ui/react";
+import {useUser} from "@/context/AdminUserContext";
 
 type LayoutMap = {
     [key: string]: React.FC<LayoutProps>;
 }
 
+type Role = 'CU' | 'CL' | 'CS' | 'CA' | 'PA' | 'EU';
+
 const SurveyComponent: React.FC<SurveyComponentProps> = ({
                                                              surveyJson,
                                                              layout = 'default',
+                                                             layoutOptions,
                                                              endpoint,
                                                              isNew,
                                                              dataset,
-                                                             onSurveyComplete,
+                                                             rolesCanEdit = ['CU', 'CL', 'CS', 'CA', 'PA', 'EU'],
+                                                             onSurveySuccess,
+                                                             onSurveyFailure,
+                                                             reloadPageOnSuccess,
+                                                             includeVariables,
                                                              excludeKeys,
                                                              redirectUrl,
                                                              cssPath,
                                                              sjsPath,
                                                              jsPath,
                                                          }) => {
+    const user = useUser();
+
+    const canEdit = rolesCanEdit?.includes(user.role as Role)
 
     // Memoize the updated surveyJson based on the layout
     const updatedSurveyJson = useMemo(() => {
@@ -56,6 +68,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
         surveyJson: updatedSurveyJson,
         isNew: isNew,
         dataset: dataset,
+        includeVariables: includeVariables,
         cssPath: cssPath,
         sjsPath: sjsPath,
         jsPath: jsPath
@@ -68,7 +81,9 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
         endpoint: endpoint,
         redirectUrl: redirectUrl,
         excludeKeys: excludeKeys,
-        onSurveyComplete: onSurveyComplete
+        onSurveySuccess: onSurveySuccess,
+        onSurveyFailure: onSurveyFailure,
+        reloadPageOnSuccess: reloadPageOnSuccess
     });
 
     // Dynamically load CSS file and remove it when the component unmounts
@@ -87,7 +102,6 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
         if (cssPath) {
             // Build the correct path for the CSS file inside the public folder
             const cssHref = `/cssPath/${cssPath}.css`;
-            console.log(cssHref);
             // Create a link element and append it to the head
             linkElement = document.createElement('link');
             linkElement.rel = 'stylesheet';
@@ -110,16 +124,14 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
 
     const SurveyLayout = layoutMap[layout];
 
-    if (isLoading) {
-        return <div>Loading Survey (Survey State)...</div>;
+    if (isLoading || !model) {
+        return (
+            <Flex justifyContent="center" alignItems="center">
+                <Spinner color={'white'}/>
+            </Flex>);
     }
 
-    // Ensure model is not null before rendering
-    if (!model) {
-        return <div>Loading Survey (Model State)...</div>; // Loading state
-    }
-
-    return <SurveyLayout model={model} dataset={dataset}/>;
+    return <SurveyLayout model={model} dataset={dataset} canEdit={canEdit} {...layoutOptions}/>;
 };
 
 export default SurveyComponent;

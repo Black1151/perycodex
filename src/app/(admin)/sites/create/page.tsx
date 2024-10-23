@@ -1,30 +1,50 @@
-import {cookies} from "next/headers";
-import {redirect} from "next/navigation";
-
-// SurveyJS
-import {siteJson} from "@/components/Z_surveyJs/forms/site";
+import {siteJson} from "@/components/surveyjs/forms/site";
 import AdminHeader from "@/components/AdminHeader";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+import {getUserIdentity} from "@/lib/getUserIdentity";
+import {checkUserRole} from "@/lib/checkUserRole";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-export const fetchCache = "force-no-store";
+interface SearchParams {
+    siteType?: string
+}
 
-export default async function CustomersPage() {
-    const cookieStore = cookies();
-    const authToken = cookieStore.get("auth_token")?.value;
+export default async function SitesCreatePage({searchParams}: { searchParams: SearchParams }) {
+    const userIdentity = await getUserIdentity();
+    checkUserRole(userIdentity, `/sites/create`);
 
-    if (!authToken) {
-        return redirect("/login");
+    let headerTitle = "Create Site";
+    let siteTypeParam = searchParams.siteType;
+
+    if (userIdentity.role === 'CA') {
+        if (!['internal', 'external'].includes(siteTypeParam || '')) {
+            siteTypeParam = 'internal';
+        }
+        if (siteTypeParam === 'internal') {
+            headerTitle = 'Create New Company Site ';
+        } else if (siteTypeParam === 'external') {
+            headerTitle = 'Create New Client Site';
+        }
+    } else if (userIdentity.role === 'PA') {
+        headerTitle = 'Create Site';
     }
+
+    const surveyVariables = [
+        {
+            "siteType": {
+                siteTypeParam
+            }
+        }
+    ]
+
 
     return (
         <>
-            <AdminHeader headingText={'Create Site'}/>
+            <AdminHeader headingText={headerTitle}/>
             <SurveyComponent
                 surveyJson={siteJson}
                 endpoint={'/site'}
                 isNew={true}
+                includeVariables={surveyVariables}
                 redirectUrl={'/sites'}
                 sjsPath={'admin'}
             />

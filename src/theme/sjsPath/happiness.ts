@@ -95,10 +95,9 @@ export const themeJson = {
         "--sjs-article-font-default-lineHeight": "28px",
         "--sjs-article-font-default-paragraphIndent": "0px",
         "--sjs-article-font-default-textCase": "none",
-        // "--sjs-general-backcolor-dim": "rgba(248, 248, 248, 1)",
 
 
-        "--sjs-general-backcolor-dim": "rgba(227, 13, 93, 1)",
+        "--sjs-general-backcolor-dim": "rgba(227, 13, 93, 0)",
 
 
 

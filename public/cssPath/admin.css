@@ -5,15 +5,15 @@
 
 .sd-input:focus {
     color: #ff0070;
-    box-shadow: var(--sjs-shadow-inner-reset, inset 0px 0px 0px 0px rgba(0, 0, 0, 0.15)), 0 0 0 1px var(--sjs-primary-backcolor, var(--primary, #19b394));
+    box-shadow: var(--sjs-shadow-inner-reset, inset 0px 0px 0px 0px rgba(0, 0, 0, 0.15)), 0 0 0 0px var(--sjs-primary-backcolor, var(--primary, #19b394));
 }
 
 .sd-input .sd-dropdown:focus {
-    box-shadow: var(--sjs-shadow-inner-reset, inset 0px 0px 0px 0px rgba(0, 0, 0, 0.15)), 0 0 0 1px var(--sjs-primary-backcolor, var(--primary, #19b394));
+    box-shadow: var(--sjs-shadow-inner-reset, inset 0px 0px 0px 0px rgba(0, 0, 0, 0.15)), 0 0 0 0px var(--sjs-primary-backcolor, var(--primary, #19b394));
 }
 
 .sd-input.sd-dropdown:focus-within {
-    box-shadow: var(--sjs-shadow-inner-reset, inset 0px 0px 0px 0px rgba(0, 0, 0, 0.15)), 0 0 0 1px var(--sjs-primary-backcolor, var(--primary, #19b394));
+    box-shadow: var(--sjs-shadow-inner-reset, inset 0px 0px 0px 0px rgba(0, 0, 0, 0.15)), 0 0 0 0px var(--sjs-primary-backcolor, var(--primary, #19b394));
 }
 
 

@@ -1,18 +1,18 @@
-import { Heading, Text } from "@chakra-ui/react";
+import {Heading, Text} from "@chakra-ui/react";
 
 interface AdminHeadingProps {
     headingText: string;
     dataCount?: number;
 }
 
-const AdminHeading: React.FC<AdminHeadingProps> = ({ headingText, dataCount }) => {
+const AdminHeading: React.FC<AdminHeadingProps> = ({headingText, dataCount}) => {
     return (
-        <Heading as="h1" size="lg" color="white" width="full" borderBottom="1px solid white">
+        <Heading as="h1" size="xl" color="white" width="full" fontFamily={'Bonfire'} fontWeight={100} borderBottom="1px solid white">
             {headingText}{" "}
             {dataCount &&
-            <Text as="sup" size="sm">
-                {dataCount}
-            </Text>
+                <Text as="sup" size="xs" fontFamily={'Metropolis'}>
+                    {dataCount}
+                </Text>
             }
         </Heading>
     );

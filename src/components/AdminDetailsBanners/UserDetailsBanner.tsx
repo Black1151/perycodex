@@ -3,144 +3,147 @@
 import React from 'react';
 import {Box, Flex, FormControl, Heading, IconButton, Image, Input, Spinner, Text, VStack} from "@chakra-ui/react";
 import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
+import DomainIcon from '@mui/icons-material/Domain';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import CreateIcon from '@mui/icons-material/Create';
 import UpdateIcon from '@mui/icons-material/Update';
 import moment from "moment/moment";
 import {useRouter} from "next/navigation"
+import {useUser} from "@/context/AdminUserContext";
+import {useMediaUploader} from "@/hooks/useMediaUploader";
 
 interface User {
     id: number;
     email: string;
-    aboutMe: string | null;
-    jobTitle: string;
-    imageUrl: string;
-    customerId: number | null;
-    siteId: number;
-    teamId: number;
+    aboutMe?: string;
+    jobTitle?: string;
+    imageUrl?: string;
+    customerId?: number | null;
+    siteId?: number;
+    teamId?: number;
     role: string;
-    firstName: string;
-    lastName: string;
-    telephone: string;
-    mobile: string;
-    vehicleRegistration: string | null;
-    jobLevelId: number;
-    contractTypeId: number;
-    titleId: number;
-    lastLogin: string;
-    isVerified: boolean;
-    marketingOptOutId: number | null;
+    firstName?: string;
+    lastName?: string;
+    telephone?: string;
+    mobile?: string;
+    vehicleRegistration?: string;
+    jobLevelId?: number;
+    contractTypeId?: number;
+    titleId?: number;
+    lastLogin?: string;
+    isVerified?: boolean;
+    marketingOptOutId?: number;
     uniqueId: string;
-    emailVerifiedAt: string | null;
-    departmentId: number | null;
-    employStartDate: string | null;
-    isProfileRegistered: boolean;
-    remoteWorker: boolean;
-    rememberToken: string | null;
+    emailVerifiedAt?: string;
+    departmentId?: number;
+    employStartDate?: string;
+    isProfileRegistered?: boolean;
+    remoteWorker?: boolean;
+    rememberToken?: string;
     isActive: boolean;
     createdAt: string;
     updatedAt: string;
-    createdBy: number;
-    updatedBy: number;
-    createdByUser: UserMeta;
-    updatedByUser: UserMeta;
-    customer: Customer | null;
-    site: Site;
-    jobLevel: JobLevel;
-    contractType: ContractType;
-    title: Title;
-    marketingOptOut: string | null;
-    hobbies: string[];
-    languages: string[];
+    createdBy?: number;
+    updatedBy?: number;
+    createdByUser?: UserMeta;
+    updatedByUser?: UserMeta;
+    customer?: Customer;
+    site?: Site;
+    jobLevel?: JobLevel;
+    contractType?: ContractType;
+    title?: Title;
+    marketingOptOut?: string;
+    hobbies?: string[];
+    languages?: string[];
 }
 
 interface Customer {
     id: number;
     name: string;
     address1: string;
-    address2: string;
-    address3: string;
-    address4: string;
+    address2?: string;
+    address3?: string;
+    address4?: string;
     postcode: string;
-    country: string;
-    customerCode: string;
-    webAddress: string;
+    country?: string;
+    customerCode?: string;
+    webAddress?: string;
     singleSignOn: boolean;
-    primaryContactId: number | null;
+    primaryContactId?: number | null;
     businessTypeId: number;
     sectorId: number;
     regionId: number;
     companySizeId: number;
-    companyNo: string;
-    sicCode: string;
-    numberOfEmployees: number;
-    parentId: number | null;
-    licensedUsers: number | null;
-    contactLevelId: number | null;
-    imageUrl: string;
+    companyNo?: string;
+    sicCode?: string;
+    numberOfEmployees?: number;
+    parentId?: number | null;
+    licensedUsers?: number | null;
+    contactLevelId?: number | null;
+    imageUrl?: string;
     uniqueId: string;
     isActive: boolean;
     createdAt: string;
     updatedAt: string;
     createdBy: number;
     updatedBy: number;
-    multiSite: boolean;
+    multiSite?: boolean;
 }
 
 interface UserMeta {
     id: number;
     email: string;
-    aboutMe: string | null;
-    jobTitle: string;
-    imageUrl: string;
-    customerId: number | null;
-    siteId: number | null;
-    teamId: number | null;
+    aboutMe?: string | null;
+    jobTitle?: string;
+    imageUrl?: string;
+    customerId?: number | null;
+    siteId?: number | null;
+    teamId?: number | null;
     role: string;
-    firstName: string;
-    lastName: string;
-    telephone: string;
-    mobile: string | null;
-    vehicleRegistration: string | null;
-    jobLevelId: number | null;
-    contractTypeId: number | null;
-    titleId: number | null;
-    lastLogin: string;
-    isVerified: boolean;
-    marketingOptOutId: number | null;
+    firstName?: string;
+    lastName?: string;
+    telephone?: string;
+    mobile?: string | null;
+    vehicleRegistration?: string | null;
+    jobLevelId?: number | null;
+    contractTypeId?: number | null;
+    titleId?: number | null;
+    lastLogin?: string;
+    isVerified?: boolean;
+    marketingOptOutId?: number | null;
     uniqueId: string;
-    emailVerifiedAt: string | null;
-    departmentId: number | null;
-    employStartDate: string | null;
-    isProfileRegistered: boolean;
-    remoteWorker: boolean;
-    rememberToken: string | null;
+    emailVerifiedAt?: string | null;
+    departmentId?: number | null;
+    employStartDate?: string | null;
+    isProfileRegistered?: boolean;
+    remoteWorker?: boolean;
+    rememberToken?: string | null;
     isActive: boolean;
     createdAt: string;
     updatedAt: string;
-    createdBy: number;
-    updatedBy: number;
+    createdBy?: number;
+    updatedBy?: number;
 }
 
 interface Site {
     id: number;
     siteName: string;
-    siteEmail: string;
-    siteTel: string;
-    customerId: number;
-    primaryContactId: number | null;
+    siteEmail?: string;
+    siteTel?: string;
+    customerId?: number;
+    primaryContactId?: number | null;
     address1: string;
     address2: string;
-    address3: string;
-    address4: string;
+    address3?: string;
+    address4?: string;
     postcode: string;
-    country: string;
-    latitude: string;
-    longitude: string;
+    country?: string;
+    latitude?: string;
+    longitude?: string;
     uniqueId: string;
-    siteTypeId: number | null;
-    isActive: boolean;
+    siteTypeId?: number | null;
+    isActive?: boolean;
     createdAt: string;
     updatedAt: string;
     createdBy: number;
@@ -189,13 +192,28 @@ interface UserDetailsBannerProps {
 }
 
 export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
-
-    const isCurrentUser = true; // TODO: Add logic to see if current user
-    const isUploading = false; // TODO: Add logic to upload a new photo
+    const currentUser = useUser();
     const router = useRouter();
 
+    const isCurrentUser = user.uniqueId === currentUser.userUniqueId;
+    const allowedToUploadPhoto = (
+        isCurrentUser ||
+        (currentUser.role === 'PA') ||
+        (currentUser.role === 'CA' && currentUser.customerId === user.customerId) ||
+        (currentUser.role === 'CA' && currentUser.customerId === user?.customer?.parentId)
+    );
+
+    // Using the media uploader hook for profile photo
+    const {isUploading, handleFileChange} = useMediaUploader(
+        `/api/user/uploadPhoto/${user.uniqueId}`,
+        "imageUrl",
+        () => {
+            router.refresh()
+        }
+    );
+
     return (
-        <Flex mb={4} p={4} borderRadius={8} color={'white'} overflow={'hidden'}>
+        <Flex mb={4} p={[0, 0, 4]} borderRadius={8} color={'white'} overflow={'hidden'}>
             {/*Image Upload*/}
             <FormControl w={'100px'} h={'100px'} aspectRatio={1} borderRadius={'full'}>
                 <Box
@@ -204,7 +222,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                     h={'100px'}
                     borderRadius="full"
                     overflow="hidden"
-                    _hover={{'.overlay': {opacity: isCurrentUser ? 1 : 0}}} // Only show overlay if it's the current user
+                    _hover={{'.overlay': {opacity: allowedToUploadPhoto ? 1 : 0}}}
                 >
                     <Image
                         boxSize="100px"
@@ -212,7 +230,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                         objectFit={'cover'}
                         src={user.imageUrl}
                         alt={`${user.firstName} ${user.lastName}`}
-                        // cursor={isCurrentUser ? "pointer" : "default"}  // Only allow pointer if it's the current user
+                        cursor={allowedToUploadPhoto ? "pointer" : "default"}
                         fallback={
                             <Flex
                                 align={'center'}
@@ -221,20 +239,20 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                                 h={'100px'}
                                 borderRadius="full"
                                 bg="gray.200"
-                                // cursor={isCurrentUser ? "pointer" : "default"}  // Only allow pointer if it's the current user
+                                cursor={allowedToUploadPhoto ? "pointer" : "default"}
                             >
                                 <Text
                                     color="gray.500"
                                     m={'auto'}
                                     fontSize={'xx-large'}
                                 >
-                                    {user.firstName[0]}
-                                    {user.lastName[0]}
+                                    {user.firstName?.[0] ?? ''}
+                                    {user.lastName?.[0] ?? ''}
                                 </Text>
                             </Flex>
                         }
                     />
-                    {isCurrentUser && (
+                    {allowedToUploadPhoto && (
                         <Box
                             className="overlay"
                             position="absolute"
@@ -251,7 +269,8 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                             transition="opacity 0.3s ease"
                         >
                             <IconButton
-                                icon={<AddAPhotoOutlinedIcon/>}
+                                icon={<AddAPhotoOutlinedIcon fontSize="large"
+                                                             sx={{color: "var(--chakra-colors-perygonPink)"}}/>}
                                 aria-label="Upload Photo"
                                 colorScheme="whiteAlpha"
                                 onClick={() => document.getElementById('photo-upload')?.click()}
@@ -267,22 +286,20 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
                             h="100%"
                             justifyContent="center"
                             alignItems="center"
-                            bg="rgba(0, 0, 0, 0.5)" // Optional: Add a background overlay during uploading
+                            bg="rgba(0, 0, 0, 0.5)"
                             borderRadius="full"
                         >
                             <Spinner size="md"/>
                         </Flex>
                     )}
                 </Box>
-                {isCurrentUser && (
+                {allowedToUploadPhoto && (
                     <Input
                         id="photo-upload"
                         type="file"
-                        name="photo"
+                        name="imageUrl"
                         mb={4}
-                        onChange={() => {
-                            window.alert("Uploading a photo FAKE")
-                        }}
+                        onChange={handleFileChange}  // Connect the file input to the uploader
                         disabled={isUploading}
                         display="none"
                     />
@@ -290,72 +307,59 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({user}) => {
             </FormControl>
             {/*User Details*/}
             <VStack align="start" ml={4}>
-                <Flex alignItems="center">
-                    <Heading size="lg" fontWeight={100}>{user.firstName} {user.lastName}</Heading>
+                <Flex alignItems="center" gap={2}>
                     <Box
-                        ml={2}
-                        w={4}
-                        h={4}
+                        w={'1.4rem'}
+                        h={'1.4rem'}
                         borderRadius="full"
                         border={'white 1px solid'}
                         bg={user.isActive ? 'green.500' : 'red.500'}
                     />
+                    <Heading fontWeight={100} size={['md', 'md', 'lg']}>
+                        {user.firstName ?? 'No Name'} {user.lastName ?? ''}
+                    </Heading>
                 </Flex>
 
-                <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
+                <Flex direction={'row'} justify={'center'} align={'flex-start'} gap={2}>
                     <EmailOutlinedIcon/>
-                    <Text fontSize="md">{user.email}</Text>
+                    <Text fontSize="sm" as={'a'} href={`mailto:${user.email}`}
+                          _hover={{textDecoration: 'underline', cursor: 'pointer'}}>
+                        {user.email}
+                    </Text>
+                </Flex>
+                <Flex direction={'row'} justify={'center'} align={'flex-start'} gap={2}>
+                    <DomainIcon/>
+                    {user.customer && (
+                        <Text fontSize="sm" _hover={{textDecoration: 'underline', cursor: 'pointer'}}
+                              onClick={() => router.push(`/customers/${user.customer?.uniqueId}`)}>
+                            {user.customer.name}
+                        </Text>
+                    )}
                 </Flex>
                 <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
                     <LocationOnOutlinedIcon/>
-                    <Text fontSize="sm">
-                        {user.site ? user.site.siteName : "Unknown"}
-                    </Text>
+                    {user.site ? (
+                        <Text fontSize="sm" _hover={{textDecoration: 'underline', cursor: 'pointer'}}
+                              onClick={() => router.push(`/sites/${user.site?.uniqueId}`)}>
+                            {user.site.siteName}
+                        </Text>
+                    ) : (
+                        <Text fontSize="sm">Unknown</Text>
+                    )}
                 </Flex>
-                {/* Organisation's Logo */}
-                {user.customer && (
-                    <Image
-                        mt={'auto'}
-                        maxHeight={'50px'}
-                        maxWidth={'150px'}
-                        objectFit={'contain'}
-                        src={user.customer?.imageUrl || ""}
-                        cursor={'pointer'}
-                        onClick={() => router.push(`/customers/${user.customer?.uniqueId}`)}
-                        alt={`${user.customer.name} Logo`}
-                        fallback={
-                            <Flex
-                                align={'center'}
-                                justify={'center'}
-                                minW={'100px'}
-                                h={'full'}
-                                bg="gray.200"
-                            >
-                                <Text
-                                    color="gray.500"
-                                    m={'auto'}
-                                    fontSize={'lg'}
-                                >
-                                    {user.customer.name[0]}
-                                </Text>
-                            </Flex>
-                        }
-                    />
-                )}
             </VStack>
             {/* User Details*/}
             <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-start'} display={['none', 'none', 'flex']}>
-                <Heading size="lg" fontWeight={100}>ID: {user.id}</Heading>
-                <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
+                <Heading size={['md', 'md', 'lg']} fontWeight={100}>ID: {user.id}</Heading>
+                <Flex direction="row" justify="center" align="center" gap={2}>
                     <CreateIcon/>
                     <Text fontSize="sm">{moment(user.createdAt).format('D/MM/YYYY')}</Text>
                 </Flex>
-                <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
+                <Flex direction="row" justify="center" align="center" gap={2}>
                     <UpdateIcon/>
                     <Text fontSize="sm">{moment(user.updatedAt).format('D/MM/YYYY')}</Text>
                 </Flex>
-
             </VStack>
         </Flex>
     );
-}
+};

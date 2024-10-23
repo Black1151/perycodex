@@ -1,12 +1,19 @@
 import {ITheme, SurveyModel} from "survey-core";
 
+type Role = 'CU' | 'CL' | 'CS' | 'CA' | 'PA' | 'EU';
+
 export interface SurveyComponentProps {
     surveyJson: any;
     endpoint: string;
     isNew: boolean;
     layout?: string;
+    layoutOptions?: Record<string, any>;
     dataset?: Record<string, any>;
-    onSurveyComplete?: () => void;
+    rolesCanEdit?: Role[];
+    onSurveySuccess?: () => void;
+    onSurveyFailure?: () => void;
+    reloadPageOnSuccess?: boolean;
+    includeVariables?: Array<{ [key: string]: { [nestedKey: string]: any } }>;
     excludeKeys?: string[];
     redirectUrl?: string;
     cssPath?: string;
@@ -17,12 +24,23 @@ export interface SurveyComponentProps {
 export interface LayoutProps {
     model: any;
     dataset: any;
+    canEdit: boolean;
+}
+
+export interface DefaultLayoutProps extends LayoutProps {
+    showTopNavigation?: boolean;
+    showBottomNavigation?: boolean;
+}
+
+export interface HappinessLayoutProps extends LayoutProps {
+    showTitle?: boolean
 }
 
 export interface UseSurveyProps {
     surveyJson: any;   // You can replace `any` with a more specific type if you have one for your survey JSON structure
     isNew: boolean;    // Flag to indicate if the survey is new
     dataset?: any;     // Optional dataset, you can specify the type if you have a specific structure
+    includeVariables?: Array<{ [key: string]: { [nestedKey: string]: any } }>;
     cssPath?: string;
     sjsPath?: string;
     jsPath?: string;
@@ -33,8 +51,10 @@ export interface UseSurveySubmissionProps {
     isNew: boolean; // Determines whether to use POST or PUT
     endpoint: string; // API endpoint to send the data
     excludeKeys?: string[]; // Keys to exclude from submission data
-    onSurveyComplete?: () => void; // Callback after successful completion
+    onSurveySuccess?: () => void; // Callback after successful completion
+    onSurveyFailure?: () => void; // Callback after failure
     redirectUrl?: string; // URL to redirect after completion
+    reloadPageOnSuccess?: boolean
 }
 
 export interface NavigationProps {
@@ -44,12 +64,15 @@ export interface NavigationProps {
     prevPage: () => void;
     jumpToPage: (page: any) => void; // Adjust 'any' to the proper type (like PageModel) if necessary
     submitSurvey: () => void;
+    canEdit?: boolean;
+    cancelSurvey: () => void;
     switchToDisplayMode: () => void;
     switchToEditMode: () => void;
     pageListOptions: Array<any>; // Adjust 'any' to the type of your pages if necessary
     isFirstPage: boolean;
     isLastPage: boolean;
     isEditing: boolean;
+    isSubmitting: boolean;
 }
 
 export interface ThemeModule {

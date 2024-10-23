@@ -1,76 +1,39 @@
-import React from 'react';
 import {UserDetailsBanner} from "@/components/AdminDetailsBanners/UserDetailsBanner";
-import {userJson} from "@/components/Z_surveyJs/forms/user";
-import {cookies} from "next/headers";
+import {userJson} from "@/components/surveyjs/forms/user";
 import {redirect} from "next/navigation";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+import {getUserIdentity} from "@/lib/getUserIdentity";
+import {checkUserRole} from "@/lib/checkUserRole";
+import apiClient from "@/lib/apiClient";
 
-export default async function UserPage() {
-    const cookieStore = cookies();
-    const authToken = cookieStore.get("auth_token")?.value;
-    const uniqueId = cookieStore.get("user_uuid")?.value;
+export default async function MyProfilePage() {
+    const userIdentity = await getUserIdentity();
+    checkUserRole(userIdentity, `/my-profile`);
 
-    if (!authToken) {
-        return redirect("/login");
-    }
+    const {userUniqueId} = userIdentity;
 
-    let userIdentity;
+    const res = await apiClient(`/user/findBy?uniqueId=${userUniqueId}`);
 
-    try {
-        const identityResponse = await fetch(
-            `${process.env.BE_URL}/getView?view=vwLoggedInUserIdentity&userUniqueId=${uniqueId}&selectColumns=userUniqueId,role`,
-            {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${authToken}`,
-                },
-            }
-        );
-
-        if (!identityResponse.ok) {
-            throw new Error('Failed to fetch user identity');
-        }
-
-        userIdentity = (await identityResponse.json()).resource;
-    } catch (error) {
+    if (!res.ok) {
         return redirect('/error');
     }
 
-    const {userUniqueId, role} = userIdentity;
+    const user = await res.json();
+    const userData = user.resource;
 
-    if (role === 'PA') {
-        return redirect("/customers");
-    }
-
-    try {
-        const res = await fetch(`${process.env.BE_URL}/user/findBy?uniqueId=${userUniqueId}`, {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${authToken}`,
-            },
-        });
-
-        if (!res.ok) {
-            return redirect('/error');
-        }
-
-        const user = await res.json();
-        const userData = user.resource;
-
-        // Step 3: Render the user details and survey
-        return (
-            <div>
-                <UserDetailsBanner user={userData}/>
-                <SurveyComponent
-                    surveyJson={userJson}
-                    endpoint={`/user/${userUniqueId}`}
-                    isNew={false}
-                    dataset={userData}
-                    sjsPath={'admin'}
-                />
-            </div>
-        );
-    } catch (error) {
-        return redirect('/error');
-    }
-};
+    return (
+        <div>
+            <UserDetailsBanner user={userData}/>
+            <SurveyComponent
+                surveyJson={userJson}
+                endpoint={`/user/${userUniqueId}`}
+                isNew={false}
+                excludeKeys={['imageUrl']}
+                dataset={userData}
+                sjsPath={'admin'}
+                reloadPageOnSuccess={true}
+            />
+        </div>
+    );
+}
+;

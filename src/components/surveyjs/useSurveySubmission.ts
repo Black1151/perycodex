@@ -1,7 +1,7 @@
 'use client';
 
 import {useEffect} from 'react';
-import {SurveyModel} from 'survey-core';
+import {Question, QuestionHtmlModel, SurveyModel} from 'survey-core';
 import {useToast} from '@chakra-ui/react'; // Assuming Chakra UI's toast is used for notifications
 import {useRouter} from 'next/navigation';
 import {UseSurveySubmissionProps} from "@/components/surveyjs/SurveyProps"; // For redirection after submission (if needed)
@@ -11,21 +11,39 @@ const useSurveySubmission = ({
                                  isNew,
                                  endpoint,
                                  excludeKeys = [],
-                                 onSurveyComplete,
+                                 onSurveySuccess,
+                                 onSurveyFailure,
                                  redirectUrl,
+                                 reloadPageOnSuccess = false
                              }: UseSurveySubmissionProps) => {
-    const toast = useToast(); // For showing success and error notifications
-    const router = useRouter(); // For redirection after survey completion
+    const toast = useToast();
+    const router = useRouter();
 
     useEffect(() => {
             if (!model) return;
-
-            // Handle survey submission
             const handleSurveySubmission = async (sender: SurveyModel) => {
-                console.log(endpoint);
-
                 const requestType = isNew ? "POST" : "PUT";
-                let filteredSurveyData = {...sender.data};
+
+                const allQuestions: Question[] = model.getAllQuestions();
+
+                const surveyData: { [key: string]: any } = sender.data;
+
+                // Iterate through all questions, checking for missing data and setting it to `null`
+                allQuestions.forEach((question: Question) => {
+                    const questionName = question.name;
+
+                    // Check if the question type is 'QuestionHtmlModel' and skip it if true
+                    if (question instanceof QuestionHtmlModel) {
+                        return; // Skip this iteration
+                    }
+
+                    // If the question doesn't exist in the data, set it to null
+                    if (!(questionName in surveyData)) {
+                        surveyData[questionName] = null;
+                    }
+                });
+
+                let filteredSurveyData = {...surveyData};
 
                 // Exclude specific keys from survey data
                 filteredSurveyData = Object.keys(filteredSurveyData)
@@ -70,19 +88,26 @@ const useSurveySubmission = ({
                         position: "bottom-right",
                     });
 
-                    onSurveyComplete?.(); // Call if provided
+                    onSurveySuccess?.(); // Call if provided
 
-                    // TODO: Change back so it is dynamic (Currently just for demo)
-                    const handleRedirection = () => {
-                        redirectUrl && router.push(redirectUrl); // Redirect if a URL is provided
+
+                    // Update the model data with the newly submitted data
+                    model.data = result.data || filteredSurveyData;
+
+                    // Rerender the survey with the updated data
+                    if (!isNew) {
+                        model.clear(false, false);
+                        model.render();
                     }
 
-                    setTimeout(handleRedirection, 1000);
+                    if (reloadPageOnSuccess) {
+                        router.refresh()
+                    }
 
-
-                    // Clear and rerender the survey
-                    // model.clear(false, false);
-                    // model.render();
+                    // Handle redirection if a URL is provided
+                    if (redirectUrl) {
+                        setTimeout(() => router.push(redirectUrl), 1000);
+                    }
 
                     return result;
 
@@ -96,9 +121,9 @@ const useSurveySubmission = ({
                         isClosable: true,
                         position: "bottom-right",
                     });
+                    onSurveyFailure?.();
                 }
             };
-
 
             // Attach the `handleSurveySubmission` function to the survey's onComplete event
             model.onComplete.add(handleSurveySubmission);
@@ -107,7 +132,7 @@ const useSurveySubmission = ({
             return () => {
                 model.onComplete.remove(handleSurveySubmission);
             };
-        }, [model, isNew, endpoint, excludeKeys, onSurveyComplete, redirectUrl, toast, router]
+        }, [model, isNew, endpoint, excludeKeys, onSurveySuccess, redirectUrl, toast, router]
     )
     ;
 

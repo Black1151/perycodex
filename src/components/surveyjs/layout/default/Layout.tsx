@@ -5,11 +5,17 @@ import {Box, Flex} from "@chakra-ui/react";
 import {motion} from "framer-motion";
 import useSurveyNavigation from "@/components/surveyjs/useSurveyNavigation";
 import BottomNavigation from "@/components/surveyjs/layout/default/BottomNavigation";
-import {LayoutProps} from "@/components/surveyjs/SurveyProps";
+import {DefaultLayoutProps} from "@/components/surveyjs/SurveyProps";
 
 const MotionBox = motion(Box); // Create a motion-wrapped Box for animations
 
-const DefaultLayout: React.FC<LayoutProps> = ({model, dataset}) => {
+const DefaultLayout: React.FC<DefaultLayoutProps> = ({
+                                                         model,
+                                                         dataset,
+                                                         canEdit,
+                                                         showTopNavigation = true,
+                                                         showBottomNavigation = true,
+                                                     }) => {
     const {
         currentPage,
         setCurrentPage,
@@ -17,12 +23,14 @@ const DefaultLayout: React.FC<LayoutProps> = ({model, dataset}) => {
         prevPage,
         jumpToPage,
         submitSurvey,
+        cancelSurvey,
         switchToDisplayMode,
         switchToEditMode,
         pageListOptions,
         isFirstPage,
         isLastPage,
         isEditing,
+        isSubmitting
     } = useSurveyNavigation(model, dataset);
 
     const [direction, setDirection] = useState(1); // 1 for next page, -1 for previous page
@@ -30,17 +38,12 @@ const DefaultLayout: React.FC<LayoutProps> = ({model, dataset}) => {
     useEffect(() => {
         // Listen for SurveyJS page change event
         const handlePageChange = () => {
-            console.log('Current Page:', currentPage);
-            console.log('Direction:', direction);
-
             // Set the direction based on whether the user is going to the next or previous page
             if (model.currentPageNo > currentPage) {
                 setDirection(1); // Slide from right for next page
             } else {
                 setDirection(-1); // Slide from left for previous page
             }
-            console.log('Direction:', direction);
-
         };
 
         // Attach event to the model
@@ -53,9 +56,11 @@ const DefaultLayout: React.FC<LayoutProps> = ({model, dataset}) => {
     }, [model, currentPage]);
 
     return (
-        <Flex w="full" justify="center" align="center" py={4} position="relative" direction="column">
-            <Box maxW={['98%', '98%', '98%']} w="100%" bg="white" borderRadius="lg" overflow="hidden">
-                {/* Navigation Component */}
+        <Flex w="full" maxW={['98%', '98%', '100%']} px={[0, 0, 4]} justify="center" align="center" py={4}
+              position="relative"
+              direction="column">
+            {/* Navigation Component */}
+            {showTopNavigation &&
                 <TopNavigation
                     currentPage={currentPage}
                     setCurrentPage={setCurrentPage}
@@ -63,13 +68,18 @@ const DefaultLayout: React.FC<LayoutProps> = ({model, dataset}) => {
                     prevPage={prevPage}
                     jumpToPage={jumpToPage}
                     submitSurvey={submitSurvey}
+                    cancelSurvey={cancelSurvey}
+                    canEdit={canEdit}
                     switchToDisplayMode={switchToDisplayMode}
                     switchToEditMode={switchToEditMode}
                     pageListOptions={pageListOptions}
                     isFirstPage={isFirstPage}
                     isLastPage={isLastPage}
                     isEditing={isEditing}
+                    isSubmitting={isSubmitting}
                 />
+            }
+            <Box w="100%" overflow="hidden" bg={'white'}>
 
                 {/* Motion-animated Survey component with slide transition */}
                 <MotionBox
@@ -95,20 +105,24 @@ const DefaultLayout: React.FC<LayoutProps> = ({model, dataset}) => {
 
 
                 {/*    Bottom Navigation*/}
-                <BottomNavigation
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                    nextPage={nextPage}
-                    prevPage={prevPage}
-                    jumpToPage={jumpToPage}
-                    submitSurvey={submitSurvey}
-                    switchToDisplayMode={switchToDisplayMode}
-                    switchToEditMode={switchToEditMode}
-                    pageListOptions={pageListOptions}
-                    isFirstPage={isFirstPage}
-                    isLastPage={isLastPage}
-                    isEditing={isEditing}
-                />
+                {showBottomNavigation &&
+                    <BottomNavigation
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        nextPage={nextPage}
+                        prevPage={prevPage}
+                        jumpToPage={jumpToPage}
+                        submitSurvey={submitSurvey}
+                        cancelSurvey={cancelSurvey}
+                        switchToDisplayMode={switchToDisplayMode}
+                        switchToEditMode={switchToEditMode}
+                        pageListOptions={pageListOptions}
+                        isFirstPage={isFirstPage}
+                        isLastPage={isLastPage}
+                        isEditing={isEditing}
+                        isSubmitting={isSubmitting}
+                    />
+                }
             </Box>
         </Flex>
     );

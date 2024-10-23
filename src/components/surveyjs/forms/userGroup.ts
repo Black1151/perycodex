@@ -18,16 +18,12 @@ export const userGroupJson = {
                     readOnly: false
                 },
                 {
-                    type: "dropdown",
+                    type: "text",
                     name: "customerId",
-                    isRequired: true,
                     title: "Customer",
-                    choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/customer/allBy`,
-                        path: "resource",
-                        valueName: "id",
-                        titleName: "name"
-                    },
+                    readOnly: true,
+                    visibleIf: "{pgv_currentUser.role} != 'PA'",
+                    defaultValueExpression: "{pgv_currentUser.customerId}"
                 },
                 {
                     type: "text",

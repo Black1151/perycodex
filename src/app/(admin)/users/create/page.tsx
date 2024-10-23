@@ -1,30 +1,49 @@
-import {cookies} from "next/headers";
-import {redirect} from "next/navigation";
-
-// SurveyJS
-import {userJson} from "@/components/Z_surveyJs/forms/user"
+import {userJson} from "@/components/surveyjs/forms/user"
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import AdminHeader from "@/components/AdminHeader";
+import {getUserIdentity} from "@/lib/getUserIdentity";
+import {checkUserRole} from "@/lib/checkUserRole";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-export const fetchCache = "force-no-store";
+interface SearchParams {
+    userType?: string
+}
 
-export default async function CustomersPage() {
-    const cookieStore = cookies();
-    const authToken = cookieStore.get("auth_token")?.value;
+export default async function UsersCreatePage({searchParams}: { searchParams: SearchParams }) {
+    const userIdentity = await getUserIdentity();
+    checkUserRole(userIdentity, `/users/create`);
 
-    if (!authToken) {
-        return redirect("/login");
+    let headerTitle = "Create User";
+    let userTypeParam = searchParams.userType;
+
+    if (userIdentity.role === 'CA') {
+        if (!['external'].includes(userTypeParam || '')) {
+            userTypeParam = 'external';
+            headerTitle = 'Create New Client User'
+        } else if (userTypeParam === 'external') {
+            headerTitle = 'Create New Client User';
+        }
+    } else if (userIdentity.role === 'PA') {
+        headerTitle = 'Create User';
     }
+
+    const surveyVariables = [
+        {
+            "userType": {
+                userTypeParam
+            }
+        }
+    ]
+
 
     return (
         <>
-            <AdminHeader headingText={'Create User'}/>
+            <AdminHeader headingText={headerTitle}/>
             <SurveyComponent
                 surveyJson={userJson}
                 endpoint={'/user'}
                 isNew={true}
+                excludeKeys={['imageUrl']}
+                includeVariables={surveyVariables}
                 redirectUrl={'/users'}
                 sjsPath={'admin'}
             />

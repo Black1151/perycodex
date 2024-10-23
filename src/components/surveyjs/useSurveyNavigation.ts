@@ -4,7 +4,8 @@ import {PageModel} from 'survey-core/typings/packages/survey-core/src/page';
 
 const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
     const [currentPage, setCurrentPage] = useState<number>(0);
-    const [isEditing, setIsEditing] = useState<boolean>(model?.mode === 'edit'); // Track the current mode
+    const [isEditing, setIsEditing] = useState<boolean>(model?.mode === 'edit')
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
     const [pageListOptions, setPageListOptions] = useState<{ page: PageModel, title: string }[]>([]);
 
     useEffect(() => {
@@ -62,6 +63,21 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
         }
     };
 
+    // Function to find the first page with incomplete or invalid data
+    const findFirstIncompletePage = (): PageModel | null => {
+        if (!model) return null;
+
+        for (const page of model.visiblePages) {
+            // If the page is not valid or has errors, return it
+            if (!page.validate(true)) {
+                return page;
+            }
+        }
+
+        // If all pages are valid, return null
+        return null;
+    };
+
 
     // Function to replace variables dynamically in strings
     const replaceVariables = (str: string, survey: SurveyModel) => {
@@ -91,16 +107,19 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
 
     const submitSurvey = () => {
         if (model && isEditing) {
+            setIsSubmitting(true);
 
             // Validate the entire survey before submitting
             if (!model.validate(true, true)) {
                 model.focusOnFirstError;
-                return 0;
+                setIsSubmitting(false);
+                return;
             }
 
             if (!model.isCurrentPageHasErrors) {
                 if (!model.completeLastPage()) {
                     model.focusOnFirstError;
+                    setIsSubmitting(false);
                     return;
                 }
 
@@ -114,6 +133,8 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
                 // If there are errors, focus on the first page with an error
                 model.focusOnFirstError;
             }
+
+            setIsSubmitting(false);
         }
     };
 
@@ -122,16 +143,29 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
         if (model) {
             setIsEditing(true);
             model.mode = "edit";
+
+            // Find the first page with incomplete data and navigate to it
+            const firstIncompletePage = findFirstIncompletePage();
+            if (firstIncompletePage) {
+                model.currentPage = firstIncompletePage; // Set the first incomplete page as the current page
+                setCurrentPage(model.currentPageNo); // Update the state
+            }
         }
     };
 
     const switchToDisplayMode = () => {
         if (model) {
             setIsEditing(false);
-            model.data = dataset
             model.mode = "display";
         }
     };
+
+    const cancelSurvey = () => {
+        if (model) {
+            model.data = dataset;
+            switchToDisplayMode();
+        }
+    }
 
     return {
         currentPage,
@@ -140,12 +174,14 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
         prevPage,
         jumpToPage,
         submitSurvey,
+        cancelSurvey,
         switchToEditMode,
         switchToDisplayMode,
         pageListOptions,
         isFirstPage: model?.isFirstPage || false,
         isLastPage: model?.isLastPage || false,
         isEditing,
+        isSubmitting,
     };
 };
 

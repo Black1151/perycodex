@@ -1,40 +1,43 @@
 "use client";
 
-import { VStack } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
-import { PerygonContainer } from "@/components/layout/PerygonContainer";
-import { Footer } from "@/components/layout/Footer";
-import { NavBarProps, NavBar } from "../../NavBar";
-import { Tool } from "@/types/types";
-import { LeftHandNavigationDrawer } from "@/components/layout/LeftHandNavigationDrawer";
-import { RightHandNavigationDrawer } from "@/components/layout/RightHandNavigationDrawer";
+import {VStack} from "@chakra-ui/react";
+import {useEffect, useState} from "react";
+import {PerygonContainer} from "@/components/layout/PerygonContainer";
+import {Footer} from "@/components/layout/Footer";
+import {NavBar, NavBarProps} from "../../NavBar";
+import {Tool} from "@/types/types";
+import {LeftHandNavigationDrawer} from "@/components/layout/LeftHandNavigationDrawer";
+import {RightHandNavigationDrawer} from "@/components/layout/RightHandNavigationDrawer";
 
 interface ClientSatisfactionClientInnerProps {
-  navBarProps: NavBarProps;
-  toolData: Tool;
+    navBarProps: NavBarProps;
+    toolData: Tool;
 }
 
 export default function ClientSatisfactionClientInner({
-  navBarProps,
-}: ClientSatisfactionClientInnerProps) {
-  const [isLoading, setIsLoading] = useState(true);
+                                                          navBarProps,
+                                                      }: ClientSatisfactionClientInnerProps) {
+    const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 6000);
-  }, []);
+    useEffect(() => {
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 6000);
+    }, []);
 
-  return (
-    <PerygonContainer>
-      <>
-        <VStack minH="100vh">
-          <NavBar {...navBarProps} />
-          <Footer />
-        </VStack>
-        <LeftHandNavigationDrawer title={'User Menu'} />
-        <RightHandNavigationDrawer />
-      </>
-    </PerygonContainer>
-  );
+    return (
+        <>
+            <PerygonContainer>
+                <>
+                    <VStack minH="100vh">
+                        <NavBar {...navBarProps} />
+                    </VStack>
+                    <LeftHandNavigationDrawer title={'User Menu'}/>
+                    <RightHandNavigationDrawer/>
+                </>
+            </PerygonContainer>
+            <Footer/>
+        </>
+    )
+        ;
 }

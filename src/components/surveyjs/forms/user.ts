@@ -5,8 +5,17 @@ export const userJson = {
                 title: "User Main Details",
                 elements: [
                     {
-                        type: "text",
+                        type: "dropdown",
                         name: "customerId",
+                        title: "Customer",
+                        isRequired: true,
+                        visibleIf: "{pgv_formMode} = 'new'",
+                        choicesByUrl: {
+                            url: `${process.env.NEXT_PUBLIC_BASE_URL}api/customer/allBy`,
+                            path: "resource",
+                            valueName: "id",
+                            titleName: "name"
+                        },
                     },
                     {
                         type: "dropdown",
@@ -16,8 +25,10 @@ export const userJson = {
                         startWithNewLine: false,
                         placeholder: "Select Role",
                         allowClear: true,
+                        enableIf: "{pgv_currentUser.role} = 'CA' or {pgv_currentUser.role} = 'PA'",
                         setValueIf: "{userTypePaying} = false",
-                        setValueExpression: "'EU'",
+                        setValueExpression: "iif({pgv_formMode} = 'new', 'EU', 'CU')",
+                        defaultValueExpression: "iif({pgv_formMode} = 'new', 'EU', 'CU')",
                         isRequired: true,
                         choices: [
                             {
@@ -50,7 +61,8 @@ export const userJson = {
                     {
                         type: "boolean",
                         name: "isActive",
-                        title: "Is this contact active?",
+                        visibleIf: "{pgv_currentUser.role} = 'CA' or {pgv_currentUser.role} = 'PA'",
+                        title: "Is this user active?",
                         titleLocation: "top",
                         startWithNewLine: false,
                         defaultValue: true,
@@ -110,7 +122,7 @@ export const userJson = {
                         name: "departmentId",
                         title: "Department",
                         titleLocation: "top",
-                        placeholder: "Select (customer) department / service user works in",
+                        placeholder: "Select department",
                         allowClear: true,
                         isRequired: true,
                         visibleIf: "{userTypePaying} = true",
@@ -130,7 +142,7 @@ export const userJson = {
                         startWithNewLine: false,
                         isRequired: true,
                         visibleIf: "{userTypePaying} = true",
-                        placeholder: "Select (customer) team user works in",
+                        placeholder: "Select team",
                         allowClear: true,
                         enableIf: "{customerID} notempty and {departmentId} notempty",
                         choicesByUrl: {
@@ -194,6 +206,7 @@ export const userJson = {
                         name: "email",
                         inputType: "email",
                         title: "Email",
+                        enableIf: "{pgv_formMode} = 'new'",
                         titleLocation: "top",
                         isRequired: true,
                         placeholder: "Enter the email of the user"
@@ -610,7 +623,7 @@ export const userJson = {
         calculatedValues: [
             {
                 name: "userTypePaying",
-                expression: "iif({role} = 'EU', false, true)",
+                expression: "iif({pgv_formMode} = 'new' or {role} = 'EU', false, true)",
                 includeIntoResult: false
             }
         ],

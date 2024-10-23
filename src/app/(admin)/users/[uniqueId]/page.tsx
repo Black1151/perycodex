@@ -1,25 +1,16 @@
-import React from 'react';
 import {UserDetailsBanner} from "@/components/AdminDetailsBanners/UserDetailsBanner";
-import {userJson} from "@/components/Z_surveyJs/forms/user";
-import {cookies} from "next/headers";
+import {userJson} from "@/components/surveyjs/forms/user";
 import {redirect} from "next/navigation";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+import {getUserIdentity} from "@/lib/getUserIdentity";
+import {checkUserRole} from "@/lib/checkUserRole";
+import apiClient from "@/lib/apiClient";
 
-export default async function UserPage({params}: { params: { uniqueId: string } }) {
-    const cookieStore = cookies();
-    const authToken = cookieStore.get("auth_token")?.value;
+export default async function UsersDetailPage({params}: { params: { uniqueId: string } }) {
+    const userIdentity = await getUserIdentity();
+    checkUserRole(userIdentity, `/users/${params.uniqueId}`);
 
-    if (!authToken) {
-        return redirect("/login");
-    }
-
-    // Fetch user data from the backend
-    const res = await fetch(`${process.env.BE_URL}/user/findBy?uniqueId=${params.uniqueId}`, {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${authToken}`,
-        },
-    });
+    const res = await apiClient(`/user/findBy?uniqueId=${params.uniqueId}`);
 
     if (!res.ok) {
         return redirect("/error");
@@ -36,7 +27,9 @@ export default async function UserPage({params}: { params: { uniqueId: string } 
                 endpoint={`/user/${params.uniqueId}`}
                 isNew={false}
                 dataset={userData}
+                excludeKeys={['imageUrl']}
                 sjsPath={'admin'}
+                reloadPageOnSuccess={true}
             />
         </>
     );

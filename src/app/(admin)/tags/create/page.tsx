@@ -1,26 +1,24 @@
-import {cookies} from "next/headers";
-import {redirect} from "next/navigation";
-
-// SurveyJS
-import {siteJson} from "@/components/Z_surveyJs/forms/site";
+import {getUserIdentity} from "@/lib/getUserIdentity";
+import {checkUserRole} from "@/lib/checkUserRole";
 import AdminHeader from "@/components/AdminHeader";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+import {tagsJson} from "@/components/surveyjs/forms/tags";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-export const fetchCache = "force-no-store";
-
-export default async function CustomersPage() {
-    const cookieStore = cookies();
-    const authToken = cookieStore.get("auth_token")?.value;
-
-    if (!authToken) {
-        return redirect("/login");
-    }
+export default async function TagsCreatePage() {
+    const userIdentity = await getUserIdentity();
+    checkUserRole(userIdentity, "/tags/create");
 
     return (
         <>
-            <h1>Tags Creation to be implemented</h1>
+            <AdminHeader headingText="Create Tag"/>
+            <SurveyComponent
+                surveyJson={tagsJson}
+                endpoint={'/tag'}
+                isNew={true}
+                layout={'default'}
+                redirectUrl={'/tags'}
+                sjsPath={'admin'}
+            />
         </>
     );
 }

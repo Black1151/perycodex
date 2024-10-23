@@ -1,25 +1,16 @@
-import React from 'react';
 import {CustomerDetailsBanner} from "@/components/AdminDetailsBanners/CustomerDetailsBanner"
-import {customerJson} from "@/components/Z_surveyJs/forms/customer";
-import {cookies} from "next/headers";
+import {customerJson} from "@/components/surveyjs/forms/customer";
 import {redirect} from "next/navigation";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+import {getUserIdentity} from "@/lib/getUserIdentity";
+import {checkUserRole} from "@/lib/checkUserRole";
+import apiClient from "@/lib/apiClient";
 
-export default async function CustomerPage({params}: { params: { uniqueId: string } }) {
-    const cookieStore = cookies();
-    const authToken = cookieStore.get("auth_token")?.value;
+export default async function CustomersDetailsPage({params}: { params: { uniqueId: string } }) {
+    const userIdentity = await getUserIdentity();
+    checkUserRole(userIdentity, `/customers/${params.uniqueId}`);
 
-    if (!authToken) {
-        return redirect("/login");
-    }
-
-    // Fetch customer data from the backend
-    const res = await fetch(`${process.env.BE_URL}/customer/findBy?uniqueId=${params.uniqueId}`, {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${authToken}`,
-        },
-    });
+    const res = await apiClient(`/customer/findBy?uniqueId=${params.uniqueId}`);
 
     if (!res.ok) {
         return redirect("/error");
@@ -36,7 +27,10 @@ export default async function CustomerPage({params}: { params: { uniqueId: strin
                 endpoint={`/customer/${params.uniqueId}`}
                 isNew={false}
                 dataset={customerData}
+                excludeKeys={['imageUrl']}
+                layout={'default'}
                 sjsPath={'admin'}
+                reloadPageOnSuccess={true}
             />
         </div>
     );

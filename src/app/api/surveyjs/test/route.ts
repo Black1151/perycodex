@@ -4,6 +4,7 @@ import {NextResponse} from 'next/server';
 export async function POST(req: Request) {
     try {
         const surveyData = await req.json(); // Parse the JSON body from the request
+        console.log('Received #:', surveyData.length);
         console.log('Received survey data:', surveyData);
 
         // Simulate saving the data to a database (or perform actual logic here)
@@ -21,6 +22,7 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
     try {
         const surveyData = await req.json(); // Parse the JSON body from the request
+        console.log('Received #:', surveyData.length);
         console.log('Received survey update:', surveyData);
 
         // Simulate updating the data in a database (or perform actual logic here)

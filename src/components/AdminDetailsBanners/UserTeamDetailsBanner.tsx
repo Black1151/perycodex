@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import {Box, Flex, FormControl, Heading, Text, VStack, Badge} from '@chakra-ui/react';
+import {Badge, Box, Flex, FormControl, Heading, Text, VStack} from '@chakra-ui/react';
 import {People} from "@mui/icons-material";
 import moment from "moment/moment";
 import CreateIcon from "@mui/icons-material/Create";
@@ -32,7 +32,7 @@ export const UserTeamDetailsBanner: React.FC<UserTeamDetailsBannerProps> = ({tea
     const isDepartment = team.parentTeamId === null;
 
     return (
-        <Flex mb={4} p={4} color={'white'} overflow={'hidden'}>
+        <Flex mb={4} p={[0, 0, 4]} color={'white'} overflow={'hidden'}>
             {/* Team/Department Icon and Name */}
             <FormControl w={'100px'} h={'100px'} aspectRatio={1} borderRadius={'full'}>
                 <Box
@@ -45,22 +45,22 @@ export const UserTeamDetailsBanner: React.FC<UserTeamDetailsBannerProps> = ({tea
                     justifyContent="center"
                     alignItems="center"
                 >
-                    <People fontSize="large" style={{fontSize: '48px', color: 'gray'}}/>
+                    <People fontSize="large" sx={{color: "var(--chakra-colors-perygonPink)"}}/>
                 </Box>
             </FormControl>
 
             {/* Team/Department Information */}
             <VStack align="start" ml={4} minW={'300px'} spacing={3}>
-                <Flex alignItems="center">
-                    <Heading fontWeight={300}>{team.name}</Heading>
+                <Flex alignItems="center" gap={2}>
                     <Box
-                        ml={2}
-                        w={4}
-                        h={4}
+                        w={'1.4rem'}
+                        h={'1.4rem'}
                         borderRadius="full"
                         border={'white 1px solid'}
                         bg={team.isActive ? 'green.500' : 'red.500'}
                     />
+                    <Heading fontWeight={300} size={['md', 'md', 'lg']}>{team.name}</Heading>
+
                 </Flex>
 
                 {/* Department or Team Badge */}
@@ -77,7 +77,7 @@ export const UserTeamDetailsBanner: React.FC<UserTeamDetailsBannerProps> = ({tea
 
             {/* Unique ID and Manager ID */}
             <VStack ml={'auto'} alignItems={'end'} justifyContent={'flex-start'} display={['none', 'none', 'flex']}>
-                <Heading size="lg" fontWeight={100}>ID: {team.id}</Heading>
+                <Heading size={['md', 'md', 'lg']} fontWeight={100}>ID: {team.id}</Heading>
                 <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
                     <CreateIcon/>
                     <Text fontSize="sm">{moment(team.createdAt).format('D/MM/YYYY')}</Text>
