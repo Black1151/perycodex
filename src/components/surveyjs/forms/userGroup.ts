@@ -22,6 +22,7 @@ export const userGroupJson = {
                     name: "customerId",
                     isRequired: true,
                     title: "Customer",
+                    visibleIf: "{pgv_currentUser.role} != 'PA'",
                     enableIf: "{pgv_currentUser.role} != 'PA'",
                     choicesByUrl: {
                         url: `${process.env.NEXT_PUBLIC_BASE_URL}api/customer/allBy`,
