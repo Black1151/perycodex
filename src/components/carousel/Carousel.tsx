@@ -1,5 +1,5 @@
-import React from "react";
-import { Box, HStack } from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Box, HStack, VStack } from "@chakra-ui/react";
 import CarouselControls from "./CarouselControls";
 import CarouselDots from "./CarouselDots";
 import CarouselItem, { CarouselItemProps } from "./CarouselItem";
@@ -19,16 +19,44 @@ const Carousel: React.FC<CarouselProps> = ({
     setParentIndex
   );
 
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchEndX, setTouchEndX] = useState<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEndX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStartX !== null && touchEndX !== null) {
+      const deltaX = touchStartX - touchEndX;
+      const minSwipeDistance = 50;
+      if (deltaX > minSwipeDistance) {
+        nextSlide();
+      } else if (deltaX < -minSwipeDistance) {
+        prevSlide();
+      }
+    }
+    setTouchStartX(null);
+    setTouchEndX(null);
+  };
+
   return (
-    <Box
+    <VStack
       position={"relative"}
       height={["200px", "300px", "270px"]}
-      bottom={[10, 0]}
-      mx={30}
+      bottom={0}
+      mx={[0, 30]}
       pb={10}
+      gap={10}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       <CarouselControls onPrev={prevSlide} onNext={nextSlide} />
-
       <HStack
         spacing={5}
         justifyContent="center"
@@ -59,17 +87,19 @@ const Carousel: React.FC<CarouselProps> = ({
           }
 
           return (
-            <Box
+            <HStack
               key={index}
               onClick={() => (currentIndex === index ? "" : updateIndex(index))}
               transition="opacity 0.5s ease-in-out, pointer-events 0.5s ease-in-out"
               opacity={opacity}
               cursor={distance <= 1 ? "pointer" : "default"}
               pointerEvents={pointerEvents}
-              width={[100, 200]}
+              width={["100%", 125, 200]}
+              alignItems="center"
+              justifyContent="center"
             >
               <CarouselItem {...item} isSelected={index === currentIndex} />
-            </Box>
+            </HStack>
           );
         })}
       </HStack>
@@ -78,7 +108,7 @@ const Carousel: React.FC<CarouselProps> = ({
         currentIndex={currentIndex}
         onDotClick={updateIndex}
       />
-    </Box>
+    </VStack>
   );
 };
 

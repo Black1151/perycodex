@@ -1,12 +1,12 @@
-import React from "react"
-import { Box } from "@chakra-ui/react"
-import { ChevronLeft, ChevronRight } from "@mui/icons-material"
+import React from "react";
+import { Box } from "@chakra-ui/react";
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 
 interface CarouselNavigationButtonProps {
-  direction: "left" | "right"
-  onClick: () => void
-  top: string | undefined
-  side: string | undefined
+  direction: "left" | "right";
+  onClick: () => void;
+  top: string | undefined;
+  side: string | undefined;
 }
 
 const CarouselNavigationButton: React.FC<CarouselNavigationButtonProps> = ({
@@ -15,15 +15,15 @@ const CarouselNavigationButton: React.FC<CarouselNavigationButtonProps> = ({
   top,
   side,
 }) => {
-  const IconComponent = direction === "left" ? ChevronLeft : ChevronRight
+  const IconComponent = direction === "left" ? ChevronLeft : ChevronRight;
 
   const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
-    ;(e.currentTarget as HTMLElement).style.transform = "scale(1.2)"
-  }
+    (e.currentTarget as HTMLElement).style.transform = "scale(1.2)";
+  };
 
   const handleMouseUp = (e: React.MouseEvent | React.TouchEvent) => {
-    ;(e.currentTarget as HTMLElement).style.transform = "translateY(-25%)"
-  }
+    (e.currentTarget as HTMLElement).style.transform = "translateY(-25%)";
+  };
 
   return (
     <Box
@@ -38,7 +38,7 @@ const CarouselNavigationButton: React.FC<CarouselNavigationButtonProps> = ({
       onMouseUp={handleMouseUp}
       onTouchStart={handleMouseDown}
       onTouchEnd={handleMouseUp}
-      display="flex"
+      display={["none", "flex"]}
       alignItems="center"
       justifyContent="center"
       width="40px"
@@ -56,7 +56,7 @@ const CarouselNavigationButton: React.FC<CarouselNavigationButtonProps> = ({
         style={{ color: "white", fontSize: "24px", transition: "color 0.3s" }}
       />
     </Box>
-  )
-}
+  );
+};
 
-export default CarouselNavigationButton
+export default CarouselNavigationButton;

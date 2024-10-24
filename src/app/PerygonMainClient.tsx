@@ -4,14 +4,13 @@ import { useState, useEffect } from "react";
 import CarouselDisplay from "@/components/carousel/CarouselDisplay";
 import { CarouselItemProps } from "@/components/carousel/CarouselItem";
 import {
-  Box,
-  useTheme,
   Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
   ModalBody,
   Text,
+  Flex,
 } from "@chakra-ui/react";
 import { NavBar, NavBarProps } from "./NavBar";
 import { Footer } from "@/components/layout/Footer";
@@ -59,7 +58,7 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
   };
 
   return (
-    <Box minHeight="100vh" width="100%" overflow="hidden">
+    <Flex flex={1} overflow="hidden">
       <NavBar {...navbarProps} />
       {!showNoToolsModal && <CarouselDisplay carouselItems={carouselItems} />}
       <Footer />
@@ -81,6 +80,6 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
           </ModalBody>
         </ModalContent>
       </Modal>
-    </Box>
+    </Flex>
   );
 };
