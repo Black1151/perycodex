@@ -20,7 +20,7 @@ export const userFields: ColDef[] | any = [
         // flex: 1,
         cellRenderer: UserImageRenderer,
         cellRendererParams: {
-            uniqueIdField: 'uniqueId',
+            uniqueIdField: 'userUniqueId',
             nameField: 'fullName',
             imageUrlField: 'imageUrl',
         }
