@@ -4,15 +4,17 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {AgGridReact} from 'ag-grid-react';
 import 'ag-grid-charts-enterprise';
 import {
-    GetRowIdParams, GridApi,
+    GetRowIdParams,
+    GridApi,
     GridReadyEvent,
     LicenseManager,
     RowDataTransaction,
-    RowDropZoneParams, RowSelectionOptions
+    RowDropZoneParams,
+    RowSelectionOptions
 } from 'ag-grid-charts-enterprise';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import {Box, Button, Flex, Heading, Text, useBreakpointValue, Stack} from '@chakra-ui/react';
+import {Box, Button, Flex, Heading, Stack, Text, useBreakpointValue} from '@chakra-ui/react';
 import CustomGridBottomPagination from '@/components/agGrids/CustomGridBottomPagination';
 import LoadingOverlay from '@/components/agGrids/LoadingOverlay';
 import DraggableNoDataOverlay from "@/components/agGrids/DraggableNoDataOverlay";
@@ -213,6 +215,39 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
 
     };
 
+    const moveAllToSample = () => {
+        if (populationGridRef.current && sampleGridRef.current) {
+            const allPopulationRows: any[] = [];
+
+            // Loop through all rows in the population grid
+            populationGridRef.current.api.forEachNode((node) => {
+                allPopulationRows.push(node.data);
+            });
+
+            if (allPopulationRows.length > 0) {
+                // Move all rows from population to sample grid
+                addRecordsToGrid(populationGridRef.current.api, sampleGridRef.current.api, allPopulationRows);
+            }
+        }
+    };
+
+    const moveAllToPopulation = () => {
+        if (sampleGridRef.current && populationGridRef.current) {
+            const allSampleRows: any[] = [];
+
+            // Loop through all rows in the sample grid
+            sampleGridRef.current.api.forEachNode((node) => {
+                allSampleRows.push(node.data);
+            });
+
+            if (allSampleRows.length > 0) {
+                // Move all rows from sample back to population grid
+                addRecordsToGrid(sampleGridRef.current.api, populationGridRef.current.api, allSampleRows);
+            }
+        }
+    };
+
+
     const rowSelection: RowSelectionOptions = {mode: 'multiRow'}
 
     return (
@@ -289,6 +324,21 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                             />
                         </Flex>
                     </Stack>
+
+                    <Flex mt={4} justify="center" gap={4}>
+                        <Button
+                            onClick={moveAllToSample}
+                            isDisabled={populationGridRef.current?.api?.getDisplayedRowCount() === 0}
+                        >
+                            Add All
+                        </Button>
+                        <Button
+                            onClick={moveAllToPopulation}
+                            isDisabled={sampleGridRef.current?.api?.getDisplayedRowCount() === 0}
+                        >
+                            Remove All
+                        </Button>
+                    </Flex>
                     <Button my={4} p={4} onClick={handleSubmission} isDisabled={!!errorMessage} isLoading={loading}>
                         Submit
                     </Button>
