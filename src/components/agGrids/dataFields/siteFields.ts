@@ -2,6 +2,7 @@ import {ColDef} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
 import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/OrganisationLogoRenderer";
 import UserImageRenderer from "@/components/agGrids/CellRenderers/UserImageRenderer";
+import SiteLinkRenderer from "@/components/agGrids/CellRenderers/SiteLinkRenderer";
 
 // Updated AgGrids fields for Sites
 export const siteFields: ColDef[] | any = [
@@ -18,6 +19,11 @@ export const siteFields: ColDef[] | any = [
         field: 'siteName',
         headerName: 'Site Name',
         filter: "agMultiColumnFilter",
+        cellRenderer: SiteLinkRenderer,
+        cellRendererParams: {
+            uniqueIdField: 'siteUniqueId',
+            nameField: 'siteName',
+        }
         // flex: 1
     },
     {
