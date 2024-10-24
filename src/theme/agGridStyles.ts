@@ -62,9 +62,21 @@ export const agGridStyles = {
     },
 
     ".ag-theme-perygon": {
+        // "--ag-icon-font-display": "none !important",
         "--ag-checkbox-background-color": "white !important",
         "--ag-checkbox-checked-color": "var(--chakra-colors-perygonPink) !important",
         "--ag-checkbox-unchecked-color": "var(--chakra-colors-seduloRed) !important",
         "--ag-checkbox-indeterminate-color": "white !important",
+
+        // Remove check icon and replace with a Perygon Pink
+        "--ag-icon-font-display-checkbox-checked": "none !important",
+        "--ag-icon-image-checkbox-checked": "url('/images/perygonPinkCheck.svg') !important",
+
+        // Remove indeterminate and replace with
+        "--ag-icon-font-display-checkbox-indeterminate": "none !important",
+        "--ag-icon-image-checkbox-indeterminate": "url('/images/perygonPinkUndeterminate.svg') !important",
+
+        // Remove unchecked icon and replace with
+        "--ag-icon-image-checkbox-unchecked": "url('/images/perygonCheck.svg') !important",
     },
 };
