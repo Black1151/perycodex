@@ -60,4 +60,11 @@ export const agGridStyles = {
         color: "white !important",
         fontSize: "18px",
     },
+
+    ".ag-theme-perygon": {
+        "--ag-checkbox-background-color": "white !important",
+        "--ag-checkbox-checked-color": "var(--chakra-colors-perygonPink) !important",
+        "--ag-checkbox-unchecked-color": "var(--chakra-colors-seduloRed) !important",
+        "--ag-checkbox-indeterminate-color": "white !important",
+    },
 };
