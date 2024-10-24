@@ -127,15 +127,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
           Open {carouselItems[currentIndex].name}
         </Button>
       </Flex>
-      <Box
-        zIndex={3}
-        width="100%"
-        display="flex"
-        justifyContent="center"
-        mt={10}
-      >
-        <Carousel carouselItems={carouselItems} setParentIndex={setIndex} />
-      </Box>
+      <Carousel carouselItems={carouselItems} setParentIndex={setIndex} />
     </VStack>
   );
 };

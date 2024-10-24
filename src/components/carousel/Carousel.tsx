@@ -63,10 +63,10 @@ const Carousel: React.FC<CarouselProps> = ({
               key={index}
               onClick={() => (currentIndex === index ? "" : updateIndex(index))}
               transition="opacity 0.5s ease-in-out, pointer-events 0.5s ease-in-out"
-              width={`${100 / carouselItems.length}%`}
               opacity={opacity}
               cursor={distance <= 1 ? "pointer" : "default"}
               pointerEvents={pointerEvents}
+              width={[100, 200]}
             >
               <CarouselItem {...item} isSelected={index === currentIndex} />
             </Box>
