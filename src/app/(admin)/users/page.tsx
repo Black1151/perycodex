@@ -5,6 +5,7 @@ import InviteNewUserModalForPA from "@/app/(admin)/users/InviteUser";
 import {getUserIdentity} from "@/lib/getUserIdentity";
 import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
+import {redirect} from "next/navigation";
 
 interface SearchParams {
     userType?: string
@@ -42,8 +43,13 @@ export default async function UsersPage({searchParams}: { searchParams: SearchPa
 
     const res = await apiClient(url, {cache: "no-store"});
 
+    if (!res.ok) {
+        return redirect("/error");
+    }
+
+
     const users = await res.json();
-    const userData = users.resource;
+    const userData = users.resource || [];
 
     const userCount = userData ? userData.length : 0;
 

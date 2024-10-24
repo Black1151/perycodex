@@ -44,7 +44,7 @@ export default async function SitesPage({searchParams}: { searchParams: SearchPa
     }
 
     const sites = await res.json();
-    const siteData = sites.resource;
+    const siteData = sites.resource || [];
 
     const siteCount = siteData ? siteData.length : 0;
 

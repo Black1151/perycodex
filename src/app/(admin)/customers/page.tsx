@@ -37,7 +37,7 @@ export default async function CustomersPage({searchParams}: { searchParams: Sear
     }
 
     const customers = await res.json();
-    const customerData = customers.resource;
+    const customerData = customers.resource || [];
 
     const customerCount = customerData ? customerData.length : 0;
 

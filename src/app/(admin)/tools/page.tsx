@@ -20,7 +20,7 @@ export default async function ToolsPage() {
     }
 
     const tools = await res.json();
-    const toolData = tools.resource;
+    const toolData = tools.resource || [];
 
     const toolCount = toolData ? toolData.length : 0;
 

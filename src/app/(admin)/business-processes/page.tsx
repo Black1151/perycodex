@@ -20,7 +20,7 @@ export default async function WorkflowsPage() {
     }
 
     const businessProcesses = await res.json();
-    const businessProcessData = businessProcesses.resource;
+    const businessProcessData = businessProcesses.resource || [];
 
     const businessProcessCount = businessProcessData ? businessProcessData.length : 0;
 

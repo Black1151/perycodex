@@ -20,7 +20,7 @@ export default async function WorkflowsPage() {
     }
 
     const workflows = await res.json();
-    const workflowData = workflows.resource;
+    const workflowData = workflows.resource || [];
 
     const workflowCount = workflowData ? workflowData.length : 0;
 
