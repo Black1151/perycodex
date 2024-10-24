@@ -10,16 +10,32 @@ import {
     LicenseManager,
     RowDataTransaction,
     RowDropZoneParams,
-    RowSelectionOptions
+    RowSelectionOptions,
 } from 'ag-grid-charts-enterprise';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import {Box, Button, Flex, Heading, Stack, Text, useBreakpointValue} from '@chakra-ui/react';
+import {
+    Box,
+    Button,
+    Flex,
+    Heading,
+    Stack,
+    Text,
+    useBreakpointValue,
+    Alert,
+    AlertIcon,
+    Tooltip,
+    IconButton,
+} from '@chakra-ui/react';
+import {InfoOutlined, Close, Remove} from "@mui/icons-material";
 import CustomGridBottomPagination from '@/components/agGrids/CustomGridBottomPagination';
 import LoadingOverlay from '@/components/agGrids/LoadingOverlay';
-import DraggableNoDataOverlay from "@/components/agGrids/DraggableNoDataOverlay";
-import {useFetchClient} from "@/hooks/useFetchClient";
-import {ColDef} from "ag-grid-community";
+import DraggableNoDataOverlay from '@/components/agGrids/DraggableNoDataOverlay';
+import {useFetchClient} from '@/hooks/useFetchClient';
+import {ColDef} from 'ag-grid-community';
+import CloseIcon from "@mui/icons-material/Close";
+import AddIcon from "@mui/icons-material/Add";
+import DoneIcon from "@mui/icons-material/Done";
 
 LicenseManager.setLicenseKey(`${process.env.NEXT_PUBLIC_AG_GRID_LICENSE_KEY}`);
 
@@ -45,7 +61,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                                                                              sampleData,
                                                                              sampleTitle,
                                                                              fieldDefs,
-                                                                             dynamicIdField
+                                                                             dynamicIdField,
                                                                          }) => {
     const isMobile = useBreakpointValue({base: true, md: false});
     const [populationRowData, setPopulationRowData] = useState<any[]>(populationData || []);
@@ -53,6 +69,15 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
     const {fetchClient, loading} = useFetchClient();
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+    // NEW: State to control visibility of the alert
+    const [isAlertVisible, setIsAlertVisible] = useState<boolean>(false);
+
+    // Toggle Alert visibility
+    const toggleAlertVisibility = () => {
+        setIsAlertVisible((prevVisible) => !prevVisible);
+    };
+
+    // Checks for duplicate IDs and displays an error message if duplicates are found
     const checkForDuplicateIds = useCallback(() => {
         const checkDuplicates = (data: any[], idField: string) => {
             const seenIds = new Set();
@@ -90,9 +115,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
     useEffect(() => {
         if (!errorMessage && populationData && sampleData) {
             const sampleIds = new Set(sampleData.map((row) => row[dynamicIdField]));
-            const reducedPopulation = populationData.filter(
-                (row) => !sampleIds.has(row[dynamicIdField])
-            );
+            const reducedPopulation = populationData.filter((row) => !sampleIds.has(row[dynamicIdField]));
             setPopulationRowData(reducedPopulation);
         }
     }, [populationData, sampleData, dynamicIdField, errorMessage]);
@@ -112,13 +135,16 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
     const [populationPaginationInfo, setPopulationPaginationInfo] = useState<PaginationInfo>(commonPaginationInfo);
     const [samplePaginationInfo, setSamplePaginationInfo] = useState<PaginationInfo>(commonPaginationInfo);
 
-    const defaultColDef: ColDef = useMemo(() => ({
-        flex: isMobile ? 0 : 1,
-        sortable: true,
-        filter: true,
-        floatingFilter: false,
-        resizable: true,
-    }), [isMobile]);
+    const defaultColDef: ColDef = useMemo(
+        () => ({
+            flex: isMobile ? 0 : 1,
+            sortable: true,
+            filter: true,
+            floatingFilter: false,
+            resizable: true,
+        }),
+        [isMobile]
+    );
 
     const updatePaginationInfo = useCallback(
         (gridRef: React.RefObject<AgGridReact>, setPaginationInfo: React.Dispatch<React.SetStateAction<PaginationInfo>>) => {
@@ -142,18 +168,16 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
         }
 
         // Add rows to the new grid
-        const newRowApi = newGridApi;
         const newTransaction: RowDataTransaction = {
             add: data,
         };
-        newRowApi!.applyTransaction(newTransaction);
+        newGridApi!.applyTransaction(newTransaction);
 
         // Remove rows from the old grid
-        const oldRowApi = oldGridApi;
         const oldTransaction: RowDataTransaction = {
             remove: data,
         };
-        oldRowApi!.applyTransaction(oldTransaction);
+        oldGridApi!.applyTransaction(oldTransaction);
     };
 
     const addDropZoneToGrid = useCallback(
@@ -178,8 +202,8 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
             const dropZone: RowDropZoneParams = {
                 getContainer: () => dropZoneContainer,
                 onDragStop: (draggedParams) => {
-                    const selectedRows = sourceGridRef.current?.api.getSelectedRows(); // Get selected rows
-                    let rowsToMove = selectedRows && selectedRows.length > 0 ? selectedRows : [draggedParams.node.data]; // If no rows selected, use dragged row
+                    const selectedRows = sourceGridRef.current?.api.getSelectedRows();
+                    let rowsToMove = selectedRows && selectedRows.length > 0 ? selectedRows : [draggedParams.node.data];
 
                     if (sourceGridRef.current?.api && targetGridRef.current?.api) {
                         addRecordsToGrid(
@@ -205,27 +229,24 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
         const rowData: any[] = [];
         sampleGridRef.current.api.forEachNode((node) => rowData.push(node.data));
 
-        const result = await fetchClient(`/api/surveyjs/test`, {
-            method: "PUT",
+        await fetchClient(`/api/surveyjs/test`, {
+            method: 'PUT',
             body: rowData,
-            successMessage: "Data sent successfully.",
-            errorMessage: "Unable to send data. Please try again.",
+            successMessage: 'Data sent successfully.',
+            errorMessage: 'Unable to send data. Please try again.',
             redirectOnError: false,
         });
-
     };
 
     const moveAllToSample = () => {
         if (populationGridRef.current && sampleGridRef.current) {
             const allPopulationRows: any[] = [];
 
-            // Loop through all rows in the population grid
             populationGridRef.current.api.forEachNode((node) => {
                 allPopulationRows.push(node.data);
             });
 
             if (allPopulationRows.length > 0) {
-                // Move all rows from population to sample grid
                 addRecordsToGrid(populationGridRef.current.api, sampleGridRef.current.api, allPopulationRows);
             }
         }
@@ -235,31 +256,79 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
         if (sampleGridRef.current && populationGridRef.current) {
             const allSampleRows: any[] = [];
 
-            // Loop through all rows in the sample grid
             sampleGridRef.current.api.forEachNode((node) => {
                 allSampleRows.push(node.data);
             });
 
             if (allSampleRows.length > 0) {
-                // Move all rows from sample back to population grid
                 addRecordsToGrid(sampleGridRef.current.api, populationGridRef.current.api, allSampleRows);
             }
         }
     };
 
-
-    const rowSelection: RowSelectionOptions = {mode: 'multiRow'}
+    const rowSelection: RowSelectionOptions = {mode: 'multiRow'};
 
     return (
         <Box className="ag-theme-alpine ag-theme-perygon" w="full" py={2}>
             {!errorMessage ? (
                 <>
+                    {!isAlertVisible && (
+                        <Flex justifyContent="flex-end" mb={4}>
+                            {/* Tooltip with Info Icon */}
+                            <Tooltip label="Click to show instructions" aria-label="Info Tooltip" hasArrow>
+                                <IconButton
+                                    icon={<InfoOutlined
+                                        sx={{fontSize: '1.5rem', color: '#718096'}}/>}  // Larger, modern icon style
+                                    aria-label="Toggle Instructions"
+                                    onClick={toggleAlertVisibility}
+                                    size="lg"
+                                    variant='ghost'
+                                    _hover={{backgroundColor: 'transparent', color: '#2D3748', border: '1px solid white'}}  // Hover effect
+                                />
+                            </Tooltip>
+                        </Flex>
+                    )}
+
+                    {/* Conditionally render the alert based on state */}
+                    {isAlertVisible && (
+                        <Alert status="info" mb={4} borderRadius="lg" bg="#E2E8F0" color="#1A202C"
+                               border="1px solid #CBD5E0" boxShadow="lg">
+                            <Flex justify="space-between" align="center" w="full" gap={4}>
+                                <Flex align="center" gap={2}>
+                                    <AlertIcon color="#3182CE"/> {/* Subtle alert icon */}
+                                    <Text fontWeight="500" fontSize="md">
+                                        You can drag and drop rows between grids, select multiple rows, or use the
+                                        buttons to move all rows at once.
+                                    </Text>
+                                </Flex>
+
+                                {/* MUI Close button to hide the Alert */}
+                                <IconButton
+                                    aria-label="Close"
+                                    icon={<Close style={{
+                                        fontSize: '1.25rem',
+                                        color: '#718096'
+                                    }}/>}  // Modern, subtle close button style
+                                    onClick={() => setIsAlertVisible(false)}
+                                    size="sm"
+                                    variant="ghost"
+                                    _hover={{
+                                        backgroundColor: 'transparent',
+                                        color: '#2D3748',
+                                        border: '1px solid black'
+                                    }}  // Modern hover effect
+                                />
+                            </Flex>
+                        </Alert>
+                    )}
+
                     <Stack w="full" align="center" gap={8} direction={{base: 'column', md: 'row'}}>
                         {/* Population Grid Section */}
                         <Flex direction="column" minW={'400px'} height="500px" w={'full'} flexGrow={1}
                               ref={populationDraggableBoxRef}>
-                            <Heading mb={2}
-                                     fontSize={isMobile ? 'lg' : '2xl'}>{populationTitle ?? 'Original Data'}</Heading>
+                            <Heading mb={2} fontSize={isMobile ? 'lg' : '2xl'}>
+                                {populationTitle ?? 'Original Data'}
+                            </Heading>
                             <AgGridReact
                                 ref={populationGridRef}
                                 rowData={populationRowData}
@@ -275,12 +344,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                                 loadingOverlayComponent={LoadingOverlay}
                                 columnDefs={fieldDefs}
                                 onGridReady={(params) =>
-                                    addDropZoneToGrid(
-                                        params,
-                                        populationGridRef,
-                                        sampleGridRef,
-                                        sampleDraggableBoxRef
-                                    )
+                                    addDropZoneToGrid(params, populationGridRef, sampleGridRef, sampleDraggableBoxRef)
                                 }
                             />
                             <CustomGridBottomPagination
@@ -293,7 +357,9 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                         {/* Sample Grid Section */}
                         <Flex direction="column" minW={'400px'} height="500px" w={'full'} flexGrow={1}
                               ref={sampleDraggableBoxRef}>
-                            <Heading mb={2} fontSize={isMobile ? 'lg' : '2xl'}>{sampleTitle ?? 'New Data'}</Heading>
+                            <Heading mb={2} fontSize={isMobile ? 'lg' : '2xl'}>
+                                {sampleTitle ?? 'New Data'}
+                            </Heading>
                             <AgGridReact
                                 ref={sampleGridRef}
                                 rowData={sampleRowData}
@@ -308,12 +374,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                                 noRowsOverlayComponentParams={{gridType: 'sample'}}
                                 loadingOverlayComponent={LoadingOverlay}
                                 onGridReady={(params) =>
-                                    addDropZoneToGrid(
-                                        params,
-                                        sampleGridRef,
-                                        populationGridRef,
-                                        populationDraggableBoxRef
-                                    )
+                                    addDropZoneToGrid(params, sampleGridRef, populationGridRef, populationDraggableBoxRef)
                                 }
                                 columnDefs={fieldDefs}
                             />
@@ -325,23 +386,39 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                         </Flex>
                     </Stack>
 
-                    <Flex mt={4} justify="center" gap={4}>
+                    <Flex mt={4} justify="flex-end" gap={4}>
                         <Button
+                            mr={3}
+                            bgColor="darkGray"
+                            border="1px solid darkGray"
+                            leftIcon={<AddIcon/>}
+                            color="white"
+                            _hover={{color: "darkGray", backgroundColor: "white"}}
                             onClick={moveAllToSample}
-                            isDisabled={populationGridRef.current?.api?.getDisplayedRowCount() === 0}
-                        >
+                            isDisabled={populationGridRef.current?.api?.getDisplayedRowCount() === 0}>
                             Add All
                         </Button>
                         <Button
+                            mr={3}
+                            bgColor="darkGray"
+                            border="1px solid darkGray"
+                            leftIcon={<Remove/>}
+                            color="white"
+                            _hover={{color: "darkGray", backgroundColor: "white"}}
                             onClick={moveAllToPopulation}
-                            isDisabled={sampleGridRef.current?.api?.getDisplayedRowCount() === 0}
-                        >
+                            isDisabled={sampleGridRef.current?.api?.getDisplayedRowCount() === 0}>
                             Remove All
                         </Button>
+                        <Button
+                            bgColor="green"
+                            border="1px solid lightGray"
+                            color="white"
+                            leftIcon={<DoneIcon/>}
+                            _hover={{color: "green", backgroundColor: "white"}}
+                            onClick={handleSubmission} isDisabled={!!errorMessage || sampleGridRef.current?.api?.getDisplayedRowCount() === 0} isLoading={loading}>
+                            Submit
+                        </Button>
                     </Flex>
-                    <Button my={4} p={4} onClick={handleSubmission} isDisabled={!!errorMessage} isLoading={loading}>
-                        Submit
-                    </Button>
                 </>
             ) : (
                 <Box my={4} p={4} bg="red.100" color="red.800">
