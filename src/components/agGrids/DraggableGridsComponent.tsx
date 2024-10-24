@@ -15,25 +15,24 @@ import {
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import {
+    Alert,
+    AlertIcon,
     Box,
     Button,
     Flex,
     Heading,
+    IconButton,
     Stack,
     Text,
-    useBreakpointValue,
-    Alert,
-    AlertIcon,
     Tooltip,
-    IconButton,
+    useBreakpointValue,
 } from '@chakra-ui/react';
-import {InfoOutlined, Close, Remove} from "@mui/icons-material";
+import {Close, InfoOutlined, Remove} from "@mui/icons-material";
 import CustomGridBottomPagination from '@/components/agGrids/CustomGridBottomPagination';
 import LoadingOverlay from '@/components/agGrids/LoadingOverlay';
 import DraggableNoDataOverlay from '@/components/agGrids/DraggableNoDataOverlay';
 import {useFetchClient} from '@/hooks/useFetchClient';
 import {ColDef} from 'ag-grid-community';
-import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import DoneIcon from "@mui/icons-material/Done";
 
@@ -69,10 +68,22 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
     const {fetchClient, loading} = useFetchClient();
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    // NEW: State to control visibility of the alert
+    const [populationHasSelectedRows, setPopulationHasSelectedRows] = useState<boolean>(false);
+    const [sampleHasSelectedRows, setSampleHasSelectedRows] = useState<boolean>(false);
+
+    const onPopulationSelectionChanged = () => {
+        const selectedRows = populationGridRef.current?.api.getSelectedRows();
+        setPopulationHasSelectedRows(!!(selectedRows && selectedRows.length > 0)); // Ensures a boolean value
+    };
+
+    const onSampleSelectionChanged = () => {
+        const selectedRows = sampleGridRef.current?.api.getSelectedRows();
+        setSampleHasSelectedRows(!!(selectedRows && selectedRows.length > 0)); // Ensures a boolean value
+    };
+
+
     const [isAlertVisible, setIsAlertVisible] = useState<boolean>(false);
 
-    // Toggle Alert visibility
     const toggleAlertVisibility = () => {
         setIsAlertVisible((prevVisible) => !prevVisible);
     };
@@ -240,31 +251,46 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
 
     const moveAllToSample = () => {
         if (populationGridRef.current && sampleGridRef.current) {
-            const allPopulationRows: any[] = [];
+            let selectedRows = populationGridRef.current.api.getSelectedRows();
 
-            populationGridRef.current.api.forEachNode((node) => {
-                allPopulationRows.push(node.data);
-            });
+            if (selectedRows.length > 0) {
+                // If there are selected rows, move only the selected rows
+                addRecordsToGrid(populationGridRef.current.api, sampleGridRef.current.api, selectedRows);
+            } else {
+                // If no rows are selected, move all rows
+                const allPopulationRows: any[] = [];
+                populationGridRef.current.api.forEachNode((node) => {
+                    allPopulationRows.push(node.data);
+                });
 
-            if (allPopulationRows.length > 0) {
-                addRecordsToGrid(populationGridRef.current.api, sampleGridRef.current.api, allPopulationRows);
+                if (allPopulationRows.length > 0) {
+                    addRecordsToGrid(populationGridRef.current.api, sampleGridRef.current.api, allPopulationRows);
+                }
             }
         }
     };
 
     const moveAllToPopulation = () => {
         if (sampleGridRef.current && populationGridRef.current) {
-            const allSampleRows: any[] = [];
+            let selectedRows = sampleGridRef.current.api.getSelectedRows();
 
-            sampleGridRef.current.api.forEachNode((node) => {
-                allSampleRows.push(node.data);
-            });
+            if (selectedRows.length > 0) {
+                // If there are selected rows, move only the selected rows
+                addRecordsToGrid(sampleGridRef.current.api, populationGridRef.current.api, selectedRows);
+            } else {
+                // If no rows are selected, move all rows
+                const allSampleRows: any[] = [];
+                sampleGridRef.current.api.forEachNode((node) => {
+                    allSampleRows.push(node.data);
+                });
 
-            if (allSampleRows.length > 0) {
-                addRecordsToGrid(sampleGridRef.current.api, populationGridRef.current.api, allSampleRows);
+                if (allSampleRows.length > 0) {
+                    addRecordsToGrid(sampleGridRef.current.api, populationGridRef.current.api, allSampleRows);
+                }
             }
         }
     };
+
 
     const rowSelection: RowSelectionOptions = {mode: 'multiRow'};
 
@@ -283,7 +309,11 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                                     onClick={toggleAlertVisibility}
                                     size="lg"
                                     variant='ghost'
-                                    _hover={{backgroundColor: 'transparent', color: '#2D3748', border: '1px solid white'}}  // Hover effect
+                                    _hover={{
+                                        backgroundColor: 'transparent',
+                                        color: '#2D3748',
+                                        border: '1px solid white'
+                                    }}  // Hover effect
                                 />
                             </Tooltip>
                         </Flex>
@@ -338,6 +368,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                                 onPaginationChanged={() => updatePaginationInfo(populationGridRef, setPopulationPaginationInfo)}
                                 defaultColDef={defaultColDef}
                                 selection={rowSelection}
+                                onSelectionChanged={onPopulationSelectionChanged}
                                 paginationPageSize={populationPaginationInfo.pageSize}
                                 noRowsOverlayComponent={DraggableNoDataOverlay}
                                 noRowsOverlayComponentParams={{gridType: 'population'}}
@@ -368,6 +399,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                                 suppressPaginationPanel
                                 onPaginationChanged={() => updatePaginationInfo(sampleGridRef, setSamplePaginationInfo)}
                                 defaultColDef={defaultColDef}
+                                onSelectionChanged={onSampleSelectionChanged}
                                 selection={rowSelection}
                                 paginationPageSize={samplePaginationInfo.pageSize}
                                 noRowsOverlayComponent={DraggableNoDataOverlay}
@@ -396,7 +428,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                             _hover={{color: "darkGray", backgroundColor: "white"}}
                             onClick={moveAllToSample}
                             isDisabled={populationGridRef.current?.api?.getDisplayedRowCount() === 0}>
-                            Add All
+                            {!populationHasSelectedRows ? 'Add All' : 'Add Selected'}
                         </Button>
                         <Button
                             mr={3}
@@ -407,7 +439,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                             _hover={{color: "darkGray", backgroundColor: "white"}}
                             onClick={moveAllToPopulation}
                             isDisabled={sampleGridRef.current?.api?.getDisplayedRowCount() === 0}>
-                            Remove All
+                            {!sampleHasSelectedRows ? 'Remove All' : 'Remove Selected'}
                         </Button>
                         <Button
                             bgColor="green"
@@ -415,7 +447,9 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                             color="white"
                             leftIcon={<DoneIcon/>}
                             _hover={{color: "green", backgroundColor: "white"}}
-                            onClick={handleSubmission} isDisabled={!!errorMessage || sampleGridRef.current?.api?.getDisplayedRowCount() === 0} isLoading={loading}>
+                            onClick={handleSubmission}
+                            isDisabled={!!errorMessage || sampleGridRef.current?.api?.getDisplayedRowCount() === 0}
+                            isLoading={loading}>
                             Submit
                         </Button>
                     </Flex>
