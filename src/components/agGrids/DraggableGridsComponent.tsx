@@ -8,7 +8,7 @@ import {
     GridReadyEvent,
     LicenseManager,
     RowDataTransaction,
-    RowDropZoneParams
+    RowDropZoneParams, RowSelectionOptions
 } from 'ag-grid-charts-enterprise';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -110,13 +110,12 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
     const [populationPaginationInfo, setPopulationPaginationInfo] = useState<PaginationInfo>(commonPaginationInfo);
     const [samplePaginationInfo, setSamplePaginationInfo] = useState<PaginationInfo>(commonPaginationInfo);
 
-    const defaultColDef = useMemo(() => ({
+    const defaultColDef: ColDef = useMemo(() => ({
         flex: isMobile ? 0 : 1,
         sortable: true,
         filter: true,
         floatingFilter: false,
         resizable: true,
-        autoSize: true,
     }), [isMobile]);
 
     const updatePaginationInfo = useCallback(
@@ -135,34 +134,23 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
 
     const getRowId = (params: GetRowIdParams) => String(params.data[dynamicIdField]);
 
-    const addRecordToGrid = (oldGridApi: GridApi, newGridApi: GridApi, data: any) => {
-        if (!data || data[dynamicIdField] == null) {
+    const addRecordsToGrid = (oldGridApi: GridApi, newGridApi: GridApi, data: any[]) => {
+        if (!data || data.length === 0) {
             return;
         }
 
+        // Add rows to the new grid
         const newRowApi = newGridApi;
-
-        const rowAlreadyInGrid = !!newRowApi!.getRowNode(data[dynamicIdField]);
-        let newTransaction: RowDataTransaction;
-
-        if (rowAlreadyInGrid) {
-            window.alert("Row already exists");
-            return;
-        }
-
-        newTransaction = {
-            add: [data],
+        const newTransaction: RowDataTransaction = {
+            add: data,
         };
-
         newRowApi!.applyTransaction(newTransaction);
 
+        // Remove rows from the old grid
         const oldRowApi = oldGridApi;
-        let oldTransaction: RowDataTransaction;
-
-        oldTransaction = {
-            remove: [data]
+        const oldTransaction: RowDataTransaction = {
+            remove: data,
         };
-
         oldRowApi!.applyTransaction(oldTransaction);
     };
 
@@ -188,11 +176,14 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
             const dropZone: RowDropZoneParams = {
                 getContainer: () => dropZoneContainer,
                 onDragStop: (draggedParams) => {
+                    const selectedRows = sourceGridRef.current?.api.getSelectedRows(); // Get selected rows
+                    let rowsToMove = selectedRows && selectedRows.length > 0 ? selectedRows : [draggedParams.node.data]; // If no rows selected, use dragged row
+
                     if (sourceGridRef.current?.api && targetGridRef.current?.api) {
-                        addRecordToGrid(
+                        addRecordsToGrid(
                             sourceGridRef.current.api,
                             targetGridRef.current.api,
-                            draggedParams.node.data
+                            rowsToMove
                         );
                     }
                 },
@@ -200,7 +191,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
 
             params.api.addRowDropZone(dropZone);
         },
-        [addRecordToGrid]
+        [addRecordsToGrid]
     );
 
     const handleSubmission = async () => {
@@ -222,6 +213,8 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
 
     };
 
+    const rowSelection: RowSelectionOptions = {mode: 'multiRow'}
+
     return (
         <Box className="ag-theme-alpine ag-theme-perygon" w="full" py={2}>
             {!errorMessage ? (
@@ -240,10 +233,12 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                                 getRowId={getRowId}
                                 onPaginationChanged={() => updatePaginationInfo(populationGridRef, setPopulationPaginationInfo)}
                                 defaultColDef={defaultColDef}
+                                selection={rowSelection}
                                 paginationPageSize={populationPaginationInfo.pageSize}
                                 noRowsOverlayComponent={DraggableNoDataOverlay}
                                 noRowsOverlayComponentParams={{gridType: 'population'}}
                                 loadingOverlayComponent={LoadingOverlay}
+                                columnDefs={fieldDefs}
                                 onGridReady={(params) =>
                                     addDropZoneToGrid(
                                         params,
@@ -252,7 +247,6 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                                         sampleDraggableBoxRef
                                     )
                                 }
-                                columnDefs={fieldDefs}
                             />
                             <CustomGridBottomPagination
                                 gridRef={populationGridRef}
@@ -273,6 +267,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                                 suppressPaginationPanel
                                 onPaginationChanged={() => updatePaginationInfo(sampleGridRef, setSamplePaginationInfo)}
                                 defaultColDef={defaultColDef}
+                                selection={rowSelection}
                                 paginationPageSize={samplePaginationInfo.pageSize}
                                 noRowsOverlayComponent={DraggableNoDataOverlay}
                                 noRowsOverlayComponentParams={{gridType: 'sample'}}
