@@ -5,6 +5,9 @@ import React, {ReactNode} from "react";
 import {NavBar} from "../NavBar";
 import {Footer} from "@/components/layout/Footer";
 import {UserProvider} from "@/context/AdminUserContext";
+import {usePathname, useRouter} from "next/navigation";
+import {LeftHandNavigationDrawer} from "@/components/layout/LeftHandNavigationDrawer";
+import {PerygonContainer} from "@/components/layout/PerygonContainer";
 import {
     AccountTree,
     AddReaction,
@@ -19,11 +22,9 @@ import {
     People,
     Person,
     Schema,
-    Sell
+    Sell,
+    DynamicForm
 } from "@mui/icons-material";
-import {usePathname, useRouter} from "next/navigation";
-import {LeftHandNavigationDrawer} from "@/components/layout/LeftHandNavigationDrawer";
-import {PerygonContainer} from "@/components/layout/PerygonContainer";
 
 interface AdminLayoutProps {
     children: ReactNode;
@@ -229,7 +230,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps, us
                 },
                 {
                     label: "Survey JS Test",
-                    icon: <Grid4x4 sx={{height: '100%', width: '100%'}}/>,
+                    icon: <DynamicForm sx={{height: '100%', width: '100%'}}/>,
                     onClick: () => router.push('/survey-test'),
                     category: "Testing Area"
                 },
