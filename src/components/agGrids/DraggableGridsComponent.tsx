@@ -25,16 +25,14 @@ import {
     Stack,
     Text,
     Tooltip,
-    useBreakpointValue,
+    useBreakpointValue
 } from '@chakra-ui/react';
-import {Close, InfoOutlined, Remove} from "@mui/icons-material";
+import {Add, Close, Done, InfoOutlined, Remove} from "@mui/icons-material";
 import CustomGridBottomPagination from '@/components/agGrids/CustomGridBottomPagination';
 import LoadingOverlay from '@/components/agGrids/LoadingOverlay';
 import DraggableNoDataOverlay from '@/components/agGrids/DraggableNoDataOverlay';
 import {useFetchClient} from '@/hooks/useFetchClient';
 import {ColDef} from 'ag-grid-community';
-import AddIcon from "@mui/icons-material/Add";
-import DoneIcon from "@mui/icons-material/Done";
 
 LicenseManager.setLicenseKey(`${process.env.NEXT_PUBLIC_AG_GRID_LICENSE_KEY}`);
 
@@ -297,170 +295,178 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
     return (
         <Box className="ag-theme-alpine ag-theme-perygon" w="full" py={2}>
             {!errorMessage ? (
-                <>
-                    {!isAlertVisible && (
-                        <Flex justifyContent="flex-end" mb={4}>
-                            {/* Tooltip with Info Icon */}
-                            <Tooltip label="Click to show instructions" aria-label="Info Tooltip" hasArrow>
-                                <IconButton
-                                    icon={<InfoOutlined
-                                        sx={{fontSize: '1.5rem', color: '#718096'}}/>}  // Larger, modern icon style
-                                    aria-label="Toggle Instructions"
-                                    onClick={toggleAlertVisibility}
-                                    size="lg"
-                                    variant='ghost'
-                                    _hover={{
-                                        backgroundColor: 'transparent',
-                                        color: '#2D3748',
-                                        border: '1px solid white'
-                                    }}  // Hover effect
-                                />
-                            </Tooltip>
-                        </Flex>
-                    )}
-
-                    {/* Conditionally render the alert based on state */}
-                    {isAlertVisible && (
-                        <Alert status="info" mb={4} borderRadius="lg" bg="#E2E8F0" color="#1A202C"
-                               border="1px solid #CBD5E0" boxShadow="lg">
+                    <>
+                        {/* Conditionally render the alert based on state */}
+                        <Alert status="info" mb={4} borderRadius="lg" bg={isAlertVisible ? "#E2E8F0" : 'transparent'}
+                               color="#1A202C"
+                               border={isAlertVisible ? "1px solid #CBD5E0" : '1px solid transparent'} boxShadow={isAlertVisible ? "lg" : ''}>
                             <Flex justify="space-between" align="center" w="full" gap={4}>
-                                <Flex align="center" gap={2}>
-                                    <AlertIcon color="#3182CE"/> {/* Subtle alert icon */}
-                                    <Text fontWeight="500" fontSize="md">
-                                        You can drag and drop rows between grids, select multiple rows, or use the
-                                        buttons to move all rows at once.
-                                    </Text>
-                                </Flex>
-
-                                {/* MUI Close button to hide the Alert */}
-                                <IconButton
-                                    aria-label="Close"
-                                    icon={<Close style={{
-                                        fontSize: '1.25rem',
-                                        color: '#718096'
-                                    }}/>}  // Modern, subtle close button style
-                                    onClick={() => setIsAlertVisible(false)}
-                                    size="sm"
-                                    variant="ghost"
-                                    _hover={{
-                                        backgroundColor: 'transparent',
-                                        color: '#2D3748',
-                                        border: '1px solid black'
-                                    }}  // Modern hover effect
-                                />
+                                {isAlertVisible && (
+                                    <>
+                                        <AlertIcon color="#3182CE"/> {/* Subtle alert icon */}
+                                        <Text fontWeight="500" fontSize="md">
+                                            You can drag and drop rows between grids, select multiple rows, or use the
+                                            buttons to move all rows at once.
+                                        </Text>
+                                    </>
+                                )}
+                                <Box ml={'auto'}>
+                                    {!isAlertVisible ?
+                                        (
+                                            <Tooltip label="Click to show instructions" aria-label="Info Tooltip" hasArrow>
+                                                <IconButton
+                                                    icon={<InfoOutlined
+                                                        sx={{
+                                                            fontSize: '1.5rem',
+                                                            color: '#718096'
+                                                        }}/>}  // Larger, modern icon style
+                                                    aria-label="Toggle Instructions"
+                                                    onClick={toggleAlertVisibility}
+                                                    size="lg"
+                                                    variant='ghost'
+                                                    _hover={{
+                                                        backgroundColor: 'transparent',
+                                                        color: '#2D3748',
+                                                        border: '1px solid white'
+                                                    }}  // Hover effect
+                                                />
+                                            </Tooltip>
+                                        )
+                                        :
+                                        (
+                                            <IconButton
+                                                aria-label="Close"
+                                                icon={<Close style={{
+                                                    fontSize: '1.5rem',
+                                                    color: '#718096'
+                                                }}/>} // Modern, subtle close button style
+                                                onClick={toggleAlertVisibility}
+                                                size="lg"
+                                                variant="ghost"
+                                                _hover={{
+                                                    backgroundColor: 'transparent',
+                                                    color: '#2D3748',
+                                                    border: '1px solid black'
+                                                }}  // Modern hover effect
+                                            />
+                                        )
+                                    }
+                                </Box>
                             </Flex>
                         </Alert>
-                    )}
 
-                    <Stack w="full" align="center" gap={8} direction={{base: 'column', md: 'row'}}>
-                        {/* Population Grid Section */}
-                        <Flex direction="column" minW={'400px'} height="500px" w={'full'} flexGrow={1}
-                              ref={populationDraggableBoxRef}>
-                            <Heading mb={2} fontSize={isMobile ? 'lg' : '2xl'}>
-                                {populationTitle ?? 'Original Data'}
-                            </Heading>
-                            <AgGridReact
-                                ref={populationGridRef}
-                                rowData={populationRowData}
-                                pagination
-                                suppressPaginationPanel
-                                getRowId={getRowId}
-                                onPaginationChanged={() => updatePaginationInfo(populationGridRef, setPopulationPaginationInfo)}
-                                defaultColDef={defaultColDef}
-                                selection={rowSelection}
-                                onSelectionChanged={onPopulationSelectionChanged}
-                                paginationPageSize={populationPaginationInfo.pageSize}
-                                noRowsOverlayComponent={DraggableNoDataOverlay}
-                                noRowsOverlayComponentParams={{gridType: 'population'}}
-                                loadingOverlayComponent={LoadingOverlay}
-                                columnDefs={fieldDefs}
-                                onGridReady={(params) =>
-                                    addDropZoneToGrid(params, populationGridRef, sampleGridRef, sampleDraggableBoxRef)
-                                }
-                            />
-                            <CustomGridBottomPagination
-                                gridRef={populationGridRef}
-                                paginationInfo={populationPaginationInfo}
-                                onPageChange={() => updatePaginationInfo(populationGridRef, setPopulationPaginationInfo)}
-                            />
+                        <Stack w="full" align="center" gap={8} direction={{base: 'column', md: 'row'}}>
+                            {/* Population Grid Section */}
+                            <Flex direction="column" minW={'400px'} height="500px" w={'full'} flexGrow={1}
+                                  ref={populationDraggableBoxRef}>
+                                <Heading mb={2} fontSize={isMobile ? 'lg' : '2xl'}>
+                                    {populationTitle ?? 'Original Data'}
+                                </Heading>
+                                <AgGridReact
+                                    ref={populationGridRef}
+                                    rowData={populationRowData}
+                                    pagination
+                                    suppressPaginationPanel
+                                    getRowId={getRowId}
+                                    onPaginationChanged={() => updatePaginationInfo(populationGridRef, setPopulationPaginationInfo)}
+                                    defaultColDef={defaultColDef}
+                                    selection={rowSelection}
+                                    onSelectionChanged={onPopulationSelectionChanged}
+                                    paginationPageSize={populationPaginationInfo.pageSize}
+                                    noRowsOverlayComponent={DraggableNoDataOverlay}
+                                    noRowsOverlayComponentParams={{gridType: 'population'}}
+                                    loadingOverlayComponent={LoadingOverlay}
+                                    columnDefs={fieldDefs}
+                                    onGridReady={(params) =>
+                                        addDropZoneToGrid(params, populationGridRef, sampleGridRef, sampleDraggableBoxRef)
+                                    }
+                                />
+                                <CustomGridBottomPagination
+                                    gridRef={populationGridRef}
+                                    paginationInfo={populationPaginationInfo}
+                                    onPageChange={() => updatePaginationInfo(populationGridRef, setPopulationPaginationInfo)}
+                                />
+                            </Flex>
+
+                            {/* Sample Grid Section */}
+                            <Flex direction="column" minW={'400px'} height="500px" w={'full'} flexGrow={1}
+                                  ref={sampleDraggableBoxRef}>
+                                <Heading mb={2} fontSize={isMobile ? 'lg' : '2xl'}>
+                                    {sampleTitle ?? 'New Data'}
+                                </Heading>
+                                <AgGridReact
+                                    ref={sampleGridRef}
+                                    rowData={sampleRowData}
+                                    pagination
+                                    getRowId={getRowId}
+                                    suppressPaginationPanel
+                                    onPaginationChanged={() => updatePaginationInfo(sampleGridRef, setSamplePaginationInfo)}
+                                    defaultColDef={defaultColDef}
+                                    onSelectionChanged={onSampleSelectionChanged}
+                                    selection={rowSelection}
+                                    paginationPageSize={samplePaginationInfo.pageSize}
+                                    noRowsOverlayComponent={DraggableNoDataOverlay}
+                                    noRowsOverlayComponentParams={{gridType: 'sample'}}
+                                    loadingOverlayComponent={LoadingOverlay}
+                                    onGridReady={(params) =>
+                                        addDropZoneToGrid(params, sampleGridRef, populationGridRef, populationDraggableBoxRef)
+                                    }
+                                    columnDefs={fieldDefs}
+                                />
+                                <CustomGridBottomPagination
+                                    gridRef={sampleGridRef}
+                                    paginationInfo={samplePaginationInfo}
+                                    onPageChange={() => updatePaginationInfo(sampleGridRef, setSamplePaginationInfo)}
+                                />
+                            </Flex>
+                        </Stack>
+
+                        <Flex mt={4} justify="flex-end" gap={4}>
+                            <Button
+                                mr={3}
+                                bgColor="darkGray"
+                                border="1px solid darkGray"
+                                leftIcon={<Add/>}
+                                color="white"
+                                _hover={{color: "darkGray", backgroundColor: "white"}}
+                                onClick={moveAllToSample}
+                                isDisabled={populationGridRef.current?.api?.getDisplayedRowCount() === 0}>
+                                {!populationHasSelectedRows ? 'Add All' : 'Add Selected'}
+                            </Button>
+                            <Button
+                                mr={3}
+                                bgColor="darkGray"
+                                border="1px solid darkGray"
+                                leftIcon={<Remove/>}
+                                color="white"
+                                _hover={{color: "darkGray", backgroundColor: "white"}}
+                                onClick={moveAllToPopulation}
+                                isDisabled={sampleGridRef.current?.api?.getDisplayedRowCount() === 0}>
+                                {!sampleHasSelectedRows ? 'Remove All' : 'Remove Selected'}
+                            </Button>
+                            <Button
+                                bgColor="green"
+                                border="1px solid lightGray"
+                                color="white"
+                                leftIcon={<Done/>}
+                                _hover={{color: "green", backgroundColor: "white"}}
+                                onClick={handleSubmission}
+                                isDisabled={!!errorMessage || sampleGridRef.current?.api?.getDisplayedRowCount() === 0}
+                                isLoading={loading}>
+                                Submit
+                            </Button>
                         </Flex>
-
-                        {/* Sample Grid Section */}
-                        <Flex direction="column" minW={'400px'} height="500px" w={'full'} flexGrow={1}
-                              ref={sampleDraggableBoxRef}>
-                            <Heading mb={2} fontSize={isMobile ? 'lg' : '2xl'}>
-                                {sampleTitle ?? 'New Data'}
-                            </Heading>
-                            <AgGridReact
-                                ref={sampleGridRef}
-                                rowData={sampleRowData}
-                                pagination
-                                getRowId={getRowId}
-                                suppressPaginationPanel
-                                onPaginationChanged={() => updatePaginationInfo(sampleGridRef, setSamplePaginationInfo)}
-                                defaultColDef={defaultColDef}
-                                onSelectionChanged={onSampleSelectionChanged}
-                                selection={rowSelection}
-                                paginationPageSize={samplePaginationInfo.pageSize}
-                                noRowsOverlayComponent={DraggableNoDataOverlay}
-                                noRowsOverlayComponentParams={{gridType: 'sample'}}
-                                loadingOverlayComponent={LoadingOverlay}
-                                onGridReady={(params) =>
-                                    addDropZoneToGrid(params, sampleGridRef, populationGridRef, populationDraggableBoxRef)
-                                }
-                                columnDefs={fieldDefs}
-                            />
-                            <CustomGridBottomPagination
-                                gridRef={sampleGridRef}
-                                paginationInfo={samplePaginationInfo}
-                                onPageChange={() => updatePaginationInfo(sampleGridRef, setSamplePaginationInfo)}
-                            />
-                        </Flex>
-                    </Stack>
-
-                    <Flex mt={4} justify="flex-end" gap={4}>
-                        <Button
-                            mr={3}
-                            bgColor="darkGray"
-                            border="1px solid darkGray"
-                            leftIcon={<AddIcon/>}
-                            color="white"
-                            _hover={{color: "darkGray", backgroundColor: "white"}}
-                            onClick={moveAllToSample}
-                            isDisabled={populationGridRef.current?.api?.getDisplayedRowCount() === 0}>
-                            {!populationHasSelectedRows ? 'Add All' : 'Add Selected'}
-                        </Button>
-                        <Button
-                            mr={3}
-                            bgColor="darkGray"
-                            border="1px solid darkGray"
-                            leftIcon={<Remove/>}
-                            color="white"
-                            _hover={{color: "darkGray", backgroundColor: "white"}}
-                            onClick={moveAllToPopulation}
-                            isDisabled={sampleGridRef.current?.api?.getDisplayedRowCount() === 0}>
-                            {!sampleHasSelectedRows ? 'Remove All' : 'Remove Selected'}
-                        </Button>
-                        <Button
-                            bgColor="green"
-                            border="1px solid lightGray"
-                            color="white"
-                            leftIcon={<DoneIcon/>}
-                            _hover={{color: "green", backgroundColor: "white"}}
-                            onClick={handleSubmission}
-                            isDisabled={!!errorMessage || sampleGridRef.current?.api?.getDisplayedRowCount() === 0}
-                            isLoading={loading}>
-                            Submit
-                        </Button>
-                    </Flex>
-                </>
-            ) : (
-                <Box my={4} p={4} bg="red.100" color="red.800">
-                    <Text>{errorMessage}</Text>
-                </Box>
-            )}
+                    </>
+                ) :
+                (
+                    <Box my={4} p={4} bg="red.100" color="red.800">
+                        <Text>{errorMessage}</Text>
+                    </Box>
+                )
+            }
         </Box>
-    );
+    )
+        ;
 };
 
 export default DraggableGridsComponent;
