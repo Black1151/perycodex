@@ -22,6 +22,7 @@ import {
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/context/AdminUserContext";
+import BottomNavigationMenu from "@/components/layout/BottomNavigationMenu";
 
 interface LayoutProps {
   children: ReactNode;
@@ -42,13 +43,13 @@ export default function Layout({ children }: LayoutProps) {
           category: "Internal",
         },
         {
-          label: "My Company Users",
+          label: "Company Users",
           icon: <Person sx={{ height: "100%", width: "100%" }} />,
           onClick: () => router.push("/users?userType=internal"),
           category: "Internal",
         },
         {
-          label: "My Company Sites",
+          label: "Company Sites",
           icon: <LocationOn sx={{ height: "100%", width: "100%" }} />,
           onClick: () => router.push("/sites?siteType=internal"),
           category: "Internal",
@@ -78,13 +79,13 @@ export default function Layout({ children }: LayoutProps) {
           category: "External",
         },
         {
-          label: "Our Clients Users",
+          label: "Clients Users",
           icon: <Person sx={{ height: "100%", width: "100%" }} />,
           onClick: () => router.push("/users?userType=external"),
           category: "External",
         },
         {
-          label: "Our Clients Sites",
+          label: "Clients Sites",
           icon: <LocationOn sx={{ height: "100%", width: "100%" }} />,
           onClick: () => router.push("/sites?siteType=external"),
           category: "External",
@@ -188,10 +189,13 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <Flex flex={1} width="100%" mt={"60px"} mb={"30px"}>
       {!["/my-profile", "/my-company"].includes(pathname) && (
-        <LeftHandNavigationDrawer
-          menuItems={menuItems}
-          defaultDrawerState={"half-open"}
-        />
+        <>
+          <LeftHandNavigationDrawer
+            menuItems={menuItems}
+            defaultDrawerState={"half-open"}
+          />
+          <BottomNavigationMenu menuItems={menuItems} />
+        </>
       )}
       <Box flex={1} overflowY="auto" px={[5, 5, 78]} py={5}>
         {children}

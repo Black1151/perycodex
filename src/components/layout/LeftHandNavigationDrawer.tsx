@@ -42,7 +42,6 @@ export function LeftHandNavigationDrawer({
     }
   };
 
-  // Group menu items by category
   const groupedItems =
     menuItems?.reduce((acc, item) => {
       const category = item.category || "uncategorized";
@@ -55,7 +54,13 @@ export function LeftHandNavigationDrawer({
 
   return (
     <>
-      <Box position="absolute" top={59} left={0} zIndex={1}>
+      <Box
+        position="absolute"
+        top={59}
+        left={0}
+        zIndex={1}
+        display={["none", "none", "block"]}
+      >
         <RotatingChevron
           placement="left"
           onClick={toggleDrawer}
@@ -66,6 +71,7 @@ export function LeftHandNavigationDrawer({
       <AnimatePresence>
         {drawerState !== "closed" && (
           <MotionBox
+            display={["none", "none", "block"]}
             position="fixed"
             top={0}
             left={0}
@@ -98,31 +104,24 @@ export function LeftHandNavigationDrawer({
                   {Object.entries(groupedItems).map(
                     ([category, itemsInCategory], categoryIndex) => (
                       <React.Fragment key={categoryIndex}>
-                        {/* Category Name */}
                         {category !== "uncategorized" &&
                           drawerState === "fully-open" && (
-                            <Box
-                              borderRadius="md"
-                              mb={4} // Margin below category for spacing
-                            >
+                            <Box borderRadius="md" mb={4}>
                               <Text
                                 fontWeight="bold"
                                 fontSize="lg"
-                                color={theme.colors.gray[600]} // Darker color for better contrast
+                                color={theme.colors.gray[600]}
                                 mb={2}
                               >
                                 {category}
                               </Text>
 
-                              {/* Divider below category title */}
                               <Divider
                                 borderColor={theme.colors.perygonPink}
                                 opacity={0.5}
                               />
                             </Box>
                           )}
-
-                        {/* Menu Items in the Category */}
                         {itemsInCategory.map((item, index) => (
                           <React.Fragment key={item.label}>
                             <SideBarMenuItem
@@ -146,20 +145,17 @@ export function LeftHandNavigationDrawer({
                             )}
                           </React.Fragment>
                         ))}
-                        {/*Divider between categories*/}
                         {categoryIndex <
                           Object.keys(groupedItems).length - 1 && (
                           <Divider
                             borderColor={theme.colors.perygonPink}
                             opacity={0.8}
-                            my={6} // Add more margin for clearer separation
+                            my={6}
                           />
                         )}
                       </React.Fragment>
                     )
                   )}
-
-                  {/* If no menu items */}
                   {!menuItems && drawerState === "fully-open" && (
                     <Text>No menu items supplied</Text>
                   )}
