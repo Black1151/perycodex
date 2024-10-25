@@ -76,7 +76,6 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
       height="100vh"
       bgColor="red"
       justifyContent="space-around"
-      // minHeight="90vh"
       p={[5, 10]}
       overflow="hidden"
       backgroundImage={layers[layers.length - 1].image}

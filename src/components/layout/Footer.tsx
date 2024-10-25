@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, HStack, Text, useTheme } from "@chakra-ui/react";
 
 export const Footer = () => {

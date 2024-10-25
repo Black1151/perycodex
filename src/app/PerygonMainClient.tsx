@@ -17,13 +17,11 @@ import { Footer } from "@/components/layout/Footer";
 
 interface PerygonMainClientProps {
   carouselItems: CarouselItemProps[];
-  navbarProps: NavBarProps;
   showNoToolsModal: boolean;
 }
 
 export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
   carouselItems,
-  navbarProps,
   showNoToolsModal,
 }) => {
   const [countdown, setCountdown] = useState(5);
@@ -58,10 +56,8 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
   };
 
   return (
-    <Flex flex={1} overflow="hidden">
-      <NavBar {...navbarProps} />
+    <Flex flex={1} overflow="hidden" width="100%">
       {!showNoToolsModal && <CarouselDisplay carouselItems={carouselItems} />}
-      <Footer />
       <Modal
         isOpen={showNoToolsModal}
         onClose={() => {}}
