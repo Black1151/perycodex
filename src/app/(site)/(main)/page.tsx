@@ -40,7 +40,7 @@ export default async function PerygonMain() {
             Authorization: `Bearer ${authToken}`,
           },
           cache: "no-store",
-          next: { revalidate: 0 }, // Force fetch to occur every time
+          next: { revalidate: 0 },
         }),
         fetch(`${process.env.BE_URL}/user/isProfileComplete`, {
           method: "POST",
@@ -50,7 +50,7 @@ export default async function PerygonMain() {
           },
           body: JSON.stringify({ uniqueId }),
           cache: "no-store",
-          next: { revalidate: 0 }, // Force fetch to occur every time
+          next: { revalidate: 0 },
         }),
       ]);
 
@@ -79,7 +79,6 @@ export default async function PerygonMain() {
 
   return (
     <PerygonMainClient
-      // navbarProps={navbarProps}
       carouselItems={carouselItems}
       showNoToolsModal={carouselItems.length === 0}
     />
