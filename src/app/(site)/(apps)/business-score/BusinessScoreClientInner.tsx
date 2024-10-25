@@ -8,7 +8,6 @@ import { RightHandNavigationDrawer } from "@/components/layout/RightHandNavigati
 import { NavBarProps } from "@/app/NavBar";
 
 interface HappinessScoreClientInnerProps {
-  navBarProps: NavBarProps;
   toolData: Tool;
 }
 
