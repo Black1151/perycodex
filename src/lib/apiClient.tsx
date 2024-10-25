@@ -10,6 +10,7 @@ const apiClient = async (url: string, options: FetchOptions = {}) => {
 
   const headers: HeadersInit = {
     "Content-Type": "application/json",
+    Accept: "application/json",
     ...options.headers,
   };
 
