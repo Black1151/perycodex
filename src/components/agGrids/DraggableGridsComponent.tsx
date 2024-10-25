@@ -22,6 +22,7 @@ import {
     Flex,
     Heading,
     IconButton,
+    Input,
     Stack,
     Text,
     Tooltip,
@@ -65,6 +66,36 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
     const [sampleRowData, setSampleRowData] = useState<any[]>(sampleData || []);
     const {fetchClient, loading} = useFetchClient();
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+    const [undoStack, setUndoStack] = useState<any[]>([]);
+
+    const onPopulationSearchChange = useCallback(() => {
+        populationGridRef?.current?.api.setGridOption(
+            "quickFilterText",
+            (document.getElementById("population-quick-filter") as HTMLInputElement).value
+        );
+    }, []);
+
+    const onSampleSearchChange = useCallback(() => {
+        sampleGridRef?.current?.api.setGridOption(
+            "quickFilterText",
+            (document.getElementById("sample-quick-filter") as HTMLInputElement).value
+        );
+    }, []);
+
+    const moveRowWithUndo = (oldGridApi: GridApi, newGridApi: GridApi, data: any[]) => {
+        addRecordsToGrid(oldGridApi, newGridApi, data);
+        setUndoStack([...undoStack, {oldGridApi, newGridApi, data}]);
+    };
+
+    const handleUndo = () => {
+        const lastMove = undoStack.pop();
+        if (lastMove) {
+            addRecordsToGrid(lastMove.newGridApi, lastMove.oldGridApi, lastMove.data);
+            setUndoStack([...undoStack]);
+        }
+    };
+
 
     const [populationHasSelectedRows, setPopulationHasSelectedRows] = useState<boolean>(false);
     const [sampleHasSelectedRows, setSampleHasSelectedRows] = useState<boolean>(false);
@@ -215,7 +246,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                     let rowsToMove = selectedRows && selectedRows.length > 0 ? selectedRows : [draggedParams.node.data];
 
                     if (sourceGridRef.current?.api && targetGridRef.current?.api) {
-                        addRecordsToGrid(
+                        moveRowWithUndo(
                             sourceGridRef.current.api,
                             targetGridRef.current.api,
                             rowsToMove
@@ -253,7 +284,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
 
             if (selectedRows.length > 0) {
                 // If there are selected rows, move only the selected rows
-                addRecordsToGrid(populationGridRef.current.api, sampleGridRef.current.api, selectedRows);
+                moveRowWithUndo(populationGridRef.current.api, sampleGridRef.current.api, selectedRows);
             } else {
                 // If no rows are selected, move all rows
                 const allPopulationRows: any[] = [];
@@ -262,7 +293,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                 });
 
                 if (allPopulationRows.length > 0) {
-                    addRecordsToGrid(populationGridRef.current.api, sampleGridRef.current.api, allPopulationRows);
+                    moveRowWithUndo(populationGridRef.current.api, sampleGridRef.current.api, allPopulationRows);
                 }
             }
         }
@@ -274,7 +305,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
 
             if (selectedRows.length > 0) {
                 // If there are selected rows, move only the selected rows
-                addRecordsToGrid(sampleGridRef.current.api, populationGridRef.current.api, selectedRows);
+                moveRowWithUndo(sampleGridRef.current.api, populationGridRef.current.api, selectedRows);
             } else {
                 // If no rows are selected, move all rows
                 const allSampleRows: any[] = [];
@@ -283,7 +314,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                 });
 
                 if (allSampleRows.length > 0) {
-                    addRecordsToGrid(sampleGridRef.current.api, populationGridRef.current.api, allSampleRows);
+                    moveRowWithUndo(sampleGridRef.current.api, populationGridRef.current.api, allSampleRows);
                 }
             }
         }
@@ -299,7 +330,8 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                         {/* Conditionally render the alert based on state */}
                         <Alert status="info" mb={4} borderRadius="lg" bg={isAlertVisible ? "#E2E8F0" : 'transparent'}
                                color="#1A202C"
-                               border={isAlertVisible ? "1px solid #CBD5E0" : '1px solid transparent'} boxShadow={isAlertVisible ? "lg" : ''}>
+                               border={isAlertVisible ? "1px solid #CBD5E0" : '1px solid transparent'}
+                               boxShadow={isAlertVisible ? "lg" : ''}>
                             <Flex justify="space-between" align="center" w="full" gap={4}>
                                 {isAlertVisible && (
                                     <>
@@ -362,6 +394,12 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                                 <Heading mb={2} fontSize={isMobile ? 'lg' : '2xl'}>
                                     {populationTitle ?? 'Original Data'}
                                 </Heading>
+                                <Input
+                                    placeholder={"Search Population Data"}
+                                    id={'population-quick-filter'}
+                                    onChange={onPopulationSearchChange}
+                                    mb={4}
+                                />
                                 <AgGridReact
                                     ref={populationGridRef}
                                     rowData={populationRowData}
@@ -394,6 +432,12 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                                 <Heading mb={2} fontSize={isMobile ? 'lg' : '2xl'}>
                                     {sampleTitle ?? 'New Data'}
                                 </Heading>
+                                <Input
+                                    placeholder={"Search Sample Data"}
+                                    id={'sample-quick-filter'}
+                                    onChange={onSampleSearchChange}
+                                    mb={4}
+                                />
                                 <AgGridReact
                                     ref={sampleGridRef}
                                     rowData={sampleRowData}
@@ -422,6 +466,18 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                         </Stack>
 
                         <Flex mt={4} justify="flex-end" gap={4}>
+
+                            <Button
+                                mr={3}
+                                bgColor="darkGray"
+                                border="1px solid darkGray"
+                                leftIcon={<Add/>}
+                                color="white"
+                                _hover={{color: "darkGray", backgroundColor: "white"}}
+                                onClick={handleUndo}
+                                isDisabled={undoStack.length === 0}>
+                                Undo
+                            </Button>
                             <Button
                                 mr={3}
                                 bgColor="darkGray"
