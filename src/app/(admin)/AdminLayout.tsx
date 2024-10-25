@@ -225,9 +225,14 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({children, userProps, us
                     label: "Drag Grids Test",
                     icon: <Grid4x4 sx={{height: '100%', width: '100%'}}/>,
                     onClick: () => router.push('/grid-test'),
-                    category: "Grid Test"
+                    category: "Testing Area"
                 },
-
+                {
+                    label: "Survey JS Test",
+                    icon: <Grid4x4 sx={{height: '100%', width: '100%'}}/>,
+                    onClick: () => router.push('/survey-test'),
+                    category: "Testing Area"
+                },
             ];
         }
         return [];
