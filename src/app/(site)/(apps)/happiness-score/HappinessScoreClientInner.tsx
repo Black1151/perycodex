@@ -2,8 +2,6 @@
 
 import { Flex, Grid, GridItem, Heading, HStack } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
-import { PerygonContainer } from "@/components/layout/PerygonContainer";
-import { Footer } from "@/components/layout/Footer";
 import { Tool } from "@/types/types";
 import { HappinessScoreSplashScreen } from "./HappinessScoreSplashScreen";
 import { HappinessScoreMasonry } from "./HappinessScoreMasonry";
