@@ -1,17 +1,20 @@
 // components/ClientUserProvider.tsx (Client Component)
 "use client";
 
-import { ReactNode } from "react";
-import { UserContextProps, UserProvider } from "@/context/AdminUserContext";
+import {ReactNode} from "react";
+import {UserProvider} from "@/providers/UserProvider";
 
 interface ClientUserProviderProps {
-  children: ReactNode;
-  userMetadata: UserContextProps;
+    children: ReactNode;
 }
 
 export default function SiteProviders({
-  children,
-  userMetadata,
-}: ClientUserProviderProps) {
-  return <UserProvider value={userMetadata}>{children}</UserProvider>;
+                                          children,
+                                      }: ClientUserProviderProps) {
+
+    return (
+        <UserProvider>
+            {children}
+        </UserProvider>
+    )
 }

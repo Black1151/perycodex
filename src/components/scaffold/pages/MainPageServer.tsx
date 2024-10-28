@@ -22,22 +22,13 @@ export default async function MainPage<T extends Tool>({
   const uniqueId = cookieStore.get("user_uuid")?.value;
   const authToken = cookieStore.get("auth_token")?.value;
 
-  let isProfileRegistered = false;
   let userIdentity: UserIdentity | null = null;
   let toolData: T | null = null;
 
   if (uniqueId && authToken) {
     try {
-      const [profileResponse, identityResponse, toolDataResponse] =
+      const [identityResponse, toolDataResponse] =
         await Promise.all([
-          fetch(`${process.env.BE_URL}/user/isProfileComplete`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${authToken}`,
-            },
-            body: JSON.stringify({ uniqueId }),
-          }),
           fetch(
             `${process.env.BE_URL}/getView?view=vwLoggedInUserIdentity&userUniqueId=${uniqueId}&selectColumns=userImageUrl,firstName,role`,
             {
@@ -58,21 +49,15 @@ export default async function MainPage<T extends Tool>({
           ),
         ]);
 
-      const profileData = await profileResponse.json();
       const identityData = await identityResponse.json();
       const toolDataData = await toolDataResponse.json();
 
-      isProfileRegistered = profileData.resource.isProfileRegistered;
       userIdentity = identityData.resource as UserIdentity;
       toolData = toolDataData.resource as T;
     } catch (error) {
       console.error(error);
       redirect("/login");
     }
-  }
-
-  if (!isProfileRegistered) {
-    return redirect("/profile-setup");
   }
 
   if (ClientInnerComponent && toolData) {
