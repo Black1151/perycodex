@@ -47,7 +47,6 @@ export default async function MainLayout({
             Authorization: `Bearer ${authToken}`,
           },
           cache: "no-store",
-          next: { revalidate: 0 }, // Force fetch to occur every time
         }
       ),
       fetch(`${process.env.BE_URL}/getUserMetadata`, {
@@ -58,7 +57,6 @@ export default async function MainLayout({
         },
         body: JSON.stringify({ p_userUniqueId: uniqueId }),
         cache: "no-store",
-        next: { revalidate: 0 }, // Force fetch to occur every time
       }),
     ]);
 
