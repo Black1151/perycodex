@@ -8,7 +8,7 @@ import {LayoutProps, SurveyComponentProps} from '@/components/surveyjs/SurveyPro
 import useSurvey from '@/components/surveyjs/useSurvey';
 import useSurveySubmission from "@/components/surveyjs/useSurveySubmission";
 import {Flex, Spinner} from "@chakra-ui/react";
-import {useUser} from "@/context/AdminUserContext";
+import {useUser} from "@/providers/UserProvider";
 
 type LayoutMap = {
     [key: string]: React.FC<LayoutProps>;
@@ -34,9 +34,9 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
                                                              sjsPath,
                                                              jsPath,
                                                          }) => {
-    const user = useUser();
+    const {user} = useUser();
 
-    const canEdit = rolesCanEdit?.includes(user.role as Role)
+    const canEdit = rolesCanEdit?.includes(user?.role as Role)
 
     // Memoize the updated surveyJson based on the layout
     const updatedSurveyJson = useMemo(() => {

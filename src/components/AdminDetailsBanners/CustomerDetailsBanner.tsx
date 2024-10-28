@@ -8,7 +8,7 @@ import LanguageIcon from "@mui/icons-material/Language"
 import moment from "moment/moment";
 import CreateIcon from "@mui/icons-material/Create";
 import UpdateIcon from "@mui/icons-material/Update";
-import {useUser} from "@/context/AdminUserContext";
+import {useUser} from "@/providers/UserProvider";
 import {useMediaUploader} from "@/hooks/useMediaUploader";
 import {useRouter} from "next/navigation";
 
@@ -52,13 +52,13 @@ interface CustomerDetailsBannerProps {
 export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
                                                                                 customer,
                                                                             }) => {
-    const currentUser = useUser();
+    const {user} = useUser();
     const router = useRouter();
 
     const allowedToUploadPhoto =
-        (currentUser.role === 'PA' ||
-            (currentUser.role === 'CA' && currentUser.customerId === customer.id) ||
-            (currentUser.role === 'CA' && currentUser.customerId === customer.parentId)
+        (user?.role === 'PA' ||
+            (user?.role === 'CA' && user?.customerId === customer.id) ||
+            (user?.role === 'CA' && user?.customerId === customer.parentId)
         );
 
     // Using the media uploader hook for profile photo
