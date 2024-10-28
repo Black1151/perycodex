@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Box,
   VStack,
   Text,
   Button,
@@ -73,10 +72,11 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
 
   return (
     <VStack
-      mt="60px"
       flex={1}
+      height="100vh"
+      bgColor="red"
       justifyContent="space-around"
-      minHeight="90vh"
+      p={[5, 10]}
       overflow="hidden"
       backgroundImage={layers[layers.length - 1].image}
       backgroundPosition="center"
@@ -88,8 +88,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
         flexDirection="column"
         gap={10}
         alignItems="flex-start"
-        mt={[5, 20]}
-        padding="10px"
+        mt={[20, 20]}
         justifyContent="flex-start"
         background={`linear-gradient(to bottom right, rgba(255, 0, 0, 0.6), rgba(255, 192, 203, 0.6))`}
         color="white"
@@ -98,8 +97,8 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
         textAlign="left"
         transition="transform 0.4s ease-in-out"
         transform={showInfoBox ? "translateX(0)" : "translateX(-2000px)"}
-        p={12}
-        minHeight={320}
+        p={[8, 12]}
+        minHeight={340}
       >
         <HStack>
           <Image

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Image, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, Image, Text, VStack } from "@chakra-ui/react";
 
 export interface CarouselItemProps {
   thumbNailImage: string;
@@ -20,7 +20,7 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
   isSelected,
 }) => {
   return (
-    <VStack>
+    <VStack flex={1} mx={[0, 2]}>
       <Box
         backgroundPosition="center"
         backgroundRepeat="no-repeat"
@@ -35,11 +35,22 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
           transition="height 0.5s ease-in-out"
         />
       </Box>
-      <Box bg="white" p={[1, null, 2]} borderRadius={5}>
-        <Text fontWeight="bold" color="perygonPink" fontSize={[9, null, 12]}>
+      <Flex
+        bg="white"
+        p={[1, null, 2]}
+        borderRadius={5}
+        alignItems="center"
+        justifyContent="center"
+        textAlign="center"
+        minHeight={10}
+        px={3}
+        flex={1}
+        width="100%"
+      >
+        <Text fontWeight="bold" color="perygonPink" fontSize={[12, null, 16]}>
           {name}
         </Text>
-      </Box>
+      </Flex>
     </VStack>
   );
 };

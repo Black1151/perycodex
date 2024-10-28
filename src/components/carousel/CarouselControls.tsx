@@ -1,18 +1,18 @@
-import React from "react"
-import { useBreakpointValue } from "@chakra-ui/react"
-import CarouselNavigationButton from "./CarouselNavigationButton"
+import React from "react";
+import { useBreakpointValue } from "@chakra-ui/react";
+import CarouselNavigationButton from "./CarouselNavigationButton";
 
 interface CarouselControlsProps {
-  onPrev: () => void
-  onNext: () => void
+  onPrev: () => void;
+  onNext: () => void;
 }
 
 const CarouselControls: React.FC<CarouselControlsProps> = ({
   onPrev,
   onNext,
 }) => {
-  const top = useBreakpointValue({ base: "40%", md: "40%" })
-  const side = useBreakpointValue({ base: "-30px", md: "-40px" })
+  const top = useBreakpointValue({ base: "40%", md: "40%" });
+  const side = useBreakpointValue({ base: "-30px", md: "-40px" });
 
   return (
     <>
@@ -29,7 +29,7 @@ const CarouselControls: React.FC<CarouselControlsProps> = ({
         side={side}
       />
     </>
-  )
-}
+  );
+};
 
-export default CarouselControls
+export default CarouselControls;

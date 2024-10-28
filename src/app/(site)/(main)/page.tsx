@@ -1,6 +1,9 @@
+// Force dynamic rendering to prevent caching issues
+export const dynamic = "force-dynamic";
+
 import { CarouselItemProps } from "@/components/carousel/CarouselItem";
 import { cookies } from "next/headers";
-import { PerygonMainClient } from "./PerygonMainClient";
+import { PerygonMainClient } from "../../PerygonMainClient";
 import { redirect } from "next/navigation";
 
 type CarouselItemWithoutIsSelected = Omit<CarouselItemProps, "isSelected">;
@@ -25,55 +28,36 @@ export default async function PerygonMain() {
   const uniqueId = cookieStore.get("user_uuid")?.value;
 
   let carouselItems: CarouselItemWithoutIsSelected[] = [];
-  let navbarProps = {
-    userFirstName: "",
-    userImageUrl: "",
-    userRole: "",
-  };
   let isProfileRegistered = false;
 
   if (authToken) {
     try {
-      const [fetchCarouselItems, fetchUserInfo, fetchProfileStatus] =
-        await Promise.all([
-          fetch(`${process.env.BE_URL}/getAllView?view=vwToolsCarouselList`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${authToken}`,
-            },
-          }),
-          fetch(
-            `${process.env.BE_URL}/getView?view=vwLoggedInUserIdentity&userUniqueId=${uniqueId}&selectColumns=userImageUrl,firstName,role`,
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${authToken}`,
-              },
-            }
-          ),
-          fetch(`${process.env.BE_URL}/user/isProfileComplete`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${authToken}`,
-            },
-            body: JSON.stringify({ uniqueId }),
-          }),
-        ]);
+      const [fetchCarouselItems, fetchProfileStatus] = await Promise.all([
+        fetch(`${process.env.BE_URL}/getAllView?view=vwToolsCarouselList`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          cache: "no-store",
+          next: { revalidate: 0 },
+        }),
+        fetch(`${process.env.BE_URL}/user/isProfileComplete`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({ uniqueId }),
+          cache: "no-store",
+          next: { revalidate: 0 },
+        }),
+      ]);
 
       const carouselItemsData = await fetchCarouselItems.json();
-      const userInfoData = await fetchUserInfo.json();
       const profileStatusData = await fetchProfileStatus.json();
 
       carouselItems = transformCarouselItems(carouselItemsData.resource ?? []);
-
-      navbarProps = {
-        userFirstName: userInfoData.resource.firstName,
-        userImageUrl: userInfoData.resource.userImageUrl,
-        userRole: userInfoData.resource.role,
-      };
-
       isProfileRegistered = profileStatusData.resource.isProfileRegistered;
     } catch (error: any) {
       console.error("Error details:", error);
@@ -81,10 +65,6 @@ export default async function PerygonMain() {
     }
   } else {
     redirect("/login");
-  }
-
-  if (navbarProps.userRole === "PA") {
-    return redirect("/customers");
   }
 
   if (!isProfileRegistered) {
@@ -99,7 +79,6 @@ export default async function PerygonMain() {
 
   return (
     <PerygonMainClient
-      navbarProps={navbarProps}
       carouselItems={carouselItems}
       showNoToolsModal={carouselItems.length === 0}
     />

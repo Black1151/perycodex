@@ -14,7 +14,6 @@ export default async function MainPage<T extends Tool>({
   toolId: string;
 
   ClientInnerComponent?: React.ComponentType<{
-    navBarProps: NavBarProps;
     toolData: T;
   }>;
   children?: ReactNode;
@@ -72,21 +71,12 @@ export default async function MainPage<T extends Tool>({
     }
   }
 
-  const navBarProps = {
-    userFirstName: userIdentity?.firstName ?? "",
-    userImageUrl: userIdentity?.userImageUrl ?? "",
-    userRole: userIdentity?.role ?? "",
-    logoImageUrl: toolData?.logoImageUrl ?? "",
-  };
-
   if (!isProfileRegistered) {
     return redirect("/profile-setup");
   }
 
   if (ClientInnerComponent && toolData) {
-    return (
-      <ClientInnerComponent navBarProps={navBarProps} toolData={toolData} />
-    );
+    return <ClientInnerComponent toolData={toolData} />;
   }
 
   return <>{children}</>;

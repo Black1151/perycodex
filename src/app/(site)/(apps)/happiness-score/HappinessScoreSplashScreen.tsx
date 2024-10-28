@@ -1,5 +1,6 @@
+import LoadingBar from "@/components/LoadingBar/LoadingBar";
 import { Center, Box, Flex, keyframes, Image, VStack } from "@chakra-ui/react";
-import LoadingBar from "../../../components/LoadingBar/LoadingBar";
+
 import { motion } from "framer-motion";
 
 const fadeIn = keyframes`
