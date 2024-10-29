@@ -12,8 +12,7 @@ import {
   Text,
   Flex,
 } from "@chakra-ui/react";
-import { NavBar, NavBarProps } from "./NavBar";
-import { Footer } from "@/components/layout/Footer";
+import { useRouter } from "next/navigation";
 
 interface PerygonMainClientProps {
   carouselItems: CarouselItemProps[];
@@ -25,6 +24,7 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
   showNoToolsModal,
 }) => {
   const [countdown, setCountdown] = useState(5);
+  const router = useRouter();
 
   useEffect(() => {
     if (showNoToolsModal) {
@@ -42,11 +42,16 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
     }
   }, [countdown]);
 
+  useEffect(() => {
+    router.refresh();
+  }, []);
+
   const logoutUser = async () => {
     try {
       const response = await fetch("/api/auth/sign-out", { method: "POST" });
       if (response.ok) {
-        window.location.href = "/login";
+        router.push("/login");
+        router.refresh();
       } else {
         console.error("Logout failed");
       }
