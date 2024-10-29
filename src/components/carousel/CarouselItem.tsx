@@ -43,7 +43,7 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
         justifyContent="center"
         textAlign="center"
         minHeight={10}
-        px={3}
+        px={[0, 3]}
         flex={1}
         width="100%"
       >
