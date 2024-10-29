@@ -8,6 +8,7 @@ import {
   Flex,
   HStack,
   Image,
+  Box,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { CarouselItemProps } from "./CarouselItem";
@@ -126,7 +127,9 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
           Open {carouselItems[currentIndex].name}
         </Button>
       </Flex>
-      <Carousel carouselItems={carouselItems} setParentIndex={setIndex} />
+      <Box maxWidth={650}>
+        <Carousel carouselItems={carouselItems} setParentIndex={setIndex} />
+      </Box>
     </VStack>
   );
 };
