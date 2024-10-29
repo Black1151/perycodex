@@ -15,7 +15,7 @@ interface BottomNavigationMenuItemProps {
 
 const BottomNavigationMenuItem: React.FC<BottomNavigationMenuItemProps> = ({
   menuItem,
-  iconSize = "32px", // Increased the default icon size
+  iconSize = "32px",
   hoverStyles,
 }) => {
   const theme = useTheme();
@@ -28,13 +28,13 @@ const BottomNavigationMenuItem: React.FC<BottomNavigationMenuItemProps> = ({
       alignItems="center"
       onClick={menuItem.onClick}
       cursor="pointer"
-      minWidth={110}
+      minWidth={55}
       p={2}
-      //   pt={4}
       _hover={{
         ...hoverStyles,
         backgroundColor: theme.colors.gray[100],
       }}
+      textAlign="center"
     >
       <Box
         boxSize={iconSize}

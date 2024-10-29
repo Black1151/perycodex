@@ -15,12 +15,13 @@ export function BottomNavigationMenu({ menuItems }: BottomNavigationMenuProps) {
       bg="white"
       boxShadow="xl"
       zIndex={5}
-      p={2}
+      px={2}
       display={["block", "block", "none"]}
     >
       <HStack
         spacing={4}
         justify="space-around"
+        alignItems="flex-start"
         overflowX="auto"
         css={{
           "&::-webkit-scrollbar": { display: "none" },
