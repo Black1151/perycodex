@@ -10,7 +10,7 @@ export default async function WorkflowsPage() {
     const userIdentity = await getUserIdentity();
     checkUserRole(userIdentity, "/workflows");
 
-    let url = '/workflow/allBy';
+    let url = '/getAllView?view=vwWorkflowsList';
     let headerTitle = 'Workflows';
 
     const res = await apiClient(url, { cache: "no-store" });

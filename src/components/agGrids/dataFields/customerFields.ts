@@ -31,14 +31,14 @@ export const customerFields: ColDef[] | any = [
         // flex: 1,
     },
     {
-        field: 'address3',
-        headerName: 'City',
+        field: 'sectorName',
+        headerName: 'Sector',
         filter: "agMultiColumnFilter",
         // flex: 1,
     },
     {
-        field: 'countryName',
-        headerName: 'Country',
+        field: 'regionName',
+        headerName: 'Region',
         filter: "agMultiColumnFilter",
         // flex: 1,
     },
@@ -52,12 +52,6 @@ export const customerFields: ColDef[] | any = [
         field: 'noOfSites',
         headerName: '# Sites',
         filter: "agNumberColumnFilter",
-        // flex: 1,
-    },
-    {
-        field: 'sectorName',
-        headerName: 'Sector',
-        filter: "agMultiColumnFilter",
         // flex: 1,
     },
     {
