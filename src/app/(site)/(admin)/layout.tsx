@@ -197,7 +197,7 @@ export default function Layout({ children }: LayoutProps) {
           <BottomNavigationMenu menuItems={menuItems} />
         </>
       )}
-      <Box flex={1} overflowY="auto" px={[5, 5, 78]} py={5}>
+      <Box flex={1} overflowY="auto" px={[5, 5, 78]} py={5} pb={[20, 0]}>
         {children}
       </Box>
     </Flex>
