@@ -18,6 +18,7 @@ import {
     Person,
     Schema,
     Sell,
+    ShoppingCartCheckout
 } from "@mui/icons-material";
 import {usePathname, useRouter} from "next/navigation";
 import {useUser} from "@/providers/UserProvider";
@@ -140,6 +141,12 @@ export default function Layout({children}: LayoutProps) {
                     icon: <Checklist sx={{height: "100%", width: "100%"}}/>,
                     onClick: () => router.push("/select-items"),
                     category: "Platform",
+                },
+                {
+                    label: "Tool Subscriptions",
+                    icon: <ShoppingCartCheckout sx={{height: "100%", width: "100%"}}/>,
+                    onClick: () => router.push("/tool-subscriptions"),
+                    category: "Workflows",
                 },
                 {
                     label: "Tool",
