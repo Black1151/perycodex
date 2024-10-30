@@ -76,7 +76,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
       flex={1}
       height="100vh"
       bgColor="red"
-      justifyContent="space-around"
+      justifyContent={["space-between", "space-around"]}
       p={[5, 10]}
       overflow="hidden"
       backgroundImage={layers[layers.length - 1].image}
@@ -89,7 +89,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
         flexDirection="column"
         gap={10}
         alignItems="flex-start"
-        mt={[20, 20]}
+        mt={[20, 10]}
         justifyContent="flex-start"
         background={`linear-gradient(to bottom right, rgba(255, 0, 0, 0.6), rgba(255, 192, 203, 0.6))`}
         color="white"

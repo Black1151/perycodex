@@ -45,11 +45,12 @@ const Carousel: React.FC<CarouselProps> = ({
   return (
     <Box
       position={"relative"}
-      height={"240px"}
+      height={["150px", "240px"]}
       mx={30}
       onTouchStart={(e) => (touchStartX.current = e.touches[0].clientX)}
       onTouchMove={(e) => (touchEndX.current = e.touches[0].clientX)}
       onTouchEnd={handleSwipe}
+      bottom={[0, 10]}
     >
       <CarouselControls
         onPrev={() => debouncedSlide(prevSlide)}
@@ -60,7 +61,7 @@ const Carousel: React.FC<CarouselProps> = ({
           spacing={4}
           justifyContent="space-between"
           alignItems="center"
-          height={"240px"}
+          height={["150px", "240px"]}
           width={`${(carouselItems.length * 100) / 3}%`}
           transform={`translateX(-${
             (currentIndex - 1) * (100 / carouselItems.length)
