@@ -1,5 +1,6 @@
 import {ColDef} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
+import FormRenderer from "@/components/agGrids/CellRenderers/FormRenderer";
 
 export const formFields: ColDef[] | any = [
     {
@@ -13,6 +14,11 @@ export const formFields: ColDef[] | any = [
         field: "name",
         headerName: "Form Name",
         filter: "agMultiColumnFilter",
+        cellRenderer: FormRenderer,
+        cellRendererParams: {
+            nameField: 'name',
+            uniqueIdField: 'id'
+        }
     },
     {
         field: "description",

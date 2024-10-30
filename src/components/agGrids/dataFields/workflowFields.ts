@@ -2,14 +2,15 @@
 
 import {ColDef} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
+import WorkflowRenderer from "@/components/agGrids/CellRenderers/WorkflowRenderer";
 
 export const workflowFields: ColDef[] = [
     {
         field: "id",
         headerName: "ID",
         filter: "agNumberColumnFilter",
-        maxWidth: 100,
-        minWidth: 60,
+        maxWidth: 128,
+        minWidth: 64,
         sortable: true,
     },
     {
@@ -17,6 +18,11 @@ export const workflowFields: ColDef[] = [
         headerName: "Workflow Name",
         filter: "agTextColumnFilter",
         minWidth: 200,
+        cellRenderer: WorkflowRenderer,
+        cellRendererParams: {
+            nameField: 'name',
+            uniqueIdField: 'id'
+        }
     },
     {
         field: "description",

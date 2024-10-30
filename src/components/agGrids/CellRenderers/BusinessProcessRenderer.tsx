@@ -4,34 +4,34 @@ import React from 'react';
 import {Box, Flex, Text} from "@chakra-ui/react";
 import Link from "next/link";
 import {CustomCellRendererProps} from 'ag-grid-react';
-import {LocationOn} from "@mui/icons-material";
+import {Schema} from "@mui/icons-material";
 
 // Define the interface for the component's props
-interface SiteLinkRendererProps extends CustomCellRendererProps {
+interface BusinessProcessRendererProps extends CustomCellRendererProps {
     nameField: string;  // Field name for dynamic Site Name
     uniqueIdField: string;  // Field name for dynamic Site Unique ID
 }
 
-const SiteLinkRenderer: React.FC<SiteLinkRendererProps> = ({
-                                                               node,
-                                                               nameField,
-                                                               uniqueIdField,
-                                                           }) => {
+const BusinessProcessRenderer: React.FC<BusinessProcessRendererProps> = ({
+                                                                             node,
+                                                                             nameField,
+                                                                             uniqueIdField,
+                                                                         }) => {
 
-    const site = node?.data
+    const businessProcess = node?.data;
 
-    if (!site) {
+    if (!businessProcess) {
         return null;
     }
 
     // Access fields dynamically using the provided field names
-    const siteName = site[nameField] ?? 'No Site';
-    const uniqueId = site[uniqueIdField];
+    const businessProcessName = businessProcess[nameField] ?? 'No Business Process';
+    const uniqueId = businessProcess[uniqueIdField];
 
     // Conditionally create a link only if uniqueId exists
-    const link = uniqueId ? `/sites/${uniqueId}` : null;
+    const link = uniqueId ? `/business-processes/${uniqueId}` : null;
 
-    // Render the site name as text (inside a link if the site has a unique ID)
+    // Render the businessProcess name as text (inside a link if the businessProcess has a unique ID)
     const content = (
         <Flex alignItems="center" justifyContent="flex-start" w="full" h="full" maxW="full" gap={2}>
             <Box
@@ -44,10 +44,10 @@ const SiteLinkRenderer: React.FC<SiteLinkRendererProps> = ({
                 bg={'gray.100'}
                 justifyContent="center"
             >
-                <LocationOn sx={{color: "var(--chakra-colors-perygonPink)"}}/>
+                <Schema sx={{color: "var(--chakra-colors-perygonPink)"}}/>
             </Box>
             <Text fontSize={'14px'} flex={1} overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
-                {siteName}
+                {businessProcessName}
             </Text>
         </Flex>
     );
@@ -62,4 +62,4 @@ const SiteLinkRenderer: React.FC<SiteLinkRendererProps> = ({
     );
 };
 
-export default SiteLinkRenderer;
+export default BusinessProcessRenderer;

@@ -1,5 +1,6 @@
 import {ColDef} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
+import SelectItemRenderer from "@/components/agGrids/CellRenderers/SelectItemRenderer";
 
 export const selectItemFields: ColDef[] | any = [
     {
@@ -10,10 +11,31 @@ export const selectItemFields: ColDef[] | any = [
         minWidth: 64,
         filter: "agNumberColumnFilter"
     },
-    {field: 'label', filter: "agMultiColumnFilter", headerName: 'Label'},
-    {field: 'value', filter: "agMultiColumnFilter", headerName: 'Value'},
-    {field: 'type', filter: "agMultiColumnFilter", headerName: 'Type'},
-    {field: 'sortOrder', filter: "agNumberColumnFilter", headerName: 'Order'},
+    {
+        field: 'label',
+        filter: "agMultiColumnFilter",
+        headerName: 'Label',
+        cellRenderer: SelectItemRenderer,
+        cellRendererParams: {
+            nameField: 'label',
+            uniqueIdField: 'id',
+        }
+    },
+    {
+        field: 'value',
+        filter: "agMultiColumnFilter",
+        headerName: 'Value'
+    },
+    {
+        field: 'type',
+        filter: "agMultiColumnFilter",
+        headerName: 'Type'
+    },
+    {
+        field: 'sortOrder',
+        filter: "agNumberColumnFilter",
+        headerName: 'Order'
+    },
     {
         field: 'isActive',
         headerName: 'Actions',
