@@ -173,17 +173,17 @@ export default function Layout({children}: LayoutProps) {
                     category: "Workflows",
                 },
                 {
-                    label: "Test Happiness",
+                    label: "Form Builder",
                     icon: <AddReaction sx={{height: "100%", width: "100%"}}/>,
                     onClick: () =>
-                        router.push("/test-happiness-score?workflowId=1&toolId=1"),
-                    category: "Test Survey",
+                        router.push("/survey-test"),
+                    category: "Test",
                 },
                 {
                     label: "Drag Grids Test",
                     icon: <Grid4x4 sx={{height: "100%", width: "100%"}}/>,
                     onClick: () => router.push("/grid-test"),
-                    category: "Grid Test",
+                    category: "Test",
                 },
             ];
         }
