@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useCallback, useState } from "react";
 import { Box, HStack } from "@chakra-ui/react";
 import CarouselControls from "./CarouselControls";
 import CarouselDots from "./CarouselDots";
@@ -21,13 +21,24 @@ const Carousel: React.FC<CarouselProps> = ({
 
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const debouncedSlide = useCallback(
+    (action: () => void) => {
+      if (!isTransitioning) {
+        setIsTransitioning(true);
+        action();
+      }
+    },
+    [isTransitioning]
+  );
 
   const handleSwipe = () => {
     if (touchStartX.current - touchEndX.current > 50) {
-      nextSlide();
+      debouncedSlide(nextSlide);
     }
     if (touchStartX.current - touchEndX.current < -50) {
-      prevSlide();
+      debouncedSlide(prevSlide);
     }
   };
 
@@ -40,7 +51,10 @@ const Carousel: React.FC<CarouselProps> = ({
       onTouchMove={(e) => (touchEndX.current = e.touches[0].clientX)}
       onTouchEnd={handleSwipe}
     >
-      <CarouselControls onPrev={prevSlide} onNext={nextSlide} />
+      <CarouselControls
+        onPrev={() => debouncedSlide(prevSlide)}
+        onNext={() => debouncedSlide(nextSlide)}
+      />
       <Box>
         <HStack
           spacing={4}
@@ -52,6 +66,7 @@ const Carousel: React.FC<CarouselProps> = ({
             (currentIndex - 1) * (100 / carouselItems.length)
           }%)`}
           transition="transform 0.5s ease-in-out"
+          onTransitionEnd={() => setIsTransitioning(false)}
         >
           {carouselItems.map((item, index) => {
             let opacity = 1;
@@ -75,7 +90,9 @@ const Carousel: React.FC<CarouselProps> = ({
               <Box
                 key={index}
                 onClick={() =>
-                  currentIndex === index ? "" : updateIndex(index)
+                  currentIndex === index
+                    ? null
+                    : debouncedSlide(() => updateIndex(index))
                 }
                 transition="opacity 0.5s ease-in-out, pointer-events 0.5s ease-in-out"
                 width={`${100 / carouselItems.length}%`}
@@ -92,7 +109,7 @@ const Carousel: React.FC<CarouselProps> = ({
         <CarouselDots
           itemsCount={carouselItems.length}
           currentIndex={currentIndex}
-          onDotClick={updateIndex}
+          onDotClick={(index) => debouncedSlide(() => updateIndex(index))}
         />
       </Box>
     </Box>
