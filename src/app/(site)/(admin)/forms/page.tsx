@@ -20,7 +20,7 @@ export default async function FormsPage() {
     }
 
     const forms = await res.json();
-    const formData = forms.resource;
+    const formData = forms.resource || [];
 
     const formCount = formData ? formData.length : 0;
 

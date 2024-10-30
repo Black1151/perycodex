@@ -1,3 +1,5 @@
+'use client';
+
 import {Box, VStack, useTheme, Divider, Text} from "@chakra-ui/react";
 import {motion, AnimatePresence} from "framer-motion";
 import {useState} from "react";

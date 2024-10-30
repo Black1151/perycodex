@@ -10,8 +10,6 @@ export const optionListItemsFields: ColDef[] | any = [
     {headerName: "Value 4", field: "value4", sortable: true, filter: true},
     {headerName: "Value 5", field: "value5", sortable: true, filter: true},
     {headerName: "Sort Order", field: "sortOrder", sortable: true, filter: true},
-    {headerName: "Created At", field: "createdAt", sortable: true, filter: true},
-    {headerName: "Updated At", field: "updatedAt", sortable: true, filter: true},
     {
         field: 'isActive',
         headerName: '',

@@ -24,15 +24,20 @@ export default async function OptionListsPage() {
             apiClient(optionListGroupsUrl, {cache: "no-store"}),
         ]);
 
+        // Check if any of the responses are not ok
+        if (!optionListsRes.ok || !optionListItemsRes.ok || !optionListGroupsRes.ok) {
+            return redirect("/error");
+        }
+
+
         const optionListsJson = await optionListsRes.json();
         const optionListItemsJson = await optionListItemsRes.json();
         const optionListGroupsJson = await optionListGroupsRes.json();
 
         // Use the fake data
-        const optionListData = await optionListsJson.resource;
-        const optionListItemData = await optionListItemsJson.resource;
-        const optionListGroupData = await optionListGroupsJson.resource;
-
+        const optionListData = optionListsJson.resource || [];
+        const optionListItemData = optionListItemsJson.resource || [];
+        const optionListGroupData = optionListGroupsJson.resource || [];
 
         const dataSources = [
             {

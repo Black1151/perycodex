@@ -13,8 +13,6 @@ export const optionListFields: ColDef[] | any = [
         cellRenderer: 'booleanCellRenderer'
     },
     {headerName: "Group ID", field: "optionListGroupId", sortable: true, filter: true},
-    {headerName: "Created At", field: "createdAt", sortable: true, filter: true},
-    {headerName: "Updated At", field: "updatedAt", sortable: true, filter: true},
     {
         field: 'isActive',
         headerName: '',

@@ -17,7 +17,7 @@ export default async function TeamsPage() {
     }
 
     const teams = await res.json();
-    const teamData = teams.resource;
+    const teamData = teams.resource || [];
 
     const teamCount = teamData ? teamData.length : 0;
 

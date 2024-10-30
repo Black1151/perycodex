@@ -1,5 +1,6 @@
 import {ColDef} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
+import ToolConfigRenderer from "@/components/agGrids/CellRenderers/ToolConfigRenderer";
 
 export const toolFields: ColDef[] = [
     {
@@ -14,6 +15,12 @@ export const toolFields: ColDef[] = [
         field: "name",
         headerName: "Tool Name",
         filter: "agTextColumnFilter",
+        cellRenderer: ToolConfigRenderer,
+        cellRendererParams: {
+            'uniqueIdField': 'id',
+            'imageUrlField': 'iconImageUrl',
+            'nameField': 'name'
+        }
     },
     {
         field: "description",
@@ -21,20 +28,19 @@ export const toolFields: ColDef[] = [
         filter: "agTextColumnFilter",
     },
     {
-        field: "previewText",
-        headerName: "Preview Text",
-        filter: "agTextColumnFilter",
-    },
-    {
-        field: "appUrl",
-        headerName: "App URL",
-        filter: "agTextColumnFilter",
-    },
-    {
-        field: "categoryId",
+        field: "categoryName",
         headerName: "Category ID",
         filter: "agNumberColumnFilter",
-        maxWidth: 150,
+    },
+    {
+        field: "noTimesUsedInSubs",
+        headerName: "# Subscriptions",
+        filter: "agNumberColumnFilter",
+    },
+    {
+        field: "noTimesUsedInToolWorkflow",
+        headerName: "# WFs",
+        filter: "agNumberColumnFilter",
     },
     {
         field: "isActive",
