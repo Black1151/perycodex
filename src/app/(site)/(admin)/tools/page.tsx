@@ -10,7 +10,7 @@ export default async function ToolsPage() {
     const userIdentity = await getUserIdentity();
     checkUserRole(userIdentity, "/tools");
 
-    let url = '/toolConfig/allBy';
+    let url = '/getAllView?view=vwToolsConfigList';
     let headerTitle = 'Tools';
 
     const res = await apiClient(url, { cache: "no-store" });
@@ -20,7 +20,7 @@ export default async function ToolsPage() {
     }
 
     const tools = await res.json();
-    const toolData = tools.resource;
+    const toolData = tools.resource || [];
 
     const toolCount = toolData ? toolData.length : 0;
 

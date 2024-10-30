@@ -20,7 +20,7 @@ export default async function FormsPage() {
     }
 
     const selectItems = await res.json();
-    const selectItemData = selectItems.resource;
+    const selectItemData = selectItems.resource || [];
 
     const selectItemCount = selectItemData ? selectItemData.length : 0;
 

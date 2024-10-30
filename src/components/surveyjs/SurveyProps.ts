@@ -8,6 +8,7 @@ export interface SurveyComponentProps {
     isNew: boolean;
     layout?: string;
     layoutOptions?: Record<string, any>;
+    formSubmission?: 'admin' | 'workflow',
     dataset?: Record<string, any>;
     rolesCanEdit?: Role[];
     onSurveySuccess?: () => void;
@@ -48,6 +49,7 @@ export interface UseSurveyProps {
 
 export interface UseSurveySubmissionProps {
     model: SurveyModel | null;
+    formSubmission: 'admin' | 'workflow',
     isNew: boolean; // Determines whether to use POST or PUT
     endpoint: string; // API endpoint to send the data
     excludeKeys?: string[]; // Keys to exclude from submission data

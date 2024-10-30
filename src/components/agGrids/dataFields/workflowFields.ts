@@ -25,6 +25,16 @@ export const workflowFields: ColDef[] = [
         minWidth: 300,
     },
     {
+        field: "noTimesUsedInTool",
+        headerName: "# Tools",
+        filter: "agNumberColumnFilter",
+    },
+    {
+        field: "noTimesUsedInBusProc",
+        headerName: "# BPs",
+        filter: "agNumberColumnFilter",
+    },
+    {
         field: "isActive",
         headerName: "Actions",
         cellRenderer: ActionButtonRenderer, // Renderer for actions (edit/delete)

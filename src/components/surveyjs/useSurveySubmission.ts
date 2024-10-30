@@ -9,6 +9,7 @@ import {UseSurveySubmissionProps} from "@/components/surveyjs/SurveyProps"; // F
 const useSurveySubmission = ({
                                  model,
                                  isNew,
+                                 formSubmission,
                                  endpoint,
                                  excludeKeys = [],
                                  onSurveySuccess,
@@ -53,16 +54,32 @@ const useSurveySubmission = ({
                         return acc;
                     }, {} as Record<string, any>);
 
-                const apiUrl = requestType === "POST"
-                    ? `/api/surveyjs${endpoint}`
-                    : `/api/surveyjs/${endpoint.split('/')[1]}`;
+                let apiUrl = '';
+                let payload;
 
-                const payload = requestType === "PUT"
-                    ? {
-                        uniqueId: endpoint.split('/')[2],
-                        data: filteredSurveyData,
+                if (formSubmission === 'admin') {
+
+                    apiUrl = requestType === "POST"
+                        ? `/api/surveyjs${endpoint}`
+                        : `/api/surveyjs/${endpoint.split('/')[1]}`;
+
+                    payload = requestType === "PUT"
+                        ? {
+                            uniqueId: endpoint.split('/')[2],
+                            data: filteredSurveyData,
+                        }
+                        : filteredSurveyData;
+
+                } else if (formSubmission === 'workflow') {
+
+                    apiUrl = endpoint;
+
+                    payload = {
+                        "jsonResponse": filteredSurveyData,
+                        "isComplete": true,
                     }
-                    : filteredSurveyData;
+
+                }
 
                 try {
                     const response = await fetch(apiUrl, {
@@ -133,8 +150,7 @@ const useSurveySubmission = ({
                 model.onComplete.remove(handleSurveySubmission);
             };
         }, [model, isNew, endpoint, excludeKeys, onSurveySuccess, redirectUrl, toast, router]
-    )
-    ;
+    );
 
     return {};
 };
