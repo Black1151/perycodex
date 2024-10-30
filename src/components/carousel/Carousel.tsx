@@ -1,6 +1,6 @@
 import React, { useRef, useCallback, useState } from "react";
-import { Box, HStack } from "@chakra-ui/react";
-import CarouselControls from "./CarouselControls";
+import { Box, HStack, VStack } from "@chakra-ui/react";
+import CarouselNavigationButton from "./CarouselNavigationButton";
 import CarouselDots from "./CarouselDots";
 import CarouselItem, { CarouselItemProps } from "./CarouselItem";
 import useCarousel from "@/hooks/useCarousel";
@@ -43,25 +43,35 @@ const Carousel: React.FC<CarouselProps> = ({
   };
 
   return (
-    <Box
-      position={"relative"}
+    <VStack
+      spacing={4}
       height={["150px", "240px"]}
       mx={30}
+      mb={[0, 10]}
+      position="relative"
       onTouchStart={(e) => (touchStartX.current = e.touches[0].clientX)}
       onTouchMove={(e) => (touchEndX.current = e.touches[0].clientX)}
       onTouchEnd={handleSwipe}
-      bottom={[0, 10]}
     >
-      <CarouselControls
-        onPrev={() => debouncedSlide(prevSlide)}
-        onNext={() => debouncedSlide(nextSlide)}
+      <CarouselNavigationButton
+        direction="left"
+        onClick={() => debouncedSlide(prevSlide)}
+        top="40%"
+        side={["-30px", "-40px"]}
       />
-      <Box>
+      <CarouselNavigationButton
+        direction="right"
+        onClick={() => debouncedSlide(nextSlide)}
+        top="40%"
+        side={["-30px", "-40px"]}
+      />
+
+      <Box flex={1} width="100%">
         <HStack
           spacing={4}
           justifyContent="space-between"
           alignItems="center"
-          height={["150px", "240px"]}
+          height="100%"
           width={`${(carouselItems.length * 100) / 3}%`}
           transform={`translateX(-${
             (currentIndex - 1) * (100 / carouselItems.length)
@@ -113,7 +123,7 @@ const Carousel: React.FC<CarouselProps> = ({
           onDotClick={(index) => debouncedSlide(() => updateIndex(index))}
         />
       </Box>
-    </Box>
+    </VStack>
   );
 };
 

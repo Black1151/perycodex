@@ -74,8 +74,6 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
   return (
     <VStack
       flex={1}
-      height="100vh"
-      bgColor="red"
       justifyContent={["space-between", "space-around"]}
       p={[5, 10]}
       overflow="hidden"
