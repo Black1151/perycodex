@@ -18,7 +18,7 @@ export default async function UsersPage({
     const userIdentity = await getUserIdentity();
     checkUserRole(userIdentity, "/users");
 
-    let url = `/getAllView?view=vwUsersList&selectColumns=id,userUniqueId,email,role,fullName,jobTitle,imageUrl,customerId,custName,custUniqueId,custImageUrl,custParentId,siteName,isActive`;
+    let url = `/getAllView?view=vwUsersList&selectColumns=id,userUniqueId,email,role,fullName,jobTitle,imageUrl,customerId,custName,custUniqueId,custImageUrl,custParentId,siteName,siteUniqueId,isActive`;
     let headerTitle = "Users";
     let userTypeParam = searchParams.userType;
     let createNewUrl = "/users/create";
