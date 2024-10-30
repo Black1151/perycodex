@@ -11,6 +11,7 @@ import UpdateIcon from "@mui/icons-material/Update";
 import {useUser} from "@/providers/UserProvider";
 import {useMediaUploader} from "@/hooks/useMediaUploader";
 import {useRouter} from "next/navigation";
+import {BusinessOutlined} from "@mui/icons-material";
 
 interface Customer {
     id: number;
@@ -55,6 +56,8 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
     const {user} = useUser();
     const router = useRouter();
 
+    const imageWidth = customer.imageUrl ? ['100px', '175px'] : '100px'
+
     const allowedToUploadPhoto =
         (user?.role === 'PA' ||
             (user?.role === 'CA' && user?.customerId === customer.id) ||
@@ -75,33 +78,36 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
             // direction={['column', 'column', 'row']}
         >
             {/* Customer Logo Upload */}
-            <FormControl w={['100px', '175px']} h={'100px'} aspectRatio={1} borderRadius={'full'}>
+            <FormControl w={imageWidth} h={'100px'} aspectRatio={1} borderRadius={'full'}>
                 <Box
                     position="relative"
-                    w={['100px', '175px']}
+                    w={imageWidth}
                     h={'100px'}
                     overflow="hidden"
                     _hover={{'.overlay': {opacity: allowedToUploadPhoto ? 1 : 0}}} // Only show overlay if upload is allowed
                 >
                     <Image
-                        w={['100px', '175px']}
+                        w={imageWidth}
                         h={'100px'}
                         objectFit={'scale-down'}
                         src={customer.imageUrl}
                         alt={customer.name}
                         borderRadius={'lg'}
                         fallback={
-                            <Flex
-                                align={'center'}
-                                justify={'center'}
-                                w={['100px', '175px']}
-                                h={'100px'}
-                                bg="gray.200"
-                                cursor={allowedToUploadPhoto ? 'pointer' : 'default'} // Allow pointer only if upload is allowed
-                            >
-                                <Text color="gray.500" m={'auto'} fontSize={'xx-large'}>
-                                    {customer.name[0]}
-                                </Text>
+                            <Flex alignItems="center" justifyContent="center" w="full" h="full" maxW="full" gap={2}>
+                                <Box
+                                    position="relative"
+                                    w={'100px'}
+                                    h={'100px'}
+                                    borderRadius="full"
+                                    bg="gray.100"
+                                    display="flex"
+                                    justifyContent="center"
+                                    alignItems="center"
+                                >
+                                    <BusinessOutlined fontSize="large"
+                                                      sx={{color: "var(--chakra-colors-perygonPink)"}}/>
+                                </Box>
                             </Flex>
                         }
                     />
