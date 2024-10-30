@@ -19,7 +19,6 @@ export function BottomNavigationMenu({ menuItems }: BottomNavigationMenuProps) {
       display={["block", "block", "none"]}
     >
       <HStack
-        spacing={4}
         justify="space-around"
         alignItems="flex-start"
         overflowX="auto"
