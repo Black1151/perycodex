@@ -3,6 +3,7 @@
 
 import {ReactNode} from "react";
 import {UserProvider} from "@/providers/UserProvider";
+import {WorkflowProvider} from "@/providers/WorkflowProvider";
 
 interface ClientUserProviderProps {
     children: ReactNode;
@@ -14,7 +15,9 @@ export default function SiteProviders({
 
     return (
         <UserProvider>
-            {children}
+            <WorkflowProvider>
+                {children}
+            </WorkflowProvider>
         </UserProvider>
     )
 }

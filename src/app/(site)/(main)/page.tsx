@@ -20,6 +20,7 @@ function transformCarouselItems(data: any[]): CarouselItemWithoutIsSelected[] {
         name: item.displayName,
         description: item.previewText,
         appUrl: item.appUrl,
+        toolWfId: item.toolWfId
     }));
 }
 
