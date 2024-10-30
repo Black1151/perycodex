@@ -62,9 +62,10 @@ export const useUser = () => {
 
 // Provider component to wrap the layout and pages
 export const UserProvider: React.FC<{
+    value?: UserContextProps;
     children: ReactNode;
-}> = ({children}) => {
-    const [user, setUser] = useState<UserContextProps | null>(null);
+}> = ({value, children}) => {
+    const [user, setUser] = useState<UserContextProps | null>(value || null);
     const {fetchClient} = useFetchClient();
 
     const getUserMetadata = async (): Promise<void> => {
@@ -75,15 +76,6 @@ export const UserProvider: React.FC<{
             console.error("Error fetching user metadata:", error);
         }
     };
-
-    useEffect(() => {
-        const fetchUserMetadata = async () => {
-            if (!user) {
-                await getUserMetadata();
-            }
-        }
-        fetchUserMetadata();
-    }, [])
 
     return (
         <UserContext.Provider value={{user}}>

@@ -1,20 +1,21 @@
-// components/ClientUserProvider.tsx (Client Component)
 "use client";
 
 import {ReactNode} from "react";
-import {UserProvider} from "@/providers/UserProvider";
+import {UserContextProps, UserProvider} from "@/providers/UserProvider";
 import {WorkflowProvider} from "@/providers/WorkflowProvider";
 
 interface ClientUserProviderProps {
     children: ReactNode;
+    userMetadata: UserContextProps;
 }
 
 export default function SiteProviders({
                                           children,
+                                          userMetadata,
                                       }: ClientUserProviderProps) {
 
     return (
-        <UserProvider>
+        <UserProvider value={userMetadata}>
             <WorkflowProvider>
                 {children}
             </WorkflowProvider>

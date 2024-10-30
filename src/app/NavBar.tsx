@@ -1,17 +1,27 @@
 "use client";
 
-import {Box, HStack, Image, Menu, MenuButton, MenuItem, MenuList, Text, useTheme} from "@chakra-ui/react";
-import {motion} from "framer-motion";
-import {useRouter} from "next/navigation";
 import {
+    HStack,
+    Box,
+    Image,
+    Text,
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuItem,
+    useTheme,
+} from "@chakra-ui/react";
+import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import {
+    Settings as SettingsIcon,
+    Build as BuildIcon,
+    Person as PersonIcon,
     Business as BusinessIcon,
+    Lock as LockIcon,
     ExitToApp as ExitToAppIcon,
     Home as HomeIcon,
-    Lock as LockIcon,
-    Person as PersonIcon,
-    Settings as SettingsIcon,
 } from "@mui/icons-material";
-import {useUser} from "@/providers/UserProvider";
 
 const MotionBox = motion(Box);
 const MotionHStack = motion(HStack);
@@ -29,12 +39,14 @@ interface MenuItemProps {
     onClick: () => void;
 }
 
-export const NavBar = ({}) => {
+export const NavBar: React.FC<NavBarProps> = ({
+                                                  userFirstName,
+                                                  userImageUrl,
+                                                  userRole,
+                                                  logoImageUrl,
+                                              }) => {
     const router = useRouter();
     const theme = useTheme();
-    const {user} = useUser();
-
-    let logoImageUrl;
 
     const handleLogout = async () => {
         await fetch("/api/auth/sign-out", {
@@ -64,45 +76,45 @@ export const NavBar = ({}) => {
         const commonMenuItems: MenuItemProps[] = [
             {
                 label: "My Tools",
-                icon: <HomeIcon/>,
+                icon: <HomeIcon />,
                 onClick: () => router.push("/"),
             },
             {
                 label: "My Profile",
-                icon: <PersonIcon/>,
+                icon: <PersonIcon />,
                 onClick: () => router.push("/my-profile"),
             },
             {
                 label: "My Company",
-                icon: <BusinessIcon/>,
+                icon: <BusinessIcon />,
                 onClick: () => router.push("/my-company"),
             },
             {
                 label: "Change Password",
-                icon: <LockIcon/>,
+                icon: <LockIcon />,
                 onClick: () => console.log("Change Password clicked"),
             },
             {
                 label: "Logout",
-                icon: <ExitToAppIcon/>,
+                icon: <ExitToAppIcon />,
                 onClick: handleLogout,
             },
         ];
 
-        if (user?.role === "PA") {
+        if (userRole === "PA") {
             return [
                 {
                     label: "Admin",
-                    icon: <SettingsIcon/>,
+                    icon: <SettingsIcon />,
                     onClick: () => router.push("/customers"),
                 },
                 ...commonMenuItems,
             ];
-        } else if (user?.role === "CA") {
+        } else if (userRole === "CA") {
             return [
                 {
                     label: "Admin Tools",
-                    icon: <SettingsIcon/>,
+                    icon: <SettingsIcon />,
                     onClick: () => router.push("/customers"),
                 },
                 ...commonMenuItems,
@@ -132,9 +144,9 @@ export const NavBar = ({}) => {
             borderBottom="white 1px solid"
         >
             <MotionBox
-                initial={{x: "-5vw", opacity: 0}}
-                animate={{x: 0, opacity: 1}}
-                transition={{duration: 0.3}}
+                initial={{ x: "-5vw", opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.3 }}
                 w="150px"
                 display="flex"
             >
@@ -157,15 +169,15 @@ export const NavBar = ({}) => {
                 )}
             </MotionBox>
             <MotionHStack
-                initial={{x: "5vw", opacity: 0}}
-                animate={{x: 0, opacity: 1}}
-                transition={{duration: 0.3}}
+                initial={{ x: "5vw", opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.3 }}
                 justifyContent="center"
                 alignItems="center"
                 gap={8}
             >
                 <Text display={["none", null, "block"]} color="white" fontSize={18}>
-                    {greeting}, {user?.firstName}!
+                    {greeting}, {userFirstName}!
                 </Text>
 
                 <Menu>
@@ -175,12 +187,12 @@ export const NavBar = ({}) => {
                         overflow="hidden"
                         width="40px"
                         height="40px"
-                        _hover={{cursor: "pointer"}}
+                        _hover={{ cursor: "pointer" }}
                     >
                         <Image
                             src={
-                                user?.userImageUrl && user?.userImageUrl !== ""
-                                    ? user?.userImageUrl
+                                userImageUrl && userImageUrl !== ""
+                                    ? userImageUrl
                                     : "blank-profile-picture.webp"
                             }
                             alt="profile pic"

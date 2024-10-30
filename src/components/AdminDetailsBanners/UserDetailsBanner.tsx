@@ -205,7 +205,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({surveyUser}
 
     // Using the media uploader hook for profile photo
     const {isUploading, handleFileChange} = useMediaUploader(
-        `/api/surveyUser/uploadPhoto/${surveyUser.uniqueId}`,
+        `/api/user/uploadPhoto/${surveyUser.uniqueId}`,
         "imageUrl",
         () => {
             router.refresh()

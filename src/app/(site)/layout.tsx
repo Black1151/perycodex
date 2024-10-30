@@ -5,6 +5,7 @@ import {NavBar} from "../NavBar";
 import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
 import SiteProviders from "./SiteProviders";
+import {UserContextProps} from "@/providers/UserProvider";
 
 interface NavBarProps {
     userFirstName: string;
@@ -78,9 +79,9 @@ export default async function MainLayout({
     ////// WE NEED TO LOOK AT ADDING THE NAVBAR PROPS TO THE METADATA FETCH AND GIVING TO NAVBAR VIA PROVIDER - This may solve the stubborn user caching bug
 
     return (
-        <SiteProviders>
+        <SiteProviders userMetadata={userMetadata as UserContextProps}>
             <PerygonContainer>
-                <NavBar/>
+                <NavBar {...(navBarProps as NavBarProps)} />
                 {children}
             </PerygonContainer>
             <Footer/>
