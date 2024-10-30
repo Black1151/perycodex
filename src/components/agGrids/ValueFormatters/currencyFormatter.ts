@@ -3,8 +3,6 @@ export const currencyFormatter = (
     currencySymbol: string = '£'
 ): string => {
 
-    console.log(value);
-
     // Check if the value is a valid number
     if (typeof value !== 'number' || isNaN(value)) {
         return "£0.00";

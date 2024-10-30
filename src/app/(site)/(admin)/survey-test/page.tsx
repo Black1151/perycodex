@@ -14,8 +14,6 @@ export default async function TestSurveyPage() {
     const sjsFiles = fs.readdirSync(sjsDirectory).map((file) => path.parse(file).name);
     const jsFiles = fs.readdirSync(jsDirectory).map((file) => path.parse(file).name);
 
-    console.log(cssFiles);
-
     return (
         <>
             <AdminHeader headingText={'Test Survey'} />

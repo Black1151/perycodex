@@ -3,8 +3,6 @@ import { ValueFormatterParams } from 'ag-grid-community';
 // Date formatter function for DD/MM/YYYY format
 export const dateFormatter = (params: ValueFormatterParams): string => {
 
-    console.log(params);
-
     if (!params.value) return ''; // Handle empty values
     const date = new Date(params.value);
 

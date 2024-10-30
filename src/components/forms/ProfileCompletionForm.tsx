@@ -105,8 +105,6 @@ export function ProfileCompletionForm({
         errorMessage: "Failed to fetch teams for the selected department",
       });
 
-      console.log("DATA", data);
-
       const transformedTeams = transformTeams(
         (data as { resource: TeamFromBE[] }).resource || []
       );

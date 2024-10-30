@@ -6,8 +6,6 @@ export async function POST(req: NextRequest, {params}: { params: { businessProce
     try {
         const {businessProcessInstanceId} = params;
 
-        console.log(businessProcessInstanceId);
-
         // Ensure that businessProcessInstanceId is provided
         if (!businessProcessInstanceId) {
             return NextResponse.json(
@@ -17,8 +15,6 @@ export async function POST(req: NextRequest, {params}: { params: { businessProce
         }
 
         const {jsonResponse, isComplete} = await req.json();
-
-        console.log(jsonResponse, isComplete);
 
         // Stringify jsonResponse before sending it in the API request
         const response = await apiClient(`/saveWorkflow`, {
@@ -31,8 +27,6 @@ export async function POST(req: NextRequest, {params}: { params: { businessProce
         });
 
         const responseData = await response.json();
-
-        console.log(responseData);
 
         // If the API call fails, return the error response
         if (!response.ok) {

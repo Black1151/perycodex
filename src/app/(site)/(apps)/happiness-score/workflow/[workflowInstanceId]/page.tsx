@@ -48,9 +48,6 @@ export default async function HappinessScoreWorkflowPage({params}: { params: { w
     const responseData: ApiResponse = await response.json();
     const stages = responseData.resource;
 
-    console.log(`WORKFLOW INSTANCE: ${workflowInstanceId}`)
-    console.log(stages);
-
     let nextStage: WorkflowStage | undefined;
 
     // Determine whether we need to sort or directly use the single item
