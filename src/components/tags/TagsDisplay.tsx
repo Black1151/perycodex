@@ -1,3 +1,5 @@
+"use client";
+
 import { HStack } from "@chakra-ui/react";
 import { Tag } from "./Tag";
 
@@ -10,6 +12,8 @@ interface TagsDisplayProps {
 }
 
 export const TagsDisplay = ({ tags }: TagsDisplayProps) => {
+  console.log(tags[0]);
+
   return (
     <HStack>
       {tags.map((tag) => (

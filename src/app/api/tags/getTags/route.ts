@@ -1,12 +1,21 @@
-import { NextRequest, NextResponse } from "next/server";
+import { Tag } from "@/components/AdminDetailsBanners/TagDetailsBanner";
 import apiClient from "@/lib/apiClient";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export interface TagsResponse {
+  resource: Tag[];
+}
+
+export interface ErrorResponse {
+  error: string;
+}
+
+type ApiResponse = TagsResponse | ErrorResponse;
+
+export async function GET(
+  req: NextRequest
+): Promise<NextResponse<ApiResponse>> {
   const { searchParams } = new URL(req.url);
-  console.log(
-    "GET /api/tags/getTags params:",
-    Object.fromEntries(searchParams)
-  );
 
   try {
     const recordTypeId = searchParams.get("recordTypeId");
@@ -32,7 +41,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const tags = await response.json();
+    const tags: TagsResponse = await response.json();
     return NextResponse.json(tags);
   } catch (error: any) {
     console.error(error);

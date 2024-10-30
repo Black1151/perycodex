@@ -24,6 +24,8 @@ import { useMediaUploader } from "@/hooks/useMediaUploader";
 import { useRouter } from "next/navigation";
 import { TagsDisplay } from "@/components/tags/TagsDisplay";
 import { useFetchClient } from "@/hooks/useFetchClient";
+import { TagsResponse } from "@/app/api/tags/getTags/route";
+import { Tag } from "./TagDetailsBanner";
 
 interface Customer {
   id: number;
@@ -68,7 +70,7 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
   const currentUser = useUser();
   const router = useRouter();
   const { fetchClient } = useFetchClient();
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState<Tag[]>([]);
 
   const allowedToUploadPhoto =
     currentUser.role === "PA" ||
@@ -94,8 +96,9 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
       );
 
       if (response) {
-        console.log(response);
-        // setTags(rspeonse.resource || []);
+        const tagsResponse = response as TagsResponse;
+        // console.log(response);
+        setTags(tagsResponse.resource);
       }
     };
 
