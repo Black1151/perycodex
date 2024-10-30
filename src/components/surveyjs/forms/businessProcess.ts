@@ -42,17 +42,17 @@ export const businessProcessJson = {
                     },
                 },
                 {
-                    type: "comment",
+                    type: "tagbox",
                     name: "userAccessGroupNames",
                     title: "User Access Group Names",
-                    autoGrow: true,
                     titleLocation: "top",
                     placeholder: "Enter user access group names",
-                    validators: [{
-                        type: "expression",
-                        text: "Must be valid JSON",
-                        expression: "validateJson({valueJson})"
-                    }]
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/userGroupPlatform`,
+                        path: "resource",
+                        valueName: "name",
+                        titleName: "name"
+                    },
                 },
                 {
                     type: "boolean",

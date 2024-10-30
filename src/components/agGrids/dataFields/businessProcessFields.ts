@@ -25,6 +25,11 @@ export const businessProcessFields: ColDef[] = [
         minWidth: 300,
     },
     {
+        field: "noTimesUsedInWorkflow",
+        headerName: "# WFs",
+        filter: "agNumberColumnFilter",
+    },
+    {
         field: "isActive",
         headerName: "Actions",
         cellRenderer: ActionButtonRenderer, // A custom renderer for edit/delete actions

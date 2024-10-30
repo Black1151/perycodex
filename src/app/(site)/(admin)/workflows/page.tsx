@@ -10,7 +10,7 @@ export default async function WorkflowsPage() {
     const userIdentity = await getUserIdentity();
     checkUserRole(userIdentity, "/workflows");
 
-    let url = '/workflow/allBy';
+    let url = '/getAllView?view=vwWorkflowsList';
     let headerTitle = 'Workflows';
 
     const res = await apiClient(url, { cache: "no-store" });
@@ -20,7 +20,7 @@ export default async function WorkflowsPage() {
     }
 
     const workflows = await res.json();
-    const workflowData = workflows.resource;
+    const workflowData = workflows.resource || [];
 
     const workflowCount = workflowData ? workflowData.length : 0;
 

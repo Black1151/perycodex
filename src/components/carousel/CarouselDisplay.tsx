@@ -14,6 +14,7 @@ import { useState, useEffect } from "react";
 import { CarouselItemProps } from "./CarouselItem";
 import { useRouter } from "next/navigation";
 import Carousel from "./Carousel";
+import { useWorkflow } from "@/providers/WorkflowProvider";
 
 export interface CarouselDisplayProps {
   carouselItems: CarouselItemProps[];
@@ -31,6 +32,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
   const [nextLayerId, setNextLayerId] = useState(1);
   const [currentIndex, setCurrentIndex] = useState(1);
   const [showInfoBox, setShowInfoBox] = useState(true);
+  const { setToolId, setWorkflowId } = useWorkflow();
 
   const router = useRouter();
 
@@ -76,6 +78,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
       flex={1}
       justifyContent={["space-between", "space-around"]}
       p={[5, 10]}
+      pb={[20]}
       overflow="hidden"
       backgroundImage={layers[layers.length - 1].image}
       backgroundPosition="center"
@@ -116,11 +119,13 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
           _hover={{
             bg: theme.colors.perygonPink,
           }}
-          onClick={() =>
+          onClick={() => {
+            setToolId(carouselItems[currentIndex].toolId);
+            setWorkflowId(carouselItems[currentIndex].toolWfId);
             router.push(
-              `${carouselItems[currentIndex].appUrl}?toolId=${carouselItems[currentIndex].toolId}`
-            )
-          }
+              `${carouselItems[currentIndex].appUrl}?toolId=${carouselItems[currentIndex].toolId}&workflowId=${carouselItems[currentIndex].toolWfId}`
+            );
+          }}
         >
           Open {carouselItems[currentIndex].name}
         </Button>

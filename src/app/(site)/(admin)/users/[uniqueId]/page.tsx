@@ -21,7 +21,7 @@ export default async function UsersDetailPage({params}: { params: { uniqueId: st
 
     return (
         <>
-            <UserDetailsBanner user={userData}/>
+            <UserDetailsBanner surveyUser={userData}/>
             <SurveyComponent
                 surveyJson={userJson}
                 endpoint={`/user/${params.uniqueId}`}

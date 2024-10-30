@@ -16,8 +16,9 @@ export default async function UserGroupsPage() {
         return redirect("/error");
     }
 
+
     const userGroups = await res.json();
-    const userGroupData = userGroups.resource;
+    const userGroupData = userGroups.resource || [];
 
     const userGroupCount = userGroupData ? userGroupData.length : 0;
 

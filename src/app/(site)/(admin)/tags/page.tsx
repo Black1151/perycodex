@@ -20,7 +20,7 @@ export default async function TagsPage() {
     }
 
     const tags = await res.json();
-    const tagData = tags.resource;
+    const tagData = tags.resource || [];
 
     const tagCount = tagData ? tagData.length : 0;
 
