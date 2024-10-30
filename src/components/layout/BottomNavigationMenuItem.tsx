@@ -46,7 +46,7 @@ const BottomNavigationMenuItem: React.FC<BottomNavigationMenuItemProps> = ({
         {menuItem.icon}
       </Box>
       <Divider maxWidth={70} borderColor={theme.colors.perygonPink} />
-      <Text fontSize={10} color={theme.colors.gray[700]}>
+      <Text fontSize={10} color={theme.colors.gray[900]}>
         {menuItem.label}
       </Text>
     </VStack>

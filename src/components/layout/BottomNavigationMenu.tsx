@@ -19,7 +19,7 @@ export function BottomNavigationMenu({ menuItems }: BottomNavigationMenuProps) {
       zIndex={5}
       px={2}
       display={["block", "block", "none"]}
-      borderTop={`1px solid ${theme.colors.perygonPink}`}
+      borderBottom={`1px solid ${theme.colors.perygonPink}`}
     >
       <HStack
         justify="space-around"
