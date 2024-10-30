@@ -15,7 +15,7 @@ interface BottomNavigationMenuItemProps {
 
 const BottomNavigationMenuItem: React.FC<BottomNavigationMenuItemProps> = ({
   menuItem,
-  iconSize = "20px",
+  iconSize = "24px",
   hoverStyles,
 }) => {
   const theme = useTheme();
@@ -46,7 +46,7 @@ const BottomNavigationMenuItem: React.FC<BottomNavigationMenuItemProps> = ({
         {menuItem.icon}
       </Box>
       <Divider maxWidth={70} borderColor={theme.colors.perygonPink} />
-      <Text fontSize={9} color={theme.colors.gray[700]}>
+      <Text fontSize={10} color={theme.colors.gray[700]}>
         {menuItem.label}
       </Text>
     </VStack>
