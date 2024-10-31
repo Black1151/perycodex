@@ -10,7 +10,7 @@ export default async function FormsPage() {
     const userIdentity = await getUserIdentity();
     checkUserRole(userIdentity, "/forms");
 
-    let url = '/form/allBy';
+    let url = '/getAllView?view=vwFormsList ';
     let headerTitle = 'Forms';
 
     const res = await apiClient(url, { cache: "no-store" });
