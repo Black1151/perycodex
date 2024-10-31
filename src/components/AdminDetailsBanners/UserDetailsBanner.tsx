@@ -233,7 +233,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
   useEffect(() => {
     const fetchTags = async () => {
       const response = await fetchClient(
-        `/api/tags/getTags?recordTypeId=2&recordId=${user.id}`
+        `/api/tags/getTags?recordTypeId=2&recordId=${user?.userId}`
       );
 
       if (response) {
