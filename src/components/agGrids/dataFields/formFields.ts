@@ -26,6 +26,11 @@ export const formFields: ColDef[] | any = [
         filter: "agMultiColumnFilter",
     },
     {
+        field: "noTimesUsedInBusProc",
+        headerName: "# BPs",
+        filter: "agNumberColumnFilter",
+    },
+    {
         field: "isActive",
         headerName: "Actions",
         cellRenderer: ActionButtonRenderer, // Renderer for actions (edit/delete)
