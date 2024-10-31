@@ -30,7 +30,7 @@ export default function SiteProviders({
         <UserProvider value={userMetadata}>
             <WorkflowProvider>
                 {children}
-                <UserModal userMetadata={userMetadata}/>
+                {process.env.NODE_ENV === "development" && <UserModal userMetadata={userMetadata}/>}
             </WorkflowProvider>
         </UserProvider>
     );
