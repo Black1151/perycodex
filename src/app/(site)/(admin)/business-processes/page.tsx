@@ -10,7 +10,7 @@ export default async function WorkflowsPage() {
     const userIdentity = await getUserIdentity();
     checkUserRole(userIdentity, "/business-processes");
 
-    let url = '/businessProcess/allBy';
+    let url = '/getAllView?view=vwBusinessProcessesList';
     let headerTitle = 'Business Processes';
 
     const res = await apiClient(url, { cache: "no-store" });
@@ -20,7 +20,7 @@ export default async function WorkflowsPage() {
     }
 
     const businessProcesses = await res.json();
-    const businessProcessData = businessProcesses.resource;
+    const businessProcessData = businessProcesses.resource || [];
 
     const businessProcessCount = businessProcessData ? businessProcessData.length : 0;
 

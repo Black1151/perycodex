@@ -6,7 +6,7 @@ import {
     registerSurveyJsFunctionsWithSurvey
 } from "@/components/surveyjs/globalJsFunctions";
 import {ThemeModule, UseSurveyProps} from "@/components/surveyjs/SurveyProps";
-import {useUser} from "@/context/AdminUserContext";
+import {useUser} from "@/providers/UserProvider";
 
 const useSurvey = ({
                        surveyJson,
@@ -20,7 +20,7 @@ const useSurvey = ({
 
     const [model, setModel] = useState<SurveyModel | null>(null);
     const [isLoading, setIsLoading] = useState(true);  // New loading state
-    const user = useUser();
+    const {user} = useUser();
 
     // ? Global Setting
 

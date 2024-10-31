@@ -1,6 +1,6 @@
-import React, { useRef } from "react";
-import { Box, HStack } from "@chakra-ui/react";
-import CarouselControls from "./CarouselControls";
+import React, { useRef, useCallback, useState } from "react";
+import { Box, HStack, VStack } from "@chakra-ui/react";
+import CarouselNavigationButton from "./CarouselNavigationButton";
 import CarouselDots from "./CarouselDots";
 import CarouselItem, { CarouselItemProps } from "./CarouselItem";
 import useCarousel from "@/hooks/useCarousel";
@@ -21,37 +21,63 @@ const Carousel: React.FC<CarouselProps> = ({
 
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const debouncedSlide = useCallback(
+    (action: () => void) => {
+      if (!isTransitioning) {
+        setIsTransitioning(true);
+        action();
+      }
+    },
+    [isTransitioning]
+  );
 
   const handleSwipe = () => {
     if (touchStartX.current - touchEndX.current > 50) {
-      nextSlide();
+      debouncedSlide(nextSlide);
     }
     if (touchStartX.current - touchEndX.current < -50) {
-      prevSlide();
+      debouncedSlide(prevSlide);
     }
   };
 
   return (
-    <Box
-      position={"relative"}
-      height={"240px"}
+    <VStack
+      spacing={4}
+      height={["150px", "240px"]}
       mx={30}
+      mb={[0, 10]}
+      position="relative"
       onTouchStart={(e) => (touchStartX.current = e.touches[0].clientX)}
       onTouchMove={(e) => (touchEndX.current = e.touches[0].clientX)}
       onTouchEnd={handleSwipe}
     >
-      <CarouselControls onPrev={prevSlide} onNext={nextSlide} />
-      <Box>
+      <CarouselNavigationButton
+        direction="left"
+        onClick={() => debouncedSlide(prevSlide)}
+        top="40%"
+        side={["-30px", "-40px"]}
+      />
+      <CarouselNavigationButton
+        direction="right"
+        onClick={() => debouncedSlide(nextSlide)}
+        top="40%"
+        side={["-30px", "-40px"]}
+      />
+
+      <Box flex={1} width="100%">
         <HStack
           spacing={4}
           justifyContent="space-between"
           alignItems="center"
-          height={"240px"}
+          height="100%"
           width={`${(carouselItems.length * 100) / 3}%`}
           transform={`translateX(-${
             (currentIndex - 1) * (100 / carouselItems.length)
           }%)`}
           transition="transform 0.5s ease-in-out"
+          onTransitionEnd={() => setIsTransitioning(false)}
         >
           {carouselItems.map((item, index) => {
             let opacity = 1;
@@ -75,7 +101,9 @@ const Carousel: React.FC<CarouselProps> = ({
               <Box
                 key={index}
                 onClick={() =>
-                  currentIndex === index ? "" : updateIndex(index)
+                  currentIndex === index
+                    ? null
+                    : debouncedSlide(() => updateIndex(index))
                 }
                 transition="opacity 0.5s ease-in-out, pointer-events 0.5s ease-in-out"
                 width={`${100 / carouselItems.length}%`}
@@ -92,10 +120,10 @@ const Carousel: React.FC<CarouselProps> = ({
         <CarouselDots
           itemsCount={carouselItems.length}
           currentIndex={currentIndex}
-          onDotClick={updateIndex}
+          onDotClick={(index) => debouncedSlide(() => updateIndex(index))}
         />
       </Box>
-    </Box>
+    </VStack>
   );
 };
 

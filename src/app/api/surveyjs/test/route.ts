@@ -4,8 +4,6 @@ import {NextResponse} from 'next/server';
 export async function POST(req: Request) {
     try {
         const surveyData = await req.json(); // Parse the JSON body from the request
-        console.log('Received #:', surveyData.length);
-        console.log('Received survey data:', surveyData);
 
         // Simulate saving the data to a database (or perform actual logic here)
         return NextResponse.json({

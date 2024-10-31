@@ -5,8 +5,8 @@ import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 interface CarouselNavigationButtonProps {
   direction: "left" | "right";
   onClick: () => void;
-  top: string | undefined;
-  side: string | undefined;
+  top: string | string[] | undefined;
+  side: string | string[] | undefined;
 }
 
 const CarouselNavigationButton: React.FC<CarouselNavigationButtonProps> = ({

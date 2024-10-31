@@ -47,10 +47,14 @@ const CustomerLogoRenderer: React.FC<CustomerLogoRendererProps> = ({
                     <Image
                         src={imageUrl}
                         alt={name}
+                        id={imageUrl}
+                        key={imageUrl}
+                        height="80%"
                         maxW="100%"
                         maxH="100%"
+                        boxShadow="md"
                         objectFit="contain"
-                        fallbackSrc="https://via.placeholder.com/50"
+                        // fallbackSrc="https://via.placeholder.com/50"
                     />
                 </Box>
             ) : (

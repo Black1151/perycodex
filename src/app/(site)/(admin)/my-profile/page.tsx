@@ -23,7 +23,7 @@ export default async function MyProfilePage() {
 
     return (
         <div>
-            <UserDetailsBanner user={userData}/>
+            <UserDetailsBanner surveyUser={userData}/>
             <SurveyComponent
                 surveyJson={userJson}
                 endpoint={`/user/${userUniqueId}`}

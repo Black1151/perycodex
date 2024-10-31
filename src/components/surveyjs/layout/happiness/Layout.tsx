@@ -3,7 +3,6 @@ import {Survey} from 'survey-react-ui';
 import {Flex} from "@chakra-ui/react";
 import useSurveyNavigation from "@/components/surveyjs/useSurveyNavigation";
 import {HappinessLayoutProps} from "@/components/surveyjs/SurveyProps";
-import {LetterFlyIn} from "@/components/animations/text/LetterFlyIn";
 
 
 const HappinessLayout: React.FC<HappinessLayoutProps> = ({
@@ -28,10 +27,8 @@ const HappinessLayout: React.FC<HappinessLayoutProps> = ({
     } = useSurveyNavigation(model, dataset);
 
     return (
-        <Flex w="full" justify="center" align="center" pt={'60px'} bg={'perygonPink'} position="fixed"
-              direction="column" top={0} left={0}
-              height={'100svh'} width={'100svw'} zIndex={101}>
-            {showTitle && (<LetterFlyIn>What is your happiness score this week?</LetterFlyIn>)}
+        <Flex w="full" justify="center" align="center" bg={'perygonPink'} height={'full'} width={'full'}
+              direction="column" zIndex={101}>
             <Survey model={model}/>
         </Flex>
     );
