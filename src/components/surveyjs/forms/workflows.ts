@@ -106,5 +106,50 @@ export const workflowJson = {
 
             ],
         },
+        {
+            name: "workflow-associated-business-processes",
+            title: "Associated BPs",
+            elements: [
+                {
+                    type: "matrixdynamic",
+                    name: "workflowBusinessProcess",
+                    width: "100%",
+                    title: "Associated Business Processes",
+                    titleLocation: "hidden",
+                    rowCount: 0,
+                    allowRemoveRows: true,
+                    detailPanelMode: "underRowSingle",
+                    allowRowsDragAndDrop: true,
+                    addRowText: "Add Business Process",
+                    panelRemoveText: "Delete Business Process",
+                    columns: [
+                        {
+                            cellType: "dropdown",
+                            name: "businessProcessId",
+                            title: "Associated BPs #{panelIndex}",
+                            titleLocation: "top",
+                            isRequired: true,
+                            placeholder: "Select Business Process",
+                            choicesByUrl: {
+                                url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/businessProcess/allBy?selectColumns=id,name&isActive=true`,
+                                path: "resource",
+                                valueName: "id",
+                                titleName: "name"
+                            },
+                        },
+                        {
+                            cellType: "expression",
+                            name: "businessProcessOrder",
+                            startWithNewLine: false,
+                            title: "Order",
+                            titleLocation: "top",
+                            inputType: "number",
+                            expression: "{rowIndex}",
+                            placeholder: "BP Order"
+                        },
+                    ],
+                }
+            ]
+        }
     ],
 };

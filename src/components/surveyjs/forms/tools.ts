@@ -119,5 +119,85 @@ export const toolsJson = {
                 },
             ],
         },
+        {
+            name: "toolConfig-associated-workflows",
+            title: "Associated Workflows",
+            elements: [
+                {
+                    type: "paneldynamic",
+                    name: "toolWorkflow",
+                    width: "100%",
+                    minWidth: "256px",
+                    title: "Worflows",
+                    titleLocation: "hidden",
+                    panelCount: 1,
+                    minPanelCount: 1,
+                    confirmDeleteText: "Do you want to delete workflow?",
+                    panelAddText: "Add Workflow",
+                    panelRemoveText: "Delete Workflow",
+                    showRangeInProgress: false,
+                    templateElements: [
+                        {
+                            type: "dropdown",
+                            name: "workflowId",
+                            title: "Associated Workflow #{panelIndex}",
+                            titleLocation: "top",
+                            placeholder: "Select Workflow",
+                            isRequired: true,
+                            choicesByUrl: {
+                                url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/workflow/allBy?selectColumns=id,name&isActive=true`,  // The API endpoint to fetch choices from
+                                path: "resource",
+                                valueName: "id",
+                                titleName: "name"
+                            },
+                        },
+                        {
+                            type: "boolean",
+                            name: "caCanUpdateScheduleFrequency",
+                            title: "CAs update schedules?",
+                            titleLocation: "top",
+                            width: "33%",
+                            description: "Can CAs update schedules?",
+                            descriptionLocation: "underInput",
+                            defaultValue: false,
+                            isRequired: true,
+                            labelTrue: "Yes",
+                            labelFalse: "No",
+                            swapOrder: true
+                        },
+                        {
+                            type: "boolean",
+                            name: "isReadOnly",
+                            title: "Read Only?",
+                            titleLocation: "top",
+                            width: "33%",
+                            startWithNewLine: false,
+                            description: "Is this tool read only",
+                            descriptionLocation: "underInput",
+                            defaultValue: false,
+                            isRequired: true,
+                            labelTrue: "Yes",
+                            labelFalse: "No",
+                            swapOrder: true
+                        },
+                        {
+                            type: "boolean",
+                            name: "isActive",
+                            width: "33%",
+                            startWithNewLine: false,
+                            title: "Active?",
+                            titleLocation: "top",
+                            description: "Is this tool active?",
+                            descriptionLocation: "underInput",
+                            defaultValue: false,
+                            isRequired: true,
+                            labelTrue: "Yes",
+                            labelFalse: "No",
+                            swapOrder: true
+                        }
+                    ],
+                }
+            ]
+        }
     ],
-};
+}
