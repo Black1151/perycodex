@@ -106,7 +106,7 @@ const SurveyTestComponent: React.FC<SurveyTestComponentProps> = ({cssFiles, sjsF
             px={{base: 4, lg: 8}}
         >
             <Heading as="h2" size="xl" textAlign="center" color="white" mb={8}>
-                Survey Builder
+                Form Builder
             </Heading>
             <Flex
                 direction="column"
