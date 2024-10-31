@@ -12,6 +12,7 @@ import moment from "moment/moment";
 import {useRouter} from "next/navigation"
 import {useUser} from "@/providers/UserProvider";
 import {useMediaUploader} from "@/hooks/useMediaUploader";
+import {Person} from "@mui/icons-material";
 
 interface User {
     id: number;
@@ -232,23 +233,20 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({surveyUser}
                         alt={`${surveyUser.firstName} ${surveyUser.lastName}`}
                         cursor={allowedToUploadPhoto ? "pointer" : "default"}
                         fallback={
-                            <Flex
-                                align={'center'}
-                                justify={'center'}
-                                w={'100px'}
-                                h={'100px'}
-                                borderRadius="full"
-                                bg="gray.200"
-                                cursor={allowedToUploadPhoto ? "pointer" : "default"}
-                            >
-                                <Text
-                                    color="gray.500"
-                                    m={'auto'}
-                                    fontSize={'xx-large'}
+                            <Flex alignItems="center" justifyContent="center" w="full" h="full" maxW="full" gap={2}>
+                                <Box
+                                    position="relative"
+                                    w={'100px'}
+                                    h={'100px'}
+                                    borderRadius="full"
+                                    bg="gray.100"
+                                    display="flex"
+                                    justifyContent="center"
+                                    alignItems="center"
                                 >
-                                    {surveyUser.firstName?.[0] ?? ''}
-                                    {surveyUser.lastName?.[0] ?? ''}
-                                </Text>
+                                    <Person fontSize="large"
+                                            sx={{color: "var(--chakra-colors-perygonPink)"}}/>
+                                </Box>
                             </Flex>
                         }
                     />
@@ -329,12 +327,17 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({surveyUser}
                 </Flex>
                 <Flex direction={'row'} justify={'center'} align={'flex-start'} gap={2}>
                     <DomainIcon/>
-                    {surveyUser.customer && (
-                        <Text fontSize="sm" _hover={{textDecoration: 'underline', cursor: 'pointer'}}
-                              onClick={() => router.push(`/customers/${surveyUser.customer?.uniqueId}`)}>
-                            {surveyUser.customer.name}
-                        </Text>
-                    )}
+                    {surveyUser.customer ? (
+                            <Text fontSize="sm" _hover={{textDecoration: 'underline', cursor: 'pointer'}}
+                                  onClick={() => router.push(`/customers/${surveyUser.customer?.uniqueId}`)}>
+                                {surveyUser.customer.name}
+                            </Text>
+                        )
+                        :
+                        (
+                            <Text fontSize="sm"> Platform</Text>
+                        )
+                    }
                 </Flex>
                 <Flex direction={'row'} justify={'center'} align={'center'} gap={2}>
                     <LocationOnOutlinedIcon/>
@@ -344,7 +347,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({surveyUser}
                             {surveyUser.site.siteName}
                         </Text>
                     ) : (
-                        <Text fontSize="sm">Unknown</Text>
+                        <Text fontSize="sm">No site</Text>
                     )}
                 </Flex>
             </VStack>

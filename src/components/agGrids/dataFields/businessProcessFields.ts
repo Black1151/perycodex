@@ -2,14 +2,15 @@
 
 import {ColDef} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
+import BusinessProcessRenderer from "@/components/agGrids/CellRenderers/BusinessProcessRenderer";
 
 export const businessProcessFields: ColDef[] = [
     {
         field: "id",
         headerName: "ID",
         filter: "agNumberColumnFilter",
-        maxWidth: 100,
-        minWidth: 60,
+        maxWidth: 128,
+        minWidth: 64,
         sortable: true,
     },
     {
@@ -17,6 +18,11 @@ export const businessProcessFields: ColDef[] = [
         headerName: "Business Process Name",
         filter: "agTextColumnFilter",
         minWidth: 200,
+        cellRenderer: BusinessProcessRenderer,
+        cellRendererParams: {
+            nameField: 'name',
+            uniqueIdField: 'id'
+        }
     },
     {
         field: "description",

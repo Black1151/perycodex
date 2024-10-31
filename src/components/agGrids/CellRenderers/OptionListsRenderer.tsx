@@ -4,34 +4,35 @@ import React from 'react';
 import {Box, Flex, Text} from "@chakra-ui/react";
 import Link from "next/link";
 import {CustomCellRendererProps} from 'ag-grid-react';
-import {LocationOn} from "@mui/icons-material";
+import {FormatListNumbered} from "@mui/icons-material";
 
 // Define the interface for the component's props
-interface SiteLinkRendererProps extends CustomCellRendererProps {
+interface OptionListsRendererProps extends CustomCellRendererProps {
     nameField: string;  // Field name for dynamic Site Name
     uniqueIdField: string;  // Field name for dynamic Site Unique ID
 }
 
-const SiteLinkRenderer: React.FC<SiteLinkRendererProps> = ({
-                                                               node,
-                                                               nameField,
-                                                               uniqueIdField,
-                                                           }) => {
+const OptionListsRenderer: React.FC<OptionListsRendererProps> = ({
+                                                                 node,
+                                                                 nameField,
+                                                                 uniqueIdField,
+                                                             }) => {
 
-    const site = node?.data
+    const optionList = node?.data;
 
-    if (!site) {
+    if (!optionList) {
         return null;
     }
 
     // Access fields dynamically using the provided field names
-    const siteName = site[nameField] ?? 'No Site';
-    const uniqueId = site[uniqueIdField];
+    const optionListName = optionList[nameField] ?? 'No Option List';
+    const uniqueId = optionList[uniqueIdField];
 
     // Conditionally create a link only if uniqueId exists
-    const link = uniqueId ? `/sites/${uniqueId}` : null;
+    const link = uniqueId ? `/option-lists/lists/${uniqueId}` : null;
 
-    // Render the site name as text (inside a link if the site has a unique ID)
+
+    // Render the optionList name as text (inside a link if the optionList has a unique ID)
     const content = (
         <Flex alignItems="center" justifyContent="flex-start" w="full" h="full" maxW="full" gap={2}>
             <Box
@@ -44,10 +45,10 @@ const SiteLinkRenderer: React.FC<SiteLinkRendererProps> = ({
                 bg={'gray.100'}
                 justifyContent="center"
             >
-                <LocationOn sx={{color: "var(--chakra-colors-perygonPink)"}}/>
+                <FormatListNumbered sx={{color: "var(--chakra-colors-perygonPink)"}}/>
             </Box>
             <Text fontSize={'14px'} flex={1} overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
-                {siteName}
+                {optionListName}
             </Text>
         </Flex>
     );
@@ -62,4 +63,4 @@ const SiteLinkRenderer: React.FC<SiteLinkRendererProps> = ({
     );
 };
 
-export default SiteLinkRenderer;
+export default OptionListsRenderer;

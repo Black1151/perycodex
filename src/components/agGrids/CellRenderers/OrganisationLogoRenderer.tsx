@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import {Box, Image, Text, Flex} from '@chakra-ui/react';
+import {Box, Flex, Image, Text} from '@chakra-ui/react';
 import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
 import Link from 'next/link';
 import {CustomCellRendererProps} from "ag-grid-react";
@@ -58,16 +58,20 @@ const CustomerLogoRenderer: React.FC<CustomerLogoRendererProps> = ({
                     />
                 </Box>
             ) : (
-                <Box
-                    flexShrink={0}
-                    width="50px"
-                    height="50px"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                >
-                    <BusinessOutlinedIcon/>
-                </Box>
+                <Flex width={'50px'} height={'full'} align={'center'} justify={'center'}>
+                    <Box
+                        flexShrink={0}
+                        height="80%"
+                        aspectRatio={1}
+                        display="flex"
+                        alignItems="center"
+                        borderRadius={'full'}
+                        bg={'gray.100'}
+                        justifyContent="center"
+                    >
+                        <BusinessOutlinedIcon sx={{color: "var(--chakra-colors-perygonPink)"}}/>
+                    </Box>
+                </Flex>
             )}
             <Text fontSize={'14px'} flex={1} overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
                 {name}

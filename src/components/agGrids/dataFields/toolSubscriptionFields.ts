@@ -11,8 +11,8 @@ export const toolSubscriptionFields: ColDef[] = [
         field: "id",
         headerName: "ID",
         filter: "agNumberColumnFilter",
-        maxWidth: 100,
-        minWidth: 60,
+        maxWidth: 128,
+        minWidth: 64,
         sortable: true,
     },
     {
@@ -21,9 +21,9 @@ export const toolSubscriptionFields: ColDef[] = [
         filter: "agMultiColumnFilter",
         cellRenderer: ToolConfigRenderer,
         cellRendererParams: {
-            'uniqueIdField': 'toolId',
-            'imageUrlField': 'toolIconImageUrl',
-            'nameField': 'toolName'
+            uniqueIdField: 'toolId',
+            imageUrlField: 'toolIconImageUrl',
+            nameField: 'toolName',
         }
     },
     {

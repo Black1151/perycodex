@@ -13,7 +13,6 @@ export const siteFields: ColDef[] | any = [
         filter: "agNumberColumnFilter",
         maxWidth: 128,
         minWidth: 64,
-        // flex: 1,
     },
     {
         field: 'siteName',
@@ -24,37 +23,31 @@ export const siteFields: ColDef[] | any = [
             uniqueIdField: 'siteUniqueId',
             nameField: 'siteName',
         }
-        // flex: 1
     },
     {
         field: 'siteTypeName',
         headerName: 'Type',
         filter: "agMultiColumnFilter",
-        // flex: 1
     },
     {
         field: 'address1',
         headerName: 'St. Name',
         filter: "agMultiColumnFilter",
-        // flex: 1
     },
     {
         field: 'address3',
         headerName: 'City',
         filter: "agMultiColumnFilter",
-        // flex: 1
     },
     {
         field: 'postcode',
         headerName: 'Postcode',
         filter: "agMultiColumnFilter",
-        // flex: 1
     },
     {
         field: 'custName',
         headerName: 'Customer',
         filter: "agMultiColumnFilter",
-        // flex: 1,
         cellRenderer: OrganisationLogoRenderer,
         cellRendererParams: {
             idField: 'custUniqueId',
@@ -66,7 +59,6 @@ export const siteFields: ColDef[] | any = [
         field: 'primaryContactFullName',
         headerName: 'Primary Contact',
         filter: "agMultiColumnFilter",
-        // flex: 1,
         cellRenderer: UserImageRenderer,
         cellRendererParams: {
             uniqueIdField: 'primaryContactUniqueId',
@@ -77,7 +69,6 @@ export const siteFields: ColDef[] | any = [
     {
         field: 'isActive',
         headerName: 'Actions',
-        // flex: 1,
         cellRenderer: ActionButtonRenderer,
         cellRendererParams: {
             redirectUrl: '/sites',

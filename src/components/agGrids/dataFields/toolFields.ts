@@ -7,8 +7,8 @@ export const toolFields: ColDef[] = [
         field: "id",
         headerName: "ID",
         filter: "agNumberColumnFilter",
-        maxWidth: 100,
-        minWidth: 60,
+        maxWidth: 128,
+        minWidth: 64,
         sortable: true,
     },
     {
@@ -17,9 +17,9 @@ export const toolFields: ColDef[] = [
         filter: "agTextColumnFilter",
         cellRenderer: ToolConfigRenderer,
         cellRendererParams: {
-            'uniqueIdField': 'id',
-            'imageUrlField': 'iconImageUrl',
-            'nameField': 'name'
+            uniqueIdField: 'id',
+            imageUrlField: 'iconImageUrl',
+            nameField: 'name',
         }
     },
     {

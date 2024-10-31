@@ -4,34 +4,34 @@ import React from 'react';
 import {Box, Flex, Text} from "@chakra-ui/react";
 import Link from "next/link";
 import {CustomCellRendererProps} from 'ag-grid-react';
-import {LocationOn} from "@mui/icons-material";
+import {Sell} from "@mui/icons-material";
 
 // Define the interface for the component's props
-interface SiteLinkRendererProps extends CustomCellRendererProps {
+interface TagRendererProps extends CustomCellRendererProps {
     nameField: string;  // Field name for dynamic Site Name
     uniqueIdField: string;  // Field name for dynamic Site Unique ID
 }
 
-const SiteLinkRenderer: React.FC<SiteLinkRendererProps> = ({
-                                                               node,
-                                                               nameField,
-                                                               uniqueIdField,
-                                                           }) => {
+const TagRenderer: React.FC<TagRendererProps> = ({
+                                                     node,
+                                                     nameField,
+                                                     uniqueIdField,
+                                                 }) => {
 
-    const site = node?.data
+    const tag = node?.data;
 
-    if (!site) {
+    if (!tag) {
         return null;
     }
 
     // Access fields dynamically using the provided field names
-    const siteName = site[nameField] ?? 'No Site';
-    const uniqueId = site[uniqueIdField];
+    const tagName = tag[nameField] ?? 'No Tag';
+    const uniqueId = tag[uniqueIdField];
 
     // Conditionally create a link only if uniqueId exists
-    const link = uniqueId ? `/sites/${uniqueId}` : null;
+    const link = uniqueId ? `/tags/${uniqueId}` : null;
 
-    // Render the site name as text (inside a link if the site has a unique ID)
+    // Render the tag name as text (inside a link if the tag has a unique ID)
     const content = (
         <Flex alignItems="center" justifyContent="flex-start" w="full" h="full" maxW="full" gap={2}>
             <Box
@@ -44,10 +44,10 @@ const SiteLinkRenderer: React.FC<SiteLinkRendererProps> = ({
                 bg={'gray.100'}
                 justifyContent="center"
             >
-                <LocationOn sx={{color: "var(--chakra-colors-perygonPink)"}}/>
+                <Sell sx={{color: "var(--chakra-colors-perygonPink)"}}/>
             </Box>
             <Text fontSize={'14px'} flex={1} overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
-                {siteName}
+                {tagName}
             </Text>
         </Flex>
     );
@@ -62,4 +62,4 @@ const SiteLinkRenderer: React.FC<SiteLinkRendererProps> = ({
     );
 };
 
-export default SiteLinkRenderer;
+export default TagRenderer;

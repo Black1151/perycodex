@@ -75,7 +75,7 @@ export default async function PerygonMain() {
 
     if (carouselItems.length === 1) {
         return redirect(
-            `${carouselItems[0].appUrl}?toolId=${carouselItems[0].toolId}`
+            `${carouselItems[0].appUrl}?toolId=${carouselItems[0].toolId}&workflowId=${carouselItems[0].toolWfId}`
         );
     }
 
