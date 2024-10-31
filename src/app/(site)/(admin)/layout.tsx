@@ -9,16 +9,19 @@ import {
     Checklist,
     Construction,
     Domain,
+    Email,
     FormatAlignCenter,
     FormatListNumbered,
     Grid4x4,
     Groups,
     LocationOn,
+    MailLock,
     People,
     Person,
+    ScheduleSend,
     Schema,
     Sell,
-    ShoppingCartCheckout
+    ShoppingCartCheckout,
 } from "@mui/icons-material";
 import {usePathname, useRouter} from "next/navigation";
 import {useUser} from "@/providers/UserProvider";
@@ -171,6 +174,24 @@ export default function Layout({children}: LayoutProps) {
                     icon: <FormatAlignCenter sx={{height: "100%", width: "100%"}}/>,
                     onClick: () => router.push("/forms"),
                     category: "Workflows",
+                },
+                {
+                    label: "Email Templates",
+                    icon: <Email sx={{height: "100%", width: "100%"}}/>,
+                    onClick: () => router.push("/email-template"),
+                    category: "Emails",
+                },
+                {
+                    label: "Email Schedules",
+                    icon: <ScheduleSend sx={{height: "100%", width: "100%"}}/>,
+                    onClick: () => router.push("/email-schedule"),
+                    category: "Emails",
+                },
+                {
+                    label: "Email Links",
+                    icon: <MailLock sx={{height: "100%", width: "100%"}}/>,
+                    onClick: () => router.push("/email-secure-link"),
+                    category: "Emails",
                 },
                 {
                     label: "Form Builder",
