@@ -20,7 +20,10 @@ export const useFetchClient = () => {
     url: string,
     {
       method = "GET",
-      headers = { "Content-Type": "application/json" },
+      headers = {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
       body,
       successMessage,
       errorMessage = "An unexpected error occurred.",
@@ -35,6 +38,7 @@ export const useFetchClient = () => {
         headers,
         ...(body ? { body: JSON.stringify(body) } : {}),
       });
+      console.log("FETCH CLIENT RESPONSE", response);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -53,6 +57,8 @@ export const useFetchClient = () => {
 
       return data;
     } catch (error: any) {
+      console.log("FETCH CLIENT ERROR", error);
+      console.error(error);
       toast({
         title: "Error",
         description: error.message || errorMessage,

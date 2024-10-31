@@ -29,7 +29,7 @@ export async function GET(
     }
 
     const response = await apiClient(
-      `/tagAssociation/allBy?recordTypeId=${recordTypeId}&recordId=${recordId}`
+      `/getAllView?view=vwTagAssociationsList&selectColumns=name,colour,tagId&recordTypeId=${recordTypeId}&recordId=${recordId}`
     );
 
     if (!response.ok) {

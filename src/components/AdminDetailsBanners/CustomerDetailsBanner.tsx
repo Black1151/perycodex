@@ -89,15 +89,11 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
   useEffect(() => {
     const fetchTags = async () => {
       const response = await fetchClient(
-        `/api/tags/getTags?recordTypeId=1&recordId=${customer.id}`,
-        {
-          method: "GET",
-        }
+        `/api/tags/getTags?recordTypeId=1&recordId=${customer.id}`
       );
 
       if (response) {
         const tagsResponse = response as TagsResponse;
-        // console.log(response);
         setTags(tagsResponse.resource);
       }
     };
