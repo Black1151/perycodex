@@ -22,7 +22,7 @@ export const toolSubscriptionsJson = {
                     title: "Tool Config",
                     isRequired: true,
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}api/toolConfig/allBy`,
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/toolConfig/allBy`,
                         path: "resource",
                         valueName: "id",
                         titleName: "name"
