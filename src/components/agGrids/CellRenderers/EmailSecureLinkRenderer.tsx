@@ -25,8 +25,8 @@ const EmailSecureLinkRenderer: React.FC<EmailSecureLinkRendererProps> = ({
     }
 
     // Access fields dynamically using the provided field names
-    const emailSecureLinkName = emailSecureLink[nameField] ?? 'No Secure Link';
     const uniqueId = emailSecureLink[uniqueIdField];
+    const emailSecureLinkName = emailSecureLink[nameField] ?? uniqueId ?? 'No Secure Link';
 
     // Conditionally create a link only if uniqueId exists
     const link = uniqueId ? `/email-secure-link/${uniqueId}` : null;
