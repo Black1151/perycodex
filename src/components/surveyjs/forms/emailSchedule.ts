@@ -45,13 +45,13 @@ export const emailScheduleJson = {
                     name: "businessProcessId",
                     title: "Business Process",
                     titleLocation: "top",
-                    isRequired: true,
                     placeholder: "Select Business Process",
+                    enableIf: "{workflowId} notempty",
+                    visibleIf: "{workflowId} notempty",
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/businessProcess/allBy?selectColumns=id,name&isActive=true`,
-                        path: "resource",
-                        valueName: "id",
-                        titleName: "name"
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/view?view=vwWorkflowToBusinessProcess&workflowId={workflowId}`,
+                        valueName: "businessProcessId",
+                        titleName: "bpName"
                     },
                 },
                 {
@@ -75,17 +75,16 @@ export const emailScheduleJson = {
                     defaultValueExpression: "today()",
                     isRequired: true,
                     inputType: "date",
-                    minValueExpression: "today()"
                 },
                 {
                     type: "text",
                     name: "endDate",
                     title: "Select end date",
-                    defaultValueExpression: "{startDate}",
+                    defaultValueExpression: "today()",
                     isRequired: true,
                     inputType: "date",
-                    minValueExpression: "{startDate}"
-                }, {
+                },
+                {
                     type: "text",
                     name: "sendTime",
                     title: "Send Time between 09:00 and 18:00",
@@ -137,13 +136,49 @@ export const emailScheduleJson = {
                     isRequired: true,
                     visibleIf: "{frequency} = 'Weekly'",
                     choices: [
-                        "Monday",
-                        "Tuesday",
-                        "Wednesday",
-                        "Thursday",
-                        "Friday",
-                        "Saturday",
-                        "Sunday"
+
+                        {
+                            text: "Monday",
+                            value: 1
+                        },
+
+
+                        {
+                            text: "Tuesday",
+                            value: 2
+                        },
+
+
+                        {
+                            text: "Wednesday",
+                            value: 3
+                        },
+
+
+                        {
+                            text: "Thursday",
+                            value: 4
+                        },
+
+
+                        {
+                            text: "Friday",
+                            value: 5
+                        },
+
+
+                        {
+                            text: "Saturday",
+                            value: 6
+                        },
+
+
+                        {
+                            text: "Sunday",
+                            value: 7
+                        }
+
+
                     ],
                 },
                 {
@@ -154,10 +189,120 @@ export const emailScheduleJson = {
                     visibleIf: "{frequency} = 'Monthly'",
                     colCount: 5,
                     choices: [
-                        "1", "2", "3", "4", "5", "6", "7",
-                        "8", "9", "10", "11", "12", "13", "14",
-                        "15", "16", "17", "18", "19", "20", "21",
-                        "22", "23", "24", "25", "26", "27", "28"],
+                        {
+                            text: "1",
+                            value: "1"
+                        },
+                        {
+                            text: "2",
+                            value: "2"
+                        },
+                        {
+                            text: "3",
+                            value: "3"
+                        },
+                        {
+                            text: "4",
+                            value: "4"
+                        },
+                        {
+                            text: "5",
+                            value: "5"
+                        },
+                        {
+                            text: "6",
+                            value: "6"
+                        },
+                        {
+                            text: "7",
+                            value: "7"
+                        },
+                        {
+                            text: "8",
+                            value: "8"
+                        },
+                        {
+                            text: "9",
+                            value: "9"
+                        },
+                        {
+                            text: "10",
+                            value: "10"
+                        },
+                        {
+                            text: "11",
+                            value: "11"
+                        },
+                        {
+                            text: "12",
+                            value: "12"
+                        },
+                        {
+                            text: "13",
+                            value: "13"
+                        },
+                        {
+                            text: "14",
+                            value: "14"
+                        },
+                        {
+                            text: "15",
+                            value: "15"
+                        },
+                        {
+                            text: "16",
+                            value: "16"
+                        },
+                        {
+                            text: "17",
+                            value: "17"
+                        },
+                        {
+                            text: "18",
+                            value: "18"
+                        },
+                        {
+                            text: "19",
+                            value: "19"
+                        },
+                        {
+                            text: "20",
+                            value: "20"
+                        },
+                        {
+                            text: "21",
+                            value: "21"
+                        },
+                        {
+                            text: "22",
+                            value: "22"
+                        },
+                        {
+                            text: "23",
+                            value: "23"
+                        },
+                        {
+                            text: "24",
+                            value: "24"
+                        },
+                        {
+                            text: "25",
+                            value: "25"
+                        },
+                        {
+                            text: "26",
+                            value: "26"
+                        },
+                        {
+                            text: "27",
+                            value: "27"
+                        },
+                        {
+                            text: "28",
+                            value: "28"
+                        }
+
+                    ],
                 },
                 {
                     type: "boolean",
@@ -170,7 +315,8 @@ export const emailScheduleJson = {
                     labelFalse: "No",
                     swapOrder: true,
                     visibleIf: "{frequency} = 'Monthly'",
-                }, {
+                },
+                {
                     type: "text",
                     name: "interval",
                     title: "Enter an Interval",

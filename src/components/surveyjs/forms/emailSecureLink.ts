@@ -49,7 +49,6 @@ export const emailSecureLinkJson = {
                     defaultValueExpression: "today()",
                     isRequired: true,
                     inputType: "date",
-                    minValueExpression: "today()"
                 },
                 {
                     type: "dropdown",
@@ -76,7 +75,7 @@ export const emailSecureLinkJson = {
                 },
                 {
                     type: "dropdown",
-                    name: "toolConfigId",
+                    name: "toolId",
                     title: "Tool Config",
                     isRequired: true,
                     choicesByUrl: {
@@ -86,23 +85,20 @@ export const emailSecureLinkJson = {
                         titleName: "name"
                     }
                 },
-                // TODO: ToolWorkflow instead
                 {
                     type: "dropdown",
                     name: "workflowId",
                     title: "Workflow",
                     titleLocation: "top",
-                    enableIf: "{toolConfigId} notempty",
-                    visibleIf: "{toolConfigId} notempty",
+                    enableIf: "{toolId} notempty",
+                    visibleIf: "{toolId} notempty",
                     placeholder: "Select Workflow",
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/workflow/allBy?selectColumns=id,name&isActive=true`,  // The API endpoint to fetch choices from
-                        path: "resource",
-                        valueName: "id",
-                        titleName: "name"
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/view?view=vwToolToWorkflow&toolConfigId={toolId}`,
+                        valueName: "workflowId",
+                        titleName: "wfName"
                     },
                 },
-                // TODO: WorkflowBusinessProcess instead
                 {
                     type: "dropdown",
                     name: "businessProcessId",
@@ -112,10 +108,9 @@ export const emailSecureLinkJson = {
                     enableIf: "{workflowId} notempty",
                     visibleIf: "{workflowId} notempty",
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/businessProcess/allBy?selectColumns=id,name&isActive=true`,
-                        path: "resource",
-                        valueName: "id",
-                        titleName: "name"
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/view?view=vwWorkflowToBusinessProcess&workflowId={workflowId}`,
+                        valueName: "businessProcessId",
+                        titleName: "bpName"
                     },
                 },
                 {
