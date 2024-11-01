@@ -30,13 +30,18 @@ export const emailScheduleFields: ColDef[] | any = [
         filter: "agMultiColumnFilter",
     },
     {
-        field: 'frequency',
-        headerName: 'Frequency',
+        field: 'endDate',
+        headerName: 'End Date',
         filter: "agMultiColumnFilter",
     },
     {
-        field: 'endDate',
-        headerName: 'End Date',
+        field: 'sendTime',
+        headerName: 'Send Time',
+        filter: "agMultiColumnFilter",
+    },
+    {
+        field: 'frequency',
+        headerName: 'Frequency',
         filter: "agMultiColumnFilter",
     },
     {

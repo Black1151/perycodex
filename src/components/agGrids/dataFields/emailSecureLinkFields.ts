@@ -4,6 +4,9 @@ import CustomerRenderer from "@/components/agGrids/CellRenderers/CustomerRendere
 import EmailScheduleRenderer from "@/components/agGrids/CellRenderers/EmailScheduleRenderer";
 import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
 import EmailSecureLinkRenderer from "@/components/agGrids/CellRenderers/EmailSecureLinkRenderer";
+import ToolConfigRenderer from "@/components/agGrids/CellRenderers/ToolConfigRenderer";
+import WorkflowRenderer from "@/components/agGrids/CellRenderers/WorkflowRenderer";
+import BusinessProcessRenderer from "@/components/agGrids/CellRenderers/BusinessProcessRenderer";
 
 // Updated AgGrids fields
 export const emailSecureLinkFields: ColDef[] | any = [
@@ -25,13 +28,43 @@ export const emailSecureLinkFields: ColDef[] | any = [
         }
     },
     {
-        field: 'toolId',
-        headerName: 'Tool ID',
+        field: 'toolName',
+        headerName: 'Tool Name',
+        filter: "agMultiColumnFilter",
+        cellRenderer: ToolConfigRenderer,
+        cellRendererParams: {
+            uniqueIdField: 'toolId',
+            nameField: 'toolName',
+        }
+    },
+    {
+        field: 'wfName',
+        headerName: 'Workflow',
+        filter: "agMultiColumnFilter",
+        cellRenderer: WorkflowRenderer,
+        cellRendererParams: {
+            uniqueIdField: 'workflowId',
+            nameField: 'wfName',
+        }
+    },
+    {
+        field: 'bpName',
+        headerName: 'Business Process',
+        filter: "agMultiColumnFilter",
+        cellRenderer: BusinessProcessRenderer,
+        cellRendererParams: {
+            uniqueIdField: 'businessProcessId',
+            nameField: 'bpName',
+        }
+    },
+    {
+        field: "actionType",
+        headerName: "Action Type",
         filter: "agMultiColumnFilter",
     },
     {
-        field: 'toolName',
-        headerName: 'Tool Name',
+        field: "expirationDate",
+        headerName: "Expiration",
         filter: "agMultiColumnFilter",
     },
     {
