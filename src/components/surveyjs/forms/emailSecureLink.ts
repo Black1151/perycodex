@@ -1,8 +1,8 @@
 export const emailSecureLinkJson = {
     pages: [
         {
-            name: "email-schedule-details",
-            title: "Email Schedule Details",
+            name: "email-secureLink-details",
+            title: "Email Secure Link",
             elements: [
                 {
                     type: "boolean",
@@ -10,7 +10,7 @@ export const emailSecureLinkJson = {
                     minWidth: "256px",
                     title: "Active?",
                     titleLocation: "top",
-                    description: "Is this email schedule active?",
+                    description: "Is this email link active?",
                     descriptionLocation: "underInput",
                     defaultValue: false,
                     isRequired: true,
@@ -19,20 +19,82 @@ export const emailSecureLinkJson = {
                     swapOrder: true
                 },
                 {
+                    type: "boolean",
+                    name: "adminGenerated",
+                    minWidth: "256px",
+                    startWithNewLine: false,
+                    title: "Admin Generated?",
+                    titleLocation: "top",
+                    defaultValue: true,
+                    isRequired: true,
+                    labelTrue: "Yes",
+                    labelFalse: "No",
+                    swapOrder: true,
+                    readOnly: true
+                },
+                {
                     type: "text",
                     name: "name",
-                    title: "Schedule Name",
+                    title: "Name",
+                    titleLocation: "top",
+                    isRequired: false,
+                    maxLength: 200,
+                    placeholder: "Enter name if required",
+                },
+
+                {
+                    type: "text",
+                    name: "expirationDate",
+                    title: "Expiration Date",
+                    defaultValueExpression: "today()",
+                    isRequired: true,
+                    inputType: "date",
+                    minValueExpression: "today()"
+                },
+                {
+                    type: "dropdown",
+                    name: "actionType",
+                    title: "Action Type",
                     titleLocation: "top",
                     isRequired: true,
-                    placeholder: "Enter schedule name",
+                    startWithNewLine: false,
+                    placeholder: "Select action type",
+                    choices: [
+                        {
+                            value: "create",
+                            text: "Create"
+                        },
+                        {
+                            value: "contribute",
+                            text: "Contribute"
+                        },
+                        {
+                            value: "direct",
+                            text: "Direct"
+                        },
+                    ],
                 },
+                {
+                    type: "dropdown",
+                    name: "toolConfigId",
+                    title: "Tool Config",
+                    isRequired: true,
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/toolConfig/allBy`,
+                        path: "resource",
+                        valueName: "id",
+                        titleName: "name"
+                    }
+                },
+                // TODO: ToolWorkflow instead
                 {
                     type: "dropdown",
                     name: "workflowId",
                     title: "Workflow",
                     titleLocation: "top",
+                    enableIf: "{toolConfigId} notempty",
+                    visibleIf: "{toolConfigId} notempty",
                     placeholder: "Select Workflow",
-                    isRequired: true,
                     choicesByUrl: {
                         url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/workflow/allBy?selectColumns=id,name&isActive=true`,  // The API endpoint to fetch choices from
                         path: "resource",
@@ -40,13 +102,15 @@ export const emailSecureLinkJson = {
                         titleName: "name"
                     },
                 },
+                // TODO: WorkflowBusinessProcess instead
                 {
                     type: "dropdown",
                     name: "businessProcessId",
                     title: "Business Process",
                     titleLocation: "top",
-                    isRequired: true,
                     placeholder: "Select Business Process",
+                    enableIf: "{workflowId} notempty",
+                    visibleIf: "{workflowId} notempty",
                     choicesByUrl: {
                         url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/businessProcess/allBy?selectColumns=id,name&isActive=true`,
                         path: "resource",
@@ -56,143 +120,26 @@ export const emailSecureLinkJson = {
                 },
                 {
                     type: "dropdown",
-                    name: "emailTemplateId",
-                    title: "Email Template",
-                    titleLocation: "top",
-                    isRequired: true,
-                    placeholder: "Select Email Template",
+                    name: "toCustomerId",
+                    title: "Customer",
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/emailTemplate/allBy?selectColumns=id,name&isActive=true`,
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/customer/allBy`,
                         path: "resource",
                         valueName: "id",
                         titleName: "name"
                     },
                 },
                 {
-                    type: "text",
-                    name: "startDate",
-                    title: "Select start date",
-                    defaultValueExpression: "today()",
-                    isRequired: true,
-                    inputType: "date",
-                    minValueExpression: "today()"
-                },
-                {
-                    type: "text",
-                    name: "endDate",
-                    title: "Select end date",
-                    defaultValueExpression: "{startDate}",
-                    isRequired: true,
-                    inputType: "date",
-                    minValueExpression: "{startDate}"
-                }, {
-                    type: "text",
-                    name: "sendTime",
-                    title: "Send Time between 09:00 and 18:00",
-                    isRequired: true,
-                    inputType: "time",
-                    min: "09:00",
-                    max: "18:00"
-                },
-                {
-                    type: "comment",
-                    name: "targetCondition",
-                    title: "Additional Condition that needs to be met",
-                    titleLocation: "top",
-                    visible: false,
-                    isRequired: false,
-                    placeholder: "Enter target condition",
-                    autoGrow: true
-                },
-                {
                     type: "dropdown",
-                    name: "frequency",
-                    title: "Frequency",
-                    titleLocation: "top",
-                    isRequired: true,
-                    placeholder: "Select frequency",
-                    choices: [
-                        {
-                            value: "daily",
-                            text: "Daily"
-                        },
-                        {
-                            value: "weekly",
-                            text: "Weekly"
-                        },
-                        {
-                            value: "monthly",
-                            text: "Monthly"
-                        },
-                        {
-                            value: "one-time",
-                            text: "One-time"
-                        }],
-
-                },
-                {
-                    type: "checkbox",
-                    name: "daysOfWeek",
-                    title: "Which days of week?",
-                    isRequired: true,
-                    visibleIf: "{frequency} = 'Weekly'",
-                    choices: [
-                        "Monday",
-                        "Tuesday",
-                        "Wednesday",
-                        "Thursday",
-                        "Friday",
-                        "Saturday",
-                        "Sunday"
-                    ],
-                },
-                {
-                    type: "checkbox",
-                    name: "daysOfMonth",
-                    title: "Which days of month?",
-                    requiredIf: "{lastDayOfMOnth} = false",
-                    visibleIf: "{frequency} = 'Monthly'",
-                    colCount: 5,
-                    choices: [
-                        "1", "2", "3", "4", "5", "6", "7",
-                        "8", "9", "10", "11", "12", "13", "14",
-                        "15", "16", "17", "18", "19", "20", "21",
-                        "22", "23", "24", "25", "26", "27", "28"],
-                },
-                {
-                    type: "boolean",
-                    name: "lastDayOfMonth",
-                    minWidth: "256px",
-                    title: "Last day of month",
-                    titleLocation: "top", defaultValue: false,
-                    isRequired: true,
-                    labelTrue: "Yes",
-                    labelFalse: "No",
-                    swapOrder: true,
-                    visibleIf: "{frequency} = 'Monthly'",
-                }, {
-                    type: "text",
-                    name: "interval",
-                    title: "Enter an Interval",
-                    isRequired: true,
-                    inputType: "number",
-                    defaultValue: 1,
-                    min: 1,
-                    max: 30,
-                    description: "An interval of 1 would be every week or month, 2 would be every 2 weeks or months etc.",
-                    descriptionLocation: "underInput",
-                },
-                {
-                    type: "tagbox",
-                    name: "userDistGroupNames",
-                    title: "User Distribution Group Names",
-                    titleLocation: "top",
-                    placeholder: "Enter user access group names",
+                    name: "toUserId",
+                    title: "User",
+                    enableIf: "{toCustomerId} notempty",
+                    visibleIf: "{toCustomerId} notempty",
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/userGroupPlatform`,
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/allBy?customerId={toCustomerId}`,
                         path: "resource",
-                        valueName: "name",
-                        titleName: "name"
+                        valueName: "id",
+                        titleName: "email"
                     },
                 },
             ]

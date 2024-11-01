@@ -99,12 +99,12 @@ export const emailTemplateJson = {
                     visibleIf: "{isActionable} = 'True'",
                     maxLength: 300,
                     choicesByUrl: {
-                        url: '',
-                        path: '',
-                        valueName: '',
-                        titleName: '',
-                    }
-                }
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/emailSecureLink/allBy?selectColumns=id,name,uniqueId&isActive=true&adminGenerated=true`,
+                        path: "resource",
+                        valueName: "id",
+                        titleName: "id"
+                    },
+                },
             ]
         }
     ],
