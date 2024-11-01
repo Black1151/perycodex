@@ -10,7 +10,7 @@ export default async function EmailSchedulePage() {
     const userIdentity = await getUserIdentity();
     checkUserRole(userIdentity, "/email-schedule");
 
-    let url = '/emailSchedule/allBy';
+    let url = '/getAllView?view=vwEmailSchedulesList';
     let headerTitle = 'Email Schedules';
 
     const res = await apiClient(url, {cache: "no-store"});

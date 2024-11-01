@@ -13,7 +13,7 @@ export default async function EmailSecureLinkCreatePage() {
             <AdminHeader headingText="Create Email Secure Link"/>
             <SurveyComponent
                 surveyJson={emailSecureLinkJson}
-                endpoint={'/test'}
+                endpoint={'/emailSecureLink'}
                 isNew={true}
                 layout={'default'}
                 redirectUrl={'/email-secure-link'}

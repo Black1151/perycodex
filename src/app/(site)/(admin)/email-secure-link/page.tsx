@@ -10,7 +10,7 @@ export default async function EmailSecureLinkPage() {
     const userIdentity = await getUserIdentity();
     checkUserRole(userIdentity, "/email-secure-link");
 
-    let url = '/emailSecureLink/allBy';
+    let url = '/getAllView?view=vwEmailSecureLinksList';
     let headerTitle = 'Email Secure Links';
 
     const res = await apiClient(url, {cache: "no-store"});
@@ -31,7 +31,7 @@ export default async function EmailSecureLinkPage() {
                 <DataGridComponent
                     data={emailSecureLinkData}
                     initialFields={emailSecureLinkFields}
-                    createNewUrl={"/email-schedule/create"}
+                    createNewUrl={"/email-secure-link/create"}
                 />
             </>
         );
