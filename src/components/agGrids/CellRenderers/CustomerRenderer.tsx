@@ -7,27 +7,27 @@ import Link from 'next/link';
 import {CustomCellRendererProps} from "ag-grid-react";
 
 // Define the interface for the props expected by the component
-interface CustomerLogoRendererProps extends CustomCellRendererProps {
+interface CustomerRendererProps extends CustomCellRendererProps {
     imageUrlField: string; // Field name for dynamic Image Url
-    idField: string; // Field name for dynamic ID
+    uniqueIdField: string; // Field name for dynamic ID
     nameField: string; // Field name for dynamic Name
 }
 
-const CustomerLogoRenderer: React.FC<CustomerLogoRendererProps> = ({
-                                                                       node,
-                                                                       nameField,
-                                                                       idField,
-                                                                       imageUrlField,
-                                                                   }) => {
+const CustomerRenderer: React.FC<CustomerRendererProps> = ({
+                                                               node,
+                                                               nameField,
+                                                               uniqueIdField,
+                                                               imageUrlField,
+                                                           }) => {
     const customer = node?.data;
 
     if (!customer) {
         return null;
     }
 
-    const name = customer[nameField] ?? 'No Customer'; // Access the name dynamically using nameField
+    const name = customer[nameField] ?? 'Platform'; // Access the name dynamically using nameField
     const imageUrl = customer[imageUrlField]; // Access the Image dynamically using imageUrlField
-    const uniqueId = customer[idField]; // Access the unique ID dynamically using idField
+    const uniqueId = customer[uniqueIdField]; // Access the unique ID dynamically using uniqueIdField
 
     const link = uniqueId ? `/customers/${uniqueId}` : null;
 
@@ -89,4 +89,4 @@ const CustomerLogoRenderer: React.FC<CustomerLogoRendererProps> = ({
     );
 };
 
-export default CustomerLogoRenderer;
+export default CustomerRenderer;
