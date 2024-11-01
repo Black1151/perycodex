@@ -19,79 +19,54 @@ export const emailSecureLinkJson = {
                     swapOrder: true
                 },
                 {
-                    type: "dropdown",
-                    name: "worklfowId",
-                    title: "Workflow",
+                    type: "text",
+                    name: "name",
+                    title: "Schedule Name",
                     titleLocation: "top",
                     isRequired: true,
-                    choices: [
-                        {
-                            value: "1",
-                            text: "Workflow 1"
-                        },
-                        {
-                            value: "2",
-                            text: "Workflow 2"
-                        },
-                        {
-                            value: "2",
-                            text: "Workflow 3"
-                        },
-                        {
-                            value: "2",
-                            text: "Workflow 4"
-                        }],
-                    placeholder: "Select workflow"
+                    placeholder: "Enter schedule name",
+                },
+                {
+                    type: "dropdown",
+                    name: "workflowId",
+                    title: "Workflow",
+                    titleLocation: "top",
+                    placeholder: "Select Workflow",
+                    isRequired: true,
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/workflow/allBy?selectColumns=id,name&isActive=true`,  // The API endpoint to fetch choices from
+                        path: "resource",
+                        valueName: "id",
+                        titleName: "name"
+                    },
                 },
                 {
                     type: "dropdown",
                     name: "businessProcessId",
-                    title: "Stage",
+                    title: "Business Process",
                     titleLocation: "top",
-                    isRequired: false,
-                    choices: [
-                        {
-                            value: "1",
-                            text: "Stage 1"
-                        },
-                        {
-                            value: "2",
-                            text: "Stage 2"
-                        },
-                        {
-                            value: "2",
-                            text: "Stage 3"
-                        },
-                        {
-                            value: "2",
-                            text: "Stage 4"
-                        }],
-                    placeholder: "Select stage"
+                    isRequired: true,
+                    placeholder: "Select Business Process",
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/businessProcess/allBy?selectColumns=id,name&isActive=true`,
+                        path: "resource",
+                        valueName: "id",
+                        titleName: "name"
+                    },
                 },
                 {
                     type: "dropdown",
-                    name: "emailTemaplateId",
+                    name: "emailTemplateId",
                     title: "Email Template",
                     titleLocation: "top",
                     isRequired: true,
-                    choices: [
-                        {
-                            value: "1",
-                            text: "Email Template 1"
-                        },
-                        {
-                            value: "2",
-                            text: "Email Template 2"
-                        },
-                        {
-                            value: "2",
-                            text: "Email Template 3"
-                        },
-                        {
-                            value: "2",
-                            text: "Email Template 4"
-                        }],
-                    placeholder: "Select email template"
+                    placeholder: "Select Email Template",
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/emailTemplate/allBy?selectColumns=id,name&isActive=true`,
+                        path: "resource",
+                        valueName: "id",
+                        titleName: "name"
+                    },
                 },
                 {
                     type: "text",
@@ -124,6 +99,7 @@ export const emailSecureLinkJson = {
                     name: "targetCondition",
                     title: "Additional Condition that needs to be met",
                     titleLocation: "top",
+                    visible: false,
                     isRequired: false,
                     placeholder: "Enter target condition",
                     autoGrow: true
@@ -134,6 +110,7 @@ export const emailSecureLinkJson = {
                     title: "Frequency",
                     titleLocation: "top",
                     isRequired: true,
+                    placeholder: "Select frequency",
                     choices: [
                         {
                             value: "daily",
@@ -151,13 +128,14 @@ export const emailSecureLinkJson = {
                             value: "one-time",
                             text: "One-time"
                         }],
-                    placeholder: "Select frequency"
+
                 },
                 {
                     type: "checkbox",
                     name: "daysOfWeek",
                     title: "Which days of week?",
                     isRequired: true,
+                    visibleIf: "{frequency} = 'Weekly'",
                     choices: [
                         "Monday",
                         "Tuesday",
@@ -167,17 +145,19 @@ export const emailSecureLinkJson = {
                         "Saturday",
                         "Sunday"
                     ],
-                    visibleIf: "{frequency} = 'Weekly'"
                 },
                 {
                     type: "checkbox",
                     name: "daysOfMonth",
-                    title: "Which days of month?", requiredIf: "{lastDayOfMOnth} = false",
+                    title: "Which days of month?",
+                    requiredIf: "{lastDayOfMOnth} = false",
+                    visibleIf: "{frequency} = 'Monthly'",
+                    colCount: 5,
                     choices: [
                         "1", "2", "3", "4", "5", "6", "7",
                         "8", "9", "10", "11", "12", "13", "14",
                         "15", "16", "17", "18", "19", "20", "21",
-                        "22", "23", "24", "25", "26", "27", "28"], visibleIf: "{frequency} = 'Monthly'", colCount: 5
+                        "22", "23", "24", "25", "26", "27", "28"],
                 },
                 {
                     type: "boolean",
@@ -201,33 +181,20 @@ export const emailSecureLinkJson = {
                     max: 30,
                     description: "An interval of 1 would be every week or month, 2 would be every 2 weeks or months etc.",
                     descriptionLocation: "underInput",
-                }, {
-                    type: "matrixdynamic",
+                },
+                {
+                    type: "tagbox",
                     name: "userDistGroupNames",
-                    state: "collapsed",
-                    startWithNewLine: true,
-                    title: "Distribution User Group Names",
-                    showHeader: false,
-                    description: "Which groups of user is this email sent to?",
-                    descriptionLocation: "underInput",
-                    columns: [
-                        {
-                            name: "userGroup",
-                            title: "User Group Name",
-                            cellType: "text",
-                            isRequired: true,
-                            maxLength: 80,
-                            placeholder: "Enter group name"
-                        }
-                    ],
-                    rowCount: 1,
-                    confirmDelete: true,
-                    confirmDeleteText: "Are you sure you want to delete this user group?",
-                    addRowText: "Add a User Group Name",
-                    removeRowText: "Delete this User Group Name",
-                    hideColumnsIfEmpty: true,
-                    emptyRowsText: "No user group names entered yet.\nClick 'Add a User Group Name' to add a new one.\nClick the delete icon to remove an existing entry."
-                }
+                    title: "User Distribution Group Names",
+                    titleLocation: "top",
+                    placeholder: "Enter user access group names",
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/userGroupPlatform`,
+                        path: "resource",
+                        valueName: "name",
+                        titleName: "name"
+                    },
+                },
             ]
         }
     ],
