@@ -1,10 +1,5 @@
 import {useEffect, useState} from 'react';
 import {Model, Serializer, settings, SurveyModel} from 'survey-core';
-
-import {
-    registerSurveyFunctionsWithoutSurvey,
-    registerSurveyJsFunctionsWithSurvey
-} from "@/components/surveyjs/globalJsFunctions";
 import {ThemeModule, UseSurveyProps} from "@/components/surveyjs/SurveyProps";
 import {useUser} from "@/providers/UserProvider";
 
