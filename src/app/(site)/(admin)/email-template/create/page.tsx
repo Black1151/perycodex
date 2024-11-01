@@ -13,7 +13,7 @@ export default async function EmailTemplateCreatePage() {
             <AdminHeader headingText="Create Email Template"/>
             <SurveyComponent
                 surveyJson={emailTemplateJson}
-                endpoint={'/test'}
+                endpoint={'/emailTemplate'}
                 isNew={true}
                 layout={'default'}
                 redirectUrl={'/email-template'}

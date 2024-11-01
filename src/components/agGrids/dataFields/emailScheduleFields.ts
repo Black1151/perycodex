@@ -1,6 +1,9 @@
 import {ColDef} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
-import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/OrganisationLogoRenderer";
+import CustomerRenderer from "@/components/agGrids/CellRenderers/CustomerRenderer";
+import EmailScheduleRenderer from "@/components/agGrids/CellRenderers/EmailScheduleRenderer";
+import WorkflowRenderer from "@/components/agGrids/CellRenderers/WorkflowRenderer";
+import BusinessProcessRenderer from "@/components/agGrids/CellRenderers/BusinessProcessRenderer";
 
 // Updated AgGrids fields
 export const emailScheduleFields: ColDef[] | any = [
@@ -15,17 +18,11 @@ export const emailScheduleFields: ColDef[] | any = [
         field: 'name',
         headerName: 'Name',
         filter: "agMultiColumnFilter",
-        cellRenderer: OrganisationLogoRenderer,
+        cellRenderer: EmailScheduleRenderer,
         cellRendererParams: {
-            idField: 'custId',
+            uniqueIdField: 'id',
             nameField: 'name',
-            imageUrlField: 'imageUrl'
         }
-    },
-    {
-        field: 'frequency',
-        headerName: 'Frequency',
-        filter: "agMultiColumnFilter",
     },
     {
         field: 'startDate',
@@ -36,6 +33,36 @@ export const emailScheduleFields: ColDef[] | any = [
         field: 'endDate',
         headerName: 'End Date',
         filter: "agMultiColumnFilter",
+    },
+    {
+        field: 'sendTime',
+        headerName: 'Send Time',
+        filter: "agMultiColumnFilter",
+    },
+    {
+        field: 'frequency',
+        headerName: 'Frequency',
+        filter: "agMultiColumnFilter",
+    },
+    {
+        field: 'wfName',
+        headerName: 'Workflow',
+        filter: "agMultiColumnFilter",
+        cellRenderer: WorkflowRenderer,
+        cellRendererParams: {
+            nameField: 'wfName',
+            uniqueIdField: 'workflowId'
+        }
+    },
+    {
+        field: 'bpName',
+        headerName: 'Business Process',
+        filter: "agMultiColumnFilter",
+        cellRenderer: BusinessProcessRenderer,
+        cellRendererParams: {
+            nameField: 'bpName',
+            uniqueIdField: 'businessProcessId'
+        }
     },
     {
         field: 'isActive',

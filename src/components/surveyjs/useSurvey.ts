@@ -1,10 +1,5 @@
 import {useEffect, useState} from 'react';
 import {Model, Serializer, settings, SurveyModel} from 'survey-core';
-
-import {
-    registerSurveyFunctionsWithoutSurvey,
-    registerSurveyJsFunctionsWithSurvey
-} from "@/components/surveyjs/globalJsFunctions";
 import {ThemeModule, UseSurveyProps} from "@/components/surveyjs/SurveyProps";
 import {useUser} from "@/providers/UserProvider";
 
@@ -12,7 +7,6 @@ const useSurvey = ({
                        surveyJson,
                        isNew,
                        dataset,
-                       cssPath,
                        includeVariables,
                        sjsPath,
                        jsPath
@@ -37,14 +31,10 @@ const useSurvey = ({
     useEffect(() => {
         if (!surveyJson) return;
 
-        const model = new Model(surveyJson);
-
-        // Custom Sedulo Functions that need to be registered
-        registerSurveyFunctionsWithoutSurvey();
-        registerSurveyJsFunctionsWithSurvey(model);
+        const surveyModel = new Model(surveyJson);
 
         // Register all the custom SVG Icons
-        const applyJsPath = async (): Promise<void> => {
+        const applyJsPath = async (surveyModel: Model): Promise<void> => {
             if (jsPath) {
                 try {
                     // Dynamically import the module based on the jsPath
@@ -58,7 +48,7 @@ const useSurvey = ({
                     }
 
                     if (jsModule?.applyJsWithSurvey) {
-                        await jsModule.applyJsWithSurvey(model); // Pass the survey object if necessary
+                        await jsModule.applyJsWithSurvey(surveyModel); // Pass the survey object if necessary
                     } else {
                         console.error(`applyJsWithSurvey function not found in module at path: ${jsPath}`);
                     }
@@ -72,12 +62,12 @@ const useSurvey = ({
         };
 
         // Dynamically import and apply `themeJson` based on `sjsPath` prop
-        const applyTheme = async (): Promise<void> => {
+        const applyTheme = async (surveyModel: Model): Promise<void> => {
             if (sjsPath) {
                 try {
                     const themeModule: ThemeModule = await import(`@/theme/sjsPath/${sjsPath}`); // Construct the path dynamically
                     if (themeModule.themeJson) {
-                        await model.applyTheme(themeModule.themeJson);
+                        surveyModel.applyTheme(themeModule.themeJson);
                     } else {
                         console.error(`themeJson not found in module at path: ${sjsPath}`);
                     }
@@ -89,22 +79,22 @@ const useSurvey = ({
             setIsLoading(false);  // Set loading state to false once theme is applied
         };
 
-        const initializeSurvey = async () => {
-            await applyJsPath();
-            await applyTheme();
+        const initializeSurvey = async (surveyModel: Model) => {
+            await applyJsPath(surveyModel);
+            await applyTheme(surveyModel);
 
-            model.onOpenDropdownMenu.add((_, options) => {
+            surveyModel.onOpenDropdownMenu.add((_, options) => {
                 options.menuType = "dropdown"
             });
 
             // Set Common Variables that will be needed within the survey
-            model.setVariable("pgv_currentUser", user);
+            surveyModel.setVariable("pgv_currentUser", user);
 
             // Set survey to read-only mode depending on state of isEditing
-            model.mode = isNew ? "edit" : "display";
+            surveyModel.mode = isNew ? "edit" : "display";
 
             // Allow form to know if formMode is in edit or display mode
-            model.setVariable("pgv_formMode", isNew ? "new" : "edit");
+            surveyModel.setVariable("pgv_formMode", isNew ? "new" : "edit");
 
             // Dynamically go through the list of objects and set the entire nested object as a variable
             if (includeVariables && Array.isArray(includeVariables)) {
@@ -113,24 +103,24 @@ const useSurvey = ({
                     Object.keys(variableObject).forEach(key => {
                         // Set the entire nested object as a variable with the "pgv_" prefix
                         const value = variableObject[key];
-                        model.setVariable(`wfv_${key}`, value);
+                        surveyModel.setVariable(`wfv_${key}`, value);
                     });
                 });
             }
 
             // If data exists then apply it here
             if (dataset) {
-                model.data = dataset;
+                surveyModel.data = dataset;
             }
 
             // Survey dataset to include fields that are hidden (not default)
-            model.clearInvisibleValues = false;
+            surveyModel.clearInvisibleValues = false;
 
-            setModel(model);  // Set the model after everything is initialized
+            setModel(surveyModel);  // Set the model after everything is initialized
             setIsLoading(false);  // Set loading state to false
         }
 
-        initializeSurvey()
+        initializeSurvey(surveyModel)
 
     }, [surveyJson]);
 

@@ -3,7 +3,7 @@
 import {ColDef, ValueFormatterParams} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
 import ToolConfigRenderer from "@/components/agGrids/CellRenderers/ToolConfigRenderer";
-import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/OrganisationLogoRenderer";
+import CustomerRenderer from "@/components/agGrids/CellRenderers/CustomerRenderer";
 import {currencyFormatter} from "@/components/agGrids/ValueFormatters/currencyFormatter";
 
 export const toolSubscriptionFields: ColDef[] = [
@@ -30,9 +30,9 @@ export const toolSubscriptionFields: ColDef[] = [
         field: "customerName",
         headerName: "Customer",
         filter: "agMultiColumnFilter",
-        cellRenderer: OrganisationLogoRenderer,
+        cellRenderer: CustomerRenderer,
         cellRendererParams: {
-            'idField': 'custUniqueId',
+            'uniqueIdField': 'custUniqueId',
             'imageUrlField': 'custImageUrl',
             'nameField': 'custName'
         },

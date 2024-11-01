@@ -28,7 +28,7 @@ export default async function EmailTemplatesDetailPage({
             <EmailTemplateDetailsBanner emailTemplate={emailTemplateData}/>
             <SurveyComponent
                 surveyJson={emailTemplateJson}
-                endpoint={`/test`}
+                endpoint={`/emailTemplate/${params.uniqueId}`}
                 isNew={false}
                 dataset={emailTemplateData}
                 layout={'default'}

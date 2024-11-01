@@ -7,7 +7,7 @@ import {CustomCellRendererProps} from 'ag-grid-react';
 import {Person} from "@mui/icons-material";
 
 // Define the interface for the component's props
-interface UserImageRendererProps extends CustomCellRendererProps {
+interface UserRendererProps extends CustomCellRendererProps {
     uniqueIdField: string;  // Field name for dynamic User Unique ID
     imageUrlField: string;  // Field name for dynamic Image URL
     nameField: string;  // Field name for dynamic Full Name
@@ -18,12 +18,12 @@ interface Contact {
     [key: string]: any;  // Support dynamic fields in contact object
 }
 
-const UserImageRenderer: React.FC<UserImageRendererProps> = ({
-                                                                 data: contact,
-                                                                 uniqueIdField,
-                                                                 imageUrlField,
-                                                                 nameField,
-                                                             }) => {
+const UserRenderer: React.FC<UserRendererProps> = ({
+                                                       data: contact,
+                                                       uniqueIdField,
+                                                       imageUrlField,
+                                                       nameField,
+                                                   }) => {
 
     if (!contact) {
         return null;
@@ -92,4 +92,4 @@ const UserImageRenderer: React.FC<UserImageRendererProps> = ({
     );
 };
 
-export default UserImageRenderer;
+export default UserRenderer;

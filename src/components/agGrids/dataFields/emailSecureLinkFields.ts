@@ -1,6 +1,12 @@
 import {ColDef} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
-import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/OrganisationLogoRenderer";
+import CustomerRenderer from "@/components/agGrids/CellRenderers/CustomerRenderer";
+import EmailScheduleRenderer from "@/components/agGrids/CellRenderers/EmailScheduleRenderer";
+import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
+import EmailSecureLinkRenderer from "@/components/agGrids/CellRenderers/EmailSecureLinkRenderer";
+import ToolConfigRenderer from "@/components/agGrids/CellRenderers/ToolConfigRenderer";
+import WorkflowRenderer from "@/components/agGrids/CellRenderers/WorkflowRenderer";
+import BusinessProcessRenderer from "@/components/agGrids/CellRenderers/BusinessProcessRenderer";
 
 // Updated AgGrids fields
 export const emailSecureLinkFields: ColDef[] | any = [
@@ -15,43 +21,72 @@ export const emailSecureLinkFields: ColDef[] | any = [
         field: 'name',
         headerName: 'Name',
         filter: "agMultiColumnFilter",
-        cellRenderer: OrganisationLogoRenderer,
+        cellRenderer: EmailSecureLinkRenderer,
         cellRendererParams: {
-            idField: 'custId',
+            uniqueIdField: 'id',
             nameField: 'name',
-            imageUrlField: 'imageUrl'
         }
-    },
-    {
-        field: 'toolId',
-        headerName: 'Tool ID',
-        filter: "agMultiColumnFilter",
     },
     {
         field: 'toolName',
         headerName: 'Tool Name',
         filter: "agMultiColumnFilter",
+        cellRenderer: ToolConfigRenderer,
+        cellRendererParams: {
+            uniqueIdField: 'toolId',
+            nameField: 'toolName',
+        }
+    },
+    {
+        field: 'wfName',
+        headerName: 'Workflow',
+        filter: "agMultiColumnFilter",
+        cellRenderer: WorkflowRenderer,
+        cellRendererParams: {
+            uniqueIdField: 'workflowId',
+            nameField: 'wfName',
+        }
+    },
+    {
+        field: 'bpName',
+        headerName: 'Business Process',
+        filter: "agMultiColumnFilter",
+        cellRenderer: BusinessProcessRenderer,
+        cellRendererParams: {
+            uniqueIdField: 'businessProcessId',
+            nameField: 'bpName',
+        }
+    },
+    {
+        field: "actionType",
+        headerName: "Action Type",
+        filter: "agMultiColumnFilter",
+    },
+    {
+        field: "expirationDate",
+        headerName: "Expiration",
+        filter: "agMultiColumnFilter",
     },
     {
         field: 'toUserId',
-        headerName: 'User ID',
+        headerName: 'User',
         filter: "agMultiColumnFilter",
-        cellRenderer: OrganisationLogoRenderer,
+        cellRenderer: UserRenderer,
         cellRendererParams: {
-            idField: 'custId',
-            nameField: 'name',
-            imageUrlField: 'imageUrl'
+            uniqueIdField: 'userUniqueId',
+            nameField: 'userFullName',
+            imageUrlField: 'userImageUrl'
         }
     },
     {
         field: 'toCustomerId',
-        headerName: 'Customer ID',
+        headerName: 'Customer',
         filter: "agMultiColumnFilter",
-        cellRenderer: OrganisationLogoRenderer,
+        cellRenderer: CustomerRenderer,
         cellRendererParams: {
-            idField: 'custId',
-            nameField: 'name',
-            imageUrlField: 'imageUrl'
+            uniqueIdField: 'custUniqueId',
+            nameField: 'custName',
+            imageUrlField: 'custImageUrl'
         }
     },
     {

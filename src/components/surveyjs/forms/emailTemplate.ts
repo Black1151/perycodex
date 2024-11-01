@@ -56,25 +56,12 @@ export const emailTemplateJson = {
                 },
                 {
                     type: "boolean",
-                    name: "isReminder",
-                    title: "Is this is Reminder?",
-                    titleLocation: "top",
-                    description: "Is this email template just a user reminder?",
-                    descriptionLocation: "underInput",
-                    defaultValue: true,
-                    isRequired: true,
-                    labelTrue: "Yes",
-                    labelFalse: "No",
-                    swapOrder: true
-                },
-                {
-                    type: "boolean",
                     name: "isActionable",
                     title: "Is this Actionable?",
                     titleLocation: "top",
                     description: "Is this email template inclusive of an Action link?",
                     descriptionLocation: "underInput",
-                    defaultValue: true,
+                    defaultValue: false,
                     isRequired: true,
                     labelTrue: "Yes",
                     labelFalse: "No",
@@ -94,21 +81,30 @@ export const emailTemplateJson = {
                         {
                             value: "contribute",
                             text: "Contribute"
+                        },
+                        {
+                            value: "direct",
+                            text: "Direct"
                         }
                     ],
                     placeholder: "Select action type",
                     visibleIf: "{isActionable} = 'True'"
                 },
                 {
-                    type: "text",
-                    name: "actionUrl",
-                    title: "Action URL (Link)",
+                    type: "dropdown",
+                    name: "secureLinkId",
+                    title: "Secure Link",
                     titleLocation: "top",
-                    isRequired: true,
-                    placeholder: "Enter action URL (Link)",
+                    placeholder: "Select Secure Link",
+                    visibleIf: "{isActionable} = 'True'",
                     maxLength: 300,
-                    visibleIf: "{isActionable} = 'True'"
-                }
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/emailSecureLink/allBy?selectColumns=id,name,uniqueId&isActive=true&adminGenerated=true`,
+                        path: "resource",
+                        valueName: "id",
+                        titleName: "id"
+                    },
+                },
             ]
         }
     ],

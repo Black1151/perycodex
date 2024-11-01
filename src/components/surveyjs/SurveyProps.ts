@@ -42,7 +42,6 @@ export interface UseSurveyProps {
     isNew: boolean;    // Flag to indicate if the survey is new
     dataset?: any;     // Optional dataset, you can specify the type if you have a specific structure
     includeVariables?: Array<{ [key: string]: { [nestedKey: string]: any } }>;
-    cssPath?: string;
     sjsPath?: string;
     jsPath?: string;
 }

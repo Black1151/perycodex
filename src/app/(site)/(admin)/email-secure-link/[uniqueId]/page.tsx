@@ -28,7 +28,7 @@ export default async function EmailTemplatesDetailPage({
             <EmailScheduleDetailsBanner emailSchedule={emailSecureLinkData}/>
             <SurveyComponent
                 surveyJson={emailSecureLinkJson}
-                endpoint={`/test`}
+                endpoint={`/emailSecureLink/${params.uniqueId}`}
                 isNew={false}
                 dataset={emailSecureLinkData}
                 layout={'default'}

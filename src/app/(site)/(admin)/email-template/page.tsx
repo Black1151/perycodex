@@ -10,7 +10,7 @@ export default async function EmailTemplatePage() {
     const userIdentity = await getUserIdentity();
     checkUserRole(userIdentity, "/email-template");
 
-    let url = '/emailTemplate/allBy';
+    let url = '/getAllView?view=vwEmailTemplatesList';
     let headerTitle = 'Email Templates';
 
     const res = await apiClient(url, {cache: "no-store"});

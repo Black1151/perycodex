@@ -1,7 +1,7 @@
 import {ColDef} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
-import UserImageRenderer from "@/components/agGrids/CellRenderers/UserImageRenderer";
-import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/OrganisationLogoRenderer";
+import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
+import CustomerRenderer from "@/components/agGrids/CellRenderers/CustomerRenderer";
 import SiteLinkRenderer from "@/components/agGrids/CellRenderers/SiteLinkRenderer";
 
 // Updated AgGrids fields
@@ -17,7 +17,7 @@ export const userFields: ColDef[] | any = [
         field: 'fullName',
         headerName: 'Name',
         filter: "agMultiColumnFilter",
-        cellRenderer: UserImageRenderer,
+        cellRenderer: UserRenderer,
         cellRendererParams: {
             uniqueIdField: 'userUniqueId',
             nameField: 'fullName',
@@ -43,11 +43,11 @@ export const userFields: ColDef[] | any = [
         field: 'custName',
         headerName: 'Customer',
         filter: "agMultiColumnFilter",
-        cellRenderer: OrganisationLogoRenderer,
+        cellRenderer: CustomerRenderer,
         cellRendererParams: {
             nameField: 'custName',
             imageUrlField: 'custImageUrl',
-            idField: 'custUniqueId',
+            uniqueIdField: 'custUniqueId',
         }
     },
     {

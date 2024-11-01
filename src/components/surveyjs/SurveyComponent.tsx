@@ -9,6 +9,10 @@ import useSurvey from '@/components/surveyjs/useSurvey';
 import useSurveySubmission from "@/components/surveyjs/useSurveySubmission";
 import {Flex, Spinner} from "@chakra-ui/react";
 import {useUser} from "@/providers/UserProvider";
+import {
+    registerSurveyFunctionsWithoutSurvey,
+    registerSurveyJsFunctionsWithSurvey
+} from "@/components/surveyjs/globalJsFunctions";
 
 type LayoutMap = {
     [key: string]: React.FC<LayoutProps>;
@@ -70,10 +74,13 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
         isNew: isNew,
         dataset: dataset,
         includeVariables: includeVariables,
-        cssPath: cssPath,
         sjsPath: sjsPath,
         jsPath: jsPath
     });
+
+    // Register Javascript functionality
+    registerSurveyFunctionsWithoutSurvey()
+    registerSurveyJsFunctionsWithSurvey(model);
 
     // Add the events to what happens on submission of survey
     useSurveySubmission({
