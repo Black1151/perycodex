@@ -1,6 +1,7 @@
 import {ColDef} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
-import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/OrganisationLogoRenderer";
+import CustomerRenderer from "@/components/agGrids/CellRenderers/CustomerRenderer";
+import EmailTemplateRenderer from "@/components/agGrids/CellRenderers/EmailTemplateRenderer";
 
 // Updated AgGrids fields
 export const emailTemplateFields: ColDef[] | any = [
@@ -15,11 +16,10 @@ export const emailTemplateFields: ColDef[] | any = [
         field: 'name',
         headerName: 'Name',
         filter: "agMultiColumnFilter",
-        cellRenderer: OrganisationLogoRenderer,
+        cellRenderer: EmailTemplateRenderer,
         cellRendererParams: {
-            idField: 'custId',
+            uniqueIdField: 'id',
             nameField: 'name',
-            imageUrlField: 'imageUrl'
         }
     },
     {
@@ -36,6 +36,11 @@ export const emailTemplateFields: ColDef[] | any = [
         field: 'actionType',
         headerName: 'Action Type',
         filter: "agMultiColumnFilter",
+    },
+    {
+        field: "noTimesUsedInShedule",
+        headerName: "# Schedules",
+        filter: "agNumberColumnFilter",
     },
     {
         field: 'isActive',

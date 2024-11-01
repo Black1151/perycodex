@@ -2,8 +2,8 @@
 
 import {ColDef} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
-import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/OrganisationLogoRenderer";
-import UserImageRenderer from "@/components/agGrids/CellRenderers/UserImageRenderer";
+import CustomerRenderer from "@/components/agGrids/CellRenderers/CustomerRenderer";
+import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
 import TeamCellRenderer from "@/components/agGrids/CellRenderers/TeamCellRenderer";
 import TeamRenderer from "@/components/agGrids/CellRenderers/TeamRenderer";
 
@@ -31,10 +31,10 @@ export const teamFields: ColDef[] | any = [
         headerName: 'Customer',
         cellDataType: "text",
         filter: "agMultiColumnFilter",
-        cellRenderer: OrganisationLogoRenderer,
+        cellRenderer: CustomerRenderer,
         cellRendererParams: {
             nameField: 'custName',
-            idField: 'custUniqueId',
+            uniqueIdField: 'custUniqueId',
             imageUrlField: 'custImageUrl',
         }
     },
@@ -56,7 +56,7 @@ export const teamFields: ColDef[] | any = [
         headerName: 'Manager',
         cellDataType: "text",
         filter: "agMultiColumnFilter",
-        cellRenderer: UserImageRenderer,
+        cellRenderer: UserRenderer,
         cellRendererParams: {
             nameField: 'managerFullName',
             uniqueIdField: 'managerUniqueId',

@@ -1,6 +1,9 @@
 import {ColDef} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
-import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/OrganisationLogoRenderer";
+import CustomerRenderer from "@/components/agGrids/CellRenderers/CustomerRenderer";
+import EmailScheduleRenderer from "@/components/agGrids/CellRenderers/EmailScheduleRenderer";
+import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
+import EmailSecureLinkRenderer from "@/components/agGrids/CellRenderers/EmailSecureLinkRenderer";
 
 // Updated AgGrids fields
 export const emailSecureLinkFields: ColDef[] | any = [
@@ -15,11 +18,10 @@ export const emailSecureLinkFields: ColDef[] | any = [
         field: 'name',
         headerName: 'Name',
         filter: "agMultiColumnFilter",
-        cellRenderer: OrganisationLogoRenderer,
+        cellRenderer: EmailSecureLinkRenderer,
         cellRendererParams: {
-            idField: 'custId',
+            uniqueIdField: 'id',
             nameField: 'name',
-            imageUrlField: 'imageUrl'
         }
     },
     {
@@ -34,24 +36,24 @@ export const emailSecureLinkFields: ColDef[] | any = [
     },
     {
         field: 'toUserId',
-        headerName: 'User ID',
+        headerName: 'User',
         filter: "agMultiColumnFilter",
-        cellRenderer: OrganisationLogoRenderer,
+        cellRenderer: UserRenderer,
         cellRendererParams: {
-            idField: 'custId',
-            nameField: 'name',
-            imageUrlField: 'imageUrl'
+            uniqueIdField: 'userUniqueId',
+            nameField: 'userFullName',
+            imageUrlField: 'userImageUrl'
         }
     },
     {
         field: 'toCustomerId',
-        headerName: 'Customer ID',
+        headerName: 'Customer',
         filter: "agMultiColumnFilter",
-        cellRenderer: OrganisationLogoRenderer,
+        cellRenderer: CustomerRenderer,
         cellRendererParams: {
-            idField: 'custId',
-            nameField: 'name',
-            imageUrlField: 'imageUrl'
+            uniqueIdField: 'custUniqueId',
+            nameField: 'custName',
+            imageUrlField: 'custImageUrl'
         }
     },
     {

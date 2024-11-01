@@ -2,7 +2,7 @@
 
 import {ColDef, ICellRendererParams} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
-import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/OrganisationLogoRenderer";
+import CustomerRenderer from "@/components/agGrids/CellRenderers/CustomerRenderer";
 import ColourCellRenderer from "@/components/agGrids/CellRenderers/ColourCellRenderer";
 import TagRenderer from "@/components/agGrids/CellRenderers/TagRenderer";
 
@@ -45,9 +45,9 @@ export const tagFields: ColDef[] | any = [
         field: 'custName',
         headerName: 'Customer',
         filter: "agMultiColumnFilter",
-        cellRenderer: OrganisationLogoRenderer,
+        cellRenderer: CustomerRenderer,
         cellRendererParams: {
-            idField: 'custUniqueId',
+            uniqueIdField: 'custUniqueId',
             nameField: 'custName',
             imageUrlField: 'custImageUrl',
         }

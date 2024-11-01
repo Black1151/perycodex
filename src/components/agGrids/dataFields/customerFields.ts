@@ -1,6 +1,6 @@
 import {ColDef} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
-import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/OrganisationLogoRenderer";
+import CustomerRenderer from "@/components/agGrids/CellRenderers/CustomerRenderer";
 
 // Updated AgGrids fields
 export const customerFields: ColDef[] | any = [
@@ -15,9 +15,9 @@ export const customerFields: ColDef[] | any = [
         field: 'name',
         headerName: 'Name',
         filter: "agMultiColumnFilter",
-        cellRenderer: OrganisationLogoRenderer,
+        cellRenderer: CustomerRenderer,
         cellRendererParams: {
-            idField: 'custId',
+            uniqueIdField: 'custId',
             nameField: 'name',
             imageUrlField: 'imageUrl'
         }
