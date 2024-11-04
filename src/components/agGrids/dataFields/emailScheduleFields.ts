@@ -3,7 +3,7 @@ import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButto
 import EmailScheduleRenderer from "@/components/agGrids/CellRenderers/EmailScheduleRenderer";
 import WorkflowRenderer from "@/components/agGrids/CellRenderers/WorkflowRenderer";
 import BusinessProcessRenderer from "@/components/agGrids/CellRenderers/BusinessProcessRenderer";
-import DuplicateSchedule from "@/app/(site)/(admin)/email-schedule/DuplicateSchedule";
+import DuplicateSchedule from "@/app/(site)/(admin)/email-schedule/AssignSchedule";
 
 // Updated AgGrids fields
 export const emailScheduleFields: ColDef[] | any = [

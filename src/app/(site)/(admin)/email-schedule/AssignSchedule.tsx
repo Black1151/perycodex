@@ -5,18 +5,18 @@ import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import React from "react";
 import {duplicateCustomerEmailSchedule} from "@/components/surveyjs/forms/duplicateCustomerEmailSchedule";
 
-interface DuplicateScheduleModalProps {
+interface AssignScheduleProps {
     isOpen: boolean;  // Controlled by the parent
     onClose: () => void;  // Close handler passed by parent
     endpoint: string;
     id: string;
 }
 
-const DuplicateScheduleModal = ({
+const AssignSchedule = ({
                                     isOpen,
                                     onClose,
                                     id
-                                }: DuplicateScheduleModalProps) => {
+                                }: AssignScheduleProps) => {
     // Function to handle the form completion event
     const handleSurveySuccess = () => {
         onClose();  // Close the modal after survey success
@@ -37,7 +37,7 @@ const DuplicateScheduleModal = ({
             <ModalContent>
                 <ModalHeader paddingBottom={0}>
                     <Flex justifyContent={'center'} alignItems={'center'} width={'100%'}>
-                        Duplicate Schedule
+                        Assign Schedule To Customer
                     </Flex>
                 </ModalHeader>
                 <ModalBody>
@@ -59,4 +59,4 @@ const DuplicateScheduleModal = ({
     );
 };
 
-export default DuplicateScheduleModal;
+export default AssignSchedule;
