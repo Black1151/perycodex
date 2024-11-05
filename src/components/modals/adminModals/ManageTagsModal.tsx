@@ -1,30 +1,33 @@
 "use client";
 
+import { useState, forwardRef, useImperativeHandle } from "react";
 import { PerygonModal } from "@/components/modals/PerygonModal";
 import { ManageTagsModalBody } from "../modalBodies/ManageTagsModalBody";
 
 interface ManageTagsModalProps {
   customerId: number;
-  isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
 }
 
-export function ManageTagsModal({
-  customerId,
-  isOpen,
-  setIsOpen,
-}: ManageTagsModalProps) {
-  return (
-    <PerygonModal
-      isOpen={isOpen}
-      onClose={() => setIsOpen(false)}
-      title="Manage Tags"
-      body={
-        <ManageTagsModalBody
-          customerId={customerId}
-          onClose={() => setIsOpen(false)}
-        />
-      }
-    />
-  );
-}
+export const ManageTagsModal = forwardRef(
+  ({ customerId }: ManageTagsModalProps, ref) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    useImperativeHandle(ref, () => ({
+      openModal: () => setIsOpen(true),
+    }));
+
+    return (
+      <PerygonModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Manage Tags"
+        body={
+          <ManageTagsModalBody
+            customerId={customerId}
+            onClose={() => setIsOpen(false)}
+          />
+        }
+      />
+    );
+  }
+);

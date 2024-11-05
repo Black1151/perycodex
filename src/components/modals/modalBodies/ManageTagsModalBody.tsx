@@ -12,6 +12,7 @@ import {
   TabPanels,
   Tab,
   TabPanel,
+  Spinner,
 } from "@chakra-ui/react";
 import { Tag } from "@/components/AdminDetailsBanners/TagDetailsBanner";
 import { useFetchClient } from "@/hooks/useFetchClient";
@@ -100,9 +101,7 @@ export function ManageTagsModalBody({
       if (newTagsResponse) {
         setTags(newTagsResponse.resource);
       }
-
       onClose();
-      router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
@@ -158,7 +157,16 @@ export function ManageTagsModalBody({
   };
 
   if (isLoading) {
-    return <Text>Loading tags...</Text>;
+    return (
+      <Box
+        height={170}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Spinner />
+      </Box>
+    );
   }
 
   if (error) {
