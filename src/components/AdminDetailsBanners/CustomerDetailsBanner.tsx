@@ -22,6 +22,7 @@ import UpdateIcon from "@mui/icons-material/Update";
 import { useUser } from "@/providers/UserProvider";
 import { useMediaUploader } from "@/hooks/useMediaUploader";
 import { useRouter } from "next/navigation";
+import { BusinessOutlined } from "@mui/icons-material";
 import { TagsDisplay } from "@/components/tags/TagsDisplay";
 import { TagsResponse } from "@/app/api/tags/getTagsForRecord/route";
 import { useTags } from "@/providers/TagsProvider";
@@ -68,6 +69,8 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
 }) => {
   const { user } = useUser();
   const router = useRouter();
+
+  const imageWidth = customer.imageUrl ? ["100px", "175px"] : "100px";
   const { tags, setRecordDetails, setTags } = useTags();
 
   const allowedToUploadPhoto =
@@ -112,32 +115,32 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
   }, []);
 
   return (
-    <VStack w={"100%"} flex={1} align={"stretch"}>
+    <VStack>
       <Flex
         mb={4}
-        flex={1}
         p={[0, 0, 4]}
         borderRadius={8}
         color={"white"}
         overflow={"hidden"}
         align={"flex-start"}
+        // direction={['column', 'column', 'row']}
       >
         {/* Customer Logo Upload */}
         <FormControl
-          w={["100px", "175px"]}
+          w={imageWidth}
           h={"100px"}
           aspectRatio={1}
           borderRadius={"full"}
         >
           <Box
             position="relative"
-            w={["100px", "175px"]}
+            w={imageWidth}
             h={"100px"}
             overflow="hidden"
-            _hover={{ ".overlay": { opacity: allowedToUploadPhoto ? 1 : 0 } }}
+            _hover={{ ".overlay": { opacity: allowedToUploadPhoto ? 1 : 0 } }} // Only show overlay if upload is allowed
           >
             <Image
-              w={["100px", "175px"]}
+              w={imageWidth}
               h={"100px"}
               objectFit={"scale-down"}
               src={customer.imageUrl}
@@ -145,16 +148,28 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
               borderRadius={"lg"}
               fallback={
                 <Flex
-                  align={"center"}
-                  justify={"center"}
-                  w={["100px", "175px"]}
-                  h={"100px"}
-                  bg="gray.200"
-                  cursor={allowedToUploadPhoto ? "pointer" : "default"}
+                  alignItems="center"
+                  justifyContent="center"
+                  w="full"
+                  h="full"
+                  maxW="full"
+                  gap={2}
                 >
-                  <Text color="gray.500" m={"auto"} fontSize={"xx-large"}>
-                    {customer.name[0]}
-                  </Text>
+                  <Box
+                    position="relative"
+                    w={"100px"}
+                    h={"100px"}
+                    borderRadius="full"
+                    bg="gray.100"
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <BusinessOutlined
+                      fontSize="large"
+                      sx={{ color: "var(--chakra-colors-perygonPink)" }}
+                    />
+                  </Box>
                 </Flex>
               }
             />
@@ -197,7 +212,7 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
                 h="100%"
                 justifyContent="center"
                 alignItems="center"
-                bg="rgba(0, 0, 0, 0.5)"
+                bg="rgba(0, 0, 0, 0.5)" // Optional: Add a background overlay during uploading
               >
                 <Spinner size="md" />
               </Flex>

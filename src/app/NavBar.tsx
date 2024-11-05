@@ -1,27 +1,18 @@
 "use client";
 
+import {Box, HStack, Image, Menu, MenuButton, MenuItem, MenuList, Text, useTheme, Flex} from "@chakra-ui/react";
+import {motion} from "framer-motion";
+import {useRouter} from "next/navigation";
 import {
-    HStack,
-    Box,
-    Image,
-    Text,
-    Menu,
-    MenuButton,
-    MenuList,
-    MenuItem,
-    useTheme,
-} from "@chakra-ui/react";
-import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
-import {
-    Settings as SettingsIcon,
-    Build as BuildIcon,
-    Person as PersonIcon,
     Business as BusinessIcon,
-    Lock as LockIcon,
     ExitToApp as ExitToAppIcon,
     Home as HomeIcon,
+    Lock as LockIcon,
+    Person,
+    Person as PersonIcon,
+    Settings as SettingsIcon,
 } from "@mui/icons-material";
+import React from "react";
 
 const MotionBox = motion(Box);
 const MotionHStack = motion(HStack);
@@ -76,27 +67,27 @@ export const NavBar: React.FC<NavBarProps> = ({
         const commonMenuItems: MenuItemProps[] = [
             {
                 label: "My Tools",
-                icon: <HomeIcon />,
+                icon: <HomeIcon/>,
                 onClick: () => router.push("/"),
             },
             {
                 label: "My Profile",
-                icon: <PersonIcon />,
+                icon: <PersonIcon/>,
                 onClick: () => router.push("/my-profile"),
             },
             {
                 label: "My Company",
-                icon: <BusinessIcon />,
+                icon: <BusinessIcon/>,
                 onClick: () => router.push("/my-company"),
             },
             {
                 label: "Change Password",
-                icon: <LockIcon />,
+                icon: <LockIcon/>,
                 onClick: () => console.log("Change Password clicked"),
             },
             {
                 label: "Logout",
-                icon: <ExitToAppIcon />,
+                icon: <ExitToAppIcon/>,
                 onClick: handleLogout,
             },
         ];
@@ -105,7 +96,7 @@ export const NavBar: React.FC<NavBarProps> = ({
             return [
                 {
                     label: "Admin",
-                    icon: <SettingsIcon />,
+                    icon: <SettingsIcon/>,
                     onClick: () => router.push("/customers"),
                 },
                 ...commonMenuItems,
@@ -114,7 +105,7 @@ export const NavBar: React.FC<NavBarProps> = ({
             return [
                 {
                     label: "Admin Tools",
-                    icon: <SettingsIcon />,
+                    icon: <SettingsIcon/>,
                     onClick: () => router.push("/customers"),
                 },
                 ...commonMenuItems,
@@ -144,9 +135,9 @@ export const NavBar: React.FC<NavBarProps> = ({
             borderBottom="white 1px solid"
         >
             <MotionBox
-                initial={{ x: "-5vw", opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.3 }}
+                initial={{x: "-5vw", opacity: 0}}
+                animate={{x: 0, opacity: 1}}
+                transition={{duration: 0.3}}
                 w="150px"
                 display="flex"
             >
@@ -169,9 +160,9 @@ export const NavBar: React.FC<NavBarProps> = ({
                 )}
             </MotionBox>
             <MotionHStack
-                initial={{ x: "5vw", opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.3 }}
+                initial={{x: "5vw", opacity: 0}}
+                animate={{x: 0, opacity: 1}}
+                transition={{duration: 0.3}}
                 justifyContent="center"
                 alignItems="center"
                 gap={8}
@@ -187,19 +178,24 @@ export const NavBar: React.FC<NavBarProps> = ({
                         overflow="hidden"
                         width="40px"
                         height="40px"
-                        _hover={{ cursor: "pointer" }}
+                        _hover={{cursor: "pointer"}}
                     >
-                        <Image
-                            src={
-                                userImageUrl && userImageUrl !== ""
-                                    ? userImageUrl
-                                    : "blank-profile-picture.webp"
-                            }
-                            alt="profile pic"
-                            width="100%"
-                            height="100%"
-                            objectFit="cover"
-                        />
+                        {userImageUrl ?
+
+                            <Image
+                                src={userImageUrl}
+                                alt="profile pic"
+                                width="100%"
+                                height="100%"
+                                objectFit="cover"
+                            />
+                            :
+                            <Flex bg={'gray.100'} width={'full'} height={'full'} align={'center'} justify={'center'}>
+                                <Person
+                                    sx={{color: "var(--chakra-colors-perygonPink)", width: '100%', height: '100%'}}/>
+                            </Flex>
+                        }
+
                     </MenuButton>
                     <MenuList bg="white" color={theme.colors.perygonPink} px={2}>
                         {menuItems.map((item) => (

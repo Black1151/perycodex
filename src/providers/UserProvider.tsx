@@ -74,6 +74,13 @@ export const UserProvider: React.FC<{
   const [user, setUser] = useState<UserContextProps | null>(value || null);
   const { fetchClient } = useFetchClient();
 
+  useEffect(() => {
+    // Update the user context when `value` (userMetadata) changes
+    if (value) {
+      setUser(value);
+    }
+  }, [value]);
+
   const getUserMetadata = async (): Promise<void> => {
     try {
       const res = await fetchClient(`/api/user/getUserMetadata`);

@@ -5,6 +5,7 @@ import {Box, IconButton, Switch} from "@chakra-ui/react";
 import {Visibility} from '@mui/icons-material'; // MUI icons
 import {useRouter} from 'next/navigation';
 import {useFetchClient} from "@/hooks/useFetchClient";
+import Link from "next/link";
 
 interface ActionButtonRendererProps {
     node: { data: { [key: string]: any; isActive: boolean } }; // Support dynamic keys for node data
@@ -14,27 +15,20 @@ interface ActionButtonRendererProps {
 }
 
 const ActionButtonRenderer: React.FC<ActionButtonRendererProps> = ({
-                                                                         node,
-                                                                         redirectUrl,
-                                                                         updateUrl,
-                                                                         idField,
-                                                                     }) => {
+                                                                       node,
+                                                                       redirectUrl,
+                                                                       updateUrl,
+                                                                       idField,
+                                                                   }) => {
     const router = useRouter();
     const [isActive, setIsActive] = useState(node?.data?.isActive);
     const {fetchClient} = useFetchClient();
 
+
     // Access uniqueId dynamically using idField
     const uniqueId = node?.data?.[idField];
 
-    // Handle View Button Click
-    const handleViewClick = () => {
-        if (uniqueId) {
-            router.push(`${redirectUrl}/${uniqueId}`);
-        } else {
-            console.error('Node or ID is not defined.');
-            window.alert("Node or ID is not defined.");
-        }
-    };
+    const link = uniqueId ? `${redirectUrl}/${uniqueId}` : redirectUrl;
 
     // Handle Toggle Active/Inactive Status
     const handleToggle = async () => {
@@ -74,17 +68,21 @@ const ActionButtonRenderer: React.FC<ActionButtonRendererProps> = ({
                     }}
                 />
             }
-            <IconButton
-                aria-label="View"
-                aspectRatio={1}
-                variant="agPrimary"
-                onClick={handleViewClick}
-                icon={<Visibility style={{fontSize: "inherit"}}/>}
-                sx={{
-                    height: '80%',
-                    alignSelf: "center",
-                }}
-            />
+            <Box height={'full'}>
+
+                <Link href={link}>
+                    <IconButton
+                        aria-label="View"
+                        aspectRatio={1}
+                        variant="agPrimary"
+                        icon={<Visibility style={{fontSize: "inherit"}}/>}
+                        sx={{
+                            height: '80%',
+                            alignSelf: "center",
+                        }}
+                    />
+                </Link>
+            </Box>
         </Box>
     );
 };

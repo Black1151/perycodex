@@ -1,33 +1,33 @@
 'use client';
 
 import React from 'react';
-import {Box, Image, Text, Flex} from '@chakra-ui/react';
+import {Box, Flex, Image, Text} from '@chakra-ui/react';
 import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
 import Link from 'next/link';
 import {CustomCellRendererProps} from "ag-grid-react";
 
 // Define the interface for the props expected by the component
-interface CustomerLogoRendererProps extends CustomCellRendererProps {
+interface CustomerRendererProps extends CustomCellRendererProps {
     imageUrlField: string; // Field name for dynamic Image Url
-    idField: string; // Field name for dynamic ID
+    uniqueIdField: string; // Field name for dynamic ID
     nameField: string; // Field name for dynamic Name
 }
 
-const CustomerLogoRenderer: React.FC<CustomerLogoRendererProps> = ({
-                                                                       node,
-                                                                       nameField,
-                                                                       idField,
-                                                                       imageUrlField,
-                                                                   }) => {
+const CustomerRenderer: React.FC<CustomerRendererProps> = ({
+                                                               node,
+                                                               nameField,
+                                                               uniqueIdField,
+                                                               imageUrlField,
+                                                           }) => {
     const customer = node?.data;
 
     if (!customer) {
         return null;
     }
 
-    const name = customer[nameField] ?? 'No Customer'; // Access the name dynamically using nameField
+    const name = customer[nameField] ?? 'Platform'; // Access the name dynamically using nameField
     const imageUrl = customer[imageUrlField]; // Access the Image dynamically using imageUrlField
-    const uniqueId = customer[idField]; // Access the unique ID dynamically using idField
+    const uniqueId = customer[uniqueIdField]; // Access the unique ID dynamically using uniqueIdField
 
     const link = uniqueId ? `/customers/${uniqueId}` : null;
 
@@ -58,16 +58,20 @@ const CustomerLogoRenderer: React.FC<CustomerLogoRendererProps> = ({
                     />
                 </Box>
             ) : (
-                <Box
-                    flexShrink={0}
-                    width="50px"
-                    height="50px"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                >
-                    <BusinessOutlinedIcon/>
-                </Box>
+                <Flex width={'50px'} height={'full'} align={'center'} justify={'center'}>
+                    <Box
+                        flexShrink={0}
+                        height="80%"
+                        aspectRatio={1}
+                        display="flex"
+                        alignItems="center"
+                        borderRadius={'full'}
+                        bg={'gray.100'}
+                        justifyContent="center"
+                    >
+                        <BusinessOutlinedIcon sx={{color: "var(--chakra-colors-perygonPink)"}}/>
+                    </Box>
+                </Flex>
             )}
             <Text fontSize={'14px'} flex={1} overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
                 {name}
@@ -85,4 +89,4 @@ const CustomerLogoRenderer: React.FC<CustomerLogoRendererProps> = ({
     );
 };
 
-export default CustomerLogoRenderer;
+export default CustomerRenderer;

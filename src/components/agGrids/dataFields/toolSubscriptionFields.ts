@@ -3,7 +3,7 @@
 import {ColDef, ValueFormatterParams} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
 import ToolConfigRenderer from "@/components/agGrids/CellRenderers/ToolConfigRenderer";
-import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/OrganisationLogoRenderer";
+import CustomerRenderer from "@/components/agGrids/CellRenderers/CustomerRenderer";
 import {currencyFormatter} from "@/components/agGrids/ValueFormatters/currencyFormatter";
 
 export const toolSubscriptionFields: ColDef[] = [
@@ -11,8 +11,8 @@ export const toolSubscriptionFields: ColDef[] = [
         field: "id",
         headerName: "ID",
         filter: "agNumberColumnFilter",
-        maxWidth: 100,
-        minWidth: 60,
+        maxWidth: 128,
+        minWidth: 64,
         sortable: true,
     },
     {
@@ -21,18 +21,18 @@ export const toolSubscriptionFields: ColDef[] = [
         filter: "agMultiColumnFilter",
         cellRenderer: ToolConfigRenderer,
         cellRendererParams: {
-            'uniqueIdField': 'toolId',
-            'imageUrlField': 'toolIconImageUrl',
-            'nameField': 'toolName'
+            uniqueIdField: 'toolId',
+            imageUrlField: 'toolIconImageUrl',
+            nameField: 'toolName',
         }
     },
     {
         field: "customerName",
         headerName: "Customer",
         filter: "agMultiColumnFilter",
-        cellRenderer: OrganisationLogoRenderer,
+        cellRenderer: CustomerRenderer,
         cellRendererParams: {
-            'idField': 'custUniqueId',
+            'uniqueIdField': 'custUniqueId',
             'imageUrlField': 'custImageUrl',
             'nameField': 'custName'
         },

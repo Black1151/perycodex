@@ -1,0 +1,347 @@
+export const emailScheduleJson = {
+    pages: [
+        {
+            name: "email-schedule-details",
+            title: "Email Schedule Details",
+            elements: [
+                {
+                    type: "boolean",
+                    name: "isActive",
+                    minWidth: "256px",
+                    title: "Active?",
+                    titleLocation: "top",
+                    description: "Is this email schedule active?",
+                    descriptionLocation: "underInput",
+                    defaultValue: false,
+                    isRequired: true,
+                    labelTrue: "Yes",
+                    labelFalse: "No",
+                    swapOrder: true
+                },
+                {
+                    type: "text",
+                    name: "name",
+                    title: "Schedule Name",
+                    titleLocation: "top",
+                    isRequired: true,
+                    placeholder: "Enter schedule name",
+                },
+                {
+                    type: "dropdown",
+                    name: "workflowId",
+                    title: "Workflow",
+                    titleLocation: "top",
+                    placeholder: "Select Workflow",
+                    isRequired: true,
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/workflow/allBy?selectColumns=id,name&isActive=true`,  // The API endpoint to fetch choices from
+                        path: "resource",
+                        valueName: "id",
+                        titleName: "name"
+                    },
+                },
+                {
+                    type: "dropdown",
+                    name: "businessProcessId",
+                    title: "Business Process",
+                    titleLocation: "top",
+                    placeholder: "Select Business Process",
+                    enableIf: "{workflowId} notempty",
+                    visibleIf: "{workflowId} notempty",
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/view?view=vwWorkflowToBusinessProcess&workflowId={workflowId}`,
+                        valueName: "businessProcessId",
+                        titleName: "bpName"
+                    },
+                },
+                {
+                    type: "dropdown",
+                    name: "emailTemplateId",
+                    title: "Email Template",
+                    titleLocation: "top",
+                    isRequired: true,
+                    placeholder: "Select Email Template",
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/emailTemplate/allBy?selectColumns=id,name&isActive=true`,
+                        path: "resource",
+                        valueName: "id",
+                        titleName: "name"
+                    },
+                },
+                {
+                    type: "text",
+                    name: "startDate",
+                    title: "Select start date",
+                    defaultValueExpression: "today()",
+                    isRequired: true,
+                    inputType: "date",
+                },
+                {
+                    type: "text",
+                    name: "endDate",
+                    title: "Select end date",
+                    defaultValueExpression: "today()",
+                    isRequired: true,
+                    inputType: "date",
+                },
+                {
+                    type: "text",
+                    name: "sendTime",
+                    title: "Send Time between 09:00 and 18:00",
+                    isRequired: true,
+                    inputType: "time",
+                    min: "09:00",
+                    max: "18:00"
+                },
+                {
+                    type: "comment",
+                    name: "targetCondition",
+                    title: "Additional Condition that needs to be met",
+                    titleLocation: "top",
+                    visible: false,
+                    isRequired: false,
+                    placeholder: "Enter target condition",
+                    autoGrow: true
+                },
+                {
+                    type: "dropdown",
+                    name: "frequency",
+                    title: "Frequency",
+                    titleLocation: "top",
+                    isRequired: true,
+                    placeholder: "Select frequency",
+                    choices: [
+                        {
+                            value: "daily",
+                            text: "Daily"
+                        },
+                        {
+                            value: "weekly",
+                            text: "Weekly"
+                        },
+                        {
+                            value: "monthly",
+                            text: "Monthly"
+                        },
+                        {
+                            value: "one-time",
+                            text: "One-time"
+                        }],
+
+                },
+                {
+                    type: "checkbox",
+                    name: "daysOfWeek",
+                    title: "Which days of week?",
+                    isRequired: true,
+                    visibleIf: "{frequency} = 'Weekly'",
+                    choices: [
+
+                        {
+                            text: "Monday",
+                            value: 1
+                        },
+
+
+                        {
+                            text: "Tuesday",
+                            value: 2
+                        },
+
+
+                        {
+                            text: "Wednesday",
+                            value: 3
+                        },
+
+
+                        {
+                            text: "Thursday",
+                            value: 4
+                        },
+
+
+                        {
+                            text: "Friday",
+                            value: 5
+                        },
+
+
+                        {
+                            text: "Saturday",
+                            value: 6
+                        },
+
+
+                        {
+                            text: "Sunday",
+                            value: 7
+                        }
+
+
+                    ],
+                },
+                {
+                    type: "checkbox",
+                    name: "daysOfMonth",
+                    title: "Which days of month?",
+                    requiredIf: "{lastDayOfMOnth} = false",
+                    visibleIf: "{frequency} = 'Monthly'",
+                    colCount: 5,
+                    choices: [
+                        {
+                            text: "1",
+                            value: "1"
+                        },
+                        {
+                            text: "2",
+                            value: "2"
+                        },
+                        {
+                            text: "3",
+                            value: "3"
+                        },
+                        {
+                            text: "4",
+                            value: "4"
+                        },
+                        {
+                            text: "5",
+                            value: "5"
+                        },
+                        {
+                            text: "6",
+                            value: "6"
+                        },
+                        {
+                            text: "7",
+                            value: "7"
+                        },
+                        {
+                            text: "8",
+                            value: "8"
+                        },
+                        {
+                            text: "9",
+                            value: "9"
+                        },
+                        {
+                            text: "10",
+                            value: "10"
+                        },
+                        {
+                            text: "11",
+                            value: "11"
+                        },
+                        {
+                            text: "12",
+                            value: "12"
+                        },
+                        {
+                            text: "13",
+                            value: "13"
+                        },
+                        {
+                            text: "14",
+                            value: "14"
+                        },
+                        {
+                            text: "15",
+                            value: "15"
+                        },
+                        {
+                            text: "16",
+                            value: "16"
+                        },
+                        {
+                            text: "17",
+                            value: "17"
+                        },
+                        {
+                            text: "18",
+                            value: "18"
+                        },
+                        {
+                            text: "19",
+                            value: "19"
+                        },
+                        {
+                            text: "20",
+                            value: "20"
+                        },
+                        {
+                            text: "21",
+                            value: "21"
+                        },
+                        {
+                            text: "22",
+                            value: "22"
+                        },
+                        {
+                            text: "23",
+                            value: "23"
+                        },
+                        {
+                            text: "24",
+                            value: "24"
+                        },
+                        {
+                            text: "25",
+                            value: "25"
+                        },
+                        {
+                            text: "26",
+                            value: "26"
+                        },
+                        {
+                            text: "27",
+                            value: "27"
+                        },
+                        {
+                            text: "28",
+                            value: "28"
+                        }
+
+                    ],
+                },
+                {
+                    type: "boolean",
+                    name: "lastDayOfMonth",
+                    minWidth: "256px",
+                    title: "Last day of month",
+                    titleLocation: "top", defaultValue: false,
+                    isRequired: true,
+                    labelTrue: "Yes",
+                    labelFalse: "No",
+                    swapOrder: true,
+                    visibleIf: "{frequency} = 'Monthly'",
+                },
+                {
+                    type: "text",
+                    name: "interval",
+                    title: "Enter an Interval",
+                    isRequired: true,
+                    inputType: "number",
+                    defaultValue: 1,
+                    min: 1,
+                    max: 30,
+                    description: "An interval of 1 would be every week or month, 2 would be every 2 weeks or months etc.",
+                    descriptionLocation: "underInput",
+                },
+                {
+                    type: "tagbox",
+                    name: "userDistGroupNames",
+                    title: "User Distribution Group Names",
+                    titleLocation: "top",
+                    placeholder: "Enter user access group names",
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/userGroupPlatform`,
+                        path: "resource",
+                        valueName: "name",
+                        titleName: "name"
+                    },
+                },
+            ]
+        }
+    ],
+};

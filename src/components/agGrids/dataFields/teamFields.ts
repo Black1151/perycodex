@@ -1,12 +1,11 @@
 'use client';
 
-import {ColDef, ICellRendererParams, ValueFormatterParams} from "ag-grid-community";
+import {ColDef} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
-import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/OrganisationLogoRenderer";
-import UserImageRenderer from "@/components/agGrids/CellRenderers/UserImageRenderer";
-import {Badge} from "@chakra-ui/react";
-import React from "react";
+import CustomerRenderer from "@/components/agGrids/CellRenderers/CustomerRenderer";
+import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
 import TeamCellRenderer from "@/components/agGrids/CellRenderers/TeamCellRenderer";
+import TeamRenderer from "@/components/agGrids/CellRenderers/TeamRenderer";
 
 export const teamFields: ColDef[] | any = [
     {
@@ -21,15 +20,18 @@ export const teamFields: ColDef[] | any = [
         field: 'name',
         headerName: 'Name',
         filter: "agMultiColumnFilter",
-        // flex: 3
+        cellRenderer: TeamRenderer,
+        cellRendererParams: {
+            nameField: 'name',
+            uniqueIdField: 'id'
+        }
     },
     {
         field: 'custName',
         headerName: 'Customer',
         cellDataType: "text",
         filter: "agMultiColumnFilter",
-        // flex: 2,
-        cellRenderer: OrganisationLogoRenderer,
+        cellRenderer: CustomerRenderer,
         cellRendererParams: {
             nameField: 'custName',
             uniqueIdField: 'custUniqueId',
@@ -41,14 +43,12 @@ export const teamFields: ColDef[] | any = [
         headerName: 'Parent Department',
         cellDataType: "text",
         filter: "agMultiColumnFilter",
-        // flex: 2,
     },
     {
         field: 'parentTeamName',
         headerName: 'Type',
         cellDataType: "text",
         filter: "agMultiColumnFilter",
-        // flex: 1,
         cellRenderer: TeamCellRenderer,
     },
     {
@@ -56,8 +56,7 @@ export const teamFields: ColDef[] | any = [
         headerName: 'Manager',
         cellDataType: "text",
         filter: "agMultiColumnFilter",
-        // flex: 2,
-        cellRenderer: UserImageRenderer,
+        cellRenderer: UserRenderer,
         cellRendererParams: {
             nameField: 'managerFullName',
             uniqueIdField: 'managerUniqueId',
@@ -67,7 +66,6 @@ export const teamFields: ColDef[] | any = [
     {
         field: 'isActive',
         headerName: 'Actions',
-        // flex: 1,
         cellRenderer: ActionButtonRenderer,
         cellRendererParams: {
             redirectUrl: '/teams',

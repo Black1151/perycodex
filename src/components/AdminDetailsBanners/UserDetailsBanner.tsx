@@ -23,6 +23,7 @@ import moment from "moment/moment";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/providers/UserProvider";
 import { useMediaUploader } from "@/hooks/useMediaUploader";
+import {Person} from "@mui/icons-material";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { TagsDisplay } from "@/components/tags/TagsDisplay";
 import { Tag } from "./TagDetailsBanner";
@@ -259,127 +260,111 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
     setRecordDetails(surveyUser.id.toString(), "2");
   }, []);
 
-  return (
-    <VStack w={"100%"} flex={1} align={"stretch"}>
-      <Flex
-        mb={4}
-        p={[0, 0, 4]}
-        borderRadius={8}
-        color={"white"}
-        overflow={"hidden"}
-      >
-        {/*Image Upload*/}
-        <FormControl
-          w={"100px"}
-          h={"100px"}
-          aspectRatio={1}
-          borderRadius={"full"}
-        >
-          <Box
-            position="relative"
-            w={"100px"}
-            h={"100px"}
-            borderRadius="full"
-            overflow="hidden"
-            _hover={{ ".overlay": { opacity: allowedToUploadPhoto ? 1 : 0 } }}
-          >
-            <Image
-              boxSize="100px"
-              borderRadius="full"
-              objectFit={"cover"}
-              src={surveyUser.imageUrl}
-              alt={`${surveyUser.firstName} ${surveyUser.lastName}`}
-              cursor={allowedToUploadPhoto ? "pointer" : "default"}
-              fallback={
-                <Flex
-                  align={"center"}
-                  justify={"center"}
-                  w={"100px"}
-                  h={"100px"}
-                  borderRadius="full"
-                  bg="gray.200"
-                  cursor={allowedToUploadPhoto ? "pointer" : "default"}
+    return (
+      <VStack>
+        <Flex mb={4} p={[0, 0, 4]} borderRadius={8} color={'white'} overflow={'hidden'}>
+            {/*Image Upload*/}
+            <FormControl w={'100px'} h={'100px'} aspectRatio={1} borderRadius={'full'}>
+                <Box
+                    position="relative"
+                    w={'100px'}
+                    h={'100px'}
+                    borderRadius="full"
+                    overflow="hidden"
+                    _hover={{'.overlay': {opacity: allowedToUploadPhoto ? 1 : 0}}}
                 >
-                  <Text color="gray.500" m={"auto"} fontSize={"xx-large"}>
-                    {surveyUser.firstName?.[0] ?? ""}
-                    {surveyUser.lastName?.[0] ?? ""}
-                  </Text>
-                </Flex>
-              }
-            />
-            {allowedToUploadPhoto && (
-              <Box
-                className="overlay"
-                position="absolute"
-                top="0"
-                left="0"
-                w="100%"
-                h="100%"
-                bg="rgba(0, 0, 0, 0.5)"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                borderRadius="full"
-                opacity={0}
-                transition="opacity 0.3s ease"
-              >
-                <IconButton
-                  icon={
-                    <AddAPhotoOutlinedIcon
-                      fontSize="large"
-                      sx={{ color: "var(--chakra-colors-perygonPink)" }}
+                    <Image
+                        boxSize="100px"
+                        borderRadius="full"
+                        objectFit={'cover'}
+                        src={surveyUser.imageUrl}
+                        alt={`${surveyUser.firstName} ${surveyUser.lastName}`}
+                        cursor={allowedToUploadPhoto ? "pointer" : "default"}
+                        fallback={
+                            <Flex alignItems="center" justifyContent="center" w="full" h="full" maxW="full" gap={2}>
+                                <Box
+                                    position="relative"
+                                    w={'100px'}
+                                    h={'100px'}
+                                    borderRadius="full"
+                                    bg="gray.100"
+                                    display="flex"
+                                    justifyContent="center"
+                                    alignItems="center"
+                                >
+                                    <Person fontSize="large"
+                                            sx={{color: "var(--chakra-colors-perygonPink)"}}/>
+                                </Box>
+                            </Flex>
+                        }
                     />
-                  }
-                  aria-label="Upload Photo"
-                  colorScheme="whiteAlpha"
-                  onClick={() =>
-                    document.getElementById("photo-upload")?.click()
-                  }
-                />
-              </Box>
-            )}
-            {isUploading && (
-              <Flex
-                position="absolute"
-                top="0"
-                left="0"
-                w="100%"
-                h="100%"
-                justifyContent="center"
-                alignItems="center"
-                bg="rgba(0, 0, 0, 0.5)"
-                borderRadius="full"
-              >
-                <Spinner size="md" />
-              </Flex>
-            )}
-          </Box>
-          {allowedToUploadPhoto && (
-            <Input
-              id="photo-upload"
-              type="file"
-              name="imageUrl"
-              mb={4}
-              onChange={handleFileChange}
-              disabled={isUploading}
-              display="none"
-            />
-          )}
-        </FormControl>
-        {/*User Details*/}
-        <VStack align="start" ml={4}>
-          <Flex alignItems="center" gap={2}>
-            <Box
-              w={"1.4rem"}
-              h={"1.4rem"}
-              borderRadius="full"
-              border={"white 1px solid"}
-              bg={surveyUser.isActive ? "green.500" : "red.500"}
-            />
-            <Heading fontWeight={100} size={["md", "md", "lg"]}>
-              {surveyUser.firstName ?? "No Name"} {surveyUser.lastName ?? ""}
-            </Heading>
-          </Flex>
+                    {allowedToUploadPhoto && (
+                        <Box
+                            className="overlay"
+                            position="absolute"
+                            top="0"
+                            left="0"
+                            w="100%"
+                            h="100%"
+                            bg="rgba(0, 0, 0, 0.5)"
+                            display="flex"
+                            justifyContent="center"
+                            alignItems="center"
+                            borderRadius="full"
+                            opacity={0}
+                            transition="opacity 0.3s ease"
+                        >
+                            <IconButton
+                                icon={<AddAPhotoOutlinedIcon fontSize="large"
+                                                             sx={{color: "var(--chakra-colors-perygonPink)"}}/>}
+                                aria-label="Upload Photo"
+                                colorScheme="whiteAlpha"
+                                onClick={() => document.getElementById('photo-upload')?.click()}
+                            />
+                        </Box>
+                    )}
+                    {isUploading && (
+                        <Flex
+                            position="absolute"
+                            top="0"
+                            left="0"
+                            w="100%"
+                            h="100%"
+                            justifyContent="center"
+                            alignItems="center"
+                            bg="rgba(0, 0, 0, 0.5)"
+                            borderRadius="full"
+                        >
+                            <Spinner size="md"/>
+                        </Flex>
+                    )}
+                </Box>
+                {allowedToUploadPhoto && (
+                    <Input
+                        id="photo-upload"
+                        type="file"
+                        name="imageUrl"
+                        mb={4}
+                        onChange={handleFileChange}  // Connect the file input to the uploader
+                        disabled={isUploading}
+                        display="none"
+                    />
+                )}
+            </FormControl>
+            {/*User Details*/}
+            <VStack align="start" ml={4}>
+                <Flex alignItems="center" gap={2}>
+                    <Box
+                        w={'1.4rem'}
+                        h={'1.4rem'}
+                        borderRadius="full"
+                        border={'white 1px solid'}
+                        bg={surveyUser.isActive ? 'green.500' : 'red.500'}
+                    />
+                    <Heading fontWeight={100} size={['md', 'md', 'lg']}>
+                        {surveyUser.firstName ?? 'No Name'} {surveyUser.lastName ?? ''}
+                    </Heading>
+                </Flex>
 
           <Flex
             direction={"row"}
@@ -404,17 +389,22 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
             gap={2}
           >
             <DomainIcon />
-            {surveyUser.customer && (
-              <Text
+            {surveyUser.customer ? (
+                  <Text
                 fontSize="sm"
                 _hover={{ textDecoration: "underline", cursor: "pointer" }}
-                onClick={() =>
+                    onClick={() =>
                   router.push(`/customers/${surveyUser.customer?.uniqueId}`)
                 }
               >
-                {surveyUser.customer.name}
-              </Text>
-            )}
+                    {surveyUser.customer.name}
+                  </Text>
+                        )
+                        :
+                        (
+                            <Text fontSize="sm"> Platform</Text>
+                )
+                    }
           </Flex>
           <Flex direction={"row"} justify={"center"} align={"center"} gap={2}>
             <LocationOnOutlinedIcon />
@@ -429,7 +419,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
                 {surveyUser.site.siteName}
               </Text>
             ) : (
-              <Text fontSize="sm">Unknown</Text>
+              <Text fontSize="sm">No site</Text>
             )}
           </Flex>
         </VStack>

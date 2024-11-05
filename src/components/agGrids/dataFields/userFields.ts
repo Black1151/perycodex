@@ -1,7 +1,7 @@
 import {ColDef} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
-import UserImageRenderer from "@/components/agGrids/CellRenderers/UserImageRenderer";
-import OrganisationLogoRenderer from "@/components/agGrids/CellRenderers/OrganisationLogoRenderer";
+import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
+import CustomerRenderer from "@/components/agGrids/CellRenderers/CustomerRenderer";
 import SiteLinkRenderer from "@/components/agGrids/CellRenderers/SiteLinkRenderer";
 
 // Updated AgGrids fields
@@ -12,14 +12,12 @@ export const userFields: ColDef[] | any = [
         filter: "agMultiColumnFilter",
         maxWidth: 128,
         minWidth: 64,
-        // flex: 1
     },
     {
         field: 'fullName',
         headerName: 'Name',
         filter: "agMultiColumnFilter",
-        // flex: 1,
-        cellRenderer: UserImageRenderer,
+        cellRenderer: UserRenderer,
         cellRendererParams: {
             uniqueIdField: 'userUniqueId',
             nameField: 'fullName',
@@ -30,30 +28,26 @@ export const userFields: ColDef[] | any = [
         field: 'email',
         headerName: 'Email',
         filter: "agMultiColumnFilter",
-        // flex: 1
     },
     {
         field: 'role',
         headerName: 'Role',
         filter: "agMultiColumnFilter",
-        // flex: 1
     },
     {
         field: 'jobTitle',
         headerName: 'Job Title',
         filter: "agMultiColumnFilter",
-        // flex: 2
     },
     {
         field: 'custName',
         headerName: 'Customer',
         filter: "agMultiColumnFilter",
-        // flex: 2,
-        cellRenderer: OrganisationLogoRenderer,
+        cellRenderer: CustomerRenderer,
         cellRendererParams: {
             nameField: 'custName',
             imageUrlField: 'custImageUrl',
-            idField: 'custUniqueId',
+            uniqueIdField: 'custUniqueId',
         }
     },
     {
@@ -65,12 +59,10 @@ export const userFields: ColDef[] | any = [
             nameField: 'siteName',
             uniqueIdField: "siteUniqueId",
         }
-        // flex: 2
     },
     {
         field: 'isActive',
         headerName: 'Actions',
-        // flex: 1,
         cellRenderer: ActionButtonRenderer,
         cellRendererParams: {
             redirectUrl: '/users',

@@ -4,9 +4,10 @@ import React from 'react';
 import {Box, Flex, Image, Text} from "@chakra-ui/react";
 import Link from "next/link";
 import {CustomCellRendererProps} from 'ag-grid-react';
+import {Person} from "@mui/icons-material";
 
 // Define the interface for the component's props
-interface UserImageRendererProps extends CustomCellRendererProps {
+interface UserRendererProps extends CustomCellRendererProps {
     uniqueIdField: string;  // Field name for dynamic User Unique ID
     imageUrlField: string;  // Field name for dynamic Image URL
     nameField: string;  // Field name for dynamic Full Name
@@ -17,12 +18,12 @@ interface Contact {
     [key: string]: any;  // Support dynamic fields in contact object
 }
 
-const UserImageRenderer: React.FC<UserImageRendererProps> = ({
-                                                                 data: contact,
-                                                                 uniqueIdField,
-                                                                 imageUrlField,
-                                                                 nameField,
-                                                             }) => {
+const UserRenderer: React.FC<UserRendererProps> = ({
+                                                       data: contact,
+                                                       uniqueIdField,
+                                                       imageUrlField,
+                                                       nameField,
+                                                   }) => {
 
     if (!contact) {
         return null;
@@ -57,29 +58,23 @@ const UserImageRenderer: React.FC<UserImageRendererProps> = ({
                         borderRadius="50%"
                         objectFit="cover"
                         boxShadow="md"
-                        fallbackSrc="blank-profile-picture.webp"
                     />
                 </Box>
             ) : (
-                <Box
-                    flexShrink={0}
-                    width="50px"
-                    height="50px"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                >
-                    <Image
-                        alt={fullName}
-                        src={'blank-profile-picture.webp'}
+                <Flex width={'50px'} height={'full'} align={'center'} justify={'center'}>
+                    <Box
+                        flexShrink={0}
                         height="80%"
                         aspectRatio={1}
-                        borderRadius="50%"
-                        objectFit="cover"
-                        boxShadow="md"
-                        fallbackSrc="blank-profile-picture.webp"
-                    />
-                </Box>
+                        display="flex"
+                        alignItems="center"
+                        borderRadius={'full'}
+                        bg={'gray.100'}
+                        justifyContent="center"
+                    >
+                        <Person sx={{color: "var(--chakra-colors-perygonPink)"}}/>
+                    </Box>
+                </Flex>
             )}
             <Text fontSize={'14px'} flex={1} overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
                 {fullName}
@@ -97,4 +92,4 @@ const UserImageRenderer: React.FC<UserImageRendererProps> = ({
     );
 };
 
-export default UserImageRenderer;
+export default UserRenderer;
