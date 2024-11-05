@@ -115,7 +115,7 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
   }, []);
 
   return (
-    <VStack>
+    <VStack w={"100%"} flex={1} align={"stretch"}>
       <Flex
         mb={4}
         p={[0, 0, 4]}
