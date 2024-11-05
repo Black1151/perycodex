@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Flex,
@@ -23,9 +23,8 @@ import { useUser } from "@/providers/UserProvider";
 import { useMediaUploader } from "@/hooks/useMediaUploader";
 import { useRouter } from "next/navigation";
 import { TagsDisplay } from "@/components/tags/TagsDisplay";
-import { useFetchClient } from "@/hooks/useFetchClient";
-import { TagsResponse } from "@/app/api/tags/getTags/route";
-import { Tag } from "./TagDetailsBanner";
+import { TagsResponse } from "@/app/api/tags/getTagsForRecord/route";
+import { useTags } from "@/providers/TagsProvider";
 
 interface Customer {
   id: number;
@@ -69,15 +68,13 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
 }) => {
   const { user } = useUser();
   const router = useRouter();
-  const { fetchClient } = useFetchClient();
-  const [tags, setTags] = useState<Tag[]>([]);
+  const { tags, setRecordDetails, setTags } = useTags();
 
   const allowedToUploadPhoto =
     user?.role === "PA" ||
     (user?.role === "CA" && user?.customerId === customer.id) ||
     (user?.role === "CA" && user?.customerId === customer.parentId);
 
-  // Using the media uploader hook for profile photo
   const { isUploading, handleFileChange } = useMediaUploader(
     `/api/customer/uploadPhoto/${customer.uniqueId}`,
     "imageUrl",
@@ -88,17 +85,30 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
 
   useEffect(() => {
     const fetchTags = async () => {
-      const response = await fetchClient(
-        `/api/tags/getTags?recordTypeId=1&recordId=${customer.id}`
-      );
+      try {
+        const response = await fetch(
+          `/api/tags/getTagsForRecord?recordTypeId=1&recordId=${customer.id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+          }
+        );
 
-      if (response) {
-        const tagsResponse = response as TagsResponse;
+        if (!response.ok) {
+          throw new Error("Error fetching tags.");
+        }
+
+        const tagsResponse: TagsResponse = await response.json();
         setTags(tagsResponse.resource);
+      } catch (error) {
+        console.error(error);
       }
     };
-
     fetchTags();
+    setRecordDetails(customer.id.toString(), "1");
   }, []);
 
   return (

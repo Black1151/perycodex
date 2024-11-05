@@ -26,7 +26,8 @@ import { useMediaUploader } from "@/hooks/useMediaUploader";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { TagsDisplay } from "@/components/tags/TagsDisplay";
 import { Tag } from "./TagDetailsBanner";
-import { TagsResponse } from "@/app/api/tags/getTags/route";
+import { TagsResponse } from "@/app/api/tags/getTagsForRecord/route";
+import { useTags } from "@/providers/TagsProvider";
 
 interface User {
   id: number;
@@ -210,8 +211,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
 }) => {
   const { user } = useUser();
   const router = useRouter();
-  const { fetchClient } = useFetchClient();
-  const [tags, setTags] = useState<Tag[]>([]);
+  const { tags, setRecordDetails, setTags } = useTags();
 
   const isCurrentUser = surveyUser.uniqueId === user?.userUniqueId;
   const allowedToUploadPhoto =
@@ -232,17 +232,31 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
 
   useEffect(() => {
     const fetchTags = async () => {
-      const response = await fetchClient(
-        `/api/tags/getTags?recordTypeId=2&recordId=${user?.userId}`
-      );
+      try {
+        const response = await fetch(
+          `/api/tags/getTagsForRecord?recordTypeId=2&recordId=${surveyUser.id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+          }
+        );
 
-      if (response) {
-        const tagsResponse = response as TagsResponse;
+        if (!response.ok) {
+          throw new Error("Error fetching tags.");
+        }
+
+        const tagsResponse: TagsResponse = await response.json();
         setTags(tagsResponse.resource);
+      } catch (error) {
+        console.error(error);
       }
     };
 
     fetchTags();
+    setRecordDetails(surveyUser.id.toString(), "2");
   }, []);
 
   return (
@@ -346,7 +360,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
               type="file"
               name="imageUrl"
               mb={4}
-              onChange={handleFileChange} // Connect the file input to the uploader
+              onChange={handleFileChange}
               disabled={isUploading}
               display="none"
             />

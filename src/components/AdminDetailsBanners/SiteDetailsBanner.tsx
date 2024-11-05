@@ -19,8 +19,8 @@ import DomainIcon from "@mui/icons-material/Domain";
 import { useRouter } from "next/navigation";
 import { TagsDisplay } from "@/components/tags/TagsDisplay";
 import { useFetchClient } from "@/hooks/useFetchClient";
-import { TagsResponse } from "@/app/api/tags/getTags/route";
-import { Tag } from "./TagDetailsBanner";
+import { useTags } from "@/providers/TagsProvider";
+import { TagsResponse } from "@/app/api/tags/getTagsAvailableToAddToRecord/route";
 
 interface Site {
   id: number;
@@ -52,22 +52,35 @@ export const SiteDetailsBanner: React.FC<SiteDetailsBannerProps> = ({
   site,
 }) => {
   const router = useRouter();
-  const { fetchClient } = useFetchClient();
-  const [tags, setTags] = useState<Tag[]>([]);
+  const { tags, setRecordDetails, setTags } = useTags();
 
   useEffect(() => {
     const fetchTags = async () => {
-      const response = await fetchClient(
-        `/api/tags/getTags?recordTypeId=3&recordId=${site.id}`
-      );
+      try {
+        const response = await fetch(
+          `/api/tags/getTagsForRecord?recordTypeId=3&recordId=${site.id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+          }
+        );
 
-      if (response) {
-        const tagsResponse = response as TagsResponse;
+        if (!response.ok) {
+          throw new Error("Error fetching tags.");
+        }
+
+        const tagsResponse: TagsResponse = await response.json();
         setTags(tagsResponse.resource);
+      } catch (error) {
+        console.error(error);
       }
     };
 
     fetchTags();
+    setRecordDetails(site.id.toString(), "3");
   }, []);
 
   return (

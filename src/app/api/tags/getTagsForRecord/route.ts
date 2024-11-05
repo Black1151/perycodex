@@ -29,7 +29,7 @@ export async function GET(
     }
 
     const response = await apiClient(
-      `/getAllView?view=vwTagAssociationsList&selectColumns=name,colour,tagId&recordTypeId=${recordTypeId}&recordId=${recordId}`
+      `/getAllView?view=vwTagAssociationsList&selectColumns=name,colour,tagId,tagAssocId&recordTypeId=${recordTypeId}&recordId=${recordId}`
     );
 
     if (!response.ok) {
@@ -42,6 +42,7 @@ export async function GET(
     }
 
     const tags: TagsResponse = await response.json();
+
     return NextResponse.json(tags);
   } catch (error: any) {
     console.error(error);

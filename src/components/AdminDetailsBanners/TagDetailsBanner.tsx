@@ -2,7 +2,6 @@
 
 import React from "react";
 import {
-  Badge,
   Box,
   Flex,
   FormControl,
@@ -20,6 +19,7 @@ import { Tag } from "../tags/Tag";
 export interface Tag {
   id: number;
   name: string;
+  assocId?: number;
   colour: string;
   icon?: string;
   score?: number;
