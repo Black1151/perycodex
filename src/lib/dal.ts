@@ -71,7 +71,6 @@ const roleBasedRoutes: { [key: string]: string[] } = {
         "/users/create",
         "/my-company",
         "/my-profile",
-        "/test-happiness-score",
     ],
     PA: [
         "/customers",
@@ -125,7 +124,8 @@ const roleBasedRoutes: { [key: string]: string[] } = {
         "/user-groups/create",
         "/users",
         "/users/[dynamicSegment]",
-        "/test-happiness-score",
+        "/survey-test",
+        "/grid-test",
     ],
     CU: [
         '/my-profile',
@@ -175,9 +175,6 @@ export const verifySession = async () => {
 export const getUser = async (): Promise<User> => {
     const session = await verifySession();
 
-    console.log(`Fetching user metadata`);
-    console.log(`Session: ${session.userId}`);
-
     // If there's no session, redirect to login
     if (!session) {
         redirect('/login');
@@ -185,8 +182,6 @@ export const getUser = async (): Promise<User> => {
 
     const cookieStore = cookies();
     const authToken = cookieStore.get("auth_token")?.value;
-
-    console.log(authToken)
 
     try {
         const response = await fetch(`${process.env.BE_URL}/getUserMetadata`, {
@@ -206,10 +201,8 @@ export const getUser = async (): Promise<User> => {
 
         const userData = await response.json();
 
-        console.log(`User: ${userData.resource.role}`);
         return userData.resource as User; // Cast the response to the User type
     } catch (error) {
-        console.error('Failed to fetch user:', error);
         redirect('/login'); // Redirect to login if there's an error
         throw error; // Optional: re-throw if additional handling is needed
     }
