@@ -2,15 +2,14 @@ import {UserDetailsBanner} from "@/components/AdminDetailsBanners/UserDetailsBan
 import {userJson} from "@/components/surveyjs/forms/user";
 import {redirect} from "next/navigation";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
+import {checkUserRole, getUser} from "@/lib/dal";
 
 export default async function MyProfilePage() {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, `/my-profile`);
+    const user = await getUser();
+    await checkUserRole(`/my-profile`);
 
-    const {userUniqueId} = userIdentity;
+    const {userUniqueId} = user;
 
     const res = await apiClient(`/user/findBy?uniqueId=${userUniqueId}`);
 
@@ -18,18 +17,18 @@ export default async function MyProfilePage() {
         return redirect('/error');
     }
 
-    const user = await res.json();
-    const userData = user.resource;
+    const pageUser = await res.json();
+    const pageUserData = pageUser.resource;
 
     return (
         <div>
-            <UserDetailsBanner surveyUser={userData}/>
+            <UserDetailsBanner surveyUser={pageUserData}/>
             <SurveyComponent
                 surveyJson={userJson}
                 endpoint={`/user/${userUniqueId}`}
                 isNew={false}
                 excludeKeys={['imageUrl']}
-                dataset={userData}
+                dataset={pageUserData}
                 sjsPath={'admin'}
                 reloadPageOnSuccess={true}
             />

@@ -1,18 +1,16 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
 import {redirect} from "next/navigation";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import {workflowJson} from "@/components/surveyjs/forms/workflows";
 import {WorkflowDetailsBanner} from "@/components/AdminDetailsBanners/WorkflowDetailsBanner";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function WorkflowsDetailPage({
                                                       params,
                                                   }: {
     params: { uniqueId: string };
 }) {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, `/workflows/${params.uniqueId}`);
+    await checkUserRole(`/workflows/${params.uniqueId}`);
 
     const res = await apiClient(`/workflow/findBy?id=${params.uniqueId}`);
 

@@ -1,19 +1,17 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
 import {redirect} from "next/navigation";
 import AdminHeader from "@/components/AdminHeader";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {formFields} from "@/components/agGrids/dataFields/formFields";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function FormsPage() {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, "/forms");
+    await checkUserRole("/forms");
 
     let url = '/getAllView?view=vwFormsList ';
     let headerTitle = 'Forms';
 
-    const res = await apiClient(url, { cache: "no-store" });
+    const res = await apiClient(url, {cache: "no-store"});
 
     if (!res.ok) {
         return redirect("/error");

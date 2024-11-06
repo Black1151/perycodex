@@ -1,12 +1,10 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import AdminHeader from "@/components/AdminHeader";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import {selectItemsJson} from "@/components/surveyjs/forms/selectItems";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function OptionListsCreatePage() {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, "/select-items/create");
+    await checkUserRole("/select-items/create");
 
     return (
         <>

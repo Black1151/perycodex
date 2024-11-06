@@ -1,12 +1,10 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import AdminHeader from "@/components/AdminHeader";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import {emailTemplateJson} from "@/components/surveyjs/forms/emailTemplate";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function EmailTemplateCreatePage() {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, "/email-template/create");
+    await checkUserRole("/email-template/create");
 
     return (
         <>

@@ -1,18 +1,16 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
 import {redirect} from "next/navigation";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import {businessProcessJson} from "@/components/surveyjs/forms/businessProcess";
 import {BusinessProcessDetailsBanner} from "@/components/AdminDetailsBanners/BusinessProcessDetailsBanner";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function BusinessProcessesDetailPage({
-                                                      params,
-                                                  }: {
+                                                              params,
+                                                          }: {
     params: { uniqueId: string };
 }) {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, `/business-processes/${params.uniqueId}`);
+    await checkUserRole(`/business-processes/${params.uniqueId}`);
 
     const res = await apiClient(`/businessProcess/findBy?id=${params.uniqueId}`);
 

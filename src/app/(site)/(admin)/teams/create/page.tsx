@@ -1,12 +1,10 @@
 import {userTeamJson} from "@/components/surveyjs/forms/userTeam";
 import AdminHeader from "@/components/AdminHeader";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function TeamsCreatePage() {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, `/teams/create`);
+    await checkUserRole(`/teams/create`);
 
     return (
         <>

@@ -1,19 +1,17 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
 import {redirect} from "next/navigation";
 import AdminHeader from "@/components/AdminHeader";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {workflowFields} from "@/components/agGrids/dataFields/workflowFields";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function WorkflowsPage() {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, "/workflows");
+    await checkUserRole("/workflows");
 
     let url = '/getAllView?view=vwWorkflowsList';
     let headerTitle = 'Workflows';
 
-    const res = await apiClient(url, { cache: "no-store" });
+    const res = await apiClient(url, {cache: "no-store"});
 
     if (!res.ok) {
         return redirect("/error");

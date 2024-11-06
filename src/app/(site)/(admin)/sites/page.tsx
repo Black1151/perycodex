@@ -2,38 +2,37 @@ import {redirect} from "next/navigation";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {siteFields} from "@/components/agGrids/dataFields/siteFields";
 import AdminHeader from "@/components/AdminHeader";
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
+import {checkUserRole, getUser} from "@/lib/dal";
 
 interface SearchParams {
     siteType?: string
 }
 
 export default async function SitesPage({searchParams}: { searchParams: SearchParams }) {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, "/sites");
+    const user = await getUser();
+    await checkUserRole("/sites");
 
     let url = `/getAllView?view=vwSitesList&customerId=not-null&selectColumns=id,siteName,siteUniqueId,custName,custUniqueId,custImageUrl,siteTypeName,address1,address3,postcode,isActive,primaryContactUniqueId,primaryContactFullName,primaryContactImageUrl`;
     let headerTitle = 'Sites';
     let siteTypeParam = searchParams.siteType;
     let createNewUrl = '/sites/create';
 
-    if (userIdentity.role === 'CA') {
+    if (user.role === 'CA') {
         if (!['internal', 'external'].includes(siteTypeParam || '')) {
             siteTypeParam = 'internal';
             headerTitle = 'My Company Sites'
         }
         if (siteTypeParam === 'internal') {
             headerTitle = 'My Company Sites';
-            url += `&customerId=${userIdentity.customerId}`;
+            url += `&customerId=${user.customerId}`;
             createNewUrl += `?siteType=internal`;
         } else if (siteTypeParam === 'external') {
             headerTitle = 'Our Client Sites';
-            url += `&custParentId=${userIdentity.customerId}`;
+            url += `&custParentId=${user.customerId}`;
             createNewUrl += `?siteType=external`;
         }
-    } else if (userIdentity.role === 'PA') {
+    } else if (user.role === 'PA') {
         headerTitle = 'Sites';
     }
 

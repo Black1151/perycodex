@@ -1,12 +1,10 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import AdminHeader from "@/components/AdminHeader";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import {workflowJson} from "@/components/surveyjs/forms/workflows";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function WorkflowsCreatePage() {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, "/workflows/create");
+    await checkUserRole("/workflows/create");
 
     return (
         <>
