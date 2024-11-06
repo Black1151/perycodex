@@ -1,5 +1,3 @@
-"use client";
-
 import { ReactNode } from "react";
 import {
   Modal,
@@ -7,10 +5,10 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalCloseButton,
-  ModalFooter,
-  Button,
+  Box,
+  Flex,
 } from "@chakra-ui/react";
+import CloseIcon from "@mui/icons-material/Close"; // MUI icon import
 
 interface PerygonModalProps {
   title: string;
@@ -28,15 +26,27 @@ export function PerygonModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>{title}</ModalHeader>
-        <ModalCloseButton />
+      <ModalContent borderRadius="md">
+        <ModalHeader
+          color="white"
+          borderTopRadius="md"
+          bg="perygonPink"
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          {title}
+          <Box
+            onClick={onClose}
+            cursor="pointer"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <CloseIcon />
+          </Box>
+        </ModalHeader>
         <ModalBody>{body}</ModalBody>
-        <ModalFooter>
-          <Button colorScheme="blue" onClick={onClose}>
-            Close
-          </Button>
-        </ModalFooter>
       </ModalContent>
     </Modal>
   );
