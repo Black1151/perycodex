@@ -2,13 +2,11 @@ import {redirect} from "next/navigation";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {teamFields} from "@/components/agGrids/dataFields/teamFields";
 import AdminHeader from "@/components/AdminHeader";
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function TeamsPage() {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, "/customers");
+    await checkUserRole("/customers");
 
     const res = await apiClient(`/getAllView?view=vwUserTeamsList`);
 

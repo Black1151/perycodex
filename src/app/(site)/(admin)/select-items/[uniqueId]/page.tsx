@@ -1,14 +1,12 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
 import {redirect} from "next/navigation";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import {selectItemsJson} from "@/components/surveyjs/forms/selectItems";
 import {SelectItemDetailsBanner} from "@/components/AdminDetailsBanners/SelectItemDetailsBanner";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function SelectItemsDetailPage({params}: { params: { uniqueId: string }; }) {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, `/select-items/${params.uniqueId}`);
+    await checkUserRole(`/select-items/${params.uniqueId}`);
 
     const res = await apiClient(`/selectItem/findBy?id=${params.uniqueId}`);
 

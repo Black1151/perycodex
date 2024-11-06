@@ -1,18 +1,16 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
 import {redirect} from "next/navigation";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import {FormDetailsBanner} from "@/components/AdminDetailsBanners/FormDetailsBanner";
 import {formsJson} from "@/components/surveyjs/forms/forms";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function FormsDetailPage({
-                                                 params,
-                                             }: {
+                                                  params,
+                                              }: {
     params: { uniqueId: string };
 }) {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, `/forms/${params.uniqueId}`);
+    await checkUserRole(`/forms/${params.uniqueId}`);
 
     const res = await apiClient(`/form/findBy?id=${params.uniqueId}`);
 

@@ -1,7 +1,10 @@
 import DraggableGridsComponent from "@/components/agGrids/DraggableGridsComponent";
 import {ColDef} from "ag-grid-community";
+import {checkUserRole} from "@/lib/dal";
 
-export default function MyCustomerPage() {
+export default async function MyCustomerPage() {
+    await checkUserRole('/grid-test')
+
     // Example datasets
     const populationData = [
         {id: 1, name: 'John Doe', age: 28, job: 'Engineer'},

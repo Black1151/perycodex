@@ -1,18 +1,16 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
 import {redirect} from "next/navigation";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import {toolSubscriptionsJson} from "@/components/surveyjs/forms/toolSubscriptions";
 import {ToolSubscriptionDetailsBanner} from "@/components/AdminDetailsBanners/ToolSubscriptionDetailsBanner";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function ToolSubscriptionsDetailPage({
                                                               params,
                                                           }: {
     params: { uniqueId: string };
 }) {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, `/tool-subscriptions/${params.uniqueId}`);
+    await checkUserRole(`/tool-subscriptions/${params.uniqueId}`);
 
     const res = await apiClient(`/toolCustomer/findBy?id=${params.uniqueId}`);
 

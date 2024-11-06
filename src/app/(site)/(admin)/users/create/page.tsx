@@ -1,28 +1,27 @@
 import {userJson} from "@/components/surveyjs/forms/user"
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import AdminHeader from "@/components/AdminHeader";
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
+import {checkUserRole, getUser} from "@/lib/dal";
 
 interface SearchParams {
     userType?: string
 }
 
 export default async function UsersCreatePage({searchParams}: { searchParams: SearchParams }) {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, `/users/create`);
+    const user = await getUser();
+    await checkUserRole(`/users/create`);
 
     let headerTitle = "Create User";
     let userTypeParam = searchParams.userType;
 
-    if (userIdentity.role === 'CA') {
+    if (user.role === 'CA') {
         if (!['external'].includes(userTypeParam || '')) {
             userTypeParam = 'external';
             headerTitle = 'Create New Client User'
         } else if (userTypeParam === 'external') {
             headerTitle = 'Create New Client User';
         }
-    } else if (userIdentity.role === 'PA') {
+    } else if (user.role === 'PA') {
         headerTitle = 'Create User';
     }
 

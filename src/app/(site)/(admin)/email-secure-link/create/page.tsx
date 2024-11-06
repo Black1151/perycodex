@@ -1,12 +1,10 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import AdminHeader from "@/components/AdminHeader";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import {emailSecureLinkJson} from "@/components/surveyjs/forms/emailSecureLink";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function EmailSecureLinkCreatePage() {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, "/email-secure-link/create");
+    await checkUserRole("/email-secure-link/create");
 
     return (
         <>

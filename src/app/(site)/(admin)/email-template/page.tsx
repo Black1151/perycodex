@@ -1,14 +1,12 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
 import {redirect} from "next/navigation";
 import AdminHeader from "@/components/AdminHeader";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {emailTemplateFields} from "@/components/agGrids/dataFields/emailTemplateFields";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function EmailTemplatePage() {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, "/email-template");
+    await checkUserRole("/email-template");
 
     let url = '/getAllView?view=vwEmailTemplatesList';
     let headerTitle = 'Email Templates';

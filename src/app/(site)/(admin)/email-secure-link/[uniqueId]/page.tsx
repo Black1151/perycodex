@@ -1,18 +1,16 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
 import {redirect} from "next/navigation";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import {EmailScheduleDetailsBanner} from "@/components/AdminDetailsBanners/EmailScheduleDetailsBanner";
 import {emailSecureLinkJson} from "@/components/surveyjs/forms/emailSecureLink";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function EmailTemplatesDetailPage({
                                                            params,
                                                        }: {
     params: { uniqueId: string };
 }) {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, `/email-secure-link/${params.uniqueId}`);
+    await checkUserRole(`/email-secure-link/${params.uniqueId}`);
 
     const res = await apiClient(`/emailSecureLink/findBy?id=${params.uniqueId}`);
 

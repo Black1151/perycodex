@@ -1,19 +1,17 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
 import {redirect} from "next/navigation";
 import AdminHeader from "@/components/AdminHeader";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {selectItemFields} from "@/components/agGrids/dataFields/selectItemFields";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function FormsPage() {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, "/select-items");
+    await checkUserRole("/select-items");
 
     let url = '/selectItem/allBy';
     let headerTitle = 'Select Items';
 
-    const res = await apiClient(url, { cache: "no-store" });
+    const res = await apiClient(url, {cache: "no-store"});
 
     if (!res.ok) {
         return redirect("/error");

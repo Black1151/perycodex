@@ -2,13 +2,11 @@ import {CustomerDetailsBanner} from "@/components/AdminDetailsBanners/CustomerDe
 import {customerJson} from "@/components/surveyjs/forms/customer";
 import {redirect} from "next/navigation";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
+import {checkUserRole} from "@/lib/dal";
 import apiClient from "@/lib/apiClient";
 
 export default async function CustomersDetailsPage({params}: { params: { uniqueId: string } }) {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, `/customers/${params.uniqueId}`);
+    await checkUserRole(`/customers/${params.uniqueId}`);
 
     const res = await apiClient(`/customer/findBy?uniqueId=${params.uniqueId}`);
 

@@ -2,8 +2,10 @@ import AdminHeader from "@/components/AdminHeader";
 import SurveyTestComponent from "@/components/surveyjs/SurveyTestComponent";
 import fs from 'fs';
 import path from 'path';
+import {checkUserRole} from "@/lib/dal";
 
 export default async function TestSurveyPage() {
+    await checkUserRole('/survey-test');
     // Directories for CSS, SJS, and JS files
     const cssDirectory = path.join(process.cwd(), 'public', 'cssPath');
     const sjsDirectory = path.join(process.cwd(), 'src', 'theme', 'sjsPath');
@@ -16,7 +18,7 @@ export default async function TestSurveyPage() {
 
     return (
         <>
-            <AdminHeader headingText={'Test Survey'} />
+            <AdminHeader headingText={'Test Survey'}/>
             <SurveyTestComponent
                 cssFiles={cssFiles}
                 sjsFiles={sjsFiles}

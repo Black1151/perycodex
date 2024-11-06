@@ -2,13 +2,11 @@ import {redirect} from "next/navigation";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {groupFields} from "@/components/agGrids/dataFields/userGroupFields";
 import AdminHeader from "@/components/AdminHeader";
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function UserGroupsPage() {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, "/user-groups");
+    await checkUserRole("/user-groups");
 
     const res = await apiClient(`/getAllView?view=vwUserGroupsList`);
 

@@ -1,12 +1,10 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import AdminHeader from "@/components/AdminHeader";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import {toolsJson} from "@/components/surveyjs/forms/tools";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function ToolsCreatePage() {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, "/tools/create");
+    await checkUserRole("/tools/create");
 
     return (
         <>

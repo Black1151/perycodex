@@ -1,18 +1,16 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
 import {redirect} from "next/navigation";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import {TagDetailsBanner} from "@/components/AdminDetailsBanners/TagDetailsBanner";
 import {tagsJson} from "@/components/surveyjs/forms/tags";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function TagsDetailPage({
                                                  params,
                                              }: {
     params: { uniqueId: string };
 }) {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, `/tags/${params.uniqueId}`);
+    await checkUserRole(`/tags/${params.uniqueId}`);
 
     const res = await apiClient(`/tag/findBy?id=${params.uniqueId}`);
 

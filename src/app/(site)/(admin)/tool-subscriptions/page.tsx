@@ -1,14 +1,12 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
 import {redirect} from "next/navigation";
 import AdminHeader from "@/components/AdminHeader";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {toolSubscriptionFields} from "@/components/agGrids/dataFields/toolSubscriptionFields";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function ToolSubscriptionsPage() {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, "/tool-subscriptions");
+    await checkUserRole("/tool-subscriptions");
 
     let url = '/getAllView?view=vwToolSubscriptionsList';
     let headerTitle = 'Tool Subscriptions';

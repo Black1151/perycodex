@@ -2,17 +2,15 @@ import {redirect} from "next/navigation";
 import {siteJson} from "@/components/surveyjs/forms/site";
 import {SiteDetailsBanner} from "@/components/AdminDetailsBanners/SiteDetailsBanner";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function SitesDetailPage({
-                                           params,
-                                       }: {
+                                                  params,
+                                              }: {
     params: { uniqueId: string };
 }) {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, `/sites/${params.uniqueId}`);
+    await checkUserRole(`/sites/${params.uniqueId}`);
 
     const res = await apiClient(`/site/findBy?uniqueId=${params.uniqueId}`);
 
