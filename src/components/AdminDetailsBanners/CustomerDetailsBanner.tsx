@@ -111,7 +111,14 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
       }
     };
     fetchTags();
-    setRecordDetails(customer.id.toString(), "1");
+    setRecordDetails(
+      {
+        recordCustomerId: customer.id.toString(),
+        recordId: customer.id.toString(),
+        recordParentId: customer.parentId?.toString() || "",
+      },
+      "1"
+    );
   }, []);
 
   return (

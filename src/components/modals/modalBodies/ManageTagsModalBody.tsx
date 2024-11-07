@@ -16,7 +16,6 @@ import {
 } from "@chakra-ui/react";
 import { Tag } from "@/components/AdminDetailsBanners/TagDetailsBanner";
 import { useFetchClient } from "@/hooks/useFetchClient";
-import { useRouter } from "next/navigation";
 import { useTags } from "@/providers/TagsProvider";
 
 interface ManageTagsModalBodyProps {
@@ -35,9 +34,9 @@ export function ManageTagsModalBody({
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const { fetchClient } = useFetchClient();
-  const router = useRouter();
   const { tags, setTags } = useTags();
-  const { recordId, recordTypeId } = useTags();
+  const { recordIds, recordTypeId } = useTags();
+  const recordId = recordIds?.recordId;
 
   useEffect(() => {
     const fetchAvailableTags = async () => {
@@ -191,13 +190,17 @@ export function ManageTagsModalBody({
                   setSelectedTagId(e.target.value);
                 }}
               >
-                {availableTags.map((tag: Tag) => {
-                  return (
-                    <option key={tag.id} value={String(tag.id)}>
-                      {tag.name}
-                    </option>
-                  );
-                })}
+                {availableTags && availableTags[1] ? (
+                  availableTags.map((tag: Tag) => {
+                    return (
+                      <option key={tag.id} value={String(tag.id)}>
+                        {tag.name}
+                      </option>
+                    );
+                  })
+                ) : (
+                  <Text>No tags available</Text>
+                )}
               </Select>
             </Box>
 
