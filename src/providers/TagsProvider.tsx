@@ -1,21 +1,21 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  ReactNode,
-  useState,
-  useEffect,
-} from "react";
+import { createContext, useContext, ReactNode, useState, useMemo } from "react";
 import { Tag } from "@/components/AdminDetailsBanners/TagDetailsBanner";
 
 interface TagsContextType {
-  recordId?: string;
+  recordIds?: RecordIds;
   recordTypeId?: string;
   tags: Tag[];
-  setRecordDetails: (recordId: string, recordTypeId: string) => void;
+  setRecordDetails: (recordIds: RecordIds, recordTypeId: string) => void;
   setTags: (tags: Tag[]) => void;
 }
+
+type RecordIds = {
+  recordCustomerId: string;
+  recordId: string;
+  recordParentId: string;
+};
 
 const TagsContext = createContext<TagsContextType | undefined>(undefined);
 
@@ -24,27 +24,28 @@ interface TagsProviderProps {
 }
 
 export function TagsProvider({ children }: TagsProviderProps) {
-  const [recordId, setRecordId] = useState<string>();
+  const [recordIds, setRecordIds] = useState<RecordIds>();
   const [recordTypeId, setRecordTypeId] = useState<string>();
   const [tags, setTags] = useState<Tag[]>([]);
 
-  const setRecordDetails = (recordId: string, recordTypeId: string) => {
-    setRecordId(recordId);
+  const setRecordDetails = (recordIds: RecordIds, recordTypeId: string) => {
+    setRecordIds(recordIds);
     setRecordTypeId(recordTypeId);
   };
 
+  const contextValue = useMemo(
+    () => ({
+      recordIds,
+      recordTypeId,
+      tags,
+      setRecordDetails,
+      setTags,
+    }),
+    [recordIds, recordTypeId, tags]
+  );
+
   return (
-    <TagsContext.Provider
-      value={{
-        recordId,
-        recordTypeId,
-        tags,
-        setRecordDetails,
-        setTags,
-      }}
-    >
-      {children}
-    </TagsContext.Provider>
+    <TagsContext.Provider value={contextValue}>{children}</TagsContext.Provider>
   );
 }
 

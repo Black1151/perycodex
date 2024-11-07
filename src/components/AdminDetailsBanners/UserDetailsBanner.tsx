@@ -24,9 +24,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@/providers/UserProvider";
 import { useMediaUploader } from "@/hooks/useMediaUploader";
 import { Person } from "@mui/icons-material";
-import { useFetchClient } from "@/hooks/useFetchClient";
 import { TagsDisplay } from "@/components/tags/TagsDisplay";
-import { Tag } from "./TagDetailsBanner";
 import { TagsResponse } from "@/app/api/tags/getTagsForRecord/route";
 import { useTags } from "@/providers/TagsProvider";
 
@@ -257,7 +255,14 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
     };
 
     fetchTags();
-    setRecordDetails(surveyUser.id.toString(), "2");
+    setRecordDetails(
+      {
+        recordCustomerId: surveyUser.id.toString(),
+        recordId: surveyUser.id.toString(),
+        recordParentId: surveyUser.customerId?.toString() || "",
+      },
+      "2"
+    );
   }, []);
 
   return (

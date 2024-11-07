@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Flex,
@@ -18,9 +18,8 @@ import UpdateIcon from "@mui/icons-material/Update";
 import DomainIcon from "@mui/icons-material/Domain";
 import { useRouter } from "next/navigation";
 import { TagsDisplay } from "@/components/tags/TagsDisplay";
-import { useFetchClient } from "@/hooks/useFetchClient";
 import { useTags } from "@/providers/TagsProvider";
-import { TagsResponse } from "@/app/api/tags/getTagsAvailableToAddToRecord/route";
+import { TagsResponse } from "@/app/api/tags/getTagsForRecord/route";
 
 interface Site {
   id: number;
@@ -80,7 +79,14 @@ export const SiteDetailsBanner: React.FC<SiteDetailsBannerProps> = ({
     };
 
     fetchTags();
-    setRecordDetails(site.id.toString(), "3");
+    setRecordDetails(
+      {
+        recordCustomerId: site.id.toString(),
+        recordId: site.id.toString(),
+        recordParentId: site.customer?.uniqueId || "",
+      },
+      "3"
+    );
   }, []);
 
   return (
