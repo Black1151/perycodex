@@ -1,12 +1,10 @@
 import {customerJson} from "@/components/surveyjs/forms/customer";
 import AdminHeader from "@/components/AdminHeader";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function CustomersCreatePage() {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, `/customers/create`);
+    await checkUserRole(`/customers/create`);
 
     return (
         <>

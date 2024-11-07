@@ -1,12 +1,10 @@
 import {userGroupJson} from "@/components/surveyjs/forms/userGroup";
 import AdminHeader from "@/components/AdminHeader";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function UserGroupsCreatePage() {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, `/user-groups/create`);
+    await checkUserRole(`/user-groups/create`);
 
     return (
         <>

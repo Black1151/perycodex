@@ -1,19 +1,17 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
 import {redirect} from "next/navigation";
 import AdminHeader from "@/components/AdminHeader";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {tagFields} from "@/components/agGrids/dataFields/tagFields";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function TagsPage() {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, "/tags");
+    await checkUserRole("/tags");
 
     let url = '/getAllView?view=vwTagsList';
     let headerTitle = 'Tags';
 
-    const res = await apiClient(url, { cache: "no-store" });
+    const res = await apiClient(url, {cache: "no-store"});
 
     if (!res.ok) {
         return redirect("/error");

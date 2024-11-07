@@ -27,7 +27,7 @@ export const toolSubscriptionFields: ColDef[] = [
         }
     },
     {
-        field: "customerName",
+        field: "custName",
         headerName: "Customer",
         filter: "agMultiColumnFilter",
         cellRenderer: CustomerRenderer,

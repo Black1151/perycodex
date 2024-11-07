@@ -1,14 +1,12 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
 import {redirect} from "next/navigation";
 import AdminHeader from "@/components/AdminHeader";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {emailScheduleFields} from "@/components/agGrids/dataFields/emailScheduleFields";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function EmailSchedulePage() {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, "/email-schedule");
+    await checkUserRole("/email-schedule");
 
     let url = '/getAllView?view=vwEmailSchedulesList';
     let headerTitle = 'Email Schedules';

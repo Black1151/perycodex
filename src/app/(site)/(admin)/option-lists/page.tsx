@@ -1,5 +1,3 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
 import TabbedGrids from "@/components/agGrids/TabbedGrids";
 import {redirect} from "next/navigation";
@@ -7,10 +5,10 @@ import AdminHeader from "@/components/AdminHeader";
 import {optionListFields} from "@/components/agGrids/dataFields/optionListFields";
 import {optionListGroupsFields} from "@/components/agGrids/dataFields/optionListGroupFields";
 import {optionListItemsFields} from "@/components/agGrids/dataFields/optionListItemFields";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function OptionListsPage() {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, "/option-lists");
+    await checkUserRole("/option-lists");
 
     const optionListUrl = '/optionList/allBy'
     const optionListItemsUrl = '/optionListItem/allBy'

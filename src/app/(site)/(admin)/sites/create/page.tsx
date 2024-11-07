@@ -1,21 +1,20 @@
 import {siteJson} from "@/components/surveyjs/forms/site";
 import AdminHeader from "@/components/AdminHeader";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
+import {checkUserRole, getUser} from "@/lib/dal";
 
 interface SearchParams {
     siteType?: string
 }
 
 export default async function SitesCreatePage({searchParams}: { searchParams: SearchParams }) {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, `/sites/create`);
+    const user = await getUser();
+    await checkUserRole(`/sites/create`);
 
     let headerTitle = "Create Site";
     let siteTypeParam = searchParams.siteType;
 
-    if (userIdentity.role === 'CA') {
+    if (user.role === 'CA') {
         if (!['internal', 'external'].includes(siteTypeParam || '')) {
             siteTypeParam = 'internal';
         }
@@ -24,7 +23,7 @@ export default async function SitesCreatePage({searchParams}: { searchParams: Se
         } else if (siteTypeParam === 'external') {
             headerTitle = 'Create New Client Site';
         }
-    } else if (userIdentity.role === 'PA') {
+    } else if (user.role === 'PA') {
         headerTitle = 'Create Site';
     }
 

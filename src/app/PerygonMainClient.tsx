@@ -42,9 +42,6 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
     }
   }, [countdown]);
 
-  useEffect(() => {
-    router.refresh();
-  }, []);
 
   const logoutUser = async () => {
     try {

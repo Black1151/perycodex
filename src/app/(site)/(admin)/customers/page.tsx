@@ -1,11 +1,11 @@
-// AG Grids
+import apiClient from "@/lib/apiClient";
+import { checkUserRole, getUser } from "@/lib/dal";
+import { redirect } from "next/navigation";
+import AdminHeader from "@/components/AdminHeader";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import { customerFields } from "@/components/agGrids/dataFields/customerFields";
-import AdminHeader from "@/components/AdminHeader";
-import { getUserIdentity } from "@/lib/getUserIdentity";
-import apiClient from "@/lib/apiClient";
-import { checkUserRole } from "@/lib/checkUserRole";
-import { redirect } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 
 interface SearchParams {
   customerType?: string;
@@ -16,23 +16,18 @@ export default async function CustomersPage({
 }: {
   searchParams: SearchParams;
 }) {
-  const userIdentity = await getUserIdentity();
-  checkUserRole(userIdentity, "/customers");
+  const user = await getUser(); // Awaiting user data
+  await checkUserRole("/customers");
 
   let url = `/getAllView?view=vwCustomersList&selectColumns=id,name,custId,customerCode,imageUrl,isActive,noOfUsers,noOfSites,sectorName,regionName,customerType`;
   let headerTitle = "Customers";
   let customerTypeParam = searchParams.customerType;
 
-  if (userIdentity.role === "CA") {
-    if (!["external"].includes(customerTypeParam || "")) {
-      customerTypeParam = "external";
-      headerTitle = "Our Clients";
-    } else if (customerTypeParam === "external") {
-      headerTitle = "Our Clients";
-    }
-  } else if (userIdentity.role === "PA") {
-    headerTitle = "Customers";
-  }
+  // Role-based logic for setting customer type and header title
+  ({ customerTypeParam, headerTitle } = getHeaderAndCustomerType(
+    user.role,
+    customerTypeParam
+  ));
 
   const res = await apiClient(url, { cache: "no-store" });
 
@@ -41,26 +36,35 @@ export default async function CustomersPage({
   }
 
   const customers = await res.json();
-  const customerData = customers.resource;
+  const customerData = customers.resource || [];
+  const customerCount = customerData.length;
 
-  const customerCount = customerData ? customerData.length : 0;
-
-  if (customerData) {
-    return (
-      <>
-        <AdminHeader headingText={headerTitle} dataCount={customerCount} />
+  return (
+    <>
+      <AdminHeader headingText={headerTitle} dataCount={customerCount} />
+      {customerCount > 0 ? (
         <DataGridComponent
           data={customerData}
           initialFields={customerFields}
           createNewUrl={"/customers/create"}
         />
-      </>
-    );
-  } else {
-    return (
-      <>
+      ) : (
         <h1>No Customers Found</h1>
-      </>
-    );
+      )}
+    </>
+  );
+}
+
+// Function to determine header title and customer type based on user role
+function getHeaderAndCustomerType(role: string, customerTypeParam?: string) {
+  let headerTitle = "Customers";
+  if (role === "CA") {
+    if (!["external"].includes(customerTypeParam || "")) {
+      customerTypeParam = "external";
+      headerTitle = "Our Clients";
+    }
+  } else if (role === "PA") {
+    headerTitle = "Customers";
   }
+  return { customerTypeParam, headerTitle };
 }

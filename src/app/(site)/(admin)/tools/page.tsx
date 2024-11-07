@@ -1,19 +1,17 @@
-import {getUserIdentity} from "@/lib/getUserIdentity";
-import {checkUserRole} from "@/lib/checkUserRole";
 import apiClient from "@/lib/apiClient";
 import {redirect} from "next/navigation";
 import AdminHeader from "@/components/AdminHeader";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {toolFields} from "@/components/agGrids/dataFields/toolFields";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function ToolsPage() {
-    const userIdentity = await getUserIdentity();
-    checkUserRole(userIdentity, "/tools");
+    await checkUserRole("/tools");
 
     let url = '/getAllView?view=vwToolsConfigList';
     let headerTitle = 'Tools';
 
-    const res = await apiClient(url, { cache: "no-store" });
+    const res = await apiClient(url, {cache: "no-store"});
 
     if (!res.ok) {
         return redirect("/error");
