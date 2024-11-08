@@ -248,9 +248,7 @@ export default function SideBars() {
         shouldShowManageTags = true;
       } else if (
         (user?.role === "CA" && recordCustomerId == String(user?.customerId)) ||
-        (user?.role === "CA" &&
-          recordParentId == String(user.customerId) &&
-          entityType == "customers")
+        (user?.role === "CA" && recordParentId == String(user.customerId))
       ) {
         // CA can edit their own customer's sites
         shouldShowManageTags = true;
@@ -277,8 +275,6 @@ export default function SideBars() {
 
   const rightMenuItems = generateRightSidebarItemsDrawer;
 
-  // TODO: Determine the correct customerId to pass to ManageTagsModal
-  // For CA users, this might be the customerId of the current record
   let modalCustomerId = user?.customerId || 0;
 
   return (
