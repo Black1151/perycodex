@@ -38,27 +38,28 @@ export function ManageTagsModalBody({
   const { recordIds, recordTypeId } = useTags();
   const recordId = recordIds?.recordId;
 
-  useEffect(() => {
-    const fetchAvailableTags = async () => {
-      setIsLoading(true);
-      setError("");
+  const fetchAvailableTags = async () => {
+    setIsLoading(true);
+    setError("");
 
-      const data = await fetchClient<{ resource: Tag[] }>(
-        "/api/tags/getTagsAvailableToAddToRecord",
-        {
-          method: "POST",
-          body: { customerId, recordTypeId, recordId },
-          errorMessage: "Failed to fetch available tags",
-          redirectOnError: false,
-        }
-      );
-
-      if (data) {
-        setAvailableTags(data.resource);
+    const data = await fetchClient<{ resource: Tag[] }>(
+      "/api/tags/getTagsAvailableToAddToRecord",
+      {
+        method: "POST",
+        body: { customerId, recordTypeId, recordId },
+        errorMessage: "Failed to fetch available tags",
+        redirectOnError: false,
       }
+    );
 
-      setIsLoading(false);
-    };
+    if (data) {
+      setAvailableTags(data.resource);
+    }
+
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
     fetchAvailableTags();
   }, []);
 
@@ -100,7 +101,7 @@ export function ManageTagsModalBody({
       if (newTagsResponse) {
         setTags(newTagsResponse.resource);
       }
-      onClose();
+      await fetchAvailableTags();
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
@@ -147,7 +148,8 @@ export function ManageTagsModalBody({
         setTags(newTagsResponse.resource);
       }
 
-      onClose();
+      // Fetch the available tags again after removing a tag
+      await fetchAvailableTags();
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
@@ -173,75 +175,82 @@ export function ManageTagsModalBody({
   }
 
   return (
-    <Tabs>
-      <TabList>
-        <Tab>Add Tags</Tab>
-        <Tab>Remove Tags</Tab>
-      </TabList>
+    <VStack align="stretch">
+      <Tabs>
+        <TabList>
+          <Tab width="50%">Add Tags</Tab>
+          <Tab width="50%">Remove Tags</Tab>
+        </TabList>
 
-      <TabPanels>
-        <TabPanel>
-          <VStack spacing={4} align="stretch">
-            <Box>
-              <Select
-                placeholder="Select a tag to add"
-                value={selectedTagId}
-                onChange={(e) => {
-                  setSelectedTagId(e.target.value);
-                }}
+        <TabPanels>
+          <TabPanel pb={0}>
+            <VStack spacing={4} align="stretch">
+              <Box>
+                <Select
+                  placeholder="Select a tag to add"
+                  value={selectedTagId}
+                  onChange={(e) => {
+                    setSelectedTagId(e.target.value);
+                  }}
+                  py={5}
+                >
+                  {availableTags && availableTags[1] ? (
+                    availableTags.map((tag: Tag) => {
+                      return (
+                        <option key={tag.id} value={String(tag.id)}>
+                          {tag.name}
+                        </option>
+                      );
+                    })
+                  ) : (
+                    <Text>No tags available</Text>
+                  )}
+                </Select>
+              </Box>
+
+              <Button
+                colorScheme="blue"
+                onClick={handleAddTag}
+                isDisabled={!selectedTagId}
               >
-                {availableTags && availableTags[1] ? (
-                  availableTags.map((tag: Tag) => {
-                    return (
-                      <option key={tag.id} value={String(tag.id)}>
-                        {tag.name}
-                      </option>
-                    );
-                  })
-                ) : (
-                  <Text>No tags available</Text>
-                )}
-              </Select>
-            </Box>
+                Add Tag
+              </Button>
+            </VStack>
+          </TabPanel>
 
-            <Button
-              colorScheme="blue"
-              onClick={handleAddTag}
-              isDisabled={!selectedTagId}
-            >
-              Add Tag
-            </Button>
-          </VStack>
-        </TabPanel>
+          <TabPanel pb={0}>
+            <VStack spacing={4} align="stretch">
+              <Box>
+                <Select
+                  placeholder="Select a tag to remove"
+                  value={selectedTagToRemoveId}
+                  onChange={(e) => {
+                    setSelectedTagToRemoveId(e.target.value);
+                  }}
+                  py={5}
+                >
+                  {tags.map((tag: any) => (
+                    <option key={tag.id} value={tag.tagAssocId}>
+                      {tag.name}
+                    </option>
+                  ))}
+                </Select>
+              </Box>
 
-        <TabPanel>
-          <VStack spacing={4} align="stretch">
-            <Box>
-              <Select
-                placeholder="Select a tag to remove"
-                value={selectedTagToRemoveId}
-                onChange={(e) => {
-                  setSelectedTagToRemoveId(e.target.value);
-                }}
+              <Button
+                colorScheme="red"
+                onClick={handleRemoveTag}
+                isDisabled={!selectedTagToRemoveId}
               >
-                {tags.map((tag: any) => (
-                  <option key={tag.id} value={tag.tagAssocId}>
-                    {tag.name}
-                  </option>
-                ))}
-              </Select>
-            </Box>
-
-            <Button
-              colorScheme="red"
-              onClick={handleRemoveTag}
-              isDisabled={!selectedTagToRemoveId}
-            >
-              Remove Tag
-            </Button>
-          </VStack>
-        </TabPanel>
-      </TabPanels>
-    </Tabs>
+                Remove Tag
+              </Button>
+            </VStack>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+      <Button mx={4} colorScheme="green" onClick={onClose}>
+        Done
+      </Button>
+    </VStack>
   );
 }
