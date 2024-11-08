@@ -29,6 +29,7 @@ import BottomNavigationMenu from "@/components/layout/BottomNavigationMenu";
 import { RightHandNavigationDrawer } from "@/components/layout/RightHandNavigationDrawer";
 import { ManageTagsModal } from "@/components/modals/adminModals/ManageTagsModal";
 import { useTags } from "@/providers/TagsProvider";
+import { useBreakpointValue } from "@chakra-ui/react";
 
 export default function SideBars() {
   const router = useRouter();
@@ -281,6 +282,11 @@ export default function SideBars() {
 
   let modalCustomerId = user?.customerId || 0;
 
+  const rightDrawerDefaultState = useBreakpointValue({
+    base: "closed",
+    md: "half-open",
+  } as const);
+
   return (
     <>
       {!["/my-profile", "/my-company"].includes(pathname) && (
@@ -293,7 +299,7 @@ export default function SideBars() {
       {rightMenuItems.length > 0 && (
         <RightHandNavigationDrawer
           menuItems={rightMenuItems}
-          defaultDrawerState={"half-open"}
+          defaultDrawerState={rightDrawerDefaultState}
         />
       )}
       <ManageTagsModal ref={modalRef} customerId={modalCustomerId} />
