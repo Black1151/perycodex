@@ -6,9 +6,7 @@ import {
   ModalHeader,
   ModalBody,
   Box,
-  Flex,
 } from "@chakra-ui/react";
-import CloseIcon from "@mui/icons-material/Close"; // MUI icon import
 
 interface PerygonModalProps {
   title: string;
@@ -28,12 +26,12 @@ export function PerygonModal({
       <ModalOverlay />
       <ModalContent borderRadius="md">
         <ModalHeader
-          color="white"
+          color="black"
+          width="100%"
           borderTopRadius="md"
-          bg="perygonPink"
           display="flex"
           alignItems="center"
-          justifyContent="space-between"
+          justifyContent="center"
         >
           {title}
           <Box
@@ -42,11 +40,9 @@ export function PerygonModal({
             display="flex"
             alignItems="center"
             justifyContent="center"
-          >
-            <CloseIcon />
-          </Box>
+          ></Box>
         </ModalHeader>
-        <ModalBody>{body}</ModalBody>
+        <ModalBody textAlign="center">{body}</ModalBody>{" "}
       </ModalContent>
     </Modal>
   );

@@ -20,28 +20,7 @@ import { useRouter } from "next/navigation";
 import { TagsDisplay } from "@/components/tags/TagsDisplay";
 import { useTags } from "@/providers/TagsProvider";
 import { TagsResponse } from "@/app/api/tags/getTagsForRecord/route";
-
-interface Site {
-  id: number;
-  siteName: string;
-  siteEmail?: string;
-  siteTel?: string;
-  address1: string;
-  address2: string;
-  address3?: string;
-  postcode: string;
-  country?: string;
-  uniqueId: string;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-  customer?: Customer;
-}
-
-type Customer = {
-  name: string;
-  uniqueId: string;
-};
+import { Site } from "@/types/types";
 
 interface SiteDetailsBannerProps {
   site: Site;
@@ -81,7 +60,7 @@ export const SiteDetailsBanner: React.FC<SiteDetailsBannerProps> = ({
     fetchTags();
     setRecordDetails(
       {
-        recordCustomerId: site.id.toString(),
+        recordCustomerId: site.customerId?.toString() || "",
         recordId: site.id.toString(),
         recordParentId: site.customer?.uniqueId || "",
       },

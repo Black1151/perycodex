@@ -1,8 +1,5 @@
 import { ReactNode } from "react";
-
 import { Box, Flex } from "@chakra-ui/react";
-
-import { ManageTagsModal } from "@/components/modals/adminModals/ManageTagsModal";
 import { TagsProvider } from "@/providers/TagsProvider";
 import SideBars from "./SideBars";
 

@@ -236,22 +236,26 @@ export default function SideBars() {
 
     let shouldShowManageTags = false;
 
-    if (pathname === "/my-profile") {
-      // All users can manage tags on their own User record
-      shouldShowManageTags = true;
-    } else if (user?.role === "CA" && pathname === `/my-company`) {
-      // CA users can manage tags on their own Company record
-      shouldShowManageTags = true;
-    } else if (entityType && recordId) {
-      if (entityType === "users" && recordId === String(user?.userId)) {
-        // User is viewing their own User record in admin
+    // Skip all logic if user role is PA
+    if (user?.role !== "PA") {
+      if (pathname === "/my-profile") {
+        // All users except PA can manage tags on their own User record
         shouldShowManageTags = true;
-      } else if (
-        (user?.role === "CA" && recordCustomerId == String(user?.customerId)) ||
-        (user?.role === "CA" && recordParentId == String(user.customerId))
-      ) {
-        // CA can edit their own customer's sites
+      } else if (user?.role === "CA" && pathname === `/my-company`) {
+        // CA users can manage tags on their own Company record
         shouldShowManageTags = true;
+      } else if (entityType && recordId) {
+        if (entityType === "users" && recordId === String(user?.userId)) {
+          // User is viewing their own User record in admin
+          shouldShowManageTags = true;
+        } else if (
+          (user?.role === "CA" &&
+            recordCustomerId == String(user?.customerId)) ||
+          (user?.role === "CA" && recordParentId == String(user.customerId))
+        ) {
+          // CA can edit their own customer's sites
+          shouldShowManageTags = true;
+        }
       }
     }
 
