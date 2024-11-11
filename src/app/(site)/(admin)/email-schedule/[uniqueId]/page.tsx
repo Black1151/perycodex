@@ -17,7 +17,7 @@ export default async function EmailTemplatesDetailPage({
     // Determine the correct URL based on the user's role
     const apiUrl =
         user.role === "CA"
-            ? `/getView?view=vwEmailSchedulesCustomerList&customerId=${user.customerId}&id=${params.uniqueId}`
+            ? `/emailScheduleCustomerOpt/findBy?customerId=${user.customerId}&id=${params.uniqueId}`
             : `/emailSchedule/findBy?id=${params.uniqueId}`;
 
     const res = await apiClient(apiUrl);
