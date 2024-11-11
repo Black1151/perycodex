@@ -18,8 +18,6 @@ export async function GET(req: NextRequest) {
         urlWithParams.searchParams.append(key, value);
     });
 
-    console.log(urlWithParams.toString());
-
     try {
         const response = await fetch(urlWithParams.toString(),
             {
