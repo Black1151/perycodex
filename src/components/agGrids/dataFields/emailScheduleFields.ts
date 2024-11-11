@@ -4,6 +4,7 @@ import EmailScheduleRenderer from "@/components/agGrids/CellRenderers/EmailSched
 import WorkflowRenderer from "@/components/agGrids/CellRenderers/WorkflowRenderer";
 import BusinessProcessRenderer from "@/components/agGrids/CellRenderers/BusinessProcessRenderer";
 import DuplicateSchedule from "@/app/(site)/(admin)/email-schedule/AssignSchedule";
+import ToolConfigRenderer from "@/components/agGrids/CellRenderers/ToolConfigRenderer";
 
 // Updated AgGrids fields
 export const emailScheduleFields: ColDef[] | any = [
@@ -43,6 +44,17 @@ export const emailScheduleFields: ColDef[] | any = [
         field: 'frequency',
         headerName: 'Frequency',
         filter: "agMultiColumnFilter",
+    },
+    {
+        field: "toolName",
+        headerName: "Tool Name",
+        filter: "agMultiColumnFilter",
+        cellRenderer: ToolConfigRenderer,
+        cellRendererParams: {
+            uniqueIdField: 'toolId',
+            imageUrlField: 'toolIconImageUrl',
+            nameField: 'toolName',
+        }
     },
     {
         field: 'wfName',
