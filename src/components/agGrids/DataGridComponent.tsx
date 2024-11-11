@@ -121,7 +121,6 @@ const DataGridComponent = <T, >({
             (document.getElementById('filter-text-box') as HTMLInputElement).value = '');
     }, []);
 
-    // TODO: Check for any unintended consequences
     // Effect to update rowData when the prop `data` changes
     useEffect(() => {
         if (data) {
@@ -160,17 +159,19 @@ const DataGridComponent = <T, >({
                 </Button>
 
                 {/* Create New Button */}
-                <Button
-                    variant="solid"
-                    bg="lightGreen"
-                    aria-label="create-new"
-                    onClick={handleCreateNewClick}
-                    size="md"
-                    color="white"
-                    leftIcon={<Add/>}
-                >
-                    {createNewUrlButtonText}
-                </Button>
+                {(createNewUrl || isModalEnabled) && (
+                    <Button
+                        variant="solid"
+                        bg="lightGreen"
+                        aria-label="create-new"
+                        onClick={handleCreateNewClick}
+                        size="md"
+                        color="white"
+                        leftIcon={<Add/>}
+                    >
+                        {createNewUrlButtonText}
+                    </Button>
+                )}
             </Flex>
 
             <Flex direction={'column'} height={'500px'}>

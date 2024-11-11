@@ -1,13 +1,10 @@
 import {ColDef} from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
 import EmailScheduleRenderer from "@/components/agGrids/CellRenderers/EmailScheduleRenderer";
-import WorkflowRenderer from "@/components/agGrids/CellRenderers/WorkflowRenderer";
-import BusinessProcessRenderer from "@/components/agGrids/CellRenderers/BusinessProcessRenderer";
-import DuplicateSchedule from "@/app/(site)/(admin)/email-schedule/AssignSchedule";
 import ToolConfigRenderer from "@/components/agGrids/CellRenderers/ToolConfigRenderer";
 
 // Updated AgGrids fields
-export const emailScheduleFields: ColDef[] | any = [
+export const caEmailScheduleFields: ColDef[] | any = [
     {
         field: "id",
         headerName: "ID",
@@ -36,15 +33,16 @@ export const emailScheduleFields: ColDef[] | any = [
         filter: "agMultiColumnFilter",
     },
     {
-        field: 'sendTime',
-        headerName: 'Send Time',
+        field: 'nextSendTime',
+        headerName: 'Sent Next',
         filter: "agMultiColumnFilter",
     },
     {
-        field: 'frequency',
-        headerName: 'Frequency',
+        field: 'lastSentTime',
+        headerName: 'Sent Last',
         filter: "agMultiColumnFilter",
     },
+
     {
         field: "toolName",
         headerName: "Tool Name",
@@ -57,32 +55,11 @@ export const emailScheduleFields: ColDef[] | any = [
         }
     },
     {
-        field: 'wfName',
-        headerName: 'Workflow',
-        filter: "agMultiColumnFilter",
-        cellRenderer: WorkflowRenderer,
-        cellRendererParams: {
-            nameField: 'wfName',
-            uniqueIdField: 'workflowId'
-        }
-    },
-    {
-        field: 'bpName',
-        headerName: 'Business Process',
-        filter: "agMultiColumnFilter",
-        cellRenderer: BusinessProcessRenderer,
-        cellRendererParams: {
-            nameField: 'bpName',
-            uniqueIdField: 'businessProcessId'
-        }
-    },
-    {
         field: 'isActive',
         headerName: '',
         cellRenderer: ActionButtonRenderer,
         cellRendererParams: {
             redirectUrl: '/email-schedule',
-            DuplicateComponent: DuplicateSchedule,
             updateUrl: '/api/emailSchedule/',
             idField: 'id',
         }
