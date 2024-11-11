@@ -28,6 +28,9 @@ const useSurvey = ({
     Serializer.findProperty("choicesByUrl", "allowEmptyResponse").defaultValue =
         true;
 
+    // Don't allow to cache results so that calls are made with clean data
+    settings.useCachingForChoicesRestful = false;
+
     useEffect(() => {
         if (!surveyJson) return;
 
