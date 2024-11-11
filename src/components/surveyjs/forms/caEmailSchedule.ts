@@ -297,6 +297,7 @@ export const caEmailScheduleJson = {
                     title: "User Distribution Group Names",
                     titleLocation: "top",
                     placeholder: "Enter user access group names",
+                    // isRequired: true,
                     readOnly: false,
                     choicesByUrl: {
                         url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/userGroup/allBy?customerId={pgv_currentUser.customerId}&isActive=true`,
