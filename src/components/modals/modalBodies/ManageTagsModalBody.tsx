@@ -178,8 +178,8 @@ export function ManageTagsModalBody({
     <VStack align="stretch">
       <Tabs>
         <TabList>
-          <Tab width="50%">Add Tags</Tab>
-          <Tab width="50%">Remove Tags</Tab>
+          <Tab width="50%">Add</Tab>
+          <Tab width="50%">Remove</Tab>
         </TabList>
 
         <TabPanels>
@@ -248,7 +248,7 @@ export function ManageTagsModalBody({
           </TabPanel>
         </TabPanels>
       </Tabs>
-      <Button mx={4} colorScheme="green" onClick={onClose}>
+      <Button mx={4} colorScheme="gray" onClick={onClose}>
         Done
       </Button>
     </VStack>

@@ -1,5 +1,11 @@
-import React, { useRef, useCallback, useState } from "react";
-import { Box, HStack, VStack } from "@chakra-ui/react";
+import React, { useRef, useCallback, useState, useEffect } from "react";
+import {
+  Box,
+  Flex,
+  HStack,
+  VStack,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import CarouselNavigationButton from "./CarouselNavigationButton";
 import CarouselDots from "./CarouselDots";
 import CarouselItem, { CarouselItemProps } from "./CarouselItem";
@@ -20,8 +26,15 @@ const Carousel: React.FC<CarouselProps> = ({
   );
 
   const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
+  const touchStartTime = useRef(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  useEffect(() => {
+    console.log(currentIndex);
+  }, [currentIndex]);
+
+  // Determine the number of items to show based on screen size
+  const itemsToShow = useBreakpointValue({ base: 3, md: 5 }) ?? 3;
 
   const debouncedSlide = useCallback(
     (action: () => void) => {
@@ -33,25 +46,38 @@ const Carousel: React.FC<CarouselProps> = ({
     [isTransitioning]
   );
 
-  const handleSwipe = () => {
-    if (touchStartX.current - touchEndX.current > 50) {
-      debouncedSlide(nextSlide);
-    }
-    if (touchStartX.current - touchEndX.current < -50) {
-      debouncedSlide(prevSlide);
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartTime.current = Date.now();
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const movementX = touchStartX.current - touchEndX;
+    const movementTime = Date.now() - touchStartTime.current;
+
+    // Determine if it's a swipe
+    if (Math.abs(movementX) > 50 && movementTime < 500) {
+      e.preventDefault(); // Prevent default only on swipe
+      if (movementX > 0) {
+        debouncedSlide(nextSlide);
+      } else {
+        debouncedSlide(prevSlide);
+      }
     }
   };
 
   return (
     <VStack
+      width="100%"
+      maxWidth={1200}
       spacing={4}
       height={["150px", "240px"]}
       mx={30}
       mb={[0, 10]}
       position="relative"
-      onTouchStart={(e) => (touchStartX.current = e.touches[0].clientX)}
-      onTouchMove={(e) => (touchEndX.current = e.touches[0].clientX)}
-      onTouchEnd={handleSwipe}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <CarouselNavigationButton
         direction="left"
@@ -66,15 +92,15 @@ const Carousel: React.FC<CarouselProps> = ({
         side={["-30px", "-40px"]}
       />
 
-      <Box flex={1} width="100%">
+      <Box width="100%">
         <HStack
           spacing={4}
           justifyContent="space-between"
           alignItems="center"
-          height="100%"
-          width={`${(carouselItems.length * 100) / 3}%`}
+          width={`${(carouselItems.length * 100) / itemsToShow}%`}
           transform={`translateX(-${
-            (currentIndex - 1) * (100 / carouselItems.length)
+            (currentIndex - Math.floor(itemsToShow / 2)) *
+            (100 / carouselItems.length)
           }%)`}
           transition="transform 0.5s ease-in-out"
           onTransitionEnd={() => setIsTransitioning(false)}
@@ -84,21 +110,24 @@ const Carousel: React.FC<CarouselProps> = ({
             let pointerEvents: "auto" | "none" = "auto";
             const distance = Math.abs(currentIndex - index);
 
-            if (distance === 1) {
-              opacity = 0.8;
-              pointerEvents = "auto";
-            } else if (distance > 1) {
+            if (
+              [0, 1].includes(currentIndex) &&
+              itemsToShow === 5 &&
+              [3, 4].includes(index)
+            ) {
+              opacity = 1;
+            } else if (currentIndex === 0 && itemsToShow === 3 && index === 2) {
+              opacity = 1;
+            } else if (distance > Math.floor(itemsToShow / 2)) {
               opacity = 0;
               pointerEvents = "none";
-            }
-
-            if (currentIndex === 0 && index === 2) {
-              opacity = 0.8;
+            } else {
+              opacity = 1;
               pointerEvents = "auto";
             }
-
             return (
-              <Box
+              <HStack
+                gap={4}
                 key={index}
                 onClick={() =>
                   currentIndex === index
@@ -108,15 +137,18 @@ const Carousel: React.FC<CarouselProps> = ({
                 transition="opacity 0.5s ease-in-out, pointer-events 0.5s ease-in-out"
                 width={`${100 / carouselItems.length}%`}
                 opacity={opacity}
-                cursor={distance <= 1 ? "pointer" : "default"}
+                cursor={
+                  distance <= Math.floor(itemsToShow / 2)
+                    ? "pointer"
+                    : "default"
+                }
                 pointerEvents={pointerEvents}
               >
                 <CarouselItem {...item} isSelected={index === currentIndex} />
-              </Box>
+              </HStack>
             );
           })}
         </HStack>
-
         <CarouselDots
           itemsCount={carouselItems.length}
           currentIndex={currentIndex}

@@ -62,6 +62,24 @@ export const perygonTheme = extendTheme({
                         boxShadow: "outline",
                     },
                 },
+                darkGray: {
+                    bgColor: "darkGray",
+                    border: "1px solid darkGray",
+                    color: "white",
+                    _hover: {
+                        color: "darkGray",
+                        backgroundColor: "white",
+                    },
+                },
+                green: {
+                    bgColor: "green",
+                    border: "1px solid lightGray",
+                    color: "white",
+                    _hover: {
+                        color: "green",
+                        backgroundColor: "white",
+                    },
+                },
             },
         },
         Switch: {

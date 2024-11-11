@@ -18,8 +18,8 @@ const CarouselDots: React.FC<CarouselDotsProps> = ({
     justifyContent="center"
     alignItems="center"
     width="full"
-    // zIndex={2}
     display={["none", null, "flex"]}
+    mt={4}
   >
     {Array.from({ length: itemsCount }).map((_, index) => (
       <Dot

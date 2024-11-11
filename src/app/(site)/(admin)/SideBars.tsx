@@ -263,7 +263,7 @@ export default function SideBars() {
     return shouldShowManageTags
       ? [
           {
-            label: "Manage Tags",
+            label: "Add / Remove Tags",
             icon: <Sell sx={{ height: "100%", width: "100%" }} />,
             // @ts-ignore
             onClick: () => modalRef.current?.openModal(),

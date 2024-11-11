@@ -20,7 +20,7 @@ export const ManageTagsModal = forwardRef(
       <PerygonModal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
-        title="Manage Tags"
+        title="Add / Remove Tags"
         body={
           <ManageTagsModalBody
             customerId={customerId}

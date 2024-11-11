@@ -100,7 +100,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
         transition="transform 0.4s ease-in-out"
         transform={showInfoBox ? "translateX(0)" : "translateX(-2000px)"}
         p={[8, 12]}
-        minHeight={340}
+        minHeight={400}
       >
         <HStack>
           <Image
@@ -130,9 +130,9 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
           Open {carouselItems[currentIndex].name}
         </Button>
       </Flex>
-      <Box maxWidth={650}>
-        <Carousel carouselItems={carouselItems} setParentIndex={setIndex} />
-      </Box>
+      {/* <Box> */}
+      <Carousel carouselItems={carouselItems} setParentIndex={setIndex} />
+      {/* </Box> */}
     </VStack>
   );
 };
