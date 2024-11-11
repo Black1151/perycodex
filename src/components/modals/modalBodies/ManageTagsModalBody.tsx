@@ -17,6 +17,7 @@ import {
 import { Tag } from "@/components/AdminDetailsBanners/TagDetailsBanner";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { useTags } from "@/providers/TagsProvider";
+import { Check, Add, Remove } from "@mui/icons-material";
 
 interface ManageTagsModalBodyProps {
   customerId: number;
@@ -37,6 +38,12 @@ export function ManageTagsModalBody({
   const { tags, setTags } = useTags();
   const { recordIds, recordTypeId } = useTags();
   const recordId = recordIds?.recordId;
+
+  const resetFormState = () => {
+    setSelectedTagId("");
+    setSelectedTagToRemoveId("");
+    setError("");
+  };
 
   const fetchAvailableTags = async () => {
     setIsLoading(true);
@@ -102,6 +109,7 @@ export function ManageTagsModalBody({
         setTags(newTagsResponse.resource);
       }
       await fetchAvailableTags();
+      resetFormState();
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
@@ -147,9 +155,8 @@ export function ManageTagsModalBody({
       if (newTagsResponse) {
         setTags(newTagsResponse.resource);
       }
-
-      // Fetch the available tags again after removing a tag
       await fetchAvailableTags();
+      resetFormState();
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
@@ -175,15 +182,46 @@ export function ManageTagsModalBody({
   }
 
   return (
-    <VStack align="stretch">
-      <Tabs>
+    <VStack align="stretch" pb={4}>
+      <Tabs onChange={resetFormState}>
         <TabList>
-          <Tab width="50%">Add</Tab>
-          <Tab width="50%">Remove</Tab>
+          <Tab
+            _selected={{
+              color: "green.500",
+              borderBottom: "2px solid",
+              borderBottomColor: "green.500",
+            }}
+            _focus={{
+              boxShadow: "none",
+            }}
+            _active={{
+              background: "none",
+            }}
+            width="50%"
+          >
+            Add
+          </Tab>
+          <Tab
+            _selected={{
+              color: "red.500",
+              borderBottom: "2px solid",
+              borderBottomColor: "red.500",
+            }}
+            _focus={{
+              boxShadow: "none",
+            }}
+            _active={{
+              background: "none",
+            }}
+            width="50%"
+          >
+            Remove
+          </Tab>
         </TabList>
 
         <TabPanels>
           <TabPanel pb={0}>
+            {/* Add Tab Content */}
             <VStack spacing={4} align="stretch">
               <Box>
                 <Select
@@ -209,9 +247,10 @@ export function ManageTagsModalBody({
               </Box>
 
               <Button
-                colorScheme="blue"
+                variant="green"
                 onClick={handleAddTag}
                 isDisabled={!selectedTagId}
+                leftIcon={<Add />}
               >
                 Add Tag
               </Button>
@@ -219,6 +258,7 @@ export function ManageTagsModalBody({
           </TabPanel>
 
           <TabPanel pb={0}>
+            {/* Remove Tab Content */}
             <VStack spacing={4} align="stretch">
               <Box>
                 <Select
@@ -238,9 +278,10 @@ export function ManageTagsModalBody({
               </Box>
 
               <Button
-                colorScheme="red"
+                variant="red"
                 onClick={handleRemoveTag}
                 isDisabled={!selectedTagToRemoveId}
+                leftIcon={<Remove />}
               >
                 Remove Tag
               </Button>
@@ -248,7 +289,8 @@ export function ManageTagsModalBody({
           </TabPanel>
         </TabPanels>
       </Tabs>
-      <Button mx={4} colorScheme="gray" onClick={onClose}>
+
+      <Button mx={4} variant="darkGray" onClick={onClose} leftIcon={<Check />}>
         Done
       </Button>
     </VStack>
