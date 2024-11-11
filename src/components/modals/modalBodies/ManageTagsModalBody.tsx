@@ -34,6 +34,7 @@ export function ManageTagsModalBody({
     useState<string>("");
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const { fetchClient } = useFetchClient();
   const { tags, setTags } = useTags();
   const { recordIds, recordTypeId } = useTags();
@@ -183,7 +184,13 @@ export function ManageTagsModalBody({
 
   return (
     <VStack align="stretch" pb={4}>
-      <Tabs onChange={resetFormState}>
+      <Tabs
+        index={selectedTabIndex}
+        onChange={(index) => {
+          resetFormState();
+          setSelectedTabIndex(index);
+        }}
+      >
         <TabList>
           <Tab
             _selected={{

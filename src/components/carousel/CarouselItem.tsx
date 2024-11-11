@@ -32,7 +32,7 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
           src={thumbNailImage}
           alt={alt}
           height={
-            isSelected ? ["125px", null, "150px"] : ["50px", null, "75px"]
+            isSelected ? ["100px", null, "150px"] : ["50px", null, "75px"]
           }
           objectFit="contain"
           transition="height 0.5s ease-in-out"
