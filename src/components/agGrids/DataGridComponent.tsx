@@ -159,7 +159,7 @@ const DataGridComponent = <T, >({
                 </Button>
 
                 {/* Create New Button */}
-                {createNewUrl && (
+                {(createNewUrl || isModalEnabled) && (
                     <Button
                         variant="solid"
                         bg="lightGreen"
