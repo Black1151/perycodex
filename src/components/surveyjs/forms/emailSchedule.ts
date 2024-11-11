@@ -28,16 +28,29 @@ export const emailScheduleJson = {
                 },
                 {
                     type: "dropdown",
+                    name: "toolId",
+                    title: "Tool Config",
+                    isRequired: true,
+                    choicesByUrl: {
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/toolConfig/allBy`,
+                        path: "resource",
+                        valueName: "id",
+                        titleName: "name"
+                    }
+                },
+                {
+                    type: "dropdown",
                     name: "workflowId",
                     title: "Workflow",
+                    visibleIf: "{toolId} notempty",
+                    enableIf: "{toolId} notempty",
                     titleLocation: "top",
                     placeholder: "Select Workflow",
                     isRequired: true,
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/workflow/allBy?selectColumns=id,name&isActive=true`,  // The API endpoint to fetch choices from
-                        path: "resource",
-                        valueName: "id",
-                        titleName: "name"
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/view?view=vwToolToWorkflow&toolConfigId={toolId}`,  // The API endpoint to fetch choices from
+                        valueName: "workflowId",
+                        titleName: "wfName"
                     },
                 },
                 {
