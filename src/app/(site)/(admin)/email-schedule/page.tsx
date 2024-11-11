@@ -3,12 +3,14 @@ import {redirect} from "next/navigation";
 import AdminHeader from "@/components/AdminHeader";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import {emailScheduleFields} from "@/components/agGrids/dataFields/emailScheduleFields";
-import {checkUserRole} from "@/lib/dal";
+import {checkUserRole, getUser} from "@/lib/dal";
+import {caEmailScheduleFields} from "@/components/agGrids/dataFields/caEmailScheduleFields";
 
 export default async function EmailSchedulePage() {
+    const user = await getUser();
     await checkUserRole("/email-schedule");
 
-    let url = '/getAllView?view=vwEmailSchedulesList';
+    let url = user.role === 'PA' ? '/getAllView?view=vwEmailSchedulesList' : `/getAllView?view=vwEmailSchedulesCustomerList&customerId=${user.customerId}`;
     let headerTitle = 'Email Schedules';
 
     const res = await apiClient(url, {cache: "no-store"});
@@ -28,8 +30,8 @@ export default async function EmailSchedulePage() {
                 <AdminHeader headingText={headerTitle} dataCount={emailScheduleCount}/>
                 <DataGridComponent
                     data={emailScheduleData}
-                    initialFields={emailScheduleFields}
-                    createNewUrl={"/email-schedule/create"}
+                    initialFields={user.role === 'PA' ? emailScheduleFields : caEmailScheduleFields}
+                    createNewUrl={user.role === 'PA' ? "/email-schedule/create" : undefined}
                 />
             </>
         );
