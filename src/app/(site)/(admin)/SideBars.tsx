@@ -89,6 +89,12 @@ export default function SideBars() {
             category: "Internal",
           },
           {
+            label: "Email Schedules",
+            icon: <ScheduleSend sx={{ height: "100%", width: "100%" }} />,
+            onClick: () => router.push("/email-schedule"),
+            category: "Internal",
+          },
+          {
             label: "Our Clients",
             icon: <Domain sx={{ height: "100%", width: "100%" }} />,
             onClick: () => router.push("/customers?customerType=external"),

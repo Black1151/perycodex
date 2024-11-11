@@ -10,11 +10,11 @@ export const baseSurveyCssVariablesTheme = {
     "--sjs-questionpanel-cornerRadius": "12px",
 
     // Question Titles
-    "--sjs-font-questiontitle-weight": "500", // TODO: GET FEEDBACK
-    "--sjs-font-questiontitle-size": "14px",
+    "--sjs-font-questiontitle-weight": "500",
+    "--sjs-font-questiontitle-size": "16px",
 
     // Question Description
-    "--sjs-font-questiondescription-size": "14px",
+    "--sjs-font-questiondescription-size": "12px",
 
     // Header
     "--sjs-header-backcolor": "transparent",
@@ -23,14 +23,14 @@ export const baseSurveyCssVariablesTheme = {
     "--sjs-font-headertitle-size": "24px",
 
     // Header description
-    "--sjs-font-headerdescription-size": "14px",
+    "--sjs-font-headerdescription-size": "12px",
     "--sjs-font-headerdescription-weight": "600",
 
     // Editor Panel - This looks like the background of a field
     "--sjs-editorpanel-cornerRadius": "0px", // Corner radius of the input fields
 
     // Font Editor
-    "--sjs-font-editorfont-size": "14px",
+    "--sjs-font-editorfont-size": "16px",
 
     // Article Font ??
     "--sjs-article-font-xx-large-textDecoration": "none",

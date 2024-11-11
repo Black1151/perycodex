@@ -63,6 +63,8 @@ const roleBasedRoutes: { [key: string]: string[] } = {
         "/teams",
         "/teams/[dynamicSegment]",
         "/teams/create",
+        "/email-schedule",
+        "/email-schedule/[dynamicSegment]",
         "/user-groups",
         "/user-groups/[dynamicSegment]",
         "/user-groups/create",

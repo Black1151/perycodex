@@ -22,3 +22,25 @@
     color: #f9f9f9;
     font-weight: 400;
 }
+
+@media screen and (max-width: 425px) {
+    .sd-input {
+        font-size: 14px !important;
+    }
+
+    .sd-dropdown__filter-string-input {
+        font-size: 14px !important;
+    }
+
+    .sv-dropdown-popup .sd-list__item-body {
+        font-size: 14px !important;
+    }
+
+    .sd-dropdown__value {
+        font-size: 14px !important;
+    }
+
+    .sd-element__title span {
+        font-size: 14px !important;
+    }
+}

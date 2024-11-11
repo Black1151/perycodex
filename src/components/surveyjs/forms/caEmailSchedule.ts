@@ -1,8 +1,8 @@
-export const emailScheduleJson = {
+export const caEmailScheduleJson = {
     pages: [
         {
-            name: "email-schedule-details",
-            title: "Email Schedule Details",
+            name: "email-schedule-customer-options",
+            title: "Email Schedule Options",
             elements: [
                 {
                     type: "boolean",
@@ -24,48 +24,18 @@ export const emailScheduleJson = {
                     title: "Schedule Name",
                     titleLocation: "top",
                     isRequired: true,
-                    placeholder: "Enter schedule name",
+                    readOnly: true,
+                    placeholder: "Enter schedule name"
                 },
                 {
-                    type: "dropdown",
-                    name: "toolId",
-                    title: "Tool Config",
-                    isRequired: true,
-                    choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/toolConfig/allBy`,
-                        path: "resource",
-                        valueName: "id",
-                        titleName: "name"
-                    }
-                },
-                {
-                    type: "dropdown",
-                    name: "workflowId",
-                    title: "Workflow",
-                    visibleIf: "{toolId} notempty",
-                    enableIf: "{toolId} notempty",
+                    type: "text",
+                    name: "customerId",
+                    title: "Customer",
                     titleLocation: "top",
-                    placeholder: "Select Workflow",
+                    defaultValueExpression: "{pgv_currentUser.customerId}",
                     isRequired: true,
-                    choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/view?view=vwToolToWorkflow&toolConfigId={toolId}`,  // The API endpoint to fetch choices from
-                        valueName: "workflowId",
-                        titleName: "wfName"
-                    },
-                },
-                {
-                    type: "dropdown",
-                    name: "businessProcessId",
-                    title: "Business Process",
-                    titleLocation: "top",
-                    placeholder: "Select Business Process",
-                    enableIf: "{workflowId} notempty",
-                    visibleIf: "{workflowId} notempty",
-                    choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/view?view=vwWorkflowToBusinessProcess&workflowId={workflowId}`,
-                        valueName: "businessProcessId",
-                        titleName: "bpName"
-                    },
+                    readOnly: true,
+                    visible: false
                 },
                 {
                     type: "dropdown",
@@ -73,7 +43,9 @@ export const emailScheduleJson = {
                     title: "Email Template",
                     titleLocation: "top",
                     isRequired: true,
-                    placeholder: "Select Email Template",
+                    readOnly: true,
+                    visible: false,
+                    placeholder: "Select email template",
                     choicesByUrl: {
                         url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/emailTemplate/allBy?selectColumns=id,name&isActive=true`,
                         path: "resource",
@@ -83,38 +55,27 @@ export const emailScheduleJson = {
                 },
                 {
                     type: "text",
-                    name: "startDate",
-                    title: "Select start date",
-                    defaultValueExpression: "today()",
-                    isRequired: true,
+                    name: "lastSentTime",
+                    title: "Last Send Time",
                     inputType: "date",
+                    startWithNewLine: false,
+                    readOnly: true,
                 },
                 {
                     type: "text",
-                    name: "endDate",
-                    title: "Select end date",
-                    defaultValueExpression: "today()",
+                    name: "nextSendTime",
+                    title: "Next Send Time",
                     isRequired: true,
                     inputType: "date",
+                    readOnly: true
                 },
                 {
                     type: "text",
                     name: "sendTime",
                     title: "Send Time between 09:00 and 18:00",
-                    isRequired: true,
                     inputType: "time",
                     min: "09:00",
                     max: "18:00"
-                },
-                {
-                    type: "comment",
-                    name: "targetCondition",
-                    title: "Additional Condition that needs to be met",
-                    titleLocation: "top",
-                    visible: false,
-                    isRequired: false,
-                    placeholder: "Enter target condition",
-                    autoGrow: true
                 },
                 {
                     type: "dropdown",
@@ -123,6 +84,7 @@ export const emailScheduleJson = {
                     titleLocation: "top",
                     isRequired: true,
                     placeholder: "Select frequency",
+                    readOnly: true,
                     choices: [
                         {
                             value: "daily",
@@ -139,7 +101,8 @@ export const emailScheduleJson = {
                         {
                             value: "one-time",
                             text: "One-time"
-                        }],
+                        }
+                    ],
                 },
                 {
                     type: "checkbox",
@@ -147,6 +110,7 @@ export const emailScheduleJson = {
                     title: "Which days of week?",
                     isRequired: true,
                     visibleIf: "{frequency} = 'Weekly'",
+                    readOnly: true,
                     choices: [
                         {
                             text: "Monday",
@@ -184,6 +148,7 @@ export const emailScheduleJson = {
                     title: "Which days of month?",
                     requiredIf: "{lastDayOfMOnth} = false",
                     visibleIf: "{frequency} = 'Monthly'",
+                    readOnly: true,
                     colCount: 5,
                     choices: [
                         {
@@ -299,6 +264,7 @@ export const emailScheduleJson = {
                             value: "28"
                         }
                     ],
+
                 },
                 {
                     type: "boolean",
@@ -317,11 +283,11 @@ export const emailScheduleJson = {
                     type: "text",
                     name: "interval",
                     title: "Enter an Interval",
+                    defaultValue: 0,
                     isRequired: true,
                     inputType: "number",
-                    defaultValue: 1,
                     min: 1,
-                    max: 30,
+                    max: 12,
                     description: "An interval of 1 would be every week or month, 2 would be every 2 weeks or months etc.",
                     descriptionLocation: "underInput",
                 },
@@ -331,8 +297,9 @@ export const emailScheduleJson = {
                     title: "User Distribution Group Names",
                     titleLocation: "top",
                     placeholder: "Enter user access group names",
+                    readOnly: false,
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/userGroupPlatform`,
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/userGroup/allBy?customerId={pgv_currentUser.customerId}&isActive=true`,
                         path: "resource",
                         valueName: "name",
                         titleName: "name"
@@ -340,5 +307,6 @@ export const emailScheduleJson = {
                 },
             ]
         }
+
     ],
 };

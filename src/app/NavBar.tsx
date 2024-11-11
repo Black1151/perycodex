@@ -120,7 +120,7 @@ export const NavBar: React.FC<NavBarProps> = ({
     return (
         <HStack
             gap={[5, 20]}
-            px={5}
+            px={[3,3,5]}
             width="100%"
             fontSize={[20, 40]}
             justifyContent="space-between"

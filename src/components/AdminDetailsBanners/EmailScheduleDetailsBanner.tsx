@@ -57,8 +57,7 @@ export const EmailScheduleDetailsBanner: React.FC<EmailScheduleDetailsBannerProp
                         border={'white 1px solid'}
                         bg={emailSchedule.isActive ? 'green.500' : 'red.500'}
                     />
-                    <Heading fontWeight={300} size={['md', 'md', 'lg']}>{emailSchedule.name}</Heading>
-
+                    <Heading fontWeight={300} size={['md', 'md', 'lg']}>{emailSchedule.name || 'No Name'}</Heading>
                 </Flex>
             </VStack>
 
