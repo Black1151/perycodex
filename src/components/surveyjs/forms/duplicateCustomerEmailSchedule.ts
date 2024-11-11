@@ -17,9 +17,10 @@ export const duplicateCustomerEmailSchedule = {
                     isRequired: true,
                     title: "Customer",
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/view?view=vwInviteUserCustomersList`,
-                        valueName: "custId",
-                        titleName: "custName"
+                        url: `/api/customer/allBy?parentId=null&isActive=true`,
+                        path: "resource",
+                        valueName: "id",
+                        titleName: "name"
                     },
                 },
 

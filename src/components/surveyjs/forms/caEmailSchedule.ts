@@ -35,6 +35,7 @@ export const caEmailScheduleJson = {
                     defaultValueExpression: "{pgv_currentUser.customerId}",
                     isRequired: true,
                     readOnly: true,
+                    visible: false
                 },
                 {
                     type: "dropdown",
@@ -43,6 +44,7 @@ export const caEmailScheduleJson = {
                     titleLocation: "top",
                     isRequired: true,
                     readOnly: true,
+                    visible: false,
                     placeholder: "Select email template",
                     choicesByUrl: {
                         url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/emailTemplate/allBy?selectColumns=id,name&isActive=true`,
@@ -53,28 +55,24 @@ export const caEmailScheduleJson = {
                 },
                 {
                     type: "text",
-                    name: "startDate",
-                    title: "Select start date",
-                    defaultValueExpression: "today()",
+                    name: "lastSentTime",
+                    title: "Last Send Time",
+                    inputType: "date",
+                    startWithNewLine: false,
+                    readOnly: true,
+                },
+                {
+                    type: "text",
+                    name: "nextSendTime",
+                    title: "Next Send Time",
                     isRequired: true,
                     inputType: "date",
                     readOnly: true
                 },
                 {
                     type: "text",
-                    name: "endDate",
-                    title: "Select end date",
-                    defaultValueExpression: "{startDate}",
-                    isRequired: true,
-                    inputType: "date",
-                    minValueExpression: "{startDate}",
-                    readOnly: true,
-                },
-                {
-                    type: "text",
                     name: "sendTime",
                     title: "Send Time between 09:00 and 18:00",
-                    isRequired: true,
                     inputType: "time",
                     min: "09:00",
                     max: "18:00"
@@ -289,7 +287,7 @@ export const caEmailScheduleJson = {
                     isRequired: true,
                     inputType: "number",
                     min: 1,
-                    max: 30,
+                    max: 12,
                     description: "An interval of 1 would be every week or month, 2 would be every 2 weeks or months etc.",
                     descriptionLocation: "underInput",
                 },
@@ -299,9 +297,9 @@ export const caEmailScheduleJson = {
                     title: "User Distribution Group Names",
                     titleLocation: "top",
                     placeholder: "Enter user access group names",
-                    readOnly: true,
+                    readOnly: false,
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/userGroupPlatform`,
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/userGroup/allBy?customerId={pgv_currentUser.customerId}&isActive=true`,
                         path: "resource",
                         valueName: "name",
                         titleName: "name"
