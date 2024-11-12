@@ -41,7 +41,7 @@ export interface ActivityResponse {
 export default async function ActivityPage() {
   const user = await getUser(); // Awaiting user data
   const userRole = user.role; // Fetch the user's role
-  const isManager = user.isManager ? user.isManager : false;
+  const isManager = user.teamManagerCount && user.teamManagerCount > 0;
   await checkUserRole("/activity");
 
   let headerTitle = "Activity";
@@ -52,11 +52,14 @@ export default async function ActivityPage() {
   let myTeamsActivityUrl = `/getAllView?view=vwProgressList&wfStarterTeamManagerId=${user.userId}`; // User who is manager
   let ourTeamActivityUrl = `/getAllView?view=vwProgressList&wfStarterTeamId=${user.teamId}`; // CS CL CA
 
+  let resArray: string[] = [];
+
   try {
     // Set up conditional API calls based on the user's role
     const apiCalls = [
       apiClient(myActivityUrl, { cache: "no-store" }), // My Activity is for everyone
     ];
+    resArray.push("myActivityRes");
 
     if (["CS", "CL", "CA"].includes(userRole)) {
       // Only fetch Our Activity and Team Activity if the role matches
@@ -64,11 +67,13 @@ export default async function ActivityPage() {
         apiClient(ourActivityUrl, { cache: "no-store" }),
         apiClient(ourTeamActivityUrl, { cache: "no-store" }),
       );
+      resArray.push("ourActivityRes", "ourTeamActivityRes");
     }
 
     if (isManager) {
       // Only fetch My Team Activity if the user is a manager
       apiCalls.push(apiClient(myTeamsActivityUrl, { cache: "no-store" }));
+      resArray.push("myTeamsActivityRes");
     }
 
     // Execute the relevant API calls in parallel
@@ -79,23 +84,22 @@ export default async function ActivityPage() {
       return redirect("/error");
     }
 
-    // Extract the data from each response
-    const [
-      myActivityRes,
-      ourActivityRes,
-      ourTeamActivityRes,
-      myTeamsActivityRes,
-    ] = await Promise.all(apiResponses.map((res) => res.json()));
+    // Extract the data from each response dynamically based on `resArray`
+    const responseData = await Promise.all(
+      apiResponses.map((res) => res.json()),
+    );
 
-    // Map responses to respective data arrays
-    const myActivityData = (myActivityRes?.resource ||
-      []) as ActivityResponse[];
-    const ourActivityData = (ourActivityRes?.resource ||
-      []) as ActivityResponse[];
-    const ourTeamActivityData = (ourTeamActivityRes?.resource ||
-      []) as ActivityResponse[];
-    const myTeamsActivityData = (myTeamsActivityRes?.resource ||
-      []) as ActivityResponse[];
+    // Create a dynamic mapping of responses
+    const responses: { [key: string]: ActivityResponse[] } = {};
+    resArray.forEach((key, index) => {
+      responses[key] = responseData[index]?.resource || [];
+    });
+
+    // Map responses to their respective data arrays
+    const myActivityData = responses["myActivityRes"] || [];
+    const ourActivityData = responses["ourActivityRes"] || [];
+    const ourTeamActivityData = responses["ourTeamActivityRes"] || [];
+    const myTeamsActivityData = responses["myTeamsActivityRes"] || [];
 
     // Create data sources for TabbedGrids
     const dataSources = [
