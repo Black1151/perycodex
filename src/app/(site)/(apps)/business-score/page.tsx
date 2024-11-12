@@ -3,20 +3,19 @@ import HappinessScoreClientInner from "../happiness-score/HappinessScoreClientIn
 import BusinessScoreClientInner from "./BusinessScoreClientInner";
 
 export default async function Home({
-                                       searchParams,
-                                   }: {
-    searchParams: { [key: string]: string | string[] | undefined };
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
-    const toolId = searchParams.toolId as string;
-    const workflowId = searchParams.workflowId as string;
+  const toolId = searchParams.toolId as string;
+  const workflowId = searchParams.workflowId as string;
 
-
-    return (
-        <MainPageServer
-            searchParams={searchParams}
-            toolId={toolId}
-            workflowId={workflowId}
-            ClientInnerComponent={BusinessScoreClientInner}
-        />
-    );
+  return (
+    <MainPageServer
+      searchParams={searchParams}
+      toolId={toolId}
+      workflowId={workflowId}
+      ClientInnerComponent={BusinessScoreClientInner}
+    />
+  );
 }

@@ -10,7 +10,7 @@ export async function POST() {
     if (!apiToken) {
       return NextResponse.json(
         { error: "No authentication token found." },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -27,7 +27,7 @@ export async function POST() {
       const errorMessage = data?.error || "Logout failed.";
       return NextResponse.json(
         { error: errorMessage },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
@@ -41,7 +41,7 @@ export async function POST() {
     const errorMessage = error.message || "An error occurred during logout.";
     return NextResponse.json(
       { error: errorMessage },
-      { status: error.status || 500 }
+      { status: error.status || 500 },
     );
   }
 }

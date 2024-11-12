@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react"
-import { Box } from "@chakra-ui/react"
+import React, { useState, useEffect } from "react";
+import { Box } from "@chakra-ui/react";
 
 interface BackgroundLayer {
-  id: number
-  image: string
-  opacity: number
+  id: number;
+  image: string;
+  opacity: number;
 }
 
 interface FadingBackgroundProps {
-  images: string[]
-  currentIndex: number
+  images: string[];
+  currentIndex: number;
 }
 
 const FadingBackground: React.FC<FadingBackgroundProps> = ({
@@ -18,33 +18,33 @@ const FadingBackground: React.FC<FadingBackgroundProps> = ({
 }) => {
   const [layers, setLayers] = useState<BackgroundLayer[]>([
     { id: 0, image: images[currentIndex], opacity: 1 },
-  ])
-  const [nextLayerId, setNextLayerId] = useState(1)
+  ]);
+  const [nextLayerId, setNextLayerId] = useState(1);
 
   useEffect(() => {
     const newLayer = {
       id: nextLayerId,
       image: images[currentIndex],
       opacity: 0,
-    }
-    setLayers([...layers, newLayer])
-    setNextLayerId(nextLayerId + 1)
+    };
+    setLayers([...layers, newLayer]);
+    setNextLayerId(nextLayerId + 1);
 
     setTimeout(() => {
       setLayers((prevLayers) =>
         prevLayers.map((layer, idx) => {
           if (idx === prevLayers.length - 1) {
-            return { ...layer, opacity: 1 }
+            return { ...layer, opacity: 1 };
           }
-          return { ...layer, opacity: 0 }
+          return { ...layer, opacity: 0 };
         }),
-      )
-    }, 10)
+      );
+    }, 10);
 
     setTimeout(() => {
-      setLayers((prevLayers) => prevLayers.slice(1))
-    }, 1000)
-  }, [currentIndex])
+      setLayers((prevLayers) => prevLayers.slice(1));
+    }, 1000);
+  }, [currentIndex]);
 
   return (
     <>
@@ -65,7 +65,7 @@ const FadingBackground: React.FC<FadingBackgroundProps> = ({
         />
       ))}
     </>
-  )
-}
+  );
+};
 
-export default FadingBackground
+export default FadingBackground;

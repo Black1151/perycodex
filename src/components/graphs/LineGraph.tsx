@@ -56,7 +56,7 @@ const LineGraph: React.FC<LineGraphProps> = ({ DataPoints = [] }) => {
 
   const yAxisTicks = Array.from(
     { length: Math.ceil(maxValue) + 1 },
-    (_, i) => i
+    (_, i) => i,
   );
 
   const mapIndexToX = (index: number) => {

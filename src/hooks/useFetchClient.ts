@@ -28,7 +28,7 @@ export const useFetchClient = () => {
       successMessage,
       errorMessage = "An unexpected error occurred.",
       redirectOnError = true,
-    }: FetchOptions = {}
+    }: FetchOptions = {},
   ): Promise<T | null> => {
     setLoading(true);
 

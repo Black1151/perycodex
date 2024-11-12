@@ -3,7 +3,7 @@ import apiClient from "@/lib/apiClient";
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { tagId: string } }
+  { params }: { params: { tagId: string } },
 ) {
   try {
     const { tagId } = params;
@@ -11,7 +11,7 @@ export async function DELETE(
     if (!tagId) {
       return NextResponse.json(
         { error: "Missing required fields" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -30,7 +30,7 @@ export async function DELETE(
     console.error("Error removing tag from record:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -26,7 +26,7 @@ export default async function CustomersPage({
   // Role-based logic for setting customer type and header title
   ({ customerTypeParam, headerTitle } = getHeaderAndCustomerType(
     user.role,
-    customerTypeParam
+    customerTypeParam,
   ));
 
   const res = await apiClient(url, { cache: "no-store" });

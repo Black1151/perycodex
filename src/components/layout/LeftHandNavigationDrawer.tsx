@@ -43,14 +43,17 @@ export function LeftHandNavigationDrawer({
   };
 
   const groupedItems =
-    menuItems?.reduce((acc, item) => {
-      const category = item.category || "uncategorized";
-      if (!acc[category]) {
-        acc[category] = [];
-      }
-      acc[category].push(item);
-      return acc;
-    }, {} as Record<string, MenuItem[]>) || {};
+    menuItems?.reduce(
+      (acc, item) => {
+        const category = item.category || "uncategorized";
+        if (!acc[category]) {
+          acc[category] = [];
+        }
+        acc[category].push(item);
+        return acc;
+      },
+      {} as Record<string, MenuItem[]>,
+    ) || {};
 
   return (
     <>
@@ -154,7 +157,7 @@ export function LeftHandNavigationDrawer({
                           />
                         )}
                       </React.Fragment>
-                    )
+                    ),
                   )}
                   {!menuItems && drawerState === "fully-open" && (
                     <Text>No menu items supplied</Text>

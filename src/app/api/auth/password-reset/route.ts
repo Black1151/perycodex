@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
         data?.error || "An error occurred during the password reset.";
       return NextResponse.json(
         { error: errorMessage },
-        { status: response.status }
+        { status: response.status },
       );
     }
 

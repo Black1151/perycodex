@@ -1,45 +1,52 @@
 import apiClient from "@/lib/apiClient";
-import {redirect} from "next/navigation";
+import { redirect } from "next/navigation";
 import AdminHeader from "@/components/AdminHeader";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
-import {emailScheduleFields} from "@/components/agGrids/dataFields/emailScheduleFields";
-import {checkUserRole, getUser} from "@/lib/dal";
-import {caEmailScheduleFields} from "@/components/agGrids/dataFields/caEmailScheduleFields";
+import { emailScheduleFields } from "@/components/agGrids/dataFields/emailScheduleFields";
+import { checkUserRole, getUser } from "@/lib/dal";
+import { caEmailScheduleFields } from "@/components/agGrids/dataFields/caEmailScheduleFields";
 
 export default async function EmailSchedulePage() {
-    const user = await getUser();
-    await checkUserRole("/email-schedule");
+  const user = await getUser();
+  await checkUserRole("/email-schedule");
 
-    let url = user.role === 'PA' ? '/getAllView?view=vwEmailSchedulesList' : `/getAllView?view=vwEmailSchedulesCustomerList&customerId=${user.customerId}`;
-    let headerTitle = 'Email Schedules';
+  let url =
+    user.role === "PA"
+      ? "/getAllView?view=vwEmailSchedulesList"
+      : `/getAllView?view=vwEmailSchedulesCustomerList&customerId=${user.customerId}`;
+  let headerTitle = "Email Schedules";
 
-    const res = await apiClient(url, {cache: "no-store"});
+  const res = await apiClient(url, { cache: "no-store" });
 
-    if (!res.ok) {
-        return redirect("/error");
-    }
+  if (!res.ok) {
+    return redirect("/error");
+  }
 
-    const emailSchedules = await res.json();
-    const emailScheduleData = emailSchedules.resource || [];
+  const emailSchedules = await res.json();
+  const emailScheduleData = emailSchedules.resource || [];
 
-    const emailScheduleCount = emailScheduleData ? emailScheduleData.length : 0;
+  const emailScheduleCount = emailScheduleData ? emailScheduleData.length : 0;
 
-    if (emailScheduleData) {
-        return (
-            <>
-                <AdminHeader headingText={headerTitle} dataCount={emailScheduleCount}/>
-                <DataGridComponent
-                    data={emailScheduleData}
-                    initialFields={user.role === 'PA' ? emailScheduleFields : caEmailScheduleFields}
-                    createNewUrl={user.role === 'PA' ? "/email-schedule/create" : undefined}
-                />
-            </>
-        );
-    } else {
-        return (
-            <>
-                <h1>No Schedules Found</h1>
-            </>
-        );
-    }
+  if (emailScheduleData) {
+    return (
+      <>
+        <AdminHeader headingText={headerTitle} dataCount={emailScheduleCount} />
+        <DataGridComponent
+          data={emailScheduleData}
+          initialFields={
+            user.role === "PA" ? emailScheduleFields : caEmailScheduleFields
+          }
+          createNewUrl={
+            user.role === "PA" ? "/email-schedule/create" : undefined
+          }
+        />
+      </>
+    );
+  } else {
+    return (
+      <>
+        <h1>No Schedules Found</h1>
+      </>
+    );
+  }
 }

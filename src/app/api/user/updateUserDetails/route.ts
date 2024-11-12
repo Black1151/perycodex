@@ -9,7 +9,7 @@ export async function PUT(req: NextRequest) {
   if (!uniqueId) {
     return NextResponse.json(
       { error: "User UUID not found in cookies." },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -30,7 +30,7 @@ export async function PUT(req: NextRequest) {
       const errorMessage = data?.error || "Failed to update user data.";
       return NextResponse.json(
         { error: errorMessage },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
@@ -39,7 +39,7 @@ export async function PUT(req: NextRequest) {
     console.error(error);
     return NextResponse.json(
       { error: error.message || "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

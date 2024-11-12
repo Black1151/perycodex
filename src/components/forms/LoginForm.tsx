@@ -47,7 +47,7 @@ export function LoginForm() {
         successMessage: "Successfully logged in!",
         errorMessage: "Incorrect user or password",
         redirectOnError: false,
-      }
+      },
     );
 
     if (result) {

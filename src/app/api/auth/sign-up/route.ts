@@ -22,13 +22,13 @@ export async function POST(req: NextRequest) {
         data?.error || "An error occurred during registration";
       return NextResponse.json(
         { error: errorMessage },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
     return NextResponse.json(
       { message: "Registration successful" },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error: any) {
     console.error(error);

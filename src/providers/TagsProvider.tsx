@@ -41,7 +41,7 @@ export function TagsProvider({ children }: TagsProviderProps) {
       setRecordDetails,
       setTags,
     }),
-    [recordIds, recordTypeId, tags]
+    [recordIds, recordTypeId, tags],
   );
 
   return (

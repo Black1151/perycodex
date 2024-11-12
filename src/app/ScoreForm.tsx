@@ -1,19 +1,27 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Box, Button, FormControl, FormLabel, HStack, Icon, Textarea } from '@chakra-ui/react';
-import { FaStar } from 'react-icons/fa';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  HStack,
+  Icon,
+  Textarea,
+} from "@chakra-ui/react";
+import { FaStar } from "react-icons/fa";
 
 export const ScoreForm = () => {
   const [score, setScore] = useState<number>(0);
-  const [comment, setComment] = useState<string>('');
+  const [comment, setComment] = useState<string>("");
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Simulate score submission
-    router.push('/scores');
+    router.push("/scores");
   };
 
   const handleScoreChange = (newScore: number) => {
@@ -32,7 +40,7 @@ export const ScoreForm = () => {
                 key={i}
                 boxSize={8}
                 cursor="pointer"
-                color={i < score ? 'teal.500' : 'gray.300'}
+                color={i < score ? "teal.500" : "gray.300"}
                 onClick={() => handleScoreChange(i + 1)}
               />
             ))}
@@ -46,7 +54,9 @@ export const ScoreForm = () => {
             placeholder="Enter your comment"
           />
         </FormControl>
-        <Button type="submit" colorScheme="teal">Submit</Button>
+        <Button type="submit" colorScheme="teal">
+          Submit
+        </Button>
       </form>
     </Box>
   );

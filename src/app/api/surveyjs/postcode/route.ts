@@ -1,11 +1,14 @@
-import {NextRequest, NextResponse} from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const postcode = searchParams.get('postcode');
+  const postcode = searchParams.get("postcode");
 
   if (!postcode) {
-    return NextResponse.json({ error: 'Please provide a postcode' }, { status: 400 });
+    return NextResponse.json(
+      { error: "Please provide a postcode" },
+      { status: 400 },
+    );
   }
 
   try {
@@ -22,6 +25,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(data);
   } catch (error) {
     // Handle any potential errors from the fetch call
-    return NextResponse.json({ error: 'Failed to fetch postcode data' }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch postcode data" },
+      { status: 500 },
+    );
   }
 }

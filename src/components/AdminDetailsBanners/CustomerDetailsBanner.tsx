@@ -83,7 +83,7 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
     "imageUrl",
     () => {
       router.refresh();
-    }
+    },
   );
 
   useEffect(() => {
@@ -97,7 +97,7 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
               "Content-Type": "application/json",
               Accept: "application/json",
             },
-          }
+          },
         );
 
         if (!response.ok) {
@@ -117,7 +117,7 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
         recordId: customer.id.toString(),
         recordParentId: customer.parentId?.toString() || "",
       },
-      "1"
+      "1",
     );
   }, []);
 

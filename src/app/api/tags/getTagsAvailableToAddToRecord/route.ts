@@ -13,7 +13,7 @@ export interface ErrorResponse {
 type ApiResponse = TagsResponse | ErrorResponse;
 
 export async function POST(
-  req: NextRequest
+  req: NextRequest,
 ): Promise<NextResponse<ApiResponse>> {
   try {
     const body = await req.json();
@@ -22,7 +22,7 @@ export async function POST(
     if (!customerId || !recordTypeId || !recordId) {
       return NextResponse.json(
         { error: "CustomerId, recordTypeId, and recordId are required." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -36,7 +36,7 @@ export async function POST(
         (await response.json())?.error || "Failed to fetch available tags.";
       return NextResponse.json(
         { error: errorMessage },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
@@ -50,7 +50,7 @@ export async function POST(
         error:
           error.message || "An error occurred while fetching available tags.",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

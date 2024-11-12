@@ -43,7 +43,7 @@ export const SiteDetailsBanner: React.FC<SiteDetailsBannerProps> = ({
               "Content-Type": "application/json",
               Accept: "application/json",
             },
-          }
+          },
         );
 
         if (!response.ok) {
@@ -64,7 +64,7 @@ export const SiteDetailsBanner: React.FC<SiteDetailsBannerProps> = ({
         recordId: site.id.toString(),
         recordParentId: site.customer?.uniqueId || "",
       },
-      "3"
+      "3",
     );
   }, []);
 

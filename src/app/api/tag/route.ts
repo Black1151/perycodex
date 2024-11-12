@@ -8,7 +8,7 @@ export async function PUT(req: NextRequest) {
     if (!uniqueId) {
       return NextResponse.json(
         { error: "Unique ID is required." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -25,7 +25,7 @@ export async function PUT(req: NextRequest) {
           responseData?.error || "Failed to update record - please try again.";
         return NextResponse.json(
           { error: errorMessage },
-          { status: response.status }
+          { status: response.status },
         );
       }
 
@@ -39,7 +39,7 @@ export async function PUT(req: NextRequest) {
     console.error(error);
     return NextResponse.json(
       { error: error.message || "An error occurred." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

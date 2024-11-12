@@ -1,6 +1,6 @@
 //// Currently unused
 
-import {NextRequest, NextResponse} from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import apiClient from "@/lib/apiClient";
 
@@ -30,22 +30,21 @@ export async function GET() {
     console.error("Error fetching user data:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
-
 export async function PUT(req: NextRequest) {
   try {
     // Parse the full JSON body
-    const {uniqueId, data} = await req.json();
+    const { uniqueId, data } = await req.json();
 
     // Check if the required uniqueId is present
     if (!uniqueId) {
       return NextResponse.json(
-          {error: "Unique ID is required."},
-          {status: 400}
+        { error: "Unique ID is required." },
+        { status: 400 },
       );
     }
 
@@ -60,24 +59,25 @@ export async function PUT(req: NextRequest) {
 
       if (!response.ok || response.status !== 200) {
         const errorMessage =
-            responseData?.error || "Failed to update record - please try again.";
+          responseData?.error || "Failed to update record - please try again.";
         return NextResponse.json(
-            {error: errorMessage},
-            {status: response.status}
+          { error: errorMessage },
+          { status: response.status },
         );
       }
 
       // Respond with success message
-      return NextResponse.json({message: "Record updated successfully"});
+      return NextResponse.json({ message: "Record updated successfully" });
     } catch (error: any) {
-      const errorMessage = error.message || "An error occurred during the update.";
-      return NextResponse.json({error: errorMessage}, {status: 500});
+      const errorMessage =
+        error.message || "An error occurred during the update.";
+      return NextResponse.json({ error: errorMessage }, { status: 500 });
     }
   } catch (error: any) {
     console.error(error);
     return NextResponse.json(
-        {error: error.message || "An error occurred."},
-        {status: 500}
+      { error: error.message || "An error occurred." },
+      { status: 500 },
     );
   }
 }

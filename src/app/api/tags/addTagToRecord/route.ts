@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     if (!recordId || !recordTypeId || !tagId) {
       return NextResponse.json(
         { error: "recordId, recordTypeId and tagId are required." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
       const errorMessage = errorData?.error || "Failed to add tag to record.";
       return NextResponse.json(
         { error: errorMessage },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     console.error(error);
     return NextResponse.json(
       { error: error.message || "An error occurred while adding the tag." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

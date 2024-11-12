@@ -56,7 +56,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
               return { ...layer, opacity: 1 };
             }
             return { ...layer, opacity: 0 };
-          })
+          }),
         );
       }, 10);
 
@@ -123,7 +123,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
             setToolId(carouselItems[currentIndex].toolId);
             setWorkflowId(carouselItems[currentIndex].toolWfId);
             router.push(
-              `${carouselItems[currentIndex].appUrl}?toolId=${carouselItems[currentIndex].toolId}&workflowId=${carouselItems[currentIndex].toolWfId}`
+              `${carouselItems[currentIndex].appUrl}?toolId=${carouselItems[currentIndex].toolId}&workflowId=${carouselItems[currentIndex].toolWfId}`,
             );
           }}
         >

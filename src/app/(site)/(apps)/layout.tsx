@@ -1,17 +1,11 @@
-import React, {ReactNode} from "react";
+import React, { ReactNode } from "react";
 
-
-export default async function Layout({
-                                         children,
-                                     }: {
-    children: ReactNode;
-}) {
-
-    return (
-        <>
-            {/*// <WorkflowLayout>*/}
-            {children}
-            {/*</WorkflowLayout>*/}
-        </>
-    );
+export default async function Layout({ children }: { children: ReactNode }) {
+  return (
+    <>
+      {/*// <WorkflowLayout>*/}
+      {children}
+      {/*</WorkflowLayout>*/}
+    </>
+  );
 }

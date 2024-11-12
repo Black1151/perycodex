@@ -16,7 +16,7 @@ const Carousel: React.FC<CarouselProps> = ({
 }) => {
   const { currentIndex, prevSlide, nextSlide, updateIndex } = useCarousel(
     carouselItems.length,
-    setParentIndex
+    setParentIndex,
   );
 
   const touchStartX = useRef(0);
@@ -31,7 +31,7 @@ const Carousel: React.FC<CarouselProps> = ({
         action();
       }
     },
-    [isTransitioning]
+    [isTransitioning],
   );
 
   const handleTouchStart = (e: React.TouchEvent) => {

@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
         headers: {
           Authorization: authToken ? `Bearer ${authToken}` : "",
         },
-      }
+      },
     );
 
     const data = await response.json();
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       const errorMessage = data?.error || "Failed to fetch user teams.";
       return NextResponse.json(
         { error: errorMessage },
-        { status: response.status }
+        { status: response.status },
       );
     }
 

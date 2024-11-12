@@ -153,7 +153,7 @@ const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({ DataPoints }) => {
             <Tooltip
               key={index}
               label={dataPoint.title}
-              bgColor={theme.colors.peryugonPink }
+              bgColor={theme.colors.peryugonPink}
               placement="top"
               isOpen={isTouchDevice ? activeTooltip === index : undefined}
             >
