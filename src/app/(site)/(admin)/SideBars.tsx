@@ -112,13 +112,6 @@ export default function SideBars() {
             onClick: () => router.push("/sites?siteType=external"),
             category: "External",
           },
-          {
-            label: "Test Happiness",
-            icon: <AddReaction sx={{ height: "100%", width: "100%" }} />,
-            onClick: () =>
-              router.push("/test-happiness-score?workflowId=1&toolId=1"),
-            category: "Test Survey",
-          },
         ];
       } else if (userRole === "PA") {
         return [
