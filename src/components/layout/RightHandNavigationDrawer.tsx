@@ -1,8 +1,7 @@
 "use client";
-
+import { useState } from "react";
 import { Box, VStack, useTheme, Divider, Text } from "@chakra-ui/react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
 import React from "react";
 import { RotatingChevron } from "./RotatingChevron";
 import SideBarMenuItem from "./SideBarMenuItem";
@@ -42,6 +41,65 @@ export function RightHandNavigationDrawer({
     }
   };
 
+  // Touch event state
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+  const [touchEndX, setTouchEndX] = useState<number | null>(null);
+  const [touchEndY, setTouchEndY] = useState<number | null>(null);
+  const [touchId, setTouchId] = useState<number | null>(null);
+
+  const minSwipeDistance = 50; // Adjust as needed
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    const touch = e.targetTouches[0];
+    setTouchId(touch.identifier);
+    setTouchEndX(null);
+    setTouchEndY(null);
+    setTouchStartX(touch.clientX);
+    setTouchStartY(touch.clientY);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (touchId === null) return;
+    const touch = Array.from(e.changedTouches).find(
+      (t) => t.identifier === touchId,
+    );
+    if (!touch) return;
+    setTouchEndX(touch.clientX);
+    setTouchEndY(touch.clientY);
+  };
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchId === null) return;
+    const touch = Array.from(e.changedTouches).find(
+      (t) => t.identifier === touchId,
+    );
+    if (!touch || touchStartX === null || touchStartY === null) return;
+
+    const deltaX = touchStartX - touch.clientX;
+    const deltaY = touchStartY - touch.clientY;
+    const absDeltaX = Math.abs(deltaX);
+    const absDeltaY = Math.abs(deltaY);
+
+    setTouchId(null);
+
+    if (absDeltaX < minSwipeDistance || absDeltaX < absDeltaY) {
+      return;
+    }
+
+    if (deltaX > 0) {
+      if (drawerState === "closed") {
+        setDrawerState("fully-open");
+      } else if (drawerState === "half-open") {
+        setDrawerState("fully-open");
+      }
+    } else {
+      if (drawerState !== "closed") {
+        setDrawerState("closed");
+      }
+    }
+  };
+
   return (
     <>
       <Box position="absolute" top={59} right={16} zIndex={1}>
@@ -51,6 +109,21 @@ export function RightHandNavigationDrawer({
           drawerState={drawerState}
         />
       </Box>
+
+      {/* Touch area when drawer is closed */}
+      {drawerState === "closed" && (
+        <Box
+          position="fixed"
+          top={0}
+          right={0}
+          bottom={0}
+          width="20px"
+          zIndex={5}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        />
+      )}
 
       <AnimatePresence>
         {drawerState !== "closed" && (
@@ -126,6 +199,18 @@ export function RightHandNavigationDrawer({
                 color={theme.colors.perygonPink}
               />
             </Box>
+
+            {/* Touch area to detect swipe to close */}
+            <Box
+              position="absolute"
+              top={0}
+              left={0}
+              bottom={0}
+              width="20px"
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEnd}
+            />
           </MotionBox>
         )}
       </AnimatePresence>

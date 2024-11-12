@@ -16,7 +16,7 @@ export function BottomNavigationMenu({ menuItems }: BottomNavigationMenuProps) {
       right={0}
       bg="white"
       boxShadow="xl"
-      zIndex={5}
+      zIndex={6}
       px={2}
       display={["block", "block", "none"]}
       borderBottom={`1px solid ${theme.colors.perygonPink}`}
