@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       console.error("Error occurred while sending the reset email.");
       return NextResponse.json(
         { error: data.error || "Failed to send reset email." },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
         error:
           error.message || "An error occurred while sending the reset email.",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

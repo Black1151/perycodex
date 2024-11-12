@@ -1,27 +1,27 @@
-import { useState } from "react"
+import { useState } from "react";
 
 const useCarousel = (
   itemsCount: number,
   setParentIndex?: (index: number) => void,
 ) => {
-  const [currentIndex, setCurrentIndex] = useState(1)
+  const [currentIndex, setCurrentIndex] = useState(1);
 
   const updateIndex = (index: number) => {
-    setCurrentIndex(index)
+    setCurrentIndex(index);
     if (setParentIndex) {
-      setParentIndex(index)
+      setParentIndex(index);
     }
-  }
+  };
 
   const prevSlide = () => {
-    updateIndex(currentIndex === 0 ? itemsCount - 1 : currentIndex - 1)
-  }
+    updateIndex(currentIndex === 0 ? itemsCount - 1 : currentIndex - 1);
+  };
 
   const nextSlide = () => {
-    updateIndex(currentIndex === itemsCount - 1 ? 0 : currentIndex + 1)
-  }
+    updateIndex(currentIndex === itemsCount - 1 ? 0 : currentIndex + 1);
+  };
 
-  return { currentIndex, prevSlide, nextSlide, updateIndex }
-}
+  return { currentIndex, prevSlide, nextSlide, updateIndex };
+};
 
-export default useCarousel
+export default useCarousel;

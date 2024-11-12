@@ -20,7 +20,7 @@ export async function PUT(req: NextRequest) {
         data?.error || "Verification failed - please try again.";
       return NextResponse.json(
         { error: errorMessage },
-        { status: response.status }
+        { status: response.status },
       );
     }
 

@@ -15,9 +15,8 @@ const apiClient = async (url: string, options: FetchOptions = {}) => {
   };
 
   if (authToken) {
-    (headers as Record<string, string>)[
-      "Authorization"
-    ] = `Bearer ${authToken}`;
+    (headers as Record<string, string>)["Authorization"] =
+      `Bearer ${authToken}`;
   }
 
   const fetchOptions: FetchOptions = {

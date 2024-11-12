@@ -42,7 +42,6 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
     }
   }, [countdown]);
 
-
   const logoutUser = async () => {
     try {
       const response = await fetch("/api/auth/sign-out", { method: "POST" });

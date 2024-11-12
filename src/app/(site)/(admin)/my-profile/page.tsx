@@ -1,38 +1,37 @@
-import {UserDetailsBanner} from "@/components/AdminDetailsBanners/UserDetailsBanner";
-import {userJson} from "@/components/surveyjs/forms/user";
-import {redirect} from "next/navigation";
+import { UserDetailsBanner } from "@/components/AdminDetailsBanners/UserDetailsBanner";
+import { userJson } from "@/components/surveyjs/forms/user";
+import { redirect } from "next/navigation";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import apiClient from "@/lib/apiClient";
-import {checkUserRole, getUser} from "@/lib/dal";
+import { checkUserRole, getUser } from "@/lib/dal";
 
 export default async function MyProfilePage() {
-    const user = await getUser();
-    await checkUserRole(`/my-profile`);
+  const user = await getUser();
+  await checkUserRole(`/my-profile`);
 
-    const {userUniqueId} = user;
+  const { userUniqueId } = user;
 
-    const res = await apiClient(`/user/findBy?uniqueId=${userUniqueId}`);
+  const res = await apiClient(`/user/findBy?uniqueId=${userUniqueId}`);
 
-    if (!res.ok) {
-        return redirect('/error');
-    }
+  if (!res.ok) {
+    return redirect("/error");
+  }
 
-    const pageUser = await res.json();
-    const pageUserData = pageUser.resource;
+  const pageUser = await res.json();
+  const pageUserData = pageUser.resource;
 
-    return (
-        <div>
-            <UserDetailsBanner surveyUser={pageUserData}/>
-            <SurveyComponent
-                surveyJson={userJson}
-                endpoint={`/user/${userUniqueId}`}
-                isNew={false}
-                excludeKeys={['imageUrl']}
-                dataset={pageUserData}
-                sjsPath={'admin'}
-                reloadPageOnSuccess={true}
-            />
-        </div>
-    );
+  return (
+    <div>
+      <UserDetailsBanner surveyUser={pageUserData} />
+      <SurveyComponent
+        surveyJson={userJson}
+        endpoint={`/user/${userUniqueId}`}
+        isNew={false}
+        excludeKeys={["imageUrl"]}
+        dataset={pageUserData}
+        sjsPath={"admin"}
+        reloadPageOnSuccess={true}
+      />
+    </div>
+  );
 }
-;

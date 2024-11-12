@@ -13,7 +13,7 @@ export interface ErrorResponse {
 type ApiResponse = TagsResponse | ErrorResponse;
 
 export async function GET(
-  req: NextRequest
+  req: NextRequest,
 ): Promise<NextResponse<ApiResponse>> {
   const { searchParams } = new URL(req.url);
 
@@ -24,12 +24,12 @@ export async function GET(
     if (!recordTypeId || !recordId) {
       return NextResponse.json(
         { error: "Both recordTypeId and recordId are required." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const response = await apiClient(
-      `/getAllView?view=vwTagAssociationsList&selectColumns=name,colour,tagId,tagAssocId&recordTypeId=${recordTypeId}&recordId=${recordId}`
+      `/getAllView?view=vwTagAssociationsList&selectColumns=name,colour,tagId,tagAssocId&recordTypeId=${recordTypeId}&recordId=${recordId}`,
     );
 
     if (!response.ok) {
@@ -37,7 +37,7 @@ export async function GET(
         (await response.json())?.error || "Failed to fetch tags.";
       return NextResponse.json(
         { error: errorMessage },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
@@ -48,7 +48,7 @@ export async function GET(
     console.error(error);
     return NextResponse.json(
       { error: error.message || "An error occurred while fetching tags." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

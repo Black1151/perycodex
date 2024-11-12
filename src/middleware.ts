@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
     response.cookies.delete("user_uuid");
     response.headers.set(
       "Cache-Control",
-      "no-store, no-cache, must-revalidate"
+      "no-store, no-cache, must-revalidate",
     );
     return response;
   }
@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
       response.cookies.delete("user_uuid");
       response.headers.set(
         "Cache-Control",
-        "no-store, no-cache, must-revalidate"
+        "no-store, no-cache, must-revalidate",
       );
       return response;
     }
@@ -36,7 +36,7 @@ export async function middleware(request: NextRequest) {
     const response = NextResponse.next();
     response.headers.set(
       "Cache-Control",
-      "no-store, no-cache, must-revalidate"
+      "no-store, no-cache, must-revalidate",
     );
     return response;
   } catch (error: any) {
@@ -45,7 +45,7 @@ export async function middleware(request: NextRequest) {
     response.cookies.delete("user_uuid");
     response.headers.set(
       "Cache-Control",
-      "no-store, no-cache, must-revalidate"
+      "no-store, no-cache, must-revalidate",
     );
     return response;
   }

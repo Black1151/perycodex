@@ -21,7 +21,7 @@ const SplashScreen: React.FC = () => {
         transition: { duration: 0.5 },
       });
       await new Promise((resolve) =>
-        setTimeout(resolve, delayBeforeStart * 1000)
+        setTimeout(resolve, delayBeforeStart * 1000),
       );
       await controls.start({
         rotate: [-90, 90],

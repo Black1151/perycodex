@@ -1,5 +1,5 @@
-import React from 'react';
-import {Flex, Text, VStack, keyframes} from "@chakra-ui/react";
+import React from "react";
+import { Flex, Text, VStack, keyframes } from "@chakra-ui/react";
 
 // Define the pulsing animation using Chakra UI's keyframes utility
 const pulse = keyframes`
@@ -18,35 +18,40 @@ const pulse = keyframes`
 `;
 
 const LoadingOverlay: React.FC = () => {
-    return (
-        <Flex
-            direction="column"
-            align="center"
-            justify="center"
-            width="full"
-            height="full"
-            py={20}
-            px={5}
+  return (
+    <Flex
+      direction="column"
+      align="center"
+      justify="center"
+      width="full"
+      height="full"
+      py={20}
+      px={5}
+    >
+      <VStack spacing={4}>
+        {/* The pulsing letter "P" */}
+        <Text
+          fontSize="6xl" // Size of the "P"
+          fontFamily="bonfire" // Using the Bonfire font
+          color="perygonPink" // Use the theme color for the letter
+          animation={`${pulse} 1.5s infinite`} // Apply the pulsing animation
         >
-            <VStack spacing={4}>
-                {/* The pulsing letter "P" */}
-                <Text
-                    fontSize="6xl" // Size of the "P"
-                    fontFamily="bonfire" // Using the Bonfire font
-                    color="perygonPink" // Use the theme color for the letter
-                    animation={`${pulse} 1.5s infinite`} // Apply the pulsing animation
-                >
-                    P
-                </Text>
-                <Text fontSize="2xl" fontWeight="bold" color="white" fontFamily="heading">
-                    Loading...
-                </Text>
-                <Text fontSize="lg" color="white" textAlign="center" fontFamily="body">
-                    Please wait while we fetch the data.
-                </Text>
-            </VStack>
-        </Flex>
-    );
-}
+          P
+        </Text>
+        <Text
+          fontSize="2xl"
+          fontWeight="bold"
+          color="white"
+          fontFamily="heading"
+        >
+          Loading...
+        </Text>
+        <Text fontSize="lg" color="white" textAlign="center" fontFamily="body">
+          Please wait while we fetch the data.
+        </Text>
+      </VStack>
+    </Flex>
+  );
+};
 
 export default LoadingOverlay;

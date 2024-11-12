@@ -1,65 +1,71 @@
-'use client'
+"use client";
 
-import React from 'react';
-import {Box, Flex, Text} from "@chakra-ui/react";
+import React from "react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import Link from "next/link";
-import {CustomCellRendererProps} from 'ag-grid-react';
-import {Sell} from "@mui/icons-material";
+import { CustomCellRendererProps } from "ag-grid-react";
+import { Sell } from "@mui/icons-material";
 
 // Define the interface for the component's props
 interface TagRendererProps extends CustomCellRendererProps {
-    nameField: string;  // Field name for dynamic Site Name
-    uniqueIdField: string;  // Field name for dynamic Site Unique ID
+  nameField: string; // Field name for dynamic Site Name
+  uniqueIdField: string; // Field name for dynamic Site Unique ID
 }
 
 const TagRenderer: React.FC<TagRendererProps> = ({
-                                                     node,
-                                                     nameField,
-                                                     uniqueIdField,
-                                                 }) => {
+  node,
+  nameField,
+  uniqueIdField,
+}) => {
+  const tag = node?.data;
 
-    const tag = node?.data;
+  if (!tag) {
+    return null;
+  }
 
-    if (!tag) {
-        return null;
-    }
+  // Access fields dynamically using the provided field names
+  const tagName = tag[nameField] ?? "No Tag";
+  const uniqueId = tag[uniqueIdField];
 
-    // Access fields dynamically using the provided field names
-    const tagName = tag[nameField] ?? 'No Tag';
-    const uniqueId = tag[uniqueIdField];
+  // Conditionally create a link only if uniqueId exists
+  const link = uniqueId ? `/tags/${uniqueId}` : null;
 
-    // Conditionally create a link only if uniqueId exists
-    const link = uniqueId ? `/tags/${uniqueId}` : null;
+  // Render the tag name as text (inside a link if the tag has a unique ID)
+  const content = (
+    <Flex
+      alignItems="center"
+      justifyContent="flex-start"
+      w="full"
+      h="full"
+      maxW="full"
+      gap={2}
+    >
+      <Box
+        flexShrink={0}
+        height="80%"
+        aspectRatio={1}
+        display="flex"
+        alignItems="center"
+        borderRadius={"full"}
+        bg={"gray.100"}
+        justifyContent="center"
+      >
+        <Sell sx={{ color: "var(--chakra-colors-perygonPink)" }} />
+      </Box>
+      <Text
+        fontSize={"14px"}
+        flex={1}
+        overflow="hidden"
+        textOverflow="ellipsis"
+        whiteSpace="nowrap"
+      >
+        {tagName}
+      </Text>
+    </Flex>
+  );
 
-    // Render the tag name as text (inside a link if the tag has a unique ID)
-    const content = (
-        <Flex alignItems="center" justifyContent="flex-start" w="full" h="full" maxW="full" gap={2}>
-            <Box
-                flexShrink={0}
-                height="80%"
-                aspectRatio={1}
-                display="flex"
-                alignItems="center"
-                borderRadius={'full'}
-                bg={'gray.100'}
-                justifyContent="center"
-            >
-                <Sell sx={{color: "var(--chakra-colors-perygonPink)"}}/>
-            </Box>
-            <Text fontSize={'14px'} flex={1} overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
-                {tagName}
-            </Text>
-        </Flex>
-    );
-
-    // Conditionally render the content inside a Link if uniqueId is present
-    return link ? (
-        <Link href={link}>
-            {content}
-        </Link>
-    ) : (
-        content
-    );
+  // Conditionally render the content inside a Link if uniqueId is present
+  return link ? <Link href={link}>{content}</Link> : content;
 };
 
 export default TagRenderer;

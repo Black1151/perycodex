@@ -9,14 +9,14 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - '5432:5432'
+      - "5432:5432"
   app:
     build: .
     container_name: nextjs
     environment:
       DATABASE_URL: postgres://superman:Rt7kQ32p@postgres:5432/happiness-score
     ports:
-      - '3000:3000'
+      - "3000:3000"
     depends_on:
       - postgres
     volumes:

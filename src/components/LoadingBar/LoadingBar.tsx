@@ -42,7 +42,9 @@ const LoadingBar = () => {
           size="lg"
           value={progress}
           css={css`
-            animation: ${fade} 1s ease-in-out, ${pulse} 1.5s infinite;
+            animation:
+              ${fade} 1s ease-in-out,
+              ${pulse} 1.5s infinite;
             & > div {
               background-color: #ff6699;
             }

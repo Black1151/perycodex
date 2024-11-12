@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
           Authorization: authToken ? `Bearer ${authToken}` : "",
         },
         body: JSON.stringify({ uniqueId }),
-      }
+      },
     );
     if (!response.ok) {
       const errorData = await response.json();

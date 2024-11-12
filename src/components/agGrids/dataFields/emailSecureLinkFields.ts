@@ -1,4 +1,4 @@
-import {ColDef} from "ag-grid-community";
+import { ColDef } from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
 import CustomerRenderer from "@/components/agGrids/CellRenderers/CustomerRenderer";
 import EmailScheduleRenderer from "@/components/agGrids/CellRenderers/EmailScheduleRenderer";
@@ -10,94 +10,93 @@ import BusinessProcessRenderer from "@/components/agGrids/CellRenderers/Business
 
 // Updated AgGrids fields
 export const emailSecureLinkFields: ColDef[] | any = [
-    {
-        field: "id",
-        headerName: "ID",
-        filter: "agNumberColumnFilter",
-        maxWidth: 128,
-        minWidth: 64,
+  {
+    field: "id",
+    headerName: "ID",
+    filter: "agNumberColumnFilter",
+    maxWidth: 128,
+    minWidth: 64,
+  },
+  {
+    field: "name",
+    headerName: "Name",
+    filter: "agMultiColumnFilter",
+    cellRenderer: EmailSecureLinkRenderer,
+    cellRendererParams: {
+      uniqueIdField: "id",
+      nameField: "name",
     },
-    {
-        field: 'name',
-        headerName: 'Name',
-        filter: "agMultiColumnFilter",
-        cellRenderer: EmailSecureLinkRenderer,
-        cellRendererParams: {
-            uniqueIdField: 'id',
-            nameField: 'name',
-        }
+  },
+  {
+    field: "toolName",
+    headerName: "Tool Name",
+    filter: "agMultiColumnFilter",
+    cellRenderer: ToolConfigRenderer,
+    cellRendererParams: {
+      uniqueIdField: "toolId",
+      nameField: "toolName",
     },
-    {
-        field: 'toolName',
-        headerName: 'Tool Name',
-        filter: "agMultiColumnFilter",
-        cellRenderer: ToolConfigRenderer,
-        cellRendererParams: {
-            uniqueIdField: 'toolId',
-            nameField: 'toolName',
-        }
+  },
+  {
+    field: "wfName",
+    headerName: "Workflow",
+    filter: "agMultiColumnFilter",
+    cellRenderer: WorkflowRenderer,
+    cellRendererParams: {
+      uniqueIdField: "workflowId",
+      nameField: "wfName",
     },
-    {
-        field: 'wfName',
-        headerName: 'Workflow',
-        filter: "agMultiColumnFilter",
-        cellRenderer: WorkflowRenderer,
-        cellRendererParams: {
-            uniqueIdField: 'workflowId',
-            nameField: 'wfName',
-        }
+  },
+  {
+    field: "bpName",
+    headerName: "Business Process",
+    filter: "agMultiColumnFilter",
+    cellRenderer: BusinessProcessRenderer,
+    cellRendererParams: {
+      uniqueIdField: "businessProcessId",
+      nameField: "bpName",
     },
-    {
-        field: 'bpName',
-        headerName: 'Business Process',
-        filter: "agMultiColumnFilter",
-        cellRenderer: BusinessProcessRenderer,
-        cellRendererParams: {
-            uniqueIdField: 'businessProcessId',
-            nameField: 'bpName',
-        }
+  },
+  {
+    field: "actionType",
+    headerName: "Action Type",
+    filter: "agMultiColumnFilter",
+  },
+  {
+    field: "expirationDate",
+    headerName: "Expiration",
+    filter: "agMultiColumnFilter",
+  },
+  {
+    field: "toUserId",
+    headerName: "User",
+    filter: "agMultiColumnFilter",
+    cellRenderer: UserRenderer,
+    cellRendererParams: {
+      uniqueIdField: "userUniqueId",
+      nameField: "userFullName",
+      imageUrlField: "userImageUrl",
     },
-    {
-        field: "actionType",
-        headerName: "Action Type",
-        filter: "agMultiColumnFilter",
+  },
+  {
+    field: "toCustomerId",
+    headerName: "Customer",
+    filter: "agMultiColumnFilter",
+    cellRenderer: CustomerRenderer,
+    cellRendererParams: {
+      uniqueIdField: "custUniqueId",
+      nameField: "custName",
+      imageUrlField: "custImageUrl",
     },
-    {
-        field: "expirationDate",
-        headerName: "Expiration",
-        filter: "agMultiColumnFilter",
+  },
+  {
+    field: "isActive",
+    headerName: "",
+    cellRenderer: ActionButtonRenderer,
+    cellRendererParams: {
+      redirectUrl: "/email-secure-link",
+      updateUrl: "/api/emailSecureLink/",
+      idField: "id",
     },
-    {
-        field: 'toUserId',
-        headerName: 'User',
-        filter: "agMultiColumnFilter",
-        cellRenderer: UserRenderer,
-        cellRendererParams: {
-            uniqueIdField: 'userUniqueId',
-            nameField: 'userFullName',
-            imageUrlField: 'userImageUrl'
-        }
-    },
-    {
-        field: 'toCustomerId',
-        headerName: 'Customer',
-        filter: "agMultiColumnFilter",
-        cellRenderer: CustomerRenderer,
-        cellRendererParams: {
-            uniqueIdField: 'custUniqueId',
-            nameField: 'custName',
-            imageUrlField: 'custImageUrl'
-        }
-    },
-    {
-        field: 'isActive',
-        headerName: '',
-        cellRenderer: ActionButtonRenderer,
-        cellRendererParams: {
-            redirectUrl: '/email-secure-link',
-            updateUrl: '/api/emailSecureLink/',
-            idField: 'id',
-        }
-    },
+  },
 ];
-

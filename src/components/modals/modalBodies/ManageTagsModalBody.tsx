@@ -57,7 +57,7 @@ export function ManageTagsModalBody({
         body: { customerId, recordTypeId, recordId },
         errorMessage: "Failed to fetch available tags",
         redirectOnError: false,
-      }
+      },
     );
 
     if (data) {
@@ -103,7 +103,7 @@ export function ManageTagsModalBody({
         {
           method: "GET",
           redirectOnError: false,
-        }
+        },
       );
 
       if (newTagsResponse) {
@@ -135,7 +135,7 @@ export function ManageTagsModalBody({
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       const data = await response.json();
@@ -150,7 +150,7 @@ export function ManageTagsModalBody({
         {
           method: "GET",
           redirectOnError: false,
-        }
+        },
       );
 
       if (newTagsResponse) {

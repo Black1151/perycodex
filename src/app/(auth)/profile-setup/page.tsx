@@ -34,7 +34,7 @@ export default async function ProfileSetup() {
           Authorization: `Bearer ${authToken}`,
         },
         body: JSON.stringify({ uniqueId }),
-      }
+      },
     );
     const profileCheckResponse = await profileCheckFetch.json();
     isProfileRegistered = profileCheckResponse.resource.isProfileRegistered;
@@ -63,7 +63,7 @@ export default async function ProfileSetup() {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
-      }
+      },
     );
 
     const fetchSites = fetch(
@@ -73,7 +73,7 @@ export default async function ProfileSetup() {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
-      }
+      },
     );
 
     const [

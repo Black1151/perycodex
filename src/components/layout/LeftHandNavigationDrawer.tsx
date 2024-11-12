@@ -43,14 +43,17 @@ export function LeftHandNavigationDrawer({
   };
 
   const groupedItems =
-    menuItems?.reduce((acc, item) => {
-      const category = item.category || "uncategorized";
-      if (!acc[category]) {
-        acc[category] = [];
-      }
-      acc[category].push(item);
-      return acc;
-    }, {} as Record<string, MenuItem[]>) || {};
+    menuItems?.reduce(
+      (acc, item) => {
+        const category = item.category || "uncategorized";
+        if (!acc[category]) {
+          acc[category] = [];
+        }
+        acc[category].push(item);
+        return acc;
+      },
+      {} as Record<string, MenuItem[]>,
+    ) || {};
 
   return (
     <>
@@ -154,7 +157,7 @@ export function LeftHandNavigationDrawer({
                           />
                         )}
                       </React.Fragment>
-                    )
+                    ),
                   )}
                   {!menuItems && drawerState === "fully-open" && (
                     <Text>No menu items supplied</Text>
@@ -165,12 +168,13 @@ export function LeftHandNavigationDrawer({
 
             <Box
               position="absolute"
-              bottom={55}
-              left={drawerState === "fully-open" ? 160 : 0}
-              zIndex={6}
+              top={45}
+              right={drawerState === "fully-open" ? 49 : 46}
+              // zIndex={6}
             >
               <RotatingChevron
                 placement="right"
+                size={drawerState === "fully-open" ? "2rem" : "1.5rem"}
                 onClick={toggleDrawer}
                 drawerState={drawerState}
                 color={theme.colors.perygonPink}

@@ -44,7 +44,7 @@ export default async function MainLayout({
     const [fetchUserInfo, fetchUserMetadata] = await Promise.all([
       apiClient(
         `/getView?view=vwLoggedInUserIdentity&userUniqueId=${uniqueId}&selectColumns=userImageUrl,firstName,role,customerId`,
-        { cache: "no-store" }
+        { cache: "no-store" },
       ),
       apiClient(`/getUserMetadata`, {
         method: "POST",

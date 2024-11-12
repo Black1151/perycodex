@@ -3,14 +3,14 @@ import { siteJson } from "@/components/surveyjs/forms/site";
 import { SiteDetailsBanner } from "@/components/AdminDetailsBanners/SiteDetailsBanner";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import apiClient from "@/lib/apiClient";
-import {checkUserRole} from "@/lib/dal";
+import { checkUserRole } from "@/lib/dal";
 
 export default async function SitesDetailPage({
-                                                  params,
-                                              }: {
-    params: { uniqueId: string };
+  params,
+}: {
+  params: { uniqueId: string };
 }) {
-    await checkUserRole(`/sites/${params.uniqueId}`);
+  await checkUserRole(`/sites/${params.uniqueId}`);
 
   const res = await apiClient(`/site/findBy?uniqueId=${params.uniqueId}`);
 

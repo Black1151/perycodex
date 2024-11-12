@@ -84,7 +84,7 @@ export function ProfileCompletionForm({
   } = useForm<ProfileCompletionFormInputs>();
 
   const handleFormSubmit: SubmitHandler<ProfileCompletionFormInputs> = async (
-    formData
+    formData,
   ) => {
     const updatedData = {
       ...formData,
@@ -100,7 +100,7 @@ export function ProfileCompletionForm({
           successMessage: "Profile updated successfully",
           errorMessage: "Try again",
           redirectOnError: false,
-        }
+        },
       );
 
       if (res?.userData?.resource?.isProfileRegistered) {
@@ -118,7 +118,7 @@ export function ProfileCompletionForm({
   const handleDepartmentChange = async (departmentId: string | number) => {
     setValue(
       "departmentId",
-      typeof departmentId === "string" ? departmentId : departmentId.toString()
+      typeof departmentId === "string" ? departmentId : departmentId.toString(),
     );
     setIsTeamsLoading(true);
 
@@ -130,7 +130,7 @@ export function ProfileCompletionForm({
       });
 
       const transformedTeams = transformTeams(
-        (data as { resource: TeamFromBE[] }).resource || []
+        (data as { resource: TeamFromBE[] }).resource || [],
       );
 
       setTeamOptions(transformedTeams);

@@ -46,7 +46,7 @@ export function PasswordResetForm({ token }: ActivateAccountFormProps) {
   } = useForm<ActivateAccountFormInputs>();
 
   const handleFormSubmit: SubmitHandler<ActivateAccountFormInputs> = async (
-    data
+    data,
   ) => {
     const result = await fetchClient("/api/auth/password-reset", {
       method: "POST",

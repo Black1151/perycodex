@@ -33,7 +33,7 @@ export function ActivateAccountForm({ token }: ActivateAccountFormProps) {
   } = useForm<ActivateAccountFormInputs>();
 
   const handleFormSubmit: SubmitHandler<ActivateAccountFormInputs> = async (
-    data
+    data,
   ) => {
     const result = await fetchClient("/api/auth/activate-account", {
       method: "PUT",

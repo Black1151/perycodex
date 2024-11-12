@@ -1,6 +1,7 @@
 @font-face {
   font-family: "Bonfire";
-  src: url("/fonts/Bonfire.otf") format("opentype"),
+  src:
+    url("/fonts/Bonfire.otf") format("opentype"),
     url("/fonts/Bonfire.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;

@@ -1,23 +1,17 @@
-'use client';
+"use client";
 
-import React from 'react';
-import {useWorkflow} from "@/providers/WorkflowProvider";
-import {useRouter} from "next/navigation";
+import React from "react";
+import { useWorkflow } from "@/providers/WorkflowProvider";
+import { useRouter } from "next/navigation";
 
-const WorkflowLayout = ({children,}: { children: React.ReactNode }) => {
-        const {toolId, workflowId} = useWorkflow();
-        const router = useRouter();
+const WorkflowLayout = ({ children }: { children: React.ReactNode }) => {
+  const { toolId, workflowId } = useWorkflow();
+  const router = useRouter();
 
-        if (!workflowId || !toolId) {
-            router.push('/');
-        }
+  if (!workflowId || !toolId) {
+    router.push("/");
+  }
 
-        return (
-            <>
-                {children}
-            </>
-        );
-    }
-;
-
+  return <>{children}</>;
+};
 export default WorkflowLayout;
