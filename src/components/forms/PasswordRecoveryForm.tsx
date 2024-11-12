@@ -1,5 +1,3 @@
-// PasswordRecoveryForm.tsx (Client Component)
-
 "use client";
 
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -33,7 +31,7 @@ export function PasswordRecoveryForm({
       onSubmit={handleSubmit(onSubmit)}
       style={{ width: "100%", maxWidth: "md" }}
     >
-      <VStack spacing={4} w={500} p={6}>
+      <VStack spacing={4} w="100%">
         <VStack gap="70px" w={300}>
           <InputField
             name="email"

@@ -35,7 +35,7 @@ export function SignUpForm({ onSubmit, isSubmitting }: SignUpFormProps) {
       onSubmit={handleSubmit(handleFormSubmit)}
       style={{ width: "100%", maxWidth: "md" }}
     >
-      <VStack spacing={4} w={500} p={6}>
+      <VStack spacing={4} w="100%">
         <VStack w={300}>
           <InputField
             name="email"
