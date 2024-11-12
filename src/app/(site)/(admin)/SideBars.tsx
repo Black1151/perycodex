@@ -230,7 +230,7 @@ export default function SideBars() {
       }
       return [];
     },
-    [router]
+    [router],
   );
 
   const generateRightSidebarItemsDrawer = useMemo(() => {
@@ -281,7 +281,7 @@ export default function SideBars() {
 
   const leftMenuItems = useMemo(
     () => generateLeftSidebarItemsDrawer(user?.role || ""),
-    [user?.role]
+    [user?.role],
   );
 
   const rightMenuItems = generateRightSidebarItemsDrawer;
@@ -295,7 +295,7 @@ export default function SideBars() {
 
   return (
     <>
-      {!["/my-profile", "/my-company"].includes(pathname) && (
+      {!["/my-profile", "/my-company", "/activity"].includes(pathname) && (
         <LeftHandNavigationDrawer
           menuItems={leftMenuItems}
           defaultDrawerState={"half-open"}
