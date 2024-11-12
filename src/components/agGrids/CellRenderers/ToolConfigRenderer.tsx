@@ -4,7 +4,7 @@ import React from "react";
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { CustomCellRendererProps } from "ag-grid-react";
-import { Construction } from "@mui/icons-material";
+import { Construction } from "@mui/icons-material"; // Define the interface for the component's props
 
 // Define the interface for the component's props
 interface ToolConfigRendererProps extends CustomCellRendererProps {

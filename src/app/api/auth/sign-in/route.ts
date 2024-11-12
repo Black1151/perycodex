@@ -4,6 +4,12 @@ import apiClient from "@/lib/apiClient";
 export async function POST(req: NextRequest) {
   const { email, password } = await req.json();
 
+  // Extract searchParams from the incoming request
+  const { searchParams } = req.nextUrl;
+
+  // Extract `searchParams` from the request URL
+  const secureLink = req.nextUrl.searchParams.get("l");
+
   try {
     const response = await apiClient("/authentication/login", {
       method: "POST",
@@ -31,6 +37,8 @@ export async function POST(req: NextRequest) {
       redirectUrl += "/profile-setup";
     } else if (role === "PA") {
       redirectUrl += "/customers";
+    } else if (secureLink) {
+      redirectUrl += `/link?l=${secureLink}`;
     }
 
     const res = NextResponse.json({ redirectUrl });

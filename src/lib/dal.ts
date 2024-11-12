@@ -47,6 +47,7 @@ interface User {
   customerParentName?: string;
   customerIsActive?: boolean;
   userImageUrl?: string;
+  teamManagerCount?: number;
 }
 
 const roleBasedRoutes: { [key: string]: string[] } = {
@@ -73,6 +74,7 @@ const roleBasedRoutes: { [key: string]: string[] } = {
     "/users/create",
     "/my-company",
     "/my-profile",
+    "/activity",
   ],
   PA: [
     "/customers",
@@ -129,10 +131,10 @@ const roleBasedRoutes: { [key: string]: string[] } = {
     "/survey-test",
     "/grid-test",
   ],
-  CU: ["/my-profile", "/my-company"],
-  CM: ["/my-profile", "/my-company"],
-  CL: ["/my-profile", "/my-company"],
-  CS: ["/my-profile", "/my-company"],
+  CU: ["/my-profile", "/my-company", "/activity"],
+  CM: ["/my-profile", "/my-company", "/activity"],
+  CL: ["/my-profile", "/my-company", "/activity"],
+  CS: ["/my-profile", "/my-company", "/activity"],
   // Add more roles and routes as needed
 };
 
@@ -199,6 +201,7 @@ export const getUser = async (): Promise<User> => {
     throw error; // Optional: re-throw if additional handling is needed
   }
 };
+
 
 export async function checkUserRole(targetPathname: string): Promise<boolean> {
   const user = await getUser();

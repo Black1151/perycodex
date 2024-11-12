@@ -123,7 +123,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
             setToolId(carouselItems[currentIndex].toolId);
             setWorkflowId(carouselItems[currentIndex].toolWfId);
             router.push(
-              `${carouselItems[currentIndex].appUrl}?toolId=${carouselItems[currentIndex].toolId}&workflowId=${carouselItems[currentIndex].toolWfId}`,
+              `${carouselItems[currentIndex].appUrl}?toolId=${carouselItems[currentIndex].toolId}&wfId=${carouselItems[currentIndex].toolWfId}`,
             );
           }}
         >
