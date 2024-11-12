@@ -14,6 +14,7 @@ interface RotatingChevronProps {
     right?: number | string;
     bottom?: number | string;
   };
+  size?: string;
 }
 
 const MotionBox = motion(Box);
@@ -23,6 +24,7 @@ export const RotatingChevron: React.FC<RotatingChevronProps> = ({
   onClick,
   color = "white",
   position,
+  size = "3rem",
 }) => {
   const [isTouch, setIsTouch] = useState(false);
   const [rotation, setRotation] = useState(0);
@@ -73,9 +75,9 @@ export const RotatingChevron: React.FC<RotatingChevronProps> = ({
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
       >
         {placement === "left" ? (
-          <ChevronLeft style={{ fontSize: "3rem" }} />
+          <ChevronLeft style={{ fontSize: size }} />
         ) : (
-          <ChevronRight style={{ fontSize: "3rem" }} />
+          <ChevronRight style={{ fontSize: size }} />
         )}
       </MotionBox>
     </MotionBox>

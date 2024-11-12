@@ -106,7 +106,6 @@ export function RightHandNavigationDrawer({
                         )}
                       </React.Fragment>
                     ))}
-                  {/* If no menu items */}
                   {!menuItems && drawerState === "fully-open" && (
                     <Text>No menu items supplied</Text>
                   )}
@@ -116,10 +115,11 @@ export function RightHandNavigationDrawer({
 
             <Box
               position="absolute"
-              bottom={55}
-              right={drawerState === "fully-open" ? 220 : 16}
+              top={69}
+              left={drawerState === "fully-open" ? -18 : -21}
             >
               <RotatingChevron
+                size={drawerState === "fully-open" ? "2rem" : "1.5rem"}
                 placement="left"
                 onClick={toggleDrawer}
                 drawerState={drawerState}

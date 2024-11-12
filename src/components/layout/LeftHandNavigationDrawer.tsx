@@ -168,12 +168,13 @@ export function LeftHandNavigationDrawer({
 
             <Box
               position="absolute"
-              bottom={55}
-              left={drawerState === "fully-open" ? 160 : 0}
+              top={45}
+              right={drawerState === "fully-open" ? 49 : 41}
               zIndex={6}
             >
               <RotatingChevron
                 placement="right"
+                size={drawerState === "fully-open" ? "2rem" : "1.5rem"}
                 onClick={toggleDrawer}
                 drawerState={drawerState}
                 color={theme.colors.perygonPink}
