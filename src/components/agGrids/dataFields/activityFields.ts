@@ -1,10 +1,11 @@
 "use client";
 
-import { ColDef } from "ag-grid-community";
+import { ColDef, ValueFormatterParams } from "ag-grid-community";
 import ActivityButtonRenderer from "@/components/agGrids/CellRenderers/ActivityButtonRenderer";
 import ToolConfigRenderer from "@/components/agGrids/CellRenderers/ToolConfigRenderer";
 import StatusBadgeRenderer from "@/components/agGrids/CellRenderers/StatusBadgeRenderer";
 import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
+import { dateValueFormatter } from "@/components/agGrids/ValueFormatters/dateValueFormatter";
 
 export const activityFields: ColDef[] = [
   {
@@ -16,7 +17,7 @@ export const activityFields: ColDef[] = [
   },
   {
     field: "toolName",
-    headerName: "App Name",
+    headerName: "Tool Name",
     filter: "agTextColumnFilter",
     minWidth: 200,
     cellRenderer: ToolConfigRenderer,
@@ -49,9 +50,26 @@ export const activityFields: ColDef[] = [
     cellRenderer: StatusBadgeRenderer,
   },
   {
+    field: "wfInstStartDate",
+    headerName: "Start Date",
+    filter: "agMultiColumnFilter",
+    valueFormatter: (params: ValueFormatterParams) => {
+      return dateValueFormatter(params.value);
+    },
+  },
+  {
+    field: "wfInstCompDate",
+    headerName: "Complete Date",
+    filter: "agMultiColumnFilter",
+    valueFormatter: (params: ValueFormatterParams) => {
+      return dateValueFormatter(params.value);
+    },
+  },
+  {
     field: "noStagesPossible",
     headerName: "Possible Stages",
     filter: "agMultiColumnFilter",
+    hide: true,
   },
   {
     field: "noStagesPending",
@@ -68,16 +86,7 @@ export const activityFields: ColDef[] = [
     headerName: "Completed Stages",
     filter: "agMultiColumnFilter",
   },
-  {
-    field: "wfInstStartDate",
-    headerName: "Start Date",
-    filter: "agMultiColumnFilter",
-  },
-  {
-    field: "wfInstCompDate",
-    headerName: "Complete Date",
-    filter: "agMultiColumnFilter",
-  },
+
   {
     field: "isActive",
     headerName: "Actions",
