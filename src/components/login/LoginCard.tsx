@@ -23,13 +23,14 @@ export function LoginCard({
         bg="white"
         spacing={4}
         align="center"
-        p={4}
+        p={[6, 8]}
         overflow="hidden"
         borderRadius="md"
         boxShadow="md"
         position="relative"
         height={height}
         justifyContent="flex-end"
+        width={["100%", 480]}
       >
         <Image
           src="/perygonSpeechBubble.png"
@@ -41,7 +42,7 @@ export function LoginCard({
           objectPosition="bottom"
         />
         {titleComponent}
-        <Box width="full">{children}</Box>
+        <Box width="100%">{children}</Box>
       </VStack>
     </SpringScale>
   );

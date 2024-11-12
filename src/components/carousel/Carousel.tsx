@@ -1,11 +1,5 @@
-import React, { useRef, useCallback, useState, useEffect } from "react";
-import {
-  Box,
-  Flex,
-  HStack,
-  VStack,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import React, { useRef, useCallback, useState } from "react";
+import { Box, HStack, VStack, useBreakpointValue } from "@chakra-ui/react";
 import CarouselNavigationButton from "./CarouselNavigationButton";
 import CarouselDots from "./CarouselDots";
 import CarouselItem, { CarouselItemProps } from "./CarouselItem";
@@ -28,12 +22,6 @@ const Carousel: React.FC<CarouselProps> = ({
   const touchStartX = useRef(0);
   const touchStartTime = useRef(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-
-  useEffect(() => {
-    console.log(currentIndex);
-  }, [currentIndex]);
-
-  // Determine the number of items to show based on screen size
   const itemsToShow = useBreakpointValue({ base: 3, md: 5 }) ?? 3;
 
   const debouncedSlide = useCallback(
@@ -56,9 +44,8 @@ const Carousel: React.FC<CarouselProps> = ({
     const movementX = touchStartX.current - touchEndX;
     const movementTime = Date.now() - touchStartTime.current;
 
-    // Determine if it's a swipe
     if (Math.abs(movementX) > 50 && movementTime < 500) {
-      e.preventDefault(); // Prevent default only on swipe
+      e.preventDefault();
       if (movementX > 0) {
         debouncedSlide(nextSlide);
       } else {
