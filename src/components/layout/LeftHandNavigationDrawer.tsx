@@ -168,8 +168,8 @@ export function LeftHandNavigationDrawer({
 
             <Box
               position="absolute"
-              top={45}
-              right={drawerState === "fully-open" ? 49 : 46}
+              top={58}
+              right={drawerState === "fully-open" ? 31 : 6}
               // zIndex={6}
             >
               <RotatingChevron

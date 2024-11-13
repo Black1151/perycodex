@@ -59,11 +59,11 @@ export const RotatingChevron: React.FC<RotatingChevronProps> = ({
       display="flex"
       alignItems="center"
       justifyContent="center"
-      boxSize="60px"
+      // boxSize="60px"
       opacity={0.7}
       whileHover={{
         opacity: 1,
-        scale: 1.4,
+        scale: 1,
         transition: { type: "spring", stiffness: 300, damping: 20 },
       }}
       whileTap={{ scale: 1.2 }}

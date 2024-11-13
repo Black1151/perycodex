@@ -115,8 +115,8 @@ export function RightHandNavigationDrawer({
 
             <Box
               position="absolute"
-              top={69}
-              left={drawerState === "fully-open" ? -18 : -19}
+              top={83}
+              left={drawerState === "fully-open" ? 0 : -0.5}
             >
               <RotatingChevron
                 size={drawerState === "fully-open" ? "2rem" : "1.5rem"}
