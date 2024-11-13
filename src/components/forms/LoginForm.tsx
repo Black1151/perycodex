@@ -13,7 +13,7 @@ import {
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
 import { InputField } from "./InputField";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { emailValidation } from "./validationSchema/validationSchema";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { useEffect } from "react";
@@ -26,6 +26,9 @@ export type LoginFormInputs = {
 export function LoginForm() {
   const theme = useTheme();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const secureLink = searchParams.get("l");
 
   useEffect(() => {
     router.refresh();
@@ -39,16 +42,17 @@ export function LoginForm() {
   } = useForm<LoginFormInputs>();
 
   const handleFormSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
-    const result: { redirectUrl: string } | null = await fetchClient(
-      "/api/auth/sign-in",
-      {
-        method: "POST",
-        body: data,
-        successMessage: "Successfully logged in!",
-        errorMessage: "Incorrect user or password",
-        redirectOnError: false,
-      },
-    );
+    const endpoint = secureLink
+      ? `/api/auth/sign-in?l=${secureLink}`
+      : "/api/auth/sign-in";
+
+    const result: { redirectUrl: string } | null = await fetchClient(endpoint, {
+      method: "POST",
+      body: data,
+      successMessage: "Successfully logged in!",
+      errorMessage: "Incorrect user or password",
+      redirectOnError: false,
+    });
 
     if (result) {
       router.push(result.redirectUrl);

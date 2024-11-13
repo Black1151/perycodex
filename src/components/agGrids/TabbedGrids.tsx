@@ -2,12 +2,12 @@
 
 import React from "react";
 import {
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
   Box,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   Text,
 } from "@chakra-ui/react";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
@@ -28,12 +28,34 @@ interface TabbedDataGridProps {
 }
 
 const TabbedGrids: React.FC<TabbedDataGridProps> = ({ dataSources }) => {
+  if (dataSources.length === 1) {
+    // Render only the single panel without tabs
+    const source = dataSources[0];
+    return (
+      <Box borderRadius="md" mt={4}>
+        <DataGridComponent
+          data={source.data}
+          initialFields={source.fields}
+          createNewUrl={source.createNewUrl}
+          createNewUrlButtonText={source.createNewUrlButtonText}
+          isModalEnabled={source.isModalEnabled}
+          openModalComponent={source.openModalComponent}
+        />
+      </Box>
+    );
+  }
+
+  // Render tabs with panels if there are multiple data sources
   return (
     <Box borderRadius="md" mt={4}>
       <Tabs variant="enclosed" size="md" isFitted>
         <TabList>
           {dataSources.map((source, index) => (
-            <Tab key={index} _selected={{ color: "white", bg: "perygonPink" }}>
+            <Tab
+              key={index}
+              color={"white"}
+              _selected={{ color: "white", bg: "#FFFFFF44" }}
+            >
               {source.title}
               <Text as="sup" size="sm">
                 {source.data.length}

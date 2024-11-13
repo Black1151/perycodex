@@ -95,7 +95,7 @@ export default function WorkflowLayout({ stages }: WorkflowLayoutProps) {
           isNew={true}
           formSubmission="workflow"
           layout="happiness"
-          redirectUrl={`/happiness-score?workflowId=1&toolId=1`}
+          redirectUrl={`/happiness-score?wfId=1&toolId=1`}
           jsPath={currentStage.jsAdditionalFileUrl}
           cssPath={currentStage.cssThemeFileUrl}
           sjsPath={currentStage.sjsThemeFileUrl}

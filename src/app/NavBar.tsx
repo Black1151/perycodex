@@ -2,6 +2,7 @@
 
 import {
   Box,
+  Flex,
   HStack,
   Image,
   Menu,
@@ -10,7 +11,6 @@ import {
   MenuList,
   Text,
   useTheme,
-  Flex,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -22,6 +22,7 @@ import {
   Person,
   Person as PersonIcon,
   Settings as SettingsIcon,
+  Timeline,
 } from "@mui/icons-material";
 import React from "react";
 
@@ -90,6 +91,11 @@ export const NavBar: React.FC<NavBarProps> = ({
         label: "My Company",
         icon: <BusinessIcon />,
         onClick: () => router.push("/my-company"),
+      },
+      {
+        label: "Activity",
+        icon: <Timeline />,
+        onClick: () => router.push("/activity"),
       },
       {
         label: "Change Password",
