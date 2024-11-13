@@ -3,6 +3,7 @@ import { Survey } from "survey-react-ui";
 import { Flex } from "@chakra-ui/react";
 import useSurveyNavigation from "@/components/surveyjs/useSurveyNavigation";
 import { HappinessLayoutProps } from "@/components/surveyjs/SurveyProps";
+import SurveyNavigationGuard from "@/components/surveyjs/SurveyNavigationGuard";
 
 const HappinessLayout: React.FC<HappinessLayoutProps> = ({
   model,
@@ -26,18 +27,24 @@ const HappinessLayout: React.FC<HappinessLayoutProps> = ({
   } = useSurveyNavigation(model, dataset);
 
   return (
-    <Flex
-      w="full"
-      justify="center"
-      align="center"
-      bg={"perygonPink"}
-      height={"full"}
-      width={"full"}
-      direction="column"
-      zIndex={101}
+    <SurveyNavigationGuard
+      isEditing={isEditing}
+      setToDisplayMode={switchToDisplayMode}
+      setToEditMode={switchToEditMode}
     >
-      <Survey model={model} />
-    </Flex>
+      <Flex
+        w="full"
+        justify="center"
+        align="center"
+        bg={"perygonPink"}
+        height={"full"}
+        width={"full"}
+        direction="column"
+        zIndex={101}
+      >
+        <Survey model={model} />
+      </Flex>
+    </SurveyNavigationGuard>
   );
 };
 
