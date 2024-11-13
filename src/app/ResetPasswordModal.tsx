@@ -1,0 +1,53 @@
+"use client";
+
+import React from "react";
+import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
+import { useUser } from "@/providers/UserProvider";
+import { useFetchClient } from "@/hooks/useFetchClient";
+
+const ResetPasswordModal = ({
+  openState,
+  handleOnClose,
+}: {
+  openState: boolean;
+  handleOnClose: () => void;
+}) => {
+  const { user } = useUser();
+  const { fetchClient } = useFetchClient();
+
+  const handlePasswordReset = async () => {
+    const data = {
+      email: user?.email,
+    };
+
+    const result = await fetchClient("/api/auth/password-recovery", {
+      method: "POST",
+      body: data,
+      redirectOnError: false,
+      successMessage: "A password reset email has been sent to you.",
+      errorMessage: "Looks like something went wrong, please try again.",
+    });
+
+    if (result) {
+      handleOnClose();
+    }
+  };
+
+  return (
+    <>
+      <SurveyModal
+        isOpen={openState}
+        onClose={handleOnClose}
+        onConfirm={handlePasswordReset}
+        title={"Reset Password"}
+        bodyContent={
+          "Are you sure you want to reset your password. An email will be sent to you if you click send email."
+        }
+        confirmLabel={"Send Email"}
+        cancelLabel={"Cancel"}
+      />
+    </>
+  );
+};
+
+export default ResetPasswordModal;

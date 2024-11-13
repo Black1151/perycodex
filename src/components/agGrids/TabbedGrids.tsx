@@ -54,10 +54,11 @@ const TabbedGrids: React.FC<TabbedDataGridProps> = ({ dataSources }) => {
             <Tab
               key={index}
               color={"white"}
+              fontSize={["sm", "sm", "md"]}
               _selected={{ color: "white", bg: "#FFFFFF44" }}
             >
               {source.title}
-              <Text as="sup" size="sm">
+              <Text as="sup" size={"sm"}>
                 {source.data.length}
               </Text>
             </Tab>
@@ -66,7 +67,7 @@ const TabbedGrids: React.FC<TabbedDataGridProps> = ({ dataSources }) => {
 
         <TabPanels>
           {dataSources.map((source, index) => (
-            <TabPanel key={index}>
+            <TabPanel key={index} margin={0} p={0}>
               <DataGridComponent
                 data={source.data}
                 initialFields={source.fields}
