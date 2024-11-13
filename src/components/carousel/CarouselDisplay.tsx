@@ -88,7 +88,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
     >
       <Flex
         flexDirection="column"
-        gap={10}
+        gap={5}
         alignItems="flex-start"
         mt={[20, 10]}
         justifyContent="flex-start"
@@ -100,9 +100,9 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
         transition="transform 0.4s ease-in-out"
         transform={showInfoBox ? "translateX(0)" : "translateX(-2000px)"}
         p={[8, 12]}
-        minHeight={400}
+        minHeight={340}
       >
-        <HStack>
+        <HStack gap={8}>
           <Image
             src={carouselItems[currentIndex].iconImage}
             alt={carouselItems[currentIndex].name}
