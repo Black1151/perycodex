@@ -24,7 +24,8 @@ import {
   Settings as SettingsIcon,
   Timeline,
 } from "@mui/icons-material";
-import React from "react";
+import React, { useState } from "react";
+import ResetPasswordModal from "@/app/ResetPasswordModal";
 
 const MotionBox = motion(Box);
 const MotionHStack = motion(HStack);
@@ -50,6 +51,11 @@ export const NavBar: React.FC<NavBarProps> = ({
 }) => {
   const router = useRouter();
   const theme = useTheme();
+  const [passwordResetModalOpen, setPasswordResetModalOpen] = useState(false);
+
+  const handleOnClose = () => {
+    setPasswordResetModalOpen(false);
+  };
 
   const handleLogout = async () => {
     await fetch("/api/auth/sign-out", {
@@ -98,9 +104,9 @@ export const NavBar: React.FC<NavBarProps> = ({
         onClick: () => router.push("/activity"),
       },
       {
-        label: "Change Password",
+        label: "Reset Password",
         icon: <LockIcon />,
-        onClick: () => console.log("Change Password clicked"),
+        onClick: () => setPasswordResetModalOpen(true),
       },
       {
         label: "Logout",
@@ -249,6 +255,11 @@ export const NavBar: React.FC<NavBarProps> = ({
           </MenuList>
         </Menu>
       </MotionHStack>
+
+      <ResetPasswordModal
+        openState={passwordResetModalOpen}
+        handleOnClose={handleOnClose}
+      />
     </HStack>
   );
 };
