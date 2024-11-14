@@ -22,7 +22,11 @@ const Carousel: React.FC<CarouselProps> = ({
   const touchStartX = useRef(0);
   const touchStartTime = useRef(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const itemsToShow = useBreakpointValue({ base: 3, md: 5 }) ?? 3;
+  const itemsToShow =
+    useBreakpointValue({
+      base: 3,
+      md: carouselItems.length < 5 ? 3 : 5,
+    }) ?? 3;
 
   const debouncedSlide = useCallback(
     (action: () => void) => {
@@ -56,7 +60,7 @@ const Carousel: React.FC<CarouselProps> = ({
 
   return (
     <VStack
-      width="90%"
+      width={carouselItems.length < 5 ? "70%" : "90%"}
       maxWidth={1200}
       spacing={4}
       height={["150px", "240px"]}

@@ -8,7 +8,6 @@ import {
   Flex,
   HStack,
   Image,
-  Box,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { CarouselItemProps } from "./CarouselItem";
@@ -25,12 +24,12 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
   const [layers, setLayers] = useState([
     {
       id: 0,
-      image: carouselItems[1]?.backgroundImage || fallbackImage,
+      image: carouselItems[0]?.backgroundImage || fallbackImage,
       opacity: 1,
     },
   ]);
   const [nextLayerId, setNextLayerId] = useState(1);
-  const [currentIndex, setCurrentIndex] = useState(1);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [showInfoBox, setShowInfoBox] = useState(true);
   const { setToolId, setWorkflowId } = useWorkflow();
 
@@ -130,9 +129,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
           Open {carouselItems[currentIndex].name}
         </Button>
       </Flex>
-      {/* <Box> */}
       <Carousel carouselItems={carouselItems} setParentIndex={setIndex} />
-      {/* </Box> */}
     </VStack>
   );
 };

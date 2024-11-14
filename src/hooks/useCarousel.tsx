@@ -4,7 +4,7 @@ const useCarousel = (
   itemsCount: number,
   setParentIndex?: (index: number) => void,
 ) => {
-  const [currentIndex, setCurrentIndex] = useState(1);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const updateIndex = (index: number) => {
     setCurrentIndex(index);
