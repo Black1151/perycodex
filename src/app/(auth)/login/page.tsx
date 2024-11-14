@@ -31,26 +31,30 @@ export default async function LoginPage({
       headers: { Authorization: `Bearer ${authToken}` },
     });
 
-    const authCheck = await authCheckResponse.json();
+    if (authCheckResponse.ok) {
+      const authCheck = await authCheckResponse.json();
 
-    if (authCheck.resource.Authenticated) {
-      // Verify token with the backend
-      const isProfileCompleteResponse = await apiClient(
-        `/user/isProfileComplete`,
-        {
-          method: "POST",
-          headers: { Authorization: `Bearer ${authToken}` },
-        },
-      );
+      if (authCheck.resource.Authenticated) {
+        // Verify token with the backend
+        const isProfileCompleteResponse = await apiClient(
+          `/user/isProfileComplete`,
+          {
+            method: "POST",
+            headers: { Authorization: `Bearer ${authToken}` },
+          },
+        );
 
-      const profileCompleteCheck = await isProfileCompleteResponse.json();
+        const profileCompleteCheck = await isProfileCompleteResponse.json();
 
-      if (!profileCompleteCheck.resource.isProfileRegistered) {
-        redirect("/profile-setup");
+        if (!profileCompleteCheck.resource.isProfileRegistered) {
+          redirect("/profile-setup");
+        }
+
+        // Redirect to the link processing page if authenticated
+        redirect(
+          secureLink ? `/link?l=${encodeURIComponent(secureLink)}` : `/`,
+        );
       }
-
-      // Redirect to the link processing page if authenticated
-      redirect(secureLink ? `/link?l=${encodeURIComponent(secureLink)}` : `/`);
     }
   }
 

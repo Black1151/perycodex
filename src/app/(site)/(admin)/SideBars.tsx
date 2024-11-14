@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { LeftHandNavigationDrawer } from "@/components/layout/LeftHandNavigationDrawer";
 
 import {
@@ -39,14 +39,6 @@ export default function SideBars() {
   const { recordIds } = useTags();
 
   const { recordId, recordParentId, recordCustomerId } = recordIds || {};
-
-  useEffect(() => {
-    console.log("recordId", recordId);
-    console.log("recordCustomerId", recordCustomerId);
-    console.log("recordParentId", recordParentId);
-    console.log("recordIds", recordIds);
-    console.log("user ID ", user?.userId);
-  }, [recordIds, user]);
 
   const generateLeftSidebarItemsDrawer = useMemo(
     () => (userRole: string | undefined) => {
