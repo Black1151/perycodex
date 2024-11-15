@@ -1,6 +1,6 @@
 "use client";
 
-import { Image, VStack, Box } from "@chakra-ui/react";
+import { Box, Image, VStack } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import { SpringScale } from "../animations/SpringScale";
 

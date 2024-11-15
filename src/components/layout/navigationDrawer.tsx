@@ -1,11 +1,16 @@
-import { Box, VStack, useTheme, IconButton, Divider } from "@chakra-ui/react";
-import { ChevronLeft, ChevronRight } from "@mui/icons-material";
-import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
-import React from "react";
+import { Box, Divider, IconButton, useTheme, VStack } from "@chakra-ui/react";
+import {
+  Build,
+  Business,
+  ChevronLeft,
+  ChevronRight,
+  Lock,
+  Person,
+} from "@mui/icons-material";
+import { AnimatePresence, motion } from "framer-motion";
+import React, { useState } from "react";
 import { RotatingChevron } from "./RotatingChevron";
 import SideBarMenuItem from "./SideBarMenuItem";
-import { Build, Person, Business, Lock } from "@mui/icons-material";
 import { LetterFlyIn } from "../animations/text/LetterFlyIn";
 
 interface NavigationDrawerProps {

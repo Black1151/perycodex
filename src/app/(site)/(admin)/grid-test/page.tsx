@@ -1,33 +1,39 @@
 import DraggableGridsComponent from "@/components/agGrids/DraggableGridsComponent";
 import { ColDef } from "ag-grid-community";
 import { checkUserRole } from "@/lib/dal";
+import apiClient from "@/lib/apiClient";
 
 export default async function MyCustomerPage() {
   await checkUserRole("/grid-test");
 
-  // Example datasets
-  const populationData = [
-    { id: 1, name: "John Doe", age: 28, job: "Engineer" },
-    { id: 9, name: "John Doe", age: 28, job: "Engineer" },
-    { id: 2, name: "Jane Smith", age: 34, job: "Doctor" },
-    { id: 3, name: "Alice Johnson", age: 22, job: "Designer" },
-    { id: 4, name: "Bob Brown", age: 45, job: "Manager" },
-    { id: 5, name: "Charlie White", age: 30, job: "Developer" },
-    { id: 6, name: "Dana Black", age: 27, job: "Writer" },
-    { id: 7, name: "Eve Green", age: 50, job: "Teacher" },
-    { id: 8, name: "Frank Yellow", age: 38, job: "Scientist" },
-  ];
+  let populationData = [];
 
-  const sampleData = [
-    { id: 5, name: "Charlie White", age: 30, job: "Developer" },
-    { id: 6, name: "Dana Black", age: 27, job: "Writer" },
-  ];
+  // User Data
+  const populationRes = await apiClient(
+    "/user/allBy?selectColumns=id,firstName,lastName,role,email",
+  );
+
+  if (populationRes.ok) {
+    const populationJson = await populationRes.json();
+    populationData = populationJson.resource;
+  }
+
+  let sampleData = [];
+
+  // User Data
+  const sampleRes = await apiClient("/userGroupMember/allBy?userGroupId=11");
+
+  if (sampleRes.ok) {
+    const sampleJson = await sampleRes.json();
+    sampleData = sampleJson.resource;
+  }
 
   const fieldDefs: ColDef[] = [
     { headerName: "ID", field: "id", rowDrag: true },
-    { headerName: "Name", field: "name" },
-    { headerName: "Age", field: "age" },
-    { headerName: "Job", field: "job" },
+    { headerName: "First", field: "firstName" },
+    { headerName: "Last", field: "lastName" },
+    { headerName: "Role", field: "role" },
+    { headerName: "Email", field: "email" },
   ];
 
   return (
@@ -36,9 +42,12 @@ export default async function MyCustomerPage() {
         populationData={populationData}
         populationTitle={"ALL USERS"}
         sampleData={sampleData}
+        endpoint={"/api/userGroup/many/11"}
         sampleTitle={"USER GROUP MEMBERS"}
         fieldDefs={fieldDefs}
         dynamicIdField={"id"}
+        mappingField={"userId"}
+        payloadKey={"users"}
       />
     </>
   );

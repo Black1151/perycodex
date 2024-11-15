@@ -202,7 +202,6 @@ export const getUser = async (): Promise<User> => {
   }
 };
 
-
 export async function checkUserRole(targetPathname: string): Promise<boolean> {
   const user = await getUser();
 

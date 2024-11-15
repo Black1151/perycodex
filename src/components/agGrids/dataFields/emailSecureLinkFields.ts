@@ -1,7 +1,6 @@
 import { ColDef } from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
 import CustomerRenderer from "@/components/agGrids/CellRenderers/CustomerRenderer";
-import EmailScheduleRenderer from "@/components/agGrids/CellRenderers/EmailScheduleRenderer";
 import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
 import EmailSecureLinkRenderer from "@/components/agGrids/CellRenderers/EmailSecureLinkRenderer";
 import ToolConfigRenderer from "@/components/agGrids/CellRenderers/ToolConfigRenderer";

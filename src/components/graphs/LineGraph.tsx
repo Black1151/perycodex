@@ -1,10 +1,10 @@
-import React, { useRef, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Box,
-  Text,
-  VStack,
   HStack,
+  Text,
   useBreakpointValue,
+  VStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { perygonTheme } from "@/theme/theme";

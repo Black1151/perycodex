@@ -1,16 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import CarouselDisplay from "@/components/carousel/CarouselDisplay";
 import { CarouselItemProps } from "@/components/carousel/CarouselItem";
 import {
+  Flex,
   Modal,
-  ModalOverlay,
+  ModalBody,
   ModalContent,
   ModalHeader,
-  ModalBody,
+  ModalOverlay,
   Text,
-  Flex,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 

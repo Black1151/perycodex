@@ -1,15 +1,15 @@
 "use client";
 
 import {
-  VStack,
-  Text,
   Button,
-  useTheme,
   Flex,
   HStack,
   Image,
+  Text,
+  useTheme,
+  VStack,
 } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { CarouselItemProps } from "./CarouselItem";
 import { useRouter } from "next/navigation";
 import Carousel from "./Carousel";

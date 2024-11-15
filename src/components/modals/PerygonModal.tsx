@@ -1,11 +1,11 @@
 import { ReactNode } from "react";
 import {
+  Box,
   Modal,
-  ModalOverlay,
+  ModalBody,
   ModalContent,
   ModalHeader,
-  ModalBody,
-  Box,
+  ModalOverlay,
 } from "@chakra-ui/react";
 
 interface PerygonModalProps {

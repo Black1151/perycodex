@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import apiClient from "@/lib/apiClient";
 import { cookies } from "next/headers";
 
 export async function GET(req: NextRequest) {

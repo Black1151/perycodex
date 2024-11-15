@@ -1,7 +1,7 @@
 "use client";
 
-import { useForm, SubmitHandler, FieldError } from "react-hook-form";
-import { Button, VStack, useTheme } from "@chakra-ui/react";
+import { FieldError, SubmitHandler, useForm } from "react-hook-form";
+import { Button, useTheme, VStack } from "@chakra-ui/react";
 import EmailIcon from "@mui/icons-material/Email";
 import { InputField } from "./InputField";
 import { emailValidation } from "./validationSchema/validationSchema";

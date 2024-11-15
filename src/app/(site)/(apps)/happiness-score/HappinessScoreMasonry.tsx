@@ -1,14 +1,7 @@
 import { SpringScale } from "@/components/animations/SpringScale";
 import { StatBox } from "@/components/Masonry/StatsMasonry/StatBox";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
-import {
-  Box,
-  GridItem,
-  SimpleGrid,
-  Stack,
-  useTheme,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, GridItem, SimpleGrid, useTheme, VStack } from "@chakra-ui/react";
 
 export const HappinessScoreMasonry = () => {
   const theme = useTheme();

@@ -1,5 +1,4 @@
 import React from "react";
-import { Box } from "@chakra-ui/react";
 import apiClient from "@/lib/apiClient";
 import WorkflowLayout from "./WorkflowLayout";
 
