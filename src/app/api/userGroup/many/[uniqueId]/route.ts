@@ -49,8 +49,18 @@ export async function POST(
     }
   } catch (error) {
     console.error("Error submitting data:", error);
+
+    // Check if the error is an instance of Error
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { message: "Internal server error", error: error.message },
+        { status: 500 },
+      );
+    }
+
+    // If the error is not an instance of Error, return a generic message
     return NextResponse.json(
-      { message: "Internal server error", error: error.message },
+      { message: "Internal server error", error: "An unknown error occurred." },
       { status: 500 },
     );
   }
