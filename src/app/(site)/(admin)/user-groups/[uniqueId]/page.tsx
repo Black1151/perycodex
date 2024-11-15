@@ -7,6 +7,8 @@ import apiClient from "@/lib/apiClient";
 import { checkUserRole, getUser } from "@/lib/dal";
 import DraggableGridsComponent from "@/components/agGrids/DraggableGridsComponent";
 import { ColDef } from "ag-grid-community";
+import TeamRenderer from "@/components/agGrids/CellRenderers/TeamRenderer";
+import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
 
 export default async function UserGroupsDetailPage({
   params,
@@ -56,9 +58,13 @@ export default async function UserGroupsDetailPage({
     // Fetch the remaining data using the `id` from the first call
     const [userPopulationRes, userSampleRes, teamPopulationRes, teamSampleRes] =
       await Promise.all([
-        apiClient("/user/allBy?selectColumns=id,firstName,lastName,role,email"),
+        apiClient(
+          "/user/allBy?selectColumns=id,firstName,lastName,role,email,uniqueId",
+        ),
         apiClient(`/userGroupMember/allBy?userGroupId=${userGroupId}`),
-        apiClient("/userTeam/allBy"),
+        apiClient(
+          `/userTeam/allBy?parentTeamId=not-null&customerId=${user.customerId}`,
+        ),
         apiClient(`/userGroupMember/allBy?userGroupId=${userGroupId}`),
       ]);
 
@@ -68,17 +74,63 @@ export default async function UserGroupsDetailPage({
 
     const userPopulationJson = await userPopulationRes.json();
     const userSampleJson = await userSampleRes.json();
+    const teamPopulationJson = await teamPopulationRes.json();
+    const teamSampleJson = await teamSampleRes.json();
 
     const userPopulationData = userPopulationJson.resource;
     const userSampleData = userSampleJson.resource;
+    const teamPopulationData = teamPopulationJson.resource;
+    const teamSampleData = teamSampleJson.resource;
 
-    // Column definitions for DraggableGridsComponent
-    const fieldDefs: ColDef[] = [
-      { headerName: "ID", field: "id", rowDrag: true },
-      { headerName: "First Name", field: "firstName" },
-      { headerName: "Last Name", field: "lastName" },
-      { headerName: "Role", field: "role" },
-      { headerName: "Email", field: "email" },
+    // Column definitions for Users Members
+    const userFieldDefs: ColDef[] = [
+      {
+        headerName: "ID",
+        field: "id",
+        maxWidth: 100,
+        minWidth: 64,
+        rowDrag: true,
+      },
+      {
+        headerName: "First Name",
+        field: "firstName",
+        cellRenderer: UserRenderer,
+        cellRendererParams: {
+          uniqueIdField: "uniqueId",
+          nameField: "firstName",
+          imageUrlField: "imageUrl",
+        },
+      },
+      {
+        headerName: "Role",
+        maxWidth: 100,
+        minWidth: 64,
+        field: "role",
+      },
+      {
+        headerName: "Email",
+        field: "email",
+      },
+    ];
+
+    // Column definitions for Team Members
+    const teamFieldDefs: ColDef[] = [
+      {
+        headerName: "ID",
+        field: "id",
+        maxWidth: 128,
+        minWidth: 64,
+        rowDrag: true,
+      },
+      {
+        headerName: "Team",
+        field: "name",
+        cellRenderer: TeamRenderer,
+        cellRendererParams: {
+          nameField: "name",
+          uniqueIdField: "id",
+        },
+      },
     ];
 
     return (
@@ -87,7 +139,13 @@ export default async function UserGroupsDetailPage({
         <UserGroupDetailsBanner userGroup={userGroupData} />
 
         {/* Render based on responsive view */}
-        <Box mt={4} display={{ base: "block", md: "none" }}>
+        <Box
+          mt={4}
+          display={{
+            base: "block",
+            md: "none",
+          }}
+        >
           <SurveyComponent
             surveyJson={userGroupJson}
             endpoint={`/userGroup/${params.uniqueId}`}
@@ -98,7 +156,13 @@ export default async function UserGroupsDetailPage({
           />
         </Box>
 
-        <Box display={{ base: "none", md: "block" }} mt={4}>
+        <Box
+          display={{
+            base: "none",
+            md: "block",
+          }}
+          mt={4}
+        >
           <Tabs variant="enclosed" size="md" isFitted>
             <TabList>
               <Tab
@@ -114,6 +178,13 @@ export default async function UserGroupsDetailPage({
                 _selected={{ color: "white", bg: "#FFFFFF44" }}
               >
                 User Group Members
+              </Tab>
+              <Tab
+                color={"white"}
+                fontSize={["sm", "sm", "md"]}
+                _selected={{ color: "white", bg: "#FFFFFF44" }}
+              >
+                Team Group Members
               </Tab>
             </TabList>
 
@@ -137,7 +208,7 @@ export default async function UserGroupsDetailPage({
                   sampleData={userSampleData}
                   sampleTitle={"Users in group"}
                   endpoint={`/api/userGroup/many/${userGroupId}`}
-                  fieldDefs={fieldDefs}
+                  fieldDefs={userFieldDefs}
                   dynamicIdField={"id"}
                   mappingField={"userId"}
                   payloadKey={"users"}
@@ -146,15 +217,15 @@ export default async function UserGroupsDetailPage({
               {/* Third Tab: User Group Members - Teams */}
               <TabPanel margin={0} p={0} mt={4}>
                 <DraggableGridsComponent
-                  populationData={userPopulationData}
+                  populationData={teamPopulationData}
                   populationTitle={"Teams"}
-                  sampleData={userSampleData}
+                  sampleData={teamSampleData}
                   sampleTitle={"Teams in group"}
                   endpoint={`/api/userGroup/many/${userGroupId}`}
-                  fieldDefs={fieldDefs}
+                  fieldDefs={teamFieldDefs}
                   dynamicIdField={"id"}
                   mappingField={"teamId"}
-                  payloadKey={"users"}
+                  payloadKey={"teams"}
                 />
               </TabPanel>
             </TabPanels>
