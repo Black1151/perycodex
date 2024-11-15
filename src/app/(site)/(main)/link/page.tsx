@@ -28,9 +28,7 @@ const LinkPage = async ({ searchParams }: { searchParams: SearchParams }) => {
         error = errorData?.message || "Failed to fetch data.";
       } else {
         const data = await response.json();
-        responseData =
-          data.resource?.[0]?.fnEmailSecureLinkRedirect ||
-          "No redirect URL returned.";
+        responseData = data.resource || "No redirect URL returned.";
       }
     } catch (err) {
       console.error("Error fetching data:", err);
