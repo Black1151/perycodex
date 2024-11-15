@@ -653,10 +653,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
               leftIcon={<Done />}
               _hover={{ color: "green", backgroundColor: "white" }}
               onClick={handleSubmission}
-              isDisabled={
-                !!errorMessage ||
-                sampleGridRef.current?.api?.getDisplayedRowCount() === 0
-              }
+              isDisabled={!!errorMessage}
               isLoading={loading}
             >
               Submit
