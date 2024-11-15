@@ -1,4 +1,4 @@
-import { Flex, Badge } from "@chakra-ui/react";
+import { Badge, Flex } from "@chakra-ui/react";
 
 interface TagProps {
   id: number;

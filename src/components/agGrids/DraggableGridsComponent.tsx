@@ -55,8 +55,12 @@ interface DraggableGridsComponentProps {
   populationTitle?: string;
   sampleData: any[] | null;
   sampleTitle?: string;
+  endpoint: string;
   fieldDefs: ColDef[];
   dynamicIdField: string;
+  mappingField: string;
+  payloadKey: string;
+  showTooltip?: boolean;
 }
 
 const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
@@ -64,8 +68,12 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
   populationTitle,
   sampleData,
   sampleTitle,
+  endpoint,
   fieldDefs,
   dynamicIdField,
+  mappingField,
+  payloadKey,
+  showTooltip = false,
 }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [populationRowData, setPopulationRowData] = useState<any[]>(
@@ -174,14 +182,24 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
   }, [populationData, sampleData, dynamicIdField, checkForDuplicateIds]);
 
   useEffect(() => {
-    if (!errorMessage && populationData && sampleData) {
-      const sampleIds = new Set(sampleData.map((row) => row[dynamicIdField]));
-      const reducedPopulation = populationData.filter(
+    if (populationData && sampleData) {
+      // Create a Set of IDs from the sample data
+      const sampleIds = new Set(sampleData.map((row) => row[mappingField]));
+
+      // Split the population data into remaining and removed rows
+      const updatedPopulationData = populationData.filter(
         (row) => !sampleIds.has(row[dynamicIdField]),
       );
-      setPopulationRowData(reducedPopulation);
+
+      const newSampleData = populationData.filter((row) =>
+        sampleIds.has(row[dynamicIdField]),
+      );
+
+      // Update state for population and sample grids
+      setPopulationRowData(updatedPopulationData);
+      setSampleRowData(newSampleData);
     }
-  }, [populationData, sampleData, dynamicIdField, errorMessage]);
+  }, [populationData, sampleData, dynamicIdField, mappingField]);
 
   const populationDraggableBoxRef = useRef<HTMLDivElement>(null);
   const sampleDraggableBoxRef = useRef<HTMLDivElement>(null);
@@ -303,11 +321,17 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
     }
 
     const rowData: any[] = [];
-    sampleGridRef.current.api.forEachNode((node) => rowData.push(node.data));
+    sampleGridRef.current.api.forEachNode((node) =>
+      rowData.push(node.data[dynamicIdField]),
+    );
 
-    await fetchClient(`/api/surveyjs/test`, {
-      method: "PUT",
-      body: rowData,
+    const payload = {
+      [payloadKey]: rowData,
+    };
+
+    await fetchClient(endpoint, {
+      method: "POST",
+      body: payload,
       successMessage: "Data sent successfully.",
       errorMessage: "Unable to send data. Please try again.",
       redirectOnError: false,
@@ -375,82 +399,84 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
   const rowSelection: RowSelectionOptions = { mode: "multiRow" };
 
   return (
-    <Box className="ag-theme-alpine ag-theme-perygon" w="full" py={2}>
+    <Box className="ag-theme-alpine ag-theme-perygon" w="full">
       {!errorMessage ? (
         <>
           {/* Conditionally render the alert based on state */}
-          <Alert
-            status="info"
-            mb={4}
-            borderRadius="lg"
-            bg={isAlertVisible ? "#E2E8F0" : "transparent"}
-            color="#1A202C"
-            border={
-              isAlertVisible ? "1px solid #CBD5E0" : "1px solid transparent"
-            }
-            boxShadow={isAlertVisible ? "lg" : ""}
-          >
-            <Flex justify="space-between" align="center" w="full" gap={4}>
-              {isAlertVisible && (
-                <>
-                  <AlertIcon color="#3182CE" /> {/* Subtle alert icon */}
-                  <Text fontWeight="500" fontSize="md">
-                    You can drag and drop rows between grids, select multiple
-                    rows, or use the buttons to move all rows at once.
-                  </Text>
-                </>
-              )}
-              <Box ml={"auto"}>
-                {!isAlertVisible ? (
-                  <Tooltip
-                    label="Click to show instructions"
-                    aria-label="Info Tooltip"
-                    hasArrow
-                  >
+          {showTooltip && (
+            <Alert
+              status="info"
+              mb={4}
+              borderRadius="lg"
+              bg={isAlertVisible ? "#E2E8F0" : "transparent"}
+              color="#1A202C"
+              border={
+                isAlertVisible ? "1px solid #CBD5E0" : "1px solid transparent"
+              }
+              boxShadow={isAlertVisible ? "lg" : ""}
+            >
+              <Flex justify="space-between" align="center" w="full" gap={4}>
+                {isAlertVisible && (
+                  <>
+                    <AlertIcon color="#3182CE" /> {/* Subtle alert icon */}
+                    <Text fontWeight="500" fontSize="md">
+                      You can drag and drop rows between grids, select multiple
+                      rows, or use the buttons to move all rows at once.
+                    </Text>
+                  </>
+                )}
+                <Box ml={"auto"}>
+                  {!isAlertVisible ? (
+                    <Tooltip
+                      label="Click to show instructions"
+                      aria-label="Info Tooltip"
+                      hasArrow
+                    >
+                      <IconButton
+                        icon={
+                          <InfoOutlined
+                            sx={{
+                              fontSize: "1.5rem",
+                              color: "#718096",
+                            }}
+                          />
+                        } // Larger, modern icon style
+                        aria-label="Toggle Instructions"
+                        onClick={toggleAlertVisibility}
+                        size="lg"
+                        variant="ghost"
+                        _hover={{
+                          backgroundColor: "transparent",
+                          color: "#2D3748",
+                          border: "1px solid white",
+                        }} // Hover effect
+                      />
+                    </Tooltip>
+                  ) : (
                     <IconButton
+                      aria-label="Close"
                       icon={
-                        <InfoOutlined
-                          sx={{
+                        <Close
+                          style={{
                             fontSize: "1.5rem",
                             color: "#718096",
                           }}
                         />
-                      } // Larger, modern icon style
-                      aria-label="Toggle Instructions"
+                      } // Modern, subtle close button style
                       onClick={toggleAlertVisibility}
                       size="lg"
                       variant="ghost"
                       _hover={{
                         backgroundColor: "transparent",
                         color: "#2D3748",
-                        border: "1px solid white",
-                      }} // Hover effect
+                        border: "1px solid black",
+                      }} // Modern hover effect
                     />
-                  </Tooltip>
-                ) : (
-                  <IconButton
-                    aria-label="Close"
-                    icon={
-                      <Close
-                        style={{
-                          fontSize: "1.5rem",
-                          color: "#718096",
-                        }}
-                      />
-                    } // Modern, subtle close button style
-                    onClick={toggleAlertVisibility}
-                    size="lg"
-                    variant="ghost"
-                    _hover={{
-                      backgroundColor: "transparent",
-                      color: "#2D3748",
-                      border: "1px solid black",
-                    }} // Modern hover effect
-                  />
-                )}
-              </Box>
-            </Flex>
-          </Alert>
+                  )}
+                </Box>
+              </Flex>
+            </Alert>
+          )}
 
           <Stack
             w="full"
@@ -467,11 +493,15 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
               flexGrow={1}
               ref={populationDraggableBoxRef}
             >
-              <Heading mb={2} fontSize={isMobile ? "lg" : "2xl"}>
+              <Heading
+                mb={2}
+                color={"white"}
+                fontSize={isMobile ? "lg" : "2xl"}
+              >
                 {populationTitle ?? "Original Data"}
               </Heading>
               <Input
-                placeholder={"Search Population Data"}
+                placeholder={"Search..."}
                 id={"population-quick-filter"}
                 onChange={onPopulationSearchChange}
                 mb={4}
@@ -526,11 +556,15 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
               flexGrow={1}
               ref={sampleDraggableBoxRef}
             >
-              <Heading mb={2} fontSize={isMobile ? "lg" : "2xl"}>
+              <Heading
+                mb={2}
+                color={"white"}
+                fontSize={isMobile ? "lg" : "2xl"}
+              >
                 {sampleTitle ?? "New Data"}
               </Heading>
               <Input
-                placeholder={"Search Sample Data"}
+                placeholder={"Search..."}
                 id={"sample-quick-filter"}
                 onChange={onSampleSearchChange}
                 mb={4}

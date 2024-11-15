@@ -1,23 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
   Select,
+  Spinner,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   Text,
   VStack,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-  Spinner,
 } from "@chakra-ui/react";
 import { Tag } from "@/components/AdminDetailsBanners/TagDetailsBanner";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { useTags } from "@/providers/TagsProvider";
-import { Check, Add, Remove } from "@mui/icons-material";
+import { Add, Check, Remove } from "@mui/icons-material";
 
 interface ManageTagsModalBodyProps {
   customerId: number;

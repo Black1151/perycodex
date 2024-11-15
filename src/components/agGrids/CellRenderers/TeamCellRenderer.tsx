@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { ICellRendererParams } from "ag-grid-community";
 
 // Define the interface for the specific parameters used in this cell renderer

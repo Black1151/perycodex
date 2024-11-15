@@ -3,8 +3,8 @@ import {
   Box,
   Button,
   Flex,
-  Text,
   IconButton,
+  Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
 import {

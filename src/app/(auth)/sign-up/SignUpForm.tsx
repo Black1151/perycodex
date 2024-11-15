@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm, SubmitHandler, FieldError } from "react-hook-form";
+import { FieldError, SubmitHandler, useForm } from "react-hook-form";
 import { Button, useTheme, VStack } from "@chakra-ui/react";
 import { InputField } from "@/components/forms/InputField";
 

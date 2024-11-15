@@ -1,5 +1,5 @@
 import React from "react";
-import { VStack, Text, Box, useTheme, Divider } from "@chakra-ui/react";
+import { Box, Divider, Text, useTheme, VStack } from "@chakra-ui/react";
 
 export interface MenuItem {
   label: string;

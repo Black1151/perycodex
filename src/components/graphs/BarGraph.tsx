@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import {
   Box,
   Flex,
-  VStack,
   HStack,
-  Text,
   keyframes,
+  Text,
   Tooltip,
   useMediaQuery,
   useTheme,
+  VStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import useColor from "@/hooks/useColor";

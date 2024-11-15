@@ -1,14 +1,14 @@
 import { UserContextProps, useUser } from "@/providers/UserProvider";
 import {
+  Box,
+  Flex,
   IconButton,
   Modal,
-  ModalOverlay,
+  ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  Flex,
-  Box,
+  ModalOverlay,
   Text,
 } from "@chakra-ui/react";
 import { Person } from "@mui/icons-material";

@@ -1,5 +1,5 @@
-import React, { useRef, useCallback, useState } from "react";
-import { Box, HStack, VStack, useBreakpointValue } from "@chakra-ui/react";
+import React, { useCallback, useRef, useState } from "react";
+import { Box, HStack, useBreakpointValue, VStack } from "@chakra-ui/react";
 import CarouselNavigationButton from "./CarouselNavigationButton";
 import CarouselDots from "./CarouselDots";
 import CarouselItem, { CarouselItemProps } from "./CarouselItem";

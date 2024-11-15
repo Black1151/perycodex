@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Icon, Text, VStack, Button } from "@chakra-ui/react";
+import { Flex, Icon, Text, VStack } from "@chakra-ui/react";
 import { FiInbox } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 

@@ -1,12 +1,5 @@
-import React, { useRef, useEffect } from "react";
-import {
-  Box,
-  Text,
-  VStack,
-  HStack,
-  useBreakpointValue,
-  Flex,
-} from "@chakra-ui/react";
+import React, { useEffect, useRef } from "react";
+import { Box, Text, useBreakpointValue } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { perygonTheme } from "@/theme/theme";
 import { YAxis } from "./BarGraph";

@@ -1,7 +1,7 @@
 "use client";
 
-import { useForm, SubmitHandler, FieldError } from "react-hook-form";
-import { Button, VStack, useTheme, useToast } from "@chakra-ui/react";
+import { FieldError, SubmitHandler, useForm } from "react-hook-form";
+import { Button, useTheme, useToast, VStack } from "@chakra-ui/react";
 import { DropdownOption, InputField } from "./InputField";
 import { useRouter } from "next/navigation";
 import { phoneNumberValidation } from "./validationSchema/validationSchema";
