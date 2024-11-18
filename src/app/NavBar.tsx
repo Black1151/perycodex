@@ -26,6 +26,8 @@ import {
 } from "@mui/icons-material";
 import React, { useState } from "react";
 import ResetPasswordModal from "@/app/ResetPasswordModal";
+import { useWorkflow } from "@/providers/WorkflowProvider";
+import Link from "next/link";
 
 const MotionBox = motion(Box);
 const MotionHStack = motion(HStack);
@@ -52,6 +54,7 @@ export const NavBar: React.FC<NavBarProps> = ({
   const router = useRouter();
   const theme = useTheme();
   const [passwordResetModalOpen, setPasswordResetModalOpen] = useState(false);
+  const { toolLogo, toolPath } = useWorkflow();
 
   const handleOnClose = () => {
     setPasswordResetModalOpen(false);
@@ -164,23 +167,25 @@ export const NavBar: React.FC<NavBarProps> = ({
         w="150px"
         display="flex"
       >
-        {logoImageUrl && logoImageUrl !== "" ? (
-          <Image
-            src={logoImageUrl}
-            alt="logo"
-            height="50px"
-            objectFit="contain"
-          />
-        ) : (
-          <Text
-            fontFamily="bonfire"
-            fontSize={[30, 40]}
-            bgClip="text"
-            color="white"
-          >
-            Perygon
-          </Text>
-        )}
+        <Link href={toolPath ? toolPath : "/"}>
+          {toolLogo && toolLogo !== "" ? (
+            <Image
+              src={toolLogo}
+              alt="logo"
+              height="50px"
+              objectFit="contain"
+            />
+          ) : (
+            <Text
+              fontFamily="bonfire"
+              fontSize={[30, 40]}
+              bgClip="text"
+              color="white"
+            >
+              Perygon
+            </Text>
+          )}
+        </Link>
       </MotionBox>
       <MotionHStack
         initial={{ x: "5vw", opacity: 0 }}

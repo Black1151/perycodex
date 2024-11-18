@@ -11,7 +11,7 @@ export interface CarouselItemProps {
   isSelected?: boolean;
   appUrl: string;
   toolId: string;
-  toolWfId: number;
+  toolWfId: string;
 }
 
 const CarouselItem: React.FC<CarouselItemProps> = ({

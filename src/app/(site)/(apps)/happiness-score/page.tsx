@@ -1,5 +1,6 @@
 import MainPageServer from "@/components/scaffold/pages/MainPageServer";
 import HappinessScoreClientInner from "./HappinessScoreClientInner";
+import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
 
 export default async function Home({
   searchParams,
@@ -10,11 +11,13 @@ export default async function Home({
   const workflowId = searchParams.wfId as string;
 
   return (
-    <MainPageServer
-      searchParams={searchParams}
-      toolId={toolId}
-      workflowId={workflowId}
-      ClientInnerComponent={HappinessScoreClientInner}
-    />
+    <WorkflowEngine toolId={toolId}>
+      <MainPageServer
+        searchParams={searchParams}
+        toolId={toolId}
+        workflowId={workflowId}
+        ClientInnerComponent={HappinessScoreClientInner}
+      />
+    </WorkflowEngine>
   );
 }
