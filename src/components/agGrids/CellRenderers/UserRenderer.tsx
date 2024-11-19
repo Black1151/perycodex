@@ -47,25 +47,32 @@ const UserRenderer: React.FC<UserRendererProps> = ({
       gap={4}
     >
       {imageUrl ? (
-        <Box
-          flexShrink={0}
-          width="50px"
-          height="50px"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          padding={1}
+        <Flex
+          width={"50px"}
+          height={"full"}
+          align={"center"}
+          justify={"center"}
         >
-          <Image
-            alt={fullName}
-            src={imageUrl}
+          <Box
+            flexShrink={0}
             height="80%"
             aspectRatio={1}
-            borderRadius="50%"
-            objectFit="cover"
-            boxShadow="md"
-          />
-        </Box>
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            borderRadius={"full"}
+          >
+            <Image
+              alt={fullName}
+              src={imageUrl}
+              height="30px"
+              aspectRatio={1}
+              borderRadius="50%"
+              objectFit="cover"
+              boxShadow="md"
+            />
+          </Box>
+        </Flex>
       ) : (
         <Flex
           width={"50px"}
@@ -79,9 +86,9 @@ const UserRenderer: React.FC<UserRendererProps> = ({
             aspectRatio={1}
             display="flex"
             alignItems="center"
+            justifyContent="center"
             borderRadius={"full"}
             bg={"gray.100"}
-            justifyContent="center"
           >
             <Person sx={{ color: "var(--chakra-colors-perygonPink)" }} />
           </Box>
