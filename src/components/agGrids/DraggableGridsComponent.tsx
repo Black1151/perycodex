@@ -34,7 +34,14 @@ import {
   Tooltip,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { Add, Close, Done, InfoOutlined, Remove } from "@mui/icons-material";
+import {
+  Add,
+  Close,
+  Done,
+  InfoOutlined,
+  Remove,
+  Undo,
+} from "@mui/icons-material";
 import CustomGridBottomPagination from "@/components/agGrids/CustomGridBottomPagination";
 import LoadingOverlay from "@/components/agGrids/LoadingOverlay";
 import DraggableNoDataOverlay from "@/components/agGrids/DraggableNoDataOverlay";
@@ -61,6 +68,7 @@ interface DraggableGridsComponentProps {
   mappingField: string;
   payloadKey: string;
   showTooltip?: boolean;
+  submitTitle?: string;
 }
 
 const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
@@ -74,6 +82,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
   mappingField,
   payloadKey,
   showTooltip = false,
+  submitTitle = "Submit",
 }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [populationRowData, setPopulationRowData] = useState<any[]>(
@@ -82,7 +91,6 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
   const [sampleRowData, setSampleRowData] = useState<any[]>(sampleData || []);
   const { fetchClient, loading } = useFetchClient();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
   const [undoStack, setUndoStack] = useState<any[]>([]);
 
   const onPopulationSearchChange = useCallback(() => {
@@ -332,9 +340,10 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
     await fetchClient(endpoint, {
       method: "POST",
       body: payload,
-      successMessage: "Data sent successfully.",
+      successMessage: `${populationTitle} saved successfully.`,
       errorMessage: "Unable to send data. Please try again.",
       redirectOnError: false,
+      toastPosition: "bottom-right",
     });
   };
 
@@ -493,19 +502,31 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
               flexGrow={1}
               ref={populationDraggableBoxRef}
             >
-              <Heading
-                mb={2}
-                color={"white"}
-                fontSize={isMobile ? "lg" : "2xl"}
+              <Flex
+                direction={"row"}
+                w={"full"}
+                justify={"space-between"}
+                align={"center"}
+                p={1}
               >
-                {populationTitle ?? "Original Data"}
-              </Heading>
-              <Input
-                placeholder={"Search..."}
-                id={"population-quick-filter"}
-                onChange={onPopulationSearchChange}
-                mb={4}
-              />
+                <Heading color={"white"} fontSize={isMobile ? "lg" : "2xl"}>
+                  {populationTitle ?? "Original Data"}
+                </Heading>
+                <Input
+                  variant="outline"
+                  id="filter-text-box"
+                  placeholder="Search..."
+                  onInput={onPopulationSearchChange}
+                  w={256}
+                  bg="white"
+                  borderColor="gray.300"
+                  _hover={{ borderColor: "gray.400" }}
+                  _focus={{
+                    borderColor: "perygonPink",
+                    boxShadow: "0 0 0 1px #ff0070",
+                  }}
+                />
+              </Flex>
               <AgGridReact
                 ref={populationGridRef}
                 rowData={populationRowData}
@@ -556,19 +577,31 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
               flexGrow={1}
               ref={sampleDraggableBoxRef}
             >
-              <Heading
-                mb={2}
-                color={"white"}
-                fontSize={isMobile ? "lg" : "2xl"}
+              <Flex
+                direction={"row"}
+                w={"full"}
+                justify={"space-between"}
+                align={"center"}
+                p={1}
               >
-                {sampleTitle ?? "New Data"}
-              </Heading>
-              <Input
-                placeholder={"Search..."}
-                id={"sample-quick-filter"}
-                onChange={onSampleSearchChange}
-                mb={4}
-              />
+                <Heading color={"white"} fontSize={isMobile ? "lg" : "2xl"}>
+                  {sampleTitle ?? "New Data"}
+                </Heading>
+                <Input
+                  variant="outline"
+                  id="filter-text-box"
+                  placeholder="Search..."
+                  onInput={onSampleSearchChange}
+                  w={256}
+                  bg="white"
+                  borderColor="gray.300"
+                  _hover={{ borderColor: "gray.400" }}
+                  _focus={{
+                    borderColor: "perygonPink",
+                    boxShadow: "0 0 0 1px #ff0070",
+                  }}
+                />
+              </Flex>
               <AgGridReact
                 ref={sampleGridRef}
                 rowData={sampleRowData}
@@ -610,7 +643,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
               mr={3}
               bgColor="darkGray"
               border="1px solid darkGray"
-              leftIcon={<Add />}
+              leftIcon={<Undo />}
               color="white"
               _hover={{ color: "darkGray", backgroundColor: "white" }}
               onClick={handleUndo}
@@ -656,7 +689,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
               isDisabled={!!errorMessage}
               isLoading={loading}
             >
-              Submit
+              {submitTitle}
             </Button>
           </Flex>
         </>
