@@ -1,4 +1,4 @@
-import { useToast } from "@chakra-ui/react";
+import { ToastPosition, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -9,6 +9,7 @@ type FetchOptions = {
   successMessage?: string;
   errorMessage?: string;
   redirectOnError?: boolean;
+  toastPosition?: ToastPosition;
 };
 
 export const useFetchClient = () => {
@@ -28,6 +29,7 @@ export const useFetchClient = () => {
       successMessage,
       errorMessage = "An unexpected error occurred.",
       redirectOnError = true,
+      toastPosition = "bottom",
     }: FetchOptions = {},
   ): Promise<T | null> => {
     setLoading(true);
@@ -52,6 +54,7 @@ export const useFetchClient = () => {
           status: "success",
           duration: 5000,
           isClosable: true,
+          position: toastPosition,
         });
       }
 
@@ -65,6 +68,7 @@ export const useFetchClient = () => {
         status: "error",
         duration: 5000,
         isClosable: true,
+        position: toastPosition,
       });
 
       if (redirectOnError) {

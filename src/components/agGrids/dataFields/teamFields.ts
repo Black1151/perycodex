@@ -23,7 +23,7 @@ export const teamFields: ColDef[] | any = [
     cellRenderer: TeamRenderer,
     cellRendererParams: {
       nameField: "name",
-      uniqueIdField: "id",
+      uniqueIdField: "userTeamUniqueId",
     },
   },
   {
