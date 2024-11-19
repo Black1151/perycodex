@@ -128,7 +128,7 @@ export default async function UserGroupsDetailPage({
         cellRenderer: TeamRenderer,
         cellRendererParams: {
           nameField: "name",
-          uniqueIdField: "id",
+          uniqueIdField: "uniqueId",
         },
       },
     ];
