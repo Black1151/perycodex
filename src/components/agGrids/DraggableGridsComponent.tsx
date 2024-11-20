@@ -36,6 +36,7 @@ import {
 } from "@chakra-ui/react";
 import {
   Add,
+  Clear,
   Close,
   Done,
   InfoOutlined,
@@ -92,6 +93,49 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
   const { fetchClient, loading } = useFetchClient();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [undoStack, setUndoStack] = useState<any[]>([]);
+  const [populationHasSelectedRows, setPopulationHasSelectedRows] =
+    useState<boolean>(false);
+  const [sampleHasSelectedRows, setSampleHasSelectedRows] =
+    useState<boolean>(false);
+
+  const resetFiltersButtonText = useBreakpointValue({
+    base: "",
+    sm: "",
+    md: "Reset Filters",
+  });
+  const undoButtonText = useBreakpointValue({
+    base: "",
+    sm: "",
+    md: "Undo",
+  });
+  const addAllButtonText = useBreakpointValue({
+    base: "",
+    sm: "",
+    md: !populationHasSelectedRows ? "Add All" : "Add Selected",
+  });
+
+  const removeAllButtonText = useBreakpointValue({
+    base: "",
+    sm: "",
+    md: !sampleHasSelectedRows ? "Remove All" : "Remove Selected",
+  });
+  const submitButtonText = useBreakpointValue({
+    base: "",
+    sm: "",
+    md: submitTitle,
+  });
+
+  // Reset all filters and quick filter
+  const resetFilter = useCallback(
+    (gridRef: React.RefObject<AgGridReact>, filterId: string) => {
+      gridRef.current?.api.setFilterModel(null);
+      gridRef.current?.api.setGridOption(
+        "quickFilterText",
+        ((document.getElementById(filterId) as HTMLInputElement).value = ""),
+      );
+    },
+    [],
+  );
 
   const onPopulationSearchChange = useCallback(() => {
     populationGridRef?.current?.api.setGridOption(
@@ -125,11 +169,6 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
       setUndoStack([...undoStack]);
     }
   };
-
-  const [populationHasSelectedRows, setPopulationHasSelectedRows] =
-    useState<boolean>(false);
-  const [sampleHasSelectedRows, setSampleHasSelectedRows] =
-    useState<boolean>(false);
 
   const onPopulationSelectionChanged = () => {
     const selectedRows = populationGridRef.current?.api.getSelectedRows();
@@ -408,7 +447,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
   const rowSelection: RowSelectionOptions = { mode: "multiRow" };
 
   return (
-    <Box className="ag-theme-alpine ag-theme-perygon" w="full">
+    <Box className="ag-theme-alpine ag-theme-perygon" w="full" pt={4}>
       {!errorMessage ? (
         <>
           {/* Conditionally render the alert based on state */}
@@ -496,7 +535,6 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
             {/* Population Grid Section */}
             <Flex
               direction="column"
-              minW={"400px"}
               height="500px"
               w={"full"}
               flexGrow={1}
@@ -505,19 +543,35 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
               <Flex
                 direction={"row"}
                 w={"full"}
-                justify={"space-between"}
+                justify={"flex-start"}
                 align={"center"}
                 p={1}
+                gap={2}
               >
                 <Heading color={"white"} fontSize={isMobile ? "lg" : "2xl"}>
                   {populationTitle ?? "Original Data"}
                 </Heading>
+                <Button
+                  variant="solid"
+                  bg="seduloRed"
+                  aria-label="reset-filters"
+                  onClick={() => {
+                    resetFilter(populationGridRef, "population-quick-filter");
+                  }}
+                  ml={"auto"}
+                  size="md"
+                  color="white"
+                  leftIcon={<Clear />}
+                  _hover={{ bg: "perygonPink" }}
+                >
+                  {resetFiltersButtonText}
+                </Button>
                 <Input
                   variant="outline"
-                  id="filter-text-box"
+                  id="population-quick-filter"
                   placeholder="Search..."
                   onInput={onPopulationSearchChange}
-                  w={256}
+                  w={[128, 128, 256]}
                   bg="white"
                   borderColor="gray.300"
                   _hover={{ borderColor: "gray.400" }}
@@ -571,7 +625,6 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
             {/* Sample Grid Section */}
             <Flex
               direction="column"
-              minW={"400px"}
               height="500px"
               w={"full"}
               flexGrow={1}
@@ -580,19 +633,35 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
               <Flex
                 direction={"row"}
                 w={"full"}
-                justify={"space-between"}
+                justify={"flex-start"}
                 align={"center"}
                 p={1}
+                gap={2}
               >
                 <Heading color={"white"} fontSize={isMobile ? "lg" : "2xl"}>
                   {sampleTitle ?? "New Data"}
                 </Heading>
+                <Button
+                  variant="solid"
+                  bg="seduloRed"
+                  aria-label="reset-filters"
+                  onClick={() => {
+                    resetFilter(sampleGridRef, "sample-quick-filter");
+                  }}
+                  ml={"auto"}
+                  size="md"
+                  color="white"
+                  leftIcon={<Clear />}
+                  _hover={{ bg: "perygonPink" }}
+                >
+                  {resetFiltersButtonText}
+                </Button>
                 <Input
                   variant="outline"
-                  id="filter-text-box"
+                  id="sample-quick-filter"
                   placeholder="Search..."
                   onInput={onSampleSearchChange}
-                  w={256}
+                  w={[128, 128, 256]}
                   bg="white"
                   borderColor="gray.300"
                   _hover={{ borderColor: "gray.400" }}
@@ -649,7 +718,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
               onClick={handleUndo}
               isDisabled={undoStack.length === 0}
             >
-              Undo
+              {undoButtonText}
             </Button>
             <Button
               mr={3}
@@ -663,7 +732,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                 populationGridRef.current?.api?.getDisplayedRowCount() === 0
               }
             >
-              {!populationHasSelectedRows ? "Add All" : "Add Selected"}
+              {addAllButtonText}
             </Button>
             <Button
               mr={3}
@@ -677,7 +746,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                 sampleGridRef.current?.api?.getDisplayedRowCount() === 0
               }
             >
-              {!sampleHasSelectedRows ? "Remove All" : "Remove Selected"}
+              {removeAllButtonText}
             </Button>
             <Button
               bgColor="green"
@@ -689,7 +758,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
               isDisabled={!!errorMessage}
               isLoading={loading}
             >
-              {submitTitle}
+              {submitButtonText}
             </Button>
           </Flex>
         </>
