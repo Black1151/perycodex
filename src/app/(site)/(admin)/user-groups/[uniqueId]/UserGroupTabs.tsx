@@ -1,32 +1,20 @@
-// File: components/UserGroupsTabs.tsx
-
 "use client";
 
 import React, { useState } from "react";
 import {
-  Box,
   Tab,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
   useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
 } from "@chakra-ui/react";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import DraggableGridsComponent from "@/components/agGrids/DraggableGridsComponent";
-import { ColDef } from "ag-grid-community";
 import { userGroupJson } from "@/components/surveyjs/forms/userGroup";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
-import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
-import CustomerRenderer from "@/components/agGrids/CellRenderers/CustomerRenderer";
-import TeamRenderer from "@/components/agGrids/CellRenderers/TeamRenderer";
+import { userFieldDefs } from "./userFields";
+import { teamFieldDefs } from "./teamFields";
 
 interface UserGroupsTabsProps {
   userGroupId: string;
@@ -48,59 +36,6 @@ const UserGroupsTabs: React.FC<UserGroupsTabsProps> = ({
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [pendingTabIndex, setPendingTabIndex] = useState<number | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const userFieldDefs: ColDef[] = [
-    {
-      headerName: "ID",
-      field: "id",
-      maxWidth: 100,
-      hide: true,
-      minWidth: 64,
-    },
-    {
-      headerName: "Name",
-      field: "firstName",
-      cellRenderer: UserRenderer,
-      rowDrag: true,
-      cellRendererParams: {
-        nameField: "fullName",
-        imageUrlField: "imageUrl",
-      },
-    },
-    {
-      headerName: "Company",
-      field: "firstName",
-      cellRenderer: CustomerRenderer,
-      cellRendererParams: {
-        nameField: "custName",
-        imageUrlField: "custImageUrl",
-      },
-    },
-    {
-      headerName: "Email",
-      field: "email",
-    },
-  ];
-
-  // Column definitions for Team Members
-  const teamFieldDefs: ColDef[] = [
-    {
-      headerName: "ID",
-      field: "id",
-      maxWidth: 128,
-      minWidth: 64,
-      hide: true,
-    },
-    {
-      headerName: "Team",
-      field: "name",
-      rowDrag: true,
-      cellRenderer: TeamRenderer,
-      cellRendererParams: {
-        nameField: "name",
-      },
-    },
-  ];
 
   const handleTabChange = (index: number) => {
     if (activeTabIndex === 1 || activeTabIndex === 2) {
@@ -152,7 +87,7 @@ const UserGroupsTabs: React.FC<UserGroupsTabsProps> = ({
           </Tab>
         </TabList>
         <TabPanels>
-          <TabPanel>
+          <TabPanel p={0}>
             <SurveyComponent
               surveyJson={userGroupJson}
               endpoint={`/userGroup/${userGroupId}`}
@@ -162,7 +97,7 @@ const UserGroupsTabs: React.FC<UserGroupsTabsProps> = ({
               reloadPageOnSuccess={true}
             />
           </TabPanel>
-          <TabPanel>
+          <TabPanel p={0}>
             <DraggableGridsComponent
               populationData={userPopulationData}
               populationTitle="Users"
@@ -176,7 +111,7 @@ const UserGroupsTabs: React.FC<UserGroupsTabsProps> = ({
               submitTitle={"Save Users"}
             />
           </TabPanel>
-          <TabPanel>
+          <TabPanel p={0}>
             <DraggableGridsComponent
               populationData={teamPopulationData}
               populationTitle="Teams"

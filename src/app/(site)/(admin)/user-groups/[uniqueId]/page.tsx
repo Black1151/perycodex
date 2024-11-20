@@ -69,7 +69,7 @@ export default async function UserGroupsDetailPage({
   const teamSampleData = (await teamSampleRes.json()).resource;
 
   return (
-    <Box p={6}>
+    <>
       <UserGroupDetailsBanner userGroup={userGroupData} />
       <UserGroupsTabs
         userGroupId={userGroupId}
@@ -79,6 +79,6 @@ export default async function UserGroupsDetailPage({
         teamPopulationData={teamPopulationData}
         teamSampleData={teamSampleData}
       />
-    </Box>
+    </>
   );
 }
