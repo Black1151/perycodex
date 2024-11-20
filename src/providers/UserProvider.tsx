@@ -53,6 +53,8 @@ export interface UserContextProps {
 
 interface UserProviderProps {
   user: UserContextProps | null;
+  showDeveloperBoard: boolean;
+  updateShowDeveloperBoard: (value: boolean) => void;
 }
 
 const UserContext = createContext<UserProviderProps | undefined>(undefined);
@@ -72,6 +74,7 @@ export const UserProvider: React.FC<{
   children: ReactNode;
 }> = ({ value, children }) => {
   const [user, setUser] = useState<UserContextProps | null>(value || null);
+  const [showDeveloperBoard, setShowDeveloperBoard] = useState<boolean>(false);
   const { fetchClient } = useFetchClient();
 
   useEffect(() => {
@@ -90,8 +93,17 @@ export const UserProvider: React.FC<{
     }
   };
 
+  const updateShowDeveloperBoard = (value: boolean): void => {
+    console.log(`Updating showDeveloperBoard to ${value}`);
+    setShowDeveloperBoard(value);
+  };
+
   return (
-    <UserContext.Provider value={{ user }}>{children}</UserContext.Provider>
+    <UserContext.Provider
+      value={{ user, showDeveloperBoard, updateShowDeveloperBoard }}
+    >
+      {children}
+    </UserContext.Provider>
   );
 };
 
