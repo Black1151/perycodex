@@ -12,6 +12,7 @@ export interface SurveyComponentProps {
   dataset?: Record<string, any>;
   rolesCanEdit?: Role[];
   onSurveySuccess?: () => void;
+  surveySuccessMessage?: string;
   onSurveyFailure?: () => void;
   reloadPageOnSuccess?: boolean;
   includeVariables?: Array<{ [key: string]: { [nestedKey: string]: any } }>;
@@ -53,6 +54,7 @@ export interface UseSurveySubmissionProps {
   endpoint: string; // API endpoint to send the data
   excludeKeys?: string[]; // Keys to exclude from submission data
   onSurveySuccess?: () => void; // Callback after successful completion
+  surveySuccessMessage?: string;
   onSurveyFailure?: () => void; // Callback after failure
   redirectUrl?: string; // URL to redirect after completion
   reloadPageOnSuccess?: boolean;
