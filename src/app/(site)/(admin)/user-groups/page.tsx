@@ -3,9 +3,11 @@ import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import { groupFields } from "@/components/agGrids/dataFields/userGroupFields";
 import AdminHeader from "@/components/AdminHeader";
 import apiClient from "@/lib/apiClient";
-import { checkUserRole } from "@/lib/dal";
+import { checkUserRole, getUser } from "@/lib/dal";
+import UserGroupDrawerComponent from "@/app/(site)/(admin)/user-groups/UserGroupDrawerComponent";
 
 export default async function UserGroupsPage() {
+  const user = await getUser();
   await checkUserRole("/user-groups");
 
   const res = await apiClient(`/getAllView?view=vwUserGroupsList`);
@@ -28,6 +30,7 @@ export default async function UserGroupsPage() {
           initialFields={groupFields}
           createNewUrl={"/user-groups/create"}
         />
+        {user.role === "PA" && <UserGroupDrawerComponent />}
       </>
     );
   } else {

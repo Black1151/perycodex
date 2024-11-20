@@ -33,6 +33,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
   dataset,
   rolesCanEdit = ["CU", "CL", "CS", "CA", "PA", "EU"],
   onSurveySuccess,
+  surveySuccessMessage,
   onSurveyFailure,
   reloadPageOnSuccess,
   includeVariables,
@@ -94,6 +95,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
     redirectUrl: redirectUrl,
     excludeKeys: excludeKeys,
     onSurveySuccess: onSurveySuccess,
+    surveySuccessMessage: surveySuccessMessage,
     onSurveyFailure: onSurveyFailure,
     reloadPageOnSuccess: reloadPageOnSuccess,
   });
