@@ -22,7 +22,7 @@ export const userFieldDefs: ColDef[] = [
   },
   {
     headerName: "Company",
-    field: "firstName",
+    field: "custName",
     cellRenderer: CustomerRenderer,
     cellRendererParams: {
       nameField: "custName",

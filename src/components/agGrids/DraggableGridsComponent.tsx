@@ -3,6 +3,7 @@
 import React, {
   useCallback,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -70,6 +71,8 @@ interface DraggableGridsComponentProps {
   payloadKey: string;
   showTooltip?: boolean;
   submitTitle?: string;
+  onUndoStackChange?: (hasUndoStack: boolean) => void;
+  resetRef?: React.MutableRefObject<(() => void) | null>;
 }
 
 const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
@@ -84,6 +87,8 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
   payloadKey,
   showTooltip = false,
   submitTitle = "Submit",
+  onUndoStackChange,
+  resetRef,
 }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [populationRowData, setPopulationRowData] = useState<any[]>(
@@ -97,6 +102,8 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
     useState<boolean>(false);
   const [sampleHasSelectedRows, setSampleHasSelectedRows] =
     useState<boolean>(false);
+  const uniquePopulationQuickFilterId = useId();
+  const uniqueSampleQuickFilterId = useId();
 
   const resetFiltersButtonText = useBreakpointValue({
     base: "",
@@ -137,19 +144,59 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
     [],
   );
 
+  const resetData = useCallback(() => {
+    // Clear the undo stack
+    setUndoStack([]);
+
+    if (populationData && sampleData) {
+      // Create a Set of IDs from the sample data
+      const sampleIds = new Set(sampleData.map((row) => row[mappingField]));
+
+      // Split the population data into remaining and removed rows
+      const updatedPopulationData = populationData.filter(
+        (row) => !sampleIds.has(row[dynamicIdField]),
+      );
+
+      const newSampleData = populationData.filter((row) =>
+        sampleIds.has(row[dynamicIdField]),
+      );
+
+      // Update state for population and sample grids
+      setPopulationRowData(updatedPopulationData);
+      setSampleRowData(newSampleData);
+    }
+  }, [populationData, sampleData]);
+
+  useEffect(() => {
+    if (resetRef) {
+      resetRef.current = resetData;
+    }
+    return () => {
+      if (resetRef) {
+        resetRef.current = null;
+      }
+    };
+  }, [resetData, resetRef]);
+
   const onPopulationSearchChange = useCallback(() => {
     populationGridRef?.current?.api.setGridOption(
       "quickFilterText",
-      (document.getElementById("population-quick-filter") as HTMLInputElement)
-        .value,
+      (
+        document.getElementById(
+          `population-quick-filter-${uniquePopulationQuickFilterId}`,
+        ) as HTMLInputElement
+      ).value,
     );
   }, []);
 
   const onSampleSearchChange = useCallback(() => {
     sampleGridRef?.current?.api.setGridOption(
       "quickFilterText",
-      (document.getElementById("sample-quick-filter") as HTMLInputElement)
-        .value,
+      (
+        document.getElementById(
+          `sample-quick-filter-${uniqueSampleQuickFilterId}`,
+        ) as HTMLInputElement
+      ).value,
     );
   }, []);
 
@@ -172,6 +219,12 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
       setUndoStack([...undoStack]);
     }
   };
+
+  useEffect(() => {
+    const hasUndoStack = undoStack.length > 0;
+    console.log(`Has undo stack: ${hasUndoStack}`);
+    onUndoStackChange?.(undoStack.length > 0);
+  }, [undoStack]);
 
   useEffect(() => {
     console.log(undoStack);
@@ -563,7 +616,10 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                   bg="seduloRed"
                   aria-label="reset-filters"
                   onClick={() => {
-                    resetFilter(populationGridRef, "population-quick-filter");
+                    resetFilter(
+                      populationGridRef,
+                      `population-quick-filter-${uniquePopulationQuickFilterId}`,
+                    );
                   }}
                   ml={"auto"}
                   size="md"
@@ -575,7 +631,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                 </Button>
                 <Input
                   variant="outline"
-                  id="population-quick-filter"
+                  id={`population-quick-filter-${uniquePopulationQuickFilterId}`}
                   placeholder="Search..."
                   onInput={onPopulationSearchChange}
                   w={[128, 128, 256]}
@@ -653,7 +709,10 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                   bg="seduloRed"
                   aria-label="reset-filters"
                   onClick={() => {
-                    resetFilter(sampleGridRef, "sample-quick-filter");
+                    resetFilter(
+                      sampleGridRef,
+                      `sample-quick-filter-${uniqueSampleQuickFilterId}`,
+                    );
                   }}
                   ml={"auto"}
                   size="md"
@@ -665,7 +724,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                 </Button>
                 <Input
                   variant="outline"
-                  id="sample-quick-filter"
+                  id={`sample-quick-filter-${uniqueSampleQuickFilterId}`}
                   placeholder="Search..."
                   onInput={onSampleSearchChange}
                   w={[128, 128, 256]}
@@ -762,7 +821,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
               leftIcon={<Done />}
               _hover={{ color: "green", backgroundColor: "white" }}
               onClick={handleSubmission}
-              isDisabled={!!errorMessage}
+              isDisabled={!!errorMessage || undoStack.length === 0}
               isLoading={loading}
             >
               {submitButtonText}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Tab,
   TabList,
@@ -36,9 +36,18 @@ const UserGroupsTabs: React.FC<UserGroupsTabsProps> = ({
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [pendingTabIndex, setPendingTabIndex] = useState<number | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [populationCanChange, setPopulationCanChange] = useState<boolean>(true);
+  const [sampleCanChange, setSampleCanChange] = useState<boolean>(true);
+
+  // Refs to reset each DraggableGridsComponent
+  const populationResetRef = useRef<(() => void) | null>(null);
+  const sampleResetRef = useRef<(() => void) | null>(null);
 
   const handleTabChange = (index: number) => {
-    if (activeTabIndex === 1 || activeTabIndex === 2) {
+    if (
+      (activeTabIndex === 1 && !populationCanChange) ||
+      (activeTabIndex === 2 && !sampleCanChange)
+    ) {
       setPendingTabIndex(index);
       onOpen();
     } else {
@@ -48,10 +57,27 @@ const UserGroupsTabs: React.FC<UserGroupsTabsProps> = ({
 
   const confirmTabChange = () => {
     if (pendingTabIndex !== null) {
+      resetCurrentTab(); // Reset current tab before switching
       setActiveTabIndex(pendingTabIndex);
       setPendingTabIndex(null);
     }
     onClose();
+  };
+
+  const resetCurrentTab = () => {
+    if (activeTabIndex === 1 && populationResetRef.current) {
+      populationResetRef.current();
+    } else if (activeTabIndex === 2 && sampleResetRef.current) {
+      sampleResetRef.current();
+    }
+  };
+
+  const onUndoStackChangePopulation = (hasUndoStack: boolean) => {
+    setPopulationCanChange(!hasUndoStack);
+  };
+
+  const onUndoStackChangeSample = (hasUndoStack: boolean) => {
+    setSampleCanChange(!hasUndoStack);
   };
 
   return (
@@ -109,6 +135,8 @@ const UserGroupsTabs: React.FC<UserGroupsTabsProps> = ({
               mappingField="userId"
               payloadKey="users"
               submitTitle={"Save Users"}
+              onUndoStackChange={onUndoStackChangePopulation}
+              resetRef={populationResetRef} // Pass the resetRef
             />
           </TabPanel>
           <TabPanel p={0}>
@@ -123,6 +151,8 @@ const UserGroupsTabs: React.FC<UserGroupsTabsProps> = ({
               mappingField="teamId"
               payloadKey="teams"
               submitTitle={"Save Teams"}
+              onUndoStackChange={onUndoStackChangeSample}
+              resetRef={sampleResetRef} // Pass the resetRef
             />
           </TabPanel>
         </TabPanels>
