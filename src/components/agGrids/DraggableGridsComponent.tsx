@@ -159,7 +159,10 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
     data: any[],
   ) => {
     addRecordsToGrid(oldGridApi, newGridApi, data);
-    setUndoStack([...undoStack, { oldGridApi, newGridApi, data }]);
+    setUndoStack((prevUndoStack) => [
+      ...prevUndoStack,
+      { oldGridApi, newGridApi, data },
+    ]);
   };
 
   const handleUndo = () => {
@@ -169,6 +172,10 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
       setUndoStack([...undoStack]);
     }
   };
+
+  useEffect(() => {
+    console.log(undoStack);
+  }, [undoStack]);
 
   const onPopulationSelectionChanged = () => {
     const selectedRows = populationGridRef.current?.api.getSelectedRows();
