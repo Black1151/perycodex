@@ -20,7 +20,7 @@ export const UserModal = ({
 }: {
   userMetadata: UserContextProps;
 }) => {
-  const { user, showDeveloperBoard } = useUser();
+  const { user } = useUser();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpen = () => setIsOpen(true);

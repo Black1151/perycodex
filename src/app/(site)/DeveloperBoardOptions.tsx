@@ -21,7 +21,6 @@ const DeveloperBoardOptions: React.FC<DeveloperBoardOptionsProps> = ({
 
   const toggleExpand = () => setIsExpanded((prev) => !prev);
 
-  // Conditional rendering logic
   const isDevelopment = process.env.NODE_ENV === "development";
   const shouldRender = isDevelopment || (!isDevelopment && showDeveloperBoard);
 
@@ -69,7 +68,7 @@ const DeveloperBoardOptions: React.FC<DeveloperBoardOptionsProps> = ({
             onClick={cancelButtonClick}
             background="red.500"
             color="white"
-            isDisabled={isDevelopment}
+            isDisabled={process.env.NODE_ENV === "development"}
             _hover={{ background: "red.600" }}
             size="lg"
             borderRadius="full"
