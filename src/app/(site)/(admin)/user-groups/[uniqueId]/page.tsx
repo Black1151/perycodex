@@ -1,4 +1,3 @@
-import { Box } from "@chakra-ui/react";
 import { redirect } from "next/navigation";
 import { UserGroupDetailsBanner } from "@/components/AdminDetailsBanners/UserGroupDetailsBanner";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
@@ -29,7 +28,7 @@ export default async function UserGroupsDetailPage({
 
   if (user.role === "PA") {
     return (
-      <Box p={6}>
+      <>
         <UserGroupDetailsBanner userGroup={userGroupData} />
         <SurveyComponent
           surveyJson={userGroupJson}
@@ -39,7 +38,7 @@ export default async function UserGroupsDetailPage({
           sjsPath={"admin"}
           reloadPageOnSuccess={true}
         />
-      </Box>
+      </>
     );
   }
 
