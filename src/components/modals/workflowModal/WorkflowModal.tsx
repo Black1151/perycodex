@@ -32,10 +32,6 @@ export const WorkflowModal = () => {
         aria-label="Open Workflow Details"
         icon={<AccountTree />}
         onClick={handleOpen}
-        position="fixed"
-        bottom="20px"
-        right="80px"
-        zIndex={1000}
         colorScheme="teal"
         size="lg"
         borderRadius="full"

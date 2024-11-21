@@ -1,7 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { UserModal } from "@/components/modals/userModal/UserModal";
 import { WorkflowModal } from "@/components/modals/workflowModal/WorkflowModal";
 import { UserContextProps, useUser } from "@/providers/UserProvider";
+import { Flex, IconButton } from "@chakra-ui/react";
+import {
+  Cancel,
+  KeyboardArrowDown,
+  KeyboardArrowUp,
+} from "@mui/icons-material";
 
 interface DeveloperBoardOptionsProps {
   userMetadata: UserContextProps;
@@ -10,16 +16,67 @@ interface DeveloperBoardOptionsProps {
 const DeveloperBoardOptions: React.FC<DeveloperBoardOptionsProps> = ({
   userMetadata,
 }) => {
-  const { showDeveloperBoard } = useUser();
+  const { showDeveloperBoard, updateShowDeveloperBoard } = useUser();
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleExpand = () => setIsExpanded((prev) => !prev);
 
   if (process.env.NODE_ENV !== "development" || showDeveloperBoard === false)
     return null;
 
+  const cancelButtonClick = () => {
+    updateShowDeveloperBoard(false);
+  };
+
   return (
-    <>
-      <UserModal userMetadata={userMetadata} />
-      <WorkflowModal />
-    </>
+    <Flex
+      position="fixed"
+      right="20px"
+      bottom="20px"
+      zIndex={1000}
+      flexDirection="column-reverse"
+      alignItems="center"
+      gap={4}
+    >
+      {/* Main Button */}
+      <IconButton
+        aria-label="Expand Developer Options"
+        icon={!isExpanded ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+        onClick={toggleExpand}
+        background="teal.500"
+        color="white"
+        _hover={{ background: "teal.600" }}
+        size="lg"
+        isRound
+        zIndex={1001}
+      />
+
+      {/* Developer Options */}
+      {isExpanded && (
+        <Flex
+          flexDirection="column"
+          gap={4}
+          transition="all 0.3s ease-in-out"
+          transform={isExpanded ? "translateY(0)" : "translateY(20px)"}
+        >
+          {/* Cancel Button */}
+          <IconButton
+            aria-label="Cancel"
+            icon={<Cancel />}
+            onClick={cancelButtonClick}
+            background="red.500"
+            color="white"
+            _hover={{ background: "red.600" }}
+            size="lg"
+            borderRadius="full"
+          />
+
+          <UserModal userMetadata={userMetadata} />
+
+          <WorkflowModal />
+        </Flex>
+      )}
+    </Flex>
   );
 };
 

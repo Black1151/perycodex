@@ -20,7 +20,7 @@ export const UserModal = ({
 }: {
   userMetadata: UserContextProps;
 }) => {
-  const { user } = useUser();
+  const { user, showDeveloperBoard } = useUser();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpen = () => setIsOpen(true);
@@ -33,10 +33,6 @@ export const UserModal = ({
         aria-label="Open user details"
         icon={<Person />}
         onClick={handleOpen}
-        position="fixed"
-        bottom="20px"
-        right="20px"
-        zIndex={1000}
         colorScheme="teal"
         size="lg"
         borderRadius="full"
@@ -46,7 +42,9 @@ export const UserModal = ({
       <Modal isOpen={isOpen} onClose={handleClose} size="3xl">
         <ModalOverlay />
         <ModalContent maxH={"80%"} overflow={"auto"}>
-          <ModalHeader>User Information</ModalHeader>
+          <ModalHeader>
+            User Information - {showDeveloperBoard} - {process.env.NODE_ENV}
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Flex gap={6}>
