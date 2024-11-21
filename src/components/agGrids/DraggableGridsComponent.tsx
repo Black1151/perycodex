@@ -444,6 +444,8 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
       redirectOnError: false,
       toastPosition: "bottom-right",
     });
+
+    setUndoStack([]);
   };
 
   const moveAllToSample = () => {
