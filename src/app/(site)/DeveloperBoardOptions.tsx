@@ -69,6 +69,7 @@ const DeveloperBoardOptions: React.FC<DeveloperBoardOptionsProps> = ({
             onClick={cancelButtonClick}
             background="red.500"
             color="white"
+            isDisabled={isDevelopment}
             _hover={{ background: "red.600" }}
             size="lg"
             borderRadius="full"
