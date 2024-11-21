@@ -44,6 +44,8 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
   const updateCount = () => {
     if (showDeveloperBoard) return;
 
+    if (user?.userId !== surveyUser.id) return;
+
     setDeveloperCount(developerCount + 1);
     if (developerCount === 9) {
       updateShowDeveloperBoard(true);
@@ -110,6 +112,9 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
 
   return (
     <VStack w={"100%"} flex={1} align={"stretch"}>
+      <Box position={"fixed"} top={0} left={0}>
+        {developerCount}
+      </Box>
       <Flex
         mb={4}
         p={[0, 0, 4]}

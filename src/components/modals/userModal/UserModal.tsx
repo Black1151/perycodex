@@ -20,7 +20,7 @@ export const UserModal = ({
 }: {
   userMetadata: UserContextProps;
 }) => {
-  const { user, showDeveloperBoard } = useUser();
+  const { user } = useUser();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpen = () => setIsOpen(true);
@@ -42,9 +42,7 @@ export const UserModal = ({
       <Modal isOpen={isOpen} onClose={handleClose} size="3xl">
         <ModalOverlay />
         <ModalContent maxH={"80%"} overflow={"auto"}>
-          <ModalHeader>
-            User Information - {showDeveloperBoard} - {process.env.NODE_ENV}
-          </ModalHeader>
+          <ModalHeader>User Information</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Flex gap={6}>
