@@ -8,6 +8,8 @@ export const assignGroupJson = {
           type: "dropdown",
           name: "fromCustomerId",
           visibleIf: "{pgv_currentUser.role} = 'PA'",
+          readOnly: true,
+          placeholder: "Platform",
           title: "Customer",
           choicesByUrl: {
             url: `/api/customer/allBy?parentId=null`,
