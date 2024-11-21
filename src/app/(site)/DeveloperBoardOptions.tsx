@@ -21,8 +21,11 @@ const DeveloperBoardOptions: React.FC<DeveloperBoardOptionsProps> = ({
 
   const toggleExpand = () => setIsExpanded((prev) => !prev);
 
-  if (process.env.NODE_ENV !== "development" || showDeveloperBoard === false)
-    return null;
+  // Conditional rendering logic
+  const isDevelopment = process.env.NODE_ENV === "development";
+  const shouldRender = isDevelopment || (!isDevelopment && showDeveloperBoard);
+
+  if (!shouldRender) return null;
 
   const cancelButtonClick = () => {
     updateShowDeveloperBoard(false);
