@@ -90,6 +90,13 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
   onUndoStackChange,
   resetRef,
 }) => {
+  const [checkpoints, setCheckpoints] = useState<{
+    population: any[];
+    sample: any[];
+  }>({
+    population: [],
+    sample: [],
+  });
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [populationRowData, setPopulationRowData] = useState<any[]>(
     populationData || [],
@@ -144,28 +151,12 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
     [],
   );
 
-  const resetData = useCallback(() => {
-    // Clear the undo stack
+  const resetData = () => {
     setUndoStack([]);
-
-    if (populationData && sampleData) {
-      // Create a Set of IDs from the sample data
-      const sampleIds = new Set(sampleData.map((row) => row[mappingField]));
-
-      // Split the population data into remaining and removed rows
-      const updatedPopulationData = populationData.filter(
-        (row) => !sampleIds.has(row[dynamicIdField]),
-      );
-
-      const newSampleData = populationData.filter((row) =>
-        sampleIds.has(row[dynamicIdField]),
-      );
-
-      // Update state for population and sample grids
-      setPopulationRowData(updatedPopulationData);
-      setSampleRowData(newSampleData);
-    }
-  }, [populationData, sampleData]);
+    // Update state for population and sample grids
+    setPopulationRowData([...checkpoints.population]);
+    setSampleRowData([...checkpoints.sample]);
+  };
 
   useEffect(() => {
     if (resetRef) {
@@ -222,7 +213,6 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
 
   useEffect(() => {
     const hasUndoStack = undoStack.length > 0;
-    console.log(`Has undo stack: ${hasUndoStack}`);
     onUndoStackChange?.(undoStack.length > 0);
   }, [undoStack]);
 
@@ -301,6 +291,11 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
       const newSampleData = populationData.filter((row) =>
         sampleIds.has(row[dynamicIdField]),
       );
+
+      setCheckpoints({
+        population: updatedPopulationData,
+        sample: newSampleData,
+      });
 
       // Update state for population and sample grids
       setPopulationRowData(updatedPopulationData);
@@ -422,10 +417,27 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
   );
 
   const handleSubmission = async () => {
-    if (!sampleGridRef.current || !sampleGridRef.current.api) {
+    if (
+      !sampleGridRef.current ||
+      !sampleGridRef.current.api ||
+      !populationGridRef.current ||
+      !populationGridRef.current.api
+    ) {
       console.error("Grid API not available");
       return;
     }
+
+    // Extract row data from sampleGridRef
+    const sampleGridData: any[] = [];
+    sampleGridRef.current.api.forEachNode((node) =>
+      sampleGridData.push(node.data),
+    );
+
+    // Extract row data from populationGridRef
+    const populationGridData: any[] = [];
+    populationGridRef.current.api.forEachNode((node) =>
+      populationGridData.push(node.data),
+    );
 
     const rowData: any[] = [];
     sampleGridRef.current.api.forEachNode((node) =>
@@ -443,6 +455,12 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
       errorMessage: "Unable to send data. Please try again.",
       redirectOnError: false,
       toastPosition: "bottom-right",
+    });
+
+    // Update the checkpoints with the current grid data
+    setCheckpoints({
+      population: [...populationGridData],
+      sample: [...sampleGridData],
     });
 
     setUndoStack([]);
@@ -838,5 +856,4 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
     </Box>
   );
 };
-
 export default DraggableGridsComponent;
