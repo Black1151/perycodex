@@ -1,12 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import {
-  Box,
-  Text,
-  VStack,
-  HStack,
-  useBreakpointValue,
-  Flex,
-} from "@chakra-ui/react";
+import { Box, HStack, Text, useBreakpointValue, Flex } from "@chakra-ui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { perygonTheme } from "@/theme/theme";
 
@@ -47,7 +40,7 @@ const LineGraph: React.FC<LineGraphProps> = ({ DataPoints = [] }) => {
   // Ensure maxValue is at least 10
   const maxValue = Math.max(
     Math.ceil(Math.max(...DataPoints.map((point) => point.value), 0)),
-    10,
+    10
   );
 
   // Y-axis ticks from 0 to 10

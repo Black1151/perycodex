@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Box, HStack, Text, useTheme, VStack } from "@chakra-ui/react";
 
 interface SpeechBubbleSVGProps {

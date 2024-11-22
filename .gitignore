@@ -40,3 +40,5 @@ next-env.d.ts
 .husky/pre-commit
 .husky/pre-push
 .husky/pre-merge-commit 
+
+.husky

@@ -3,7 +3,6 @@ import { Box, Button, Center, keyframes, Text, VStack } from "@chakra-ui/react";
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
 import { SpringScale } from "@/components/animations/SpringScale";
 import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 // Keyframes for subtle background animation

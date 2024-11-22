@@ -1,21 +1,20 @@
 "use client";
 
 import {
-  useTheme,
-  VStack,
-  Stack,
-  SimpleGrid,
-  GridItem,
   Box,
   Flex,
-  Button,
+  GridItem,
+  SimpleGrid,
+  Stack,
+  useTheme,
+  VStack,
 } from "@chakra-ui/react";
 
 import { StatBox } from "@/components/Masonry/StatsMasonry/StatBox";
 import { SpringScale } from "@/components/animations/SpringScale";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import BarGraph from "@/components/graphs/BarGraph";
 import LineGraph from "@/components/graphs/LineGraph";

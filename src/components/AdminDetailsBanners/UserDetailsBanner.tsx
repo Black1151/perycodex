@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -36,9 +36,26 @@ interface UserDetailsBannerProps {
 export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
   surveyUser,
 }) => {
-  const { user } = useUser();
+  const { user, showDeveloperBoard, updateShowDeveloperBoard } = useUser();
   const router = useRouter();
   const { tags, setRecordDetails, setTags } = useTags();
+  const [developerCount, setDeveloperCount] = useState<number>(0);
+
+  const updateCount = () => {
+    if (showDeveloperBoard) return;
+
+    if (user?.userId !== surveyUser.id) return;
+
+    setDeveloperCount(developerCount + 1);
+    if (developerCount === 9) {
+      updateShowDeveloperBoard(true);
+      setDeveloperCount(0);
+    }
+  };
+
+  useEffect(() => {
+    setDeveloperCount(0);
+  }, [showDeveloperBoard]);
 
   const isCurrentUser = surveyUser.uniqueId === user?.userUniqueId;
   const allowedToUploadPhoto =
@@ -95,6 +112,9 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
 
   return (
     <VStack w={"100%"} flex={1} align={"stretch"}>
+      <Box position={"fixed"} top={0} left={0}>
+        {developerCount}
+      </Box>
       <Flex
         mb={4}
         p={[0, 0, 4]}
@@ -219,6 +239,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
               borderRadius="full"
               border={"white 1px solid"}
               bg={surveyUser.isActive ? "green.500" : "red.500"}
+              onClick={updateCount}
             />
             <Heading fontWeight={100} size={["md", "md", "lg"]}>
               {surveyUser.firstName ?? "No Name"} {surveyUser.lastName ?? ""}

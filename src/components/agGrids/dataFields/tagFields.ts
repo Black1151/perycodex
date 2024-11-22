@@ -1,6 +1,6 @@
 "use client";
 
-import { ColDef, ICellRendererParams } from "ag-grid-community";
+import { ColDef } from "ag-grid-community";
 import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButtonRenderer";
 import CustomerRenderer from "@/components/agGrids/CellRenderers/CustomerRenderer";
 import ColourCellRenderer from "@/components/agGrids/CellRenderers/ColourCellRenderer";

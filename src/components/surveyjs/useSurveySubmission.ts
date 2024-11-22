@@ -13,6 +13,7 @@ const useSurveySubmission = ({
   endpoint,
   excludeKeys = [],
   onSurveySuccess,
+  surveySuccessMessage,
   onSurveyFailure,
   redirectUrl,
   reloadPageOnSuccess = false,
@@ -99,7 +100,7 @@ const useSurveySubmission = ({
         // Show success notification
         toast({
           title: "Submitted successfully.",
-          description: "The record has been successfully submitted.",
+          description: surveySuccessMessage,
           status: "success",
           duration: 5000,
           isClosable: true,

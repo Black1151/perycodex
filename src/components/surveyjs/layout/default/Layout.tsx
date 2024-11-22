@@ -65,7 +65,7 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({
       <Flex
         w="full"
         maxW={"100%"}
-        px={[0, 0, 4]}
+        px={[0, 0, 0]}
         justify="center"
         align="center"
         py={4}

@@ -5,7 +5,6 @@ import { Tool } from "@/types/types";
 import BusinessScoreSplashScreen from "./BusinessScoreSplashScreen";
 import { LeftHandNavigationDrawer } from "@/components/layout/LeftHandNavigationDrawer";
 import { RightHandNavigationDrawer } from "@/components/layout/RightHandNavigationDrawer";
-import { NavBarProps } from "@/app/NavBar";
 
 interface HappinessScoreClientInnerProps {
   toolData: Tool;

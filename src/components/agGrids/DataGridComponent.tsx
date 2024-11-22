@@ -6,6 +6,7 @@ import React, {
   useMemo,
   useRef,
   useState,
+  useId,
 } from "react";
 import { useRouter } from "next/navigation";
 import { AgGridReact } from "ag-grid-react";
@@ -59,6 +60,7 @@ const DataGridComponent = <T,>({
   const [fields, setFields] = useState<any[]>(initialFields);
   const router = useRouter();
   const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
+  const uniqueQuickFilterId = useId();
 
   // Modal disclosure state for Chakra UI
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -124,7 +126,11 @@ const DataGridComponent = <T,>({
   const onFilterTextBoxChanged = useCallback(() => {
     gridRef.current!.api.setGridOption(
       "quickFilterText",
-      (document.getElementById("filter-text-box") as HTMLInputElement).value,
+      (
+        document.getElementById(
+          `filter-text-box-${uniqueQuickFilterId}`,
+        ) as HTMLInputElement
+      ).value,
     );
   }, []);
 
@@ -133,8 +139,11 @@ const DataGridComponent = <T,>({
     gridRef.current?.api.setFilterModel(null);
     gridRef.current?.api.setGridOption(
       "quickFilterText",
-      ((document.getElementById("filter-text-box") as HTMLInputElement).value =
-        ""),
+      ((
+        document.getElementById(
+          `filter-text-box-${uniqueQuickFilterId}`,
+        ) as HTMLInputElement
+      ).value = ""),
     );
   }, []);
 
@@ -151,7 +160,7 @@ const DataGridComponent = <T,>({
         {/* Quick Filter */}
         <Input
           variant="outline"
-          id="filter-text-box"
+          id={`filter-text-box-${uniqueQuickFilterId}`}
           placeholder="Search..."
           onInput={onFilterTextBoxChanged}
           w={256}

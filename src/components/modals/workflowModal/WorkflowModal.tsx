@@ -1,42 +1,37 @@
-import { UserContextProps, useUser } from "@/providers/UserProvider";
 import {
+  Box,
+  Flex,
   IconButton,
   Modal,
-  ModalOverlay,
+  ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  Flex,
-  Box,
+  ModalOverlay,
   Text,
 } from "@chakra-ui/react";
-import { Person } from "@mui/icons-material";
+import { AccountTree } from "@mui/icons-material";
 import { useState } from "react";
+import { useWorkflow } from "@/providers/WorkflowProvider";
 
-// UserModal component with Person icon and modal for displaying user data
-export const UserModal = ({
-  userMetadata,
-}: {
-  userMetadata: UserContextProps;
-}) => {
-  const { user } = useUser();
+export const WorkflowModal = () => {
+  const { workflowId, toolId, toolPath, toolLogo } = useWorkflow();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
 
+  // Helper function to format values
+  const formatValue = (label: string, value: string | null | undefined) =>
+    `${label}: ${value ?? "Nothing at all"}`;
+
   return (
     <>
       {/* Icon button to open the modal */}
       <IconButton
-        aria-label="Open user details"
-        icon={<Person />}
+        aria-label="Open Workflow Details"
+        icon={<AccountTree />}
         onClick={handleOpen}
-        position="fixed"
-        bottom="20px"
-        right="20px"
-        zIndex={1000}
         colorScheme="teal"
         size="lg"
         borderRadius="full"
@@ -46,14 +41,14 @@ export const UserModal = ({
       <Modal isOpen={isOpen} onClose={handleClose} size="3xl">
         <ModalOverlay />
         <ModalContent maxH={"80%"} overflow={"auto"}>
-          <ModalHeader>User Information</ModalHeader>
+          <ModalHeader>Workflow Information</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Flex gap={6}>
-              {/* User Context Data */}
+              {/* Workflow Context Data */}
               <Box flex="1" p={4} bg="gray.50" borderRadius="md">
                 <Text fontWeight="bold" mb={2}>
-                  User Context
+                  Workflow Context
                 </Text>
                 <Box
                   as="pre"
@@ -61,22 +56,13 @@ export const UserModal = ({
                   whiteSpace="pre-wrap"
                   wordBreak="break-word"
                 >
-                  {JSON.stringify(user, null, 2)}
-                </Box>
-              </Box>
-
-              {/* User Metadata Data */}
-              <Box flex="1" p={4} bg="gray.50" borderRadius="md">
-                <Text fontWeight="bold" mb={2}>
-                  User Metadata
-                </Text>
-                <Box
-                  as="pre"
-                  fontSize="sm"
-                  whiteSpace="pre-wrap"
-                  wordBreak="break-word"
-                >
-                  {JSON.stringify(userMetadata, null, 2)}
+                  {formatValue("Workflow ID", workflowId)}
+                  {"\n"}
+                  {formatValue("Tool ID", toolId)}
+                  {"\n"}
+                  {formatValue("Tool Path", toolPath)}
+                  {"\n"}
+                  {formatValue("Tool Logo", toolLogo)}
                 </Box>
               </Box>
             </Flex>

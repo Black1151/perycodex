@@ -3,6 +3,7 @@
 import React, {
   useCallback,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -34,7 +35,15 @@ import {
   Tooltip,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { Add, Close, Done, InfoOutlined, Remove } from "@mui/icons-material";
+import {
+  Add,
+  Clear,
+  Close,
+  Done,
+  InfoOutlined,
+  Remove,
+  Undo,
+} from "@mui/icons-material";
 import CustomGridBottomPagination from "@/components/agGrids/CustomGridBottomPagination";
 import LoadingOverlay from "@/components/agGrids/LoadingOverlay";
 import DraggableNoDataOverlay from "@/components/agGrids/DraggableNoDataOverlay";
@@ -55,8 +64,15 @@ interface DraggableGridsComponentProps {
   populationTitle?: string;
   sampleData: any[] | null;
   sampleTitle?: string;
+  endpoint: string;
   fieldDefs: ColDef[];
   dynamicIdField: string;
+  mappingField: string;
+  payloadKey: string;
+  showTooltip?: boolean;
+  submitTitle?: string;
+  onUndoStackChange?: (hasUndoStack: boolean) => void;
+  resetRef?: React.MutableRefObject<(() => void) | null>;
 }
 
 const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
@@ -64,8 +80,15 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
   populationTitle,
   sampleData,
   sampleTitle,
+  endpoint,
   fieldDefs,
   dynamicIdField,
+  mappingField,
+  payloadKey,
+  showTooltip = false,
+  submitTitle = "Submit",
+  onUndoStackChange,
+  resetRef,
 }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [populationRowData, setPopulationRowData] = useState<any[]>(
@@ -74,22 +97,106 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
   const [sampleRowData, setSampleRowData] = useState<any[]>(sampleData || []);
   const { fetchClient, loading } = useFetchClient();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
   const [undoStack, setUndoStack] = useState<any[]>([]);
+  const [populationHasSelectedRows, setPopulationHasSelectedRows] =
+    useState<boolean>(false);
+  const [sampleHasSelectedRows, setSampleHasSelectedRows] =
+    useState<boolean>(false);
+  const uniquePopulationQuickFilterId = useId();
+  const uniqueSampleQuickFilterId = useId();
+
+  const resetFiltersButtonText = useBreakpointValue({
+    base: "",
+    sm: "",
+    md: "Reset Filters",
+  });
+  const undoButtonText = useBreakpointValue({
+    base: "",
+    sm: "",
+    md: "Undo",
+  });
+  const addAllButtonText = useBreakpointValue({
+    base: "",
+    sm: "",
+    md: !populationHasSelectedRows ? "Add All" : "Add Selected",
+  });
+
+  const removeAllButtonText = useBreakpointValue({
+    base: "",
+    sm: "",
+    md: !sampleHasSelectedRows ? "Remove All" : "Remove Selected",
+  });
+  const submitButtonText = useBreakpointValue({
+    base: "",
+    sm: "",
+    md: submitTitle,
+  });
+
+  // Reset all filters and quick filter
+  const resetFilter = useCallback(
+    (gridRef: React.RefObject<AgGridReact>, filterId: string) => {
+      gridRef.current?.api.setFilterModel(null);
+      gridRef.current?.api.setGridOption(
+        "quickFilterText",
+        ((document.getElementById(filterId) as HTMLInputElement).value = ""),
+      );
+    },
+    [],
+  );
+
+  const resetData = useCallback(() => {
+    // Clear the undo stack
+    setUndoStack([]);
+
+    if (populationData && sampleData) {
+      // Create a Set of IDs from the sample data
+      const sampleIds = new Set(sampleData.map((row) => row[mappingField]));
+
+      // Split the population data into remaining and removed rows
+      const updatedPopulationData = populationData.filter(
+        (row) => !sampleIds.has(row[dynamicIdField]),
+      );
+
+      const newSampleData = populationData.filter((row) =>
+        sampleIds.has(row[dynamicIdField]),
+      );
+
+      // Update state for population and sample grids
+      setPopulationRowData(updatedPopulationData);
+      setSampleRowData(newSampleData);
+    }
+  }, [populationData, sampleData]);
+
+  useEffect(() => {
+    if (resetRef) {
+      resetRef.current = resetData;
+    }
+    return () => {
+      if (resetRef) {
+        resetRef.current = null;
+      }
+    };
+  }, [resetData, resetRef]);
 
   const onPopulationSearchChange = useCallback(() => {
     populationGridRef?.current?.api.setGridOption(
       "quickFilterText",
-      (document.getElementById("population-quick-filter") as HTMLInputElement)
-        .value,
+      (
+        document.getElementById(
+          `population-quick-filter-${uniquePopulationQuickFilterId}`,
+        ) as HTMLInputElement
+      ).value,
     );
   }, []);
 
   const onSampleSearchChange = useCallback(() => {
     sampleGridRef?.current?.api.setGridOption(
       "quickFilterText",
-      (document.getElementById("sample-quick-filter") as HTMLInputElement)
-        .value,
+      (
+        document.getElementById(
+          `sample-quick-filter-${uniqueSampleQuickFilterId}`,
+        ) as HTMLInputElement
+      ).value,
     );
   }, []);
 
@@ -99,7 +206,10 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
     data: any[],
   ) => {
     addRecordsToGrid(oldGridApi, newGridApi, data);
-    setUndoStack([...undoStack, { oldGridApi, newGridApi, data }]);
+    setUndoStack((prevUndoStack) => [
+      ...prevUndoStack,
+      { oldGridApi, newGridApi, data },
+    ]);
   };
 
   const handleUndo = () => {
@@ -110,10 +220,15 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
     }
   };
 
-  const [populationHasSelectedRows, setPopulationHasSelectedRows] =
-    useState<boolean>(false);
-  const [sampleHasSelectedRows, setSampleHasSelectedRows] =
-    useState<boolean>(false);
+  useEffect(() => {
+    const hasUndoStack = undoStack.length > 0;
+    console.log(`Has undo stack: ${hasUndoStack}`);
+    onUndoStackChange?.(undoStack.length > 0);
+  }, [undoStack]);
+
+  useEffect(() => {
+    console.log(undoStack);
+  }, [undoStack]);
 
   const onPopulationSelectionChanged = () => {
     const selectedRows = populationGridRef.current?.api.getSelectedRows();
@@ -174,14 +289,24 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
   }, [populationData, sampleData, dynamicIdField, checkForDuplicateIds]);
 
   useEffect(() => {
-    if (!errorMessage && populationData && sampleData) {
-      const sampleIds = new Set(sampleData.map((row) => row[dynamicIdField]));
-      const reducedPopulation = populationData.filter(
+    if (populationData && sampleData) {
+      // Create a Set of IDs from the sample data
+      const sampleIds = new Set(sampleData.map((row) => row[mappingField]));
+
+      // Split the population data into remaining and removed rows
+      const updatedPopulationData = populationData.filter(
         (row) => !sampleIds.has(row[dynamicIdField]),
       );
-      setPopulationRowData(reducedPopulation);
+
+      const newSampleData = populationData.filter((row) =>
+        sampleIds.has(row[dynamicIdField]),
+      );
+
+      // Update state for population and sample grids
+      setPopulationRowData(updatedPopulationData);
+      setSampleRowData(newSampleData);
     }
-  }, [populationData, sampleData, dynamicIdField, errorMessage]);
+  }, [populationData, sampleData, dynamicIdField, mappingField]);
 
   const populationDraggableBoxRef = useRef<HTMLDivElement>(null);
   const sampleDraggableBoxRef = useRef<HTMLDivElement>(null);
@@ -303,15 +428,24 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
     }
 
     const rowData: any[] = [];
-    sampleGridRef.current.api.forEachNode((node) => rowData.push(node.data));
+    sampleGridRef.current.api.forEachNode((node) =>
+      rowData.push(node.data[dynamicIdField]),
+    );
 
-    await fetchClient(`/api/surveyjs/test`, {
-      method: "PUT",
-      body: rowData,
-      successMessage: "Data sent successfully.",
+    const payload = {
+      [payloadKey]: rowData,
+    };
+
+    await fetchClient(endpoint, {
+      method: "POST",
+      body: payload,
+      successMessage: `${populationTitle} saved successfully.`,
       errorMessage: "Unable to send data. Please try again.",
       redirectOnError: false,
+      toastPosition: "bottom-right",
     });
+
+    setUndoStack([]);
   };
 
   const moveAllToSample = () => {
@@ -375,82 +509,84 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
   const rowSelection: RowSelectionOptions = { mode: "multiRow" };
 
   return (
-    <Box className="ag-theme-alpine ag-theme-perygon" w="full" py={2}>
+    <Box className="ag-theme-alpine ag-theme-perygon" w="full" pt={4}>
       {!errorMessage ? (
         <>
           {/* Conditionally render the alert based on state */}
-          <Alert
-            status="info"
-            mb={4}
-            borderRadius="lg"
-            bg={isAlertVisible ? "#E2E8F0" : "transparent"}
-            color="#1A202C"
-            border={
-              isAlertVisible ? "1px solid #CBD5E0" : "1px solid transparent"
-            }
-            boxShadow={isAlertVisible ? "lg" : ""}
-          >
-            <Flex justify="space-between" align="center" w="full" gap={4}>
-              {isAlertVisible && (
-                <>
-                  <AlertIcon color="#3182CE" /> {/* Subtle alert icon */}
-                  <Text fontWeight="500" fontSize="md">
-                    You can drag and drop rows between grids, select multiple
-                    rows, or use the buttons to move all rows at once.
-                  </Text>
-                </>
-              )}
-              <Box ml={"auto"}>
-                {!isAlertVisible ? (
-                  <Tooltip
-                    label="Click to show instructions"
-                    aria-label="Info Tooltip"
-                    hasArrow
-                  >
+          {showTooltip && (
+            <Alert
+              status="info"
+              mb={4}
+              borderRadius="lg"
+              bg={isAlertVisible ? "#E2E8F0" : "transparent"}
+              color="#1A202C"
+              border={
+                isAlertVisible ? "1px solid #CBD5E0" : "1px solid transparent"
+              }
+              boxShadow={isAlertVisible ? "lg" : ""}
+            >
+              <Flex justify="space-between" align="center" w="full" gap={4}>
+                {isAlertVisible && (
+                  <>
+                    <AlertIcon color="#3182CE" /> {/* Subtle alert icon */}
+                    <Text fontWeight="500" fontSize="md">
+                      You can drag and drop rows between grids, select multiple
+                      rows, or use the buttons to move all rows at once.
+                    </Text>
+                  </>
+                )}
+                <Box ml={"auto"}>
+                  {!isAlertVisible ? (
+                    <Tooltip
+                      label="Click to show instructions"
+                      aria-label="Info Tooltip"
+                      hasArrow
+                    >
+                      <IconButton
+                        icon={
+                          <InfoOutlined
+                            sx={{
+                              fontSize: "1.5rem",
+                              color: "#718096",
+                            }}
+                          />
+                        } // Larger, modern icon style
+                        aria-label="Toggle Instructions"
+                        onClick={toggleAlertVisibility}
+                        size="lg"
+                        variant="ghost"
+                        _hover={{
+                          backgroundColor: "transparent",
+                          color: "#2D3748",
+                          border: "1px solid white",
+                        }} // Hover effect
+                      />
+                    </Tooltip>
+                  ) : (
                     <IconButton
+                      aria-label="Close"
                       icon={
-                        <InfoOutlined
-                          sx={{
+                        <Close
+                          style={{
                             fontSize: "1.5rem",
                             color: "#718096",
                           }}
                         />
-                      } // Larger, modern icon style
-                      aria-label="Toggle Instructions"
+                      } // Modern, subtle close button style
                       onClick={toggleAlertVisibility}
                       size="lg"
                       variant="ghost"
                       _hover={{
                         backgroundColor: "transparent",
                         color: "#2D3748",
-                        border: "1px solid white",
-                      }} // Hover effect
+                        border: "1px solid black",
+                      }} // Modern hover effect
                     />
-                  </Tooltip>
-                ) : (
-                  <IconButton
-                    aria-label="Close"
-                    icon={
-                      <Close
-                        style={{
-                          fontSize: "1.5rem",
-                          color: "#718096",
-                        }}
-                      />
-                    } // Modern, subtle close button style
-                    onClick={toggleAlertVisibility}
-                    size="lg"
-                    variant="ghost"
-                    _hover={{
-                      backgroundColor: "transparent",
-                      color: "#2D3748",
-                      border: "1px solid black",
-                    }} // Modern hover effect
-                  />
-                )}
-              </Box>
-            </Flex>
-          </Alert>
+                  )}
+                </Box>
+              </Flex>
+            </Alert>
+          )}
 
           <Stack
             w="full"
@@ -461,21 +597,55 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
             {/* Population Grid Section */}
             <Flex
               direction="column"
-              minW={"400px"}
               height="500px"
               w={"full"}
               flexGrow={1}
               ref={populationDraggableBoxRef}
             >
-              <Heading mb={2} fontSize={isMobile ? "lg" : "2xl"}>
-                {populationTitle ?? "Original Data"}
-              </Heading>
-              <Input
-                placeholder={"Search Population Data"}
-                id={"population-quick-filter"}
-                onChange={onPopulationSearchChange}
-                mb={4}
-              />
+              <Flex
+                direction={"row"}
+                w={"full"}
+                justify={"flex-start"}
+                align={"center"}
+                p={1}
+                gap={2}
+              >
+                <Heading color={"white"} fontSize={isMobile ? "lg" : "2xl"}>
+                  {populationTitle ?? "Original Data"}
+                </Heading>
+                <Button
+                  variant="solid"
+                  bg="seduloRed"
+                  aria-label="reset-filters"
+                  onClick={() => {
+                    resetFilter(
+                      populationGridRef,
+                      `population-quick-filter-${uniquePopulationQuickFilterId}`,
+                    );
+                  }}
+                  ml={"auto"}
+                  size="md"
+                  color="white"
+                  leftIcon={<Clear />}
+                  _hover={{ bg: "perygonPink" }}
+                >
+                  {resetFiltersButtonText}
+                </Button>
+                <Input
+                  variant="outline"
+                  id={`population-quick-filter-${uniquePopulationQuickFilterId}`}
+                  placeholder="Search..."
+                  onInput={onPopulationSearchChange}
+                  w={[128, 128, 256]}
+                  bg="white"
+                  borderColor="gray.300"
+                  _hover={{ borderColor: "gray.400" }}
+                  _focus={{
+                    borderColor: "perygonPink",
+                    boxShadow: "0 0 0 1px #ff0070",
+                  }}
+                />
+              </Flex>
               <AgGridReact
                 ref={populationGridRef}
                 rowData={populationRowData}
@@ -520,21 +690,55 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
             {/* Sample Grid Section */}
             <Flex
               direction="column"
-              minW={"400px"}
               height="500px"
               w={"full"}
               flexGrow={1}
               ref={sampleDraggableBoxRef}
             >
-              <Heading mb={2} fontSize={isMobile ? "lg" : "2xl"}>
-                {sampleTitle ?? "New Data"}
-              </Heading>
-              <Input
-                placeholder={"Search Sample Data"}
-                id={"sample-quick-filter"}
-                onChange={onSampleSearchChange}
-                mb={4}
-              />
+              <Flex
+                direction={"row"}
+                w={"full"}
+                justify={"flex-start"}
+                align={"center"}
+                p={1}
+                gap={2}
+              >
+                <Heading color={"white"} fontSize={isMobile ? "lg" : "2xl"}>
+                  {sampleTitle ?? "New Data"}
+                </Heading>
+                <Button
+                  variant="solid"
+                  bg="seduloRed"
+                  aria-label="reset-filters"
+                  onClick={() => {
+                    resetFilter(
+                      sampleGridRef,
+                      `sample-quick-filter-${uniqueSampleQuickFilterId}`,
+                    );
+                  }}
+                  ml={"auto"}
+                  size="md"
+                  color="white"
+                  leftIcon={<Clear />}
+                  _hover={{ bg: "perygonPink" }}
+                >
+                  {resetFiltersButtonText}
+                </Button>
+                <Input
+                  variant="outline"
+                  id={`sample-quick-filter-${uniqueSampleQuickFilterId}`}
+                  placeholder="Search..."
+                  onInput={onSampleSearchChange}
+                  w={[128, 128, 256]}
+                  bg="white"
+                  borderColor="gray.300"
+                  _hover={{ borderColor: "gray.400" }}
+                  _focus={{
+                    borderColor: "perygonPink",
+                    boxShadow: "0 0 0 1px #ff0070",
+                  }}
+                />
+              </Flex>
               <AgGridReact
                 ref={sampleGridRef}
                 rowData={sampleRowData}
@@ -576,13 +780,13 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
               mr={3}
               bgColor="darkGray"
               border="1px solid darkGray"
-              leftIcon={<Add />}
+              leftIcon={<Undo />}
               color="white"
               _hover={{ color: "darkGray", backgroundColor: "white" }}
               onClick={handleUndo}
               isDisabled={undoStack.length === 0}
             >
-              Undo
+              {undoButtonText}
             </Button>
             <Button
               mr={3}
@@ -596,7 +800,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                 populationGridRef.current?.api?.getDisplayedRowCount() === 0
               }
             >
-              {!populationHasSelectedRows ? "Add All" : "Add Selected"}
+              {addAllButtonText}
             </Button>
             <Button
               mr={3}
@@ -610,7 +814,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                 sampleGridRef.current?.api?.getDisplayedRowCount() === 0
               }
             >
-              {!sampleHasSelectedRows ? "Remove All" : "Remove Selected"}
+              {removeAllButtonText}
             </Button>
             <Button
               bgColor="green"
@@ -619,13 +823,10 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
               leftIcon={<Done />}
               _hover={{ color: "green", backgroundColor: "white" }}
               onClick={handleSubmission}
-              isDisabled={
-                !!errorMessage ||
-                sampleGridRef.current?.api?.getDisplayedRowCount() === 0
-              }
+              isDisabled={!!errorMessage || undoStack.length === 0}
               isLoading={loading}
             >
-              Submit
+              {submitButtonText}
             </Button>
           </Flex>
         </>

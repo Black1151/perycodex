@@ -1,9 +1,8 @@
 "use client";
 
-import { Box, VStack, useTheme, Divider, Text } from "@chakra-ui/react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
-import React from "react";
+import { Box, Divider, Text, useTheme, VStack } from "@chakra-ui/react";
+import { AnimatePresence, motion } from "framer-motion";
+import React, { useState } from "react";
 import { RotatingChevron } from "./RotatingChevron";
 import SideBarMenuItem from "./SideBarMenuItem";
 

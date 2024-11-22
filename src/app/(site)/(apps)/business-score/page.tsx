@@ -1,5 +1,4 @@
 import MainPageServer from "@/components/scaffold/pages/MainPageServer";
-import HappinessScoreClientInner from "../happiness-score/HappinessScoreClientInner";
 import BusinessScoreClientInner from "./BusinessScoreClientInner";
 
 export default async function Home({

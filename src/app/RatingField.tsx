@@ -12,7 +12,6 @@ import icon7 from "/smiley-icon.svg";
 import icon8 from "/smiley-icon.svg";
 import icon9 from "/smiley-icon.svg";
 import icon10 from "/smiley-icon.svg";
-import useColor from "@/hooks/useColor";
 
 const icons = [
   icon1,

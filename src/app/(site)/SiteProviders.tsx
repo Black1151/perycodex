@@ -4,7 +4,10 @@ import { ReactNode } from "react";
 import { UserContextProps, UserProvider } from "@/providers/UserProvider";
 import { WorkflowProvider } from "@/providers/WorkflowProvider";
 
-import { UserModal } from "@/components/modals/userModal/userModal";
+import { UserModal } from "@/components/modals/userModal/UserModal";
+import { WorkflowModal } from "@/components/modals/workflowModal/WorkflowModal";
+import { DeveloperBoard } from "@mui/icons-material";
+import DeveloperBoardOptions from "@/app/(site)/DeveloperBoardOptions";
 
 interface ClientUserProviderProps {
   children: ReactNode;
@@ -19,9 +22,7 @@ export default function SiteProviders({
     <UserProvider value={userMetadata}>
       <WorkflowProvider>
         {children}
-        {process.env.NODE_ENV === "development" && (
-          <UserModal userMetadata={userMetadata} />
-        )}
+        <DeveloperBoardOptions userMetadata={userMetadata} />
       </WorkflowProvider>
     </UserProvider>
   );

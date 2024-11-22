@@ -1,12 +1,12 @@
 import Counter from "@/components/counter/Counter";
 import {
+  Box,
   Flex,
+  HStack,
+  Image,
   Text,
   useTheme,
   VStack,
-  Image,
-  Box,
-  HStack,
 } from "@chakra-ui/react";
 
 interface StatBoxProps {

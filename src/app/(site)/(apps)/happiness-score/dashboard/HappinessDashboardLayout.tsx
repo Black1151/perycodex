@@ -4,7 +4,6 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { LeftHandNavigationDrawer } from "@/components/layout/LeftHandNavigationDrawer";
 import { Analytics } from "@mui/icons-material";
-import { useWorkflow } from "@/providers/WorkflowProvider";
 
 interface DashboardItem {
   dashboardId: number;
@@ -27,7 +26,6 @@ const HappinessDashboardLayout: React.FC<HappinessDashboardLayoutProps> = ({
   dashboardList,
 }) => {
   const router = useRouter();
-  const { tool } = useWorkflow();
 
   const menuItems = dashboardList.map((dashboard) => ({
     label: dashboard.dashboardName,
@@ -42,7 +40,6 @@ const HappinessDashboardLayout: React.FC<HappinessDashboardLayoutProps> = ({
         menuItems={menuItems}
         defaultDrawerState={"half-open"}
       />
-      {tool}
     </>
   );
 };

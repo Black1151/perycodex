@@ -1,5 +1,5 @@
 import LoadingBar from "@/components/LoadingBar/LoadingBar";
-import { Center, Box, Flex, keyframes, Image, VStack } from "@chakra-ui/react";
+import { Box, Center, Flex, Image, keyframes, VStack } from "@chakra-ui/react";
 
 import { motion } from "framer-motion";
 
