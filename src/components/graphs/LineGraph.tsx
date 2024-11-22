@@ -1,5 +1,12 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Box, HStack, Text, useBreakpointValue, Flex } from "@chakra-ui/react";
+import {
+  Box,
+  HStack,
+  Text,
+  useBreakpointValue,
+  Flex,
+  VStack,
+} from "@chakra-ui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { perygonTheme } from "@/theme/theme";
 
