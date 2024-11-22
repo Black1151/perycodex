@@ -18,5 +18,7 @@ export default async function Home() {
     const dashboardData = (await res.json()).resource;
 
     return <HappinessDashboardLayout dashboardList={dashboardData} />;
+
+    return;
   } catch (err) {}
 }
