@@ -36,5 +36,9 @@ yarn-error.log*
 next-env.d.ts
 
 .idea
+.husky/
+.husky/pre-commit
+.husky/pre-push
+.husky/pre-merge-commit 
 
 .husky

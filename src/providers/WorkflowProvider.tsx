@@ -52,7 +52,7 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
 
   useEffect(() => {
     const shouldReset = pathsToResetToolLogo.some((path) =>
-      pathname.startsWith(path),
+      pathname.startsWith(path)
     );
     if (!shouldReset) {
       setToolLogo(null);
@@ -69,11 +69,11 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
         console.log(`I am fetching the toolConfig Data for: ${toolId}`);
         try {
           const res: ToolConfigResponse | null = await fetchClient(
-            `/api/toolConfig/findBy?id=${toolId}`,
+            `/api/toolConfig/findBy?id=${toolId}`
           );
           if (res?.resource?.appUrl && toolId && workflowId) {
             setToolPath(
-              `${res.resource.appUrl}?toolId=${toolId}&wfId=${workflowId}`,
+              `${res.resource.appUrl}?toolId=${toolId}&wfId=${workflowId}`
             );
           }
           if (res?.resource?.logoImageUrl) {

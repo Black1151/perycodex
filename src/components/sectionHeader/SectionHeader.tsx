@@ -16,7 +16,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({ children }) => {
       justifyContent="center"
       backgroundColor="white"
     >
-      <Text color={theme.colors.perygonPink} fontSize="xl">
+      <Text color={theme.colors.perygonPink} fontSize={["sm", "lg"]}>
         {children}
       </Text>
     </Flex>

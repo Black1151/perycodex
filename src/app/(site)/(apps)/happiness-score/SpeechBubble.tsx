@@ -22,7 +22,6 @@ const SpeechBubbleSVG: React.FC<SpeechBubbleSVGProps> = ({ fill = "#fff" }) => (
 
 interface SpeechBubbleProps {
   score: number;
-  text: string;
   positiveChange?: boolean;
   fill?: string;
   textColor?: string;
@@ -31,7 +30,6 @@ interface SpeechBubbleProps {
 
 const SpeechBubble: React.FC<SpeechBubbleProps> = ({
   score,
-  text,
   positiveChange,
   change,
   fill = "#fff",
@@ -45,6 +43,9 @@ const SpeechBubble: React.FC<SpeechBubbleProps> = ({
   const [fontSize, setFontSize] = useState(12);
 
   useEffect(() => {
+    const element = containerRef.current;
+    if (!element) return;
+
     const resizeObserver = new ResizeObserver((entries) => {
       for (let entry of entries) {
         const { width, height } = entry.contentRect;
@@ -53,21 +54,28 @@ const SpeechBubble: React.FC<SpeechBubbleProps> = ({
       }
     });
 
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-    }
+    resizeObserver.observe(element);
 
     return () => {
-      if (containerRef.current) {
-        resizeObserver.unobserve(containerRef.current);
-      }
+      resizeObserver.unobserve(element);
     };
   }, []);
 
   const [wholePart, decimalPart] = score.toFixed(2).split(".");
 
+  // Resolve the text based on the score
+  const getText = (score: number): string => {
+    if (score >= 9) return "World Class!";
+    if (score >= 7) return "Great!";
+    if (score >= 5) return "Not Bad";
+    if (score >= 3) return "Not Good";
+    return "Terrible!";
+  };
+
+  const resolvedText = getText(score);
+
   return (
-    <Box position="relative" width="100%" height="100%">
+    <Box position="relative" width="100%" height="100%" maxHeight={600}>
       <SpeechBubbleSVG fill={fill} />
       <Box
         ref={containerRef}
@@ -120,7 +128,7 @@ const SpeechBubble: React.FC<SpeechBubbleProps> = ({
           mt={3}
           fontFamily="Bonfire"
         >
-          {text}
+          {resolvedText}
         </Text>
       </Box>
     </Box>

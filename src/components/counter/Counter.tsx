@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Box, BoxProps, Text } from "@chakra-ui/react";
-import { motion } from "framer-motion";
+import { Box, BoxProps } from "@chakra-ui/react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface CounterProps extends BoxProps {
   value: number;
 }
 
 const Counter: React.FC<CounterProps> = ({ value, ...rest }) => {
-  const [displayValue, setDisplayValue] = useState(0);
+  const [displayValue, setDisplayValue] = useState(value);
+  const [previousValue, setPreviousValue] = useState(value);
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
@@ -15,35 +16,55 @@ const Counter: React.FC<CounterProps> = ({ value, ...rest }) => {
   }, []);
 
   useEffect(() => {
-    if (hasMounted && value > 0) {
-      let start = 0;
-      const increment = value / 100;
-      const interval = setInterval(() => {
-        start += increment;
-        if (start >= value) {
-          clearInterval(interval);
-          setDisplayValue(value);
-        } else {
-          setDisplayValue(Math.floor(start));
-        }
-      }, 10);
-
-      return () => clearInterval(interval);
+    if (hasMounted && value !== displayValue) {
+      setPreviousValue(displayValue);
+      setDisplayValue(value);
     }
-  }, [value, hasMounted]);
+  }, [value, displayValue, hasMounted]);
 
   return (
     <Box
+      position="relative"
       display="flex"
       alignItems="center"
       justifyContent="center"
-      fontSize="md"
-      lineHeight={0}
+      fontSize="2xl"
+      lineHeight="1"
+      overflow="visible"
+      height="2rem"
       {...rest}
     >
-      <Text as={motion.div} fontWeight="bold">
-        {hasMounted ? displayValue : 0}
-      </Text>
+      <AnimatePresence initial={false}>
+        <motion.div
+          key={previousValue}
+          initial={{ opacity: 1, y: "0%", scale: 1 }}
+          animate={{ opacity: 0, y: "110%", scale: 0 }}
+          exit={{ opacity: 0, y: "110%", scale: 0 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          style={{
+            position: "absolute",
+            width: "100%",
+            textAlign: "center",
+          }}
+        >
+          {previousValue}
+        </motion.div>
+
+        <motion.div
+          key={displayValue}
+          initial={{ opacity: 0, y: "-110%", scale: 0 }}
+          animate={{ opacity: 1, y: "0%", scale: 1 }}
+          exit={{ opacity: 0, y: "110%", scale: 0 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          style={{
+            position: "absolute",
+            width: "100%",
+            textAlign: "center",
+          }}
+        >
+          {displayValue}
+        </motion.div>
+      </AnimatePresence>
     </Box>
   );
 };
