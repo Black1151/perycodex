@@ -49,11 +49,11 @@ export default function HappinessScoreClientInner({
         >
           <HStack justifyContent="space-between" mt={12} w="100%">
             <Heading
-              as={"h1"}
+              as="h1"
               fontWeight={100}
               color="white"
               size={["lg", "xl"]}
-              fontFamily={"Bonfire"}
+              fontFamily="Bonfire"
             >
               Happiness Scores
             </Heading>
@@ -61,16 +61,16 @@ export default function HappinessScoreClientInner({
               label="Create New"
               toolId={toolId}
               workflowId={workflowId}
-              redirectUrl={"/happiness-score"}
+              redirectUrl="/happiness-score"
             />
           </HStack>
           <Grid
             templateAreas={`"main"`}
-            gridTemplateRows={"1fr"}
+            gridTemplateRows="1fr"
             minH="100vh"
             w="100%"
           >
-            <GridItem area={"main"} mt={10}>
+            <GridItem area="main" mt={10}>
               <Grid
                 templateColumns={["1fr", null, "1fr 2fr"]}
                 gap={[12, null, 16]}
@@ -79,7 +79,6 @@ export default function HappinessScoreClientInner({
                   <SpringScale delay={0.2}>
                     <SpeechBubble
                       score={8.23}
-                      text="Great!"
                       change={0.57}
                       fill="white"
                       positiveChange={true}
@@ -99,16 +98,11 @@ export default function HappinessScoreClientInner({
                         { value: 8.1, title: "Apr" },
                         { value: 1.2, title: "May" },
                         { value: 9.3, title: "Jun" },
-                        { value: 9.1, title: "Jun" },
-                        { value: 3.5, title: "Jun" },
+                        { value: 9.1, title: "Jul" },
+                        { value: 3.5, title: "Aug" },
                       ]}
                     />
                   </SpringScale>
-                </GridItem>
-                <GridItem>
-                  <HappinessScoreMasonry
-                    masonryValues={["50", "23", "46", "19"]}
-                  />
                 </GridItem>
                 <GridItem>
                   <SpringScale delay={0.1} style={{ height: "100%" }}>
