@@ -50,7 +50,7 @@ export const themeJson = {
     "--sjs-special-yellow-forecolor": "rgba(255, 255, 255, 1)",
 
     "--sjs-font-family": "Metropolis",
-    "--sjs-font-size": "12px",
+    "--sjs-font-size": "14px",
 
     "--sjs-article-font-xx-large-textDecoration": "none",
     "--sjs-article-font-xx-large-fontWeight": "700",
