@@ -4,6 +4,10 @@ import { UserTeamDetailsBanner } from "@/components/AdminDetailsBanners/UserTeam
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import apiClient from "@/lib/apiClient";
 import { checkUserRole } from "@/lib/dal";
+import DataGridComponent from "@/components/agGrids/DataGridComponent";
+import { userTeamMembersListFields } from "@/components/agGrids/dataFields/userTeamMembersListFields";
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import React from "react";
 
 export default async function TeamsDetailPage({
   params,
@@ -12,26 +16,62 @@ export default async function TeamsDetailPage({
 }) {
   await checkUserRole(`/teams/${params.uniqueId}`);
 
-  const res = await apiClient(`/userTeam/findBy?uniqueId=${params.uniqueId}`);
+  const [userTeamDetailsRes, userTeamMembersRes] = await Promise.all([
+    apiClient(`/userTeam/findBy?uniqueId=${params.uniqueId}`),
+    apiClient(
+      `/getAllView?view=vwUserTeamMembersList&userTeamUniqueId=${params.uniqueId}`,
+    ),
+  ]);
 
-  if (!res.ok) {
+  if (!userTeamDetailsRes.ok || !userTeamMembersRes.ok) {
     return redirect("/error");
   }
 
-  const userTeam = await res.json();
+  const userTeam = await userTeamDetailsRes.json();
+  const userTeamMembers = await userTeamMembersRes.json();
+
   const userTeamData = userTeam?.resource;
+  const userTeamMembersData = userTeamMembers?.resource;
 
   return (
-    <div>
+    <>
       <UserTeamDetailsBanner team={userTeamData} />
-      <SurveyComponent
-        surveyJson={userTeamJson}
-        endpoint={`/userTeam/${params.uniqueId}`}
-        isNew={false}
-        dataset={userTeamData}
-        sjsPath={"admin"}
-        reloadPageOnSuccess={true}
-      />
-    </div>
+      <Tabs variant="enclosed" size="md" isFitted>
+        <TabList>
+          <Tab
+            color={"white"}
+            fontSize={["sm", "sm", "md"]}
+            _selected={{ color: "white", bg: "#FFFFFF44" }}
+          >
+            Edit User Group
+          </Tab>
+          <Tab
+            color={"white"}
+            fontSize={["sm", "sm", "md"]}
+            _selected={{ color: "white", bg: "#FFFFFF44" }}
+          >
+            {userTeamData.isDepartment ? "Department" : "Team"} Members
+          </Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel p={0}>
+            <SurveyComponent
+              surveyJson={userTeamJson}
+              endpoint={`/userTeam/${params.uniqueId}`}
+              isNew={false}
+              dataset={userTeamData}
+              sjsPath={"admin"}
+              reloadPageOnSuccess={true}
+            />
+          </TabPanel>
+          <TabPanel p={0}>
+            <DataGridComponent
+              data={userTeamMembersData}
+              initialFields={userTeamMembersListFields}
+            />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+    </>
   );
 }
