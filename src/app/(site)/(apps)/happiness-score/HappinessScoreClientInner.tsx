@@ -99,12 +99,16 @@ export default function HappinessScoreClientInner({
                         { value: 8.1, title: "Apr" },
                         { value: 1.2, title: "May" },
                         { value: 9.3, title: "Jun" },
+                        { value: 9.1, title: "Jun" },
+                        { value: 3.5, title: "Jun" },
                       ]}
                     />
                   </SpringScale>
                 </GridItem>
                 <GridItem>
-                  <HappinessScoreMasonry />
+                  <HappinessScoreMasonry
+                    masonryValues={["50", "23", "46", "19"]}
+                  />
                 </GridItem>
                 <GridItem>
                   <SpringScale delay={0.1} style={{ height: "100%" }}>

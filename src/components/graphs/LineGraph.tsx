@@ -1,12 +1,13 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import {
   Box,
   Text,
   VStack,
   HStack,
   useBreakpointValue,
+  Flex,
 } from "@chakra-ui/react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { perygonTheme } from "@/theme/theme";
 
 interface DataPoint {
@@ -20,7 +21,8 @@ interface LineGraphProps {
 
 const LineGraph: React.FC<LineGraphProps> = ({ DataPoints = [] }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [containerWidth, setContainerWidth] = React.useState(0);
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [animationKey, setAnimationKey] = useState(0);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -37,13 +39,25 @@ const LineGraph: React.FC<LineGraphProps> = ({ DataPoints = [] }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const maxValue = Math.max(...DataPoints.map((point) => point.value), 0);
+  // Re-trigger animations when DataPoints change
+  useEffect(() => {
+    setAnimationKey((prevKey) => prevKey + 1);
+  }, [DataPoints]);
+
+  // Ensure maxValue is at least 10
+  const maxValue = Math.max(
+    Math.ceil(Math.max(...DataPoints.map((point) => point.value), 0)),
+    10,
+  );
+
+  // Y-axis ticks from 0 to 10
+  const yAxisTicks = Array.from({ length: 11 }, (_, i) => i);
 
   // Responsive paddings and sizes
   const leftPadding = useBreakpointValue({ base: 20, md: 40 }) ?? 40;
   const rightPadding = useBreakpointValue({ base: 20, md: 40 }) ?? 40;
   const topPadding = useBreakpointValue({ base: 40, md: 80 }) ?? 80;
-  const bottomPadding = useBreakpointValue({ base: 40, md: 80 }) ?? 80;
+  const bottomPadding = useBreakpointValue({ base: 40, md: 140 }) ?? 80;
   const xAxisPadding = useBreakpointValue({ base: 20, md: 50 }) ?? 50;
   const imageSize = useBreakpointValue({ base: 20, md: 30 }) ?? 30;
   const strokeWidth = useBreakpointValue({ base: 2, md: 3 }) ?? 3;
@@ -53,11 +67,6 @@ const LineGraph: React.FC<LineGraphProps> = ({ DataPoints = [] }) => {
     containerWidth - leftPadding - rightPadding - 2 * xAxisPadding;
   const graphHeight = useBreakpointValue({ base: 200, md: 400 }) ?? 300;
   const totalHeight = graphHeight + topPadding + bottomPadding;
-
-  const yAxisTicks = Array.from(
-    { length: Math.ceil(maxValue) + 1 },
-    (_, i) => i,
-  );
 
   const mapIndexToX = (index: number) => {
     return (
@@ -84,9 +93,10 @@ const LineGraph: React.FC<LineGraphProps> = ({ DataPoints = [] }) => {
   };
 
   return (
-    <Box height={`${totalHeight}px`} position="relative">
+    <Flex height={`${totalHeight}px`} position="relative" width="100%" flex={1}>
       <Box
         ref={containerRef}
+        key={animationKey} // Use key to remount component on data change
         width="100%"
         height={`${totalHeight}px`}
         position="relative"
@@ -109,7 +119,14 @@ const LineGraph: React.FC<LineGraphProps> = ({ DataPoints = [] }) => {
           top="0"
         >
           {yAxisTicks.map((tick, index) => (
-            <motion.div key={tick} custom={index} style={{ width: "100%" }}>
+            <motion.div
+              key={tick}
+              custom={index}
+              style={{ width: "100%" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: index * 0.1 }}
+            >
               <HStack
                 width="100%"
                 position="absolute"
@@ -146,8 +163,8 @@ const LineGraph: React.FC<LineGraphProps> = ({ DataPoints = [] }) => {
             color="gray.500"
             position="absolute"
             left={`${mapIndexToX(index)}px`}
-            bottom={`${bottomPadding - 20}px`}
-            transform="translateX(-50%)"
+            bottom={`${bottomPadding - 70}px`}
+            transform="translateX(-50%) rotate(90deg)"
           >
             {point.title}
           </Text>
@@ -195,7 +212,7 @@ const LineGraph: React.FC<LineGraphProps> = ({ DataPoints = [] }) => {
                 initial={{ pathLength: 0 }}
                 animate={{ pathLength: 1 }}
                 transition={{
-                  duration: 0.3,
+                  duration: 0.5,
                   ease: "easeInOut",
                   delay: index * 0.2,
                 }}
@@ -219,11 +236,11 @@ const LineGraph: React.FC<LineGraphProps> = ({ DataPoints = [] }) => {
             }}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ delay: index * 0.2, duration: 0.1 }}
+            transition={{ delay: index * 0.2, duration: 0.3 }}
           />
         ))}
       </Box>
-    </Box>
+    </Flex>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -21,6 +21,7 @@ interface DataPoint {
 interface BarProps {
   value: number;
   delay: number;
+  onClick?: () => void;
 }
 
 const shimmerVertical = keyframes`
@@ -32,7 +33,7 @@ const shimmerVertical = keyframes`
   }
 `;
 
-const Bar: React.FC<BarProps> = ({ value, delay }) => {
+const Bar: React.FC<BarProps> = ({ value, delay, onClick }) => {
   const { getColor } = useColor();
 
   return (
@@ -44,7 +45,9 @@ const Bar: React.FC<BarProps> = ({ value, delay }) => {
         width: "100%",
         display: "flex",
         justifyContent: "center",
+        cursor: "pointer",
       }}
+      onClick={onClick}
     >
       <Box width="100%" maxW={[3, 5, 10]} bg={getColor(value)}>
         <Box
@@ -67,8 +70,9 @@ const Bar: React.FC<BarProps> = ({ value, delay }) => {
   );
 };
 
-interface AnimatedBarChartProps {
+export interface AnimatedBarChartProps {
   DataPoints: DataPoint[];
+  onBarClick?: (title: string) => void;
 }
 
 export const YAxis = () => {
@@ -89,7 +93,7 @@ export const YAxis = () => {
       as={motion.div}
       initial="hidden"
       animate="visible"
-      height="100%"
+      height={[200, 300]}
       justifyContent="space-between"
       width="100%"
     >
@@ -112,27 +116,37 @@ export const YAxis = () => {
   );
 };
 
-const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({ DataPoints }) => {
+const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({
+  DataPoints,
+  onBarClick,
+}) => {
   const [isTouchDevice] = useMediaQuery("(hover: none) and (pointer: coarse)");
   const [activeTooltip, setActiveTooltip] = useState<number | null>(null);
+  const theme = useTheme();
+  const [animationKey, setAnimationKey] = useState(0);
 
-  const handleBarClick = (index: number) => {
+  useEffect(() => {
+    setAnimationKey((prevKey) => prevKey + 1);
+  }, [DataPoints]);
+
+  const handleBarClick = (index: number, title: string) => {
     if (isTouchDevice) {
       setActiveTooltip(activeTooltip === index ? null : index);
     }
+    if (onBarClick) {
+      onBarClick(title);
+    }
   };
-
-  const theme = useTheme();
 
   return (
     <VStack
+      key={animationKey}
       bg="white"
       width="100%"
       flex={1}
       borderRadius="2xl"
       px={[2, 8]}
-      pb={10}
-      pt={10}
+      py={10}
       position="relative"
       minH={300}
       height={"100%"}
@@ -163,9 +177,12 @@ const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({ DataPoints }) => {
                 justifyContent="flex-end"
                 flex={1}
                 position="relative"
-                onClick={() => handleBarClick(index)}
               >
-                <Bar value={dataPoint.value} delay={index * 0.1} />
+                <Bar
+                  value={dataPoint.value}
+                  delay={index * 0.1}
+                  onClick={() => handleBarClick(index, dataPoint.title)}
+                />
                 <Flex
                   position="absolute"
                   bottom="-30px"
