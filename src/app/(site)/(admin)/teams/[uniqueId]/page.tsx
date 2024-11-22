@@ -43,7 +43,7 @@ export default async function TeamsDetailPage({
             fontSize={["sm", "sm", "md"]}
             _selected={{ color: "white", bg: "#FFFFFF44" }}
           >
-            Edit User Group
+            Edit {userTeamData.isDepartment ? "Department" : "Team"}
           </Tab>
           <Tab
             color={"white"}

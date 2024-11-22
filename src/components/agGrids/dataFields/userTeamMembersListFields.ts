@@ -1,6 +1,6 @@
 import { ColDef } from "ag-grid-community";
 import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
-import SiteLinkRenderer from "@/components/agGrids/CellRenderers/SiteLinkRenderer";
+import SiteLinkRenderer from "@/components/agGrids/CellRenderers/SiteLinkRenderer"; // Updated AgGrids fields
 
 // Updated AgGrids fields
 export const userTeamMembersListFields: ColDef[] | any = [
@@ -21,6 +21,11 @@ export const userTeamMembersListFields: ColDef[] | any = [
       nameField: "userFullname",
       imageUrlField: "userImageUrl",
     },
+  },
+  {
+    field: "userTeamName",
+    headerName: "Team",
+    filter: "agMultiColumnFilter",
   },
   {
     field: "userEmail",
