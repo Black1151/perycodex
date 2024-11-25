@@ -12,26 +12,23 @@ import {
   AccordionPanel,
   AccordionIcon,
   Button,
+  Select,
 } from "@chakra-ui/react";
 import React, { memo } from "react";
 import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/manager-dashboard/page";
-
-export interface MenuItem {
-  label: string;
-  icon: JSX.Element;
-  onClick: () => void;
-  category?: string;
-}
 
 interface RightHandNavigationDrawerProps {
   title?: string;
   handleCheckboxChange: (
     groupIndex: number,
     optionIndex: number,
-    isChecked: boolean,
+    isChecked: boolean
   ) => void;
   filterOptions: FilterOptionGroup[];
   clearAllFilters: () => void;
+  weekOptions: string[];
+  selectedWeek: string | null;
+  onWeekChange: (week: string) => void;
 }
 
 export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
@@ -39,6 +36,9 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
   filterOptions,
   title,
   clearAllFilters,
+  weekOptions,
+  selectedWeek,
+  onWeekChange,
 }: RightHandNavigationDrawerProps) {
   const theme = useTheme();
 
@@ -61,6 +61,20 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
             <Text style={{ color: theme.colors.perygonPink }}>{title}</Text>
           </Box>
         )}
+        {/* Week Selector */}
+        <Box px={4} mt={4}>
+          <Select
+            placeholder="Select Week"
+            value={selectedWeek || ""}
+            onChange={(e) => onWeekChange(e.target.value)}
+          >
+            {weekOptions.map((week) => (
+              <option key={week} value={week}>
+                {week}
+              </option>
+            ))}
+          </Select>
+        </Box>
         {/* Drawer Content */}
         <Box flex={1} position="relative" zIndex={1} p={4} overflowY="auto">
           <Button
@@ -71,9 +85,9 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
           >
             Clear All Filters
           </Button>
-          <VStack spacing={4} align="stretch" width="100%">
+          <VStack spacing={4} align="stretch" width="100%" mt={4}>
             {filterOptions &&
-              filterOptions?.map((group, groupIndex) => (
+              filterOptions.map((group, groupIndex) => (
                 <Accordion key={group.label} allowToggle>
                   <AccordionItem>
                     <AccordionButton>
@@ -92,7 +106,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                               handleCheckboxChange(
                                 groupIndex,
                                 optionIndex,
-                                e.target.checked,
+                                e.target.checked
                               )
                             }
                           >

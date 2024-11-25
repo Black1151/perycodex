@@ -1,6 +1,13 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Box, HStack, Text, useBreakpointValue, Flex } from "@chakra-ui/react";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  Box,
+  HStack,
+  Text,
+  useBreakpointValue,
+  Flex,
+  VStack,
+} from "@chakra-ui/react";
+import { motion } from "framer-motion";
 import { perygonTheme } from "@/theme/theme";
 
 interface DataPoint {
@@ -89,7 +96,7 @@ const LineGraph: React.FC<LineGraphProps> = ({ DataPoints = [] }) => {
     <Flex height={`${totalHeight}px`} position="relative" width="100%" flex={1}>
       <Box
         ref={containerRef}
-        key={animationKey} // Use key to remount component on data change
+        key={animationKey}
         width="100%"
         height={`${totalHeight}px`}
         position="relative"
@@ -172,28 +179,41 @@ const LineGraph: React.FC<LineGraphProps> = ({ DataPoints = [] }) => {
           style={{ position: "absolute", top: 0, left: 0 }}
         >
           <defs>
-            {DataPoints.slice(0, -1).map((point, index) => (
-              <linearGradient
-                key={index}
-                id={`gradient-${index}`}
-                x1="0%"
-                y1="0%"
-                x2="100%"
-                y2="0%"
-              >
-                <stop offset="0%" stopColor={getHappinessColor(point.value)} />
-                <stop
-                  offset="100%"
-                  stopColor={getHappinessColor(DataPoints[index + 1].value)}
-                />
-              </linearGradient>
-            ))}
+            {DataPoints.slice(0, -1).map((point, index) => {
+              const nextPoint = DataPoints[index + 1];
+              if (point.value === 0 && nextPoint.value === 0) {
+                return null;
+              }
+              return (
+                <linearGradient
+                  key={index}
+                  id={`gradient-${index}`}
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="0%"
+                >
+                  <stop
+                    offset="0%"
+                    stopColor={getHappinessColor(point.value)}
+                  />
+                  <stop
+                    offset="100%"
+                    stopColor={getHappinessColor(nextPoint.value)}
+                  />
+                </linearGradient>
+              );
+            })}
           </defs>
           {DataPoints.slice(0, -1).map((point, index) => {
+            const nextPoint = DataPoints[index + 1];
+            if (point.value === 0 && nextPoint.value === 0) {
+              return null;
+            }
             const x1 = mapIndexToX(index);
             const y1 = mapValueToY(point.value);
             const x2 = mapIndexToX(index + 1);
-            const y2 = mapValueToY(DataPoints[index + 1].value);
+            const y2 = mapValueToY(nextPoint.value);
 
             return (
               <motion.path
@@ -215,23 +235,26 @@ const LineGraph: React.FC<LineGraphProps> = ({ DataPoints = [] }) => {
         </svg>
 
         {/* Data point images */}
-        {DataPoints.map((point, index) => (
-          <motion.img
-            key={index}
-            src={getFaceImage(point.value)}
-            alt={`Face for score ${Math.round(point.value)}`}
-            style={{
-              position: "absolute",
-              left: `${mapIndexToX(index) - imageSize / 2}px`,
-              top: `${mapValueToY(point.value) - imageSize / 2}px`,
-              width: imageSize,
-              height: imageSize,
-            }}
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: index * 0.2, duration: 0.3 }}
-          />
-        ))}
+        {DataPoints.map(
+          (point, index) =>
+            point.value !== 0 && (
+              <motion.img
+                key={index}
+                src={getFaceImage(point.value)}
+                alt={`Face for score ${Math.round(point.value)}`}
+                style={{
+                  position: "absolute",
+                  left: `${mapIndexToX(index) - imageSize / 2}px`,
+                  top: `${mapValueToY(point.value) - imageSize / 2}px`,
+                  width: imageSize,
+                  height: imageSize,
+                }}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: index * 0.2, duration: 0.3 }}
+              />
+            )
+        )}
       </Box>
     </Flex>
   );
