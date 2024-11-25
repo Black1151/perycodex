@@ -27,6 +27,8 @@ const HappinessDashboardLayout: React.FC<HappinessDashboardLayoutProps> = ({
 }) => {
   const router = useRouter();
 
+  console.log(dashboardList);
+
   const menuItems = dashboardList.map((dashboard) => ({
     label: dashboard.dashboardName,
     icon: <Analytics sx={{ height: "100%", width: "100%" }} />,
