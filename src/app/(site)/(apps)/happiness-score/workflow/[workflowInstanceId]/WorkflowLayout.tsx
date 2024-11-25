@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Box, Center, Spinner, useToast } from "@chakra-ui/react";
+import { Box, useToast } from "@chakra-ui/react";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import { WorkflowStage } from "@/app/(site)/(apps)/happiness-score/workflow/[workflowInstanceId]/page";
 import { useFetchClient } from "@/hooks/useFetchClient";
@@ -84,7 +84,7 @@ export default function WorkflowLayout({ stages }: WorkflowLayoutProps) {
       )}
 
       {/* Display SurveyComponent if form data is available */}
-      {currentStage && currentForm ? (
+      {currentStage && currentForm && (
         <SurveyComponent
           surveyJson={
             typeof currentForm.jsonFile === "string"
@@ -101,10 +101,7 @@ export default function WorkflowLayout({ stages }: WorkflowLayoutProps) {
           sjsPath={currentStage.sjsThemeFileUrl}
           layoutOptions={{ showTitle: true }}
         />
-      ) : (
-        <Center height="100%">
-          <Spinner size="xl" color="blue.500" />
-        </Center>
+        // TODO: Renderer state for no form available
       )}
     </Box>
   );

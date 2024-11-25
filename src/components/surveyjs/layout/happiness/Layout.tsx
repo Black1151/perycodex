@@ -33,21 +33,17 @@ const HappinessLayout: React.FC<HappinessLayoutProps> = ({
       setToEditMode={switchToEditMode}
     >
       <Flex
+        height={"full"}
         w="100%"
         justify="center"
         align="center"
-        // bg={"perygonPink"}
         bg={"transparent"}
-        height={"full"}
-        width={"full"}
         direction="column"
         p={6}
-        zIndex={101}
       >
         <Survey model={model} />
         {/* Submit Button */}
         <Button
-          mt={6}
           px={8}
           py={4}
           fontSize="lg"
