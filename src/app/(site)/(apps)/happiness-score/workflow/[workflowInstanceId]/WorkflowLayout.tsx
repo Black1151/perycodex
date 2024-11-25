@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Box, useToast } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import { WorkflowStage } from "@/app/(site)/(apps)/happiness-score/workflow/[workflowInstanceId]/page";
 import { useFetchClient } from "@/hooks/useFetchClient";
@@ -10,9 +10,12 @@ import {
   MenuItem,
 } from "@/components/layout/LeftHandNavigationDrawer";
 import { Circle as CircleIcon } from "@mui/icons-material";
+import { useWorkflow } from "@/providers/WorkflowProvider";
+import { useUser } from "@/providers/UserProvider";
 
 interface WorkflowLayoutProps {
   stages: WorkflowStage[];
+  workflowInstanceId: string | null;
 }
 
 interface Form {
@@ -27,11 +30,45 @@ interface Form {
   updatedBy: number;
 }
 
-export default function WorkflowLayout({ stages }: WorkflowLayoutProps) {
+interface FormDataResponse {
+  id: number;
+  businessProcessId: number;
+  workflowInstanceId: number;
+  customerId: number;
+  currentStartByDefaultState: boolean;
+  startDate?: string;
+  completeDate?: string;
+  stepName?: string;
+  jsonResponse?: Record<string, any>;
+  statusId?: number;
+  saveAllowed?: boolean;
+  uniqueId: string;
+  startedBy?: number;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: number;
+  updatedBy: number;
+  statusName: string;
+}
+
+export default function WorkflowLayout({
+  stages,
+  workflowInstanceId,
+}: WorkflowLayoutProps) {
+  const {
+    toolId,
+    setToolId,
+    workflowId,
+    setWorkflowId,
+    setCurrentWorkflowInstanceId,
+    setCurrentBusinessProcessInstanceId,
+  } = useWorkflow();
   const [currentStage, setCurrentStage] = useState<WorkflowStage | null>(null);
   const [currentForm, setCurrentForm] = useState<Form | null>(null);
+  const [formData, setFormData] = useState<any | null>(null);
+  const [isNew, setIsNew] = useState<boolean>(false);
+  const { user } = useUser();
   const { fetchClient } = useFetchClient();
-  const toast = useToast();
 
   // Prepare menu items based on stages
   const menuItems: MenuItem[] = stages.map((stage) => ({
@@ -40,6 +77,16 @@ export default function WorkflowLayout({ stages }: WorkflowLayoutProps) {
     onClick: () => setCurrentStage(stage),
     category: "Stages",
   }));
+
+  useEffect(() => {
+    setCurrentWorkflowInstanceId(workflowInstanceId);
+
+    // Cleanup function to reset IDs on unmount
+    return () => {
+      setCurrentWorkflowInstanceId(null);
+      setCurrentBusinessProcessInstanceId(null);
+    };
+  }, []);
 
   useEffect(() => {
     // Set the initial current stage
@@ -54,23 +101,66 @@ export default function WorkflowLayout({ stages }: WorkflowLayoutProps) {
   }, [stages]);
 
   useEffect(() => {
-    // Fetch form data whenever `currentStage` changes
-    const fetchFormData = async () => {
-      if (currentStage?.formId) {
-        const formDataResource = await fetchClient<Form>(
-          `/api/workflows/getForm`,
-          {
-            method: "POST",
-            body: { formId: currentStage.formId },
-            redirectOnError: false,
-          },
-        );
+    const fetchStageData = async () => {
+      if (!currentStage) return;
 
+      setCurrentBusinessProcessInstanceId(String(currentStage.bpInstId));
+      setToolId(String(currentStage.wfInstTool));
+      setWorkflowId(String(currentStage.wfId));
+
+      try {
+        // Prepare API requests
+        const formDataRequest = currentStage.formId
+          ? fetchClient<Form>(`/api/workflows/getForm`, {
+              method: "POST",
+              body: { formId: currentStage.formId },
+              redirectOnError: false,
+            })
+          : Promise.resolve(null);
+
+        const formDatasetRequest = currentStage.bpInstId
+          ? fetchClient<FormDataResponse>(`/api/workflows/getFormData`, {
+              method: "POST",
+              body: { businessProcessInstanceId: currentStage.bpInstId },
+              redirectOnError: false,
+            })
+          : Promise.resolve(null);
+
+        // Execute requests concurrently
+        const [formDataResource, formDataset] = await Promise.all([
+          formDataRequest,
+          formDatasetRequest,
+        ]);
+
+        // Update form state
         setCurrentForm(formDataResource || null);
+
+        // Parse and update form data
+        if (formDataset) {
+          const parsedResponse =
+            typeof formDataset.jsonResponse === "string"
+              ? JSON.parse(formDataset.jsonResponse)
+              : formDataset.jsonResponse;
+          setFormData(parsedResponse);
+
+          // Set `isNew` based on `statusId` and created or started by
+          // TODO: Add user group for access when required
+          if (
+            (formDataset.statusId === 1 || formDataset.statusId === 2) &&
+            (formDataset.createdBy === user?.userId ||
+              formDataset.startedBy === user?.userId)
+          ) {
+            setIsNew(true);
+          } else if (formDataset.statusId === 3) {
+            setIsNew(false);
+          }
+        }
+      } finally {
+        // Handle any cleanup or additional logic here if needed
       }
     };
 
-    fetchFormData();
+    fetchStageData();
   }, [currentStage]);
 
   return (
@@ -92,10 +182,11 @@ export default function WorkflowLayout({ stages }: WorkflowLayoutProps) {
               : currentForm.jsonFile
           }
           endpoint={`/api/workflows/saveWorkflow/${currentStage.bpInstId}`}
-          isNew={true}
+          isNew={isNew}
+          dataset={formData}
           formSubmission="workflow"
           layout="happiness"
-          redirectUrl={`/happiness-score?wfId=1&toolId=1`}
+          redirectUrl={`/happiness-score?wfId=${workflowId}&toolId=${toolId}`}
           jsPath={currentStage.jsAdditionalFileUrl}
           cssPath={currentStage.cssThemeFileUrl}
           sjsPath={currentStage.sjsThemeFileUrl}

@@ -8,6 +8,7 @@ export interface WorkflowStage {
   wfInstCustomer: number;
   wfInstCreatedBy: number;
   wfInstStatus: number;
+  wfInstTool: number;
   wfId: number;
   wfName: string;
   bpId: number;
@@ -44,7 +45,7 @@ export default async function HappinessScoreWorkflowPage({
 }: {
   params: { workflowInstanceId: string };
 }) {
-  const workflowInstanceId = params.workflowInstanceId || undefined;
+  const workflowInstanceId = params.workflowInstanceId || null;
 
   // Fetching workflow stages data
   const response = await apiClient(
@@ -54,5 +55,7 @@ export default async function HappinessScoreWorkflowPage({
   const stages = responseData.resource;
 
   // Pass the fetched data to WorkflowLayout
-  return <WorkflowLayout stages={stages} />;
+  return (
+    <WorkflowLayout stages={stages} workflowInstanceId={workflowInstanceId} />
+  );
 }
