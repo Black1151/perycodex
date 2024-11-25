@@ -14,6 +14,7 @@ export const activityFields: ColDef[] = [
     filter: "agNumberColumnFilter",
     maxWidth: 98,
     minWidth: 64,
+    sort: "desc",
   },
   {
     field: "toolName",
@@ -26,7 +27,6 @@ export const activityFields: ColDef[] = [
       nameField: "toolName",
     },
   },
-
   {
     field: "wfStarterFullname",
     headerName: "User",

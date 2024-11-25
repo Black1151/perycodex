@@ -132,57 +132,6 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
     initializeComponent();
   }, [cssPath, model, endpoint, formSubmission, redirectUrl]);
 
-  // // Register Javascript functionality
-  // registerSurveyFunctionsWithoutSurvey();
-  // registerSurveyJsFunctionsWithSurvey(model);
-  //
-  // // Add the events to what happens on submission of survey
-  // useSurveySubmission({
-  //   model: model,
-  //   isNew: isNew,
-  //   endpoint: endpoint,
-  //   formSubmission: formSubmission,
-  //   redirectUrl: redirectUrl,
-  //   excludeKeys: excludeKeys,
-  //   onSurveySuccess: onSurveySuccess,
-  //   surveySuccessMessage: surveySuccessMessage,
-  //   onSurveyFailure: onSurveyFailure,
-  //   reloadPageOnSuccess: reloadPageOnSuccess,
-  // });
-  //
-  // // Dynamically load CSS file and remove it when the component unmounts
-  // useEffect(() => {
-  //   let linkElement: HTMLLinkElement | null = null;
-  //
-  //   if (!cssPath) {
-  //     const cssHref = `/cssPath/admin.css`;
-  //     // Create a link element and append it to the head
-  //     linkElement = document.createElement("link");
-  //     linkElement.rel = "stylesheet";
-  //     linkElement.href = cssHref;
-  //     document.head.appendChild(linkElement);
-  //   }
-  //
-  //   if (cssPath) {
-  //     // Build the correct path for the CSS file inside the public folder
-  //     const cssHref = `/cssPath/${cssPath}.css`;
-  //     // Create a link element and append it to the head
-  //     linkElement = document.createElement("link");
-  //     linkElement.rel = "stylesheet";
-  //     linkElement.href = cssHref;
-  //     document.head.appendChild(linkElement);
-  //   }
-  //
-  //   setCssLoaded(true);
-  //
-  //   return () => {
-  //     // Clean up and remove the CSS file when component unmounts
-  //     if (linkElement) {
-  //       document.head.removeChild(linkElement);
-  //     }
-  //   };
-  // }, [cssPath]);
-
   const layoutMap: LayoutMap = {
     default: DefaultLayout,
     happiness: HappinessLayout,
