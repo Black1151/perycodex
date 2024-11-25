@@ -70,26 +70,28 @@ const HappinessLayout: React.FC<HappinessLayoutProps> = ({
         </Heading>
         <Survey model={model} />
         {/* Submit Button */}
-        <Button
-          px={8}
-          py={4}
-          fontSize="lg"
-          fontWeight="bold"
-          bgColor="green"
-          border="1px solid lightGray"
-          color="white"
-          _hover={{
-            bg: "white",
-            color: "green",
-            transform: "scale(1.05)",
-            border: "1px solid lightGray",
-            boxShadow: "lg",
-          }}
-          borderRadius="full"
-          onClick={submitSurvey}
-        >
-          Submit
-        </Button>
+        {isEditing && (
+          <Button
+            px={8}
+            py={4}
+            fontSize="lg"
+            fontWeight="bold"
+            bgColor="green"
+            border="1px solid lightGray"
+            color="white"
+            _hover={{
+              bg: "white",
+              color: "green",
+              transform: "scale(1.05)",
+              border: "1px solid lightGray",
+              boxShadow: "lg",
+            }}
+            borderRadius="full"
+            onClick={submitSurvey}
+          >
+            Submit
+          </Button>
+        )}
       </Flex>
     </SurveyNavigationGuard>
   );
