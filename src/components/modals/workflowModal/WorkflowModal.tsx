@@ -15,7 +15,14 @@ import { useState } from "react";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 
 export const WorkflowModal = () => {
-  const { workflowId, toolId, toolPath, toolLogo } = useWorkflow();
+  const {
+    workflowId,
+    toolId,
+    toolPath,
+    toolLogo,
+    currentWorkflowInstanceId,
+    currentBusinessProcessInstanceId,
+  } = useWorkflow();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpen = () => setIsOpen(true);
@@ -56,13 +63,23 @@ export const WorkflowModal = () => {
                   whiteSpace="pre-wrap"
                   wordBreak="break-word"
                 >
-                  {formatValue("Workflow ID", workflowId)}
-                  {"\n"}
                   {formatValue("Tool ID", toolId)}
+                  {"\n"}
+                  {formatValue("Workflow ID", workflowId)}
                   {"\n"}
                   {formatValue("Tool Path", toolPath)}
                   {"\n"}
                   {formatValue("Tool Logo", toolLogo)}
+                  {"\n"}
+                  {formatValue(
+                    "Current Workflow Instance ID",
+                    currentWorkflowInstanceId,
+                  )}
+                  {"\n"}
+                  {formatValue(
+                    "Current Business Process Instance ID",
+                    currentBusinessProcessInstanceId,
+                  )}
                 </Box>
               </Box>
             </Flex>
