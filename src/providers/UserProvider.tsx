@@ -94,7 +94,6 @@ export const UserProvider: React.FC<{
   };
 
   const updateShowDeveloperBoard = (value: boolean): void => {
-    console.log(`Updating showDeveloperBoard to ${value}`);
     setShowDeveloperBoard(value);
   };
 
