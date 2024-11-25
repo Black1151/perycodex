@@ -5,25 +5,26 @@ import { useWorkflow } from "@/providers/WorkflowProvider";
 
 interface WorkflowEngineProps {
   toolId: string | null;
+  workflowId: string | null;
   children: React.ReactNode;
 }
 
 const WorkflowEngine: React.FC<WorkflowEngineProps> = ({
   toolId,
+  workflowId,
   children,
 }) => {
-  const { setToolId } = useWorkflow();
+  const { setToolId, setWorkflowId } = useWorkflow();
 
   useEffect(() => {
     if (toolId) {
       setToolId(toolId);
     }
 
-    // Optionally, reset toolId when the component unmounts
-    return () => {
-      setToolId(null);
-    };
-  }, [toolId, setToolId]);
+    if (workflowId) {
+      setWorkflowId(workflowId);
+    }
+  }, [toolId, workflowId]);
 
   return <>{children}</>;
 };
