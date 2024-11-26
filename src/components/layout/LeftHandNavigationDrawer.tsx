@@ -71,6 +71,9 @@ export function LeftHandNavigationDrawer({
           backgroundColor={"rgba(255,255,255,0.2)"}
           border="1px solid white"
           p={1}
+          transform="scale(1)" // Initial scale
+          transition="transform 0.2s ease-in-out" // Smooth scaling effect
+          _hover={{ transform: "scale(1.2)" }} // Scale up on hover
         >
           <Menu
             onClick={toggleDrawer}
