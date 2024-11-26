@@ -1,6 +1,7 @@
 // ScaleInView.tsx
 import { ReactNode } from "react";
 import { motion } from "framer-motion";
+import { Box } from "@chakra-ui/react";
 
 interface SpringScaleProps {
   children: ReactNode;

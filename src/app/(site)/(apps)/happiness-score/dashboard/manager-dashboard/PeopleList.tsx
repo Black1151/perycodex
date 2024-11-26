@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Table,
   Thead,
@@ -10,9 +10,16 @@ import {
   Box,
   HStack,
   Text,
+  Select,
+  IconButton,
+  Flex,
+  VStack,
+  Grid,
 } from "@chakra-ui/react";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 interface Person {
   firstName: string;
@@ -24,27 +31,52 @@ interface Person {
 
 interface PeopleListProps {
   people: Person[];
+  currentPage: number;
+  itemsPerPage: number;
+  onPageChange: (page: number) => void;
+  onItemsPerPageChange: (itemsPerPage: number) => void;
 }
 
-const PeopleList: React.FC<PeopleListProps> = ({ people }) => {
-  const [sortConfig, setSortConfig] = useState<{
+const PeopleList: React.FC<PeopleListProps> = ({
+  people,
+  currentPage,
+  itemsPerPage,
+  onPageChange,
+  onItemsPerPageChange,
+}) => {
+  const [sortConfig, setSortConfig] = React.useState<{
     key: keyof Person;
     direction: "ascending" | "descending";
   } | null>(null);
 
-  const sortedPeople = [...people].sort((a, b) => {
-    if (!sortConfig) return 0;
+  const sortedPeople = React.useMemo(() => {
+    const sorted = [...people].sort((a, b) => {
+      if (!sortConfig) return 0;
 
-    const { key, direction } = sortConfig;
+      const { key, direction } = sortConfig;
 
-    if (a[key] < b[key]) {
-      return direction === "ascending" ? -1 : 1;
+      if (a[key] < b[key]) {
+        return direction === "ascending" ? -1 : 1;
+      }
+      if (a[key] > b[key]) {
+        return direction === "ascending" ? 1 : -1;
+      }
+      return 0;
+    });
+    return sorted;
+  }, [people, sortConfig]);
+
+  const totalPages = Math.ceil(sortedPeople.length / itemsPerPage);
+
+  React.useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      onPageChange(totalPages);
     }
-    if (a[key] > b[key]) {
-      return direction === "ascending" ? 1 : -1;
-    }
-    return 0;
-  });
+  }, [currentPage, totalPages, onPageChange]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = sortedPeople.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleSort = (key: keyof Person) => {
     setSortConfig((prevState) => {
@@ -64,27 +96,49 @@ const PeopleList: React.FC<PeopleListProps> = ({ people }) => {
     );
   };
 
+  const handleItemsPerPageChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    onItemsPerPageChange(Number(event.target.value));
+    onPageChange(1);
+  };
+
+  const handlePreviousPage = () => {
+    onPageChange(Math.max(currentPage - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    onPageChange(Math.min(currentPage + 1, totalPages));
+  };
+
   return (
-    <Box
+    <VStack
       p={4}
       borderWidth={1}
       borderRadius="2xl"
-      overflowX="auto"
+      overflow="hidden"
       bg="white"
       maxW="100%"
-      maxH={520}
+      minH="100%"
+      flex={1}
+      justifyContent="space-between"
     >
-      <TableContainer>
+      <TableContainer
+        overflowX="auto"
+        overflowY="auto"
+        maxHeight={428}
+        width="100%"
+      >
         <Table variant="unstyled" colorScheme="gray" size="sm" layout="fixed">
           <Thead>
             <Tr>
               {[
-                { key: "firstName", label: "First Name" },
-                { key: "lastName", label: "Last Name" },
+                { key: "firstName", label: "First Name", minWidth: "250px" },
+                { key: "lastName", label: "Last Name", minWidth: "250px" },
                 { key: "jobTitle", label: "Job Title" },
                 { key: "department", label: "Department" },
                 { key: "score", label: "Score" },
-              ].map(({ key, label }) => (
+              ].map(({ key, label, minWidth }) => (
                 <Th
                   key={key}
                   cursor="pointer"
@@ -92,10 +146,15 @@ const PeopleList: React.FC<PeopleListProps> = ({ people }) => {
                   textOverflow="ellipsis"
                   whiteSpace="nowrap"
                   overflow="hidden"
+                  bg="white"
+                  position="sticky"
+                  top="0"
+                  zIndex={1}
+                  minWidth={minWidth || 500}
                 >
                   <HStack spacing={2}>
                     <Text fontSize={["xs", "sm"]}>{label}</Text>
-                    <Box w="20px" textAlign="center">
+                    <Box w="40px" textAlign="center">
                       {getSortIcon(key as keyof Person)}
                     </Box>
                   </HStack>
@@ -104,9 +163,9 @@ const PeopleList: React.FC<PeopleListProps> = ({ people }) => {
             </Tr>
           </Thead>
           <Tbody>
-            {sortedPeople.map((person, index) => (
+            {currentItems.map((person, index) => (
               <Tr
-                key={index}
+                key={`${person.firstName}-${person.lastName}-${index}`}
                 bg={index % 2 === 0 ? "white" : "gray.100"}
                 _hover={{
                   bg: "perygonPink",
@@ -154,7 +213,49 @@ const PeopleList: React.FC<PeopleListProps> = ({ people }) => {
           </Tbody>
         </Table>
       </TableContainer>
-    </Box>
+      <Grid mt={4} width="100%" templateColumns="1fr 1fr">
+        <HStack>
+          <Text display={["none", null, null, null, "block"]} mr={2}>
+            Rows per page:
+          </Text>
+          <Select
+            value={itemsPerPage}
+            onChange={handleItemsPerPageChange}
+            size="sm"
+            width="auto"
+          >
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+          </Select>
+        </HStack>
+        <HStack justifyContent="flex-end">
+          <IconButton
+            onClick={handlePreviousPage}
+            isDisabled={currentPage === 1}
+            icon={<ChevronLeftIcon />}
+            aria-label="Previous page"
+            size="sm"
+          />
+          <Text
+            display={["none", null, null, null, "block"]}
+            mx={2}
+            minWidth={120}
+            textAlign="center"
+          >
+            Page {currentPage} of {totalPages}
+          </Text>
+          <IconButton
+            onClick={handleNextPage}
+            isDisabled={currentPage === totalPages || totalPages === 0}
+            icon={<ChevronRightIcon />}
+            aria-label="Next page"
+            size="sm"
+          />
+        </HStack>
+      </Grid>
+    </VStack>
   );
 };
 

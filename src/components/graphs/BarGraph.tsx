@@ -82,7 +82,7 @@ export const YAxis = () => {
       opacity: 1,
       x: 0,
       transition: {
-        delay: index * 0.04 + 1,
+        delay: index * 0.04 + 0.4,
         type: "ease",
       },
     }),

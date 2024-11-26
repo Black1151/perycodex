@@ -1,5 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { Box, HStack, Text, useTheme, VStack } from "@chakra-ui/react";
+import { motion, AnimatePresence } from "framer-motion";
+import Counter from "@/components/counter/Counter";
 
 interface SpeechBubbleSVGProps {
   fill?: string;
@@ -61,7 +63,10 @@ const SpeechBubble: React.FC<SpeechBubbleProps> = ({
     };
   }, []);
 
-  const [wholePart, decimalPart] = score.toFixed(2).split(".");
+  const [wholePart, decimalPart] = useMemo(
+    () => score.toFixed(2).split("."),
+    [score]
+  );
 
   // Resolve the text based on the score
   const getText = (score: number): string => {
@@ -72,7 +77,7 @@ const SpeechBubble: React.FC<SpeechBubbleProps> = ({
     return "Terrible!";
   };
 
-  const resolvedText = getText(score);
+  const resolvedText = useMemo(() => getText(score), [score]);
 
   return (
     <Box position="relative" width="100%" height="100%" maxHeight={600}>
@@ -92,44 +97,82 @@ const SpeechBubble: React.FC<SpeechBubbleProps> = ({
         alignItems="center"
       >
         <HStack>
-          <Text
-            fontSize={`${fontSize}px`}
-            fontWeight="bold"
-            color={finalTextColor}
-            lineHeight="1"
-          >
-            {wholePart}
-          </Text>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={score}
+              initial={{
+                transform: "translateY(10%)",
+                scale: 0.1,
+                opacity: 0,
+              }}
+              animate={{ transform: "translateY(0%)", scale: 1, opacity: 1 }}
+              exit={{ transform: "translateY(-100)", scale: 0.1, opacity: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              <Text
+                fontSize={`${fontSize}px`}
+                fontWeight="bold"
+                color={finalTextColor}
+                lineHeight="1"
+              >
+                {wholePart}
+              </Text>
+            </motion.div>
+          </AnimatePresence>
           <VStack>
-            <Text
-              fontSize={`${fontSize * 0.4}px`}
-              fontWeight="bold"
-              color={finalTextColor}
-              lineHeight="1"
-              ml={1}
+            <motion.div
+              key={`${score}-${decimalPart}`}
+              initial={{ scale: 0.1, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.1, opacity: 0 }}
+              transition={{ duration: 0.8 }}
             >
-              .{decimalPart}
-            </Text>
-            <Text
-              fontSize={`${fontSize * 0.13}px`}
-              color={positiveChange ? "seduloGreen" : "seduloRed"}
-              mt={2}
+              <Text
+                fontSize={`${fontSize * 0.4}px`}
+                fontWeight="bold"
+                color={finalTextColor}
+                lineHeight="1"
+                ml={1}
+              >
+                .{decimalPart}
+              </Text>
+            </motion.div>
+            <motion.div
+              key={`change-${change}`}
+              initial={{ transform: "translateX(40%)", opacity: 0 }}
+              animate={{ transform: "translateX(0%)", opacity: 1 }}
+              exit={{ transform: "translateX(-40%)", opacity: 0 }}
+              transition={{ duration: 0.4 }}
             >
-              {positiveChange ? "\u25B2" : "\u25BC"}
-              {change.toFixed(2)}
-            </Text>
+              <Text
+                fontSize={`${fontSize * 0.13}px`}
+                color={positiveChange ? "seduloGreen" : "seduloRed"}
+                mt={2}
+              >
+                {positiveChange ? "\u25B2" : "\u25BC"}
+                {change.toFixed(2)}
+              </Text>
+            </motion.div>
           </VStack>
         </HStack>
 
-        <Text
-          fontSize={`${fontSize * 0.3}px`}
-          fontWeight="bold"
-          color={finalTextColor}
-          mt={3}
-          fontFamily="Bonfire"
+        <motion.div
+          key={resolvedText}
+          initial={{ transform: "translateX(-20%)", scale: 0.3, opacity: 0 }}
+          animate={{ transform: "translateX(0%)", scale: 1, opacity: 1 }}
+          exit={{ transform: "translateX(20%)", scale: 0.3, opacity: 0 }}
+          transition={{ duration: 0.4 }}
         >
-          {resolvedText}
-        </Text>
+          <Text
+            fontSize={`${fontSize * 0.3}px`}
+            fontWeight="bold"
+            color={finalTextColor}
+            mt={3}
+            fontFamily="Bonfire"
+          >
+            {resolvedText}
+          </Text>
+        </motion.div>
       </Box>
     </Box>
   );

@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
 import apiClient from "@/lib/apiClient";
 import { cookies } from "next/headers";
-import {
-  FilterOption,
-  FilterOptionGroup,
-} from "@/app/(site)/(apps)/happiness-score/dashboard/manager-dashboard/page";
+import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/manager-dashboard/page";
 
 interface ApiResponse {
   resource: ApiResponseItem[];
@@ -122,6 +119,8 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const queryParams = Object.fromEntries(url.searchParams.entries());
 
+  const timeRange = queryParams.timeRange || "all";
+
   const selectedFilters = {
     siteId: queryParams.siteId?.split(",") || [],
     jobLevel: queryParams.jobLevel?.split(",") || [],
@@ -136,7 +135,6 @@ export async function GET(request: Request) {
   const businessProcessId = queryParams.businessProcessId || 1;
   const toolConfigId = queryParams.toolConfigId || 1;
 
-  // Define filter groups
   const filterGroups = [
     { key: "deptName", paramName: "deptId" },
     { key: "teamName", paramName: "teamId" },
@@ -167,6 +165,25 @@ export async function GET(request: Request) {
     return endpoint;
   };
 
+  function getStartDateFromTimeRange(timeRange: string): Date | null {
+    const now = new Date();
+    switch (timeRange) {
+      case "1 month":
+        return new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+      case "3 months":
+        return new Date(now.getFullYear(), now.getMonth() - 3, now.getDate());
+      case "6 months":
+        return new Date(now.getFullYear(), now.getMonth() - 6, now.getDate());
+      case "1 year":
+        return new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+      case "all":
+      default:
+        return null;
+    }
+  }
+
+  const startDate = getStartDateFromTimeRange(timeRange);
+
   for (const group of filterGroups) {
     const filtersExcludingCurrentGroup = { ...selectedFilters } as Record<
       string,
@@ -188,6 +205,7 @@ export async function GET(request: Request) {
       }
 
       const dataForGroup: ApiResponse = await response.json();
+      console.log(dataForGroup);
 
       const options = dataForGroup.resource
         .map((item) => {
@@ -242,17 +260,21 @@ export async function GET(request: Request) {
     { score: number; item: ApiResponseItem }[]
   >();
 
-  let earliestDate: Date | null = null;
+  let earliestDate: Date | null = startDate || null;
 
   for (const item of finalData.resource) {
     const respFull = JSON.parse(item.jsonBpRespFull);
     const happinessScore = parseFloat(respFull.happinessScore);
 
-    // Group data by weeks
     const createdAt = new Date(item.createdAt);
+
+    if (startDate && createdAt < startDate) {
+      continue;
+    }
     if (!earliestDate || createdAt < earliestDate) {
       earliestDate = createdAt;
     }
+
     const [year, weekNo] = getWeekNumber(createdAt);
     const weekKey = `${year}-W${weekNo}`;
 
@@ -263,8 +285,7 @@ export async function GET(request: Request) {
   }
 
   if (!earliestDate) {
-    // If there is no data, set earliestDate to current date
-    earliestDate = new Date();
+    earliestDate = startDate || new Date();
   }
 
   const currentDate = new Date();
@@ -286,22 +307,29 @@ export async function GET(request: Request) {
         value: avgScore,
       });
 
-      // Compute masonryCounts, peopleList, departmentsData, sitesData for this week
       const masonryCounts = [0, 0, 0, 0, 0];
       const peopleList: {
+        imageUrl: string;
         firstName: string;
         lastName: string;
         jobTitle: string;
         department: string;
         score: number;
       }[] = [];
+
       const departmentScores = new Map<
         string,
         { totalScore: number; count: number }
       >();
+
       const siteScores = new Map<
-        string,
-        { totalScore: number; count: number }
+        number,
+        {
+          totalScore: number;
+          count: number;
+          mostRecentSiteName: string;
+          mostRecentCreatedAt: Date;
+        }
       >();
 
       entries.forEach(({ score, item }) => {
@@ -312,6 +340,7 @@ export async function GET(request: Request) {
         else masonryCounts[4]++;
 
         peopleList.push({
+          imageUrl: item.userImageUrl,
           firstName: item.firstName,
           lastName: item.lastName,
           jobTitle: item.jobLevelName,
@@ -329,14 +358,26 @@ export async function GET(request: Request) {
           deptData.count += 1;
         }
 
-        const siteName = item.siteName;
-        if (siteName) {
-          if (!siteScores.has(siteName)) {
-            siteScores.set(siteName, { totalScore: 0, count: 0 });
+        const siteId = item.siteId;
+        if (siteId) {
+          if (!siteScores.has(siteId)) {
+            siteScores.set(siteId, {
+              totalScore: 0,
+              count: 0,
+              mostRecentSiteName: item.siteName,
+              mostRecentCreatedAt: new Date(item.createdAt),
+            });
           }
-          const siteData = siteScores.get(siteName)!;
+          const siteData = siteScores.get(siteId)!;
           siteData.totalScore += score;
           siteData.count += 1;
+
+          // Update the most recent siteName if the current record is newer
+          const itemCreatedAt = new Date(item.createdAt);
+          if (itemCreatedAt > siteData.mostRecentCreatedAt) {
+            siteData.mostRecentCreatedAt = itemCreatedAt;
+            siteData.mostRecentSiteName = item.siteName;
+          }
         }
       });
 
@@ -354,7 +395,7 @@ export async function GET(request: Request) {
       const sitesData: { site: string; averageScore: number }[] = [];
       siteScores.forEach((value, key) => {
         sitesData.push({
-          site: key,
+          site: value.mostRecentSiteName, // Use the most recent siteName
           averageScore: value.totalScore / value.count,
         });
       });
@@ -368,7 +409,6 @@ export async function GET(request: Request) {
         sitesData,
       });
     } else {
-      // No data for this week, include week with zero values
       dataPointsArray.push({
         title: weekKey,
         value: 0,
@@ -385,7 +425,6 @@ export async function GET(request: Request) {
     }
   }
 
-  // Compute speechBubbleData
   let speechBubbleData: SpeechBubbleData = {
     currentScore: 0,
     change: 0,

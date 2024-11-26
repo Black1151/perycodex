@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, memo } from "react";
 import {
   Box,
   HStack,
@@ -6,6 +6,7 @@ import {
   useBreakpointValue,
   Flex,
   VStack,
+  Tooltip,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { perygonTheme } from "@/theme/theme";
@@ -19,7 +20,7 @@ interface LineGraphProps {
   DataPoints: DataPoint[];
 }
 
-const LineGraph: React.FC<LineGraphProps> = ({ DataPoints = [] }) => {
+const LineGraph: React.FC<LineGraphProps> = memo(({ DataPoints = [] }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(0);
   const [animationKey, setAnimationKey] = useState(0);
@@ -184,6 +185,14 @@ const LineGraph: React.FC<LineGraphProps> = ({ DataPoints = [] }) => {
               if (point.value === 0 && nextPoint.value === 0) {
                 return null;
               }
+
+              const color1 = getHappinessColor(point.value);
+              const color2 = getHappinessColor(nextPoint.value);
+
+              if (color1 === color2) {
+                return null;
+              }
+
               return (
                 <linearGradient
                   key={index}
@@ -193,14 +202,8 @@ const LineGraph: React.FC<LineGraphProps> = ({ DataPoints = [] }) => {
                   x2="100%"
                   y2="0%"
                 >
-                  <stop
-                    offset="0%"
-                    stopColor={getHappinessColor(point.value)}
-                  />
-                  <stop
-                    offset="100%"
-                    stopColor={getHappinessColor(nextPoint.value)}
-                  />
+                  <stop offset="0%" stopColor={color1} />
+                  <stop offset="100%" stopColor={color2} />
                 </linearGradient>
               );
             })}
@@ -215,11 +218,19 @@ const LineGraph: React.FC<LineGraphProps> = ({ DataPoints = [] }) => {
             const x2 = mapIndexToX(index + 1);
             const y2 = mapValueToY(nextPoint.value);
 
+            const color1 = getHappinessColor(point.value);
+            const color2 = getHappinessColor(nextPoint.value);
+
+            const gradientId = `gradient-${index}`;
+
+            const strokeColor =
+              color1 === color2 ? color1 : `url(#${gradientId})`;
+
             return (
               <motion.path
                 key={index}
                 d={`M ${x1} ${y1} L ${x2} ${y2}`}
-                stroke={`url(#gradient-${index})`}
+                stroke={strokeColor}
                 strokeWidth={strokeWidth}
                 fill="none"
                 initial={{ pathLength: 0 }}
@@ -238,26 +249,31 @@ const LineGraph: React.FC<LineGraphProps> = ({ DataPoints = [] }) => {
         {DataPoints.map(
           (point, index) =>
             point.value !== 0 && (
-              <motion.img
+              <Tooltip
                 key={index}
-                src={getFaceImage(point.value)}
-                alt={`Face for score ${Math.round(point.value)}`}
-                style={{
-                  position: "absolute",
-                  left: `${mapIndexToX(index) - imageSize / 2}px`,
-                  top: `${mapValueToY(point.value) - imageSize / 2}px`,
-                  width: imageSize,
-                  height: imageSize,
-                }}
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: index * 0.2, duration: 0.3 }}
-              />
+                label={`${point.title}: ${point.value.toFixed(2)}`}
+                placement="top"
+              >
+                <motion.img
+                  src={getFaceImage(point.value)}
+                  alt={`Face for score ${Math.round(point.value)}`}
+                  style={{
+                    position: "absolute",
+                    left: `${mapIndexToX(index) - imageSize / 2}px`,
+                    top: `${mapValueToY(point.value) - imageSize / 2}px`,
+                    width: imageSize,
+                    height: imageSize,
+                  }}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: index * 0.2, duration: 0.3 }}
+                />
+              </Tooltip>
             )
         )}
       </Box>
     </Flex>
   );
-};
+});
 
 export default LineGraph;

@@ -1,13 +1,29 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { Grid, GridItem, Box, Text } from "@chakra-ui/react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
+import {
+  Grid,
+  GridItem,
+  Flex,
+  Spinner,
+  VStack,
+  Box,
+  Select,
+} from "@chakra-ui/react";
 import LineGraph from "@/components/graphs/LineGraph";
 import { HappinessScoreMasonry } from "../../HappinessScoreMasonry";
 import SpeechBubble from "../../SpeechBubble";
 import { DashboardFilteringDrawer } from "@/components/layout/DashboardFilteringDrawer";
 import PeopleList from "./PeopleList";
 import AnimatedBarChart from "@/components/graphs/BarGraph";
+import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
+import { SpringScale } from "@/components/animations/SpringScale";
 
 interface DataPoint {
   value: number;
@@ -42,6 +58,7 @@ export interface Person {
 
 export default function ManagerDashboardPage() {
   const isInitialMount = useRef(true);
+  const [loading, setLoading] = useState(true);
   const [masonryData, setMasonryData] = useState<number[]>([]);
   const [lineGraphData, setLineGraphData] = useState<DataPoint[]>([]);
   const [speechBubbleData, setSpeechBubbleData] =
@@ -61,146 +78,165 @@ export default function ManagerDashboardPage() {
   const [weekOptions, setWeekOptions] = useState<string[]>([]);
   const [selectedWeek, setSelectedWeek] = useState<string | null>(null);
 
-  // Mapping from filter labels to API parameter names
-  const labelToParamName: Record<string, string> = {
-    "Dept Name": "deptId",
-    "Team Name": "teamId",
-    Role: "role",
-    "Job Level Name": "jobLevel",
-    "Contract Type Name": "contractTypeId",
-    "Remote Worker": "remoteWorker",
-    "Site Name": "siteId",
-  };
+  // Add time range state and options
+  const timeRangeOptions = ["1 month", "3 months", "6 months", "1 year", "all"];
+  const [selectedTimeRange, setSelectedTimeRange] = useState<string>("all");
 
-  const clearAllFilters = () => {
+  const labelToParamName: Record<string, string> = useMemo(
+    () => ({
+      "Dept Name": "deptId",
+      "Team Name": "teamId",
+      Role: "role",
+      "Job Level Name": "jobLevel",
+      "Contract Type Name": "contractTypeId",
+      "Remote Worker": "remoteWorker",
+      "Site Name": "siteId",
+    }),
+    []
+  );
+
+  const constructQueryParams = useCallback(
+    (filters: FilterOptionGroup[], timeRange: string): string => {
+      const params = new URLSearchParams();
+
+      filters.forEach((group) => {
+        const selectedOptions = group.options.filter(
+          (option) => option.isSelected
+        );
+        if (selectedOptions.length > 0) {
+          const paramName = labelToParamName[group.label];
+          if (paramName) {
+            const paramValues = selectedOptions
+              .map((option) => option.value)
+              .join(",");
+            params.append(paramName, paramValues);
+          }
+        }
+      });
+
+      if (timeRange && timeRange !== "all") {
+        params.append("timeRange", timeRange);
+      }
+
+      return params.toString();
+    },
+    [labelToParamName]
+  );
+
+  const updateFilterOptions = useCallback(
+    (newFilters: FilterOptionGroup[], currentFilters: FilterOptionGroup[]) => {
+      const updatedFilters = currentFilters.map((group) => {
+        const newGroup = newFilters.find((g) => g.label === group.label);
+        if (newGroup) {
+          const updatedOptions = group.options.map((option) => {
+            const newOption = newGroup.options.find(
+              (o) => o.value === option.value
+            );
+            return {
+              ...option,
+              isDisabled: !newOption,
+            };
+          });
+          return {
+            ...group,
+            options: updatedOptions,
+          };
+        } else {
+          const updatedOptions = group.options.map((option) => ({
+            ...option,
+            isDisabled: true,
+          }));
+          return {
+            ...group,
+            options: updatedOptions,
+          };
+        }
+      });
+
+      setFilterOptions(updatedFilters);
+    },
+    [setFilterOptions]
+  );
+
+  const fetchFilteredData = useCallback(
+    async (
+      currentFilters: FilterOptionGroup[],
+      timeRange: string = selectedTimeRange
+    ) => {
+      const queryParams = constructQueryParams(currentFilters, timeRange);
+      const response = await fetch(
+        `/api/happiness-graphs/getManagerDashboardData?${queryParams}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error fetching data: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      updateFilterOptions(data.filterOptions, currentFilters);
+
+      setLineGraphData(data.lineGraphData);
+      setWeeksData(data.weeksData);
+
+      const weekTitles = data.lineGraphData.map((dp: DataPoint) => dp.title);
+      setWeekOptions(weekTitles);
+      setSelectedWeek(weekTitles[weekTitles.length - 1]);
+    },
+    [constructQueryParams, updateFilterOptions, selectedTimeRange]
+  );
+
+  const clearAllFilters = useCallback(() => {
     const clearedFilters = filterOptions.map((group) => ({
       ...group,
       options: group.options.map((option) => ({
         ...option,
-        isSelected: false, // Reset isSelected to false
+        isSelected: false,
       })),
     }));
     setFilterOptions(clearedFilters);
-    fetchFilteredData(clearedFilters); // Fetch data with cleared filters
-  };
+    fetchFilteredData(clearedFilters, selectedTimeRange);
+  }, [filterOptions, fetchFilteredData, selectedTimeRange]);
 
-  // Function to construct query parameters from selected filters
-  const constructQueryParams = (filters: FilterOptionGroup[]): string => {
-    const params = new URLSearchParams();
-
-    filters.forEach((group) => {
-      const selectedOptions = group.options.filter(
-        (option) => option.isSelected
-      );
-      if (selectedOptions.length > 0) {
-        const paramName = labelToParamName[group.label];
-        if (paramName) {
-          const paramValues = selectedOptions
-            .map((option) => option.value)
-            .join(",");
-          params.append(paramName, paramValues);
+  const handleCheckboxChange = useCallback(
+    (groupIndex: number, optionIndex: number, isChecked: boolean) => {
+      const updatedFilters = filterOptions.map((group, gIdx) => {
+        if (gIdx === groupIndex) {
+          const updatedOptions = group.options.map((option, oIdx) => {
+            if (oIdx === optionIndex) {
+              return { ...option, isSelected: isChecked };
+            }
+            return option;
+          });
+          return { ...group, options: updatedOptions };
         }
-      }
-    });
+        return group;
+      });
+      setFilterOptions(updatedFilters);
+      fetchFilteredData(updatedFilters, selectedTimeRange);
+    },
+    [filterOptions, fetchFilteredData, selectedTimeRange]
+  );
 
-    return params.toString();
-  };
-
-  // Function to update filter options based on new data
-  const updateFilterOptions = (
-    newFilters: FilterOptionGroup[],
-    currentFilters: FilterOptionGroup[]
-  ) => {
-    const updatedFilters = currentFilters.map((group) => {
-      const newGroup = newFilters.find((g) => g.label === group.label);
-      if (newGroup) {
-        const updatedOptions = group.options.map((option) => {
-          const newOption = newGroup.options.find(
-            (o) => o.value === option.value
-          );
-          return {
-            ...option,
-            isDisabled: !newOption, // Disable if not present in new data
-          };
-        });
-        return {
-          ...group,
-          options: updatedOptions,
-        };
-      } else {
-        // If group doesn't exist in new data, disable all options
-        const updatedOptions = group.options.map((option) => ({
-          ...option,
-          isDisabled: true,
-        }));
-        return {
-          ...group,
-          options: updatedOptions,
-        };
-      }
-    });
-
-    setFilterOptions(updatedFilters);
-  };
-
-  const fetchFilteredData = async (currentFilters: FilterOptionGroup[]) => {
-    const queryParams = constructQueryParams(currentFilters);
-    const response = await fetch(
-      `/api/happiness-graphs/getManagerDashboardData?${queryParams}`
-    );
-
-    if (!response.ok) {
-      throw new Error(`Error fetching data: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-
-    // Update filter options
-    updateFilterOptions(data.filterOptions, currentFilters);
-
-    // Update other data
-    setLineGraphData(data.lineGraphData);
-    setWeeksData(data.weeksData);
-
-    // Extract week options
-    const weekTitles = data.lineGraphData.map((dp: DataPoint) => dp.title);
-    setWeekOptions(weekTitles);
-    setSelectedWeek(weekTitles[weekTitles.length - 1]); // Set to most recent week
-  };
-
-  const handleCheckboxChange = (
-    groupIndex: number,
-    optionIndex: number,
-    isChecked: boolean
-  ) => {
-    // Update filter options with the new checked state
-    const updatedFilters = filterOptions.map((group, gIdx) => {
-      if (gIdx === groupIndex) {
-        const updatedOptions = group.options.map((option, oIdx) => {
-          if (oIdx === optionIndex) {
-            return { ...option, isSelected: isChecked };
-          }
-          return option;
-        });
-        return { ...group, options: updatedOptions };
-      }
-      return group;
-    });
-    setFilterOptions(updatedFilters);
-    // Fetch data with updated filters
-    fetchFilteredData(updatedFilters);
-  };
-
-  const handleWeekChange = (week: string) => {
+  const handleWeekChange = useCallback((week: string) => {
     setSelectedWeek(week);
-  };
+  }, []);
 
-  // Fetch initial data on component mount
+  // Handle time range changes
+  const handleTimeRangeChange = useCallback(
+    (range: string) => {
+      setSelectedTimeRange(range);
+      fetchFilteredData(filterOptions, range);
+    },
+    [filterOptions, fetchFilteredData]
+  );
+
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
+        const queryParams = constructQueryParams([], selectedTimeRange);
         const response = await fetch(
-          `/api/happiness-graphs/getManagerDashboardData`
+          `/api/happiness-graphs/getManagerDashboardData?${queryParams}`
         );
 
         if (!response.ok) {
@@ -228,24 +264,24 @@ export default function ManagerDashboardPage() {
         setLineGraphData(data.lineGraphData);
         setWeeksData(data.weeksData);
 
-        // Extract week options
         const weekTitles = data.lineGraphData.map((dp: DataPoint) => dp.title);
         setWeekOptions(weekTitles);
-        setSelectedWeek(weekTitles[weekTitles.length - 1]); // Set to most recent week
+        setSelectedWeek(weekTitles[weekTitles.length - 1]);
 
         isInitialMount.current = false;
       } catch (error) {
         console.error("Failed to fetch initial data:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchInitialData();
+  }, [constructQueryParams, selectedTimeRange]);
+
+  const handleMasonryClick = useCallback((category: string) => {
+    console.log("Masonry category clicked:", category);
   }, []);
 
-  const handleMasonryClick = (category: string) => {
-    console.log("Masonry category clicked:", category);
-  };
-
-  // Update displayed data when selectedWeek changes
   useEffect(() => {
     if (selectedWeek && weeksData.length > 0) {
       const weekDataIndex = weeksData.findIndex(
@@ -253,7 +289,6 @@ export default function ManagerDashboardPage() {
       );
       if (weekDataIndex !== -1) {
         const weekData = weeksData[weekDataIndex];
-        // Compute change compared to previous week
         let change = 0;
         let positiveChange = true;
         if (weekDataIndex > 0) {
@@ -276,16 +311,32 @@ export default function ManagerDashboardPage() {
     }
   }, [selectedWeek, weeksData]);
 
-  // Map data for bar charts
-  const departmentBarData = departmentsData.map((dept) => ({
-    title: dept.department,
-    value: dept.averageScore,
-  }));
+  const departmentBarData = useMemo(
+    () =>
+      departmentsData.map((dept) => ({
+        title: dept.department,
+        value: dept.averageScore,
+      })),
+    [departmentsData]
+  );
 
-  const siteBarData = sitesData.map((site) => ({
-    title: site.site,
-    value: site.averageScore,
-  }));
+  const siteBarData = useMemo(
+    () =>
+      sitesData.map((site) => ({
+        title: site.site,
+        value: site.averageScore,
+      })),
+    [sitesData]
+  );
+
+  // Pagination state for PeopleList
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
+
+  // Reset current page when peopleListData changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [peopleListData]);
 
   return (
     <>
@@ -297,53 +348,85 @@ export default function ManagerDashboardPage() {
         weekOptions={weekOptions}
         selectedWeek={selectedWeek}
         onWeekChange={handleWeekChange}
+        timeRangeOptions={timeRangeOptions}
+        selectedTimeRange={selectedTimeRange}
+        onTimeRangeChange={handleTimeRangeChange}
       />
 
-      <Grid
-        templateColumns={["1fr", null, null, null, null, "1fr 1fr"]}
-        gap={[20, 6]}
-        mr={[0, null, null, 40]}
-      >
-        <GridItem>
-          {speechBubbleData && (
-            <SpeechBubble
-              score={speechBubbleData.currentScore}
-              change={speechBubbleData.change}
-              positiveChange={speechBubbleData.positiveChange}
-            />
-          )}
-        </GridItem>
-        <GridItem>
-          <LineGraph DataPoints={lineGraphData} />
-        </GridItem>
-        <GridItem>
-          <HappinessScoreMasonry
-            masonryValues={masonryData}
-            onStatClick={handleMasonryClick}
-          />
-        </GridItem>
-        <GridItem>
-          <PeopleList people={peopleListData} />
-        </GridItem>
+      {loading ? (
+        <Flex justifyContent="center" alignItems="center" height="100vh">
+          <Spinner size="xl" color="perygonPink" />
+        </Flex>
+      ) : (
+        <Grid
+          templateColumns={["1fr", null, "1fr 1fr"]}
+          gap={[20, 6]}
+          mr={[0, null, null, 40]}
+        >
+          <GridItem>
+            <SpringScale>
+              <Flex maxWidth={600} flexDirection="column">
+                <Flex width="100%" justifyContent="center" mb={4}>
+                  <SectionHeader>Average</SectionHeader>
+                </Flex>
+                <SpeechBubble
+                  score={speechBubbleData?.currentScore || 0}
+                  change={speechBubbleData?.change || 0}
+                  positiveChange={speechBubbleData?.positiveChange || false}
+                />
+              </Flex>
+            </SpringScale>
+          </GridItem>
 
-        {/* Comparison bar charts */}
-        <GridItem>
-          <Box bg="white" p={4} borderRadius="2xl">
-            <Text fontSize="xl" mb={4}>
-              Department Comparison
-            </Text>
-            <AnimatedBarChart DataPoints={departmentBarData} />
-          </Box>
-        </GridItem>
-        <GridItem>
-          <Box bg="white" p={4} borderRadius="2xl">
-            <Text fontSize="xl" mb={4}>
-              Site Comparison
-            </Text>
-            <AnimatedBarChart DataPoints={siteBarData} />
-          </Box>
-        </GridItem>
-      </Grid>
+          <GridItem>
+            <SpringScale>
+              <Flex width="100%" justifyContent="center" mb={4}>
+                <SectionHeader>Trend</SectionHeader>
+              </Flex>
+              <LineGraph DataPoints={lineGraphData} />
+            </SpringScale>
+          </GridItem>
+          <GridItem>
+            <Flex width="100%" justifyContent="center" mb={4}>
+              <SectionHeader>Breakdown</SectionHeader>
+            </Flex>
+            <HappinessScoreMasonry
+              masonryValues={masonryData}
+              onStatClick={handleMasonryClick}
+            />
+          </GridItem>
+          <GridItem>
+            <VStack minH="100%">
+              <Flex width="100%" justifyContent="center" mb={2}>
+                <SectionHeader>Submissions</SectionHeader>
+              </Flex>
+              <PeopleList
+                people={peopleListData}
+                currentPage={currentPage}
+                itemsPerPage={itemsPerPage}
+                onPageChange={setCurrentPage}
+                onItemsPerPageChange={setItemsPerPage}
+              />
+            </VStack>
+          </GridItem>
+          <GridItem>
+            <VStack>
+              <Flex width="100%" justifyContent="center" mb={4}>
+                <SectionHeader>Department Comparison</SectionHeader>
+              </Flex>
+              <AnimatedBarChart DataPoints={departmentBarData} />
+            </VStack>
+          </GridItem>
+          <GridItem>
+            <VStack>
+              <Flex width="100%" justifyContent="center" mb={4}>
+                <SectionHeader>Site Comparison</SectionHeader>
+              </Flex>
+              <AnimatedBarChart DataPoints={siteBarData} />
+            </VStack>
+          </GridItem>
+        </Grid>
+      )}
     </>
   );
 }

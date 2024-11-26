@@ -9,7 +9,7 @@ const MotionBox = motion(Box);
 interface LetterFlyInProps extends BoxProps {
   children: ReactNode;
   delay?: number;
-  fontSize?: number;
+  fontSize?: number | string;
   duration?: number;
 }
 

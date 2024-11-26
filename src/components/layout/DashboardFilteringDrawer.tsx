@@ -29,6 +29,9 @@ interface RightHandNavigationDrawerProps {
   weekOptions: string[];
   selectedWeek: string | null;
   onWeekChange: (week: string) => void;
+  timeRangeOptions: string[];
+  selectedTimeRange: string;
+  onTimeRangeChange: (timeRange: string) => void;
 }
 
 export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
@@ -61,6 +64,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
             <Text style={{ color: theme.colors.perygonPink }}>{title}</Text>
           </Box>
         )}
+
         {/* Week Selector */}
         <Box px={4} mt={4}>
           <Select
