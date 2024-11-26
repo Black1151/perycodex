@@ -3,8 +3,8 @@
 import { Box, Divider, Text, useTheme, VStack } from "@chakra-ui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
-import { RotatingChevron } from "./RotatingChevron";
 import SideBarMenuItem from "./SideBarMenuItem";
+import { ChevronLeft, ChevronRight, Close, Menu } from "@mui/icons-material";
 
 export interface MenuItem {
   label: string;
@@ -32,12 +32,10 @@ export function LeftHandNavigationDrawer({
   const MotionBox = motion(Box);
 
   const toggleDrawer = () => {
-    if (drawerState === "closed") {
-      setDrawerState("fully-open");
-    } else if (drawerState === "fully-open") {
+    if (drawerState === "fully-open") {
       setDrawerState("half-open");
     } else {
-      setDrawerState("closed");
+      setDrawerState("fully-open");
     }
   };
 
@@ -56,19 +54,31 @@ export function LeftHandNavigationDrawer({
 
   return (
     <>
-      <Box
-        position="absolute"
-        top={59}
-        left={0}
-        zIndex={1}
-        display={["none", "none", "block"]}
-      >
-        <RotatingChevron
-          placement="left"
-          onClick={toggleDrawer}
-          drawerState={drawerState}
-        />
-      </Box>
+      {drawerState === "closed" && (
+        <Box
+          position="absolute"
+          top={78}
+          left={5}
+          zIndex={1}
+          display={["none", "none", "flex"]} // Use "flex" instead of "block" for alignment
+          alignItems="center" // Center content vertically
+          justifyContent="center" // Center content horizontally
+          color={"rgba(248,248,248,0.8)"}
+          borderRadius="full"
+          aspectRatio={1}
+          w="36px"
+          h="36px"
+          backgroundColor={"rgba(255,255,255,0.2)"}
+          border="1px solid white"
+          p={1}
+        >
+          <Menu
+            onClick={toggleDrawer}
+            cursor="pointer"
+            style={{ fontSize: "1.5rem" }}
+          />
+        </Box>
+      )}
 
       <AnimatePresence>
         {drawerState !== "closed" && (
@@ -88,7 +98,70 @@ export function LeftHandNavigationDrawer({
             exit={{ x: "-100%", opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
-            <VStack align="stretch" height="100%" pt={"60px"}>
+            <VStack align="stretch" height="100%" pt={"60px"} gap={0}>
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                justifyContent={"flex-end"}
+                gap={2}
+                mr={2}
+                position={"absolute"}
+                right={0}
+                zIndex={2}
+                background={"white"}
+                w={"full"}
+              >
+                {drawerState === "fully-open" && (
+                  <Box
+                    color={theme.colors.perygonPink}
+                    onClick={toggleDrawer}
+                    m={0}
+                    p={0}
+                    zIndex={1}
+                  >
+                    <ChevronLeft
+                      style={{
+                        fontSize: "1.4rem",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </Box>
+                )}
+                {drawerState === "half-open" && (
+                  <Box
+                    color={theme.colors.perygonPink}
+                    onClick={toggleDrawer}
+                    m={0}
+                    p={0}
+                    zIndex={1}
+                  >
+                    <ChevronRight
+                      style={{
+                        fontSize: "1.4rem",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </Box>
+                )}
+
+                {drawerState === "fully-open" && (
+                  <Box
+                    color={theme.colors.perygonPink}
+                    onClick={() => setDrawerState("closed")}
+                    m={0}
+                    p={0}
+                    zIndex={1}
+                  >
+                    <Close
+                      style={{
+                        fontSize: "1.4rem",
+                        cursor: "pointer", // Apply cursor style directly to the icon
+                      }}
+                    />
+                  </Box>
+                )}
+              </Box>
               {drawerState === "fully-open" && (
                 <Box px={4}>
                   <h2 style={{ color: theme.colors.perygonPink }}>{title}</h2>
@@ -100,6 +173,7 @@ export function LeftHandNavigationDrawer({
                 position="relative"
                 zIndex={1}
                 p={4}
+                pt={7}
                 overflowY="auto"
               >
                 <VStack spacing={0} align="stretch" width="100%">
@@ -164,21 +238,6 @@ export function LeftHandNavigationDrawer({
                 </VStack>
               </Box>
             </VStack>
-
-            <Box
-              position="absolute"
-              top={58}
-              right={drawerState === "fully-open" ? 31 : 6}
-              // zIndex={6}
-            >
-              <RotatingChevron
-                placement="right"
-                size={drawerState === "fully-open" ? "2rem" : "1.5rem"}
-                onClick={toggleDrawer}
-                drawerState={drawerState}
-                color={theme.colors.perygonPink}
-              />
-            </Box>
           </MotionBox>
         )}
       </AnimatePresence>
