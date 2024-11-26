@@ -1,10 +1,17 @@
 "use client";
 
-import { Box, Divider, Text, useTheme, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Divider,
+  Text,
+  useBreakpointValue,
+  useTheme,
+  VStack,
+} from "@chakra-ui/react";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
-import { RotatingChevron } from "./RotatingChevron";
 import SideBarMenuItem from "./SideBarMenuItem";
+import { BlurOn, ChevronLeft, ChevronRight, Close } from "@mui/icons-material";
 
 export interface MenuItem {
   label: string;
@@ -29,45 +36,131 @@ export function RightHandNavigationDrawer({
   >(defaultDrawerState);
   const theme = useTheme();
 
+  const iconFontSize = useBreakpointValue({ base: "1.3rem", lg: "1.5rem" });
+
   const MotionBox = motion(Box);
 
   const toggleDrawer = () => {
-    if (drawerState === "closed") {
-      setDrawerState("fully-open");
-    } else if (drawerState === "fully-open") {
+    if (drawerState === "fully-open") {
       setDrawerState("half-open");
     } else {
-      setDrawerState("closed");
+      setDrawerState("fully-open");
     }
   };
 
   return (
     <>
-      <Box position="absolute" top={59} right={16} zIndex={1}>
-        <RotatingChevron
-          placement="right"
-          onClick={toggleDrawer}
-          drawerState={drawerState}
-        />
-      </Box>
+      {drawerState === "closed" && (
+        <Box
+          position="absolute"
+          top={[74, 74, 78]}
+          right={[4, 4, 5]}
+          zIndex={1}
+          display={"flex"}
+          alignItems="center"
+          justifyContent="center"
+          color={"rgba(248,248,248,0.8)"}
+          borderRadius="full"
+          aspectRatio={1}
+          w={["30px", "30px", "36px"]}
+          h={["30px", "30px", "36px"]}
+          backgroundColor={"rgba(255,255,255,0.2)"}
+          border="1px solid white"
+          p={1}
+          transform="scale(1)" // Initial scale
+          transition="transform 0.2s ease-in-out" // Smooth scaling effect
+          _hover={{ transform: "scale(1.2)" }} // Scale up on hover
+        >
+          <BlurOn
+            onClick={toggleDrawer}
+            cursor="pointer"
+            style={{ fontSize: iconFontSize }}
+          />
+        </Box>
+      )}
 
       <AnimatePresence>
         {drawerState !== "closed" && (
           <MotionBox
+            display={"block"}
             position="fixed"
-            top={-6}
+            top={0}
             right={0}
             bottom={0}
             width={drawerState === "fully-open" ? 225 : 61}
             zIndex={5}
             bg="white"
             boxShadow="xl"
+            gap={0}
             initial={{ x: "100%", opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: "100%", opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
           >
-            <VStack align="stretch" height="100%" mt={20}>
+            <VStack align="stretch" height="100%" pt={"60px"} gap={0}>
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                justifyContent={"flex-end"}
+                gap={2}
+                pr={2}
+                position={"absolute"}
+                right={0}
+                zIndex={2}
+                background={"white"}
+                w={"full"}
+              >
+                {drawerState === "fully-open" && (
+                  <Box
+                    color={theme.colors.perygonPink}
+                    onClick={toggleDrawer}
+                    m={0}
+                    p={0}
+                    zIndex={1}
+                  >
+                    <ChevronRight
+                      style={{
+                        fontSize: "1.4rem",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </Box>
+                )}
+                {drawerState === "half-open" && (
+                  <Box
+                    color={theme.colors.perygonPink}
+                    onClick={toggleDrawer}
+                    m={0}
+                    p={0}
+                    zIndex={1}
+                  >
+                    <ChevronLeft
+                      style={{
+                        fontSize: "1.4rem",
+                        cursor: "pointer",
+                      }}
+                    />
+                  </Box>
+                )}
+
+                {drawerState === "fully-open" && (
+                  <Box
+                    color={theme.colors.perygonPink}
+                    onClick={() => setDrawerState("closed")}
+                    m={0}
+                    p={0}
+                    zIndex={1}
+                  >
+                    <Close
+                      style={{
+                        fontSize: "1.4rem",
+                        cursor: "pointer", // Apply cursor style directly to the icon
+                      }}
+                    />
+                  </Box>
+                )}
+              </Box>
               {drawerState === "fully-open" && (
                 <Box px={4}>
                   <h2 style={{ color: theme.colors.perygonPink }}>{title}</h2>
@@ -78,6 +171,7 @@ export function RightHandNavigationDrawer({
                 position="relative"
                 zIndex={1}
                 p={4}
+                pt={7}
                 overflowY="auto"
               >
                 <VStack spacing={0} align="stretch" width="100%">
@@ -111,20 +205,6 @@ export function RightHandNavigationDrawer({
                 </VStack>
               </Box>
             </VStack>
-
-            <Box
-              position="absolute"
-              top={83}
-              left={drawerState === "fully-open" ? 0 : -0.5}
-            >
-              <RotatingChevron
-                size={drawerState === "fully-open" ? "2rem" : "1.5rem"}
-                placement="left"
-                onClick={toggleDrawer}
-                drawerState={drawerState}
-                color={theme.colors.perygonPink}
-              />
-            </Box>
           </MotionBox>
         )}
       </AnimatePresence>

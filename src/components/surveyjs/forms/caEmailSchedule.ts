@@ -55,22 +55,6 @@ export const caEmailScheduleJson = {
         },
         {
           type: "text",
-          name: "lastSentTime",
-          title: "Last Send Time",
-          inputType: "date",
-          startWithNewLine: false,
-          readOnly: true,
-        },
-        {
-          type: "text",
-          name: "nextSendTime",
-          title: "Next Send Time",
-          isRequired: true,
-          inputType: "date",
-          readOnly: true,
-        },
-        {
-          type: "text",
           name: "sendTime",
           title: "Send Time between 09:00 and 18:00",
           inputType: "time",

@@ -12,6 +12,8 @@ import {
 import { Circle as CircleIcon } from "@mui/icons-material";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import { useUser } from "@/providers/UserProvider";
+import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
+import { useRouter } from "next/navigation";
 
 interface WorkflowLayoutProps {
   stages: WorkflowStage[];
@@ -68,7 +70,14 @@ export default function WorkflowLayout({
   const [formData, setFormData] = useState<any | null>(null);
   const [isNew, setIsNew] = useState<boolean>(false);
   const { user } = useUser();
+  const router = useRouter();
   const { fetchClient } = useFetchClient();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleNavigateAway = () => {
+    router.push("/");
+  };
 
   // Prepare menu items based on stages
   const menuItems: MenuItem[] = stages.map((stage) => ({
@@ -143,12 +152,18 @@ export default function WorkflowLayout({
               : formDataset.jsonResponse;
           setFormData(parsedResponse);
 
-          // Set `isNew` based on `statusId` and created or started by
-          // TODO: Add user group for access when required
+          const isAuthorized =
+            formDataset.createdBy === user?.userId ||
+            formDataset.startedBy === user?.userId;
+
+          if (!isAuthorized) {
+            setIsModalOpen(true); // Show modal if unauthorized
+            return;
+          }
+
           if (
             (formDataset.statusId === 1 || formDataset.statusId === 2) &&
-            (formDataset.createdBy === user?.userId ||
-              formDataset.startedBy === user?.userId)
+            isAuthorized
           ) {
             setIsNew(true);
           } else if (formDataset.statusId === 3) {
@@ -156,7 +171,7 @@ export default function WorkflowLayout({
           }
         }
       } finally {
-        // Handle any cleanup or additional logic here if needed
+        // Additional cleanup logic if needed
       }
     };
 
@@ -164,36 +179,53 @@ export default function WorkflowLayout({
   }, [currentStage]);
 
   return (
-    <Box mt="60px" width="full" height="calc(100vh - 60px)">
-      {/* Render LeftHandNavigationDrawer if there are multiple stages */}
-      {stages.length > 1 && (
-        <LeftHandNavigationDrawer
-          menuItems={menuItems}
-          defaultDrawerState="half-open"
-        />
-      )}
+    <>
+      {/* Modal to block access */}
+      <SurveyModal
+        isOpen={isModalOpen}
+        onConfirm={handleNavigateAway}
+        onClose={handleNavigateAway}
+        showButtons={{
+          close: false,
+          confirm: true,
+        }}
+        title="Unauthorized Access"
+        bodyContent="You are not authorized to view this workflow."
+        confirmLabel="OK"
+        cancelLabel="Cancel"
+      />
 
-      {/* Display SurveyComponent if form data is available */}
-      {currentStage && currentForm && (
-        <SurveyComponent
-          surveyJson={
-            typeof currentForm.jsonFile === "string"
-              ? JSON.parse(currentForm.jsonFile)
-              : currentForm.jsonFile
-          }
-          endpoint={`/api/workflows/saveWorkflow/${currentStage.bpInstId}`}
-          isNew={isNew}
-          dataset={formData}
-          formSubmission="workflow"
-          layout="happiness"
-          redirectUrl={`/happiness-score?wfId=${workflowId}&toolId=${toolId}`}
-          jsPath={currentStage.jsAdditionalFileUrl}
-          cssPath={currentStage.cssThemeFileUrl}
-          sjsPath={currentStage.sjsThemeFileUrl}
-          layoutOptions={{ showTitle: true }}
-        />
-        // TODO: Renderer state for no form available
+      {/* Render main content only if modal is not open */}
+      {!isModalOpen && (
+        <Box mt="60px" width="full" height="calc(100vh - 60px)">
+          {stages.length > 1 && (
+            <LeftHandNavigationDrawer
+              menuItems={menuItems}
+              defaultDrawerState="half-open"
+            />
+          )}
+
+          {currentStage && currentForm && (
+            <SurveyComponent
+              surveyJson={
+                typeof currentForm.jsonFile === "string"
+                  ? JSON.parse(currentForm.jsonFile)
+                  : currentForm.jsonFile
+              }
+              endpoint={`/api/workflows/saveWorkflow/${currentStage.bpInstId}`}
+              isNew={isNew}
+              dataset={formData}
+              formSubmission="workflow"
+              layout="happiness"
+              redirectUrl={`/happiness-score?wfId=${workflowId}&toolId=${toolId}`}
+              jsPath={currentStage.jsAdditionalFileUrl}
+              cssPath={currentStage.cssThemeFileUrl}
+              sjsPath={currentStage.sjsThemeFileUrl}
+              layoutOptions={{ showTitle: true }}
+            />
+          )}
+        </Box>
       )}
-    </Box>
+    </>
   );
 }
