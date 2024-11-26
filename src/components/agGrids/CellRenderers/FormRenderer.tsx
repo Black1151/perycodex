@@ -28,7 +28,7 @@ const FormRenderer: React.FC<FormRendererProps> = ({
   const uniqueId = form[uniqueIdField];
 
   // Conditionally create a link only if uniqueId exists
-  const link = uniqueId ? `/business-processes/${uniqueId}` : null;
+  const link = uniqueId ? `/forms/${uniqueId}` : null;
 
   // Render the form name as text (inside a link if the form has a unique ID)
   const content = (
