@@ -24,6 +24,7 @@ import PeopleList from "./PeopleList";
 import AnimatedBarChart from "@/components/graphs/BarGraph";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import { SpringScale } from "@/components/animations/SpringScale";
+import StaffHappinessDetailModal from "./StaffHappinessDetailModal";
 
 interface DataPoint {
   value: number;
@@ -49,6 +50,7 @@ export interface SpeechBubbleData {
 }
 
 export interface Person {
+  userId: number;
   firstName: string;
   lastName: string;
   jobTitle: string;
@@ -64,23 +66,22 @@ export default function ManagerDashboardPage() {
   const [speechBubbleData, setSpeechBubbleData] =
     useState<SpeechBubbleData | null>(null);
   const [peopleListData, setPeopleListData] = useState<Person[]>([]);
-
   const [filterOptions, setFilterOptions] = useState<FilterOptionGroup[]>([]);
-
   const [departmentsData, setDepartmentsData] = useState<
     { department: string; averageScore: number }[]
   >([]);
   const [sitesData, setSitesData] = useState<
     { site: string; averageScore: number }[]
   >([]);
-
   const [weeksData, setWeeksData] = useState<any[]>([]);
   const [weekOptions, setWeekOptions] = useState<string[]>([]);
   const [selectedWeek, setSelectedWeek] = useState<string | null>(null);
-
-  // Add time range state and options
-  const timeRangeOptions = ["1 month", "3 months", "6 months", "1 year", "all"];
   const [selectedTimeRange, setSelectedTimeRange] = useState<string>("all");
+  const [staffHappinessDetailsModalData, setStaffHappinessDetailsModalData] =
+    useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const timeRangeOptions = ["1 month", "3 months", "6 months", "1 year", "all"];
 
   const labelToParamName: Record<string, string> = useMemo(
     () => ({
@@ -311,6 +312,38 @@ export default function ManagerDashboardPage() {
     }
   }, [selectedWeek, weeksData]);
 
+  const fetchHappinessScoreTwoMonthHistory = useCallback(
+    async (userId: number) => {
+      const payload = {
+        toolId: 1,
+        workflowId: 1,
+        businessProcessId: 1,
+        userId: userId,
+      };
+
+      const response = await fetch(
+        "/api/happiness-graphs/getUserHappinessDetails",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch happiness scores.");
+      }
+
+      const data = await response.json();
+      console.log("data", data);
+      setStaffHappinessDetailsModalData(data.resource);
+      setIsModalOpen(true);
+    },
+    []
+  );
+
   const departmentBarData = useMemo(
     () =>
       departmentsData.map((dept) => ({
@@ -329,7 +362,6 @@ export default function ManagerDashboardPage() {
     [sitesData]
   );
 
-  // Pagination state for PeopleList
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
 
@@ -358,74 +390,84 @@ export default function ManagerDashboardPage() {
           <Spinner size="xl" color="perygonPink" />
         </Flex>
       ) : (
-        <Grid
-          templateColumns={["1fr", null, "1fr 1fr"]}
-          gap={[20, 6]}
-          mr={[0, null, null, 40]}
-        >
-          <GridItem>
-            <SpringScale>
-              <Flex maxWidth={600} flexDirection="column">
-                <Flex width="100%" justifyContent="center" mb={4}>
-                  <SectionHeader>Average</SectionHeader>
-                </Flex>
-                <SpeechBubble
-                  score={speechBubbleData?.currentScore || 0}
-                  change={speechBubbleData?.change || 0}
-                  positiveChange={speechBubbleData?.positiveChange || false}
-                />
-              </Flex>
-            </SpringScale>
-          </GridItem>
-
-          <GridItem>
-            <SpringScale>
-              <Flex width="100%" justifyContent="center" mb={4}>
-                <SectionHeader>Trend</SectionHeader>
-              </Flex>
-              <LineGraph DataPoints={lineGraphData} />
-            </SpringScale>
-          </GridItem>
-          <GridItem>
-            <Flex width="100%" justifyContent="center" mb={4}>
-              <SectionHeader>Breakdown</SectionHeader>
-            </Flex>
-            <HappinessScoreMasonry
-              masonryValues={masonryData}
-              onStatClick={handleMasonryClick}
+        <>
+          {staffHappinessDetailsModalData && (
+            <StaffHappinessDetailModal
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+              {...staffHappinessDetailsModalData}
             />
-          </GridItem>
-          <GridItem>
-            <VStack minH="100%">
-              <Flex width="100%" justifyContent="center" mb={2}>
-                <SectionHeader>Submissions</SectionHeader>
+          )}
+          <Grid
+            templateColumns={["1fr", null, "1fr 1fr"]}
+            gap={[20, 6]}
+            mr={[0, null, null, 40]}
+          >
+            <GridItem>
+              <SpringScale>
+                <Flex maxWidth={600} flexDirection="column">
+                  <Flex width="100%" justifyContent="center" mb={4}>
+                    <SectionHeader>This Weeks Average</SectionHeader>
+                  </Flex>
+                  <SpeechBubble
+                    score={speechBubbleData?.currentScore || 0}
+                    change={speechBubbleData?.change || 0}
+                    positiveChange={speechBubbleData?.positiveChange || false}
+                  />
+                </Flex>
+              </SpringScale>
+            </GridItem>
+
+            <GridItem>
+              <SpringScale>
+                <Flex width="100%" justifyContent="center" mb={4}>
+                  <SectionHeader>Trend</SectionHeader>
+                </Flex>
+                <LineGraph DataPoints={lineGraphData} />
+              </SpringScale>
+            </GridItem>
+            <GridItem>
+              <Flex width="100%" justifyContent="center" mb={4}>
+                <SectionHeader>Breakdown</SectionHeader>
               </Flex>
-              <PeopleList
-                people={peopleListData}
-                currentPage={currentPage}
-                itemsPerPage={itemsPerPage}
-                onPageChange={setCurrentPage}
-                onItemsPerPageChange={setItemsPerPage}
+              <HappinessScoreMasonry
+                masonryValues={masonryData}
+                onStatClick={handleMasonryClick}
               />
-            </VStack>
-          </GridItem>
-          <GridItem>
-            <VStack>
-              <Flex width="100%" justifyContent="center" mb={4}>
-                <SectionHeader>Department Comparison</SectionHeader>
-              </Flex>
-              <AnimatedBarChart DataPoints={departmentBarData} />
-            </VStack>
-          </GridItem>
-          <GridItem>
-            <VStack>
-              <Flex width="100%" justifyContent="center" mb={4}>
-                <SectionHeader>Site Comparison</SectionHeader>
-              </Flex>
-              <AnimatedBarChart DataPoints={siteBarData} />
-            </VStack>
-          </GridItem>
-        </Grid>
+            </GridItem>
+            <GridItem>
+              <VStack minH="100%">
+                <Flex width="100%" justifyContent="center" mb={2}>
+                  <SectionHeader>Submissions</SectionHeader>
+                </Flex>
+                <PeopleList
+                  people={peopleListData}
+                  currentPage={currentPage}
+                  itemsPerPage={itemsPerPage}
+                  onPageChange={setCurrentPage}
+                  onItemsPerPageChange={setItemsPerPage}
+                  handleUserClick={fetchHappinessScoreTwoMonthHistory}
+                />
+              </VStack>
+            </GridItem>
+            <GridItem>
+              <VStack>
+                <Flex width="100%" justifyContent="center" mb={4}>
+                  <SectionHeader>Department Comparison</SectionHeader>
+                </Flex>
+                <AnimatedBarChart DataPoints={departmentBarData} />
+              </VStack>
+            </GridItem>
+            <GridItem>
+              <VStack>
+                <Flex width="100%" justifyContent="center" mb={4}>
+                  <SectionHeader>Site Comparison</SectionHeader>
+                </Flex>
+                <AnimatedBarChart DataPoints={siteBarData} />
+              </VStack>
+            </GridItem>
+          </Grid>
+        </>
       )}
     </>
   );

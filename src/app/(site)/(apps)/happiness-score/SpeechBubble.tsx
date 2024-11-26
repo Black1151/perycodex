@@ -137,22 +137,24 @@ const SpeechBubble: React.FC<SpeechBubbleProps> = ({
                 .{decimalPart}
               </Text>
             </motion.div>
-            <motion.div
-              key={`change-${change}`}
-              initial={{ transform: "translateX(40%)", opacity: 0 }}
-              animate={{ transform: "translateX(0%)", opacity: 1 }}
-              exit={{ transform: "translateX(-40%)", opacity: 0 }}
-              transition={{ duration: 0.4 }}
-            >
-              <Text
-                fontSize={`${fontSize * 0.13}px`}
-                color={positiveChange ? "seduloGreen" : "seduloRed"}
-                mt={2}
+            {change !== 0 && (
+              <motion.div
+                key={`change-${change}`}
+                initial={{ transform: "translateX(40%)", opacity: 0 }}
+                animate={{ transform: "translateX(0%)", opacity: 1 }}
+                exit={{ transform: "translateX(-40%)", opacity: 0 }}
+                transition={{ duration: 0.4 }}
               >
-                {positiveChange ? "\u25B2" : "\u25BC"}
-                {change.toFixed(2)}
-              </Text>
-            </motion.div>
+                <Text
+                  fontSize={`${fontSize * 0.13}px`}
+                  color={positiveChange ? "seduloGreen" : "seduloRed"}
+                  mt={2}
+                >
+                  {positiveChange ? "\u25B2" : "\u25BC"}
+                  {change.toFixed(2)}
+                </Text>
+              </motion.div>
+            )}
           </VStack>
         </HStack>
 

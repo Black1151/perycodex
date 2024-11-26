@@ -18,8 +18,6 @@ export const HappinessScoreMasonry: React.FC<HappinessScoreMasonryProps> = ({
 }) => {
   const theme = useTheme();
 
-  console.log(masonryValues);
-
   return (
     <VStack flex={1}>
       <SimpleGrid gap={[2, 5]} columns={[2]} flex={1} w="100%">

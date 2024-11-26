@@ -94,9 +94,8 @@ const getWeekNumber = (date: Date): [number, number] => {
 function getAllWeekKeysBetween(startDate: Date, endDate: Date): string[] {
   const weeks: string[] = [];
   let currentDate = new Date(startDate);
-  currentDate.setHours(0, 0, 0, 0); // Clear time
+  currentDate.setHours(0, 0, 0, 0);
 
-  // Set to the Monday of the week
   currentDate.setDate(currentDate.getDate() - ((currentDate.getDay() + 6) % 7));
 
   while (currentDate <= endDate) {
@@ -105,7 +104,6 @@ function getAllWeekKeysBetween(startDate: Date, endDate: Date): string[] {
     if (!weeks.includes(weekKey)) {
       weeks.push(weekKey);
     }
-    // Move to the next week (7 days)
     currentDate.setDate(currentDate.getDate() + 7);
   }
   return weeks;
@@ -114,8 +112,6 @@ function getAllWeekKeysBetween(startDate: Date, endDate: Date): string[] {
 export async function GET(request: Request) {
   const cookieStore = cookies();
   const apiToken = cookieStore.get("auth_token")?.value;
-
-  // Parse query parameters sent from the client
   const url = new URL(request.url);
   const queryParams = Object.fromEntries(url.searchParams.entries());
 
@@ -153,8 +149,6 @@ export async function GET(request: Request) {
     siteName: "siteId",
   };
 
-  const availableOptions: FilterOptionGroup[] = [];
-
   const buildEndpoint = (filters: any) => {
     let endpoint = `/getAllView?view=vwDashboardDataFromReportJson&toolConfigId=${toolConfigId}&workflowId=${workflowId}&businessProcessId=${businessProcessId}`;
     Object.keys(filters).forEach((key) => {
@@ -184,7 +178,8 @@ export async function GET(request: Request) {
 
   const startDate = getStartDateFromTimeRange(timeRange);
 
-  for (const group of filterGroups) {
+  // Use Promise.all to fetch filter options in parallel
+  const filterGroupPromises = filterGroups.map(async (group) => {
     const filtersExcludingCurrentGroup = { ...selectedFilters } as Record<
       string,
       string[]
@@ -205,7 +200,6 @@ export async function GET(request: Request) {
       }
 
       const dataForGroup: ApiResponse = await response.json();
-      console.log(dataForGroup);
 
       const options = dataForGroup.resource
         .map((item) => {
@@ -221,14 +215,23 @@ export async function GET(request: Request) {
         new Map(options.map((item) => [item.value, item])).values()
       );
 
-      availableOptions.push({
+      return {
         label: camelCaseToWords(group.key),
         options: uniqueOptions,
-      });
+      };
     } catch (error) {
       console.error("Error fetching data for group:", group.key, error);
+      return null; // Handle the error as needed
     }
-  }
+  });
+
+  // Wait for all filter group promises to resolve
+  const filterGroupResults = await Promise.all(filterGroupPromises);
+
+  // Filter out any null results
+  const availableOptions = filterGroupResults.filter(
+    (result) => result !== null
+  ) as FilterOptionGroup[];
 
   const endpointWithAllFilters = buildEndpoint(selectedFilters);
 
@@ -255,6 +258,7 @@ export async function GET(request: Request) {
     );
   }
 
+  // Process the data
   const weekGroups = new Map<
     string,
     { score: number; item: ApiResponseItem }[]
@@ -309,6 +313,7 @@ export async function GET(request: Request) {
 
       const masonryCounts = [0, 0, 0, 0, 0];
       const peopleList: {
+        userId: number;
         imageUrl: string;
         firstName: string;
         lastName: string;
@@ -340,6 +345,7 @@ export async function GET(request: Request) {
         else masonryCounts[4]++;
 
         peopleList.push({
+          userId: item.userId,
           imageUrl: item.userImageUrl,
           firstName: item.firstName,
           lastName: item.lastName,
@@ -371,8 +377,6 @@ export async function GET(request: Request) {
           const siteData = siteScores.get(siteId)!;
           siteData.totalScore += score;
           siteData.count += 1;
-
-          // Update the most recent siteName if the current record is newer
           const itemCreatedAt = new Date(item.createdAt);
           if (itemCreatedAt > siteData.mostRecentCreatedAt) {
             siteData.mostRecentCreatedAt = itemCreatedAt;
@@ -381,7 +385,6 @@ export async function GET(request: Request) {
         }
       });
 
-      // Compute average scores per department
       const departmentsData: { department: string; averageScore: number }[] =
         [];
       departmentScores.forEach((value, key) => {
@@ -391,11 +394,10 @@ export async function GET(request: Request) {
         });
       });
 
-      // Compute average scores per site
       const sitesData: { site: string; averageScore: number }[] = [];
       siteScores.forEach((value, key) => {
         sitesData.push({
-          site: value.mostRecentSiteName, // Use the most recent siteName
+          site: value.mostRecentSiteName,
           averageScore: value.totalScore / value.count,
         });
       });

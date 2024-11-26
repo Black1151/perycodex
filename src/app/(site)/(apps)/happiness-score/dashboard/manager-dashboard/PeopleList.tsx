@@ -22,6 +22,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 interface Person {
+  userId: number;
   firstName: string;
   lastName: string;
   jobTitle: string;
@@ -35,6 +36,7 @@ interface PeopleListProps {
   itemsPerPage: number;
   onPageChange: (page: number) => void;
   onItemsPerPageChange: (itemsPerPage: number) => void;
+  handleUserClick: (userId: number) => void;
 }
 
 const PeopleList: React.FC<PeopleListProps> = ({
@@ -43,6 +45,7 @@ const PeopleList: React.FC<PeopleListProps> = ({
   itemsPerPage,
   onPageChange,
   onItemsPerPageChange,
+  handleUserClick,
 }) => {
   const [sortConfig, setSortConfig] = React.useState<{
     key: keyof Person;
@@ -172,6 +175,7 @@ const PeopleList: React.FC<PeopleListProps> = ({
                   color: "white",
                 }}
                 transition="background-color 0.15s ease, color 0.15s ease"
+                onClick={() => handleUserClick(person.userId)}
               >
                 <Td
                   textOverflow="ellipsis"
