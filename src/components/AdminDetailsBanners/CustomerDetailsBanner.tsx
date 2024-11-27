@@ -26,6 +26,7 @@ import { BusinessOutlined } from "@mui/icons-material";
 import { TagsDisplay } from "@/components/tags/TagsDisplay";
 import { TagsResponse } from "@/app/api/tags/getTagsForRecord/route";
 import { useTags } from "@/providers/TagsProvider";
+import BackButton from "@/components/BackButton";
 
 interface Customer {
   id: number;
@@ -130,8 +131,10 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
         color={"white"}
         overflow={"hidden"}
         align={"flex-start"}
+        gap={2}
         // direction={['column', 'column', 'row']}
       >
+        <BackButton />
         {/* Customer Logo Upload */}
         <FormControl
           w={imageWidth}

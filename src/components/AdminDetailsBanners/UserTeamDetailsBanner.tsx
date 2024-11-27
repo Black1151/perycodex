@@ -13,7 +13,8 @@ import {
 import { People } from "@mui/icons-material";
 import moment from "moment/moment";
 import CreateIcon from "@mui/icons-material/Create";
-import UpdateIcon from "@mui/icons-material/Update"; // For fallback or general case icon
+import UpdateIcon from "@mui/icons-material/Update";
+import BackButton from "@/components/BackButton"; // For fallback or general case icon
 
 interface Team {
   id: number;
@@ -42,7 +43,8 @@ export const UserTeamDetailsBanner: React.FC<UserTeamDetailsBannerProps> = ({
   const isDepartment = team.parentTeamId === null;
 
   return (
-    <Flex mb={4} p={[0, 0, 4]} color={"white"} overflow={"hidden"}>
+    <Flex mb={4} p={[0, 0, 4]} color={"white"} overflow={"hidden"} gap={2}>
+      <BackButton />
       {/* Team/Department Icon and Name */}
       <FormControl
         w={"100px"}

@@ -15,6 +15,7 @@ import CreateIcon from "@mui/icons-material/Create";
 import UpdateIcon from "@mui/icons-material/Update";
 import SellIcon from "@mui/icons-material/Sell";
 import { Tag } from "../tags/Tag";
+import BackButton from "@/components/BackButton";
 
 export interface Tag {
   id: number;
@@ -39,7 +40,8 @@ interface TagDetailsBannerProps {
 
 export const TagDetailsBanner: React.FC<TagDetailsBannerProps> = ({ tag }) => {
   return (
-    <Flex mb={4} p={4} color={"white"} overflow={"hidden"}>
+    <Flex mb={4} p={4} color={"white"} overflow={"hidden"} gap={2}>
+      <BackButton />
       <FormControl
         w={"100px"}
         h={"100px"}

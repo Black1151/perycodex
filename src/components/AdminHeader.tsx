@@ -1,4 +1,6 @@
 import { Flex, Heading, Text } from "@chakra-ui/react";
+import React from "react";
+import BackButton from "@/components/BackButton";
 
 interface AdminHeadingProps {
   headingText: string;
@@ -10,7 +12,14 @@ const AdminHeading: React.FC<AdminHeadingProps> = ({
   dataCount,
 }) => {
   return (
-    <Flex color="white" width="full" borderBottom="1px solid white" gap={2}>
+    <Flex
+      color="white"
+      width="full"
+      borderBottom="1px solid white"
+      gap={2}
+      alignItems="flex-start"
+    >
+      <BackButton />
       <Heading as="h1" size="xl" fontFamily={"Bonfire"} fontWeight={100}>
         {headingText}{" "}
       </Heading>
