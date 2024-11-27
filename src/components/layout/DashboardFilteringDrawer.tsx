@@ -13,14 +13,14 @@ import {
 import { motion } from "framer-motion";
 import React, { memo } from "react";
 import { Close, Menu } from "@mui/icons-material";
-import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/manager-dashboard/page";
+import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/manager-dashboard/ManagerDashboard";
 
 interface RightHandNavigationDrawerProps {
   title?: string;
   handleCheckboxChange: (
     groupIndex: number,
     optionIndex: number,
-    isChecked: boolean
+    isChecked: boolean,
   ) => void;
   filterOptions: FilterOptionGroup[];
   clearAllFilters: () => void;
@@ -184,7 +184,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                                 handleCheckboxChange(
                                   groupIndex,
                                   optionIndex,
-                                  e.target.checked
+                                  e.target.checked,
                                 )
                               }
                             >

@@ -9,7 +9,7 @@ import {
   Checkbox,
   VStack,
 } from "@chakra-ui/react";
-import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/manager-dashboard/page";
+import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/manager-dashboard/ManagerDashboard";
 
 interface FilterAccordionProps {
   filterOptions: FilterOptionGroup[];
