@@ -40,9 +40,7 @@ const ResetPasswordModal = ({
         onClose={handleOnClose}
         onConfirm={handlePasswordReset}
         title={"Reset Password"}
-        bodyContent={
-          "Are you sure you want to reset your password. An email will be sent to you if you click send email."
-        }
+        bodyContent={`Are you sure you want to reset your password? Click send email to confirm.`}
         confirmLabel={"Send Email"}
         cancelLabel={"Cancel"}
       />
