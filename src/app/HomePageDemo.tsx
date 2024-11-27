@@ -121,7 +121,7 @@ export default function Home() {
               <Flex mb={4} width="100%" justifyContent="center">
                 <SectionHeader>Happiness by Group</SectionHeader>
               </Flex>
-              <BarGraph
+              {/* <BarGraph
                 DataPoints={[
                   { value: 9, title: "Leeds" },
                   { value: 7, title: "Manchester" },
@@ -130,7 +130,7 @@ export default function Home() {
                   { value: 10, title: "Edinburgh" },
                   { value: 3, title: "Dublin" },
                 ]}
-              />
+              /> */}
               <LineGraph
                 DataPoints={[
                   { value: 2, title: "Jan" },
