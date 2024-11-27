@@ -90,7 +90,7 @@ export default function HappinessScoreClientInner({
                     <Flex width="100%" justifyContent="center" mb={4}>
                       <SectionHeader>Happiness Trend</SectionHeader>
                     </Flex>
-                    <LineGraph
+                    {/* <LineGraph
                       DataPoints={[
                         { value: 6.2, title: "Jan" },
                         { value: 2.7, title: "Feb" },
@@ -101,7 +101,7 @@ export default function HappinessScoreClientInner({
                         { value: 9.1, title: "Jul" },
                         { value: 3.5, title: "Aug" },
                       ]}
-                    />
+                    /> */}
                   </SpringScale>
                 </GridItem>
                 <GridItem>
@@ -110,7 +110,7 @@ export default function HappinessScoreClientInner({
                       <Flex mb={4} width="100%" justifyContent="center">
                         <SectionHeader>Happiness by Team</SectionHeader>
                       </Flex>
-                      <BarGraph
+                      {/* <BarGraph
                         DataPoints={[
                           { value: 1, title: "Leeds" },
                           { value: 2, title: "Manchester" },
@@ -123,7 +123,7 @@ export default function HappinessScoreClientInner({
                           { value: 9, title: "Glasgow" },
                           { value: 10, title: "Aberdeen" },
                         ]}
-                      />
+                      /> */}
                     </Flex>
                   </SpringScale>
                 </GridItem>
