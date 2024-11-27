@@ -20,24 +20,16 @@ export default async function TagsPage() {
   const tags = await res.json();
   const tagData = tags.resource || [];
 
-  const tagCount = tagData ? tagData.length : 0;
+  const tagCount = tagData.length;
 
-  if (tagData) {
-    return (
-      <>
-        <AdminHeader headingText={headerTitle} dataCount={tagCount} />
-        <DataGridComponent
-          data={tagData}
-          initialFields={tagFields}
-          createNewUrl={"/tags/create"}
-        />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <h1>No Tags Found</h1>
-      </>
-    );
-  }
+  return (
+    <>
+      <AdminHeader headingText={headerTitle} dataCount={tagCount} />
+      <DataGridComponent
+        data={tagData}
+        initialFields={tagFields}
+        createNewUrl={"/tags/create"}
+      />
+    </>
+  );
 }

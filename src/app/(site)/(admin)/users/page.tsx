@@ -46,38 +46,27 @@ export default async function UsersPage({
   const users = await res.json();
   const userData = users.resource;
 
-  const userCount = userData ? userData.length : 0;
+  const userCount = userData.length;
 
-  if (userData) {
-    return (
-      <>
-        <AdminHeader
-          headingText={headerTitle ?? "Users"}
-          dataCount={userCount}
-        />
-        <DataGridComponent
-          data={userData}
-          initialFields={userFields}
-          createNewUrl={createNewUrl ? createNewUrl : undefined}
-          createNewUrlButtonText={
-            user.role === "PA" ||
-            (user.role === "CA" && userTypeParam === "internal")
-              ? "Invite New"
-              : "Create New"
-          }
-          isModalEnabled={
-            user.role === "PA" ||
-            (user.role === "CA" && userTypeParam === "internal")
-          }
-          openModalComponent={InviteNewUserModalForPA}
-        />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <h1>No Users Found</h1>
-      </>
-    );
-  }
+  return (
+    <>
+      <AdminHeader headingText={headerTitle ?? "Users"} dataCount={userCount} />
+      <DataGridComponent
+        data={userData}
+        initialFields={userFields}
+        createNewUrl={createNewUrl ? createNewUrl : undefined}
+        createNewUrlButtonText={
+          user.role === "PA" ||
+          (user.role === "CA" && userTypeParam === "internal")
+            ? "Invite New"
+            : "Create New"
+        }
+        isModalEnabled={
+          user.role === "PA" ||
+          (user.role === "CA" && userTypeParam === "internal")
+        }
+        openModalComponent={InviteNewUserModalForPA}
+      />
+    </>
+  );
 }

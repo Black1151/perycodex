@@ -49,24 +49,16 @@ export default async function SitesPage({
   const sites = await res.json();
   const siteData = sites.resource || [];
 
-  const siteCount = siteData ? siteData.length : 0;
+  const siteCount = siteData.length;
 
-  if (siteData) {
-    return (
-      <>
-        <AdminHeader headingText={headerTitle} dataCount={siteCount} />
-        <DataGridComponent
-          data={siteData}
-          initialFields={siteFields}
-          createNewUrl={createNewUrl}
-        />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <h1>No Sites Found</h1>
-      </>
-    );
-  }
+  return (
+    <>
+      <AdminHeader headingText={headerTitle} dataCount={siteCount} />
+      <DataGridComponent
+        data={siteData}
+        initialFields={siteFields}
+        createNewUrl={createNewUrl}
+      />
+    </>
+  );
 }

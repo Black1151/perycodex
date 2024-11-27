@@ -21,7 +21,7 @@ export default async function MyCustomerPage() {
   const customerData = customer.resource;
 
   return (
-    <div>
+    <>
       <CustomerDetailsBanner customer={customerData} />
       <SurveyComponent
         surveyJson={customerJson}
@@ -33,6 +33,6 @@ export default async function MyCustomerPage() {
         sjsPath={"admin"}
         reloadPageOnSuccess={true}
       />
-    </div>
+    </>
   );
 }

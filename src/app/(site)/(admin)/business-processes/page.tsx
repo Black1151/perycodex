@@ -20,29 +20,16 @@ export default async function WorkflowsPage() {
   const businessProcesses = await res.json();
   const businessProcessData = businessProcesses.resource || [];
 
-  const businessProcessCount = businessProcessData
-    ? businessProcessData.length
-    : 0;
+  const businessProcessCount = businessProcessData.length;
 
-  if (businessProcessData) {
-    return (
-      <>
-        <AdminHeader
-          headingText={headerTitle}
-          dataCount={businessProcessCount}
-        />
-        <DataGridComponent
-          data={businessProcessData}
-          initialFields={businessProcessFields}
-          createNewUrl={"/business-processes/create"}
-        />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <h1>No Business Processes Found</h1>
-      </>
-    );
-  }
+  return (
+    <>
+      <AdminHeader headingText={headerTitle} dataCount={businessProcessCount} />
+      <DataGridComponent
+        data={businessProcessData}
+        initialFields={businessProcessFields}
+        createNewUrl={"/business-processes/create"}
+      />
+    </>
+  );
 }

@@ -20,24 +20,16 @@ export default async function FormsPage() {
   const forms = await res.json();
   const formData = forms.resource || [];
 
-  const formCount = formData ? formData.length : 0;
+  const formCount = formData.length;
 
-  if (formData) {
-    return (
-      <>
-        <AdminHeader headingText={headerTitle} dataCount={formCount} />
-        <DataGridComponent
-          data={formData}
-          initialFields={formFields}
-          createNewUrl={"/forms/create"}
-        />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <h1>No Tags Found</h1>
-      </>
-    );
-  }
+  return (
+    <>
+      <AdminHeader headingText={headerTitle} dataCount={formCount} />
+      <DataGridComponent
+        data={formData}
+        initialFields={formFields}
+        createNewUrl={"/forms/create"}
+      />
+    </>
+  );
 }
