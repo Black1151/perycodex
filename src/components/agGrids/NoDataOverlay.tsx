@@ -1,6 +1,6 @@
 import React from "react";
 import { Flex, Icon, Text, VStack } from "@chakra-ui/react";
-import { FiInbox } from "react-icons/fi";
+import { QueryStats } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 
 const NoDataOverlay: React.FC = () => {
@@ -18,7 +18,7 @@ const NoDataOverlay: React.FC = () => {
       borderRadius="md"
     >
       <VStack spacing={4}>
-        <Icon as={FiInbox} boxSize={20} color="white" />
+        <Icon as={QueryStats} boxSize={20} color="white" />
         <Text
           fontSize="2xl"
           fontWeight="bold"
@@ -28,8 +28,7 @@ const NoDataOverlay: React.FC = () => {
           No Data Available
         </Text>
         <Text fontSize="lg" color="white" textAlign="center" fontFamily="body">
-          It looks like there is nothing to display at the moment. Once data is
-          available, it will appear here.
+          It looks like there is nothing to display at the moment.
         </Text>
       </VStack>
     </Flex>
