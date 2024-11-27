@@ -11,7 +11,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 import SideBarMenuItem from "./SideBarMenuItem";
-import { BlurOn, ChevronLeft, ChevronRight, Close } from "@mui/icons-material";
+import { ChevronLeft, ChevronRight, Close, Menu } from "@mui/icons-material";
 
 export interface MenuItem {
   label: string;
@@ -36,8 +36,6 @@ export function RightHandNavigationDrawer({
   >(defaultDrawerState);
   const theme = useTheme();
 
-  const iconFontSize = useBreakpointValue({ base: "1.3rem", lg: "1.5rem" });
-
   const MotionBox = motion(Box);
 
   const toggleDrawer = () => {
@@ -48,33 +46,46 @@ export function RightHandNavigationDrawer({
     }
   };
 
+  const groupedItems =
+    menuItems?.reduce(
+      (acc, item) => {
+        const category = item.category || "uncategorized";
+        if (!acc[category]) {
+          acc[category] = [];
+        }
+        acc[category].push(item);
+        return acc;
+      },
+      {} as Record<string, MenuItem[]>
+    ) || {};
+
   return (
     <>
       {drawerState === "closed" && (
         <Box
           position="absolute"
-          top={[74, 74, 78]}
-          right={[4, 4, 5]}
+          top={78}
+          right={5}
           zIndex={1}
-          display={"flex"}
-          alignItems="center"
-          justifyContent="center"
+          display={["none", "none", "flex"]} // Use "flex" instead of "block" for alignment
+          alignItems="center" // Center content vertically
+          justifyContent="center" // Center content horizontally
           color={"rgba(248,248,248,0.8)"}
           borderRadius="full"
           aspectRatio={1}
-          w={["30px", "30px", "36px"]}
-          h={["30px", "30px", "36px"]}
+          w="36px"
+          h="36px"
           backgroundColor={"rgba(255,255,255,0.2)"}
           border="1px solid white"
           p={1}
           transform="scale(1)" // Initial scale
-          transition="transform 0.2s ease-in-out" // Smooth scaling effect
-          _hover={{ transform: "scale(1.2)" }} // Scale up on hover
+          transition="transform 0.2s ease-in-out"
+          _hover={{ transform: "scale(1.2)" }}
         >
-          <BlurOn
+          <Menu
             onClick={toggleDrawer}
             cursor="pointer"
-            style={{ fontSize: iconFontSize }}
+            style={{ fontSize: "1.5rem" }}
           />
         </Box>
       )}
@@ -82,7 +93,7 @@ export function RightHandNavigationDrawer({
       <AnimatePresence>
         {drawerState !== "closed" && (
           <MotionBox
-            display={"block"}
+            display={["none", "none", "block"]}
             position="fixed"
             top={0}
             right={0}
@@ -166,6 +177,7 @@ export function RightHandNavigationDrawer({
                   <h2 style={{ color: theme.colors.perygonPink }}>{title}</h2>
                 </Box>
               )}
+
               <Box
                 flex={1}
                 position="relative"
@@ -175,30 +187,60 @@ export function RightHandNavigationDrawer({
                 overflowY="auto"
               >
                 <VStack spacing={0} align="stretch" width="100%">
-                  {menuItems &&
-                    menuItems.length > 0 &&
-                    menuItems.map((item, index) => (
-                      <React.Fragment key={item.label}>
-                        <SideBarMenuItem
-                          label={item.label}
-                          icon={item.icon}
-                          onClick={item.onClick}
-                          showIconOnly={drawerState !== "fully-open"}
-                          iconSize={6}
-                          hoverStyles={{
-                            border: `1px solid ${theme.colors.perygonPink}`,
-                            color: theme.colors.perygonPink,
-                          }}
-                        />
-                        {index < menuItems.length - 1 && (
+                  {Object.entries(groupedItems).map(
+                    ([category, itemsInCategory], categoryIndex) => (
+                      <React.Fragment key={categoryIndex}>
+                        {category !== "uncategorized" &&
+                          drawerState === "fully-open" && (
+                            <Box borderRadius="md" mb={4}>
+                              <Text
+                                fontWeight="bold"
+                                fontSize="lg"
+                                color={theme.colors.gray[600]}
+                                mb={2}
+                              >
+                                {category}
+                              </Text>
+
+                              <Divider
+                                borderColor={theme.colors.perygonPink}
+                                opacity={0.5}
+                              />
+                            </Box>
+                          )}
+                        {itemsInCategory.map((item, index) => (
+                          <React.Fragment key={item.label}>
+                            <SideBarMenuItem
+                              label={item.label}
+                              icon={item.icon}
+                              onClick={item.onClick}
+                              showIconOnly={drawerState !== "fully-open"}
+                              iconSize={6}
+                              hoverStyles={{
+                                border: `1px solid ${theme.colors.perygonPink}`,
+                                color: theme.colors.perygonPink,
+                              }}
+                            />
+                            {index < itemsInCategory.length - 1 && (
+                              <Divider
+                                borderColor={theme.colors.perygonPink}
+                                opacity={0.2}
+                                my={2}
+                              />
+                            )}
+                          </React.Fragment>
+                        ))}
+                        {categoryIndex <
+                          Object.keys(groupedItems).length - 1 && (
                           <Divider
                             borderColor={theme.colors.perygonPink}
-                            opacity={0.2}
-                            my={2}
+                            opacity={0.8}
+                            my={6}
                           />
                         )}
                       </React.Fragment>
-                    ))}
+                    )
+                  )}
                   {!menuItems && drawerState === "fully-open" && (
                     <Text>No menu items supplied</Text>
                   )}

@@ -1,30 +1,8 @@
 "use client";
 
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useMemo,
-} from "react";
-import {
-  Grid,
-  GridItem,
-  Flex,
-  Spinner,
-  VStack,
-  Box,
-  Select,
-} from "@chakra-ui/react";
-import LineGraph from "@/components/graphs/LineGraph";
-import { HappinessScoreMasonry } from "../../HappinessScoreMasonry";
-import SpeechBubble from "../../SpeechBubble";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import ManagerDashboardPageInner from "./ManagerDashboardPageInner";
 import { DashboardFilteringDrawer } from "@/components/layout/DashboardFilteringDrawer";
-import PeopleList from "./PeopleList";
-import AnimatedBarChart from "@/components/graphs/BarGraph";
-import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
-import { SpringScale } from "@/components/animations/SpringScale";
-import StaffHappinessDetailModal from "./StaffHappinessDetailModal";
 
 interface DataPoint {
   value: number;
@@ -59,6 +37,10 @@ export interface Person {
 }
 
 export default function ManagerDashboardPage() {
+  const [drawerState, setDrawerState] = useState<"closed" | "fully-open">(
+    "closed"
+  );
+
   const isInitialMount = useRef(true);
   const [loading, setLoading] = useState(true);
   const [masonryData, setMasonryData] = useState<number[]>([]);
@@ -81,8 +63,13 @@ export default function ManagerDashboardPage() {
     useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const timeRangeOptions = ["1 month", "3 months", "6 months", "1 year", "all"];
+  // Memoize time range options
+  const timeRangeOptions = useMemo(
+    () => ["1 month", "3 months", "6 months", "1 year", "all"],
+    []
+  );
 
+  // Memoize labelToParamName
   const labelToParamName: Record<string, string> = useMemo(
     () => ({
       "Dept Name": "deptId",
@@ -156,7 +143,7 @@ export default function ManagerDashboardPage() {
 
       setFilterOptions(updatedFilters);
     },
-    [setFilterOptions]
+    []
   );
 
   const fetchFilteredData = useCallback(
@@ -223,15 +210,39 @@ export default function ManagerDashboardPage() {
     setSelectedWeek(week);
   }, []);
 
-  // Handle time range changes
-  const handleTimeRangeChange = useCallback(
-    (range: string) => {
-      setSelectedTimeRange(range);
-      fetchFilteredData(filterOptions, range);
+  const fetchHappinessScoreTwoMonthHistory = useCallback(
+    async (userId: number) => {
+      const payload = {
+        toolId: 1,
+        workflowId: 1,
+        businessProcessId: 1,
+        userId: userId,
+      };
+
+      const response = await fetch(
+        "/api/happiness-graphs/getUserHappinessDetails",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch happiness scores.");
+      }
+
+      const data = await response.json();
+      console.log("data", data);
+      setStaffHappinessDetailsModalData(data.resource);
+      setIsModalOpen(true);
     },
-    [filterOptions, fetchFilteredData]
+    []
   );
 
+  // Fetch initial data
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
@@ -279,10 +290,7 @@ export default function ManagerDashboardPage() {
     fetchInitialData();
   }, [constructQueryParams, selectedTimeRange]);
 
-  const handleMasonryClick = useCallback((category: string) => {
-    console.log("Masonry category clicked:", category);
-  }, []);
-
+  // Update state when selectedWeek changes
   useEffect(() => {
     if (selectedWeek && weeksData.length > 0) {
       const weekDataIndex = weeksData.findIndex(
@@ -312,163 +320,48 @@ export default function ManagerDashboardPage() {
     }
   }, [selectedWeek, weeksData]);
 
-  const fetchHappinessScoreTwoMonthHistory = useCallback(
-    async (userId: number) => {
-      const payload = {
-        toolId: 1,
-        workflowId: 1,
-        businessProcessId: 1,
-        userId: userId,
-      };
-
-      const response = await fetch(
-        "/api/happiness-graphs/getUserHappinessDetails",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch happiness scores.");
-      }
-
-      const data = await response.json();
-      console.log("data", data);
-      setStaffHappinessDetailsModalData(data.resource);
-      setIsModalOpen(true);
-    },
-    []
+  const dashboardFilteringDrawerProps = useMemo(
+    () => ({
+      handleCheckboxChange,
+      filterOptions,
+      title: "Data Filters",
+      clearAllFilters,
+      weekOptions,
+      selectedWeek,
+      onWeekChange: handleWeekChange,
+      drawerState,
+      setDrawerState,
+    }),
+    [
+      handleCheckboxChange,
+      filterOptions,
+      weekOptions,
+      selectedWeek,
+      handleWeekChange,
+      drawerState,
+      setDrawerState,
+    ]
   );
-
-  const departmentBarData = useMemo(
-    () =>
-      departmentsData.map((dept) => ({
-        title: dept.department,
-        value: dept.averageScore,
-      })),
-    [departmentsData]
-  );
-
-  const siteBarData = useMemo(
-    () =>
-      sitesData.map((site) => ({
-        title: site.site,
-        value: site.averageScore,
-      })),
-    [sitesData]
-  );
-
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
-
-  // Reset current page when peopleListData changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [peopleListData]);
 
   return (
     <>
-      <DashboardFilteringDrawer
-        handleCheckboxChange={handleCheckboxChange}
-        filterOptions={filterOptions}
-        title="Data Filters"
-        clearAllFilters={clearAllFilters}
-        weekOptions={weekOptions}
-        selectedWeek={selectedWeek}
-        onWeekChange={handleWeekChange}
-        timeRangeOptions={timeRangeOptions}
+      <DashboardFilteringDrawer {...dashboardFilteringDrawerProps} />
+      <ManagerDashboardPageInner
+        loading={loading}
+        speechBubbleData={speechBubbleData}
+        lineGraphData={lineGraphData}
+        masonryData={masonryData}
+        peopleListData={peopleListData}
+        departmentsData={departmentsData}
+        sitesData={sitesData}
         selectedTimeRange={selectedTimeRange}
-        onTimeRangeChange={handleTimeRangeChange}
+        fetchHappinessScoreTwoMonthHistory={fetchHappinessScoreTwoMonthHistory}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        staffHappinessDetailsModalData={staffHappinessDetailsModalData}
+        setDrawerState={setDrawerState}
+        drawerState={drawerState}
       />
-
-      {loading ? (
-        <Flex justifyContent="center" alignItems="center" height="100vh">
-          <Spinner size="xl" color="perygonPink" />
-        </Flex>
-      ) : (
-        <>
-          {staffHappinessDetailsModalData && (
-            <StaffHappinessDetailModal
-              isOpen={isModalOpen}
-              onClose={() => setIsModalOpen(false)}
-              {...staffHappinessDetailsModalData}
-            />
-          )}
-          <Grid
-            templateColumns={["1fr", null, "1fr 1fr"]}
-            gap={[20, 6]}
-            mr={[0, null, null, 40]}
-          >
-            <GridItem>
-              <SpringScale>
-                <Flex maxWidth={600} flexDirection="column">
-                  <Flex width="100%" justifyContent="center" mb={4}>
-                    <SectionHeader>This Weeks Average</SectionHeader>
-                  </Flex>
-                  <SpeechBubble
-                    score={speechBubbleData?.currentScore || 0}
-                    change={speechBubbleData?.change || 0}
-                    positiveChange={speechBubbleData?.positiveChange || false}
-                  />
-                </Flex>
-              </SpringScale>
-            </GridItem>
-
-            <GridItem>
-              <SpringScale>
-                <Flex width="100%" justifyContent="center" mb={4}>
-                  <SectionHeader>Trend</SectionHeader>
-                </Flex>
-                <LineGraph DataPoints={lineGraphData} />
-              </SpringScale>
-            </GridItem>
-            <GridItem>
-              <Flex width="100%" justifyContent="center" mb={4}>
-                <SectionHeader>Breakdown</SectionHeader>
-              </Flex>
-              <HappinessScoreMasonry
-                masonryValues={masonryData}
-                onStatClick={handleMasonryClick}
-              />
-            </GridItem>
-            <GridItem>
-              <VStack minH="100%">
-                <Flex width="100%" justifyContent="center" mb={2}>
-                  <SectionHeader>Submissions</SectionHeader>
-                </Flex>
-                <PeopleList
-                  people={peopleListData}
-                  currentPage={currentPage}
-                  itemsPerPage={itemsPerPage}
-                  onPageChange={setCurrentPage}
-                  onItemsPerPageChange={setItemsPerPage}
-                  handleUserClick={fetchHappinessScoreTwoMonthHistory}
-                />
-              </VStack>
-            </GridItem>
-            <GridItem>
-              <VStack>
-                <Flex width="100%" justifyContent="center" mb={4}>
-                  <SectionHeader>Department Comparison</SectionHeader>
-                </Flex>
-                <AnimatedBarChart DataPoints={departmentBarData} />
-              </VStack>
-            </GridItem>
-            <GridItem>
-              <VStack>
-                <Flex width="100%" justifyContent="center" mb={4}>
-                  <SectionHeader>Site Comparison</SectionHeader>
-                </Flex>
-                <AnimatedBarChart DataPoints={siteBarData} />
-              </VStack>
-            </GridItem>
-          </Grid>
-        </>
-      )}
     </>
   );
 }
