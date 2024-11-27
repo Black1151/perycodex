@@ -2,9 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Button, Flex, Grid, GridItem } from "@chakra-ui/react";
+import { Flex, Grid, GridItem } from "@chakra-ui/react";
 import { SpringScale } from "@/components/animations/SpringScale";
-import { Add } from "@mui/icons-material";
 import SpeechBubble from "@/app/(site)/(apps)/happiness-score/SpeechBubble";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import LineGraph from "@/components/graphs/LineGraph";
@@ -66,21 +65,6 @@ export default function StaffDashboardPage() {
       justifyContent="center"
       alignItems="center"
     >
-      <Flex w="100%" justifyContent="flex-end">
-        <SpringScale delay={0.6} style={{ height: "100%" }}>
-          <Button
-            variant="green"
-            onClick={handleStartWorkflow}
-            display="flex"
-            alignItems="center"
-            gap={[0, 0, 2]}
-            lineHeight={0}
-          >
-            <Add />
-            Create New
-          </Button>
-        </SpringScale>
-      </Flex>
       <Grid
         templateColumns={["1fr", "1fr 1fr"]}
         gap={6}
