@@ -6,7 +6,7 @@ import { Analytics } from "@mui/icons-material";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import { LeftHandNavigationDrawer } from "@/components/layout/LeftHandNavigationDrawer";
 import BottomNavigationMenu from "@/components/layout/BottomNavigationMenu";
-import { Dashboard } from "@/app/(site)/(apps)/happiness-score/page";
+import { Dashboard } from "@/lib/dashboardUtils";
 
 interface HappinessDashboardLayoutProps {
   dashboardList: Dashboard[];
