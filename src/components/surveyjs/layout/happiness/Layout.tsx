@@ -1,9 +1,10 @@
 import React from "react";
 import { Survey } from "survey-react-ui";
-import { Flex } from "@chakra-ui/react";
+import { Button, Flex, Heading, Image } from "@chakra-ui/react";
 import useSurveyNavigation from "@/components/surveyjs/useSurveyNavigation";
 import { HappinessLayoutProps } from "@/components/surveyjs/SurveyProps";
 import SurveyNavigationGuard from "@/components/surveyjs/SurveyNavigationGuard";
+import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
 
 const HappinessLayout: React.FC<HappinessLayoutProps> = ({
   model,
@@ -33,16 +34,64 @@ const HappinessLayout: React.FC<HappinessLayoutProps> = ({
       setToEditMode={switchToEditMode}
     >
       <Flex
-        w="full"
+        height={"full"}
+        w="100%"
         justify="center"
         align="center"
-        bg={"perygonPink"}
-        height={"full"}
-        width={"full"}
+        bg={"transparent"}
         direction="column"
-        zIndex={101}
+        p={6}
       >
+        {/*TODO: this could be tool logo instead of hard coded*/}
+        <Image
+          src="/images/Perygon_Happiness_score_icon.png"
+          maxW="100px"
+          maxH="100px"
+          mb={8}
+          alt="Happiness Score Icon"
+        />
+        <Heading
+          as="h1"
+          fontFamily="Metropolis"
+          fontWeight={300}
+          color={"white"}
+          textAlign={"center"}
+        >
+          How happy are{" "}
+          <LetterFlyIn
+            whiteSpace={"wrap"}
+            fontSize={36}
+            duration={0.5}
+            fontWeight={400}
+          >
+            YOU
+          </LetterFlyIn>{" "}
+          this week?
+        </Heading>
         <Survey model={model} />
+        {/* Submit Button */}
+        {isEditing && (
+          <Button
+            px={8}
+            py={4}
+            fontSize="lg"
+            fontWeight="bold"
+            bgColor="green"
+            border="1px solid lightGray"
+            color="white"
+            _hover={{
+              bg: "white",
+              color: "green",
+              transform: "scale(1.05)",
+              border: "1px solid lightGray",
+              boxShadow: "lg",
+            }}
+            borderRadius="full"
+            onClick={submitSurvey}
+          >
+            Submit
+          </Button>
+        )}
       </Flex>
     </SurveyNavigationGuard>
   );

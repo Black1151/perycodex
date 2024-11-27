@@ -47,7 +47,7 @@ interface User {
   customerParentName?: string;
   customerIsActive?: boolean;
   userImageUrl?: string;
-  teamManagerCount?: number;
+  teamManagerCount: number;
 }
 
 const roleBasedRoutes: { [key: string]: string[] } = {

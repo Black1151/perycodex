@@ -1,3 +1,5 @@
+"use client";
+
 import {
   createContext,
   ReactNode,
@@ -23,6 +25,10 @@ const WorkflowContext = createContext<{
   toolPath: string | null;
   workflowId: string | null;
   setWorkflowId: (id: string | null) => void;
+  currentWorkflowInstanceId: string | null;
+  setCurrentWorkflowInstanceId: (id: string | null) => void;
+  currentBusinessProcessInstanceId: string | null;
+  setCurrentBusinessProcessInstanceId: (id: string | null) => void;
 } | null>(null);
 
 export const useWorkflow = () => {
@@ -36,8 +42,21 @@ export const useWorkflow = () => {
 export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [toolId, setToolId] = useState<string | null>(null);
-  const [workflowId, setWorkflowId] = useState<string | null>(null);
+  const [toolId, setToolId] = useState<string | null>(
+    localStorage.getItem("toolId") || null,
+  );
+  const [workflowId, setWorkflowId] = useState<string | null>(
+    localStorage.getItem("workflowId") || null,
+  );
+  const [currentWorkflowInstanceId, setCurrentWorkflowInstanceId] = useState<
+    string | null
+  >(localStorage.getItem("currentWorkflowInstanceId") || null);
+  const [
+    currentBusinessProcessInstanceId,
+    setCurrentBusinessProcessInstanceId,
+  ] = useState<string | null>(
+    localStorage.getItem("currentBusinessProcessInstanceId") || null,
+  );
   const [toolLogo, setToolLogo] = useState<string | null>(null);
   const [toolPath, setToolPath] = useState<string | null>(null);
   const { fetchClient } = useFetchClient();
@@ -52,7 +71,7 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
 
   useEffect(() => {
     const shouldReset = pathsToResetToolLogo.some((path) =>
-      pathname.startsWith(path)
+      pathname.startsWith(path),
     );
     if (!shouldReset) {
       setToolLogo(null);
@@ -66,14 +85,13 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
   useEffect(() => {
     const fetchToolConfig = async () => {
       if (toolId) {
-        console.log(`I am fetching the toolConfig Data for: ${toolId}`);
         try {
           const res: ToolConfigResponse | null = await fetchClient(
-            `/api/toolConfig/findBy?id=${toolId}`
+            `/api/toolConfig/findBy?id=${toolId}`,
           );
           if (res?.resource?.appUrl && toolId && workflowId) {
             setToolPath(
-              `${res.resource.appUrl}?toolId=${toolId}&wfId=${workflowId}`
+              `${res.resource.appUrl}?toolId=${toolId}&wfId=${workflowId}`,
             );
           }
           if (res?.resource?.logoImageUrl) {
@@ -89,7 +107,30 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
     };
 
     fetchToolConfig();
+  }, [toolId, workflowId]);
+
+  // Save to local storage when state changes
+  useEffect(() => {
+    localStorage.setItem("toolId", toolId || "");
   }, [toolId]);
+
+  useEffect(() => {
+    localStorage.setItem("workflowId", workflowId || "");
+  }, [workflowId]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "currentWorkflowInstanceId",
+      currentWorkflowInstanceId || "",
+    );
+  }, [currentWorkflowInstanceId]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "currentBusinessProcessInstanceId",
+      currentBusinessProcessInstanceId || "",
+    );
+  }, [currentBusinessProcessInstanceId]);
 
   return (
     <WorkflowContext.Provider
@@ -100,6 +141,10 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
         toolPath,
         workflowId,
         setWorkflowId,
+        currentWorkflowInstanceId,
+        setCurrentWorkflowInstanceId,
+        currentBusinessProcessInstanceId,
+        setCurrentBusinessProcessInstanceId,
       }}
     >
       {children}

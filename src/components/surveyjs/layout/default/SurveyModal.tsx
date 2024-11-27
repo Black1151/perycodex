@@ -16,6 +16,10 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  showButtons?: {
+    close: boolean;
+    confirm: boolean;
+  };
   title?: string;
   bodyContent?: string;
   confirmLabel?: string;
@@ -26,6 +30,10 @@ const SurveyModal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   onConfirm,
+  showButtons = {
+    close: true,
+    confirm: true,
+  },
   title = "Confirm Action",
   bodyContent = "Are you sure you want to perform this action?",
   confirmLabel = "Confirm",
@@ -44,27 +52,31 @@ const SurveyModal: React.FC<ModalProps> = ({
         </ModalHeader>
         <ModalBody>{bodyContent}</ModalBody>
         <ModalFooter>
-          <Button
-            mr={3}
-            onClick={onClose}
-            bgColor="darkGray"
-            border="1px solid darkGray"
-            leftIcon={<CloseIcon />}
-            color="white"
-            _hover={{ color: "darkGray", backgroundColor: "white" }}
-          >
-            {cancelLabel}
-          </Button>
-          <Button
-            bgColor="green"
-            border="1px solid lightGray"
-            color="white"
-            leftIcon={<DoneIcon />}
-            _hover={{ color: "green", backgroundColor: "white" }}
-            onClick={onConfirm}
-          >
-            {confirmLabel}
-          </Button>
+          {showButtons.close && (
+            <Button
+              mr={3}
+              onClick={onClose}
+              bgColor="darkGray"
+              border="1px solid darkGray"
+              leftIcon={<CloseIcon />}
+              color="white"
+              _hover={{ color: "darkGray", backgroundColor: "white" }}
+            >
+              {cancelLabel}
+            </Button>
+          )}
+          {showButtons.confirm && (
+            <Button
+              bgColor="green"
+              border="1px solid lightGray"
+              color="white"
+              leftIcon={<DoneIcon />}
+              _hover={{ color: "green", backgroundColor: "white" }}
+              onClick={onConfirm}
+            >
+              {confirmLabel}
+            </Button>
+          )}
         </ModalFooter>
       </ModalContent>
     </Modal>

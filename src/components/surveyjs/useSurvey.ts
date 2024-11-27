@@ -95,8 +95,8 @@ const useSurvey = ({
     };
 
     const initializeSurvey = async (surveyModel: Model) => {
-      await applyJsPath(surveyModel);
-      await applyTheme(surveyModel);
+      // Run applyJsPath and applyTheme concurrently
+      await Promise.all([applyJsPath(surveyModel), applyTheme(surveyModel)]);
 
       surveyModel.onOpenDropdownMenu.add((_, options) => {
         options.menuType = "dropdown";

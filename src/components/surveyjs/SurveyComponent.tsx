@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "survey-core/defaultV2.css";
 import DefaultLayout from "@/components/surveyjs/layout/default/Layout";
 import HappinessLayout from "@/components/surveyjs/layout/happiness/Layout";
@@ -46,6 +46,8 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
   const { user } = useUser();
 
   const canEdit = rolesCanEdit?.includes(user?.role as Role);
+  const [cssLoaded, setCssLoaded] = useState<boolean>(false);
+  const [ready, setReady] = useState<boolean>(false);
 
   // Memoize the updated surveyJson based on the layout
   const updatedSurveyJson = useMemo(() => {
@@ -82,11 +84,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
     jsPath: jsPath,
   });
 
-  // Register Javascript functionality
-  registerSurveyFunctionsWithoutSurvey();
-  registerSurveyJsFunctionsWithSurvey(model);
-
-  // Add the events to what happens on submission of survey
+  // Add survey submission logic
   useSurveySubmission({
     model: model,
     isNew: isNew,
@@ -100,36 +98,39 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
     reloadPageOnSuccess: reloadPageOnSuccess,
   });
 
-  // Dynamically load CSS file and remove it when the component unmounts
   useEffect(() => {
-    let linkElement: HTMLLinkElement | null = null;
+    const initializeComponent = async () => {
+      try {
+        // Register JS functions
+        registerSurveyFunctionsWithoutSurvey();
+        registerSurveyJsFunctionsWithSurvey(model);
 
-    if (!cssPath) {
-      const cssHref = `/cssPath/admin.css`;
-      // Create a link element and append it to the head
-      linkElement = document.createElement("link");
-      linkElement.rel = "stylesheet";
-      linkElement.href = cssHref;
-      document.head.appendChild(linkElement);
-    }
+        // Dynamically load CSS file
+        let linkElement: HTMLLinkElement | null = null;
 
-    if (cssPath) {
-      // Build the correct path for the CSS file inside the public folder
-      const cssHref = `/cssPath/${cssPath}.css`;
-      // Create a link element and append it to the head
-      linkElement = document.createElement("link");
-      linkElement.rel = "stylesheet";
-      linkElement.href = cssHref;
-      document.head.appendChild(linkElement);
-    }
+        if (cssPath) {
+          const cssHref = `/cssPath/${cssPath}.css`;
+          linkElement = document.createElement("link");
+          linkElement.rel = "stylesheet";
+          linkElement.href = cssHref;
+          document.head.appendChild(linkElement);
+        }
 
-    return () => {
-      // Clean up and remove the CSS file when component unmounts
-      if (linkElement) {
-        document.head.removeChild(linkElement);
+        setCssLoaded(true);
+
+        // Clean up CSS on unmount
+        return () => {
+          if (linkElement) {
+            document.head.removeChild(linkElement);
+          }
+        };
+      } finally {
+        setReady(true);
       }
     };
-  }, [cssPath]);
+
+    initializeComponent();
+  }, [cssPath, model, endpoint, formSubmission, redirectUrl]);
 
   const layoutMap: LayoutMap = {
     default: DefaultLayout,
@@ -138,21 +139,19 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
 
   const SurveyLayout = layoutMap[layout];
 
-  if (isLoading || !model) {
-    return (
-      <Flex justifyContent="center" alignItems="center">
-        <Spinner color={"white"} />
-      </Flex>
-    );
-  }
-
   return (
-    <SurveyLayout
-      model={model}
-      dataset={dataset}
-      canEdit={canEdit}
-      {...layoutOptions}
-    />
+    <Flex h={"full"} w={"full"} justify={"center"} align={"center"}>
+      {isLoading || !model || !ready ? (
+        <Spinner color={"white"} />
+      ) : (
+        <SurveyLayout
+          model={model}
+          dataset={dataset}
+          canEdit={canEdit}
+          {...layoutOptions}
+        />
+      )}
+    </Flex>
   );
 };
 

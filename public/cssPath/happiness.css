@@ -1,81 +1,42 @@
 .sd-root-modern.sd-root-modern--full-container {
-  height: auto;
+    height: auto;
 }
 
 /* This bit of css centers rating questions */
 
 .sd-rating {
-  width: max-content;
-  overflow: visible;
-  max-width: 100%;
-  margin: 0 auto;
+    width: max-content;
+    overflow: visible;
+    max-width: 100%;
+    margin: 0 auto;
 }
-
-/*.sd-scrollable-container:not(.sd-scrollable-container--compact) {*/
-/*    width: max-content;*/
-/*    overflow: visible;*/
-/*    max-width: 100%;*/
-/*    margin: 0 auto;*/
-/*}*/
-
-/*center previous, next, submit */
-.sd-body__navigation {
-  justify-content: center;
-}
-
-/*normal previous, next, submit
-//.sd-body__navigation {
-//    justify-content: normal;
-}*/
 
 /*error message background colour*/
 .sd-error {
-  background-color: #f9f9f9;
+    background-color: #f9f9f9;
+}
+
+.sd-rating__item-smiley--readonly.sd-rating__item-smiley--selected {
+    border-color: white !important;
+    background: white !important;
 }
 
 /*Rating Smiley padding and min and max width*/
 .sd-rating__item-smiley {
-  min-width: calc(0 * (var(--sjs-base-unit, var(--base-unit, 8px))));
-  min-height: calc(0 * (var(--sjs-base-unit, var(--base-unit, 8px))));
+    min-width: calc(0 * (var(--sjs-base-unit, var(--base-unit, 8px))));
+    min-height: calc(0 * (var(--sjs-base-unit, var(--base-unit, 8px))));
 
-  padding: calc(0.25 * (var(--sjs-base-unit, var(--base-unit, 8px))));
-  --sjs-base-unit: 14px;
+    padding: calc(0.25 * (var(--sjs-base-unit, var(--base-unit, 8px))));
+    --sjs-base-unit: 14px;
 }
 
 /*Rating smiley min max rating text colour*/
 .sd-rating__item-text.sd-rating__item-text.sd-rating__min-text,
 .sd-rating__item-text.sd-rating__item-text.sd-rating__max-text {
-  color: #f9f9f9;
-}
-
-/*Submit button colour*/
-.sd-btn--action {
-  background-color: rgb(1 170 1);
-  color: #f9f9f9;
-}
-
-/*Submit button hover colour*/
-.sd-btn--action:hover {
-  background-color: rgb(0 191 0);
+    color: #f9f9f9;
 }
 
 /*Question input text colour*/
 .sd-input {
-  color: #ff0070;
+    color: #ff0070;
 }
-
-/*
-.sd-rating__item:nth-child(-n+8)  {
-  background-color: red;
-}
-.sd-rating__item:nth-last-child(-n+4)  {
-  background-color: orange;
-}
-.sd-rating__item:nth-last-child(-n+2)  {
-  background-color: green;
-}
-.sd-rating__item  {
-  color: white;
-}
-
-*/
