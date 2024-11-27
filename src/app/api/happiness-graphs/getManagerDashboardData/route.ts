@@ -3,7 +3,7 @@
 import { NextResponse } from "next/server";
 import apiClient from "@/lib/apiClient";
 import { cookies } from "next/headers";
-import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/manager-dashboard/page";
+import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/manager-dashboard/ManagerDashboard";
 
 interface ApiResponse {
   resource: ApiResponseItem[];
@@ -225,7 +225,7 @@ export async function GET(request: Request) {
         .filter((option) => option.label && option.label !== "null");
 
       const uniqueOptions = Array.from(
-        new Map(options.map((item) => [item.value, item])).values()
+        new Map(options.map((item) => [item.value, item])).values(),
       );
 
       return {
@@ -243,7 +243,7 @@ export async function GET(request: Request) {
 
   // Filter out any null results
   const availableOptions = filterGroupResults.filter(
-    (result) => result !== null
+    (result) => result !== null,
   ) as FilterOptionGroup[];
 
   const endpointWithAllFilters = buildEndpoint(selectedFilters);
@@ -267,7 +267,7 @@ export async function GET(request: Request) {
     console.error("Error fetching final data:", error);
     return NextResponse.json(
       { error: "Failed to fetch data from the API." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
