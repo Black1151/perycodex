@@ -54,7 +54,7 @@ const Bar: React.FC<BarProps> = ({ value, delay, onClick }) => {
         width="100%"
         maxW={[3, 5, 10]}
         bg={getColor(value)}
-        borderTopRadius="md" // Added to round the tops of the bars
+        borderTopRadius="md"
       >
         <Box
           top={0}
