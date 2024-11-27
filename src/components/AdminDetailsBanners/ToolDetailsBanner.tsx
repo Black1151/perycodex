@@ -13,6 +13,7 @@ import moment from "moment";
 import CreateIcon from "@mui/icons-material/Create";
 import UpdateIcon from "@mui/icons-material/Update";
 import { Construction } from "@mui/icons-material";
+import BackButton from "@/components/BackButton";
 
 interface Tool {
   id: number;
@@ -36,7 +37,8 @@ export const ToolDetailsBanner: React.FC<ToolDetailsBannerProps> = ({
   tool,
 }) => {
   return (
-    <Flex mb={4} p={4} color={"white"} overflow={"hidden"}>
+    <Flex mb={4} p={4} color={"white"} overflow={"hidden"} gap={2}>
+      <BackButton />
       {/* Tool Icon */}
       <FormControl
         w={"100px"}

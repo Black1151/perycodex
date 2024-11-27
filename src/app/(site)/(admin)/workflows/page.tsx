@@ -20,24 +20,16 @@ export default async function WorkflowsPage() {
   const workflows = await res.json();
   const workflowData = workflows.resource || [];
 
-  const workflowCount = workflowData ? workflowData.length : 0;
+  const workflowCount = workflowData.length;
 
-  if (workflowData) {
-    return (
-      <>
-        <AdminHeader headingText={headerTitle} dataCount={workflowCount} />
-        <DataGridComponent
-          data={workflowData}
-          initialFields={workflowFields}
-          createNewUrl={"/workflows/create"}
-        />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <h1>No Tags Found</h1>
-      </>
-    );
-  }
+  return (
+    <>
+      <AdminHeader headingText={headerTitle} dataCount={workflowCount} />
+      <DataGridComponent
+        data={workflowData}
+        initialFields={workflowFields}
+        createNewUrl={"/workflows/create"}
+      />
+    </>
+  );
 }

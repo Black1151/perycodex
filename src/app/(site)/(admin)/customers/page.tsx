@@ -16,7 +16,7 @@ export default async function CustomersPage({
 }: {
   searchParams: SearchParams;
 }) {
-  const user = await getUser(); // Awaiting user data
+  const user = await getUser();
   await checkUserRole("/customers");
 
   let url = `/getAllView?view=vwCustomersList&selectColumns=id,name,custId,customerCode,imageUrl,isActive,noOfUsers,noOfSites,sectorName,regionName,customerType`;
@@ -42,15 +42,11 @@ export default async function CustomersPage({
   return (
     <>
       <AdminHeader headingText={headerTitle} dataCount={customerCount} />
-      {customerCount > 0 ? (
-        <DataGridComponent
-          data={customerData}
-          initialFields={customerFields}
-          createNewUrl={"/customers/create"}
-        />
-      ) : (
-        <h1>No Customers Found</h1>
-      )}
+      <DataGridComponent
+        data={customerData}
+        initialFields={customerFields}
+        createNewUrl={"/customers/create"}
+      />
     </>
   );
 }

@@ -13,6 +13,7 @@ import moment from "moment";
 import CreateIcon from "@mui/icons-material/Create";
 import UpdateIcon from "@mui/icons-material/Update";
 import { Email } from "@mui/icons-material";
+import BackButton from "@/components/BackButton";
 
 interface EmailTemplate {
   id: number;
@@ -38,7 +39,8 @@ export const EmailTemplateDetailsBanner: React.FC<
   EmailTemplateDetailsBannerProps
 > = ({ emailTemplate }) => {
   return (
-    <Flex mb={4} p={4} color={"white"} overflow={"hidden"}>
+    <Flex mb={4} p={4} color={"white"} overflow={"hidden"} gap={2}>
+      <BackButton />
       {/* Form Status */}
       <FormControl
         w={"100px"}

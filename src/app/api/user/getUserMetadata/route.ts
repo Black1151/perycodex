@@ -8,7 +8,7 @@ export async function GET() {
   const uniqueId = cookieStore.get("user_uuid")?.value;
 
   if (!authToken) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
   }
 
   try {

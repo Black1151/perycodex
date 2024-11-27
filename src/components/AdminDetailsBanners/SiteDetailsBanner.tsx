@@ -21,6 +21,7 @@ import { TagsDisplay } from "@/components/tags/TagsDisplay";
 import { useTags } from "@/providers/TagsProvider";
 import { TagsResponse } from "@/app/api/tags/getTagsForRecord/route";
 import { Site } from "@/types/types";
+import BackButton from "@/components/BackButton";
 
 interface SiteDetailsBannerProps {
   site: Site;
@@ -70,7 +71,8 @@ export const SiteDetailsBanner: React.FC<SiteDetailsBannerProps> = ({
 
   return (
     <VStack w={"100%"} flex={1} align={"stretch"}>
-      <Flex mb={4} p={[0, 0, 4]} color={"white"} overflow={"hidden"}>
+      <Flex mb={4} p={[0, 0, 4]} color={"white"} overflow={"hidden"} gap={2}>
+        <BackButton />
         {/* Site Icon and Name */}
         <FormControl
           w={"100px"}

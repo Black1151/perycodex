@@ -13,6 +13,7 @@ import moment from "moment";
 import CreateIcon from "@mui/icons-material/Create";
 import UpdateIcon from "@mui/icons-material/Update";
 import SchemaIcon from "@mui/icons-material/Schema";
+import BackButton from "@/components/BackButton";
 
 interface BusinessProcess {
   id: number;
@@ -56,7 +57,8 @@ export const BusinessProcessDetailsBanner: React.FC<
   BusinessProcessDetailsBannerProps
 > = ({ businessProcess }) => {
   return (
-    <Flex mb={4} p={4} color={"white"} overflow={"hidden"}>
+    <Flex mb={4} p={4} color={"white"} overflow={"hidden"} gap={2}>
+      <BackButton />
       {/* Workflow Status */}
       <FormControl
         w={"100px"}
