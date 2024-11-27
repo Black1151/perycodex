@@ -4,12 +4,19 @@ import { getFilteredDashboards } from "@/lib/dashboardUtils";
 import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
 import HappinessDashboardLayout from "@/app/(site)/(apps)/happiness-score/dashboard/HappinessDashboardLayout";
 import WorkflowHeader from "@/app/(site)/(apps)/happiness-score/WorkflowHeader";
+import { verifySession } from "@/lib/dal";
 
 export default async function Home({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
+  const session = await verifySession();
+
+  // If there's no session, redirect to login
+  if (!session) {
+    redirect("/login");
+  }
   const toolId = searchParams.toolId as string;
   const workflowId = searchParams.wfId as string;
 

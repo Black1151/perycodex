@@ -2,12 +2,20 @@ import React from "react";
 import { Box, Text } from "@chakra-ui/react";
 import apiClient from "@/lib/apiClient";
 import { redirect } from "next/navigation";
+import { verifySession } from "@/lib/dal";
 
 interface SearchParams {
   l?: string;
 }
 
 const LinkPage = async ({ searchParams }: { searchParams: SearchParams }) => {
+  const session = await verifySession();
+
+  // If there's no session, redirect to login
+  if (!session) {
+    redirect("/login");
+  }
+
   let responseData = null;
   let error = null;
 

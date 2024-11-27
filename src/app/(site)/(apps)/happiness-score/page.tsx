@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getFilteredDashboards } from "@/lib/dashboardUtils";
 import NoDashboardsModal from "./NoDashboardModal";
 import apiClient from "@/lib/apiClient";
+import { verifySession } from "@/lib/dal";
 
 interface WorkflowInstanceResponse {
   resource: {
@@ -15,6 +16,13 @@ export default async function Home({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
+  const session = await verifySession();
+
+  // If there's no session, redirect to login
+  if (!session) {
+    redirect("/login");
+  }
+
   const toolId = searchParams.toolId as string;
   const workflowId = searchParams.wfId as string;
   const action = searchParams.a as string;

@@ -4,6 +4,7 @@ import { CarouselItemProps } from "@/components/carousel/CarouselItem";
 import { cookies } from "next/headers";
 import { PerygonMainClient } from "../../PerygonMainClient";
 import { redirect } from "next/navigation";
+import { verifySession } from "@/lib/dal";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +26,13 @@ function transformCarouselItems(data: any[]): CarouselItemWithoutIsSelected[] {
 }
 
 export default async function PerygonMain() {
+  const session = await verifySession();
+
+  // If there's no session, redirect to login
+  if (!session) {
+    redirect("/login");
+  }
+
   const cookieStore = cookies();
   const authToken = cookieStore.get("auth_token")?.value;
   const uniqueId = cookieStore.get("user_uuid")?.value;

@@ -1,6 +1,8 @@
 import React from "react";
 import apiClient from "@/lib/apiClient";
 import WorkflowLayout from "./WorkflowLayout";
+import { verifySession } from "@/lib/dal";
+import { redirect } from "next/navigation";
 
 // Define the structure of each workflow stage
 export interface WorkflowStage {
@@ -45,6 +47,13 @@ export default async function HappinessScoreWorkflowPage({
 }: {
   params: { workflowInstanceId: string };
 }) {
+  const session = await verifySession();
+
+  // If there's no session, redirect to login
+  if (!session) {
+    redirect("/login");
+  }
+
   const workflowInstanceId = params.workflowInstanceId || null;
 
   // Fetching workflow stages data
