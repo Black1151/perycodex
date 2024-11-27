@@ -10,6 +10,7 @@ type FetchOptions = {
   errorMessage?: string;
   redirectOnError?: boolean;
   toastPosition?: ToastPosition;
+  onUnauthorised?: () => void;
 };
 
 export const useFetchClient = () => {
@@ -30,6 +31,7 @@ export const useFetchClient = () => {
       errorMessage = "An unexpected error occurred.",
       redirectOnError = true,
       toastPosition = "bottom",
+      onUnauthorised,
     }: FetchOptions = {},
   ): Promise<T | null> => {
     setLoading(true);
@@ -41,6 +43,24 @@ export const useFetchClient = () => {
         ...(body ? { body: JSON.stringify(body) } : {}),
       });
       console.log("FETCH CLIENT RESPONSE", response);
+
+      if (response.status === 401) {
+        if (onUnauthorised) {
+          onUnauthorised();
+        } else {
+          toast({
+            title: "Unauthorised",
+            description:
+              "Your session has timed out, you need to log in again.",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+            position: toastPosition,
+          });
+          router.push("/login");
+        }
+        return null;
+      }
 
       if (!response.ok) {
         const errorData = await response.json();
