@@ -16,6 +16,7 @@ import useColor from "@/hooks/useColor";
 interface DataPoint {
   value: number;
   title: string;
+  count: number;
 }
 
 interface BarProps {
@@ -49,7 +50,12 @@ const Bar: React.FC<BarProps> = ({ value, delay, onClick }) => {
       }}
       onClick={onClick}
     >
-      <Box width="100%" maxW={[3, 5, 10]} bg={getColor(value)}>
+      <Box
+        width="100%"
+        maxW={[3, 5, 10]}
+        bg={getColor(value)}
+        borderTopRadius="md" // Added to round the tops of the bars
+      >
         <Box
           top={0}
           left={0}
@@ -166,7 +172,7 @@ const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({
           {DataPoints.map((dataPoint, index) => (
             <Tooltip
               key={index}
-              label={dataPoint.title}
+              label={`${dataPoint.title} - (${dataPoint.count}) Submissions`}
               bgColor={theme.colors.peryugonPink}
               placement="top"
               isOpen={isTouchDevice ? activeTooltip === index : undefined}

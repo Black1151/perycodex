@@ -1,3 +1,5 @@
+// File: app/happiness-score/dashboard/manager-dashboard/ManagerDashboardPage.tsx
+
 "use client";
 
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
@@ -33,13 +35,16 @@ export interface Person {
   lastName: string;
   jobTitle: string;
   department: string;
+  site: string; // Added site
   score: number;
+  imageUrl: string;
 }
 
 export default function ManagerDashboardPage() {
   const [drawerState, setDrawerState] = useState<"closed" | "fully-open">(
     "closed"
   );
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const isInitialMount = useRef(true);
   const [loading, setLoading] = useState(true);
@@ -50,10 +55,10 @@ export default function ManagerDashboardPage() {
   const [peopleListData, setPeopleListData] = useState<Person[]>([]);
   const [filterOptions, setFilterOptions] = useState<FilterOptionGroup[]>([]);
   const [departmentsData, setDepartmentsData] = useState<
-    { department: string; averageScore: number }[]
+    { department: string; averageScore: number; count: number }[]
   >([]);
   const [sitesData, setSitesData] = useState<
-    { site: string; averageScore: number }[]
+    { site: string; averageScore: number; count: number }[]
   >([]);
   const [weeksData, setWeeksData] = useState<any[]>([]);
   const [weekOptions, setWeekOptions] = useState<string[]>([]);
@@ -63,13 +68,6 @@ export default function ManagerDashboardPage() {
     useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Memoize time range options
-  const timeRangeOptions = useMemo(
-    () => ["1 month", "3 months", "6 months", "1 year", "all"],
-    []
-  );
-
-  // Memoize labelToParamName
   const labelToParamName: Record<string, string> = useMemo(
     () => ({
       "Dept Name": "deptId",
@@ -174,7 +172,7 @@ export default function ManagerDashboardPage() {
     [constructQueryParams, updateFilterOptions, selectedTimeRange]
   );
 
-  const clearAllFilters = useCallback(() => {
+  const clearAllFilters = useCallback(async () => {
     const clearedFilters = filterOptions.map((group) => ({
       ...group,
       options: group.options.map((option) => ({
@@ -183,11 +181,18 @@ export default function ManagerDashboardPage() {
       })),
     }));
     setFilterOptions(clearedFilters);
-    fetchFilteredData(clearedFilters, selectedTimeRange);
+    setIsUpdating(true);
+    try {
+      await fetchFilteredData(clearedFilters, selectedTimeRange);
+    } catch (error) {
+      console.error("Failed to clear filters:", error);
+    } finally {
+      setIsUpdating(false);
+    }
   }, [filterOptions, fetchFilteredData, selectedTimeRange]);
 
   const handleCheckboxChange = useCallback(
-    (groupIndex: number, optionIndex: number, isChecked: boolean) => {
+    async (groupIndex: number, optionIndex: number, isChecked: boolean) => {
       const updatedFilters = filterOptions.map((group, gIdx) => {
         if (gIdx === groupIndex) {
           const updatedOptions = group.options.map((option, oIdx) => {
@@ -201,7 +206,14 @@ export default function ManagerDashboardPage() {
         return group;
       });
       setFilterOptions(updatedFilters);
-      fetchFilteredData(updatedFilters, selectedTimeRange);
+      setIsUpdating(true);
+      try {
+        await fetchFilteredData(updatedFilters, selectedTimeRange);
+      } catch (error) {
+        console.error("Failed to update filters:", error);
+      } finally {
+        setIsUpdating(false);
+      }
     },
     [filterOptions, fetchFilteredData, selectedTimeRange]
   );
@@ -242,7 +254,6 @@ export default function ManagerDashboardPage() {
     []
   );
 
-  // Fetch initial data
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
@@ -256,6 +267,8 @@ export default function ManagerDashboardPage() {
         }
 
         const data = await response.json();
+
+        console.log(data);
 
         const initializeFilterOptions = (
           filters: FilterOptionGroup[]
@@ -290,7 +303,6 @@ export default function ManagerDashboardPage() {
     fetchInitialData();
   }, [constructQueryParams, selectedTimeRange]);
 
-  // Update state when selectedWeek changes
   useEffect(() => {
     if (selectedWeek && weeksData.length > 0) {
       const weekDataIndex = weeksData.findIndex(
@@ -331,6 +343,7 @@ export default function ManagerDashboardPage() {
       onWeekChange: handleWeekChange,
       drawerState,
       setDrawerState,
+      isUpdating,
     }),
     [
       handleCheckboxChange,
@@ -340,28 +353,45 @@ export default function ManagerDashboardPage() {
       handleWeekChange,
       drawerState,
       setDrawerState,
+      isUpdating,
+    ]
+  );
+
+  const managerDashboardPageInnerProps = useMemo(
+    () => ({
+      speechBubbleData,
+      lineGraphData,
+      masonryData,
+      peopleListData,
+      departmentsData,
+      sitesData,
+      loading,
+      fetchHappinessScoreTwoMonthHistory,
+      isModalOpen,
+      setIsModalOpen,
+      staffHappinessDetailsModalData,
+      drawerState,
+    }),
+    [
+      loading,
+      speechBubbleData,
+      lineGraphData,
+      masonryData,
+      peopleListData,
+      departmentsData,
+      sitesData,
+      fetchHappinessScoreTwoMonthHistory,
+      isModalOpen,
+      setIsModalOpen,
+      staffHappinessDetailsModalData,
+      drawerState,
     ]
   );
 
   return (
     <>
       <DashboardFilteringDrawer {...dashboardFilteringDrawerProps} />
-      <ManagerDashboardPageInner
-        loading={loading}
-        speechBubbleData={speechBubbleData}
-        lineGraphData={lineGraphData}
-        masonryData={masonryData}
-        peopleListData={peopleListData}
-        departmentsData={departmentsData}
-        sitesData={sitesData}
-        selectedTimeRange={selectedTimeRange}
-        fetchHappinessScoreTwoMonthHistory={fetchHappinessScoreTwoMonthHistory}
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        staffHappinessDetailsModalData={staffHappinessDetailsModalData}
-        setDrawerState={setDrawerState}
-        drawerState={drawerState}
-      />
+      <ManagerDashboardPageInner {...managerDashboardPageInnerProps} />
     </>
   );
 }

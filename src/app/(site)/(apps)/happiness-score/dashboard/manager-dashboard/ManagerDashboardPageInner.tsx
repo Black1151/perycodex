@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useMemo, useEffect, useCallback, useState } from "react";
-import { Grid, GridItem, Flex, Spinner, VStack } from "@chakra-ui/react";
+import {
+  Grid,
+  GridItem,
+  Flex,
+  Spinner,
+  VStack,
+  useTheme,
+} from "@chakra-ui/react";
 import LineGraph from "@/components/graphs/LineGraph";
 import { HappinessScoreMasonry } from "../../HappinessScoreMasonry";
 import SpeechBubble from "../../SpeechBubble";
@@ -10,6 +17,14 @@ import AnimatedBarChart from "@/components/graphs/BarGraph";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import { SpringScale } from "@/components/animations/SpringScale";
 import StaffHappinessDetailModal from "./StaffHappinessDetailModal";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+} from "@chakra-ui/react";
 
 interface DataPoint {
   value: number;
@@ -28,7 +43,9 @@ export interface Person {
   lastName: string;
   jobTitle: string;
   department: string;
+  site: string;
   score: number;
+  imageUrl: string;
 }
 
 interface ManagerDashboardPageInnerProps {
@@ -37,14 +54,16 @@ interface ManagerDashboardPageInnerProps {
   lineGraphData: DataPoint[];
   masonryData: number[];
   peopleListData: Person[];
-  departmentsData: { department: string; averageScore: number }[];
-  sitesData: { site: string; averageScore: number }[];
-  selectedTimeRange: string;
+  departmentsData: {
+    department: string;
+    averageScore: number;
+    count: number;
+  }[];
+  sitesData: { site: string; averageScore: number; count: number }[];
   fetchHappinessScoreTwoMonthHistory: (userId: number) => void;
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
   staffHappinessDetailsModalData: any;
-  setDrawerState: (state: "closed" | "fully-open") => void;
   drawerState: "closed" | "fully-open";
 }
 
@@ -56,20 +75,17 @@ export default function ManagerDashboardPageInner({
   peopleListData,
   departmentsData,
   sitesData,
-  selectedTimeRange,
   fetchHappinessScoreTwoMonthHistory,
   isModalOpen,
   setIsModalOpen,
   staffHappinessDetailsModalData,
-  setDrawerState,
-  drawerState,
 }: ManagerDashboardPageInnerProps) {
-  // Memoize departmentBarData and siteBarData
   const departmentBarData = useMemo(
     () =>
       departmentsData.map((dept) => ({
         title: dept.department,
         value: dept.averageScore,
+        count: dept.count,
       })),
     [departmentsData]
   );
@@ -79,20 +95,49 @@ export default function ManagerDashboardPageInner({
       sitesData.map((site) => ({
         title: site.site,
         value: site.averageScore,
+        count: site.count,
       })),
     [sitesData]
   );
 
-  // Pagination state
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
 
-  // Reset current page when peopleListData changes
+  const [barModalData, setBarModalData] = useState<Person[]>([]);
+  const [isBarModalOpen, setIsBarModalOpen] = useState(false);
+  const [barModalTitle, setBarModalTitle] = useState("");
+  const [modalCurrentPage, setModalCurrentPage] = useState<number>(1);
+  const [modalItemsPerPage, setModalItemsPerPage] = useState<number>(10);
+  const theme = useTheme();
+
+  const handleDepartmentBarClick = useCallback(
+    (title: string) => {
+      const filteredPeople = peopleListData.filter(
+        (person) => person.department === title
+      );
+      setBarModalTitle(`Department: ${title}`);
+      setBarModalData(filteredPeople);
+      setIsBarModalOpen(true);
+    },
+    [peopleListData]
+  );
+
+  const handleSiteBarClick = useCallback(
+    (title: string) => {
+      const filteredPeople = peopleListData.filter(
+        (person) => person.site === title
+      );
+      setBarModalTitle(`Site: ${title}`);
+      setBarModalData(filteredPeople);
+      setIsBarModalOpen(true);
+    },
+    [peopleListData]
+  );
+
   useEffect(() => {
     setCurrentPage(1);
   }, [peopleListData]);
 
-  // handleMasonryClick
   const handleMasonryClick = useCallback((category: string) => {
     console.log("Masonry category clicked:", category);
   }, []);
@@ -112,12 +157,32 @@ export default function ManagerDashboardPageInner({
               {...staffHappinessDetailsModalData}
             />
           )}
-          <Grid
-            templateColumns={["1fr", null, "1fr 1fr"]}
-            gap={[20, 6]}
-            mr={[0, null, null, 40]}
+          <Modal
+            isOpen={isBarModalOpen}
+            onClose={() => setIsBarModalOpen(false)}
+            size="5xl"
           >
-            <GridItem>
+            <ModalOverlay />
+            <ModalContent bgGradient={theme.gradients.perygonBackground}>
+              <ModalHeader color="white">{barModalTitle}</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody pb={10}>
+                <PeopleList
+                  people={barModalData}
+                  currentPage={modalCurrentPage}
+                  itemsPerPage={modalItemsPerPage}
+                  onPageChange={setModalCurrentPage}
+                  onItemsPerPageChange={setModalItemsPerPage}
+                  handleUserClick={fetchHappinessScoreTwoMonthHistory}
+                />
+              </ModalBody>
+            </ModalContent>
+          </Modal>
+          <Grid
+            templateColumns={["1fr", null, "1fr 1fr 1fr 1fr 1fr 1fr"]}
+            gap={[20, 6]}
+          >
+            <GridItem colSpan={[1, null, 3]}>
               <SpringScale>
                 <Flex maxWidth={600} flexDirection="column">
                   <Flex width="100%" justifyContent="center" mb={4}>
@@ -132,7 +197,7 @@ export default function ManagerDashboardPageInner({
               </SpringScale>
             </GridItem>
 
-            <GridItem>
+            <GridItem colSpan={[1, null, 3]}>
               <SpringScale>
                 <Flex width="100%" justifyContent="center" mb={4}>
                   <SectionHeader>Trend</SectionHeader>
@@ -140,7 +205,7 @@ export default function ManagerDashboardPageInner({
                 <LineGraph DataPoints={lineGraphData} />
               </SpringScale>
             </GridItem>
-            <GridItem>
+            <GridItem colSpan={[1, null, 2]}>
               <Flex width="100%" justifyContent="center" mb={4}>
                 <SectionHeader>Breakdown</SectionHeader>
               </Flex>
@@ -149,7 +214,7 @@ export default function ManagerDashboardPageInner({
                 onStatClick={handleMasonryClick}
               />
             </GridItem>
-            <GridItem>
+            <GridItem colSpan={[1, null, 4]}>
               <VStack minH="100%">
                 <Flex width="100%" justifyContent="center" mb={2}>
                   <SectionHeader>Submissions</SectionHeader>
@@ -164,20 +229,26 @@ export default function ManagerDashboardPageInner({
                 />
               </VStack>
             </GridItem>
-            <GridItem>
+            <GridItem colSpan={[1, null, 3]}>
               <VStack>
                 <Flex width="100%" justifyContent="center" mb={4}>
                   <SectionHeader>Department Comparison</SectionHeader>
                 </Flex>
-                <AnimatedBarChart DataPoints={departmentBarData} />
+                <AnimatedBarChart
+                  DataPoints={departmentBarData}
+                  onBarClick={handleDepartmentBarClick}
+                />
               </VStack>
             </GridItem>
-            <GridItem>
+            <GridItem colSpan={[1, null, 3]}>
               <VStack>
                 <Flex width="100%" justifyContent="center" mb={4}>
                   <SectionHeader>Site Comparison</SectionHeader>
                 </Flex>
-                <AnimatedBarChart DataPoints={siteBarData} />
+                <AnimatedBarChart
+                  DataPoints={siteBarData}
+                  onBarClick={handleSiteBarClick}
+                />
               </VStack>
             </GridItem>
           </Grid>

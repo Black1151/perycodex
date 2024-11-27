@@ -8,6 +8,7 @@ import {
   Checkbox,
   Button,
   Select,
+  Spinner,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import React, { memo } from "react";
@@ -28,6 +29,7 @@ interface RightHandNavigationDrawerProps {
   onWeekChange: (week: string) => void;
   drawerState: "closed" | "fully-open";
   setDrawerState: (state: "closed" | "fully-open") => void;
+  isUpdating: boolean; // Added prop
 }
 
 export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
@@ -40,6 +42,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
   onWeekChange,
   drawerState,
   setDrawerState,
+  isUpdating,
 }: RightHandNavigationDrawerProps) {
   const theme = useTheme();
   const MotionBox = motion(Box);
@@ -60,7 +63,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
           top={78}
           right={5}
           zIndex={1}
-          display={["none", "none", "flex"]}
+          display={["flex"]}
           alignItems="center"
           justifyContent="center"
           color={"rgba(248,248,248,0.8)"}
@@ -84,7 +87,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
       )}
 
       <MotionBox
-        display={["none", "none", "block"]}
+        display={"block"}
         position="fixed"
         top={0}
         right={0}
@@ -102,7 +105,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
             display="flex"
             flexDirection="row"
             alignItems="center"
-            justifyContent={"flex-end"}
+            justifyContent={"space-between"}
             gap={2}
             pr={2}
             position={"absolute"}
@@ -110,17 +113,15 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
             zIndex={2}
             background={"white"}
             w={"full"}
+            pl={5}
+            color={theme.colors.perygonPink}
+            fontWeight={"bold"}
+            fontSize={"1.2rem"}
           >
-            <Box
-              color={theme.colors.perygonPink}
-              onClick={() => setDrawerState("closed")}
-              m={0}
-              p={0}
-              zIndex={1}
-            >
+            Filter Options
+            <Box onClick={() => setDrawerState("closed")} zIndex={1} pt={1}>
               <Close
                 style={{
-                  fontSize: "1.4rem",
                   cursor: "pointer",
                 }}
               />
@@ -139,6 +140,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                   placeholder="Select Week"
                   value={selectedWeek || ""}
                   onChange={(e) => onWeekChange(e.target.value)}
+                  isDisabled={isUpdating}
                 >
                   {weekOptions.map((week) => (
                     <option key={week} value={week}>
@@ -159,8 +161,9 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                   size="sm"
                   width="100%"
                   onClick={clearAllFilters}
+                  isDisabled={isUpdating}
                 >
-                  Clear All Filters
+                  {isUpdating ? <Spinner size="sm" /> : "Clear All Filters"}
                 </Button>
                 <VStack spacing={4} align="stretch" width="100%" mt={4}>
                   {filterOptions &&
@@ -173,7 +176,10 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                           <VStack align="start" key={option.value}>
                             <Checkbox
                               isChecked={option.isSelected}
-                              isDisabled={option.isDisabled}
+                              isDisabled={
+                                isUpdating ||
+                                (!option.isSelected && option.isDisabled)
+                              }
                               onChange={(e) =>
                                 handleCheckboxChange(
                                   groupIndex,
@@ -190,6 +196,22 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                     ))}
                 </VStack>
               </Box>
+              {isUpdating && (
+                <Box
+                  position="absolute"
+                  top={0}
+                  left={0}
+                  right={0}
+                  bottom={0}
+                  bg="rgba(255, 255, 255, 0.6)"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  zIndex={10}
+                >
+                  <Spinner size="lg" />
+                </Box>
+              )}
             </>
           )}
         </VStack>

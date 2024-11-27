@@ -15,6 +15,7 @@ import {
   Flex,
   VStack,
   Grid,
+  Avatar, // Import Avatar
 } from "@chakra-ui/react";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -27,7 +28,9 @@ interface Person {
   lastName: string;
   jobTitle: string;
   department: string;
+  site: string;
   score: number;
+  imageUrl: string; // Included imageUrl
 }
 
 interface PeopleListProps {
@@ -114,6 +117,22 @@ const PeopleList: React.FC<PeopleListProps> = ({
     onPageChange(Math.min(currentPage + 1, totalPages));
   };
 
+  // Define columns with sortable property
+  const columns = [
+    { key: "imageUrl", label: "Photo", minWidth: "100px", sortable: false },
+    {
+      key: "firstName",
+      label: "First Name",
+      minWidth: "150px",
+      sortable: true,
+    },
+    { key: "lastName", label: "Last Name", minWidth: "150px", sortable: true },
+    { key: "jobTitle", label: "Job Title", sortable: true },
+    { key: "department", label: "Department", sortable: true },
+    { key: "site", label: "Site", sortable: true },
+    { key: "score", label: "Score", sortable: true },
+  ];
+
   return (
     <VStack
       p={4}
@@ -135,17 +154,11 @@ const PeopleList: React.FC<PeopleListProps> = ({
         <Table variant="unstyled" colorScheme="gray" size="sm" layout="fixed">
           <Thead>
             <Tr>
-              {[
-                { key: "firstName", label: "First Name", minWidth: "250px" },
-                { key: "lastName", label: "Last Name", minWidth: "250px" },
-                { key: "jobTitle", label: "Job Title" },
-                { key: "department", label: "Department" },
-                { key: "score", label: "Score" },
-              ].map(({ key, label, minWidth }) => (
+              {columns.map(({ key, label, minWidth, sortable }) => (
                 <Th
                   key={key}
-                  cursor="pointer"
-                  onClick={() => handleSort(key as keyof Person)}
+                  cursor={sortable ? "pointer" : "default"}
+                  onClick={() => sortable && handleSort(key as keyof Person)}
                   textOverflow="ellipsis"
                   whiteSpace="nowrap"
                   overflow="hidden"
@@ -153,13 +166,15 @@ const PeopleList: React.FC<PeopleListProps> = ({
                   position="sticky"
                   top="0"
                   zIndex={1}
-                  minWidth={minWidth || 500}
+                  minWidth={minWidth || "100px"}
                 >
                   <HStack spacing={2}>
                     <Text fontSize={["xs", "sm"]}>{label}</Text>
-                    <Box w="40px" textAlign="center">
-                      {getSortIcon(key as keyof Person)}
-                    </Box>
+                    {sortable && (
+                      <Box w="40px" textAlign="center">
+                        {getSortIcon(key as keyof Person)}
+                      </Box>
+                    )}
                   </HStack>
                 </Th>
               ))}
@@ -168,15 +183,25 @@ const PeopleList: React.FC<PeopleListProps> = ({
           <Tbody>
             {currentItems.map((person, index) => (
               <Tr
-                key={`${person.firstName}-${person.lastName}-${index}`}
+                key={`${person.userId}-${index}`}
                 bg={index % 2 === 0 ? "white" : "gray.100"}
                 _hover={{
                   bg: "perygonPink",
                   color: "white",
+                  cursor: "pointer",
                 }}
                 transition="background-color 0.15s ease, color 0.15s ease"
                 onClick={() => handleUserClick(person.userId)}
               >
+                {/* Image Column */}
+                <Td>
+                  <Avatar
+                    src={person.imageUrl}
+                    name={`${person.firstName} ${person.lastName}`}
+                    size="sm"
+                  />
+                </Td>
+                {/* Other Columns */}
                 <Td
                   textOverflow="ellipsis"
                   whiteSpace="nowrap"
@@ -204,6 +229,13 @@ const PeopleList: React.FC<PeopleListProps> = ({
                   overflow="hidden"
                 >
                   {person.department}
+                </Td>
+                <Td
+                  textOverflow="ellipsis"
+                  whiteSpace="nowrap"
+                  overflow="hidden"
+                >
+                  {person.site}
                 </Td>
                 <Td
                   textOverflow="ellipsis"

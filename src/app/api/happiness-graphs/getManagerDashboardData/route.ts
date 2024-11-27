@@ -1,3 +1,5 @@
+// File: pages/api/happiness-graphs/getManagerDashboardData.ts
+
 import { NextResponse } from "next/server";
 import apiClient from "@/lib/apiClient";
 import { cookies } from "next/headers";
@@ -70,6 +72,17 @@ interface SpeechBubbleData {
   currentScore: number;
   change: number;
   positiveChange: boolean;
+}
+
+interface Person {
+  userId: number;
+  imageUrl: string;
+  firstName: string;
+  lastName: string;
+  jobTitle: string;
+  department: string;
+  site: string;
+  score: number;
 }
 
 function camelCaseToWords(str: string): string {
@@ -312,15 +325,7 @@ export async function GET(request: Request) {
       });
 
       const masonryCounts = [0, 0, 0, 0, 0];
-      const peopleList: {
-        userId: number;
-        imageUrl: string;
-        firstName: string;
-        lastName: string;
-        jobTitle: string;
-        department: string;
-        score: number;
-      }[] = [];
+      const peopleList: Person[] = [];
 
       const departmentScores = new Map<
         string,
@@ -351,6 +356,7 @@ export async function GET(request: Request) {
           lastName: item.lastName,
           jobTitle: item.jobLevelName,
           department: item.deptName,
+          site: item.siteName,
           score: score,
         });
 
@@ -385,20 +391,26 @@ export async function GET(request: Request) {
         }
       });
 
-      const departmentsData: { department: string; averageScore: number }[] =
-        [];
+      const departmentsData: {
+        department: string;
+        averageScore: number;
+        count: number;
+      }[] = [];
       departmentScores.forEach((value, key) => {
         departmentsData.push({
           department: key,
           averageScore: value.totalScore / value.count,
+          count: value.count,
         });
       });
 
-      const sitesData: { site: string; averageScore: number }[] = [];
+      const sitesData: { site: string; averageScore: number; count: number }[] =
+        [];
       siteScores.forEach((value, key) => {
         sitesData.push({
           site: value.mostRecentSiteName,
           averageScore: value.totalScore / value.count,
+          count: value.count,
         });
       });
 
