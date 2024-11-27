@@ -70,9 +70,13 @@ export default function StaffDashboardPage() {
         <SpringScale delay={0.6} style={{ height: "100%" }}>
           <Button
             variant="green"
-            leftIcon={<Add />}
             onClick={handleStartWorkflow}
+            display="flex"
+            alignItems="center"
+            gap={[0, 0, 2]}
+            lineHeight={0}
           >
+            <Add />
             Create New
           </Button>
         </SpringScale>

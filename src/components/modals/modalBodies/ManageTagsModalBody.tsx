@@ -257,8 +257,12 @@ export function ManageTagsModalBody({
                 variant="green"
                 onClick={handleAddTag}
                 isDisabled={!selectedTagId}
-                leftIcon={<Add />}
+                display="flex"
+                alignItems="center"
+                gap={[0, 0, 2]}
+                lineHeight={0}
               >
+                <Add />
                 Add Tag
               </Button>
             </VStack>
@@ -288,8 +292,12 @@ export function ManageTagsModalBody({
                 variant="red"
                 onClick={handleRemoveTag}
                 isDisabled={!selectedTagToRemoveId}
-                leftIcon={<Remove />}
+                display="flex"
+                alignItems="center"
+                gap={[0, 0, 2]}
+                lineHeight={0}
               >
+                <Remove />
                 Remove Tag
               </Button>
             </VStack>
@@ -297,7 +305,16 @@ export function ManageTagsModalBody({
         </TabPanels>
       </Tabs>
 
-      <Button mx={4} variant="darkGray" onClick={onClose} leftIcon={<Check />}>
+      <Button
+        mx={4}
+        variant="darkGray"
+        onClick={onClose}
+        display="flex"
+        alignItems="center"
+        gap={[0, 0, 2]}
+        lineHeight={0}
+      >
+        <Check />
         Done
       </Button>
     </VStack>

@@ -644,9 +644,13 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                   ml={"auto"}
                   size="md"
                   color="white"
-                  leftIcon={<Clear />}
                   _hover={{ bg: "perygonPink" }}
+                  display="flex"
+                  alignItems="center"
+                  gap={[0, 0, 2]}
+                  lineHeight={0}
                 >
+                  <Clear />
                   {resetFiltersButtonText}
                 </Button>
                 <Input
@@ -737,9 +741,9 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                   ml={"auto"}
                   size="md"
                   color="white"
-                  leftIcon={<Clear />}
                   _hover={{ bg: "perygonPink" }}
                 >
+                  <Clear />
                   {resetFiltersButtonText}
                 </Button>
                 <Input
@@ -798,19 +802,18 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
               mr={3}
               bgColor="darkGray"
               border="1px solid darkGray"
-              leftIcon={<Undo />}
               color="white"
               _hover={{ color: "darkGray", backgroundColor: "white" }}
               onClick={handleUndo}
               isDisabled={undoStack.length === 0}
             >
+              <Undo />
               {undoButtonText}
             </Button>
             <Button
               mr={3}
               bgColor="darkGray"
               border="1px solid darkGray"
-              leftIcon={<Add />}
               color="white"
               _hover={{ color: "darkGray", backgroundColor: "white" }}
               onClick={moveAllToSample}
@@ -818,13 +821,13 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                 populationGridRef.current?.api?.getDisplayedRowCount() === 0
               }
             >
+              <Add />
               {addAllButtonText}
             </Button>
             <Button
               mr={3}
               bgColor="darkGray"
               border="1px solid darkGray"
-              leftIcon={<Remove />}
               color="white"
               _hover={{ color: "darkGray", backgroundColor: "white" }}
               onClick={moveAllToPopulation}
@@ -832,18 +835,19 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                 sampleGridRef.current?.api?.getDisplayedRowCount() === 0
               }
             >
+              <Remove />
               {removeAllButtonText}
             </Button>
             <Button
               bgColor="green"
               border="1px solid lightGray"
               color="white"
-              leftIcon={<Done />}
               _hover={{ color: "green", backgroundColor: "white" }}
               onClick={handleSubmission}
               isDisabled={!!errorMessage || undoStack.length === 0}
               isLoading={loading}
             >
+              <Done />
               {submitButtonText}
             </Button>
           </Flex>

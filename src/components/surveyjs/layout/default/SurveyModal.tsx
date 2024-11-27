@@ -58,10 +58,14 @@ const SurveyModal: React.FC<ModalProps> = ({
               onClick={onClose}
               bgColor="darkGray"
               border="1px solid darkGray"
-              leftIcon={<CloseIcon />}
               color="white"
               _hover={{ color: "darkGray", backgroundColor: "white" }}
+              display="flex"
+              alignItems="center"
+              gap={[0, 0, 2]}
+              lineHeight={0}
             >
+              <CloseIcon />
               {cancelLabel}
             </Button>
           )}
@@ -70,10 +74,14 @@ const SurveyModal: React.FC<ModalProps> = ({
               bgColor="green"
               border="1px solid lightGray"
               color="white"
-              leftIcon={<DoneIcon />}
               _hover={{ color: "green", backgroundColor: "white" }}
               onClick={onConfirm}
+              display="flex"
+              alignItems="center"
+              gap={[0, 0, 2]}
+              lineHeight={0}
             >
+              <DoneIcon />
               {confirmLabel}
             </Button>
           )}
