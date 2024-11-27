@@ -157,7 +157,7 @@ export default function WorkflowLayout({
             formDataset.startedBy === user?.userId;
 
           if (!isAuthorized) {
-            setIsModalOpen(true); // Show modal if unauthorized
+            setIsModalOpen(true);
             return;
           }
 
@@ -189,7 +189,7 @@ export default function WorkflowLayout({
           close: false,
           confirm: true,
         }}
-        title="Unauthorized Access"
+        title="Unauthorised Access"
         bodyContent="You are not authorized to view this workflow."
         confirmLabel="OK"
         cancelLabel="Cancel"

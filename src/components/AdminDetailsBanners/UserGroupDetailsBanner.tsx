@@ -12,7 +12,8 @@ import {
 import { Groups } from "@mui/icons-material";
 import moment from "moment";
 import CreateIcon from "@mui/icons-material/Create";
-import UpdateIcon from "@mui/icons-material/Update"; // Import moment.js to format the date
+import UpdateIcon from "@mui/icons-material/Update";
+import BackButton from "@/components/BackButton";
 
 interface UserGroup {
   id: number;
@@ -35,7 +36,8 @@ export const UserGroupDetailsBanner: React.FC<UserGroupDetailsBannerProps> = ({
   userGroup,
 }) => {
   return (
-    <Flex mb={4} p={4} color={"white"} overflow={"hidden"}>
+    <Flex mb={4} p={4} color={"white"} overflow={"hidden"} gap={2}>
+      <BackButton />
       {/* User Group Icon and Name */}
       <FormControl
         w={"100px"}

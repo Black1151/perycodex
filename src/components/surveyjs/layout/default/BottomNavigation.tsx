@@ -44,7 +44,6 @@ const BottomNavigation: React.FC<NavigationProps> = ({
               fontSize={"sm"}
               onClick={prevPage}
               disabled={isFirstPage}
-              leftIcon={<ArrowBackIcon />}
               bgColor="darkGray"
               w="full"
               height={12}
@@ -53,14 +52,18 @@ const BottomNavigation: React.FC<NavigationProps> = ({
               _hover={{ color: "darkGray", backgroundColor: "white" }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              display="flex"
+              alignItems="center"
+              gap={[0, 0, 2]}
+              lineHeight={0}
             >
+              <ArrowBackIcon />
               {buttonText}
             </MotionButton>
 
             <MotionButton
               fontSize={"sm"}
               onClick={nextPage}
-              rightIcon={<ArrowForwardIcon />}
               disabled={isLastPage}
               bgColor="darkGray"
               w="full"
@@ -71,6 +74,7 @@ const BottomNavigation: React.FC<NavigationProps> = ({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
+              <ArrowForwardIcon />
               {nextButtonText}
             </MotionButton>
           </Stack>
@@ -82,7 +86,6 @@ const BottomNavigation: React.FC<NavigationProps> = ({
             <MotionButton
               fontSize={"sm"}
               onClick={submitSurvey}
-              leftIcon={<DoneIcon />}
               bgColor="green"
               w="full"
               height={12}
@@ -92,6 +95,7 @@ const BottomNavigation: React.FC<NavigationProps> = ({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
+              <DoneIcon />
               {submitButtonText}
             </MotionButton>
           )}

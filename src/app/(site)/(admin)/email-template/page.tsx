@@ -20,24 +20,16 @@ export default async function EmailTemplatePage() {
   const emailTemplates = await res.json();
   const emailTemplateData = emailTemplates.resource || [];
 
-  const emailTemplateCount = emailTemplateData ? emailTemplateData.length : 0;
+  const emailTemplateCount = emailTemplateData.length;
 
-  if (emailTemplateData) {
-    return (
-      <>
-        <AdminHeader headingText={headerTitle} dataCount={emailTemplateCount} />
-        <DataGridComponent
-          data={emailTemplateData}
-          initialFields={emailTemplateFields}
-          createNewUrl={"/email-template/create"}
-        />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <h1>No Templates Found</h1>
-      </>
-    );
-  }
+  return (
+    <>
+      <AdminHeader headingText={headerTitle} dataCount={emailTemplateCount} />
+      <DataGridComponent
+        data={emailTemplateData}
+        initialFields={emailTemplateFields}
+        createNewUrl={"/email-template/create"}
+      />
+    </>
+  );
 }

@@ -3,10 +3,10 @@
 import React, {
   useCallback,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
-  useId,
 } from "react";
 import { useRouter } from "next/navigation";
 import { AgGridReact } from "ag-grid-react";
@@ -19,6 +19,7 @@ import {
   Button,
   Flex,
   Input,
+  Text,
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -178,13 +179,17 @@ const DataGridComponent = <T,>({
           bg="seduloRed"
           aria-label="reset-filters"
           onClick={resetFilter}
-          ml={"auto"}
+          ml="auto"
           size="md"
           color="white"
-          leftIcon={<Clear />}
           _hover={{ bg: "perygonPink" }}
+          display="flex"
+          alignItems="center"
+          gap={[0, 0, 2]}
+          lineHeight={0}
         >
-          {resetFiltersButtonText}
+          <Clear />
+          <Text>{resetFiltersButtonText}</Text>
         </Button>
 
         {/* Create New Button */}
@@ -196,9 +201,13 @@ const DataGridComponent = <T,>({
             onClick={handleCreateNewClick}
             size="md"
             color="white"
-            leftIcon={<Add />}
+            display="flex"
+            alignItems="center"
+            gap={[0, 0, 2]}
+            lineHeight={0}
           >
-            {createNewUrlButtonText}
+            <Add />
+            <Text>{createNewUrlButtonText}</Text>
           </Button>
         )}
       </Flex>

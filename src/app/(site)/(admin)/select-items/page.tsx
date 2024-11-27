@@ -22,22 +22,14 @@ export default async function FormsPage() {
 
   const selectItemCount = selectItemData ? selectItemData.length : 0;
 
-  if (selectItemData) {
-    return (
-      <>
-        <AdminHeader headingText={headerTitle} dataCount={selectItemCount} />
-        <DataGridComponent
-          data={selectItemData}
-          initialFields={selectItemFields}
-          createNewUrl={"/select-items/create"}
-        />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <h1>No Select Items Found</h1>
-      </>
-    );
-  }
+  return (
+    <>
+      <AdminHeader headingText={headerTitle} dataCount={selectItemCount} />
+      <DataGridComponent
+        data={selectItemData}
+        initialFields={selectItemFields}
+        createNewUrl={"/select-items/create"}
+      />
+    </>
+  );
 }

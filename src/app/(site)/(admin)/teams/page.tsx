@@ -17,27 +17,16 @@ export default async function TeamsPage() {
   const teams = await res.json();
   const teamData = teams.resource || [];
 
-  const teamCount = teamData ? teamData.length : 0;
+  const teamCount = teamData.length;
 
-  if (teamData) {
-    return (
-      <>
-        <AdminHeader
-          headingText={"Departments / Teams"}
-          dataCount={teamCount}
-        />
-        <DataGridComponent
-          data={teamData}
-          initialFields={teamFields}
-          createNewUrl={"/teams/create"}
-        />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <h1>No Teams Found</h1>
-      </>
-    );
-  }
+  return (
+    <>
+      <AdminHeader headingText={"Departments / Teams"} dataCount={teamCount} />
+      <DataGridComponent
+        data={teamData}
+        initialFields={teamFields}
+        createNewUrl={"/teams/create"}
+      />
+    </>
+  );
 }

@@ -25,28 +25,18 @@ export default async function EmailSchedulePage() {
   const emailSchedules = await res.json();
   const emailScheduleData = emailSchedules.resource || [];
 
-  const emailScheduleCount = emailScheduleData ? emailScheduleData.length : 0;
+  const emailScheduleCount = emailScheduleData.length;
 
-  if (emailScheduleData) {
-    return (
-      <>
-        <AdminHeader headingText={headerTitle} dataCount={emailScheduleCount} />
-        <DataGridComponent
-          data={emailScheduleData}
-          initialFields={
-            user.role === "PA" ? emailScheduleFields : caEmailScheduleFields
-          }
-          createNewUrl={
-            user.role === "PA" ? "/email-schedule/create" : undefined
-          }
-        />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <h1>No Schedules Found</h1>
-      </>
-    );
-  }
+  return (
+    <>
+      <AdminHeader headingText={headerTitle} dataCount={emailScheduleCount} />
+      <DataGridComponent
+        data={emailScheduleData}
+        initialFields={
+          user.role === "PA" ? emailScheduleFields : caEmailScheduleFields
+        }
+        createNewUrl={user.role === "PA" ? "/email-schedule/create" : undefined}
+      />
+    </>
+  );
 }

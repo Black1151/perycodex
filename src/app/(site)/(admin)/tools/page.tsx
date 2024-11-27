@@ -20,24 +20,16 @@ export default async function ToolsPage() {
   const tools = await res.json();
   const toolData = tools.resource || [];
 
-  const toolCount = toolData ? toolData.length : 0;
+  const toolCount = toolData.length;
 
-  if (toolData) {
-    return (
-      <>
-        <AdminHeader headingText={headerTitle} dataCount={toolCount} />
-        <DataGridComponent
-          data={toolData}
-          initialFields={toolFields}
-          createNewUrl={"/tools/create"}
-        />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <h1>No Tags Found</h1>
-      </>
-    );
-  }
+  return (
+    <>
+      <AdminHeader headingText={headerTitle} dataCount={toolCount} />
+      <DataGridComponent
+        data={toolData}
+        initialFields={toolFields}
+        createNewUrl={"/tools/create"}
+      />
+    </>
+  );
 }

@@ -20,29 +20,16 @@ export default async function EmailSecureLinkPage() {
   const emailSecureLinks = await res.json();
   const emailSecureLinkData = emailSecureLinks.resource || [];
 
-  const emailSecureLinkCount = emailSecureLinkData
-    ? emailSecureLinkData.length
-    : 0;
+  const emailSecureLinkCount = emailSecureLinkData.length;
 
-  if (emailSecureLinkData) {
-    return (
-      <>
-        <AdminHeader
-          headingText={headerTitle}
-          dataCount={emailSecureLinkCount}
-        />
-        <DataGridComponent
-          data={emailSecureLinkData}
-          initialFields={emailSecureLinkFields}
-          createNewUrl={"/email-secure-link/create"}
-        />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <h1>No Links Found</h1>
-      </>
-    );
-  }
+  return (
+    <>
+      <AdminHeader headingText={headerTitle} dataCount={emailSecureLinkCount} />
+      <DataGridComponent
+        data={emailSecureLinkData}
+        initialFields={emailSecureLinkFields}
+        createNewUrl={"/email-secure-link/create"}
+      />
+    </>
+  );
 }

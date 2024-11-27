@@ -20,29 +20,19 @@ export default async function ToolSubscriptionsPage() {
   const toolSubscriptions = await res.json();
   const toolSubscriptionData = toolSubscriptions.resource || [];
 
-  const toolSubscriptionCount = toolSubscriptionData
-    ? toolSubscriptionData.length
-    : 0;
+  const toolSubscriptionCount = toolSubscriptionData.length;
 
-  if (toolSubscriptionData) {
-    return (
-      <>
-        <AdminHeader
-          headingText={headerTitle}
-          dataCount={toolSubscriptionCount}
-        />
-        <DataGridComponent
-          data={toolSubscriptionData}
-          initialFields={toolSubscriptionFields}
-          createNewUrl={"/tool-subscriptions/create"}
-        />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <h1>No Tags Found</h1>
-      </>
-    );
-  }
+  return (
+    <>
+      <AdminHeader
+        headingText={headerTitle}
+        dataCount={toolSubscriptionCount}
+      />
+      <DataGridComponent
+        data={toolSubscriptionData}
+        initialFields={toolSubscriptionFields}
+        createNewUrl={"/tool-subscriptions/create"}
+      />
+    </>
+  );
 }

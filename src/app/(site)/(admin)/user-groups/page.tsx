@@ -19,25 +19,17 @@ export default async function UserGroupsPage() {
   const userGroups = await res.json();
   const userGroupData = userGroups.resource || [];
 
-  const userGroupCount = userGroupData ? userGroupData.length : 0;
+  const userGroupCount = userGroupData.length;
 
-  if (userGroupData) {
-    return (
-      <>
-        <AdminHeader headingText={"User Groups"} dataCount={userGroupCount} />
-        <DataGridComponent
-          data={userGroupData}
-          initialFields={groupFields}
-          createNewUrl={"/user-groups/create"}
-        />
-        {user.role === "PA" && <UserGroupDrawerComponent />}
-      </>
-    );
-  } else {
-    return (
-      <>
-        <h1>No Users Found</h1>
-      </>
-    );
-  }
+  return (
+    <>
+      <AdminHeader headingText={"User Groups"} dataCount={userGroupCount} />
+      <DataGridComponent
+        data={userGroupData}
+        initialFields={groupFields}
+        createNewUrl={"/user-groups/create"}
+      />
+      {user.role === "PA" && <UserGroupDrawerComponent />}
+    </>
+  );
 }

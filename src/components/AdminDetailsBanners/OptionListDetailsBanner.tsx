@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import moment from "moment";
 import { Create, FormatListNumbered, Update } from "@mui/icons-material";
+import BackButton from "@/components/BackButton";
 
 interface OptionList {
   id: number;
@@ -33,7 +34,8 @@ export const OptionListDetailsBanner: React.FC<
   OptionListDetailsBannerProps
 > = ({ optionList }) => {
   return (
-    <Flex mb={4} p={4} color={"white"} overflow={"hidden"}>
+    <Flex mb={4} p={4} color={"white"} overflow={"hidden"} gap={2}>
+      <BackButton />
       {/* OptionList Icon and Name */}
       {/* Site Icon and Name */}
       <FormControl

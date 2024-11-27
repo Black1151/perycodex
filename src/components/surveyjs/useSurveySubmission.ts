@@ -90,6 +90,21 @@ const useSurveySubmission = ({
           body: JSON.stringify(payload),
         });
 
+        if (response.status === 401) {
+          toast({
+            title: "Unauthorised",
+            description:
+              "Your session has timed out, you need to log in again.",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+            position: "bottom-right",
+          });
+          router.push("/login");
+
+          return null;
+        }
+
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.error || "Failed to submit data");
@@ -163,5 +178,4 @@ const useSurveySubmission = ({
 
   return {};
 };
-
 export default useSurveySubmission;

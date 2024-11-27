@@ -21,7 +21,7 @@ export default async function MyProfilePage() {
   const pageUserData = pageUser.resource;
 
   return (
-    <div>
+    <>
       <UserDetailsBanner surveyUser={pageUserData} />
       <SurveyComponent
         surveyJson={userJson}
@@ -32,6 +32,6 @@ export default async function MyProfilePage() {
         sjsPath={"admin"}
         reloadPageOnSuccess={true}
       />
-    </div>
+    </>
   );
 }

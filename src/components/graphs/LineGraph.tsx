@@ -282,4 +282,6 @@ const LineGraph: React.FC<LineGraphProps> = memo(
   }
 );
 
+LineGraph.displayName = "LineGraph";
+
 export default LineGraph;

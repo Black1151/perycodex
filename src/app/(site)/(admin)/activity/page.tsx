@@ -54,99 +54,92 @@ export default async function ActivityPage() {
 
   let resArray: string[] = [];
 
-  try {
-    // Set up conditional API calls based on the user's role
-    const apiCalls = [
-      apiClient(myActivityUrl, { cache: "no-store" }), // My Activity is for everyone
-    ];
-    resArray.push("myActivityRes");
+  // Set up conditional API calls based on the user's role
+  const apiCalls = [
+    apiClient(myActivityUrl, { cache: "no-store" }), // My Activity is for everyone
+  ];
+  resArray.push("myActivityRes");
 
-    if (["CS", "CL", "CA"].includes(userRole)) {
-      // Only fetch Our Activity and Team Activity if the role matches
-      apiCalls.push(
-        apiClient(ourActivityUrl, { cache: "no-store" }),
-        apiClient(ourTeamActivityUrl, { cache: "no-store" }),
-      );
-      resArray.push("ourActivityRes", "ourTeamActivityRes");
-    }
-
-    if (isManager) {
-      // Only fetch My Team Activity if the user is a manager
-      apiCalls.push(apiClient(myTeamsActivityUrl, { cache: "no-store" }));
-      resArray.push("myTeamsActivityRes");
-    }
-
-    // Execute the relevant API calls in parallel
-    const apiResponses = await Promise.all(apiCalls);
-
-    // Check if any of the responses are not ok
-    if (apiResponses.some((res) => !res.ok)) {
-      return redirect("/error");
-    }
-
-    // Extract the data from each response dynamically based on `resArray`
-    const responseData = await Promise.all(
-      apiResponses.map((res) => res.json()),
+  if (["CS", "CL", "CA"].includes(userRole)) {
+    // Only fetch Our Activity and Team Activity if the role matches
+    apiCalls.push(
+      apiClient(ourActivityUrl, { cache: "no-store" }),
+      apiClient(ourTeamActivityUrl, { cache: "no-store" }),
     );
+    resArray.push("ourActivityRes", "ourTeamActivityRes");
+  }
 
-    // Create a dynamic mapping of responses
-    const responses: { [key: string]: ActivityResponse[] } = {};
-    resArray.forEach((key, index) => {
-      responses[key] = responseData[index]?.resource || [];
-    });
+  if (isManager) {
+    // Only fetch My Team Activity if the user is a manager
+    apiCalls.push(apiClient(myTeamsActivityUrl, { cache: "no-store" }));
+    resArray.push("myTeamsActivityRes");
+  }
 
-    // Map responses to their respective data arrays
-    const myActivityData = responses["myActivityRes"] || [];
-    const ourActivityData = responses["ourActivityRes"] || [];
-    const ourTeamActivityData = responses["ourTeamActivityRes"] || [];
-    const myTeamsActivityData = responses["myTeamsActivityRes"] || [];
+  // Execute the relevant API calls in parallel
+  const apiResponses = await Promise.all(apiCalls);
 
-    // Create data sources for TabbedGrids
-    const dataSources = [
-      {
-        data: myActivityData,
-        title: "My Activity",
-        fields: activityFields,
-      },
-    ];
-
-    // Conditionally add data sources based on user role
-    if (["CS", "CL", "CA"].includes(userRole)) {
-      dataSources.push(
-        {
-          data: ourActivityData,
-          title: "Our Activity",
-          fields: activityFields,
-        },
-        {
-          data: ourTeamActivityData,
-          title: "Team Activity",
-          fields: activityFields,
-        },
-      );
-    }
-
-    if (isManager) {
-      dataSources.push({
-        data: myTeamsActivityData,
-        title: "My Teams Activity",
-        fields: activityFields,
-      });
-    }
-
-    // Set the header title dynamically based on the number of data sources
-    if (dataSources.length === 1) {
-      headerTitle = dataSources[0].title;
-    }
-
-    return (
-      <>
-        <AdminHeader headingText={headerTitle} />
-        <TabbedGrids dataSources={dataSources} />
-      </>
-    );
-  } catch (error) {
-    console.error("Error fetching data:", error);
+  // Check if any of the responses are not ok
+  if (apiResponses.some((res) => !res.ok)) {
     return redirect("/error");
   }
+
+  // Extract the data from each response dynamically based on `resArray`
+  const responseData = await Promise.all(apiResponses.map((res) => res.json()));
+
+  // Create a dynamic mapping of responses
+  const responses: { [key: string]: ActivityResponse[] } = {};
+  resArray.forEach((key, index) => {
+    responses[key] = responseData[index]?.resource || [];
+  });
+
+  // Map responses to their respective data arrays
+  const myActivityData = responses["myActivityRes"] || [];
+  const ourActivityData = responses["ourActivityRes"] || [];
+  const ourTeamActivityData = responses["ourTeamActivityRes"] || [];
+  const myTeamsActivityData = responses["myTeamsActivityRes"] || [];
+
+  // Create data sources for TabbedGrids
+  const dataSources = [
+    {
+      data: myActivityData,
+      title: "My Activity",
+      fields: activityFields,
+    },
+  ];
+
+  // Conditionally add data sources based on user role
+  if (["CS", "CL", "CA"].includes(userRole)) {
+    dataSources.push(
+      {
+        data: ourActivityData,
+        title: "Our Activity",
+        fields: activityFields,
+      },
+      {
+        data: ourTeamActivityData,
+        title: "Team Activity",
+        fields: activityFields,
+      },
+    );
+  }
+
+  if (isManager) {
+    dataSources.push({
+      data: myTeamsActivityData,
+      title: "My Teams Activity",
+      fields: activityFields,
+    });
+  }
+
+  // Set the header title dynamically based on the number of data sources
+  if (dataSources.length === 1) {
+    headerTitle = dataSources[0].title;
+  }
+
+  return (
+    <>
+      <AdminHeader headingText={headerTitle} />
+      <TabbedGrids dataSources={dataSources} />
+    </>
+  );
 }

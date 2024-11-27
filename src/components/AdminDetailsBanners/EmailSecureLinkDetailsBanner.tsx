@@ -13,6 +13,7 @@ import moment from "moment";
 import CreateIcon from "@mui/icons-material/Create";
 import UpdateIcon from "@mui/icons-material/Update";
 import { MailLock } from "@mui/icons-material";
+import BackButton from "@/components/BackButton";
 
 // TODO: Interface with DATABASE fields
 interface EmailSecureLink {
@@ -39,7 +40,8 @@ export const EmailSecureLinkDetailsBanner: React.FC<
   EmailSecureLinkDetailsBannerProps
 > = ({ emailSecureLink }) => {
   return (
-    <Flex mb={4} p={4} color={"white"} overflow={"hidden"}>
+    <Flex mb={4} p={4} color={"white"} overflow={"hidden"} gap={2}>
+      <BackButton />
       {/* Form Status */}
       <FormControl
         w={"100px"}

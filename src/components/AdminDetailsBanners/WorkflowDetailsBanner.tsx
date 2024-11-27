@@ -15,6 +15,7 @@ import UpdateIcon from "@mui/icons-material/Update";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
+import BackButton from "@/components/BackButton";
 
 interface Workflow {
   id: number;
@@ -44,7 +45,8 @@ export const WorkflowDetailsBanner: React.FC<WorkflowDetailsBannerProps> = ({
   workflow,
 }) => {
   return (
-    <Flex mb={4} p={4} color={"white"} overflow={"hidden"}>
+    <Flex mb={4} p={4} color={"white"} overflow={"hidden"} gap={2}>
+      <BackButton />
       {/* Workflow Status */}
       <FormControl
         w={"100px"}
