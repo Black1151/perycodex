@@ -1,6 +1,6 @@
 import React from "react";
 import { Flex, Icon, Text, VStack } from "@chakra-ui/react";
-import { FiInbox } from "react-icons/fi";
+import { QueryStats } from "@mui/icons-material";
 
 interface NoDataOverlayProps {
   gridType: "population" | "sample"; // Define the possible grid types
@@ -19,21 +19,17 @@ const NoDataOverlay: React.FC<NoDataOverlayProps> = ({ gridType }) => {
       borderRadius="md"
     >
       <VStack spacing={4}>
-        <Icon as={FiInbox} boxSize={20} color="white" />
+        <Icon as={QueryStats} boxSize={20} color="white" />
         <Text
           fontSize="2xl"
           fontWeight="bold"
           color="white"
           fontFamily="heading"
         >
-          {gridType === "population"
-            ? "No population data available..."
-            : "No sample data available..."}
+          {gridType === "population" ? "No data" : "No data"}
         </Text>
         <Text fontSize="lg" color="white" textAlign="center" fontFamily="body">
-          {gridType === "population"
-            ? "Drag items from the sample grid over to here."
-            : "Drag items from the population grid over to here."}
+          {gridType === "population" ? "" : "Add items to this grid"}
         </Text>
       </VStack>
     </Flex>
