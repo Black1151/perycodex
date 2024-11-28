@@ -13,7 +13,6 @@ export default async function Home({
 }) {
   const session = await verifySession();
 
-  // If there's no session, redirect to login
   if (!session) {
     redirect("/login");
   }

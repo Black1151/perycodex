@@ -3,20 +3,20 @@ import LineGraph from "@/components/graphs/LineGraph";
 import SpeechBubble from "@/app/(site)/(apps)/happiness-score/SpeechBubble";
 import {
   Box,
+  Flex,
   HStack,
   Image,
-  Text,
-  VStack,
   Modal,
-  ModalOverlay,
+  ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  Flex,
+  ModalOverlay,
+  Text,
+  useBreakpointValue,
+  VStack,
 } from "@chakra-ui/react";
 import { perygonTheme } from "@/theme/theme";
-import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 
 interface StaffHappinessDetailModalProps {
   averagehappiness: string;
@@ -44,6 +44,8 @@ const StaffHappinessDetailModal: React.FC<StaffHappinessDetailModalProps> = ({
     title: record.title,
   }));
 
+  const graphHeight = useBreakpointValue({ base: 150, md: 300 });
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="6xl">
       <ModalOverlay />
@@ -66,7 +68,7 @@ const StaffHappinessDetailModal: React.FC<StaffHappinessDetailModalProps> = ({
                 <SectionHeader>Averaged Happiness Value</SectionHeader>
               </Flex> */}
               <Flex justifyContent="flex-start" width="100%">
-                <Box w={300}>
+                <Box w={[200, null, 300]}>
                   <SpeechBubble
                     score={parseFloat(averagehappiness)}
                     change={0}
@@ -75,7 +77,7 @@ const StaffHappinessDetailModal: React.FC<StaffHappinessDetailModalProps> = ({
                 </Box>
               </Flex>
               <HStack
-                minWidth={300}
+                minWidth={[200, null, 300]}
                 w="100%"
                 gap={8}
                 justifyContent="space-between"
@@ -95,7 +97,7 @@ const StaffHappinessDetailModal: React.FC<StaffHappinessDetailModalProps> = ({
               {/* <Flex width="100%" justifyContent="center" mb={4}>
                 <SectionHeader>Hapiness History</SectionHeader>
               </Flex> */}
-              <LineGraph DataPoints={dataPoints} graphHeight={300} />
+              <LineGraph DataPoints={dataPoints} graphHeight={graphHeight} />
             </VStack>
           </Flex>
         </ModalBody>

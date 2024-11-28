@@ -1,13 +1,20 @@
 "use client";
 
-import React, { useMemo, useEffect, useCallback, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
+  Flex,
   Grid,
   GridItem,
-  Flex,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Spinner,
-  VStack,
+  Text,
   useTheme,
+  VStack,
 } from "@chakra-ui/react";
 import LineGraph from "@/components/graphs/LineGraph";
 import { HappinessScoreMasonry } from "../../HappinessScoreMasonry";
@@ -17,14 +24,7 @@ import AnimatedBarChart from "@/components/graphs/BarGraph";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import { SpringScale } from "@/components/animations/SpringScale";
 import StaffHappinessDetailModal from "./StaffHappinessDetailModal";
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-} from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 
 interface DataPoint {
   value: number;
@@ -87,7 +87,7 @@ export default function ManagerDashboardPageInner({
         value: dept.averageScore,
         count: dept.count,
       })),
-    [departmentsData]
+    [departmentsData],
   );
 
   const siteBarData = useMemo(
@@ -97,7 +97,7 @@ export default function ManagerDashboardPageInner({
         value: site.averageScore,
         count: site.count,
       })),
-    [sitesData]
+    [sitesData],
   );
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -109,37 +109,88 @@ export default function ManagerDashboardPageInner({
   const [modalCurrentPage, setModalCurrentPage] = useState<number>(1);
   const [modalItemsPerPage, setModalItemsPerPage] = useState<number>(10);
   const theme = useTheme();
+  const router = useRouter();
 
   const handleDepartmentBarClick = useCallback(
     (title: string) => {
       const filteredPeople = peopleListData.filter(
-        (person) => person.department === title
+        (person) => person.department === title,
       );
       setBarModalTitle(`Department: ${title}`);
       setBarModalData(filteredPeople);
       setIsBarModalOpen(true);
     },
-    [peopleListData]
+    [peopleListData],
   );
 
   const handleSiteBarClick = useCallback(
     (title: string) => {
       const filteredPeople = peopleListData.filter(
-        (person) => person.site === title
+        (person) => person.site === title,
       );
       setBarModalTitle(`Site: ${title}`);
       setBarModalData(filteredPeople);
       setIsBarModalOpen(true);
     },
-    [peopleListData]
+    [peopleListData],
+  );
+
+  const handleMasonryClick = useCallback(
+    (category: string) => {
+      if (category === "Did not participate") {
+        const nonParticipants = peopleListData.filter(
+          (person) => person.score === null || person.score === undefined,
+        );
+        setBarModalTitle("Did Not Participate");
+        setBarModalData(nonParticipants);
+        setIsBarModalOpen(true);
+        return;
+      }
+
+      let minScore = 0;
+      let maxScore = 0;
+      if (category === "1-2") {
+        minScore = 1;
+        maxScore = 2;
+      } else if (category === "3-5") {
+        minScore = 3;
+        maxScore = 5;
+      } else if (category === "6-8") {
+        minScore = 6;
+        maxScore = 8;
+      } else if (category === "9-10") {
+        minScore = 9;
+        maxScore = 10;
+      } else {
+        // Invalid category
+        return;
+      }
+
+      const filteredPeople = peopleListData.filter(
+        (person) =>
+          person.score !== null &&
+          person.score >= minScore &&
+          person.score <= maxScore,
+      );
+      setBarModalTitle(`Score Range: ${category}`);
+      setBarModalData(filteredPeople);
+      setIsBarModalOpen(true);
+    },
+    [peopleListData],
   );
 
   useEffect(() => {
     setCurrentPage(1);
   }, [peopleListData]);
 
-  const handleMasonryClick = useCallback((category: string) => {
-    console.log("Masonry category clicked:", category);
+  const refreshPage = () => {
+    router.refresh();
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(refreshPage, 10 * 60 * 1000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -167,22 +218,29 @@ export default function ManagerDashboardPageInner({
               <ModalHeader color="white">{barModalTitle}</ModalHeader>
               <ModalCloseButton />
               <ModalBody pb={10}>
-                <PeopleList
-                  people={barModalData}
-                  currentPage={modalCurrentPage}
-                  itemsPerPage={modalItemsPerPage}
-                  onPageChange={setModalCurrentPage}
-                  onItemsPerPageChange={setModalItemsPerPage}
-                  handleUserClick={fetchHappinessScoreTwoMonthHistory}
-                />
+                <VStack minHeight={520}>
+                  {barModalData.length > 0 ? (
+                    <PeopleList
+                      people={barModalData}
+                      currentPage={modalCurrentPage}
+                      itemsPerPage={modalItemsPerPage}
+                      onPageChange={setModalCurrentPage}
+                      onItemsPerPageChange={setModalItemsPerPage}
+                      handleUserClick={fetchHappinessScoreTwoMonthHistory}
+                    />
+                  ) : (
+                    <Text color="white">No data available.</Text>
+                  )}
+                </VStack>
               </ModalBody>
             </ModalContent>
           </Modal>
           <Grid
-            templateColumns={["1fr", null, "1fr 1fr 1fr 1fr 1fr 1fr"]}
-            gap={[20, 6]}
+            templateColumns={["1fr", null, null, "1fr 1fr 1fr 1fr 1fr 1fr"]}
+            gap={[8, 6]}
+            mt={6}
           >
-            <GridItem colSpan={[1, null, 3]}>
+            <GridItem colSpan={[1, null, null, 3]}>
               <SpringScale>
                 <Flex maxWidth={600} flexDirection="column">
                   <Flex width="100%" justifyContent="center" mb={4}>
@@ -197,7 +255,7 @@ export default function ManagerDashboardPageInner({
               </SpringScale>
             </GridItem>
 
-            <GridItem colSpan={[1, null, 3]}>
+            <GridItem colSpan={[1, null, null, 3]}>
               <SpringScale>
                 <Flex width="100%" justifyContent="center" mb={4}>
                   <SectionHeader>Trend</SectionHeader>
@@ -205,7 +263,7 @@ export default function ManagerDashboardPageInner({
                 <LineGraph DataPoints={lineGraphData} />
               </SpringScale>
             </GridItem>
-            <GridItem colSpan={[1, null, 2]}>
+            <GridItem colSpan={[1, null, null, 2]}>
               <Flex width="100%" justifyContent="center" mb={4}>
                 <SectionHeader>Breakdown</SectionHeader>
               </Flex>
@@ -214,7 +272,7 @@ export default function ManagerDashboardPageInner({
                 onStatClick={handleMasonryClick}
               />
             </GridItem>
-            <GridItem colSpan={[1, null, 4]}>
+            <GridItem colSpan={[1, null, null, 4]}>
               <VStack minH="100%">
                 <Flex width="100%" justifyContent="center" mb={2}>
                   <SectionHeader>Submissions</SectionHeader>
@@ -229,7 +287,7 @@ export default function ManagerDashboardPageInner({
                 />
               </VStack>
             </GridItem>
-            <GridItem colSpan={[1, null, 3]}>
+            <GridItem colSpan={[1, null, null, 3]}>
               <VStack>
                 <Flex width="100%" justifyContent="center" mb={4}>
                   <SectionHeader>Department Comparison</SectionHeader>
@@ -240,7 +298,7 @@ export default function ManagerDashboardPageInner({
                 />
               </VStack>
             </GridItem>
-            <GridItem colSpan={[1, null, 3]}>
+            <GridItem colSpan={[1, null, null, 3]}>
               <VStack>
                 <Flex width="100%" justifyContent="center" mb={4}>
                   <SectionHeader>Site Comparison</SectionHeader>

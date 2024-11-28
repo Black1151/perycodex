@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ManagerDashboardPageInner from "./ManagerDashboardPageInner";
 import { DashboardFilteringDrawer } from "@/components/layout/DashboardFilteringDrawer";
 
@@ -342,6 +342,7 @@ export default function ManagerDashboardPage() {
       drawerState,
       setDrawerState,
       isUpdating,
+      refreshPage: clearAllFilters,
     }),
     [
       handleCheckboxChange,
@@ -352,6 +353,7 @@ export default function ManagerDashboardPage() {
       drawerState,
       setDrawerState,
       isUpdating,
+      clearAllFilters,
     ],
   );
 
