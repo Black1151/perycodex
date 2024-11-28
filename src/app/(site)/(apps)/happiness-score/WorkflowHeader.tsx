@@ -22,7 +22,7 @@ const WorkflowHeader: React.FC<WorkflowHeaderProps> = ({
     <Flex
       align={"center"}
       justify={"flex-start"}
-      w={["85%", "85%", "full"]}
+      w={"full"}
       gap={4}
       lineHeight={0}
       mb={4}
