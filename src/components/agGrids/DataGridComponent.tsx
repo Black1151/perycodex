@@ -68,6 +68,7 @@ const DataGridComponent = <T,>({
 
   useEffect(() => {
     console.log(process.env.NEXT_PUBLIC_AG_GRID_LICENSE_KEY);
+    console.log(process.env.NEXT_PUBLIC_TEST);
   }, []);
 
   // Memoize defaultColDef to avoid re-renders
