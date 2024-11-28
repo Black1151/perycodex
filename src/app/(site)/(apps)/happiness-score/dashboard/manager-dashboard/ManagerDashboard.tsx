@@ -36,6 +36,7 @@ export interface Person {
   site: string; // Added site
   score: number;
   imageUrl: string;
+  fullName: string;
 }
 
 export default function ManagerDashboardPage() {

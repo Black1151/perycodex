@@ -77,6 +77,7 @@ interface SpeechBubbleData {
 interface Person {
   userId: number;
   imageUrl: string;
+  fullName: string;
   firstName: string;
   lastName: string;
   jobTitle: string;
@@ -225,7 +226,7 @@ export async function GET(request: Request) {
         .filter((option) => option.label && option.label !== "null");
 
       const uniqueOptions = Array.from(
-        new Map(options.map((item) => [item.value, item])).values(),
+        new Map(options.map((item) => [item.value, item])).values()
       );
 
       return {
@@ -243,7 +244,7 @@ export async function GET(request: Request) {
 
   // Filter out any null results
   const availableOptions = filterGroupResults.filter(
-    (result) => result !== null,
+    (result) => result !== null
   ) as FilterOptionGroup[];
 
   const endpointWithAllFilters = buildEndpoint(selectedFilters);
@@ -267,7 +268,7 @@ export async function GET(request: Request) {
     console.error("Error fetching final data:", error);
     return NextResponse.json(
       { error: "Failed to fetch data from the API." },
-      { status: 500 },
+      { status: 500 }
     );
   }
 
@@ -352,6 +353,7 @@ export async function GET(request: Request) {
         peopleList.push({
           userId: item.userId,
           imageUrl: item.userImageUrl,
+          fullName: item.fullName,
           firstName: item.firstName,
           lastName: item.lastName,
           jobTitle: item.jobLevelName,

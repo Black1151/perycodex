@@ -152,7 +152,7 @@ const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({
   }, [DataPoints]);
 
   const handleBarClick = (index: number, title: string) => {
-    if (isTouchDevice) {
+    if (!isTouchDevice) {
       setActiveTooltip(activeTooltip === index ? null : index);
     }
     if (onBarClick) {

@@ -48,6 +48,7 @@ export interface Person {
   site: string;
   score: number;
   imageUrl: string;
+  fullName: string;
 }
 
 interface ManagerDashboardPageInnerProps {
@@ -226,7 +227,7 @@ export default function ManagerDashboardPageInner({
             <ModalOverlay />
             <ModalContent bgGradient={theme.gradients.perygonBackground}>
               <ModalHeader color="white">{barModalTitle}</ModalHeader>
-              <ModalCloseButton />
+              <ModalCloseButton color="white" />
               <ModalBody pb={10}>
                 <VStack minHeight={520}>
                   {barModalData.length > 0 ? (

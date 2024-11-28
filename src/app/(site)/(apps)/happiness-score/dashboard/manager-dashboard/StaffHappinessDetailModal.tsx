@@ -55,7 +55,7 @@ const StaffHappinessDetailModal: React.FC<StaffHappinessDetailModalProps> = ({
         mx={10}
       >
         <ModalHeader color="white">{`${firstname}'s Happiness`}</ModalHeader>
-        <ModalCloseButton />
+        <ModalCloseButton color="white" />
         <ModalBody>
           <Flex
             flexDirection={["column", null, null, "row"]}
@@ -65,9 +65,6 @@ const StaffHappinessDetailModal: React.FC<StaffHappinessDetailModalProps> = ({
             gap={10}
           >
             <VStack minWidth={[250, null, 400]} maxWidth={420}>
-              {/* <Flex width="100%" justifyContent="center" mb={4}>
-                <SectionHeader>Averaged Happiness Value</SectionHeader>
-              </Flex> */}
               <Flex justifyContent="flex-start" width="100%">
                 <Box w={[200, null, 300]}>
                   <SpeechBubble
@@ -95,9 +92,6 @@ const StaffHappinessDetailModal: React.FC<StaffHappinessDetailModalProps> = ({
               </HStack>
             </VStack>
             <VStack w="100%">
-              {/* <Flex width="100%" justifyContent="center" mb={4}>
-                <SectionHeader>Hapiness History</SectionHeader>
-              </Flex> */}
               <LineGraph DataPoints={dataPoints} graphHeight={graphHeight} />
             </VStack>
           </Flex>

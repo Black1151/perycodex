@@ -23,8 +23,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 interface Person {
   userId: number;
-  firstName: string;
-  lastName: string;
+  fullName: string;
   jobTitle: string;
   department: string;
   site: string;
@@ -116,35 +115,42 @@ const PeopleList: React.FC<PeopleListProps> = ({
     onPageChange(Math.min(currentPage + 1, totalPages));
   };
 
-  // Define columns with sortable property and responsive display
   const columns = [
     {
       key: "imageUrl",
-      label: "Photo",
-      minWidth: "30px",
+      label: "",
       sortable: false,
-      display: ["none", null, "table-cell"],
+      width: "60px",
     },
     {
-      key: "firstName",
-      label: "First Name",
-      maxWidth: "150px",
+      key: "fullName",
+      label: "Name",
       sortable: true,
     },
-    { key: "lastName", label: "Last Name", minWidth: "150px", sortable: true },
+    {
+      key: "jobTitle",
+      label: "Job Title",
+      sortable: true,
+      display: ["none", null, null, null, "table-cell"],
+    },
     {
       key: "department",
       label: "Department",
       sortable: true,
-      display: ["none", null, null, "table-cell"],
+      display: ["none", "table-cell"],
     },
     {
       key: "site",
       label: "Site",
       sortable: true,
-      display: ["none", null, null, "table-cell"],
+      display: ["none", "table-cell"],
     },
-    { key: "score", label: "Score", sortable: true },
+    {
+      key: "score",
+      label: "Score",
+      sortable: true,
+      width: "100px",
+    },
   ];
 
   return (
@@ -168,7 +174,7 @@ const PeopleList: React.FC<PeopleListProps> = ({
         <Table variant="unstyled" colorScheme="gray" size="sm" layout="fixed">
           <Thead>
             <Tr>
-              {columns.map(({ key, label, minWidth, sortable, display }) => (
+              {columns.map(({ key, label, sortable, width, display }) => (
                 <Th
                   key={key}
                   cursor={sortable ? "pointer" : "default"}
@@ -180,9 +186,9 @@ const PeopleList: React.FC<PeopleListProps> = ({
                   position="sticky"
                   top="0"
                   zIndex={1}
-                  minWidth={minWidth || "100px"}
+                  width={width || "auto"} // Apply width if specified
                   display={display || "table-cell"}
-                  textTransform="none" // Add this line
+                  textTransform="none"
                 >
                   <HStack spacing={2}>
                     <Text fontSize={["xs", "sm"]}>{label}</Text>
@@ -209,17 +215,17 @@ const PeopleList: React.FC<PeopleListProps> = ({
                 transition="background-color 0.15s ease, color 0.15s ease"
                 onClick={() => handleUserClick(person.userId)}
               >
-                {columns.map(({ key, display }) => {
+                {columns.map(({ key, display, width }) => {
                   if (key === "imageUrl") {
                     return (
                       <Td
                         key={key}
                         display={display || "table-cell"}
-                        width="20px"
+                        width={width} // Apply width to constrain the image column
                       >
                         <Avatar
                           src={person.imageUrl}
-                          name={`${person.firstName} ${person.lastName}`}
+                          name={person.fullName}
                           size="sm"
                         />
                       </Td>
@@ -229,6 +235,7 @@ const PeopleList: React.FC<PeopleListProps> = ({
                       <Td
                         key={key}
                         display={display || "table-cell"}
+                        width={width || "auto"} // Apply fixed width to score column
                         textOverflow="ellipsis"
                         whiteSpace="nowrap"
                         overflow="hidden"

@@ -55,12 +55,12 @@ const LineGraph: React.FC<LineGraphProps> = memo(
 
     const leftPadding = useBreakpointValue({ base: 20, md: 40 }) ?? 40;
     const rightPadding = useBreakpointValue({ base: 20, md: 40 }) ?? 40;
-    const topPadding = useBreakpointValue({ base: 40, md: 80 }) ?? 80;
-    const bottomPadding = useBreakpointValue({ base: 140, md: 140 }) ?? 80;
+    const topPadding = useBreakpointValue({ base: 40, md: 40 }) ?? 80;
+    const bottomPadding = useBreakpointValue({ base: 140, md: 100 }) ?? 80;
     const xAxisPadding = useBreakpointValue({ base: 20, md: 50 }) ?? 50;
     const imageSize = useBreakpointValue({ base: 20, md: 30 }) ?? 30;
     const strokeWidth = useBreakpointValue({ base: 2, md: 3 }) ?? 3;
-    const fontSize = useBreakpointValue({ base: "xs", md: "sm" });
+    const fontSize = useBreakpointValue({ base: "2xs", md: "xs" });
 
     const defaultGraphHeight =
       useBreakpointValue({ base: 400, md: 400 }) ?? 300;
@@ -166,11 +166,11 @@ const LineGraph: React.FC<LineGraphProps> = memo(
             <Text
               key={index}
               fontSize={fontSize}
-              color="gray.500"
+              color={perygonTheme.colors.perygonPink}
               position="absolute"
               left={`${mapIndexToX(index)}px`}
               bottom={`${bottomPadding - 70}px`}
-              transform="translateX(-50%) rotate(90deg)"
+              transform="translateX(-90%) rotate(-45deg)"
               whiteSpace="nowrap"
             >
               {point.title}
