@@ -55,10 +55,8 @@ export default async function CustomersPage({
 function getHeaderAndCustomerType(role: string, customerTypeParam?: string) {
   let headerTitle = "Customers";
   if (role === "CA") {
-    if (!["external"].includes(customerTypeParam || "")) {
-      customerTypeParam = "external";
-      headerTitle = "Our Clients";
-    }
+    customerTypeParam = "external";
+    headerTitle = "Our Clients";
   } else if (role === "PA") {
     headerTitle = "Customers";
   }
