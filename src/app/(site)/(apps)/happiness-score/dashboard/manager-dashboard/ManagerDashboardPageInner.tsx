@@ -246,7 +246,7 @@ export default function ManagerDashboardPageInner({
               <SpringScale>
                 <Flex maxWidth={600} flexDirection="column">
                   <Flex width="100%" justifyContent="center" mb={4}>
-                    <SectionHeader>This Week's Average</SectionHeader>
+                    <SectionHeader>This Week&apos;s Average</SectionHeader>
                   </Flex>
                   <SpeechBubble
                     score={speechBubbleData?.currentScore || 0}
