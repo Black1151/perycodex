@@ -6,8 +6,12 @@ import "../styles/globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
+// Dynamically set the title based on environment
+const isDev = process.env.NODE_ENV === "development";
 export const metadata: Metadata = {
-  title: "Perygon - development branch",
+  title: isDev
+    ? "Perygon - Development / UAT"
+    : "Perygon - Your Business Growth Toolkit",
 };
 
 export default function RootLayout({
@@ -17,6 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel={"icon"} href={"/images/perygonPinkCheck.ico"} />
+      </head>
+
       <body className={inter.className}>
         <Providers>{children}</Providers>
       </body>

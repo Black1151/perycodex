@@ -1,20 +1,20 @@
 import React from "react";
 import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-  Box,
-  HStack,
-  Text,
-  Select,
-  IconButton,
-  VStack,
-  Grid,
   Avatar,
+  Box,
+  Grid,
+  HStack,
+  IconButton,
+  Select,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  VStack,
 } from "@chakra-ui/react";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -101,7 +101,7 @@ const PeopleList: React.FC<PeopleListProps> = ({
   };
 
   const handleItemsPerPageChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
+    event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     onItemsPerPageChange(Number(event.target.value));
     onPageChange(1);

@@ -3,21 +3,20 @@ import LineGraph from "@/components/graphs/LineGraph";
 import SpeechBubble from "@/app/(site)/(apps)/happiness-score/SpeechBubble";
 import {
   Box,
+  Flex,
   HStack,
   Image,
-  Text,
-  VStack,
   Modal,
-  ModalOverlay,
+  ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  Flex,
+  ModalOverlay,
+  Text,
   useBreakpointValue,
+  VStack,
 } from "@chakra-ui/react";
 import { perygonTheme } from "@/theme/theme";
-import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 
 interface StaffHappinessDetailModalProps {
   averagehappiness: string;

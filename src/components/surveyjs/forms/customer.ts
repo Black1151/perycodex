@@ -116,10 +116,9 @@ export const customerJson = {
         {
           type: "dropdown",
           name: "sectorId",
-          width: "64%",
-          minWidth: "192px",
           title: "Sector",
           titleLocation: "top",
+          minWidth: "192px",
           isRequired: true,
           placeholder:
             "Select the primary sector in which this business operates",
@@ -134,11 +133,11 @@ export const customerJson = {
         {
           type: "dropdown",
           name: "regionId",
-          width: "64%",
           minWidth: "192px",
           title: "Region",
           titleLocation: "top",
           isRequired: true,
+          startWithNewLine: false,
           searchEnabled: false,
           choicesByUrl: {
             url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=region`, // The API endpoint to fetch choices from
@@ -185,6 +184,18 @@ export const customerJson = {
             },
           ],
           placeholder: "Enter the number of current Employees",
+        },
+        {
+          type: "text",
+          name: "customerCode",
+          width: "64%",
+          minWidth: "192px",
+          title: "Customer Code",
+          titleLocation: "top",
+          description: "",
+          descriptionLocation: "underInput",
+          isRequired: false,
+          placeholder: "Enter an optional customer code for internal reference",
         },
       ],
     },
@@ -426,18 +437,6 @@ export const customerJson = {
           min: 1,
           step: 1,
           placeholder: "Enter the number of users allowed to sign up",
-        },
-        {
-          type: "text",
-          name: "customerCode",
-          width: "64%",
-          minWidth: "192px",
-          title: "Customer Code",
-          titleLocation: "top",
-          description: "",
-          descriptionLocation: "underInput",
-          isRequired: true,
-          placeholder: "Enter a customer code for internal reference",
         },
         {
           type: "matrixdynamic",

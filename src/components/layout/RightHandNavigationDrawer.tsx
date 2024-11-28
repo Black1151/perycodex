@@ -11,7 +11,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 import SideBarMenuItem from "./SideBarMenuItem";
-import { ChevronLeft, ChevronRight, Close, Menu } from "@mui/icons-material";
+import { BlurOn, ChevronLeft, ChevronRight, Close } from "@mui/icons-material";
 
 export interface MenuItem {
   label: string;
@@ -36,6 +36,8 @@ export function RightHandNavigationDrawer({
   >(defaultDrawerState);
   const theme = useTheme();
 
+  const iconFontSize = useBreakpointValue({ base: "1.3rem", lg: "1.5rem" });
+
   const MotionBox = motion(Box);
 
   const toggleDrawer = () => {
@@ -56,7 +58,7 @@ export function RightHandNavigationDrawer({
         acc[category].push(item);
         return acc;
       },
-      {} as Record<string, MenuItem[]>
+      {} as Record<string, MenuItem[]>,
     ) || {};
 
   return (
@@ -64,17 +66,17 @@ export function RightHandNavigationDrawer({
       {drawerState === "closed" && (
         <Box
           position="absolute"
-          top={78}
-          right={5}
+          top={[74, 74, 78]}
+          right={[4, 4, 5]}
           zIndex={1}
-          display={["none", "none", "flex"]} // Use "flex" instead of "block" for alignment
-          alignItems="center" // Center content vertically
-          justifyContent="center" // Center content horizontally
+          display={"flex"}
+          alignItems="center"
+          justifyContent="center"
           color={"rgba(248,248,248,0.8)"}
           borderRadius="full"
           aspectRatio={1}
-          w="36px"
-          h="36px"
+          w={["30px", "30px", "36px"]}
+          h={["30px", "30px", "36px"]}
           backgroundColor={"rgba(255,255,255,0.2)"}
           border="1px solid white"
           p={1}
@@ -82,10 +84,10 @@ export function RightHandNavigationDrawer({
           transition="transform 0.2s ease-in-out"
           _hover={{ transform: "scale(1.2)" }}
         >
-          <Menu
+          <BlurOn
             onClick={toggleDrawer}
             cursor="pointer"
-            style={{ fontSize: "1.5rem" }}
+            style={{ fontSize: iconFontSize }}
           />
         </Box>
       )}
@@ -93,7 +95,7 @@ export function RightHandNavigationDrawer({
       <AnimatePresence>
         {drawerState !== "closed" && (
           <MotionBox
-            display={["none", "none", "block"]}
+            display={"block"}
             position="fixed"
             top={0}
             right={0}
@@ -239,7 +241,7 @@ export function RightHandNavigationDrawer({
                           />
                         )}
                       </React.Fragment>
-                    )
+                    ),
                   )}
                   {!menuItems && drawerState === "fully-open" && (
                     <Text>No menu items supplied</Text>

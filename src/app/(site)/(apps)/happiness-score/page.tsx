@@ -55,6 +55,7 @@ export default async function Home({
   const { filteredDashboards, toolData } = await getFilteredDashboards(
     toolId,
     workflowId,
+    "/happiness-score",
   );
 
   // Redirect if there's only one dashboard

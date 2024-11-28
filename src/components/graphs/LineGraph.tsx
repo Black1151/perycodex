@@ -1,12 +1,12 @@
-import React, { useRef, useEffect, useState, memo } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import {
   Box,
+  Flex,
   HStack,
   Text,
-  useBreakpointValue,
-  Flex,
-  VStack,
   Tooltip,
+  useBreakpointValue,
+  VStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { perygonTheme } from "@/theme/theme";
@@ -48,7 +48,7 @@ const LineGraph: React.FC<LineGraphProps> = memo(
 
     const maxValue = Math.max(
       Math.ceil(Math.max(...DataPoints.map((point) => point.value), 0)),
-      10
+      10,
     );
 
     const yAxisTicks = Array.from({ length: 11 }, (_, i) => i);
@@ -278,12 +278,12 @@ const LineGraph: React.FC<LineGraphProps> = memo(
                     transition={{ delay: index * 0.2, duration: 0.3 }}
                   />
                 </Tooltip>
-              )
+              ),
           )}
         </Box>
       </Flex>
     );
-  }
+  },
 );
 
 LineGraph.displayName = "LineGraph";

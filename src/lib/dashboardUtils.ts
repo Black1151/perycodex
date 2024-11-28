@@ -18,7 +18,12 @@ export interface Dashboard {
 export async function getFilteredDashboards(
   toolId: string,
   workflowId: string,
-): Promise<{ filteredDashboards: Dashboard[]; toolData: any }> {
+  pathname: string,
+): Promise<{
+  filteredDashboards: Dashboard[];
+  toolData: any;
+  activeDashboardName: string | null;
+}> {
   const user = await getUser();
   const userRole = user.role;
   const isManager = user.teamManagerCount > 0;
@@ -73,8 +78,20 @@ export async function getFilteredDashboards(
     }
   });
 
+  // Identify the active dashboard based on the pathname
+  const activeDashboard =
+    filteredDashboards.find(
+      (dashboard) => dashboard.dashboardUrl === pathname,
+    ) || null;
+
+  // Extract the dashboard name if the active dashboard exists
+  const activeDashboardName = activeDashboard
+    ? activeDashboard.dashboardName
+    : null;
+
   return {
     filteredDashboards,
     toolData: toolConfigData.resource,
+    activeDashboardName,
   };
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ChevronLeft } from "@mui/icons-material";
+import { ArrowBack } from "@mui/icons-material";
 import { Flex, useBreakpointValue } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 
@@ -32,7 +32,7 @@ const BackButton = () => {
       }}
       transition="all 0.2s ease-in-out"
     >
-      <ChevronLeft fontSize="large" />
+      <ArrowBack fontSize="large" />
     </Flex>
   );
 };

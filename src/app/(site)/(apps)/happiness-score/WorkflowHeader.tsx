@@ -19,17 +19,29 @@ const WorkflowHeader: React.FC<WorkflowHeaderProps> = ({
   const ableToStartWorkflow = toolId && workflowId && canStartWorkflow;
 
   return (
-    <Flex align={"flex-start"} w={"full"} gap={2}>
+    <Flex
+      align={"center"}
+      justify={"flex-start"}
+      w={"full"}
+      gap={4}
+      lineHeight={0}
+      mb={4}
+    >
       <BackButton />
+
+      {/* Heading */}
       <Heading
         as="h1"
         fontWeight={100}
         color="white"
         size={["lg", "xl"]}
         fontFamily="Bonfire"
+        textAlign="center"
       >
         {headingText}
       </Heading>
+
+      {/* AddButton */}
       {ableToStartWorkflow && (
         <Box ml={"auto"}>
           <AddButton

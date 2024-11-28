@@ -24,16 +24,21 @@ export default async function Home({
     return redirect("/");
   }
 
-  const { filteredDashboards, toolData } = await getFilteredDashboards(
-    toolId,
-    workflowId
-  );
+  // Fetch filtered dashboards and tool data
+  const { filteredDashboards, toolData, activeDashboardName } =
+    await getFilteredDashboards(
+      toolId,
+      workflowId,
+      "/happiness-score/dashboard/manager-dashboard",
+    );
 
   return (
     <WorkflowEngine toolId={toolId} workflowId={workflowId}>
       <HappinessDashboardLayout dashboardList={filteredDashboards} />
       <WorkflowHeader
-        headingText={"Manager Dashboard"}
+        headingText={
+          activeDashboardName ? activeDashboardName : "Manager Dashboard"
+        }
         canStartWorkflow={toolData.startInUi}
       />
       <ManagerDashboardPage />
