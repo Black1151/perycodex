@@ -26,16 +26,20 @@ export default async function Home({
   }
 
   // Fetch filtered dashboards and tool data
-  const { filteredDashboards, toolData } = await getFilteredDashboards(
-    toolId,
-    workflowId,
-  );
+  const { filteredDashboards, toolData, activeDashboardName } =
+    await getFilteredDashboards(
+      toolId,
+      workflowId,
+      "/happiness-score/dashboard/team-dashboard",
+    );
 
   return (
     <WorkflowEngine toolId={toolId} workflowId={workflowId}>
       <HappinessDashboardLayout dashboardList={filteredDashboards} />
       <WorkflowHeader
-        headingText={"Team Dashboard"}
+        headingText={
+          activeDashboardName ? activeDashboardName : "Team Dashboard"
+        }
         canStartWorkflow={toolData.startInUi}
       />
       <Box>This is the team dashboard</Box>
