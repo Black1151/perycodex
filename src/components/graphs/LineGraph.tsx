@@ -56,14 +56,14 @@ const LineGraph: React.FC<LineGraphProps> = memo(
     const leftPadding = useBreakpointValue({ base: 20, md: 40 }) ?? 40;
     const rightPadding = useBreakpointValue({ base: 20, md: 40 }) ?? 40;
     const topPadding = useBreakpointValue({ base: 40, md: 80 }) ?? 80;
-    const bottomPadding = useBreakpointValue({ base: 40, md: 140 }) ?? 80;
+    const bottomPadding = useBreakpointValue({ base: 140, md: 140 }) ?? 80;
     const xAxisPadding = useBreakpointValue({ base: 20, md: 50 }) ?? 50;
     const imageSize = useBreakpointValue({ base: 20, md: 30 }) ?? 30;
     const strokeWidth = useBreakpointValue({ base: 2, md: 3 }) ?? 3;
     const fontSize = useBreakpointValue({ base: "xs", md: "sm" });
 
     const defaultGraphHeight =
-      useBreakpointValue({ base: 200, md: 400 }) ?? 300;
+      useBreakpointValue({ base: 400, md: 400 }) ?? 300;
     const graphHeight = graphHeightProp ?? defaultGraphHeight;
     const totalHeight = graphHeight + topPadding + bottomPadding;
 
@@ -171,6 +171,7 @@ const LineGraph: React.FC<LineGraphProps> = memo(
               left={`${mapIndexToX(index)}px`}
               bottom={`${bottomPadding - 70}px`}
               transform="translateX(-50%) rotate(90deg)"
+              whiteSpace="nowrap"
             >
               {point.title}
             </Text>
@@ -256,8 +257,11 @@ const LineGraph: React.FC<LineGraphProps> = memo(
               point.value !== 0 && (
                 <Tooltip
                   key={index}
-                  label={`${point.title}: ${point.value.toFixed(2)}`}
+                  label={`Score: ${point.value.toFixed(2)} on: ${point.title}`}
                   placement="top"
+                  bg={perygonTheme.colors.perygonPink}
+                  color="white"
+                  borderRadius="md"
                 >
                   <motion.img
                     src={getFaceImage(point.value)}

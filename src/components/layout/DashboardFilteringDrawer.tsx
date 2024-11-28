@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import React, { memo } from "react";
-import { Close, Menu } from "@mui/icons-material";
+import { Close, Menu, FilterAlt, Clear, Refresh } from "@mui/icons-material";
 import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/manager-dashboard/ManagerDashboard";
 
 interface RightHandNavigationDrawerProps {
@@ -20,7 +20,7 @@ interface RightHandNavigationDrawerProps {
   handleCheckboxChange: (
     groupIndex: number,
     optionIndex: number,
-    isChecked: boolean,
+    isChecked: boolean
   ) => void;
   filterOptions: FilterOptionGroup[];
   clearAllFilters: () => void;
@@ -29,8 +29,15 @@ interface RightHandNavigationDrawerProps {
   onWeekChange: (week: string) => void;
   drawerState: "closed" | "fully-open";
   setDrawerState: (state: "closed" | "fully-open") => void;
-  isUpdating: boolean; // Added prop
+  isUpdating: boolean;
+  refreshPage: () => void;
 }
+
+const displayNameMappings: { [key: string]: string } = {
+  "Contract Type Name": "Contract Type",
+  "Dept Name": "Department",
+  "Job Level Name": "Job Level",
+};
 
 export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
   handleCheckboxChange,
@@ -43,6 +50,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
   drawerState,
   setDrawerState,
   isUpdating,
+  refreshPage,
 }: RightHandNavigationDrawerProps) {
   const theme = useTheme();
   const MotionBox = motion(Box);
@@ -60,8 +68,8 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
       {drawerState === "closed" && (
         <Box
           position="absolute"
-          top={78}
-          right={5}
+          top={[135, null, 81]}
+          right={[3, 4, 5]}
           zIndex={1}
           display={["flex"]}
           alignItems="center"
@@ -78,7 +86,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
           transition="transform 0.2s ease-in-out"
           _hover={{ transform: "scale(1.2)" }}
         >
-          <Menu
+          <FilterAlt
             onClick={toggleDrawer}
             cursor="pointer"
             style={{ fontSize: "1.5rem" }}
@@ -143,7 +151,11 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                   isDisabled={isUpdating}
                 >
                   {weekOptions.map((week) => (
-                    <option key={week} value={week}>
+                    <option
+                      key={week}
+                      value={week}
+                      style={{ paddingLeft: "10px" }}
+                    >
                       {week}
                     </option>
                   ))}
@@ -153,25 +165,58 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                 flex={1}
                 position="relative"
                 zIndex={1}
-                p={4}
+                px={4}
+                p={3}
                 overflowY="auto"
               >
-                <Button
-                  colorScheme="pink"
-                  size="sm"
-                  width="100%"
-                  onClick={clearAllFilters}
-                  isDisabled={isUpdating}
-                >
-                  {isUpdating ? <Spinner size="sm" /> : "Clear All Filters"}
-                </Button>
+                <VStack spacing={4} align="stretch" width="100%">
+                  <Button
+                    width="100%"
+                    variant="red"
+                    onClick={clearAllFilters}
+                    isDisabled={isUpdating}
+                    leftIcon={<Clear component="svg" />}
+                  >
+                    {isUpdating ? <Spinner size="sm" /> : "Clear Filters"}
+                  </Button>
+                  <Button
+                    width="100%"
+                    variant="green"
+                    onClick={refreshPage}
+                    leftIcon={<Refresh component="svg" />}
+                  >
+                    {isUpdating ? <Spinner size="sm" /> : "Refresh Data"}
+                  </Button>
+                </VStack>
+
                 <VStack spacing={4} align="stretch" width="100%" mt={4}>
                   {filterOptions &&
                     filterOptions.map((group, groupIndex) => (
-                      <Box key={group.label}>
-                        <Text fontWeight="bold" mb={2}>
-                          {group.label}
-                        </Text>
+                      <Box
+                        key={group.label}
+                        border="1px solid"
+                        borderColor={theme.colors.perygonPink}
+                        borderRadius="md"
+                        p={2}
+                        boxShadow="lg" // Added subtle drop shadow
+                      >
+                        <Box
+                          width="100%"
+                          display="flex"
+                          justifyContent="center"
+                        >
+                          <Text
+                            fontWeight="bold"
+                            mb={2}
+                            bg={theme.colors.perygonPink}
+                            color="white"
+                            width="100%"
+                            p={2}
+                            borderRadius="md"
+                          >
+                            {displayNameMappings[group.label] || group.label}
+                          </Text>
+                        </Box>
                         {group.options.map((option, optionIndex) => (
                           <VStack align="start" key={option.value}>
                             <Checkbox
@@ -184,7 +229,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                                 handleCheckboxChange(
                                   groupIndex,
                                   optionIndex,
-                                  e.target.checked,
+                                  e.target.checked
                                 )
                               }
                             >

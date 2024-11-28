@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import useColor from "@/hooks/useColor";
+import { perygonTheme } from "@/theme/theme";
 
 interface DataPoint {
   value: number;
@@ -36,6 +37,7 @@ const shimmerVertical = keyframes`
 
 const Bar: React.FC<BarProps> = ({ value, delay, onClick }) => {
   const { getColor } = useColor();
+  const theme = useTheme();
 
   return (
     <motion.div
@@ -47,9 +49,23 @@ const Bar: React.FC<BarProps> = ({ value, delay, onClick }) => {
         display: "flex",
         justifyContent: "center",
         cursor: "pointer",
+        position: "relative",
       }}
       onClick={onClick}
     >
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: delay + 0.5 }}
+        style={{
+          position: "absolute",
+          top: "-20px",
+          fontSize: "10px",
+          fontWeight: "bold",
+        }}
+      >
+        <Text>{value.toFixed(1)}</Text>
+      </motion.div>
       <Box
         width="100%"
         maxW={[3, 5, 10]}
@@ -172,10 +188,12 @@ const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({
           {DataPoints.map((dataPoint, index) => (
             <Tooltip
               key={index}
-              label={`${dataPoint.title} - (${dataPoint.count}) Submissions`}
-              bgColor={theme.colors.peryugonPink}
+              label={`${dataPoint.title} - score from count of ${dataPoint.count}`}
+              bgColor={perygonTheme.colors.perygonPink}
+              color="white"
               placement="top"
               isOpen={isTouchDevice ? activeTooltip === index : undefined}
+              borderRadius="md"
             >
               <VStack
                 height="100%"

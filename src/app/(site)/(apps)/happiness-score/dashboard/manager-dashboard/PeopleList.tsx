@@ -12,10 +12,9 @@ import {
   Text,
   Select,
   IconButton,
-  Flex,
   VStack,
   Grid,
-  Avatar, // Import Avatar
+  Avatar,
 } from "@chakra-ui/react";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -30,7 +29,7 @@ interface Person {
   department: string;
   site: string;
   score: number;
-  imageUrl: string; // Included imageUrl
+  imageUrl: string;
 }
 
 interface PeopleListProps {
@@ -117,19 +116,34 @@ const PeopleList: React.FC<PeopleListProps> = ({
     onPageChange(Math.min(currentPage + 1, totalPages));
   };
 
-  // Define columns with sortable property
+  // Define columns with sortable property and responsive display
   const columns = [
-    { key: "imageUrl", label: "Photo", minWidth: "100px", sortable: false },
+    {
+      key: "imageUrl",
+      label: "Photo",
+      minWidth: "30px",
+      sortable: false,
+      display: ["none", null, "table-cell"],
+    },
     {
       key: "firstName",
       label: "First Name",
-      minWidth: "150px",
+      maxWidth: "150px",
       sortable: true,
     },
     { key: "lastName", label: "Last Name", minWidth: "150px", sortable: true },
-    { key: "jobTitle", label: "Job Title", sortable: true },
-    { key: "department", label: "Department", sortable: true },
-    { key: "site", label: "Site", sortable: true },
+    {
+      key: "department",
+      label: "Department",
+      sortable: true,
+      display: ["none", null, null, "table-cell"],
+    },
+    {
+      key: "site",
+      label: "Site",
+      sortable: true,
+      display: ["none", null, null, "table-cell"],
+    },
     { key: "score", label: "Score", sortable: true },
   ];
 
@@ -154,7 +168,7 @@ const PeopleList: React.FC<PeopleListProps> = ({
         <Table variant="unstyled" colorScheme="gray" size="sm" layout="fixed">
           <Thead>
             <Tr>
-              {columns.map(({ key, label, minWidth, sortable }) => (
+              {columns.map(({ key, label, minWidth, sortable, display }) => (
                 <Th
                   key={key}
                   cursor={sortable ? "pointer" : "default"}
@@ -167,6 +181,8 @@ const PeopleList: React.FC<PeopleListProps> = ({
                   top="0"
                   zIndex={1}
                   minWidth={minWidth || "100px"}
+                  display={display || "table-cell"}
+                  textTransform="none" // Add this line
                 >
                   <HStack spacing={2}>
                     <Text fontSize={["xs", "sm"]}>{label}</Text>
@@ -193,57 +209,35 @@ const PeopleList: React.FC<PeopleListProps> = ({
                 transition="background-color 0.15s ease, color 0.15s ease"
                 onClick={() => handleUserClick(person.userId)}
               >
-                {/* Image Column */}
-                <Td>
-                  <Avatar
-                    src={person.imageUrl}
-                    name={`${person.firstName} ${person.lastName}`}
-                    size="sm"
-                  />
-                </Td>
-                {/* Other Columns */}
-                <Td
-                  textOverflow="ellipsis"
-                  whiteSpace="nowrap"
-                  overflow="hidden"
-                >
-                  {person.firstName}
-                </Td>
-                <Td
-                  textOverflow="ellipsis"
-                  whiteSpace="nowrap"
-                  overflow="hidden"
-                >
-                  {person.lastName}
-                </Td>
-                <Td
-                  textOverflow="ellipsis"
-                  whiteSpace="nowrap"
-                  overflow="hidden"
-                >
-                  {person.jobTitle}
-                </Td>
-                <Td
-                  textOverflow="ellipsis"
-                  whiteSpace="nowrap"
-                  overflow="hidden"
-                >
-                  {person.department}
-                </Td>
-                <Td
-                  textOverflow="ellipsis"
-                  whiteSpace="nowrap"
-                  overflow="hidden"
-                >
-                  {person.site}
-                </Td>
-                <Td
-                  textOverflow="ellipsis"
-                  whiteSpace="nowrap"
-                  overflow="hidden"
-                >
-                  {person.score}
-                </Td>
+                {columns.map(({ key, display }) => {
+                  if (key === "imageUrl") {
+                    return (
+                      <Td
+                        key={key}
+                        display={display || "table-cell"}
+                        width="20px"
+                      >
+                        <Avatar
+                          src={person.imageUrl}
+                          name={`${person.firstName} ${person.lastName}`}
+                          size="sm"
+                        />
+                      </Td>
+                    );
+                  } else {
+                    return (
+                      <Td
+                        key={key}
+                        display={display || "table-cell"}
+                        textOverflow="ellipsis"
+                        whiteSpace="nowrap"
+                        overflow="hidden"
+                      >
+                        {person[key as keyof Person]}
+                      </Td>
+                    );
+                  }
+                })}
               </Tr>
             ))}
           </Tbody>

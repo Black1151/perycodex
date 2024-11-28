@@ -13,7 +13,6 @@ export default async function Home({
 }) {
   const session = await verifySession();
 
-  // If there's no session, redirect to login
   if (!session) {
     redirect("/login");
   }
@@ -25,10 +24,9 @@ export default async function Home({
     return redirect("/");
   }
 
-  // Fetch filtered dashboards and tool data
   const { filteredDashboards, toolData } = await getFilteredDashboards(
     toolId,
-    workflowId,
+    workflowId
   );
 
   return (
