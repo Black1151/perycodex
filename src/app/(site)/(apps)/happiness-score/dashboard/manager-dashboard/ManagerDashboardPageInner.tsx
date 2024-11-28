@@ -195,6 +195,14 @@ export default function ManagerDashboardPageInner({
     return () => clearTimeout(timer);
   }, []);
 
+  const handleUserClick = useCallback(
+    (userId: number) => {
+      fetchHappinessScoreTwoMonthHistory(userId);
+      setIsBarModalOpen(false);
+    },
+    [fetchHappinessScoreTwoMonthHistory]
+  );
+
   return (
     <>
       {loading ? (
@@ -228,7 +236,7 @@ export default function ManagerDashboardPageInner({
                       itemsPerPage={modalItemsPerPage}
                       onPageChange={setModalCurrentPage}
                       onItemsPerPageChange={setModalItemsPerPage}
-                      handleUserClick={fetchHappinessScoreTwoMonthHistory}
+                      handleUserClick={handleUserClick}
                     />
                   ) : (
                     <Text color="white">No data available.</Text>
