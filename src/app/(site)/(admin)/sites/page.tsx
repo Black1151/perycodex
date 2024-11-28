@@ -22,22 +22,37 @@ export default async function SitesPage({
   let siteTypeParam = searchParams.siteType;
   let createNewUrl = "/sites/create";
 
-  if (user.role === "CA") {
-    if (!["internal", "external"].includes(siteTypeParam || "")) {
-      siteTypeParam = "internal";
-      headerTitle = "My Company Sites";
+  switch (user.role) {
+    case "PA":
+      headerTitle = "Sites";
+      createNewUrl = "/sites/create";
+      break;
+
+    case "CA": {
+      const siteType =
+        siteTypeParam && ["internal", "external"].includes(siteTypeParam)
+          ? siteTypeParam
+          : "internal";
+
+      if (siteType === "internal") {
+        headerTitle = "My Company Sites";
+        url += `&customerId=${user.customerId}`;
+        createNewUrl += `?siteType=internal`;
+      } else if (siteType === "external") {
+        headerTitle = "Our Client Sites";
+        url += `&custParentId=${user.customerId}`;
+        createNewUrl += `?siteType=external`;
+      }
+      break;
     }
-    if (siteTypeParam === "internal") {
-      headerTitle = "My Company Sites";
+
+    case "CU":
+    case "CL":
+    case "CS":
+      headerTitle = "Our Sites";
       url += `&customerId=${user.customerId}`;
-      createNewUrl += `?siteType=internal`;
-    } else if (siteTypeParam === "external") {
-      headerTitle = "Our Client Sites";
-      url += `&custParentId=${user.customerId}`;
-      createNewUrl += `?siteType=external`;
-    }
-  } else if (user.role === "PA") {
-    headerTitle = "Sites";
+      createNewUrl = "";
+      break;
   }
 
   const res = await apiClient(url, { cache: "no-store" });

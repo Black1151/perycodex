@@ -23,6 +23,17 @@ export const caEmailScheduleFields: ColDef[] | any = [
     },
   },
   {
+    field: "toolName",
+    headerName: "Tool",
+    filter: "agMultiColumnFilter",
+    cellRenderer: ToolConfigRenderer,
+    cellRendererParams: {
+      uniqueIdField: "toolId",
+      imageUrlField: "toolIconImageUrl",
+      nameField: "toolName",
+    },
+  },
+  {
     field: "startDate",
     headerName: "Start Date",
     filter: "agMultiColumnFilter",
@@ -30,6 +41,16 @@ export const caEmailScheduleFields: ColDef[] | any = [
   {
     field: "endDate",
     headerName: "End Date",
+    filter: "agMultiColumnFilter",
+  },
+  {
+    field: "sendTime",
+    headerName: "Send Time",
+    filter: "agMultiColumnFilter",
+  },
+  {
+    field: "frequency",
+    headerName: "Frequency",
     filter: "agMultiColumnFilter",
   },
   {
@@ -41,18 +62,6 @@ export const caEmailScheduleFields: ColDef[] | any = [
     field: "lastSentTime",
     headerName: "Sent Last",
     filter: "agMultiColumnFilter",
-  },
-
-  {
-    field: "toolName",
-    headerName: "Tool Name",
-    filter: "agMultiColumnFilter",
-    cellRenderer: ToolConfigRenderer,
-    cellRendererParams: {
-      uniqueIdField: "toolId",
-      imageUrlField: "toolIconImageUrl",
-      nameField: "toolName",
-    },
   },
   {
     field: "isActive",

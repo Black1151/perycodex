@@ -212,12 +212,87 @@ export default function SideBars() {
             category: "Test",
           },
         ];
+      } else if (userRole === "CU") {
+        return [
+          {
+            label: "Our Staff",
+            icon: <Person sx={{ height: "100%", width: "100%" }} />,
+            onClick: () => router.push("/users"),
+            category: "My Company",
+          },
+          {
+            label: "Our Sites",
+            icon: <LocationOn sx={{ height: "100%", width: "100%" }} />,
+            onClick: () => router.push("/sites"),
+            category: "My Company",
+          },
+          {
+            label: "Teams",
+            icon: <People sx={{ height: "100%", width: "100%" }} />,
+            onClick: () => router.push("/teams"),
+            category: "My Company",
+          },
+        ];
+      } else if (userRole === "CS") {
+        return [
+          {
+            label: "Our Staff",
+            icon: <Person sx={{ height: "100%", width: "100%" }} />,
+            onClick: () => router.push("/users"),
+            category: "My Company",
+          },
+          {
+            label: "Our Sites",
+            icon: <LocationOn sx={{ height: "100%", width: "100%" }} />,
+            onClick: () => router.push("/sites"),
+            category: "My Company",
+          },
+          {
+            label: "Teams",
+            icon: <People sx={{ height: "100%", width: "100%" }} />,
+            onClick: () => router.push("/teams"),
+            category: "My Company",
+          },
+          {
+            label: "Our Clients",
+            icon: <Domain sx={{ height: "100%", width: "100%" }} />,
+            onClick: () => router.push("/customers?customerType=external"),
+            category: "My Company",
+          },
+        ];
+      } else if (userRole === "CL") {
+        return [
+          {
+            label: "Our Staff",
+            icon: <Person sx={{ height: "100%", width: "100%" }} />,
+            onClick: () => router.push("/users"),
+            category: "My Company",
+          },
+          {
+            label: "Sites",
+            icon: <LocationOn sx={{ height: "100%", width: "100%" }} />,
+            onClick: () => router.push("/sites"),
+            category: "My Company",
+          },
+          {
+            label: "Teams",
+            icon: <People sx={{ height: "100%", width: "100%" }} />,
+            onClick: () => router.push("/teams"),
+            category: "My Company",
+          },
+          {
+            label: "Our Clients",
+            icon: <Domain sx={{ height: "100%", width: "100%" }} />,
+            onClick: () => router.push("/customers?customerType=external"),
+            category: "My Company",
+          },
+        ];
       }
+
       return [];
     },
     [router],
   );
-
   const generateRightSidebarItemsDrawer = useMemo(() => {
     let entityType = null;
 
@@ -280,7 +355,7 @@ export default function SideBars() {
 
   return (
     <>
-      {!["/my-profile", "/my-company", "/activity"].includes(pathname) && (
+      {!["/my-profile", "/activity"].includes(pathname) && (
         <LeftHandNavigationDrawer
           menuItems={leftMenuItems}
           defaultDrawerState={"half-open"}

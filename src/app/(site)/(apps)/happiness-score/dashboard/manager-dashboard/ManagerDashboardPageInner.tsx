@@ -1,13 +1,20 @@
 "use client";
 
-import React, { useMemo, useEffect, useCallback, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
+  Flex,
   Grid,
   GridItem,
-  Flex,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Spinner,
-  VStack,
+  Text,
   useTheme,
+  VStack,
 } from "@chakra-ui/react";
 import LineGraph from "@/components/graphs/LineGraph";
 import { HappinessScoreMasonry } from "../../HappinessScoreMasonry";
@@ -17,15 +24,6 @@ import AnimatedBarChart from "@/components/graphs/BarGraph";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import { SpringScale } from "@/components/animations/SpringScale";
 import StaffHappinessDetailModal from "./StaffHappinessDetailModal";
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  Text,
-} from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 
 interface DataPoint {
@@ -89,7 +87,7 @@ export default function ManagerDashboardPageInner({
         value: dept.averageScore,
         count: dept.count,
       })),
-    [departmentsData]
+    [departmentsData],
   );
 
   const siteBarData = useMemo(
@@ -99,7 +97,7 @@ export default function ManagerDashboardPageInner({
         value: site.averageScore,
         count: site.count,
       })),
-    [sitesData]
+    [sitesData],
   );
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -116,32 +114,32 @@ export default function ManagerDashboardPageInner({
   const handleDepartmentBarClick = useCallback(
     (title: string) => {
       const filteredPeople = peopleListData.filter(
-        (person) => person.department === title
+        (person) => person.department === title,
       );
       setBarModalTitle(`Department: ${title}`);
       setBarModalData(filteredPeople);
       setIsBarModalOpen(true);
     },
-    [peopleListData]
+    [peopleListData],
   );
 
   const handleSiteBarClick = useCallback(
     (title: string) => {
       const filteredPeople = peopleListData.filter(
-        (person) => person.site === title
+        (person) => person.site === title,
       );
       setBarModalTitle(`Site: ${title}`);
       setBarModalData(filteredPeople);
       setIsBarModalOpen(true);
     },
-    [peopleListData]
+    [peopleListData],
   );
 
   const handleMasonryClick = useCallback(
     (category: string) => {
       if (category === "Did not participate") {
         const nonParticipants = peopleListData.filter(
-          (person) => person.score === null || person.score === undefined
+          (person) => person.score === null || person.score === undefined,
         );
         setBarModalTitle("Did Not Participate");
         setBarModalData(nonParticipants);
@@ -172,13 +170,13 @@ export default function ManagerDashboardPageInner({
         (person) =>
           person.score !== null &&
           person.score >= minScore &&
-          person.score <= maxScore
+          person.score <= maxScore,
       );
       setBarModalTitle(`Score Range: ${category}`);
       setBarModalData(filteredPeople);
       setIsBarModalOpen(true);
     },
-    [peopleListData]
+    [peopleListData],
   );
 
   useEffect(() => {

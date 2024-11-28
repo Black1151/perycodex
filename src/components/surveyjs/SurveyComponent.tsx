@@ -10,7 +10,7 @@ import {
 } from "@/components/surveyjs/SurveyProps";
 import useSurvey from "@/components/surveyjs/useSurvey";
 import useSurveySubmission from "@/components/surveyjs/useSurveySubmission";
-import { Flex, Spinner } from "@chakra-ui/react";
+import { Box, Flex, Spinner } from "@chakra-ui/react";
 import { useUser } from "@/providers/UserProvider";
 import {
   registerSurveyFunctionsWithoutSurvey,
@@ -140,9 +140,11 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
   const SurveyLayout = layoutMap[layout];
 
   return (
-    <Flex h={"full"} w={"full"} justify={"center"} align={"center"}>
+    <Flex justify={"center"} align={"center"}>
       {isLoading || !model || !ready ? (
-        <Spinner color={"white"} />
+        <Box mt={4}>
+          <Spinner color={"white"} />
+        </Box>
       ) : (
         <SurveyLayout
           model={model}

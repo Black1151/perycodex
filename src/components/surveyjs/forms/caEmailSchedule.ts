@@ -276,6 +276,21 @@ export const caEmailScheduleJson = {
           descriptionLocation: "underInput",
         },
         {
+          type: "text",
+          name: "nextSendTime",
+          title: "Next Send Time",
+          inputType: "date",
+          readOnly: true,
+        },
+        {
+          type: "text",
+          name: "lastSentTime",
+          title: "Last Send Time",
+          inputType: "date",
+          startWithNewLine: false,
+          readOnly: true,
+        },
+        {
           type: "tagbox",
           name: "userDistGroupNames",
           title: "User Distribution Group Names",

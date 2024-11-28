@@ -43,7 +43,7 @@ export default async function TeamsDetailPage({
             fontSize={["sm", "sm", "md"]}
             _selected={{ color: "white", bg: "#FFFFFF44" }}
           >
-            Edit {userTeamData.isDepartment ? "Department" : "Team"}
+            {userTeamData.isDepartment ? "Department" : "Team"}
           </Tab>
           <Tab
             color={"white"}
@@ -59,6 +59,7 @@ export default async function TeamsDetailPage({
               surveyJson={userTeamJson}
               endpoint={`/userTeam/${params.uniqueId}`}
               isNew={false}
+              rolesCanEdit={["PA", "CA"]}
               dataset={userTeamData}
               sjsPath={"admin"}
               reloadPageOnSuccess={true}

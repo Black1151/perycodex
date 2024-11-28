@@ -28,6 +28,7 @@ export default async function UsersDetailPage({
         surveyJson={userJson}
         endpoint={`/user/${params.uniqueId}`}
         isNew={false}
+        rolesCanEdit={["PA", "CA"]}
         dataset={pageUserData}
         excludeKeys={["imageUrl"]}
         sjsPath={"admin"}

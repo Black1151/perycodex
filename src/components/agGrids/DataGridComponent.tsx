@@ -66,6 +66,10 @@ const DataGridComponent = <T,>({
   // Modal disclosure state for Chakra UI
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  useEffect(() => {
+    console.log(process.env.NEXT_PUBLIC_AG_GRID_LICENSE_KEY);
+  }, []);
+
   // Memoize defaultColDef to avoid re-renders
   const defaultColDef = useMemo(
     () => ({

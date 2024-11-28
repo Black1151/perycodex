@@ -2,17 +2,18 @@
 
 import {
   Box,
-  VStack,
-  useTheme,
-  Text,
-  Checkbox,
   Button,
+  Checkbox,
   Select,
   Spinner,
+  Text,
+  useBreakpointValue,
+  useTheme,
+  VStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import React, { memo } from "react";
-import { Close, Menu, FilterAlt, Clear, Refresh } from "@mui/icons-material";
+import { Clear, Close, FilterAlt, Refresh } from "@mui/icons-material";
 import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/manager-dashboard/ManagerDashboard";
 
 interface RightHandNavigationDrawerProps {
@@ -20,7 +21,7 @@ interface RightHandNavigationDrawerProps {
   handleCheckboxChange: (
     groupIndex: number,
     optionIndex: number,
-    isChecked: boolean
+    isChecked: boolean,
   ) => void;
   filterOptions: FilterOptionGroup[];
   clearAllFilters: () => void;
@@ -54,6 +55,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
 }: RightHandNavigationDrawerProps) {
   const theme = useTheme();
   const MotionBox = motion(Box);
+  const iconFontSize = useBreakpointValue({ base: "1.3rem", lg: "1.5rem" });
 
   const toggleDrawer = () => {
     if (drawerState === "fully-open") {
@@ -77,8 +79,8 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
           color={"rgba(248,248,248,0.8)"}
           borderRadius="full"
           aspectRatio={1}
-          w="36px"
-          h="36px"
+          w={["30px", "30px", "36px"]}
+          h={["30px", "30px", "36px"]}
           backgroundColor={"rgba(255,255,255,0.2)"}
           border="1px solid white"
           p={1}
@@ -89,7 +91,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
           <FilterAlt
             onClick={toggleDrawer}
             cursor="pointer"
-            style={{ fontSize: "1.5rem" }}
+            style={{ fontSize: iconFontSize }}
           />
         </Box>
       )}
@@ -229,7 +231,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                                 handleCheckboxChange(
                                   groupIndex,
                                   optionIndex,
-                                  e.target.checked
+                                  e.target.checked,
                                 )
                               }
                             >
