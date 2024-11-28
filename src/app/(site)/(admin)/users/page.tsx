@@ -22,23 +22,46 @@ export default async function UsersPage({
   let userTypeParam = searchParams.userType;
   let createNewUrl = "/users/create";
 
-  if (user.role === "CA") {
-    if (!["internal", "external"].includes(userTypeParam || "")) {
-      userTypeParam = "internal";
+  switch (user.role) {
+    case "PA":
+      headerTitle = "Users";
+      url += `&role=!=EU`;
+      break;
+
+    case "CA": {
+      const userType =
+        userTypeParam && ["internal", "external"].includes(userTypeParam)
+          ? userTypeParam
+          : "internal";
+
+      switch (userType) {
+        case "internal":
+          headerTitle = "My Company Users";
+          url += `&customerId=${user.customerId}`;
+          createNewUrl = "";
+          break;
+
+        case "external":
+          headerTitle = "My Client Users";
+          url += `&custParentId=${user.customerId}`;
+          createNewUrl += `?userType=external`;
+          break;
+      }
+      break;
     }
 
-    if (userTypeParam === "internal") {
-      headerTitle = "My Company Users";
+    case "CU":
+    case "CL":
+    case "CS": {
+      const userType = userTypeParam === "internal" ? "internal" : "internal"; // Forces "internal"
+      headerTitle = "Our Staff";
       url += `&customerId=${user.customerId}`;
-      createNewUrl = "";
-    } else if (userTypeParam === "external") {
-      headerTitle = "My Client Users";
-      url += `&custParentId=${user.customerId}`;
-      createNewUrl += `?userType=external`;
+      createNewUrl = ""; // No "external" users allowed, so no URL modification needed
+      break;
     }
-  } else if (user.role === "PA") {
-    headerTitle = "Users";
-    url += `&role=!=EU`;
+
+    default:
+      throw new Error("Unhandled user role");
   }
 
   const res = await apiClient(url, { cache: "no-store" });

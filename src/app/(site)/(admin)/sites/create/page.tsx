@@ -2,6 +2,7 @@ import { siteJson } from "@/components/surveyjs/forms/site";
 import AdminHeader from "@/components/AdminHeader";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import { checkUserRole, getUser } from "@/lib/dal";
+import { redirect } from "next/navigation";
 
 interface SearchParams {
   siteType?: string;
@@ -14,6 +15,10 @@ export default async function SitesCreatePage({
 }) {
   const user = await getUser();
   await checkUserRole(`/sites/create`);
+
+  if (!["CA", "PA"].includes(user.role)) {
+    return redirect("/");
+  }
 
   let headerTitle = "Create Site";
   let siteTypeParam = searchParams.siteType;

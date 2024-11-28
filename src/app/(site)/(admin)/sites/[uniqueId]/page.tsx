@@ -27,6 +27,7 @@ export default async function SitesDetailPage({
       <SurveyComponent
         surveyJson={siteJson}
         endpoint={`/site/${params.uniqueId}`}
+        rolesCanEdit={["PA", "CA"]}
         isNew={false}
         dataset={siteData}
         sjsPath={"admin"}

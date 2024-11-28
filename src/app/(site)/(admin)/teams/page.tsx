@@ -3,10 +3,17 @@ import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import { teamFields } from "@/components/agGrids/dataFields/teamFields";
 import AdminHeader from "@/components/AdminHeader";
 import apiClient from "@/lib/apiClient";
-import { checkUserRole } from "@/lib/dal";
+import { checkUserRole, getUser } from "@/lib/dal";
 
 export default async function TeamsPage() {
-  await checkUserRole("/customers");
+  const user = await getUser();
+  await checkUserRole("/teams");
+
+  let headerTitle = "Departments / Teams";
+
+  if (user.role !== "CA") {
+    headerTitle = "Our Departments / Teams";
+  }
 
   const res = await apiClient(`/getAllView?view=vwUserTeamsList`);
 
@@ -21,7 +28,7 @@ export default async function TeamsPage() {
 
   return (
     <>
-      <AdminHeader headingText={"Departments / Teams"} dataCount={teamCount} />
+      <AdminHeader headingText={headerTitle} dataCount={teamCount} />
       <DataGridComponent
         data={teamData}
         initialFields={teamFields}

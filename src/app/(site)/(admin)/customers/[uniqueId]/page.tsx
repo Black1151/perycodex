@@ -28,6 +28,7 @@ export default async function CustomersDetailsPage({
         surveyJson={customerJson}
         endpoint={`/customer/${params.uniqueId}`}
         isNew={false}
+        rolesCanEdit={["CA", "PA"]}
         dataset={customerData}
         excludeKeys={["imageUrl"]}
         layout={"default"}

@@ -22,12 +22,25 @@ export default async function CustomersPage({
   let url = `/getAllView?view=vwCustomersList&selectColumns=id,name,custId,customerCode,imageUrl,isActive,noOfUsers,noOfSites,sectorName,regionName,customerType`;
   let headerTitle = "Customers";
   let customerTypeParam = searchParams.customerType;
+  let createNewUrl = "/customers/create";
 
-  // Role-based logic for setting customer type and header title
-  ({ customerTypeParam, headerTitle } = getHeaderAndCustomerType(
-    user.role,
-    customerTypeParam,
-  ));
+  switch (user.role) {
+    case "PA":
+      headerTitle = "Customers";
+      break;
+
+    case "CA":
+      customerTypeParam = "external";
+      headerTitle = "Our Clients";
+      break;
+
+    case "CL":
+    case "CS":
+      customerTypeParam = "external";
+      headerTitle = "Our Clients";
+      createNewUrl = "";
+      break;
+  }
 
   const res = await apiClient(url, { cache: "no-store" });
 
@@ -45,20 +58,8 @@ export default async function CustomersPage({
       <DataGridComponent
         data={customerData}
         initialFields={customerFields}
-        createNewUrl={"/customers/create"}
+        createNewUrl={createNewUrl}
       />
     </>
   );
-}
-
-// Function to determine header title and customer type based on user role
-function getHeaderAndCustomerType(role: string, customerTypeParam?: string) {
-  let headerTitle = "Customers";
-  if (role === "CA") {
-    customerTypeParam = "external";
-    headerTitle = "Our Clients";
-  } else if (role === "PA") {
-    headerTitle = "Customers";
-  }
-  return { customerTypeParam, headerTitle };
 }

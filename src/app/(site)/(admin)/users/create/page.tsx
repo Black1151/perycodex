@@ -2,6 +2,7 @@ import { userJson } from "@/components/surveyjs/forms/user";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import AdminHeader from "@/components/AdminHeader";
 import { checkUserRole, getUser } from "@/lib/dal";
+import { redirect } from "next/navigation";
 
 interface SearchParams {
   userType?: string;
@@ -14,6 +15,10 @@ export default async function UsersCreatePage({
 }) {
   const user = await getUser();
   await checkUserRole(`/users/create`);
+
+  if (!["CA", "PA"].includes(user.role)) {
+    return redirect("/");
+  }
 
   let headerTitle = "Create User";
   let userTypeParam = searchParams.userType;
