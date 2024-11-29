@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Flex, Grid, GridItem } from "@chakra-ui/react";
 import { SpringScale } from "@/components/animations/SpringScale";
 import SpeechBubble from "@/app/(site)/(apps)/happiness-score/SpeechBubble";
@@ -11,47 +11,71 @@ import LineGraph from "@/components/graphs/LineGraph";
 export default function StaffDashboardPage() {
   const router = useRouter();
 
-  const getHistoricalHappinessForLineGraph = () => {
-    // dummy data
-    return [
-      { value: 3, title: "2024-01-01" },
-      { value: 5, title: "2024-01-02" },
-      { value: 9, title: "2024-01-03" },
-      { value: 7, title: "2024-01-04" },
-      { value: 6, title: "2024-01-05" },
-      { value: 8, title: "2024-01-06" },
-      { value: 10, title: "2024-01-07" },
-    ];
-  };
+  const [happinessData, setHappinessData] = useState<any>(null);
+  const [lineGraphData, setLineGraphData] = useState<any[]>([]);
 
-  const getHistoricalHappinessForLineGraphTEST = async () => {
+  const getHappinessData = async () => {
+    console.log("GET HAPPINESS DATA");
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const toolId = urlParams.get("toolId");
+    const wfId = urlParams.get("wfId");
+    const businessProcessId = 1;
+
+    const payload = {
+      toolId,
+      workflowId: wfId,
+      businessProcessId,
+    };
+
+    console.log("PAYLOAD", payload);
+
     const response = await fetch(
-      "/api/happiness-graphs/getScoreHistoryLineGraph",
+      "/api/happiness-graphs/getStaffDashboardData",
       {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-      },
+        body: JSON.stringify(payload),
+      }
     );
+
     const data = await response.json();
-    return data.resource;
+
+    setHappinessData(data.resource);
+
+    // Process historic records for line graph
+    const historicRecords = JSON.parse(data.resource.historicrecords);
+    setLineGraphData(
+      historicRecords.map((record: any) => ({
+        value: record.value,
+        title: record.title,
+      }))
+    );
   };
 
   useEffect(() => {
-    getHistoricalHappinessForLineGraphTEST();
+    getHappinessData();
   }, []);
 
   const getSpeechBubbleData = () => {
+    if (!happinessData) return { score: 0, text: "Loading...", change: 0 };
+
+    const score = parseFloat(happinessData.averagehappiness);
+    const change =
+      lineGraphData.length > 1
+        ? lineGraphData[lineGraphData.length - 1].value -
+          lineGraphData[lineGraphData.length - 2].value
+        : 0;
+
     return {
-      score: 5,
-      text: "Test data!",
-      change: 1,
+      score,
+      change,
     };
   };
 
   const speechBubbleData = getSpeechBubbleData();
-  const lineGraphData = getHistoricalHappinessForLineGraph();
 
   const handleStartWorkflow = () => {
     router.push("/happiness-score/workflow/141");

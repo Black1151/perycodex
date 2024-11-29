@@ -50,12 +50,13 @@ const StaffHappinessDetailModal: React.FC<StaffHappinessDetailModalProps> = ({
     <Modal isOpen={isOpen} onClose={onClose} size="6xl">
       <ModalOverlay />
       <ModalContent
+        mx={0}
+        px={0}
         bgGradient={perygonTheme.gradients.perygonBackground}
-        mx={10}
       >
         <ModalHeader color="white">{`${firstname}'s Happiness`}</ModalHeader>
         <ModalCloseButton color="white" />
-        <ModalBody>
+        <ModalBody mx={0} px={0}>
           <Flex
             flexDirection={["column", null, null, "row"]}
             p={4}

@@ -21,7 +21,7 @@ interface RightHandNavigationDrawerProps {
   handleCheckboxChange: (
     groupIndex: number,
     optionIndex: number,
-    isChecked: boolean,
+    isChecked: boolean
   ) => void;
   filterOptions: FilterOptionGroup[];
   clearAllFilters: () => void;
@@ -109,6 +109,8 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
         transform={
           drawerState === "fully-open" ? "translateX(0)" : "translateX(100%)"
         }
+        // pb={20}
+        pb={[20, null, 0]}
       >
         <VStack align="stretch" height="100%" pt={"60px"}>
           <Box
@@ -200,7 +202,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                         borderColor={theme.colors.perygonPink}
                         borderRadius="md"
                         p={2}
-                        boxShadow="lg" // Added subtle drop shadow
+                        boxShadow="lg"
                       >
                         <Box
                           width="100%"
@@ -231,7 +233,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                                 handleCheckboxChange(
                                   groupIndex,
                                   optionIndex,
-                                  e.target.checked,
+                                  e.target.checked
                                 )
                               }
                             >
