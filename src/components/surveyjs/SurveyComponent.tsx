@@ -140,7 +140,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
   const SurveyLayout = layoutMap[layout];
 
   return (
-    <Flex justify={"center"} align={"center"}>
+    <>
       {isLoading || !model || !ready ? (
         <Box mt={4}>
           <Spinner color={"white"} />
@@ -153,7 +153,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
           {...layoutOptions}
         />
       )}
-    </Flex>
+    </>
   );
 };
 

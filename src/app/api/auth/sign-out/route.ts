@@ -10,7 +10,7 @@ export async function POST() {
     if (!apiToken) {
       return NextResponse.json(
         { error: "No authentication token found." },
-        { status: 401 },
+        { status: 500 },
       );
     }
 
