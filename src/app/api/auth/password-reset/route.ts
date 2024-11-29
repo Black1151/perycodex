@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     if (response.status === 401) {
       const errorMessage =
         data?.error || "Invalid token - please request a new password reset.";
-      return NextResponse.json({ error: errorMessage }, { status: 401 });
+      return NextResponse.json({ error: errorMessage }, { status: 500 });
     }
 
     if (!response.ok) {
