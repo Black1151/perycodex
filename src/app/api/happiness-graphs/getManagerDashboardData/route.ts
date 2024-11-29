@@ -9,6 +9,11 @@ interface ApiResponse {
   resource: ApiResponseItem[];
 }
 
+interface Tag {
+  tagId: number;
+  name: string;
+}
+
 interface ApiResponseItem {
   role: string;
   email: string;
@@ -61,6 +66,9 @@ interface ApiResponseItem {
   businessProcessId: number;
   workflowInstanceId: number;
   businessProcessInstanceId: number;
+  userTags?: Tag[];
+  siteTags?: Tag[];
+  customerTags?: Tag[];
 }
 
 interface DataPoint {
@@ -139,6 +147,9 @@ export async function GET(request: Request) {
     contractTypeId: queryParams.contractTypeId?.split(",") || [],
     role: queryParams.role?.split(",") || [],
     remoteWorker: queryParams.remoteWorker === "true" ? ["true"] : [],
+    userTagId: queryParams.userTagId?.split(",") || [],
+    siteTagId: queryParams.siteTagId?.split(",") || [],
+    customerTagId: queryParams.customerTagId?.split(",") || [],
   };
 
   const workflowId = queryParams.workflowId || 1;
@@ -153,6 +164,9 @@ export async function GET(request: Request) {
     { key: "contractTypeName", paramName: "contractTypeId" },
     { key: "remoteWorker", paramName: "remoteWorker" },
     { key: "siteName", paramName: "siteId" },
+    { key: "userTags", paramName: "userTagId" },
+    { key: "siteTags", paramName: "siteTagId" },
+    { key: "customerTags", paramName: "customerTagId" },
   ];
 
   const keyToIdMapping: Record<string, string> = {
@@ -161,6 +175,9 @@ export async function GET(request: Request) {
     jobLevelName: "jobLevelId",
     contractTypeName: "contractTypeId",
     siteName: "siteId",
+    userTags: "tagId",
+    siteTags: "tagId",
+    customerTags: "tagId",
   };
 
   const buildEndpoint = (filters: any) => {
@@ -170,6 +187,9 @@ export async function GET(request: Request) {
         endpoint += `&${key}=${filters[key].join(",")}`;
       }
     });
+
+    console.log(endpoint);
+
     return endpoint;
   };
 
@@ -201,6 +221,9 @@ export async function GET(request: Request) {
     delete filtersExcludingCurrentGroup[group.paramName];
 
     const endpoint = buildEndpoint(filtersExcludingCurrentGroup);
+
+    console.log("ENDPOINT", endpoint);
+
     try {
       const response = await apiClient(endpoint, {
         method: "GET",
@@ -215,23 +238,61 @@ export async function GET(request: Request) {
 
       const dataForGroup: ApiResponse = await response.json();
 
-      const options = dataForGroup.resource
-        .map((item) => {
-          const label = item[group.key as keyof ApiResponseItem];
+      // Collect all options for the current group
+      const optionsSet = new Map<string, { label: string; value: string }>();
+
+      for (const item of dataForGroup.resource) {
+        let dataField = item[group.key as keyof ApiResponseItem];
+
+        if (
+          group.key === "userTags" ||
+          group.key === "siteTags" ||
+          group.key === "customerTags"
+        ) {
+          if (typeof dataField === "string") {
+            try {
+              dataField = JSON.parse(dataField);
+            } catch (error) {
+              console.error(`Error parsing ${group.key} for item`, item, error);
+              dataField = [];
+            }
+          }
+
+          if (Array.isArray(dataField)) {
+            for (const tag of dataField) {
+              if (tag && tag.tagId && tag.name) {
+                optionsSet.set(String(tag.tagId), {
+                  label: tag.name,
+                  value: String(tag.tagId),
+                });
+              }
+            }
+          }
+        } else {
+          const label = dataField;
           const idKey = keyToIdMapping[group.key];
           const value = idKey ? item[idKey as keyof ApiResponseItem] : label;
+          if (label && label !== "null") {
+            optionsSet.set(String(value), {
+              label: String(label),
+              value: String(value),
+            });
+          }
+        }
+      }
 
-          return { label: String(label), value: String(value) };
-        })
-        .filter((option) => option.label && option.label !== "null");
+      const options = Array.from(optionsSet.values());
 
-      const uniqueOptions = Array.from(
-        new Map(options.map((item) => [item.value, item])).values()
-      );
+      const groupLabels: Record<string, string> = {
+        userTags: "User Tags",
+        siteTags: "Site Tags",
+        customerTags: "Customer Tags",
+        // Add more custom labels if needed
+      };
 
       return {
-        label: camelCaseToWords(group.key),
-        options: uniqueOptions,
+        label: groupLabels[group.key] || camelCaseToWords(group.key),
+        options: options,
       };
     } catch (error) {
       console.error("Error fetching data for group:", group.key, error);

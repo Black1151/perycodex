@@ -48,16 +48,16 @@ const LineGraph: React.FC<LineGraphProps> = memo(
 
     const maxValue = Math.max(
       Math.ceil(Math.max(...DataPoints.map((point) => point.value), 0)),
-      10,
+      10
     );
 
     const yAxisTicks = Array.from({ length: 11 }, (_, i) => i);
 
-    const leftPadding = useBreakpointValue({ base: 20, md: 40 }) ?? 40;
+    const leftPadding = useBreakpointValue({ base: 40, md: 40 }) ?? 40;
     const rightPadding = useBreakpointValue({ base: 20, md: 40 }) ?? 40;
     const topPadding = useBreakpointValue({ base: 40, md: 40 }) ?? 80;
-    const bottomPadding = useBreakpointValue({ base: 140, md: 100 }) ?? 80;
-    const xAxisPadding = useBreakpointValue({ base: 20, md: 50 }) ?? 50;
+    const bottomPadding = useBreakpointValue({ base: 75, md: 100 }) ?? 80;
+    const xAxisPadding = useBreakpointValue({ base: 40, md: 50 }) ?? 50;
     const imageSize = useBreakpointValue({ base: 20, md: 30 }) ?? 30;
     const strokeWidth = useBreakpointValue({ base: 2, md: 3 }) ?? 3;
     const fontSize = useBreakpointValue({ base: "2xs", md: "xs" });
@@ -169,7 +169,7 @@ const LineGraph: React.FC<LineGraphProps> = memo(
               color={perygonTheme.colors.perygonPink}
               position="absolute"
               left={`${mapIndexToX(index)}px`}
-              bottom={`${bottomPadding - 70}px`}
+              bottom={`${bottomPadding - 50}px`}
               transform="translateX(-90%) rotate(-45deg)"
               whiteSpace="nowrap"
             >
@@ -278,12 +278,12 @@ const LineGraph: React.FC<LineGraphProps> = memo(
                     transition={{ delay: index * 0.2, duration: 0.3 }}
                   />
                 </Tooltip>
-              ),
+              )
           )}
         </Box>
       </Flex>
     );
-  },
+  }
 );
 
 LineGraph.displayName = "LineGraph";
