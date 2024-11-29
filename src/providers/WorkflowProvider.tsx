@@ -42,25 +42,19 @@ export const useWorkflow = () => {
 export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [toolId, setToolId] = useState<string | null>(
-    localStorage.getItem("toolId") || null,
-  );
-  const [workflowId, setWorkflowId] = useState<string | null>(
-    localStorage.getItem("workflowId") || null,
-  );
+  const [toolId, setToolId] = useState<string | null>(null);
+  const [workflowId, setWorkflowId] = useState<string | null>(null);
   const [currentWorkflowInstanceId, setCurrentWorkflowInstanceId] = useState<
     string | null
-  >(localStorage.getItem("currentWorkflowInstanceId") || null);
+  >(null);
   const [
     currentBusinessProcessInstanceId,
     setCurrentBusinessProcessInstanceId,
-  ] = useState<string | null>(
-    localStorage.getItem("currentBusinessProcessInstanceId") || null,
-  );
+  ] = useState<string | null>(null);
   const [toolLogo, setToolLogo] = useState<string | null>(null);
   const [toolPath, setToolPath] = useState<string | null>(null);
   const { fetchClient } = useFetchClient();
-  const pathname = usePathname(); // Hook to get the current path
+  const pathname = usePathname();
 
   const pathsToResetToolLogo = [
     "/happiness-score",
@@ -69,6 +63,25 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
     "/risk-management",
   ];
 
+  // Initialize state from localStorage on the client side
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        setToolId(localStorage.getItem("toolId"));
+        setWorkflowId(localStorage.getItem("workflowId"));
+        setCurrentWorkflowInstanceId(
+          localStorage.getItem("currentWorkflowInstanceId"),
+        );
+        setCurrentBusinessProcessInstanceId(
+          localStorage.getItem("currentBusinessProcessInstanceId"),
+        );
+      } catch (error) {
+        console.error("Error initializing state from localStorage", error);
+      }
+    }
+  }, []);
+
+  // Handle pathname updates
   useEffect(() => {
     const shouldReset = pathsToResetToolLogo.some((path) =>
       pathname.startsWith(path),
@@ -109,27 +122,57 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
     fetchToolConfig();
   }, [toolId, workflowId]);
 
-  // Save to local storage when state changes
+  // Save to localStorage when state changes
   useEffect(() => {
-    localStorage.setItem("toolId", toolId || "");
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("toolId", toolId || "");
+      } catch (error) {
+        console.error("Error saving toolId to localStorage", error);
+      }
+    }
   }, [toolId]);
 
   useEffect(() => {
-    localStorage.setItem("workflowId", workflowId || "");
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("workflowId", workflowId || "");
+      } catch (error) {
+        console.error("Error saving workflowId to localStorage", error);
+      }
+    }
   }, [workflowId]);
 
   useEffect(() => {
-    localStorage.setItem(
-      "currentWorkflowInstanceId",
-      currentWorkflowInstanceId || "",
-    );
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem(
+          "currentWorkflowInstanceId",
+          currentWorkflowInstanceId || "",
+        );
+      } catch (error) {
+        console.error(
+          "Error saving currentWorkflowInstanceId to localStorage",
+          error,
+        );
+      }
+    }
   }, [currentWorkflowInstanceId]);
 
   useEffect(() => {
-    localStorage.setItem(
-      "currentBusinessProcessInstanceId",
-      currentBusinessProcessInstanceId || "",
-    );
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem(
+          "currentBusinessProcessInstanceId",
+          currentBusinessProcessInstanceId || "",
+        );
+      } catch (error) {
+        console.error(
+          "Error saving currentBusinessProcessInstanceId to localStorage",
+          error,
+        );
+      }
+    }
   }, [currentBusinessProcessInstanceId]);
 
   return (

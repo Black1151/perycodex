@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { UserModal } from "@/components/modals/userModal/UserModal";
 import { WorkflowModal } from "@/components/modals/workflowModal/WorkflowModal";
