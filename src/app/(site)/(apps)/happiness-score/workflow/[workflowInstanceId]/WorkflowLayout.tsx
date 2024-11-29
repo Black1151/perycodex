@@ -197,7 +197,7 @@ export default function WorkflowLayout({
 
       {/* Render main content only if modal is not open */}
       {!isModalOpen && (
-        <Box mt="60px" width="full" height="calc(100vh - 60px)">
+        <Box mt="60px" width="full" height="calc(100vh - 60px - 35px)">
           {stages.length > 1 && (
             <LeftHandNavigationDrawer
               menuItems={menuItems}
