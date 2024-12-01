@@ -1,4 +1,4 @@
-import Dashboard from "@/app/(site)/(apps)/happiness-score/dashboard/test-dashboard/Dashboard";
+import Dashboard from "@/app/(site)/(apps)/happiness-score/dashboard/all-dashboard/Dashboard";
 import { redirect } from "next/navigation";
 import { getFilteredDashboards } from "@/lib/dashboardUtils";
 import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
@@ -30,7 +30,7 @@ export default async function Home({
     await getFilteredDashboards(
       toolId,
       workflowId,
-      "/happiness-score/dashboard/test-dashboard",
+      "/happiness-score/dashboard/all-dashboard",
     );
 
   return (
@@ -38,7 +38,7 @@ export default async function Home({
       <HappinessDashboardLayout dashboardList={filteredDashboards} />
       <WorkflowHeader
         headingText={
-          activeDashboardName ? activeDashboardName : "AG Test Dashboard"
+          activeDashboardName ? activeDashboardName : "All Dashboard"
         }
         canStartWorkflow={toolData.startInUi}
       />
