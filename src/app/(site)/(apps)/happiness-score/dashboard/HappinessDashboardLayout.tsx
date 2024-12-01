@@ -25,8 +25,13 @@ const HappinessDashboardLayout: React.FC<HappinessDashboardLayoutProps> = ({
       router.push(
         `${dashboard.dashboardUrl}?toolId=${toolId}&wfId=${workflowId}`,
       ),
-    category: "Dashboard",
+    category: "Dashboards",
   }));
+
+  // Do not render the navigation components if there's only one item
+  if (menuItems.length === 1) {
+    return null; // Return nothing since navigation is handled automatically
+  }
 
   return (
     <>

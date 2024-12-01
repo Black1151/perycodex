@@ -1,11 +1,11 @@
 "use client";
 
-import {
+import React, {
   createContext,
-  ReactNode,
   useContext,
   useEffect,
   useState,
+  ReactNode,
 } from "react";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { usePathname } from "next/navigation";
@@ -18,7 +18,7 @@ interface ToolConfigResponse {
   };
 }
 
-const WorkflowContext = createContext<{
+interface WorkflowContextType {
   toolId: string | null;
   setToolId: (id: string | null) => void;
   toolLogo: string | null;
@@ -29,15 +29,24 @@ const WorkflowContext = createContext<{
   setCurrentWorkflowInstanceId: (id: string | null) => void;
   currentBusinessProcessInstanceId: string | null;
   setCurrentBusinessProcessInstanceId: (id: string | null) => void;
-} | null>(null);
+}
 
-export const useWorkflow = () => {
+const WorkflowContext = createContext<WorkflowContextType | null>(null);
+
+export const useWorkflow = (): WorkflowContextType => {
   const context = useContext(WorkflowContext);
   if (!context) {
     throw new Error("useWorkflow must be used within a WorkflowProvider");
   }
   return context;
 };
+
+const pathsToResetToolLogo = [
+  "/happiness-score",
+  "/client-satisfaction",
+  "/business-score",
+  "/risk-management",
+];
 
 export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
   children,
@@ -53,69 +62,66 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
   ] = useState<string | null>(null);
   const [toolLogo, setToolLogo] = useState<string | null>(null);
   const [toolPath, setToolPath] = useState<string | null>(null);
+
   const { fetchClient } = useFetchClient();
   const pathname = usePathname();
 
-  const pathsToResetToolLogo = [
-    "/happiness-score",
-    "/client-satisfaction",
-    "/business-score",
-    "/risk-management",
-  ];
-
-  // Initialize state from localStorage on the client side
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      try {
-        setToolId(localStorage.getItem("toolId"));
-        setWorkflowId(localStorage.getItem("workflowId"));
-        setCurrentWorkflowInstanceId(
-          localStorage.getItem("currentWorkflowInstanceId"),
-        );
-        setCurrentBusinessProcessInstanceId(
-          localStorage.getItem("currentBusinessProcessInstanceId"),
-        );
-      } catch (error) {
-        console.error("Error initializing state from localStorage", error);
-      }
-    }
-  }, []);
-
-  // Handle pathname updates
+  // Reset tool logo and path when navigating to specific paths
   useEffect(() => {
     const shouldReset = pathsToResetToolLogo.some((path) =>
       pathname.startsWith(path),
     );
     if (!shouldReset) {
-      setToolLogo(null);
-      setToolPath(null);
       setToolId(null);
       setWorkflowId(null);
+      setToolLogo(null);
+      setToolPath(null);
     }
   }, [pathname]);
 
-  // Fetch tool configuration when toolId changes
+  // Load initial state from localStorage on mount
+  useEffect(() => {
+    const initializeStateFromLocalStorage = () => {
+      const savedToolId = localStorage.getItem("toolId");
+      const savedWorkflowId = localStorage.getItem("workflowId");
+      const savedWorkflowInstanceId = localStorage.getItem(
+        "currentWorkflowInstanceId",
+      );
+      const savedBusinessProcessInstanceId = localStorage.getItem(
+        "currentBusinessProcessInstanceId",
+      );
+
+      if (savedToolId) setToolId(savedToolId);
+      if (savedWorkflowId) setWorkflowId(savedWorkflowId);
+      if (savedWorkflowInstanceId)
+        setCurrentWorkflowInstanceId(savedWorkflowInstanceId);
+      if (savedBusinessProcessInstanceId)
+        setCurrentBusinessProcessInstanceId(savedBusinessProcessInstanceId);
+    };
+
+    initializeStateFromLocalStorage();
+  }, []);
+
+  // Fetch tool configuration when toolId or workflowId changes
   useEffect(() => {
     const fetchToolConfig = async () => {
-      if (toolId) {
-        try {
-          const res: ToolConfigResponse | null = await fetchClient(
-            `/api/toolConfig/findBy?id=${toolId}`,
+      if (!toolId || !workflowId) return;
+
+      try {
+        const res: ToolConfigResponse | null = await fetchClient(
+          `/api/toolConfig/findBy?id=${toolId}`,
+        );
+        if (res?.resource) {
+          setToolPath(
+            `${res.resource.appUrl}?toolId=${toolId}&wfId=${workflowId}`,
           );
-          if (res?.resource?.appUrl && toolId && workflowId) {
-            setToolPath(
-              `${res.resource.appUrl}?toolId=${toolId}&wfId=${workflowId}`,
-            );
-          }
-          if (res?.resource?.logoImageUrl) {
-            setToolLogo(res.resource.logoImageUrl);
-          } else {
-            setToolLogo(null);
-            console.error("Invalid response structure or missing logoImageUrl");
-          }
-        } catch (error) {
-          console.error("Error fetching tool config:", error);
+          setToolLogo(res.resource.logoImageUrl || null);
+        } else {
+          setToolLogo(null);
+          console.error("Invalid response structure or missing logoImageUrl");
         }
+      } catch (error) {
+        console.error("Error fetching tool config:", error);
       }
     };
 
@@ -124,54 +130,35 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
 
   // Save to localStorage when state changes
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      try {
-        localStorage.setItem("toolId", toolId || "");
-      } catch (error) {
-        console.error("Error saving toolId to localStorage", error);
-      }
-    }
+    if (toolId) localStorage.setItem("toolId", toolId);
+    if (!toolId) localStorage.setItem("toolId", "");
   }, [toolId]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      try {
-        localStorage.setItem("workflowId", workflowId || "");
-      } catch (error) {
-        console.error("Error saving workflowId to localStorage", error);
-      }
-    }
+    if (workflowId) localStorage.setItem("workflowId", workflowId);
+    if (!workflowId) localStorage.setItem("workflowId", "");
   }, [workflowId]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      try {
-        localStorage.setItem(
-          "currentWorkflowInstanceId",
-          currentWorkflowInstanceId || "",
-        );
-      } catch (error) {
-        console.error(
-          "Error saving currentWorkflowInstanceId to localStorage",
-          error,
-        );
-      }
+    if (currentWorkflowInstanceId) {
+      localStorage.setItem(
+        "currentWorkflowInstanceId",
+        currentWorkflowInstanceId,
+      );
+    }
+    if (!currentWorkflowInstanceId) {
+      localStorage.setItem("currentWorkflowInstanceId", "");
     }
   }, [currentWorkflowInstanceId]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      try {
-        localStorage.setItem(
-          "currentBusinessProcessInstanceId",
-          currentBusinessProcessInstanceId || "",
-        );
-      } catch (error) {
-        console.error(
-          "Error saving currentBusinessProcessInstanceId to localStorage",
-          error,
-        );
-      }
+    if (currentBusinessProcessInstanceId) {
+      localStorage.setItem(
+        "currentBusinessProcessInstanceId",
+        currentBusinessProcessInstanceId,
+      );
+    } else {
+      localStorage.setItem("currentBusinessProcessInstanceId", "");
     }
   }, [currentBusinessProcessInstanceId]);
 

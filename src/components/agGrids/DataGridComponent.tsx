@@ -27,7 +27,7 @@ import { Add, Clear } from "@mui/icons-material";
 import NoDataOverlay from "@/components/agGrids/NoDataOverlay";
 import CustomGridBottomPagination from "@/components/agGrids/CustomGridBottomPagination";
 import LoadingOverlay from "@/components/agGrids/LoadingOverlay";
-import { ColDef } from "ag-grid-community";
+import { ColDef, FirstDataRenderedEvent } from "ag-grid-community";
 
 interface DataGridComponentProps<T> {
   data: T[] | null;
@@ -35,7 +35,11 @@ interface DataGridComponentProps<T> {
   createNewUrl?: string;
   createNewUrlButtonText?: string;
   isModalEnabled?: boolean;
-  openModalComponent?: React.ElementType; // Pass the modal component as a React component type
+  loading?: boolean;
+  openModalComponent?: React.ElementType;
+  showTopBar?: boolean;
+  defaultColDef?: ColDef;
+  onGridReady?: (params: FirstDataRenderedEvent) => void;
 }
 
 // Define the type for pagination info
@@ -52,11 +56,15 @@ LicenseManager.setLicenseKey(
 
 const DataGridComponent = <T,>({
   data,
+  loading,
   initialFields,
   createNewUrl,
   createNewUrlButtonText,
   isModalEnabled,
-  openModalComponent: ModalComponent, // Accept the component directly as a React element type
+  openModalComponent: ModalComponent,
+  showTopBar = true,
+  defaultColDef: customDefaultColDef,
+  onGridReady,
 }: DataGridComponentProps<T>) => {
   const gridRef = useRef<AgGridReact>(null);
   const [rowData, setRowData] = useState<T[]>(data || []);
@@ -76,8 +84,9 @@ const DataGridComponent = <T,>({
       filter: true,
       floatingFilter: false,
       resizable: true,
+      ...customDefaultColDef,
     }),
-    [isMobile],
+    [isMobile, customDefaultColDef],
   );
 
   const [paginationInfo, setPaginationInfo] = useState({
@@ -159,64 +168,67 @@ const DataGridComponent = <T,>({
 
   return (
     <Box className={`ag-theme-alpine ag-theme-perygon`} w={"full"} py={2}>
-      <Flex w={"full"} justify={"flex-start"} align={"center"} my={4} gap={2}>
-        {/* Quick Filter */}
-        <Input
-          variant="outline"
-          id={`filter-text-box-${uniqueQuickFilterId}`}
-          placeholder="Search..."
-          onInput={onFilterTextBoxChanged}
-          w={256}
-          bg="white"
-          borderColor="gray.300"
-          _hover={{ borderColor: "gray.400" }}
-          _focus={{
-            borderColor: "perygonPink",
-            boxShadow: "0 0 0 1px #ff0070",
-          }}
-        />
+      {showTopBar && (
+        <Flex w={"full"} justify={"flex-start"} align={"center"} my={4} gap={2}>
+          {/* Quick Filter */}
+          <Input
+            variant="outline"
+            id={`filter-text-box-${uniqueQuickFilterId}`}
+            placeholder="Search..."
+            onInput={onFilterTextBoxChanged}
+            w={256}
+            bg="white"
+            borderColor="gray.300"
+            _hover={{ borderColor: "gray.400" }}
+            _focus={{
+              borderColor: "perygonPink",
+              boxShadow: "0 0 0 1px #ff0070",
+            }}
+          />
 
-        <Button
-          variant="solid"
-          bg="seduloRed"
-          aria-label="reset-filters"
-          onClick={resetFilter}
-          ml="auto"
-          size="md"
-          color="white"
-          _hover={{ bg: "perygonPink" }}
-          display="flex"
-          alignItems="center"
-          gap={[0, 0, 2]}
-          lineHeight={0}
-        >
-          <Clear />
-          <Text>{resetFiltersButtonText}</Text>
-        </Button>
-
-        {/* Create New Button */}
-        {(createNewUrl || isModalEnabled) && (
           <Button
             variant="solid"
-            bg="lightGreen"
-            aria-label="create-new"
-            onClick={handleCreateNewClick}
+            bg="seduloRed"
+            aria-label="reset-filters"
+            onClick={resetFilter}
+            ml="auto"
             size="md"
             color="white"
+            _hover={{ bg: "perygonPink" }}
             display="flex"
             alignItems="center"
             gap={[0, 0, 2]}
             lineHeight={0}
           >
-            <Add />
-            <Text>{createNewUrlButtonText}</Text>
+            <Clear />
+            <Text>{resetFiltersButtonText}</Text>
           </Button>
-        )}
-      </Flex>
+
+          {/* Create New Button */}
+          {(createNewUrl || isModalEnabled) && (
+            <Button
+              variant="solid"
+              bg="lightGreen"
+              aria-label="create-new"
+              onClick={handleCreateNewClick}
+              size="md"
+              color="white"
+              display="flex"
+              alignItems="center"
+              gap={[0, 0, 2]}
+              lineHeight={0}
+            >
+              <Add />
+              <Text>{createNewUrlButtonText}</Text>
+            </Button>
+          )}
+        </Flex>
+      )}
 
       <Flex direction={"column"} height={"500px"}>
         <AgGridReact
           ref={gridRef}
+          loading={loading}
           rowData={rowData}
           columnDefs={fields}
           pagination={true}
@@ -228,6 +240,7 @@ const DataGridComponent = <T,>({
           paginationPageSize={paginationInfo.pageSize}
           noRowsOverlayComponent={NoDataOverlay}
           loadingOverlayComponent={LoadingOverlay}
+          onFirstDataRendered={onGridReady}
         />
         <CustomGridBottomPagination
           gridRef={gridRef}
