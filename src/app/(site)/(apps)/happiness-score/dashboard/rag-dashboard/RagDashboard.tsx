@@ -9,8 +9,6 @@ import { ColDef } from "ag-grid-community";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import { useFetchClient } from "@/hooks/useFetchClient";
-import { useUser } from "@/providers/UserProvider";
-import { useWorkflow } from "@/providers/WorkflowProvider";
 
 interface ApiResponse {
   resource: RowData[]; // This matches the RowData type you're using
@@ -33,8 +31,6 @@ interface RowData {
 
 const RagDashboard: React.FC = () => {
   const [rowData, setRowData] = useState<RowData[]>([]);
-  const { toolId, workflowId } = useWorkflow();
-  const { user } = useUser();
   const [isLoading, setIsLoading] = useState(false);
 
   const { fetchClient } = useFetchClient();
