@@ -14,10 +14,7 @@ import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { addDays, format, parseISO } from "date-fns";
-import {
-  AgCartesianSeriesTooltipRendererParams,
-  AgNodeClickEvent,
-} from "ag-charts-types";
+import { AgNodeClickEvent } from "ag-charts-types";
 import useColor from "@/hooks/useColor";
 import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/HappinessScoreRenderer";
 
@@ -97,10 +94,10 @@ interface SeduloCrossFilterChartParams extends CreateCrossFilterChartParams {
   id: string;
 }
 
-const Dashboard: React.FC = () => {
+const LeaderboardDashboard: React.FC = () => {
   const [rowData, setRowData] = useState<RowData[]>([]);
-  const theme = useTheme();
   const { getColor } = useColor();
+  const theme = useTheme();
 
   const { fetchClient } = useFetchClient();
 
@@ -108,7 +105,7 @@ const Dashboard: React.FC = () => {
     const getData = async () => {
       try {
         const response = await fetchClient<ApiResponse>(
-          "/api/happiness-graphs/getAllHappinessData?toolId=1&wfId=1",
+          "/api/happiness-graphs/getCurrentWeekHappinessData?toolId=1&wfId=1",
         );
 
         if (response && typeof response === "object" && "data" in response) {
@@ -147,7 +144,6 @@ const Dashboard: React.FC = () => {
       filter: "agSetColumnFilter",
       chartDataType: "category",
     },
-    { field: "teamName", headerName: "Team", sortable: true },
     {
       field: "deptName",
       headerName: "Department",
@@ -160,7 +156,6 @@ const Dashboard: React.FC = () => {
       headerName: "Happiness Score",
       sortable: true,
       chartDataType: "series",
-      cellRenderer: HappinessScoreRenderer,
       valueGetter: (params) => {
         try {
           const json = JSON.parse(params.data.jsonBpRespFull);
@@ -169,11 +164,13 @@ const Dashboard: React.FC = () => {
           return null; // Return null if JSON parsing fails
         }
       },
+      cellRenderer: HappinessScoreRenderer,
     },
     {
       field: "jsonBpRespFull",
       headerName: "Comments",
       sortable: true,
+      flex: 3,
       valueGetter: (params) => {
         try {
           const json = JSON.parse(params.data.jsonBpRespFull);
@@ -182,18 +179,6 @@ const Dashboard: React.FC = () => {
           return null; // Return null if JSON parsing fails
         }
       },
-    },
-    {
-      field: "eowDate",
-      headerName: "Week",
-      sortable: true,
-      chartDataType: "category",
-    },
-    {
-      field: "monthYear",
-      headerName: "Month - Year",
-      sortable: true,
-      chartDataType: "category",
     },
   ];
 
@@ -411,172 +396,6 @@ const Dashboard: React.FC = () => {
           },
         },
       },
-      {
-        id: "chart3",
-        cellRange: {
-          columns: ["eowDate", "jsonBpRespFull"],
-        },
-        chartType: "line",
-        aggFunc: "avg",
-        chartThemeOverrides: {
-          common: {
-            padding: {
-              top: 20,
-              left: 20,
-              right: 20,
-              bottom: 20,
-            },
-            contextMenu: {
-              enabled: false,
-            },
-            axes: {
-              category: {
-                label: {
-                  rotation: 300,
-                  fontSize: 10,
-                  fontFamily: "Metropolis",
-                  color: theme.colors.perygonPink,
-                },
-                gridLine: {
-                  width: 0,
-                },
-                crosshair: {
-                  enabled: false,
-                },
-              },
-              number: {
-                crosshair: {
-                  enabled: false,
-                },
-              },
-            },
-            legend: {
-              enabled: false,
-            },
-            zoom: {
-              enabled: false,
-            },
-            navigator: {
-              enabled: false,
-            },
-            overlays: {
-              noData: {
-                text: "NO DATA",
-              },
-              loading: {
-                text: "Loading...",
-              },
-            },
-          },
-          line: {
-            series: {
-              stroke: theme.colors.perygonPink,
-              interpolation: {
-                type: "smooth",
-              },
-              marker: {
-                enabled: true,
-                itemStyler: (params) => {
-                  const { datum, yKey } = params;
-                  const score = datum[yKey]; // Retrieve the score value
-                  const fillColor = getColor(score); // Determine color based on range
-
-                  return {
-                    fill: fillColor,
-                    size: 10,
-                  };
-                },
-              },
-              tooltip: {
-                renderer: renderer,
-              },
-            },
-          },
-        },
-      },
-      {
-        id: "chart4",
-        cellRange: {
-          columns: ["monthYear", "jsonBpRespFull"],
-        },
-        chartType: "line",
-        aggFunc: "avg",
-        chartThemeOverrides: {
-          common: {
-            padding: {
-              top: 20,
-              left: 20,
-              right: 20,
-              bottom: 20,
-            },
-            contextMenu: {
-              enabled: false,
-            },
-            axes: {
-              category: {
-                label: {
-                  rotation: 300,
-                  fontSize: 10,
-                  fontFamily: "Metropolis",
-                  color: theme.colors.perygonPink,
-                },
-                gridLine: {
-                  width: 0,
-                },
-                crosshair: {
-                  enabled: false,
-                },
-              },
-              number: {
-                crosshair: {
-                  enabled: false,
-                },
-              },
-            },
-            legend: {
-              enabled: false,
-            },
-            zoom: {
-              enabled: false,
-            },
-            navigator: {
-              enabled: false,
-            },
-            overlays: {
-              noData: {
-                text: "NO DATA",
-              },
-              loading: {
-                text: "Loading...",
-              },
-            },
-          },
-          line: {
-            series: {
-              stroke: theme.colors.perygonPink,
-              interpolation: {
-                type: "smooth",
-              },
-              marker: {
-                enabled: true,
-                itemStyler: (params) => {
-                  const { datum, yKey } = params;
-                  const score = datum[yKey]; // Retrieve the score value
-                  const fillColor = getColor(score); // Determine color based on range
-
-                  return {
-                    fill: fillColor,
-                    size: 10,
-                  };
-                },
-              },
-              tooltip: {
-                renderer: renderer,
-              },
-            },
-          },
-        },
-      },
     ];
 
     chartConfigs.forEach((config) => {
@@ -589,19 +408,6 @@ const Dashboard: React.FC = () => {
         });
       }
     });
-  };
-
-  const renderer = (params: AgCartesianSeriesTooltipRendererParams) => {
-    return (
-      '<div class="ag-chart-tooltip-title" style="background-color:' +
-      params.color +
-      '">' +
-      params.datum[params.xKey] +
-      "</div>" +
-      '<div class="ag-chart-tooltip-content">' +
-      params.datum[params.yKey].toFixed(2) +
-      "</div>"
-    );
   };
 
   return (
@@ -669,45 +475,9 @@ const Dashboard: React.FC = () => {
             overflow={"hidden"}
           ></Box>
         </Box>
-        <Box
-          minW={["100%", "100%", "100%"]}
-          flex={1}
-          textAlign="center"
-          borderRadius="lg"
-        >
-          <Flex width="100%" justifyContent="center" mb={4}>
-            <SectionHeader>Historic Weekly Average</SectionHeader>
-          </Flex>
-          <Box
-            id="chart3"
-            height="400px"
-            w="full"
-            // bg={"white"}
-            borderRadius={"2xl"}
-            overflow={"hidden"}
-          ></Box>
-        </Box>
-        <Box
-          minW={["100%", "100%", "100%"]}
-          flex={1}
-          textAlign="center"
-          borderRadius="lg"
-        >
-          <Flex width="100%" justifyContent="center" mb={4}>
-            <SectionHeader>Historic Monthly Average</SectionHeader>
-          </Flex>
-          <Box
-            id="chart4"
-            height="400px"
-            w="full"
-            // bg={"white"}
-            borderRadius={"2xl"}
-            overflow={"hidden"}
-          ></Box>
-        </Box>
       </Flex>
     </VStack>
   );
 };
 
-export default Dashboard;
+export default LeaderboardDashboard;

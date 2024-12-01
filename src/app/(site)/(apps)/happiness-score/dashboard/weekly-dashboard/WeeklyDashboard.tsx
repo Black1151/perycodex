@@ -1,28 +1,22 @@
 "use client";
 
-import React, { useState, useEffect, ReactDOM } from "react";
-import { Box, VStack, Flex, Text, Spinner, useTheme } from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import { Box, VStack, Flex, useTheme } from "@chakra-ui/react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import "ag-grid-charts-enterprise";
 import {
   ColDef,
-  CrossFilterChartType,
   FirstDataRenderedEvent,
   CreateCrossFilterChartParams,
-  CellStyleFunc,
-  ICellRendererParams,
 } from "ag-grid-community";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { addDays, format, parseISO } from "date-fns";
-import {
-  AgCartesianSeriesTooltipRendererParams,
-  AgNodeClickEvent,
-} from "ag-charts-types";
+import { AgNodeClickEvent } from "ag-charts-types";
 import useColor from "@/hooks/useColor";
-import HappinessScoreRenderer from "@/app/(site)/(apps)/happiness-score/dashboard/weekly-dashboard/HappinessScoreRenderer";
+import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/HappinessScoreRenderer";
 
 interface ApiResponse {
   filterOptions: any[]; // Adjust the type based on your API response
