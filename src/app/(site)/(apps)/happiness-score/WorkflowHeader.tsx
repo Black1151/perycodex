@@ -20,9 +20,9 @@ const WorkflowHeader: React.FC<WorkflowHeaderProps> = ({
 
   return (
     <Flex
-      align={"center"}
-      justify={"flex-start"}
-      w={"full"}
+      align="center"
+      justify="flex-start"
+      w="full"
       gap={4}
       lineHeight={0}
       mb={4}
@@ -34,7 +34,7 @@ const WorkflowHeader: React.FC<WorkflowHeaderProps> = ({
         as="h1"
         fontWeight={100}
         color="white"
-        size={["lg", "xl"]}
+        fontSize={{ base: "lg", md: "xl" }}
         fontFamily="Bonfire"
         textAlign="center"
       >
@@ -43,7 +43,7 @@ const WorkflowHeader: React.FC<WorkflowHeaderProps> = ({
 
       {/* AddButton */}
       {ableToStartWorkflow && (
-        <Box ml={"auto"}>
+        <Box ml="auto">
           <AddButton
             label="Create New"
             toolId={toolId}
