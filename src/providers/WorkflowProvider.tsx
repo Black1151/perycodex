@@ -66,45 +66,41 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
   const { fetchClient } = useFetchClient();
   const pathname = usePathname();
 
-  // Helper to get and save to localStorage
-  const localStorageManager = {
-    get: (key: string): string | null => localStorage.getItem(key),
-    set: (key: string, value: string | null) => {
-      if (value) localStorage.setItem(key, value);
-      else localStorage.removeItem(key); // Remove key if value is null
-    },
-  };
+  // Reset tool logo and path when navigating to specific paths
+  useEffect(() => {
+    const shouldReset = pathsToResetToolLogo.some((path) =>
+      pathname.startsWith(path),
+    );
+    if (!shouldReset) {
+      setToolId(null);
+      setWorkflowId(null);
+      setToolLogo(null);
+      setToolPath(null);
+    }
+  }, [pathname]);
 
   // Load initial state from localStorage on mount
   useEffect(() => {
-    setToolId(localStorageManager.get("toolId"));
-    setWorkflowId(localStorageManager.get("workflowId"));
-    setCurrentWorkflowInstanceId(
-      localStorageManager.get("currentWorkflowInstanceId"),
-    );
-    setCurrentBusinessProcessInstanceId(
-      localStorageManager.get("currentBusinessProcessInstanceId"),
-    );
-  }, []);
+    const initializeStateFromLocalStorage = () => {
+      const savedToolId = localStorage.getItem("toolId");
+      const savedWorkflowId = localStorage.getItem("workflowId");
+      const savedWorkflowInstanceId = localStorage.getItem(
+        "currentWorkflowInstanceId",
+      );
+      const savedBusinessProcessInstanceId = localStorage.getItem(
+        "currentBusinessProcessInstanceId",
+      );
 
-  // Save to localStorage when state changes
-  useEffect(() => {
-    localStorageManager.set("toolId", toolId);
-    localStorageManager.set("workflowId", workflowId);
-    localStorageManager.set(
-      "currentWorkflowInstanceId",
-      currentWorkflowInstanceId,
-    );
-    localStorageManager.set(
-      "currentBusinessProcessInstanceId",
-      currentBusinessProcessInstanceId,
-    );
-  }, [
-    toolId,
-    workflowId,
-    currentWorkflowInstanceId,
-    currentBusinessProcessInstanceId,
-  ]);
+      if (savedToolId) setToolId(savedToolId);
+      if (savedWorkflowId) setWorkflowId(savedWorkflowId);
+      if (savedWorkflowInstanceId)
+        setCurrentWorkflowInstanceId(savedWorkflowInstanceId);
+      if (savedBusinessProcessInstanceId)
+        setCurrentBusinessProcessInstanceId(savedBusinessProcessInstanceId);
+    };
+
+    initializeStateFromLocalStorage();
+  }, []);
 
   // Fetch tool configuration when toolId or workflowId changes
   useEffect(() => {
@@ -122,6 +118,7 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
           setToolLogo(res.resource.logoImageUrl || null);
         } else {
           setToolLogo(null);
+          console.error("Invalid response structure or missing logoImageUrl");
         }
       } catch (error) {
         console.error("Error fetching tool config:", error);
@@ -131,18 +128,39 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
     fetchToolConfig();
   }, [toolId, workflowId]);
 
-  // Reset tool logo and path when navigating to specific paths
+  // Save to localStorage when state changes
   useEffect(() => {
-    const shouldReset = pathsToResetToolLogo.some((path) =>
-      pathname.startsWith(path),
-    );
-    if (!shouldReset) {
-      setToolId(null);
-      setWorkflowId(null);
-      setToolLogo(null);
-      setToolPath(null);
+    if (toolId) localStorage.setItem("toolId", toolId);
+    if (!toolId) localStorage.setItem("toolId", "");
+  }, [toolId]);
+
+  useEffect(() => {
+    if (workflowId) localStorage.setItem("workflowId", workflowId);
+    if (!workflowId) localStorage.setItem("workflowId", "");
+  }, [workflowId]);
+
+  useEffect(() => {
+    if (currentWorkflowInstanceId) {
+      localStorage.setItem(
+        "currentWorkflowInstanceId",
+        currentWorkflowInstanceId,
+      );
     }
-  }, [pathname]);
+    if (!currentWorkflowInstanceId) {
+      localStorage.setItem("currentWorkflowInstanceId", "");
+    }
+  }, [currentWorkflowInstanceId]);
+
+  useEffect(() => {
+    if (currentBusinessProcessInstanceId) {
+      localStorage.setItem(
+        "currentBusinessProcessInstanceId",
+        currentBusinessProcessInstanceId,
+      );
+    } else {
+      localStorage.setItem("currentBusinessProcessInstanceId", "");
+    }
+  }, [currentBusinessProcessInstanceId]);
 
   return (
     <WorkflowContext.Provider
