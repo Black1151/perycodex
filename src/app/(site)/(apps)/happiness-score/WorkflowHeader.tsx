@@ -34,7 +34,7 @@ const WorkflowHeader: React.FC<WorkflowHeaderProps> = ({
         as="h1"
         fontWeight={100}
         color="white"
-        fontSize={{ base: "lg", md: "xl" }}
+        fontSize={{ base: "2xl", md: "4xl" }}
         fontFamily="Bonfire"
         textAlign="center"
       >
