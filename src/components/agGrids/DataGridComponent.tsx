@@ -35,6 +35,7 @@ interface DataGridComponentProps<T> {
   createNewUrl?: string;
   createNewUrlButtonText?: string;
   isModalEnabled?: boolean;
+  loading?: boolean;
   openModalComponent?: React.ElementType;
   showTopBar?: boolean;
   defaultColDef?: ColDef;
@@ -55,6 +56,7 @@ LicenseManager.setLicenseKey(
 
 const DataGridComponent = <T,>({
   data,
+  loading,
   initialFields,
   createNewUrl,
   createNewUrlButtonText,
@@ -226,6 +228,7 @@ const DataGridComponent = <T,>({
       <Flex direction={"column"} height={"500px"}>
         <AgGridReact
           ref={gridRef}
+          loading={loading}
           rowData={rowData}
           columnDefs={fields}
           pagination={true}
