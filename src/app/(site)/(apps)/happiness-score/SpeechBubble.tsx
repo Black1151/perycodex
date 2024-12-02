@@ -70,6 +70,7 @@ const SpeechBubble: React.FC<SpeechBubbleProps> = ({
 
   // Resolve the text based on the score
   const getText = (score: number): string => {
+    if (score === 0) return "No scores...";
     if (score >= 9) return "World Class!";
     if (score >= 7) return "Great!";
     if (score >= 5) return "Not Bad";
