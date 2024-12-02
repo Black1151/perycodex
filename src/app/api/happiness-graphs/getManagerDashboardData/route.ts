@@ -142,7 +142,7 @@ export async function GET(request: Request) {
 
   const selectedFilters = {
     siteId: queryParams.siteId?.split(",") || [],
-    jobLevel: queryParams.jobLevel?.split(",") || [],
+    jobLevelId: queryParams.jobLevelId?.split(",") || [],
     deptId: queryParams.deptId?.split(",") || [],
     teamId: queryParams.teamId?.split(",") || [],
     contractTypeId: queryParams.contractTypeId?.split(",") || [],
@@ -161,7 +161,7 @@ export async function GET(request: Request) {
     { key: "deptName", paramName: "deptId" },
     { key: "teamName", paramName: "teamId" },
     { key: "role", paramName: "role" },
-    { key: "jobLevelName", paramName: "jobLevel" },
+    { key: "jobLevelName", paramName: "jobLevelId" },
     { key: "contractTypeName", paramName: "contractTypeId" },
     { key: "remoteWorker", paramName: "remoteWorker" },
     { key: "siteName", paramName: "siteId" },

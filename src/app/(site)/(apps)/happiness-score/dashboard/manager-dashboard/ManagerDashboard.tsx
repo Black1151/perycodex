@@ -41,7 +41,7 @@ export interface Person {
 
 export default function ManagerDashboardPage() {
   const [drawerState, setDrawerState] = useState<"closed" | "fully-open">(
-    "closed",
+    "closed"
   );
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -72,12 +72,15 @@ export default function ManagerDashboardPage() {
       "Dept Name": "deptId",
       "Team Name": "teamId",
       Role: "role",
-      "Job Level Name": "jobLevel",
+      "Job Level Name": "jobLevelId",
       "Contract Type Name": "contractTypeId",
       "Remote Worker": "remoteWorker",
       "Site Name": "siteId",
+      "User Tags": "userTagId",
+      "Site Tags": "siteTagId",
+      "Customer Tags": "customerTagId",
     }),
-    [],
+    []
   );
 
   const constructQueryParams = useCallback(
@@ -86,7 +89,7 @@ export default function ManagerDashboardPage() {
 
       filters.forEach((group) => {
         const selectedOptions = group.options.filter(
-          (option) => option.isSelected,
+          (option) => option.isSelected
         );
         if (selectedOptions.length > 0) {
           const paramName = labelToParamName[group.label];
@@ -105,7 +108,7 @@ export default function ManagerDashboardPage() {
 
       return params.toString();
     },
-    [labelToParamName],
+    [labelToParamName]
   );
 
   const updateFilterOptions = useCallback(
@@ -115,7 +118,7 @@ export default function ManagerDashboardPage() {
         if (newGroup) {
           const updatedOptions = group.options.map((option) => {
             const newOption = newGroup.options.find(
-              (o) => o.value === option.value,
+              (o) => o.value === option.value
             );
             return {
               ...option,
@@ -140,17 +143,17 @@ export default function ManagerDashboardPage() {
 
       setFilterOptions(updatedFilters);
     },
-    [],
+    []
   );
 
   const fetchFilteredData = useCallback(
     async (
       currentFilters: FilterOptionGroup[],
-      timeRange: string = selectedTimeRange,
+      timeRange: string = selectedTimeRange
     ) => {
       const queryParams = constructQueryParams(currentFilters, timeRange);
       const response = await fetch(
-        `/api/happiness-graphs/getManagerDashboardData?${queryParams}`,
+        `/api/happiness-graphs/getManagerDashboardData?${queryParams}`
       );
 
       if (!response.ok) {
@@ -168,7 +171,7 @@ export default function ManagerDashboardPage() {
       setWeekOptions(weekTitles);
       setSelectedWeek(weekTitles[weekTitles.length - 1]);
     },
-    [constructQueryParams, updateFilterOptions, selectedTimeRange],
+    [constructQueryParams, updateFilterOptions, selectedTimeRange]
   );
 
   const clearAllFilters = useCallback(async () => {
@@ -214,7 +217,7 @@ export default function ManagerDashboardPage() {
         setIsUpdating(false);
       }
     },
-    [filterOptions, fetchFilteredData, selectedTimeRange],
+    [filterOptions, fetchFilteredData, selectedTimeRange]
   );
 
   const handleWeekChange = useCallback((week: string) => {
@@ -238,7 +241,7 @@ export default function ManagerDashboardPage() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(payload),
-        },
+        }
       );
 
       if (!response.ok) {
@@ -246,11 +249,10 @@ export default function ManagerDashboardPage() {
       }
 
       const data = await response.json();
-      console.log("data", data);
       setStaffHappinessDetailsModalData(data.resource);
       setIsModalOpen(true);
     },
-    [],
+    []
   );
 
   useEffect(() => {
@@ -258,7 +260,7 @@ export default function ManagerDashboardPage() {
       try {
         const queryParams = constructQueryParams([], selectedTimeRange);
         const response = await fetch(
-          `/api/happiness-graphs/getManagerDashboardData?${queryParams}`,
+          `/api/happiness-graphs/getManagerDashboardData?${queryParams}`
         );
 
         if (!response.ok) {
@@ -267,10 +269,8 @@ export default function ManagerDashboardPage() {
 
         const data = await response.json();
 
-        console.log(data);
-
         const initializeFilterOptions = (
-          filters: FilterOptionGroup[],
+          filters: FilterOptionGroup[]
         ): FilterOptionGroup[] => {
           return filters.map((group) => ({
             ...group,
@@ -305,7 +305,7 @@ export default function ManagerDashboardPage() {
   useEffect(() => {
     if (selectedWeek && weeksData.length > 0) {
       const weekDataIndex = weeksData.findIndex(
-        (wd) => wd.weekKey === selectedWeek,
+        (wd) => wd.weekKey === selectedWeek
       );
       if (weekDataIndex !== -1) {
         const weekData = weeksData[weekDataIndex];
@@ -355,7 +355,7 @@ export default function ManagerDashboardPage() {
       setDrawerState,
       isUpdating,
       clearAllFilters,
-    ],
+    ]
   );
 
   const managerDashboardPageInnerProps = useMemo(
@@ -386,7 +386,7 @@ export default function ManagerDashboardPage() {
       setIsModalOpen,
       staffHappinessDetailsModalData,
       drawerState,
-    ],
+    ]
   );
 
   return (
