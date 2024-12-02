@@ -1,14 +1,23 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Box, VStack, Flex, useTheme } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Flex,
+  IconButton,
+  Text,
+  Tooltip,
+  useDisclosure,
+  useTheme,
+  VStack,
+} from "@chakra-ui/react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import "ag-grid-charts-enterprise";
 import {
   ColDef,
-  FirstDataRenderedEvent,
   CreateCrossFilterChartParams,
+  FirstDataRenderedEvent,
 } from "ag-grid-community";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
@@ -20,60 +29,30 @@ import {
 } from "ag-charts-types";
 import useColor from "@/hooks/useColor";
 import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/HappinessScoreRenderer";
+import { Info } from "@mui/icons-material";
+import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 
 interface ApiResponse {
-  filterOptions: any[]; // Adjust the type based on your API response
-  lineGraphData: any[]; // Adjust the type based on your API response
-  speechBubbleData: Record<string, any>; // Adjust as necessary
-  weeksData: any[]; // Adjust the type based on your API response
   data: RowData[]; // This matches the RowData type you're using
 }
 
 interface RowData {
   role: string;
-  email: string;
-  firstName: string;
-  lastName: string;
   userId: number;
   fullName: string;
-  employStartDate: string;
   userImageUrl: string;
   userIsActive: boolean;
   userUniqueId: string;
   customerId: number;
-  customerName: string;
-  companyNo: string;
-  customerCode: string;
-  customerType: string;
-  customerParentName: string | null;
-  customerParentId: number | null;
-  companySizeId: number;
-  companySizeName: string;
   customerIsActive: boolean;
-  businessTypeName: string;
-  businessTypeId: number;
   siteName: string;
   siteId: number;
   teamName: string;
   teamId: number;
-  jobLevelName: string;
-  jobLevelId: number;
   deptName: string;
   deptId: number;
-  regionName: string;
-  regionId: number;
-  sectorName: string;
-  sectorId: number;
-  contractTypeName: string;
-  contractTypeId: number;
-  multiSite: boolean;
-  noOfSites: number;
-  noOfUsers: number;
-  numberOfEmployees: number;
-  webAddress: string;
-  remoteWorker: boolean;
-  jsonBpRespFull: string;
-  jsonBpRespLite: string;
+  happinessScore: number;
+  comments: string;
   createdAt: string;
   createdBy: number;
   toolConfigId: number;
@@ -81,16 +60,8 @@ interface RowData {
   businessProcessId: number;
   workflowInstanceId: number;
   businessProcessInstanceId: number;
-  userTags?: Tag[];
-  siteTags?: Tag[];
-  customerTags?: Tag[];
   eowDate?: string;
   monthYear?: string;
-}
-
-interface Tag {
-  tagId: number;
-  name: string;
 }
 
 interface SeduloCrossFilterChartParams extends CreateCrossFilterChartParams {
@@ -101,11 +72,15 @@ const Dashboard: React.FC = () => {
   const [rowData, setRowData] = useState<RowData[]>([]);
   const theme = useTheme();
   const { getColor } = useColor();
+  const [isLoading, setIsLoading] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { fetchClient } = useFetchClient();
 
   useEffect(() => {
     const getData = async () => {
+      setIsLoading(true);
+
       try {
         const response = await fetchClient<ApiResponse>(
           "/api/happiness-graphs/getAllHappinessData?toolId=1&wfId=1",
@@ -132,6 +107,8 @@ const Dashboard: React.FC = () => {
       } catch (error) {
         console.error("Error fetching data:", error);
         setRowData([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -139,60 +116,39 @@ const Dashboard: React.FC = () => {
   }, []);
 
   const columnDefs: ColDef[] = [
-    { field: "fullName", headerName: "User", sortable: true },
+    { field: "fullName", headerName: "User" },
     {
       field: "siteName",
       headerName: "Site",
-      sortable: true,
       filter: "agSetColumnFilter",
       chartDataType: "category",
     },
-    { field: "teamName", headerName: "Team", sortable: true },
+    { field: "teamName", headerName: "Team" },
     {
       field: "deptName",
       headerName: "Department",
-      sortable: true,
       filter: "agSetColumnFilter",
       chartDataType: "category",
     },
     {
-      field: "jsonBpRespFull",
+      field: "happinessScore",
       headerName: "Happiness Score",
-      sortable: true,
       chartDataType: "series",
       cellRenderer: HappinessScoreRenderer,
-      valueGetter: (params) => {
-        try {
-          const json = JSON.parse(params.data.jsonBpRespFull);
-          return json.happinessScore;
-        } catch {
-          return null; // Return null if JSON parsing fails
-        }
-      },
     },
     {
-      field: "jsonBpRespFull",
+      field: "comments",
       headerName: "Comments",
-      sortable: true,
-      valueGetter: (params) => {
-        try {
-          const json = JSON.parse(params.data.jsonBpRespFull);
-          return json.comments;
-        } catch {
-          return null; // Return null if JSON parsing fails
-        }
-      },
     },
     {
       field: "eowDate",
       headerName: "Week",
-      sortable: true,
+      sort: "asc",
       chartDataType: "category",
     },
     {
       field: "monthYear",
       headerName: "Month - Year",
-      sortable: true,
       chartDataType: "category",
     },
   ];
@@ -200,6 +156,7 @@ const Dashboard: React.FC = () => {
   const defaultColDef: ColDef = {
     resizable: true,
     filter: false,
+    sortable: false,
     suppressHeaderMenuButton: true,
   };
 
@@ -210,7 +167,7 @@ const Dashboard: React.FC = () => {
       {
         id: "chart1",
         cellRange: {
-          columns: ["deptName", "jsonBpRespFull"],
+          columns: ["deptName", "happinessScore"],
         },
         chartType: "bar",
         aggFunc: "avg",
@@ -312,7 +269,7 @@ const Dashboard: React.FC = () => {
       {
         id: "chart2",
         cellRange: {
-          columns: ["siteName", "jsonBpRespFull"],
+          columns: ["siteName", "happinessScore"],
         },
         chartType: "column",
         aggFunc: "avg",
@@ -414,7 +371,7 @@ const Dashboard: React.FC = () => {
       {
         id: "chart3",
         cellRange: {
-          columns: ["eowDate", "jsonBpRespFull"],
+          columns: ["eowDate", "happinessScore"],
         },
         chartType: "line",
         aggFunc: "avg",
@@ -497,7 +454,7 @@ const Dashboard: React.FC = () => {
       {
         id: "chart4",
         cellRange: {
-          columns: ["monthYear", "jsonBpRespFull"],
+          columns: ["monthYear", "happinessScore"],
         },
         chartType: "line",
         aggFunc: "avg",
@@ -606,6 +563,30 @@ const Dashboard: React.FC = () => {
 
   return (
     <VStack align="stretch" w="full" spacing={8}>
+      <SurveyModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onConfirm={onClose}
+        showButtons={{ close: false, confirm: true }}
+        title={"How to filter"}
+        titleProps={{
+          fontFamily: "Bonfire",
+          fontSize: "2xl",
+          fontWeight: "bold",
+          color: "perygonPink",
+        }}
+        bodyContent={
+          <>
+            <Text mb={4}>To filter the dashboard:</Text>
+            <Text as="ul" ml={4}>
+              <li>
+                Use the filter icon on column headers to find specific entries.
+              </li>
+              <li>Filtering will affect the dashboard charts below</li>
+            </Text>
+          </>
+        }
+      />
       {/* Grid Section */}
       <Box
         className="ag-theme-alpine ag-theme-perygon"
@@ -614,10 +595,22 @@ const Dashboard: React.FC = () => {
         borderRadius="lg"
       >
         <Flex width="100%" justifyContent="center" mb={4}>
-          <SectionHeader>Data Grid</SectionHeader>
+          <SectionHeader>All Submissions</SectionHeader>
+          <Tooltip label="Click to learn how to filter the dashboard" hasArrow>
+            <IconButton
+              aria-label="Filter Help"
+              icon={<Info />}
+              variant="ghost"
+              onClick={onOpen}
+              color={"white"}
+              _hover={{ color: "perygonPink", background: "white" }}
+              ml={2}
+            />
+          </Tooltip>
         </Flex>
         <DataGridComponent
           data={rowData}
+          loading={isLoading}
           initialFields={columnDefs}
           showTopBar={false}
           defaultColDef={defaultColDef}
@@ -646,7 +639,6 @@ const Dashboard: React.FC = () => {
             id="chart1"
             height="400px"
             w="full"
-            // bg={"white"}
             borderRadius={"2xl"}
             overflow={"hidden"}
           ></Box>
@@ -664,7 +656,6 @@ const Dashboard: React.FC = () => {
             id="chart2"
             height="400px"
             w="full"
-            // bg={"white"}
             borderRadius={"2xl"}
             overflow={"hidden"}
           ></Box>
@@ -682,7 +673,6 @@ const Dashboard: React.FC = () => {
             id="chart3"
             height="400px"
             w="full"
-            // bg={"white"}
             borderRadius={"2xl"}
             overflow={"hidden"}
           ></Box>
@@ -700,7 +690,6 @@ const Dashboard: React.FC = () => {
             id="chart4"
             height="400px"
             w="full"
-            // bg={"white"}
             borderRadius={"2xl"}
             overflow={"hidden"}
           ></Box>
