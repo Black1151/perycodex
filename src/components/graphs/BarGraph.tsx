@@ -64,7 +64,9 @@ const Bar: React.FC<BarProps> = ({ value, delay, onClick }) => {
           fontWeight: "bold",
         }}
       >
-        <Text>{value.toFixed(1)}</Text>
+        <Text display={["none", "block"]} fontSize={[8, null, 10]}>
+          {value.toFixed(1)}
+        </Text>
       </motion.div>
       <Box
         width="100%"
