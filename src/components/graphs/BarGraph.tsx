@@ -190,7 +190,7 @@ const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({
             {DataPoints.map((dataPoint, index) => (
               <Tooltip
                 key={index}
-                label={`${dataPoint.title} - score from count of ${dataPoint.count}`}
+                label={`${dataPoint.title} - score of ${dataPoint.value.toFixed(1)} from count of ${dataPoint.count}`}
                 bgColor={perygonTheme.colors.perygonPink}
                 color="white"
                 placement="top"
