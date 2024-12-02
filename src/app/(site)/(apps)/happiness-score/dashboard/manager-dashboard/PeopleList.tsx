@@ -154,10 +154,9 @@ const PeopleList: React.FC<PeopleListProps> = ({
     },
   ];
 
-  const baseDelay = 0.1; // Base delay for the first row
-  const delayIncrement = 0.05; // Incremental delay for each subsequent row
+  const baseDelay = 0.1;
+  const delayIncrement = 0.05;
 
-  // Define variants for animation
   const itemVariants = {
     hidden: { opacity: 0, x: -50 },
     visible: (index: number) => ({
@@ -230,18 +229,19 @@ const PeopleList: React.FC<PeopleListProps> = ({
                   exit="exit"
                   custom={index}
                   style={{
-                    backgroundColor: index % 2 === 0 ? "white" : "gray.100",
                     cursor: "pointer",
                   }}
                   onClick={() => handleUserClick(person.userId)}
                 >
                   {columns.map(({ key, display, width }) => {
+                    const isOddRow = index % 2 !== 0;
                     if (key === "imageUrl") {
                       return (
                         <Td
                           key={key}
                           display={display || "table-cell"}
                           width={width}
+                          bg={isOddRow ? "gray.100" : "white"}
                         >
                           <Avatar
                             src={person.imageUrl}
@@ -256,6 +256,7 @@ const PeopleList: React.FC<PeopleListProps> = ({
                           key={key}
                           display={display || "table-cell"}
                           width={width || "auto"}
+                          bg={isOddRow ? "gray.100" : "white"}
                           textOverflow="ellipsis"
                           whiteSpace="nowrap"
                           overflow="hidden"
