@@ -161,79 +161,84 @@ const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({
   };
 
   return (
-    <VStack
-      key={animationKey}
-      bg="white"
-      width="100%"
-      flex={1}
-      borderRadius="2xl"
-      px={[2, 8]}
-      py={10}
-      position="relative"
-      minH={300}
-      height={"100%"}
-    >
-      <HStack alignItems="center" w="100%" h="100%">
-        <YAxis />
-        <Flex
-          height="100%"
-          position="absolute"
-          pb={10}
-          pt={10}
-          left={[12, "60px"]}
-          right={[12, "60px"]}
-          justifyContent="space-between"
-          alignItems="flex-end"
-          gap="2px"
-        >
-          {DataPoints.map((dataPoint, index) => (
-            <Tooltip
-              key={index}
-              label={`${dataPoint.title} - score from count of ${dataPoint.count}`}
-              bgColor={perygonTheme.colors.perygonPink}
-              color="white"
-              placement="top"
-              isOpen={isTouchDevice ? activeTooltip === index : undefined}
-              borderRadius="md"
-            >
-              <VStack
-                height="100%"
-                alignItems="center"
-                justifyContent="flex-end"
-                flex={1}
-                position="relative"
+    <Flex flex={1} width="100%" pb={50} bg="white" borderRadius="2xl">
+      <VStack
+        key={animationKey}
+        bg="white"
+        width="100%"
+        flex={1}
+        borderRadius="2xl"
+        px={[2, 8]}
+        py={10}
+        position="relative"
+        minH={300}
+        height={"100%"}
+      >
+        <HStack alignItems="center" w="100%" h="100%">
+          <YAxis />
+          <Flex
+            height="100%"
+            position="absolute"
+            pb={10}
+            pt={10}
+            left={[12, "60px"]}
+            right={[12, "60px"]}
+            justifyContent="space-between"
+            alignItems="flex-end"
+            gap="2px"
+          >
+            {DataPoints.map((dataPoint, index) => (
+              <Tooltip
+                key={index}
+                label={`${dataPoint.title} - score from count of ${dataPoint.count}`}
+                bgColor={perygonTheme.colors.perygonPink}
+                color="white"
+                placement="top"
+                isOpen={isTouchDevice ? activeTooltip === index : undefined}
+                borderRadius="md"
               >
-                <Bar
-                  value={dataPoint.value}
-                  delay={index * 0.1}
-                  onClick={() => handleBarClick(index, dataPoint.title)}
-                />
-                <Flex
-                  position="absolute"
-                  bottom="-30px"
-                  height="30px"
-                  width="100%"
+                <VStack
+                  height="100%"
                   alignItems="center"
-                  justifyContent="center"
+                  justifyContent="flex-end"
+                  flex={1}
+                  position="relative"
                 >
-                  <Text
-                    lineHeight={1}
-                    fontSize={10}
-                    textAlign="center"
-                    transform="rotate(-90deg)"
-                    whiteSpace="nowrap"
+                  <Bar
+                    value={dataPoint.value}
+                    delay={index * 0.1}
+                    onClick={() => handleBarClick(index, dataPoint.title)}
+                  />
+                  <Flex
+                    position="absolute"
+                    bottom="-50px"
+                    height="30px"
+                    width="100%"
+                    alignItems="center"
+                    justifyContent="center"
+                    pr="50px"
                   >
-                    {dataPoint.title.length > 5
-                      ? dataPoint.title.slice(0, 5) + "..."
-                      : dataPoint.title}
-                  </Text>
-                </Flex>
-              </VStack>
-            </Tooltip>
-          ))}
-        </Flex>
-      </HStack>
-    </VStack>
+                    <Text
+                      lineHeight={1}
+                      fontSize={12}
+                      textAlign="center"
+                      transform="rotate(-45deg)"
+                      whiteSpace="nowrap"
+                      color="perygonPink"
+                    >
+                      {dataPoint.title.length > 10
+                        ? dataPoint.title.slice(0, 10) + "..."
+                        : "\u00A0".repeat(10 - dataPoint.title.length) +
+                          dataPoint.title}
+                    </Text>
+                  </Flex>
+                </VStack>
+              </Tooltip>
+            ))}
+          </Flex>
+        </HStack>
+      </VStack>
+    </Flex>
   );
 };
 
