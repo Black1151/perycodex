@@ -115,7 +115,7 @@ export const YAxis = () => {
       as={motion.div}
       initial="hidden"
       animate="visible"
-      height={[200, 300]}
+      height={300}
       justifyContent="space-between"
       width="100%"
     >
@@ -179,8 +179,7 @@ const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({
           <Flex
             height="100%"
             position="absolute"
-            pb={10}
-            pt={10}
+            py={10}
             left={[12, "60px"]}
             right={[12, "60px"]}
             justifyContent="space-between"
@@ -190,7 +189,17 @@ const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({
             {DataPoints.map((dataPoint, index) => (
               <Tooltip
                 key={index}
-                label={`${dataPoint.title} - score of ${dataPoint.value.toFixed(1)} from count of ${dataPoint.count}`}
+                label={
+                  <VStack>
+                    <Text textAlign="center">{`${dataPoint.title}`}</Text>
+                    <Text textAlign="center">
+                      {`Score of ${dataPoint.value.toFixed(1)}`}
+                    </Text>
+                    <Text textAlign="center">
+                      {`From count of ${dataPoint.count}`}
+                    </Text>
+                  </VStack>
+                }
                 bgColor={perygonTheme.colors.perygonPink}
                 color="white"
                 placement="top"
