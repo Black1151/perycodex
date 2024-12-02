@@ -40,6 +40,7 @@ interface DataGridComponentProps<T> {
   showTopBar?: boolean;
   defaultColDef?: ColDef;
   onGridReady?: (params: FirstDataRenderedEvent) => void;
+  filterModel?: any;
 }
 
 // Define the type for pagination info
@@ -65,11 +66,13 @@ const DataGridComponent = <T,>({
   showTopBar = true,
   defaultColDef: customDefaultColDef,
   onGridReady,
+  filterModel,
 }: DataGridComponentProps<T>) => {
   const gridRef = useRef<AgGridReact>(null);
   const [rowData, setRowData] = useState<T[]>(data || []);
   const [fields, setFields] = useState<any[]>(initialFields);
   const router = useRouter();
+  const [isGridReady, setIsGridReady] = useState(false);
   const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
   const uniqueQuickFilterId = useId();
 
@@ -113,6 +116,13 @@ const DataGridComponent = <T,>({
     },
     [],
   );
+
+  const handleGridReady = (params: FirstDataRenderedEvent) => {
+    setIsGridReady(true); // Mark the grid as ready
+    if (onGridReady) {
+      onGridReady(params); // Call the provided onGridReady callback
+    }
+  };
 
   // Handle the click for creating new items
   const handleCreateNewClick = () => {
@@ -165,6 +175,18 @@ const DataGridComponent = <T,>({
       setRowData(data);
     }
   }, [data]); // Run this effect whenever the data prop changes
+
+  useEffect(() => {
+    if (isGridReady && gridRef.current?.api && filterModel) {
+      gridRef.current.api.setFilterModel(filterModel); // Apply the filter model when grid is ready
+    }
+  }, [filterModel, isGridReady]);
+
+  const handleFilterChanged = () => {
+    if (gridRef.current?.api) {
+      const currentFilterModel = gridRef.current.api.getFilterModel();
+    }
+  };
 
   return (
     <Box className={`ag-theme-alpine ag-theme-perygon`} w={"full"} py={2}>
@@ -240,7 +262,8 @@ const DataGridComponent = <T,>({
           paginationPageSize={paginationInfo.pageSize}
           noRowsOverlayComponent={NoDataOverlay}
           loadingOverlayComponent={LoadingOverlay}
-          onFirstDataRendered={onGridReady}
+          onFirstDataRendered={handleGridReady}
+          onFilterChanged={handleFilterChanged}
         />
         <CustomGridBottomPagination
           gridRef={gridRef}
