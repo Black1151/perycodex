@@ -189,8 +189,6 @@ export async function GET(request: Request) {
       }
     });
 
-    console.log(endpoint);
-
     return endpoint;
   };
 
@@ -222,8 +220,6 @@ export async function GET(request: Request) {
     delete filtersExcludingCurrentGroup[group.paramName];
 
     const endpoint = buildEndpoint(filtersExcludingCurrentGroup);
-
-    console.log("ENDPOINT", endpoint);
 
     try {
       const response = await apiClient(endpoint, {
@@ -323,8 +319,6 @@ export async function GET(request: Request) {
     }
 
     finalData = await response.json();
-
-    console.log("RESPONSEXXX", finalData);
   } catch (error) {
     console.error("Error fetching final data:", error);
     return NextResponse.json(
