@@ -195,54 +195,58 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
 
                 <VStack spacing={4} align="stretch" width="100%" mt={4}>
                   {filterOptions &&
-                    filterOptions.map((group, groupIndex) => (
-                      <Box
-                        key={group.label}
-                        border="1px solid"
-                        borderColor={theme.colors.perygonPink}
-                        borderRadius="md"
-                        p={2}
-                        boxShadow="lg"
-                      >
+                    filterOptions.map((group, groupIndex) => {
+                      const hasOptions = group.options.length > 0;
+                      if (!hasOptions) return null;
+                      return (
                         <Box
-                          width="100%"
-                          display="flex"
-                          justifyContent="center"
+                          key={group.label}
+                          border="1px solid"
+                          borderColor={theme.colors.perygonPink}
+                          borderRadius="md"
+                          p={2}
+                          boxShadow="lg"
                         >
-                          <Text
-                            fontWeight="bold"
-                            mb={2}
-                            bg={theme.colors.perygonPink}
-                            color="white"
+                          <Box
                             width="100%"
-                            p={2}
-                            borderRadius="md"
+                            display="flex"
+                            justifyContent="center"
                           >
-                            {displayNameMappings[group.label] || group.label}
-                          </Text>
-                        </Box>
-                        {group.options.map((option, optionIndex) => (
-                          <VStack align="start" key={option.value}>
-                            <Checkbox
-                              isChecked={option.isSelected}
-                              isDisabled={
-                                isUpdating ||
-                                (!option.isSelected && option.isDisabled)
-                              }
-                              onChange={(e) =>
-                                handleCheckboxChange(
-                                  groupIndex,
-                                  optionIndex,
-                                  e.target.checked
-                                )
-                              }
+                            <Text
+                              fontWeight="bold"
+                              mb={2}
+                              bg={theme.colors.perygonPink}
+                              color="white"
+                              width="100%"
+                              p={2}
+                              borderRadius="md"
                             >
-                              {option.label}
-                            </Checkbox>
-                          </VStack>
-                        ))}
-                      </Box>
-                    ))}
+                              {displayNameMappings[group.label] || group.label}
+                            </Text>
+                          </Box>
+                          {group.options.map((option, optionIndex) => (
+                            <VStack align="start" key={option.value}>
+                              <Checkbox
+                                isChecked={option.isSelected}
+                                isDisabled={
+                                  isUpdating ||
+                                  (!option.isSelected && option.isDisabled)
+                                }
+                                onChange={(e) =>
+                                  handleCheckboxChange(
+                                    groupIndex,
+                                    optionIndex,
+                                    e.target.checked
+                                  )
+                                }
+                              >
+                                {option.label}
+                              </Checkbox>
+                            </VStack>
+                          ))}
+                        </Box>
+                      );
+                    })}
                 </VStack>
               </Box>
               {isUpdating && (
