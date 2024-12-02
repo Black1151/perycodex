@@ -69,6 +69,7 @@ interface ApiResponseItem {
   userTags?: Tag[];
   siteTags?: Tag[];
   customerTags?: Tag[];
+  jobTitle: string;
 }
 
 interface DataPoint {
@@ -322,6 +323,8 @@ export async function GET(request: Request) {
     }
 
     finalData = await response.json();
+
+    console.log("RESPONSEXXX", finalData);
   } catch (error) {
     console.error("Error fetching final data:", error);
     return NextResponse.json(
@@ -414,7 +417,7 @@ export async function GET(request: Request) {
           fullName: item.fullName,
           firstName: item.firstName,
           lastName: item.lastName,
-          jobTitle: item.jobLevelName,
+          jobTitle: item.jobTitle,
           department: item.deptName,
           site: item.siteName,
           score: score,

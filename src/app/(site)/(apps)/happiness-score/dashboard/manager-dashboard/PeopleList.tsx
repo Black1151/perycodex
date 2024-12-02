@@ -101,7 +101,7 @@ const PeopleList: React.FC<PeopleListProps> = ({
   };
 
   const handleItemsPerPageChange = (
-    event: React.ChangeEvent<HTMLSelectElement>,
+    event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     onItemsPerPageChange(Number(event.target.value));
     onPageChange(1);
@@ -186,7 +186,7 @@ const PeopleList: React.FC<PeopleListProps> = ({
                   position="sticky"
                   top="0"
                   zIndex={1}
-                  width={width || "auto"} // Apply width if specified
+                  width={width || "auto"}
                   display={display || "table-cell"}
                   textTransform="none"
                 >
@@ -221,7 +221,7 @@ const PeopleList: React.FC<PeopleListProps> = ({
                       <Td
                         key={key}
                         display={display || "table-cell"}
-                        width={width} // Apply width to constrain the image column
+                        width={width} 
                       >
                         <Avatar
                           src={person.imageUrl}
@@ -235,7 +235,7 @@ const PeopleList: React.FC<PeopleListProps> = ({
                       <Td
                         key={key}
                         display={display || "table-cell"}
-                        width={width || "auto"} // Apply fixed width to score column
+                        width={width || "auto"} 
                         textOverflow="ellipsis"
                         whiteSpace="nowrap"
                         overflow="hidden"

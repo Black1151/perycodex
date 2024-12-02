@@ -24,12 +24,11 @@ export default async function Home({
     return redirect("/");
   }
 
-  // Fetch filtered dashboards and tool data
   const { filteredDashboards, toolData, activeDashboardName } =
     await getFilteredDashboards(
       toolId,
       workflowId,
-      "/happiness-score/dashboard/manager-dashboard",
+      "/happiness-score/dashboard/manager-dashboard"
     );
 
   return (
