@@ -1,28 +1,34 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Box, VStack, Flex, useTheme } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Flex,
+  IconButton,
+  Text,
+  Tooltip,
+  useDisclosure,
+  useTheme,
+  VStack,
+} from "@chakra-ui/react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import "ag-grid-charts-enterprise";
 import {
   ColDef,
-  FirstDataRenderedEvent,
   CreateCrossFilterChartParams,
+  FirstDataRenderedEvent,
 } from "ag-grid-community";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import { useFetchClient } from "@/hooks/useFetchClient";
-import { addDays, format, parseISO } from "date-fns";
 import { AgNodeClickEvent } from "ag-charts-types";
 import useColor from "@/hooks/useColor";
 import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/HappinessScoreRenderer";
+import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
+import { Info } from "@mui/icons-material";
 
 interface ApiResponse {
-  filterOptions: any[]; // Adjust the type based on your API response
-  lineGraphData: any[]; // Adjust the type based on your API response
-  speechBubbleData: Record<string, any>; // Adjust as necessary
-  weeksData: any[]; // Adjust the type based on your API response
   data: RowData[]; // This matches the RowData type you're using
 }
 
@@ -98,93 +104,72 @@ const WeeklyDashboard: React.FC = () => {
   const [rowData, setRowData] = useState<RowData[]>([]);
   const { getColor } = useColor();
   const theme = useTheme();
+  const [isLoading, setIsLoading] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { fetchClient } = useFetchClient();
 
   useEffect(() => {
     const getData = async () => {
+      setIsLoading(true);
+
       try {
+        // Call fetchClient with the expected ApiResponse type
         const response = await fetchClient<ApiResponse>(
           "/api/happiness-graphs/getCurrentWeekHappinessData?toolId=1&wfId=1",
         );
 
-        if (response && typeof response === "object" && "data" in response) {
-          // Preprocess data to include the EOW date
-          const processedData = response.data.map((item: RowData) => {
-            const createdAtDate = parseISO(item.createdAt);
-            const dayOfWeek = createdAtDate.getDay(); // 0 = Sunday, 1 = Monday, ...
-            const eowDate = addDays(createdAtDate, 7 - dayOfWeek); // Move to next Sunday
-            return {
-              ...item,
-              eowDate: format(eowDate, "yyyy-MM-dd"), // Format as "YYYY-MM-DD"
-              monthYear: format(createdAtDate, "MM-yyyy"), // Format as "MM-YYYY"
-            };
-          });
-
-          setRowData(processedData);
+        if (response && response.data.length > 0) {
+          setRowData(response.data); // Use the typed response data
         } else {
-          console.error("Invalid response:", response);
           setRowData([]);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
         setRowData([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     getData();
-  }, []);
+  }, []); // Empty dependency array ensures the effect runs only on mount
 
   const columnDefs: ColDef[] = [
-    { field: "fullName", headerName: "User", sortable: true },
+    { field: "fullName", headerName: "User", filter: "agSetColumnFilter" },
     {
       field: "siteName",
       headerName: "Site",
-      sortable: true,
       filter: "agSetColumnFilter",
       chartDataType: "category",
     },
     {
       field: "deptName",
       headerName: "Department",
-      sortable: true,
+      sort: "asc",
       filter: "agSetColumnFilter",
       chartDataType: "category",
     },
     {
-      field: "jsonBpRespFull",
+      field: "happinessScore",
       headerName: "Happiness Score",
-      sortable: true,
       chartDataType: "series",
-      valueGetter: (params) => {
-        try {
-          const json = JSON.parse(params.data.jsonBpRespFull);
-          return json.happinessScore;
-        } catch {
-          return null; // Return null if JSON parsing fails
-        }
-      },
+      filter: "agSetColumnFilter",
+      sortable: true,
       cellRenderer: HappinessScoreRenderer,
     },
     {
-      field: "jsonBpRespFull",
+      field: "comments",
       headerName: "Comments",
-      sortable: true,
+      filter: "agSetColumnFilter",
       flex: 3,
-      valueGetter: (params) => {
-        try {
-          const json = JSON.parse(params.data.jsonBpRespFull);
-          return json.comments;
-        } catch {
-          return null; // Return null if JSON parsing fails
-        }
-      },
     },
   ];
 
   const defaultColDef: ColDef = {
     resizable: true,
     filter: false,
+    sortable: false,
     suppressHeaderMenuButton: true,
   };
 
@@ -195,7 +180,7 @@ const WeeklyDashboard: React.FC = () => {
       {
         id: "chart1",
         cellRange: {
-          columns: ["deptName", "jsonBpRespFull"],
+          columns: ["deptName", "happinessScore"],
         },
         chartType: "bar",
         aggFunc: "avg",
@@ -297,7 +282,7 @@ const WeeklyDashboard: React.FC = () => {
       {
         id: "chart2",
         cellRange: {
-          columns: ["siteName", "jsonBpRespFull"],
+          columns: ["siteName", "happinessScore"],
         },
         chartType: "column",
         aggFunc: "avg",
@@ -412,6 +397,30 @@ const WeeklyDashboard: React.FC = () => {
 
   return (
     <VStack align="stretch" w="full" spacing={8}>
+      <SurveyModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onConfirm={onClose}
+        showButtons={{ close: false, confirm: true }}
+        title={"How to filter"}
+        titleProps={{
+          fontFamily: "Bonfire",
+          fontSize: "2xl",
+          fontWeight: "bold",
+          color: "perygonPink",
+        }}
+        bodyContent={
+          <>
+            <Text mb={4}>To filter the dashboard:</Text>
+            <Text as="ul" ml={4}>
+              <li>
+                Use the filter icon on column headers to find specific entries.
+              </li>
+              <li>Filtering will affect the dashboard charts below</li>
+            </Text>
+          </>
+        }
+      />
       {/* Grid Section */}
       <Box
         className="ag-theme-alpine ag-theme-perygon"
@@ -420,10 +429,22 @@ const WeeklyDashboard: React.FC = () => {
         borderRadius="lg"
       >
         <Flex width="100%" justifyContent="center" mb={4}>
-          <SectionHeader>Data Grid</SectionHeader>
+          <SectionHeader>Submissions</SectionHeader>
+          <Tooltip label="Click to learn how to filter the dashboard" hasArrow>
+            <IconButton
+              aria-label="Filter Help"
+              icon={<Info />}
+              variant="ghost"
+              onClick={onOpen}
+              color={"white"}
+              _hover={{ color: "perygonPink", background: "white" }}
+              ml={2}
+            />
+          </Tooltip>
         </Flex>
         <DataGridComponent
           data={rowData}
+          loading={isLoading}
           initialFields={columnDefs}
           showTopBar={false}
           defaultColDef={defaultColDef}

@@ -48,9 +48,8 @@ export default async function ActivityPage() {
 
   // URLs for different activity types
   let myActivityUrl = `/getAllView?view=vwProgressList&wfInstStartedBy=${user.userId}`; // Everyone
-  let ourActivityUrl = `/getAllView?view=vwProgressList&wfInstCustId=${user.customerId}`; // CS CL CA
   let myTeamsActivityUrl = `/getAllView?view=vwProgressList&wfStarterTeamManagerId=${user.userId}`; // User who is manager
-  let ourTeamActivityUrl = `/getAllView?view=vwProgressList&wfStarterTeamId=${user.teamId}`; // CS CL CA
+  let ourActivityUrl = `/getAllView?view=vwProgressList&wfInstCustId=${user.customerId}`; // CS CL CA
 
   let resArray: string[] = [];
 
@@ -60,19 +59,16 @@ export default async function ActivityPage() {
   ];
   resArray.push("myActivityRes");
 
-  if (["CS", "CL", "CA"].includes(userRole)) {
-    // Only fetch Our Activity and Team Activity if the role matches
-    apiCalls.push(
-      apiClient(ourActivityUrl, { cache: "no-store" }),
-      apiClient(ourTeamActivityUrl, { cache: "no-store" }),
-    );
-    resArray.push("ourActivityRes", "ourTeamActivityRes");
-  }
-
   if (isManager) {
     // Only fetch My Team Activity if the user is a manager
     apiCalls.push(apiClient(myTeamsActivityUrl, { cache: "no-store" }));
     resArray.push("myTeamsActivityRes");
+  }
+
+  if (["CS", "CL", "CA"].includes(userRole)) {
+    // Only fetch Our Activity and Team Activity if the role matches
+    apiCalls.push(apiClient(ourActivityUrl, { cache: "no-store" }));
+    resArray.push("ourActivityRes");
   }
 
   // Execute the relevant API calls in parallel
@@ -94,9 +90,8 @@ export default async function ActivityPage() {
 
   // Map responses to their respective data arrays
   const myActivityData = responses["myActivityRes"] || [];
-  const ourActivityData = responses["ourActivityRes"] || [];
-  const ourTeamActivityData = responses["ourTeamActivityRes"] || [];
   const myTeamsActivityData = responses["myTeamsActivityRes"] || [];
+  const ourActivityData = responses["ourActivityRes"] || [];
 
   // Create data sources for TabbedGrids
   const dataSources = [
@@ -107,26 +102,19 @@ export default async function ActivityPage() {
     },
   ];
 
-  // Conditionally add data sources based on user role
-  if (["CS", "CL", "CA"].includes(userRole)) {
-    dataSources.push(
-      {
-        data: ourActivityData,
-        title: "Our Activity",
-        fields: activityFields,
-      },
-      {
-        data: ourTeamActivityData,
-        title: "Team Activity",
-        fields: activityFields,
-      },
-    );
-  }
-
   if (isManager) {
     dataSources.push({
       data: myTeamsActivityData,
       title: "My Teams Activity",
+      fields: activityFields,
+    });
+  }
+
+  // Conditionally add data sources based on user role
+  if (["CS", "CL", "CA"].includes(userRole)) {
+    dataSources.push({
+      data: ourActivityData,
+      title: "Our Activity",
       fields: activityFields,
     });
   }

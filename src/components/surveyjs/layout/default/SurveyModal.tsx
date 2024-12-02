@@ -7,6 +7,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  ModalHeaderProps,
   ModalOverlay,
 } from "@chakra-ui/react";
 import DoneIcon from "@mui/icons-material/Done";
@@ -21,7 +22,8 @@ interface ModalProps {
     confirm: boolean;
   };
   title?: string;
-  bodyContent?: string;
+  titleProps?: ModalHeaderProps;
+  bodyContent?: string | React.ReactNode;
   confirmLabel?: string;
   cancelLabel?: string;
 }
@@ -35,6 +37,7 @@ const SurveyModal: React.FC<ModalProps> = ({
     confirm: true,
   },
   title = "Confirm Action",
+  titleProps = {},
   bodyContent = "Are you sure you want to perform this action?",
   confirmLabel = "Confirm",
   cancelLabel = "Cancel",
@@ -42,10 +45,9 @@ const SurveyModal: React.FC<ModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       {" "}
-      {/* 'isCentered' ensures the modal is centered */}
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>
+        <ModalHeader {...titleProps}>
           <Flex justifyContent={"center"} alignItems={"center"} width={"100%"}>
             {title}
           </Flex>
