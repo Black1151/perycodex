@@ -224,10 +224,7 @@ export default function ManagerDashboardPageInner({
             size="5xl"
           >
             <ModalOverlay />
-            <ModalContent
-              bgGradient={theme.gradients.perygonBackground}
-              // maxHeight="100vh"
-            >
+            <ModalContent bgGradient={theme.gradients.perygonBackground}>
               <ModalHeader color="white">{barModalTitle}</ModalHeader>
               <ModalCloseButton color="white" />
               <ModalBody pb={10}>
