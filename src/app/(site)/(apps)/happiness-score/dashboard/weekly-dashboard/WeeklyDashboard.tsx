@@ -5,6 +5,12 @@ import {
   Box,
   Flex,
   IconButton,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Text,
   Tooltip,
   useDisclosure,
@@ -27,6 +33,7 @@ import useColor from "@/hooks/useColor";
 import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/HappinessScoreRenderer";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import { Info } from "@mui/icons-material";
+import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
 
 interface ApiResponse {
   data: RowData[]; // This matches the RowData type you're using
@@ -107,6 +114,11 @@ const WeeklyDashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  // Details Modal for Clicking
+  const [isBarModalOpen, setIsBarModalOpen] = useState(false);
+  const [barModalTitle, setBarModalTitle] = useState("");
+  const [filterModel, setFilterModel] = useState({});
+
   const { fetchClient } = useFetchClient();
 
   useEffect(() => {
@@ -135,40 +147,87 @@ const WeeklyDashboard: React.FC = () => {
     getData();
   }, []); // Empty dependency array ensures the effect runs only on mount
 
-  const columnDefs: ColDef[] = [
-    { field: "fullName", headerName: "User", filter: "agSetColumnFilter" },
+  const modalColDef: ColDef[] = [
     {
-      field: "siteName",
-      headerName: "Site",
-      filter: "agSetColumnFilter",
-      chartDataType: "category",
+      field: "fullName",
+      headerName: "Name",
+      cellRenderer: UserRenderer,
+      cellRendererParams: {
+        uniqueIdField: "userUniqueId",
+        nameField: "fullName",
+        imageUrlField: "userImageUrl",
+      },
     },
     {
       field: "deptName",
       headerName: "Department",
-      sort: "asc",
-      filter: "agSetColumnFilter",
+      filter: "agMultiColumnFilter",
+      chartDataType: "category",
+    },
+    {
+      field: "siteName",
+      headerName: "Site",
+      filter: "agMultiColumnFilter",
       chartDataType: "category",
     },
     {
       field: "happinessScore",
       headerName: "Happiness Score",
       chartDataType: "series",
-      filter: "agSetColumnFilter",
-      sortable: true,
       cellRenderer: HappinessScoreRenderer,
     },
     {
       field: "comments",
       headerName: "Comments",
-      filter: "agSetColumnFilter",
+    },
+  ];
+
+  const modalDefaultColDef: ColDef = {
+    resizable: true,
+    sortable: true,
+    suppressHeaderMenuButton: true,
+  };
+
+  const columnDefs: ColDef[] = [
+    {
+      field: "fullName",
+      headerName: "Name",
+      cellRenderer: UserRenderer,
+      cellRendererParams: {
+        uniqueIdField: "userUniqueId",
+        nameField: "fullName",
+        imageUrlField: "userImageUrl",
+      },
+    },
+    {
+      field: "siteName",
+      headerName: "Site",
+      filter: "agMultiColumnFilter",
+      chartDataType: "category",
+    },
+    { field: "teamName", headerName: "Team" },
+    {
+      field: "deptName",
+      headerName: "Department",
+      filter: "agMultiColumnFilter",
+      chartDataType: "category",
+    },
+    {
+      field: "happinessScore",
+      headerName: "Happiness Score",
+      chartDataType: "series",
+      cellRenderer: HappinessScoreRenderer,
+    },
+    {
+      field: "comments",
+      headerName: "Comments",
       flex: 3,
     },
   ];
 
   const defaultColDef: ColDef = {
     resizable: true,
-    filter: false,
+    filter: true,
     sortable: false,
     suppressHeaderMenuButton: true,
   };
@@ -255,23 +314,30 @@ const WeeklyDashboard: React.FC = () => {
               },
               listeners: {
                 nodeClick: (params: AgNodeClickEvent<any, any>) => {
-                  const { datum, xKey, yKey } = params;
-                  console.log("Node clicked:", params);
+                  const { xKey, datum } = params;
 
-                  if (xKey && yKey && datum) {
-                    const xValue = datum[xKey];
-                    const yValue = datum[yKey];
+                  if (datum && xKey) {
+                    // Ensure `datum[xKey]` is processed correctly
+                    const value =
+                      typeof datum[xKey] === "object"
+                        ? datum[xKey]?.value
+                        : datum[xKey];
 
-                    console.log("X Value:", xValue);
-                    console.log("Y Value:", yValue);
-
-                    alert(`Clicked on ${xValue} with value ${yValue}`);
-                  } else {
-                    console.error("Invalid xKey, yKey, or datum:", {
-                      xKey,
-                      yKey,
-                      datum,
-                    });
+                    const newFilterModel = {
+                      [xKey]: {
+                        filterType: "multi",
+                        filterModels: [
+                          null,
+                          {
+                            values: value ? [value] : [], // Extract the value or use an empty array
+                            filterType: "set",
+                          },
+                        ],
+                      },
+                    };
+                    setBarModalTitle(`Department: ${value}`);
+                    setFilterModel(newFilterModel);
+                    setIsBarModalOpen(true);
                   }
                 },
               },
@@ -357,23 +423,30 @@ const WeeklyDashboard: React.FC = () => {
               },
               listeners: {
                 nodeClick: (params: AgNodeClickEvent<any, any>) => {
-                  const { datum, xKey, yKey } = params;
-                  console.log("Node clicked:", params);
+                  const { xKey, datum } = params;
 
-                  if (xKey && yKey && datum) {
-                    const xValue = datum[xKey];
-                    const yValue = datum[yKey];
+                  if (datum && xKey) {
+                    // Ensure `datum[xKey]` is processed correctly
+                    const value =
+                      typeof datum[xKey] === "object"
+                        ? datum[xKey]?.value
+                        : datum[xKey];
 
-                    console.log("X Value:", xValue);
-                    console.log("Y Value:", yValue);
-
-                    alert(`Clicked on ${xValue} with value ${yValue}`);
-                  } else {
-                    console.error("Invalid xKey, yKey, or datum:", {
-                      xKey,
-                      yKey,
-                      datum,
-                    });
+                    const newFilterModel = {
+                      [xKey]: {
+                        filterType: "multi",
+                        filterModels: [
+                          null,
+                          {
+                            values: value ? [value] : [], // Extract the value or use an empty array
+                            filterType: "set",
+                          },
+                        ],
+                      },
+                    };
+                    setBarModalTitle(`Site: ${value}`);
+                    setFilterModel(newFilterModel);
+                    setIsBarModalOpen(true);
                   }
                 },
               },
@@ -421,6 +494,29 @@ const WeeklyDashboard: React.FC = () => {
           </>
         }
       />
+
+      <Modal
+        isOpen={isBarModalOpen}
+        onClose={() => setIsBarModalOpen(false)}
+        size="5xl"
+      >
+        <ModalOverlay />
+        <ModalContent bgGradient={theme.gradients.perygonBackground}>
+          <ModalHeader color="white">{barModalTitle}</ModalHeader>
+          <ModalCloseButton color="white" />
+          <ModalBody pb={10}>
+            <VStack minHeight={520}>
+              <DataGridComponent
+                data={rowData}
+                initialFields={modalColDef}
+                showTopBar={false}
+                defaultColDef={modalDefaultColDef}
+                filterModel={filterModel}
+              />
+            </VStack>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
       {/* Grid Section */}
       <Box
         className="ag-theme-alpine ag-theme-perygon"
@@ -446,7 +542,7 @@ const WeeklyDashboard: React.FC = () => {
           data={rowData}
           loading={isLoading}
           initialFields={columnDefs}
-          showTopBar={false}
+          showTopBar={true}
           defaultColDef={defaultColDef}
           onGridReady={handleGridReady}
         />
