@@ -210,7 +210,7 @@ export default function ManagerDashboardPageInner({
           <Spinner size="xl" color="perygonPink" />
         </Flex>
       ) : (
-        <Box>
+        <Box mb={[10, 0]}>
           {staffHappinessDetailsModalData && (
             <StaffHappinessDetailModal
               isOpen={isModalOpen}
@@ -224,7 +224,10 @@ export default function ManagerDashboardPageInner({
             size="5xl"
           >
             <ModalOverlay />
-            <ModalContent bgGradient={theme.gradients.perygonBackground}>
+            <ModalContent
+              bgGradient={theme.gradients.perygonBackground}
+              // maxHeight="100vh"
+            >
               <ModalHeader color="white">{barModalTitle}</ModalHeader>
               <ModalCloseButton color="white" />
               <ModalBody pb={10}>
