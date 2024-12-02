@@ -26,12 +26,14 @@ const Counter: React.FC<CounterProps> = ({ value, ...rest }) => {
     <Box
       position="relative"
       display="flex"
+      flexDirection="row"
       alignItems="center"
       justifyContent="center"
       fontSize="2xl"
       lineHeight="1"
       overflow="visible"
       height="2rem"
+      whiteSpace="nowrap"
       {...rest}
     >
       <AnimatePresence initial={false}>

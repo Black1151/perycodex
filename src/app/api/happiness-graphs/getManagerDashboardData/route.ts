@@ -287,7 +287,6 @@ export async function GET(request: Request) {
         userTags: "User Tags",
         siteTags: "Site Tags",
         customerTags: "Customer Tags",
-        // Add more custom labels if needed
       };
 
       return {
@@ -296,14 +295,12 @@ export async function GET(request: Request) {
       };
     } catch (error) {
       console.error("Error fetching data for group:", group.key, error);
-      return null; // Handle the error as needed
+      return null;
     }
   });
 
-  // Wait for all filter group promises to resolve
   const filterGroupResults = await Promise.all(filterGroupPromises);
 
-  // Filter out any null results
   const availableOptions = filterGroupResults.filter(
     (result) => result !== null
   ) as FilterOptionGroup[];
