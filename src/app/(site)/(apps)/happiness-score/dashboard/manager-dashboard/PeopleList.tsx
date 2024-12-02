@@ -131,7 +131,8 @@ const PeopleList: React.FC<PeopleListProps> = ({
       key: "jobTitle",
       label: "Job Title",
       sortable: true,
-      display: ["none", null, null, null, "table-cell"],
+      // display: ["none", null, null, null, "table-cell"],
+      display: "none",
     },
     {
       key: "department",
@@ -221,7 +222,7 @@ const PeopleList: React.FC<PeopleListProps> = ({
                       <Td
                         key={key}
                         display={display || "table-cell"}
-                        width={width} 
+                        width={width}
                       >
                         <Avatar
                           src={person.imageUrl}
@@ -235,7 +236,7 @@ const PeopleList: React.FC<PeopleListProps> = ({
                       <Td
                         key={key}
                         display={display || "table-cell"}
-                        width={width || "auto"} 
+                        width={width || "auto"}
                         textOverflow="ellipsis"
                         whiteSpace="nowrap"
                         overflow="hidden"
