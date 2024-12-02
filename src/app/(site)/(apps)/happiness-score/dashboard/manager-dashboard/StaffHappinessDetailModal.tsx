@@ -5,7 +5,7 @@ import {
   Box,
   Flex,
   HStack,
-  Image,
+  Avatar,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -22,7 +22,7 @@ interface StaffHappinessDetailModalProps {
   averagehappiness: string;
   firstname: string;
   historicrecords: string;
-  imageurl: string;
+  imageurl: string | null; // Allow null for missing images
   lastname: string;
   isOpen: boolean;
   onClose: () => void;
@@ -83,12 +83,15 @@ const StaffHappinessDetailModal: React.FC<StaffHappinessDetailModalProps> = ({
                 <Text fontSize={["xl", "3xl"]} fontWeight="bold" color="white">
                   {firstname} {lastname}
                 </Text>
-                <Image
-                  src={imageurl}
-                  alt={`${firstname} ${lastname}`}
-                  boxSize="150px"
-                  borderRadius="full"
-                />
+                {imageurl ? (
+                  <Avatar
+                    src={imageurl}
+                    name={`${firstname} ${lastname}`}
+                    size="2xl"
+                  />
+                ) : (
+                  <Avatar name={`${firstname} ${lastname}`} size="2xl" />
+                )}
               </HStack>
             </VStack>
             <VStack w="100%">
