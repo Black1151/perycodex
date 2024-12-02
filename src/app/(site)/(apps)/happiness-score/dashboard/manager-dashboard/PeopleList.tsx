@@ -20,6 +20,7 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface Person {
   userId: number;
@@ -131,7 +132,6 @@ const PeopleList: React.FC<PeopleListProps> = ({
       key: "jobTitle",
       label: "Job Title",
       sortable: true,
-      // display: ["none", null, null, null, "table-cell"],
       display: "none",
     },
     {
@@ -154,6 +154,23 @@ const PeopleList: React.FC<PeopleListProps> = ({
     },
   ];
 
+  const baseDelay = 0.1; // Base delay for the first row
+  const delayIncrement = 0.05; // Incremental delay for each subsequent row
+
+  // Define variants for animation
+  const itemVariants = {
+    hidden: { opacity: 0, x: -50 },
+    visible: (index: number) => ({
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.3,
+        delay: baseDelay + index * delayIncrement,
+      },
+    }),
+    exit: { opacity: 0, x: -50, transition: { duration: 0.3 } },
+  };
+
   return (
     <VStack
       p={4}
@@ -162,7 +179,6 @@ const PeopleList: React.FC<PeopleListProps> = ({
       overflow="hidden"
       bg="white"
       maxW="100%"
-      minH="100%"
       flex={1}
       justifyContent="space-between"
     >
@@ -204,50 +220,54 @@ const PeopleList: React.FC<PeopleListProps> = ({
             </Tr>
           </Thead>
           <Tbody>
-            {currentItems.map((person, index) => (
-              <Tr
-                key={`${person.userId}-${index}`}
-                bg={index % 2 === 0 ? "white" : "gray.100"}
-                _hover={{
-                  bg: "perygonPink",
-                  color: "white",
-                  cursor: "pointer",
-                }}
-                transition="background-color 0.15s ease, color 0.15s ease"
-                onClick={() => handleUserClick(person.userId)}
-              >
-                {columns.map(({ key, display, width }) => {
-                  if (key === "imageUrl") {
-                    return (
-                      <Td
-                        key={key}
-                        display={display || "table-cell"}
-                        width={width}
-                      >
-                        <Avatar
-                          src={person.imageUrl}
-                          name={person.fullName}
-                          size="sm"
-                        />
-                      </Td>
-                    );
-                  } else {
-                    return (
-                      <Td
-                        key={key}
-                        display={display || "table-cell"}
-                        width={width || "auto"}
-                        textOverflow="ellipsis"
-                        whiteSpace="nowrap"
-                        overflow="hidden"
-                      >
-                        {person[key as keyof Person]}
-                      </Td>
-                    );
-                  }
-                })}
-              </Tr>
-            ))}
+            <AnimatePresence>
+              {currentItems.map((person, index) => (
+                <motion.tr
+                  key={`${person.userId}-${person.fullName}-${index}`}
+                  variants={itemVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  custom={index}
+                  style={{
+                    backgroundColor: index % 2 === 0 ? "white" : "gray.100",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleUserClick(person.userId)}
+                >
+                  {columns.map(({ key, display, width }) => {
+                    if (key === "imageUrl") {
+                      return (
+                        <Td
+                          key={key}
+                          display={display || "table-cell"}
+                          width={width}
+                        >
+                          <Avatar
+                            src={person.imageUrl}
+                            name={person.fullName}
+                            size="sm"
+                          />
+                        </Td>
+                      );
+                    } else {
+                      return (
+                        <Td
+                          key={key}
+                          display={display || "table-cell"}
+                          width={width || "auto"}
+                          textOverflow="ellipsis"
+                          whiteSpace="nowrap"
+                          overflow="hidden"
+                        >
+                          {person[key as keyof Person]}
+                        </Td>
+                      );
+                    }
+                  })}
+                </motion.tr>
+              ))}
+            </AnimatePresence>
           </Tbody>
         </Table>
       </TableContainer>
