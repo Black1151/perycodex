@@ -184,6 +184,7 @@ const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({
           right={[12, "60px"]}
           justifyContent="space-between"
           alignItems="flex-end"
+          gap="2px"
         >
           {DataPoints.map((dataPoint, index) => (
             <Tooltip
