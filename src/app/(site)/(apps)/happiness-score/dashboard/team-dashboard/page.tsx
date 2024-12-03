@@ -27,12 +27,17 @@ export default async function Home({
   }
 
   // Fetch filtered dashboards and tool data
-  const { filteredDashboards, toolData, activeDashboardName } =
+  const { filteredDashboards, toolData, activeDashboardName, redirectPath } =
     await getFilteredDashboards(
       toolId,
       workflowId,
-      "/happiness-score/dashboard/team-dashboard"
+      "/happiness-score/dashboard/team-dashboard",
     );
+
+  // Redirect to the first dashboard if the user doesn't have access to the current one
+  if (redirectPath) {
+    return redirect(redirectPath);
+  }
 
   return (
     <WorkflowEngine toolId={toolId} workflowId={workflowId}>
