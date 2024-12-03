@@ -6,6 +6,7 @@ import { ContentCopy, Visibility } from "@mui/icons-material"; // MUI icons
 import { useRouter } from "next/navigation";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import Link from "next/link";
+import { useUser } from "@/providers/UserProvider";
 
 interface ActionButtonRendererProps {
   node: { data: { [key: string]: any; isActive: boolean } }; // Support dynamic keys for node data
@@ -13,6 +14,7 @@ interface ActionButtonRendererProps {
   updateUrl?: string;
   DuplicateComponent?: React.ElementType;
   idField: string;
+  rolesCanEdit?: string[];
 }
 
 const ActionButtonRenderer: React.FC<ActionButtonRendererProps> = ({
@@ -21,8 +23,10 @@ const ActionButtonRenderer: React.FC<ActionButtonRendererProps> = ({
   updateUrl,
   DuplicateComponent,
   idField,
+  rolesCanEdit = ["CU", "CL", "CS", "CA", "PA", "EU"],
 }) => {
   const router = useRouter();
+  const { user } = useUser();
   const [isActive, setIsActive] = useState(node?.data?.isActive);
   const { fetchClient } = useFetchClient();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -38,6 +42,9 @@ const ActionButtonRenderer: React.FC<ActionButtonRendererProps> = ({
   const uniqueId = node?.data?.[idField];
 
   const link = uniqueId ? `${redirectUrl}/${uniqueId}` : redirectUrl;
+
+  // Only allow role-based actions if user.role is defined and in the allowed roles
+  const canEdit = user?.role && rolesCanEdit.includes(user.role);
 
   // Handle Toggle Active/Inactive Status
   const handleToggle = async () => {
@@ -73,7 +80,7 @@ const ActionButtonRenderer: React.FC<ActionButtonRendererProps> = ({
       gap={2}
       height="100%"
     >
-      {updateUrl && (
+      {updateUrl && canEdit && (
         <Switch
           isChecked={isActive}
           onChange={handleToggle}

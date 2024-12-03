@@ -68,6 +68,7 @@ export const userFields: ColDef[] | any = [
       redirectUrl: "/users",
       updateUrl: "/api/user/",
       idField: "userUniqueId",
+      rolesCanEdit: ["CA", "PA"],
     },
   },
 ];

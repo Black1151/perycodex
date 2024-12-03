@@ -74,6 +74,7 @@ export const siteFields: ColDef[] | any = [
       redirectUrl: "/sites",
       updateUrl: "/api/site/",
       idField: "siteUniqueId",
+      rolesCanEdit: ["CA", "PA"],
     },
   },
 ];

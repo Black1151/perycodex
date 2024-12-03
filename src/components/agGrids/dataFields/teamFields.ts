@@ -71,6 +71,7 @@ export const teamFields: ColDef[] | any = [
       redirectUrl: "/teams",
       updateUrl: "/api/userTeam/",
       idField: "userTeamUniqueId",
+      rolesCanEdit: ["CA", "PA"],
     },
   },
 ];
