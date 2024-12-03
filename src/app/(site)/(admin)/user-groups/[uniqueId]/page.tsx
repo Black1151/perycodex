@@ -107,9 +107,7 @@ export default async function UserGroupsDetailPage({
     await Promise.all([
       apiClient("/usersGroupManagementList", { method: "POST" }),
       apiClient(`/userGroupMember/allBy?userGroupId=${userGroupId}`),
-      apiClient(
-        `/userTeam/allBy?parentTeamId=not-null&customerId=${user.customerId}`,
-      ),
+      apiClient(`/userTeam/allBy?customerId=${user.customerId}`),
       apiClient(`/userGroupMember/allBy?userGroupId=${userGroupId}`),
     ]);
 
@@ -118,12 +116,12 @@ export default async function UserGroupsDetailPage({
   }
 
   const userPopulationData = (await userPopulationRes.json()).resource;
-
   const activeUserPopulationData = userPopulationData.filter(
     (user: UserInGroup) => user.isActive,
   );
 
   const userSampleData = (await userSampleRes.json()).resource;
+  console.log(userSampleData);
   const teamPopulationData = (await teamPopulationRes.json()).resource;
 
   const activeTeamPopulationData = teamPopulationData.filter(

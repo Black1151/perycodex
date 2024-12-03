@@ -109,7 +109,7 @@ const UserGroupsTabs: React.FC<UserGroupsTabsProps> = ({
             fontSize={["sm", "sm", "md"]}
             _selected={{ color: "white", bg: "#FFFFFF44" }}
           >
-            Team Group Members
+            Department / Team Group Members
           </Tab>
         </TabList>
         <TabPanels>
@@ -142,15 +142,15 @@ const UserGroupsTabs: React.FC<UserGroupsTabsProps> = ({
           <TabPanel p={0}>
             <DraggableGridsComponent
               populationData={teamPopulationData}
-              populationTitle="Teams"
+              populationTitle="Dept / Teams"
               sampleData={teamSampleData}
-              sampleTitle="Teams in group"
+              sampleTitle="Dept / Teams in group"
               endpoint={`/api/userGroup/many/${userGroupId}`}
               fieldDefs={teamFieldDefs}
               dynamicIdField="id"
               mappingField="teamId"
               payloadKey="teams"
-              submitTitle={"Save Teams"}
+              submitTitle={"Save Dept / Teams"}
               onUndoStackChange={onUndoStackChangeSample}
               resetRef={sampleResetRef} // Pass the resetRef
             />
