@@ -698,7 +698,6 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
               <CustomGridBottomPagination
                 gridRef={populationGridRef}
                 paginationInfo={populationPaginationInfo}
-                setPaginationInfo={setPopulationPaginationInfo}
                 onPageChange={() =>
                   updatePaginationInfo(
                     populationGridRef,
@@ -788,7 +787,6 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
               />
               <CustomGridBottomPagination
                 gridRef={sampleGridRef}
-                setPaginationInfo={setSamplePaginationInfo}
                 paginationInfo={samplePaginationInfo}
                 onPageChange={() =>
                   updatePaginationInfo(sampleGridRef, setSamplePaginationInfo)
