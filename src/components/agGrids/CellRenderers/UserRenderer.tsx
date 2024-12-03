@@ -44,6 +44,7 @@ const UserRenderer: React.FC<UserRendererProps> = ({
       w="full"
       h="full"
       maxW="full"
+      maxH={"42px"}
       gap={4}
     >
       {imageUrl ? (
