@@ -23,6 +23,7 @@ export async function getFilteredDashboards(
   filteredDashboards: Dashboard[];
   toolData: any;
   activeDashboardName: string | null;
+  redirectPath?: string;
 }> {
   const user = await getUser();
   const userRole = user.role;
@@ -78,13 +79,18 @@ export async function getFilteredDashboards(
     }
   });
 
-  // Identify the active dashboard based on the pathname
-  const activeDashboard =
-    filteredDashboards.find(
-      (dashboard) => dashboard.dashboardUrl === pathname,
-    ) || null;
+  // Find the active dashboard based on the pathname
+  const activeDashboard = filteredDashboards.find(
+    (dashboard) => dashboard.dashboardUrl === pathname,
+  );
 
-  // Extract the dashboard name if the active dashboard exists
+  let redirectPath: string | undefined = undefined;
+
+  // If no active dashboard found, redirect to the first filtered dashboard
+  if (!activeDashboard && filteredDashboards.length > 0) {
+    redirectPath = filteredDashboards[0].dashboardUrl;
+  }
+
   const activeDashboardName = activeDashboard
     ? activeDashboard.dashboardName
     : null;
@@ -93,5 +99,6 @@ export async function getFilteredDashboards(
     filteredDashboards,
     toolData: toolConfigData.resource,
     activeDashboardName,
+    redirectPath,
   };
 }
