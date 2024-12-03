@@ -153,7 +153,7 @@ export function LoginForm() {
           </Button>
         </VStack>
         <Text pt="10px" fontSize="12px" color="gray">
-          Copyright &copy; 2024 Sedulo Limited (v0.2)
+          Copyright &copy; 2024 Sedulo Limited (v1.0.0)
         </Text>
       </VStack>
     </form>

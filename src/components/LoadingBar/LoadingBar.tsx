@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import { Box, Progress, keyframes } from "@chakra-ui/react";
 import { css } from "@emotion/react";
