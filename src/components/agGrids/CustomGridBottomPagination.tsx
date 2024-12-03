@@ -26,16 +26,12 @@ interface PaginationInfo {
 interface CustomGridBottomPaginationProps {
   gridRef: React.RefObject<AgGridReact>;
   paginationInfo: PaginationInfo;
-  setPaginationInfo: React.Dispatch<React.SetStateAction<PaginationInfo>>;
-  allowedToChangePageSize?: boolean;
   onPageChange: () => void;
 }
 
 const CustomGridBottomPagination: React.FC<CustomGridBottomPaginationProps> = ({
   gridRef,
   paginationInfo,
-  setPaginationInfo,
-  allowedToChangePageSize,
   onPageChange,
 }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -58,15 +54,6 @@ const CustomGridBottomPagination: React.FC<CustomGridBottomPaginationProps> = ({
   const goToPreviousPage = () => {
     gridRef.current?.api.paginationGoToPreviousPage();
     onPageChange();
-  };
-
-  const handlePaginationSizeChange = (value: string) => {
-    const newSize =
-      value === "all" ? paginationInfo.totalRows : parseInt(value, 10);
-    setPaginationInfo((prev) => ({
-      ...prev,
-      pageSize: newSize,
-    }));
   };
 
   const pageDisplay = `Page ${paginationInfo.currentPage == 0 ? 0 : paginationInfo.currentPage} of ${paginationInfo.totalPages}`;
@@ -103,27 +90,6 @@ const CustomGridBottomPagination: React.FC<CustomGridBottomPaginationProps> = ({
           justifyContent={isMobile ? "space-between" : "center"}
           align={"center"}
         >
-          <Flex justifyContent="center" align={"center"} gap={isMobile ? 1 : 2}>
-            {allowedToChangePageSize && (
-              <>
-                <Text>Rows per page:</Text>
-                <Select
-                  onChange={(e) => handlePaginationSizeChange(e.target.value)}
-                  value={paginationInfo.pageSize}
-                  size={isMobile ? "xs" : "md"}
-                  width={"auto"}
-                  bg="white"
-                  color="perygonPink"
-                >
-                  <option value="25">25</option>
-                  <option value="50">50</option>
-                  <option value="100">100</option>
-                  <option value="200">200</option>
-                  <option value="all">All</option>
-                </Select>
-              </>
-            )}
-          </Flex>
           <Flex justifyContent="center" align={"center"} gap={isMobile ? 1 : 2}>
             <Button
               size={isMobile ? "sm" : "md"}
