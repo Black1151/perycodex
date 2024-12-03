@@ -121,7 +121,6 @@ export default async function UserGroupsDetailPage({
   );
 
   const userSampleData = (await userSampleRes.json()).resource;
-  console.log(userSampleData);
   const teamPopulationData = (await teamPopulationRes.json()).resource;
 
   const activeTeamPopulationData = teamPopulationData.filter(
