@@ -268,6 +268,7 @@ const DataGridComponent = <T,>({
         <CustomGridBottomPagination
           gridRef={gridRef}
           paginationInfo={paginationInfo}
+          setPaginationInfo={setPaginationInfo}
           onPageChange={() => {
             updatePaginationInfo(gridRef, setPaginationInfo);
           }}
