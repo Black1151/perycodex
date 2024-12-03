@@ -1,3 +1,5 @@
+// File: pages/api/happiness-graphs/getManagerDashboardData.ts
+
 import { NextResponse } from "next/server";
 import apiClient from "@/lib/apiClient";
 import { cookies } from "next/headers";
@@ -136,50 +138,6 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const queryParams = Object.fromEntries(url.searchParams.entries());
 
-  const isLeaderDashboard = queryParams.isLeaderDashboard === "true";
-
-  let managerOfTeamIds: string[] = [];
-  let managerOfDeptIds: string[] = [];
-
-  if (isLeaderDashboard) {
-    try {
-      const uniqueId = cookieStore.get("user_uuid")?.value;
-      const response = await apiClient("/getTeamsUserIsManagerOf", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiToken}`,
-        },
-        body: JSON.stringify({ userUniqueId: uniqueId }),
-      });
-
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch manager of departments: ${response.statusText}`,
-        );
-      }
-
-      const data = await response.json();
-      const deptIds = data.resource.managerOfDeptIds || [];
-      const teamIds = data.resource.managerOfTeamIds || [];
-
-      managerOfDeptIds = deptIds.map(String);
-      managerOfTeamIds = teamIds.map(String);
-    } catch (error) {
-      console.error("Error fetching manager of departments:", error);
-      return NextResponse.json(
-        { error: "Failed to fetch manager of departments." },
-        { status: 500 },
-      );
-    }
-
-    if (managerOfDeptIds.length === 0 && managerOfTeamIds.length === 0) {
-      return NextResponse.json(
-        { error: "User does not manage any departments or teams." },
-        { status: 403 },
-      );
-    }
-  }
-
   const timeRange = queryParams.timeRange || "all";
 
   const selectedFilters = {
@@ -223,65 +181,17 @@ export async function GET(request: Request) {
     customerTags: "tagId",
   };
 
-  function buildEndpoint(
-    filters: any,
-    isLeaderDashboard: boolean,
-    managerOfDeptIds: string[],
-    managerOfTeamIds: string[],
-  ) {
+  const buildEndpoint = (filters: any) => {
     let endpoint = `/getAllView?view=vwDashboardDataFromReportJson&toolConfigId=${toolConfigId}&workflowId=${workflowId}&businessProcessId=${businessProcessId}`;
-
-    const adjustedFilters: any = {};
-
-    if (isLeaderDashboard) {
-      if (managerOfDeptIds.length > 0) {
-        if (filters.deptId && filters.deptId.length > 0) {
-          const allowedDeptIds = filters.deptId.filter((id: string) =>
-            managerOfDeptIds.includes(id),
-          );
-          if (allowedDeptIds.length === 0) {
-            return "";
-          }
-          adjustedFilters.deptId = allowedDeptIds;
-        } else {
-          adjustedFilters.deptId = managerOfDeptIds;
-        }
-      }
-
-      if (managerOfTeamIds.length > 0) {
-        if (filters.teamId && filters.teamId.length > 0) {
-          const allowedTeamIds = filters.teamId.filter((id: string) =>
-            managerOfTeamIds.includes(id),
-          );
-          if (allowedTeamIds.length === 0) {
-            return "";
-          }
-          adjustedFilters.teamId = allowedTeamIds;
-        } else {
-          adjustedFilters.teamId = managerOfTeamIds;
-        }
-      }
-    }
-
     Object.keys(filters).forEach((key) => {
-      if (
-        key !== "deptId" &&
-        key !== "teamId" &&
-        filters[key] &&
-        filters[key].length > 0
-      ) {
-        adjustedFilters[key] = filters[key];
+      if (filters[key]?.length) {
+        endpoint += `&${key}=${filters[key].join(",")}`;
       }
     });
 
-    Object.keys(adjustedFilters).forEach((key) => {
-      if (adjustedFilters[key]?.length) {
-        endpoint += `&${key}=${adjustedFilters[key].join(",")}`;
-      }
-    });
-
+    console.log("ENDPOINTXXX", endpoint);
     return endpoint;
-  }
+  };
 
   function getStartDateFromTimeRange(timeRange: string): Date | null {
     const now = new Date();
@@ -310,16 +220,7 @@ export async function GET(request: Request) {
     >;
     delete filtersExcludingCurrentGroup[group.paramName];
 
-    const endpoint = buildEndpoint(
-      filtersExcludingCurrentGroup,
-      isLeaderDashboard,
-      managerOfDeptIds,
-      managerOfTeamIds,
-    );
-
-    if (!endpoint) {
-      return null;
-    }
+    const endpoint = buildEndpoint(filtersExcludingCurrentGroup);
 
     try {
       const response = await apiClient(endpoint, {
@@ -334,6 +235,8 @@ export async function GET(request: Request) {
       }
 
       const dataForGroup: ApiResponse = await response.json();
+
+      // Collect all options for the current group
       const optionsSet = new Map<string, { label: string; value: string }>();
 
       for (const item of dataForGroup.resource) {
@@ -397,22 +300,10 @@ export async function GET(request: Request) {
   const filterGroupResults = await Promise.all(filterGroupPromises);
 
   const availableOptions = filterGroupResults.filter(
-    (result) => result !== null,
+    (result) => result !== null
   ) as FilterOptionGroup[];
 
-  const endpointWithAllFilters = buildEndpoint(
-    selectedFilters,
-    isLeaderDashboard,
-    managerOfDeptIds,
-    managerOfTeamIds,
-  );
-
-  if (!endpointWithAllFilters) {
-    return NextResponse.json(
-      { error: "No data available based on your filters." },
-      { status: 403 },
-    );
-  }
+  const endpointWithAllFilters = buildEndpoint(selectedFilters);
 
   let finalData: ApiResponse = { resource: [] };
 
@@ -433,10 +324,11 @@ export async function GET(request: Request) {
     console.error("Error fetching final data:", error);
     return NextResponse.json(
       { error: "Failed to fetch data from the API." },
-      { status: 500 },
+      { status: 500 }
     );
   }
 
+  // Process the data
   const weekGroups = new Map<
     string,
     { score: number; item: ApiResponseItem }[]
@@ -570,11 +462,8 @@ export async function GET(request: Request) {
         });
       });
 
-      const sitesData: {
-        site: string;
-        averageScore: number;
-        count: number;
-      }[] = [];
+      const sitesData: { site: string; averageScore: number; count: number }[] =
+        [];
       siteScores.forEach((value, key) => {
         sitesData.push({
           site: value.mostRecentSiteName,
