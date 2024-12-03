@@ -77,7 +77,9 @@ export default async function UsersPage({
       <DataGridComponent
         data={userData}
         initialFields={userFields}
-        createNewUrl={createNewUrl ? createNewUrl : undefined}
+        createNewUrl={createNewUrl ? createNewUrl : ""}
+        defaultPageSize={200}
+        allowedToChangePageSize={false}
         createNewUrlButtonText={
           user.role === "PA" ||
           (user.role === "CA" && userTypeParam === "internal")
