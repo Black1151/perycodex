@@ -58,7 +58,7 @@ export default function HappinessScoreClientInner({
               Happiness Scores
             </Heading>
             <AddButton
-              label="Create New"
+              label="Start"
               toolId={toolId}
               workflowId={workflowId}
               redirectUrl="/happiness-score"
