@@ -21,7 +21,13 @@ const HappinessScoreRenderer: React.FC<HappinessScoreRendererProps> = ({
   const color = getColor(value);
 
   return (
-    <Flex alignItems="center" justifyContent="center" h={"full"} w={"full"}>
+    <Flex
+      alignItems="center"
+      justifyContent="center"
+      h={"full"}
+      w={"full"}
+      maxH={"50px"}
+    >
       <Box
         display="flex"
         alignItems="center"
