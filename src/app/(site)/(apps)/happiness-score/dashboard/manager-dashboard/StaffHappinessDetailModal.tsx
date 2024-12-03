@@ -22,7 +22,7 @@ interface StaffHappinessDetailModalProps {
   averagehappiness: string;
   firstname: string;
   historicrecords: string;
-  imageurl: string | null; // Allow null for missing images
+  imageurl: string | null;
   lastname: string;
   isOpen: boolean;
   onClose: () => void;
@@ -79,6 +79,7 @@ const StaffHappinessDetailModal: React.FC<StaffHappinessDetailModalProps> = ({
                 w="100%"
                 gap={8}
                 justifyContent="space-between"
+                pl={6}
               >
                 <Text fontSize={["xl", "3xl"]} fontWeight="bold" color="white">
                   {firstname} {lastname}
