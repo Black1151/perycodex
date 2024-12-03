@@ -60,6 +60,7 @@ export const customerFields: ColDef[] | any = [
       redirectUrl: "/customers",
       updateUrl: "/api/customer/",
       idField: "custId",
+      rolesCanEdit: ["CA", "PA"],
     },
   },
 ];

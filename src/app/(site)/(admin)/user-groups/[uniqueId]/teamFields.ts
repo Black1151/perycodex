@@ -1,5 +1,6 @@
 import { ColDef } from "ag-grid-community";
 import TeamRenderer from "@/components/agGrids/CellRenderers/TeamRenderer";
+import TeamCellRenderer from "@/components/agGrids/CellRenderers/TeamCellRenderer";
 
 export const teamFieldDefs: ColDef[] = [
   {
@@ -17,5 +18,12 @@ export const teamFieldDefs: ColDef[] = [
     cellRendererParams: {
       nameField: "name",
     },
+  },
+  {
+    field: "parentTeamName",
+    headerName: "Type",
+    cellDataType: "text",
+    filter: "agMultiColumnFilter",
+    cellRenderer: TeamCellRenderer,
   },
 ];

@@ -10,9 +10,14 @@ export default async function TeamsPage() {
   await checkUserRole("/teams");
 
   let headerTitle = "Departments / Teams";
+  let createNewUrl = "/teams/create";
 
   if (user.role !== "CA") {
     headerTitle = "Our Departments / Teams";
+  }
+
+  if (!["CA", "PA"].includes(user.role)) {
+    createNewUrl = "";
   }
 
   const res = await apiClient(`/getAllView?view=vwUserTeamsList`);
@@ -32,7 +37,7 @@ export default async function TeamsPage() {
       <DataGridComponent
         data={teamData}
         initialFields={teamFields}
-        createNewUrl={"/teams/create"}
+        createNewUrl={createNewUrl}
       />
     </>
   );

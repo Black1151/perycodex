@@ -59,7 +59,6 @@ const CustomerRenderer: React.FC<CustomerRendererProps> = ({
             height="80%"
             maxW="100%"
             maxH="100%"
-            boxShadow="md"
             objectFit="contain"
             // fallbackSrc="https://via.placeholder.com/50"
           />
