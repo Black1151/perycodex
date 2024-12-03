@@ -63,7 +63,7 @@ const LineGraph: React.FC<LineGraphProps> = memo(
     const fontSize = useBreakpointValue({ base: "2xs", md: "xs" });
 
     const defaultGraphHeight =
-      useBreakpointValue({ base: 400, md: 400 }) ?? 300;
+      useBreakpointValue({ base: 300, md: 500 }) ?? 300;
     const graphHeight = graphHeightProp ?? defaultGraphHeight;
     const totalHeight = graphHeight + topPadding + bottomPadding;
 

@@ -200,25 +200,6 @@ export async function GET(request: Request) {
   const businessProcessId = queryParams.businessProcessId || 1;
   const toolConfigId = queryParams.toolConfigId || 1;
 
-  if (isLeaderDashboard) {
-    const selectedDeptIds = selectedFilters.deptId;
-
-    if (selectedDeptIds.length > 0) {
-      const allowedDeptIds = selectedDeptIds.filter((id) =>
-        managerOfTeamIds.includes(id)
-      );
-      if (allowedDeptIds.length === 0) {
-        return NextResponse.json(
-          { error: "No departments available based on your filters." },
-          { status: 403 }
-        );
-      }
-      selectedFilters.deptId = allowedDeptIds;
-    } else {
-      selectedFilters.deptId = managerOfTeamIds;
-    }
-  }
-
   const filterGroups = [
     { key: "deptName", paramName: "deptId" },
     { key: "teamName", paramName: "teamId" },
@@ -251,37 +232,52 @@ export async function GET(request: Request) {
   ) {
     let endpoint = `/getAllView?view=vwDashboardDataFromReportJson&toolConfigId=${toolConfigId}&workflowId=${workflowId}&businessProcessId=${businessProcessId}`;
 
+    const adjustedFilters: any = {};
+
     if (isLeaderDashboard) {
       if (managerOfDeptIds.length > 0) {
         if (filters.deptId && filters.deptId.length > 0) {
-          filters.deptId = filters.deptId.filter((id: string) =>
+          const allowedDeptIds = filters.deptId.filter((id: string) =>
             managerOfDeptIds.includes(id)
           );
-          if (filters.deptId.length === 0) {
+          if (allowedDeptIds.length === 0) {
             return "";
           }
+          adjustedFilters.deptId = allowedDeptIds;
         } else {
-          filters.deptId = managerOfDeptIds;
+          adjustedFilters.deptId = managerOfDeptIds;
         }
       }
 
       if (managerOfTeamIds.length > 0) {
         if (filters.teamId && filters.teamId.length > 0) {
-          filters.teamId = filters.teamId.filter((id: string) =>
+          const allowedTeamIds = filters.teamId.filter((id: string) =>
             managerOfTeamIds.includes(id)
           );
-          if (filters.teamId.length === 0) {
+          if (allowedTeamIds.length === 0) {
             return "";
           }
+          adjustedFilters.teamId = allowedTeamIds;
         } else {
-          filters.teamId = managerOfTeamIds;
+          adjustedFilters.teamId = managerOfTeamIds;
         }
       }
     }
 
     Object.keys(filters).forEach((key) => {
-      if (filters[key]?.length) {
-        endpoint += `&${key}=${filters[key].join(",")}`;
+      if (
+        key !== "deptId" &&
+        key !== "teamId" &&
+        filters[key] &&
+        filters[key].length > 0
+      ) {
+        adjustedFilters[key] = filters[key];
+      }
+    });
+
+    Object.keys(adjustedFilters).forEach((key) => {
+      if (adjustedFilters[key]?.length) {
+        endpoint += `&${key}=${adjustedFilters[key].join(",")}`;
       }
     });
 
