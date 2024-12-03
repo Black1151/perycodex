@@ -4,6 +4,7 @@ import { getFilteredDashboards } from "@/lib/dashboardUtils";
 import NoDashboardsModal from "./NoDashboardModal";
 import apiClient from "@/lib/apiClient";
 import { verifySession } from "@/lib/dal";
+import { HappinessScoreLandingPageInner } from "./HappinessScoreLandingPageInner";
 
 interface WorkflowInstanceResponse {
   resource: {
@@ -18,7 +19,6 @@ export default async function Home({
 }) {
   const session = await verifySession();
 
-  // If there's no session, redirect to login
   if (!session) {
     redirect("/login");
   }
@@ -31,7 +31,8 @@ export default async function Home({
     return redirect("/");
   }
 
-  // Handle action logic here
+  let redirectUrl: string | null = null;
+
   if (action && parseInt(action) === 1) {
     const response = await apiClient(`/startWorkflow`, {
       method: "POST",
@@ -44,31 +45,26 @@ export default async function Home({
     if (response.ok) {
       const responseData: WorkflowInstanceResponse = await response.json();
       if (responseData?.resource.new_wfinstid) {
-        return redirect(
-          `happiness-score/workflow/${responseData.resource.new_wfinstid}`,
-        );
+        redirectUrl = `/happiness-score/workflow/${responseData.resource.new_wfinstid}`;
       }
     }
   }
 
-  // Fetch filtered dashboards and tool data
   const { filteredDashboards, toolData } = await getFilteredDashboards(
     toolId,
     workflowId,
-    "/happiness-score",
+    "/happiness-score"
   );
 
-  // Redirect if there's only one dashboard
-  if (filteredDashboards.length > 0) {
+  if (!redirectUrl && filteredDashboards.length > 0) {
     const singleDashboard = filteredDashboards[0];
-    return redirect(
-      `${singleDashboard.dashboardUrl}?toolId=${toolId}&wfId=${workflowId}`,
-    );
+    redirectUrl = `${singleDashboard.dashboardUrl}?toolId=${toolId}&wfId=${workflowId}`;
   }
 
   return (
     <WorkflowEngine toolId={toolId} workflowId={workflowId}>
       {filteredDashboards.length === 0 && <NoDashboardsModal />}
+      <HappinessScoreLandingPageInner redirectUrl={redirectUrl} />
     </WorkflowEngine>
   );
 }
