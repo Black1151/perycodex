@@ -12,7 +12,7 @@ export const userTeamMembersListFields: ColDef[] | any = [
     minWidth: 64,
   },
   {
-    field: "fullName",
+    field: "userFullname",
     headerName: "Name",
     filter: "agMultiColumnFilter",
     cellRenderer: UserRenderer,
