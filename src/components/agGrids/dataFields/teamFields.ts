@@ -52,7 +52,7 @@ export const teamFields: ColDef[] | any = [
     cellRenderer: TeamCellRenderer,
   },
   {
-    field: "managerFullname",
+    field: "managerFullName",
     headerName: "Manager",
     cellDataType: "text",
     filter: "agMultiColumnFilter",
