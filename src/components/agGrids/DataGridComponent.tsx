@@ -42,7 +42,7 @@ interface DataGridComponentProps<T> {
   onGridReady?: (params: FirstDataRenderedEvent) => void;
   filterModel?: any;
   defaultPageSize?: number;
-  allowedToChangePageSize: boolean;
+  allowedToChangePageSize?: boolean;
 }
 
 // Define the type for pagination info

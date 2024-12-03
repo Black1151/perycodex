@@ -27,7 +27,7 @@ interface CustomGridBottomPaginationProps {
   gridRef: React.RefObject<AgGridReact>;
   paginationInfo: PaginationInfo;
   setPaginationInfo: React.Dispatch<React.SetStateAction<PaginationInfo>>;
-  allowedToChangePageSize: boolean;
+  allowedToChangePageSize?: boolean;
   onPageChange: () => void;
 }
 
