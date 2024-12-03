@@ -21,6 +21,7 @@ import { Info } from "@mui/icons-material";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/HappinessScoreRenderer";
 import HappinessDifferenceRenderer from "@/components/agGrids/CellRenderers/HappinessDifferenceRenderer";
+import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
 
 interface ApiResponse {
   resource: RowData[]; // This matches the RowData type you're using
@@ -84,7 +85,17 @@ const RagDashboard: React.FC = () => {
   }, []);
 
   const columnDefs: ColDef[] = [
-    { field: "fullName", headerName: "User", sortable: true },
+    {
+      field: "fullName",
+      headerName: "Name",
+      cellRenderer: UserRenderer,
+      sortable: true,
+      cellRendererParams: {
+        uniqueIdField: "userUniqueId",
+        nameField: "fullName",
+        imageUrlField: "userImageUrl",
+      },
+    },
     {
       field: "siteName",
       headerName: "Site",
@@ -115,7 +126,7 @@ const RagDashboard: React.FC = () => {
     },
     {
       field: "totalEntries",
-      headerName: "Entries",
+      headerName: "Submissions",
       sortable: true,
       filter: "agNumberColumnFilter",
       cellDataType: "number",
