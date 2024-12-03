@@ -132,19 +132,19 @@ const PeopleList: React.FC<PeopleListProps> = ({
       key: "jobTitle",
       label: "Job Title",
       sortable: true,
-      display: "none",
+      display: ["none", "table-cell"],
     },
     {
       key: "department",
       label: "Department",
       sortable: true,
-      display: ["none", "table-cell"],
+      display: ["none", null, null, null, "table-cell"],
     },
     {
       key: "site",
       label: "Site",
       sortable: true,
-      display: ["none", "table-cell"],
+      display: ["none", null, null, null, "table-cell"],
     },
     {
       key: "score",
