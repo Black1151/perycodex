@@ -29,7 +29,7 @@ export default async function Home({
     await getFilteredDashboards(
       toolId,
       workflowId,
-      "/happiness-score/dashboard/leader-dashboard",
+      "/happiness-score/dashboard/leader-dashboard"
     );
 
   return (

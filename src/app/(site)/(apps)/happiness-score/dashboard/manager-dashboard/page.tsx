@@ -40,7 +40,7 @@ export default async function Home({
         }
         canStartWorkflow={toolData.startInUi}
       />
-      <ManagerDashboardPage />
+      <ManagerDashboardPage isLeaderDashboard={false} />
     </WorkflowEngine>
   );
 }

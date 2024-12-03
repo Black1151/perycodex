@@ -39,7 +39,13 @@ export interface Person {
   fullName: string;
 }
 
-export default function ManagerDashboardPage() {
+interface ManagerDashboardPageProps {
+  isLeaderDashboard: boolean;
+}
+
+export default function ManagerDashboardPage({
+  isLeaderDashboard,
+}: ManagerDashboardPageProps) {
   const [drawerState, setDrawerState] = useState<"closed" | "fully-open">(
     "closed"
   );
@@ -106,9 +112,11 @@ export default function ManagerDashboardPage() {
         params.append("timeRange", timeRange);
       }
 
+      params.append("isLeaderDashboard", isLeaderDashboard ? "true" : "false");
+
       return params.toString();
     },
-    [labelToParamName]
+    [labelToParamName, isLeaderDashboard]
   );
 
   const updateFilterOptions = useCallback(
@@ -169,9 +177,15 @@ export default function ManagerDashboardPage() {
 
       const weekTitles = data.lineGraphData.map((dp: DataPoint) => dp.title);
       setWeekOptions(weekTitles);
-      setSelectedWeek(weekTitles[weekTitles.length - 1]);
+
+      if (selectedWeek && weekTitles.includes(selectedWeek)) {
+      } else if (weekTitles.length > 0) {
+        setSelectedWeek(weekTitles[weekTitles.length - 1]);
+      } else {
+        setSelectedWeek(null);
+      }
     },
-    [constructQueryParams, updateFilterOptions, selectedTimeRange]
+    [constructQueryParams, updateFilterOptions, selectedTimeRange, selectedWeek]
   );
 
   const clearAllFilters = useCallback(async () => {
