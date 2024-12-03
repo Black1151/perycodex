@@ -26,9 +26,7 @@ const icons = [
   icon10,
 ];
 
-const submitScore = (score: number) => {
-  console.log(`Score submitted: ${score}`);
-};
+const submitScore = (score: number) => {};
 
 interface RatingIconProps {
   index: number;

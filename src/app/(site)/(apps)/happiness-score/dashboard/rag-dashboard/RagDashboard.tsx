@@ -67,7 +67,6 @@ const RagDashboard: React.FC = () => {
         );
 
         if (response && response.resource) {
-          console.log(response);
           setRowData(response.resource);
         } else {
           console.error("Invalid response:", response);

@@ -20,8 +20,6 @@ const HappinessDifferenceRenderer: React.FC<
 
   const backgroundColor = value ? backgroundColorMap[value] : "gray.500";
 
-  console.log(backgroundColor);
-
   return (
     <Flex alignItems="center" justifyContent="center" h="full" w="full">
       <Box

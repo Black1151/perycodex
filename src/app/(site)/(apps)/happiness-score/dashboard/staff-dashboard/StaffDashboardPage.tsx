@@ -15,8 +15,6 @@ export default function StaffDashboardPage() {
   const [lineGraphData, setLineGraphData] = useState<any[]>([]);
 
   const getHappinessData = async () => {
-    console.log("GET HAPPINESS DATA");
-
     const urlParams = new URLSearchParams(window.location.search);
     const toolId = urlParams.get("toolId");
     const wfId = urlParams.get("wfId");
@@ -28,8 +26,6 @@ export default function StaffDashboardPage() {
       businessProcessId,
     };
 
-    console.log("PAYLOAD", payload);
-
     const response = await fetch(
       "/api/happiness-graphs/getStaffDashboardData",
       {
@@ -38,7 +34,7 @@ export default function StaffDashboardPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
-      }
+      },
     );
 
     const data = await response.json();
@@ -51,7 +47,7 @@ export default function StaffDashboardPage() {
       historicRecords.map((record: any) => ({
         value: record.value,
         title: record.title,
-      }))
+      })),
     );
   };
 

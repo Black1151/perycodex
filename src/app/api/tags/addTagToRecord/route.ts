@@ -5,8 +5,6 @@ export async function POST(req: NextRequest) {
   try {
     const { recordId, recordTypeId, tagId } = await req.json();
 
-    console.log("addTagToRecord", recordId, recordTypeId, tagId);
-
     if (!recordId || !recordTypeId || !tagId) {
       return NextResponse.json(
         { error: "recordId, recordTypeId and tagId are required." },

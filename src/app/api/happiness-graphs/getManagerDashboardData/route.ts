@@ -154,12 +154,11 @@ export async function GET(request: Request) {
 
       if (!response.ok) {
         throw new Error(
-          `Failed to fetch manager of departments: ${response.statusText}`
+          `Failed to fetch manager of departments: ${response.statusText}`,
         );
       }
 
       const data = await response.json();
-      console.log("YYY", data);
       const deptIds = data.resource.managerOfDeptIds || [];
       const teamIds = data.resource.managerOfTeamIds || [];
 
@@ -169,14 +168,14 @@ export async function GET(request: Request) {
       console.error("Error fetching manager of departments:", error);
       return NextResponse.json(
         { error: "Failed to fetch manager of departments." },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
     if (managerOfDeptIds.length === 0 && managerOfTeamIds.length === 0) {
       return NextResponse.json(
         { error: "User does not manage any departments or teams." },
-        { status: 403 }
+        { status: 403 },
       );
     }
   }
@@ -228,7 +227,7 @@ export async function GET(request: Request) {
     filters: any,
     isLeaderDashboard: boolean,
     managerOfDeptIds: string[],
-    managerOfTeamIds: string[]
+    managerOfTeamIds: string[],
   ) {
     let endpoint = `/getAllView?view=vwDashboardDataFromReportJson&toolConfigId=${toolConfigId}&workflowId=${workflowId}&businessProcessId=${businessProcessId}`;
 
@@ -238,7 +237,7 @@ export async function GET(request: Request) {
       if (managerOfDeptIds.length > 0) {
         if (filters.deptId && filters.deptId.length > 0) {
           const allowedDeptIds = filters.deptId.filter((id: string) =>
-            managerOfDeptIds.includes(id)
+            managerOfDeptIds.includes(id),
           );
           if (allowedDeptIds.length === 0) {
             return "";
@@ -252,7 +251,7 @@ export async function GET(request: Request) {
       if (managerOfTeamIds.length > 0) {
         if (filters.teamId && filters.teamId.length > 0) {
           const allowedTeamIds = filters.teamId.filter((id: string) =>
-            managerOfTeamIds.includes(id)
+            managerOfTeamIds.includes(id),
           );
           if (allowedTeamIds.length === 0) {
             return "";
@@ -315,7 +314,7 @@ export async function GET(request: Request) {
       filtersExcludingCurrentGroup,
       isLeaderDashboard,
       managerOfDeptIds,
-      managerOfTeamIds
+      managerOfTeamIds,
     );
 
     if (!endpoint) {
@@ -398,20 +397,20 @@ export async function GET(request: Request) {
   const filterGroupResults = await Promise.all(filterGroupPromises);
 
   const availableOptions = filterGroupResults.filter(
-    (result) => result !== null
+    (result) => result !== null,
   ) as FilterOptionGroup[];
 
   const endpointWithAllFilters = buildEndpoint(
     selectedFilters,
     isLeaderDashboard,
     managerOfDeptIds,
-    managerOfTeamIds
+    managerOfTeamIds,
   );
 
   if (!endpointWithAllFilters) {
     return NextResponse.json(
       { error: "No data available based on your filters." },
-      { status: 403 }
+      { status: 403 },
     );
   }
 
@@ -434,7 +433,7 @@ export async function GET(request: Request) {
     console.error("Error fetching final data:", error);
     return NextResponse.json(
       { error: "Failed to fetch data from the API." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 

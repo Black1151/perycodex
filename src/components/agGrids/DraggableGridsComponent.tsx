@@ -218,10 +218,6 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
     onUndoStackChange?.(undoStack.length > 0);
   }, [undoStack]);
 
-  useEffect(() => {
-    console.log(undoStack);
-  }, [undoStack]);
-
   const onPopulationSelectionChanged = () => {
     const selectedRows = populationGridRef.current?.api.getSelectedRows();
     setPopulationHasSelectedRows(!!(selectedRows && selectedRows.length > 0)); // Ensures a boolean value
