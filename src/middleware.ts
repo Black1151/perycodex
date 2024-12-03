@@ -30,7 +30,15 @@ export async function middleware(request: NextRequest) {
         "Cache-Control",
         "no-store, no-cache, must-revalidate"
       );
+      return response;
     }
+
+    const response = NextResponse.next();
+    response.headers.set(
+      "Cache-Control",
+      "no-store, no-cache, must-revalidate"
+    );
+    return response;
   } catch (error: any) {
     const response = NextResponse.redirect(new URL("/login", request.url));
     response.cookies.delete("auth_token");
