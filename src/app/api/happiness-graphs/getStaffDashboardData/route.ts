@@ -2,19 +2,10 @@ import apiClient from "@/lib/apiClient";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
-  console.log("ROUTE HIT");
-
   const { toolId, workflowId, businessProcessId } = await req.json();
   const cookieStore = cookies();
   const authToken = cookieStore.get("auth_token")?.value;
   const userUniqueId = cookieStore.get("user_uuid")?.value;
-
-  console.log({
-    toolId,
-    workflowId,
-    businessProcessId,
-    userUniqueId,
-  });
 
   try {
     const response = await apiClient("/happinessScoreUsersTwoMonthHistory", {
@@ -31,8 +22,6 @@ export async function POST(req: NextRequest) {
       }),
     });
     const data = await response.json();
-
-    console.log("XXX", data);
 
     return NextResponse.json(data);
   } catch (error) {

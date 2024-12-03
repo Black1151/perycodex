@@ -42,7 +42,6 @@ export const useFetchClient = () => {
         headers,
         ...(body ? { body: JSON.stringify(body) } : {}),
       });
-      console.log("FETCH CLIENT RESPONSE", response);
 
       if (response.status === 401) {
         if (onUnauthorised) {
@@ -80,8 +79,6 @@ export const useFetchClient = () => {
 
       return data;
     } catch (error: any) {
-      console.log("FETCH CLIENT ERROR", error);
-      console.error(error);
       toast({
         title: "Error",
         description: error.message || errorMessage,
