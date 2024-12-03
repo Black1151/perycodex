@@ -13,6 +13,7 @@ import {
   ModalOverlay,
   Text,
   Tooltip,
+  useBreakpointValue,
   useDisclosure,
   useTheme,
   VStack,
@@ -81,6 +82,7 @@ const Dashboard: React.FC = () => {
   const { getColor } = useColor();
   const [isLoading, setIsLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
 
   // Details Modal for Clicking
   const [isBarModalOpen, setIsBarModalOpen] = useState(false);
@@ -144,22 +146,11 @@ const Dashboard: React.FC = () => {
       filter: "agMultiColumnFilter",
       chartDataType: "category",
     },
-    { field: "teamName", headerName: "Team" },
     {
       field: "deptName",
       headerName: "Department",
       filter: "agMultiColumnFilter",
       chartDataType: "category",
-    },
-    {
-      field: "happinessScore",
-      headerName: "Happiness Score",
-      chartDataType: "series",
-      cellRenderer: HappinessScoreRenderer,
-    },
-    {
-      field: "comments",
-      headerName: "Comments",
     },
     {
       field: "eowDate",
@@ -171,6 +162,16 @@ const Dashboard: React.FC = () => {
       field: "monthYear",
       headerName: "Month - Year",
       chartDataType: "category",
+    },
+    {
+      field: "happinessScore",
+      headerName: "Happiness Score",
+      chartDataType: "series",
+      cellRenderer: HappinessScoreRenderer,
+    },
+    {
+      field: "comments",
+      headerName: "Comments",
     },
   ];
 
@@ -198,6 +199,17 @@ const Dashboard: React.FC = () => {
       chartDataType: "category",
     },
     {
+      field: "eowDate",
+      headerName: "Week",
+      sort: "asc",
+      chartDataType: "category",
+    },
+    {
+      field: "monthYear",
+      headerName: "Month - Year",
+      chartDataType: "category",
+    },
+    {
       field: "happinessScore",
       headerName: "Happiness Score",
       chartDataType: "series",
@@ -213,12 +225,14 @@ const Dashboard: React.FC = () => {
     resizable: true,
     filter: false,
     sortable: false,
+    flex: isMobile ? 0 : 1,
     suppressHeaderMenuButton: true,
   };
 
   const modalDefaultColDef: ColDef = {
     resizable: true,
     sortable: true,
+    flex: isMobile ? 0 : 1,
     suppressHeaderMenuButton: true,
   };
 
@@ -638,7 +652,7 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <VStack align="stretch" w="full" spacing={8}>
+    <VStack align="stretch" w="full" spacing={6} mb={3}>
       <SurveyModal
         isOpen={isOpen}
         onClose={onClose}
@@ -691,10 +705,9 @@ const Dashboard: React.FC = () => {
       <Box
         className="ag-theme-alpine ag-theme-perygon"
         width="100%"
-        p={4}
         borderRadius="lg"
       >
-        <Flex width="100%" justifyContent="center" mb={4}>
+        <Flex width="100%" justifyContent={"center"} mb={2}>
           <SectionHeader>All Submissions</SectionHeader>
           <Tooltip label="Click to learn how to filter the dashboard" hasArrow>
             <IconButton
@@ -732,7 +745,11 @@ const Dashboard: React.FC = () => {
           textAlign="center"
           borderRadius="lg"
         >
-          <Flex width="100%" justifyContent="center" mb={4}>
+          <Flex
+            width="100%"
+            justifyContent={isMobile ? "flex-start" : "center"}
+            mb={2}
+          >
             <SectionHeader>Happiness by Department</SectionHeader>
           </Flex>
           <Box
@@ -749,7 +766,11 @@ const Dashboard: React.FC = () => {
           textAlign="center"
           borderRadius="lg"
         >
-          <Flex width="100%" justifyContent="center" mb={4}>
+          <Flex
+            width="100%"
+            justifyContent={isMobile ? "flex-start" : "center"}
+            mb={2}
+          >
             <SectionHeader>Happiness by Office</SectionHeader>
           </Flex>
           <Box
@@ -766,7 +787,11 @@ const Dashboard: React.FC = () => {
           textAlign="center"
           borderRadius="lg"
         >
-          <Flex width="100%" justifyContent="center" mb={4}>
+          <Flex
+            width="100%"
+            justifyContent={isMobile ? "flex-start" : "center"}
+            mb={2}
+          >
             <SectionHeader>Historic Weekly Average</SectionHeader>
           </Flex>
           <Box
@@ -783,7 +808,11 @@ const Dashboard: React.FC = () => {
           textAlign="center"
           borderRadius="lg"
         >
-          <Flex width="100%" justifyContent="center" mb={4}>
+          <Flex
+            width="100%"
+            justifyContent={isMobile ? "flex-start" : "center"}
+            mb={2}
+          >
             <SectionHeader>Historic Monthly Average</SectionHeader>
           </Flex>
           <Box
@@ -798,5 +827,4 @@ const Dashboard: React.FC = () => {
     </VStack>
   );
 };
-
 export default Dashboard;

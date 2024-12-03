@@ -189,7 +189,7 @@ const DataGridComponent = <T,>({
   };
 
   return (
-    <Box className={`ag-theme-alpine ag-theme-perygon`} w={"full"} py={2}>
+    <Box className={`ag-theme-alpine ag-theme-perygon`} w={"full"} pb={2}>
       {showTopBar && (
         <Flex w={"full"} justify={"flex-start"} align={"center"} my={4} gap={2}>
           {/* Quick Filter */}
@@ -268,6 +268,7 @@ const DataGridComponent = <T,>({
         <CustomGridBottomPagination
           gridRef={gridRef}
           paginationInfo={paginationInfo}
+          setPaginationInfo={setPaginationInfo}
           onPageChange={() => {
             updatePaginationInfo(gridRef, setPaginationInfo);
           }}

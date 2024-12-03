@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, useBreakpointValue } from "@chakra-ui/react";
+import { Text, Button, useBreakpointValue } from "@chakra-ui/react";
 import AddIcon from "@mui/icons-material/Add";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { useRouter } from "next/navigation";
@@ -21,7 +21,7 @@ const AddButton: React.FC<AddButtonProps> = ({
   workflowId,
   redirectUrl,
 }) => {
-  const showLabel = useBreakpointValue({ base: false, sm: true });
+  const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
   const { fetchClient, loading } = useFetchClient();
   const router = useRouter();
 
@@ -53,27 +53,12 @@ const AddButton: React.FC<AddButtonProps> = ({
       backgroundColor="lightGreen"
       color="white"
       _hover={{ backgroundColor: "seduloGreen" }}
-      p={showLabel ? undefined : 0}
-      minW={showLabel ? undefined : "40px"}
-      h={showLabel ? undefined : "40px"}
+      minW={"40px"}
+      h={"40px"}
       isLoading={loading}
     >
-      {showLabel ? (
-        <>
-          <AddIcon style={{ marginRight: "8px" }} />
-          {label}
-        </>
-      ) : (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          w="100%"
-          h="100%"
-        >
-          <AddIcon />
-        </Box>
-      )}
+      <AddIcon style={{ marginRight: "8px" }} />
+      <Text fontSize={isMobile ? "sm" : "md"}>{label}</Text>
     </Button>
   );
 };

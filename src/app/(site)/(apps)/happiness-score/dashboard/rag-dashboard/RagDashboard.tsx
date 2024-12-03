@@ -232,7 +232,7 @@ const RagDashboard: React.FC = () => {
           data={rowData}
           loading={isLoading}
           initialFields={columnDefs}
-          showTopBar={false}
+          showTopBar={true}
           defaultColDef={defaultColDef}
         />
       </Box>

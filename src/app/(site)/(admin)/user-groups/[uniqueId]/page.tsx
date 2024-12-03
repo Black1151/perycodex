@@ -6,6 +6,61 @@ import { checkUserRole, getUser } from "@/lib/dal";
 import UserGroupsTabs from "@/app/(site)/(admin)/user-groups/[uniqueId]/UserGroupTabs";
 import { userGroupJson } from "@/components/surveyjs/forms/userGroup";
 
+interface UserInGroup {
+  id: number;
+  userUniqueId: string;
+  email: string;
+  role: string;
+  titleId: number;
+  title: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  telephone: string;
+  mobile: string;
+  vehicleRegistration: string;
+  aboutMe: string;
+  jobTitle: string;
+  imageUrl: string;
+  customerId: number;
+  custName: string;
+  custUniqueId: string;
+  custImageUrl: string;
+  custParentId: number;
+  siteId: number;
+  siteName: string;
+  remoteWorker: boolean;
+  departmentId: number;
+  deptName: string;
+  teamId: number;
+  teamName: string;
+  jobLevelId: number;
+  jobLevel: string;
+  contractTypeId: number;
+  contractType: string;
+  employStartDate: string;
+  marketingOptOutId: number;
+  marketingOptOut: number;
+  isActive: boolean;
+  siteUniqueId: string;
+}
+
+interface TeamInGroup {
+  id: number;
+  name: string;
+  description: string;
+  customerId: number;
+  managerId: number;
+  parentTeamId: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: number;
+  updatedBy: number;
+  uniqueId: string;
+  isDepartment: boolean;
+}
+
 export default async function UserGroupsDetailPage({
   params,
 }: {
@@ -63,8 +118,18 @@ export default async function UserGroupsDetailPage({
   }
 
   const userPopulationData = (await userPopulationRes.json()).resource;
+
+  const activeUserPopulationData = userPopulationData.filter(
+    (user: UserInGroup) => user.isActive,
+  );
+
   const userSampleData = (await userSampleRes.json()).resource;
   const teamPopulationData = (await teamPopulationRes.json()).resource;
+
+  const activeTeamPopulationData = teamPopulationData.filter(
+    (team: TeamInGroup) => team.isActive,
+  );
+
   const teamSampleData = (await teamSampleRes.json()).resource;
 
   return (
@@ -73,9 +138,9 @@ export default async function UserGroupsDetailPage({
       <UserGroupsTabs
         userGroupId={userGroupId}
         userGroupData={userGroupData}
-        userPopulationData={userPopulationData}
+        userPopulationData={activeUserPopulationData}
         userSampleData={userSampleData}
-        teamPopulationData={teamPopulationData}
+        teamPopulationData={activeTeamPopulationData}
         teamSampleData={teamSampleData}
       />
     </>

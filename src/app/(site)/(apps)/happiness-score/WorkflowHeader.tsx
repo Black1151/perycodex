@@ -45,7 +45,7 @@ const WorkflowHeader: React.FC<WorkflowHeaderProps> = ({
       {ableToStartWorkflow && (
         <Box ml="auto">
           <AddButton
-            label="Create New"
+            label="Start"
             toolId={toolId}
             workflowId={workflowId}
             redirectUrl="/happiness-score"

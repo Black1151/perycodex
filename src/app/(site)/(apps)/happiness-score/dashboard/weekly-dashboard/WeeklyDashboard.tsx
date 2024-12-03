@@ -13,6 +13,7 @@ import {
   ModalOverlay,
   Text,
   Tooltip,
+  useBreakpointValue,
   useDisclosure,
   useTheme,
   VStack,
@@ -113,6 +114,7 @@ const WeeklyDashboard: React.FC = () => {
   const theme = useTheme();
   const [isLoading, setIsLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
 
   // Details Modal for Clicking
   const [isBarModalOpen, setIsBarModalOpen] = useState(false);
@@ -469,7 +471,7 @@ const WeeklyDashboard: React.FC = () => {
   };
 
   return (
-    <VStack align="stretch" w="full" spacing={8}>
+    <VStack align="stretch" w="full" spacing={6} mb={3}>
       <SurveyModal
         isOpen={isOpen}
         onClose={onClose}
@@ -521,10 +523,9 @@ const WeeklyDashboard: React.FC = () => {
       <Box
         className="ag-theme-alpine ag-theme-perygon"
         width="100%"
-        p={4}
         borderRadius="lg"
       >
-        <Flex width="100%" justifyContent="center" mb={4}>
+        <Flex width="100%" justifyContent={"center"} mb={2}>
           <SectionHeader>Submissions</SectionHeader>
           <Tooltip label="Click to learn how to filter the dashboard" hasArrow>
             <IconButton
@@ -562,7 +563,11 @@ const WeeklyDashboard: React.FC = () => {
           textAlign="center"
           borderRadius="lg"
         >
-          <Flex width="100%" justifyContent="center" mb={4}>
+          <Flex
+            width="100%"
+            justifyContent={isMobile ? "flex-start" : "center"}
+            mb={2}
+          >
             <SectionHeader>Happiness by Department</SectionHeader>
           </Flex>
           <Box
@@ -580,7 +585,11 @@ const WeeklyDashboard: React.FC = () => {
           textAlign="center"
           borderRadius="lg"
         >
-          <Flex width="100%" justifyContent="center" mb={4}>
+          <Flex
+            width="100%"
+            justifyContent={isMobile ? "flex-start" : "center"}
+            mb={2}
+          >
             <SectionHeader>Happiness by Office</SectionHeader>
           </Flex>
           <Box
