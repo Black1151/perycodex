@@ -269,26 +269,7 @@ const LeaderboardDashboard: React.FC = () => {
                 };
               },
               listeners: {
-                nodeClick: (params: AgNodeClickEvent<any, any>) => {
-                  const { datum, xKey, yKey } = params;
-                  console.log("Node clicked:", params);
-
-                  if (xKey && yKey && datum) {
-                    const xValue = datum[xKey];
-                    const yValue = datum[yKey];
-
-                    console.log("X Value:", xValue);
-                    console.log("Y Value:", yValue);
-
-                    alert(`Clicked on ${xValue} with value ${yValue}`);
-                  } else {
-                    console.error("Invalid xKey, yKey, or datum:", {
-                      xKey,
-                      yKey,
-                      datum,
-                    });
-                  }
-                },
+                nodeClick: (params: AgNodeClickEvent<any, any>) => {},
               },
             },
           },
@@ -371,26 +352,7 @@ const LeaderboardDashboard: React.FC = () => {
                 };
               },
               listeners: {
-                nodeClick: (params: AgNodeClickEvent<any, any>) => {
-                  const { datum, xKey, yKey } = params;
-                  console.log("Node clicked:", params);
-
-                  if (xKey && yKey && datum) {
-                    const xValue = datum[xKey];
-                    const yValue = datum[yKey];
-
-                    console.log("X Value:", xValue);
-                    console.log("Y Value:", yValue);
-
-                    alert(`Clicked on ${xValue} with value ${yValue}`);
-                  } else {
-                    console.error("Invalid xKey, yKey, or datum:", {
-                      xKey,
-                      yKey,
-                      datum,
-                    });
-                  }
-                },
+                nodeClick: (params: AgNodeClickEvent<any, any>) => {},
               },
             },
           },

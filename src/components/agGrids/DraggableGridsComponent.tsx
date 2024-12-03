@@ -218,10 +218,6 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
     onUndoStackChange?.(undoStack.length > 0);
   }, [undoStack]);
 
-  useEffect(() => {
-    console.log(undoStack);
-  }, [undoStack]);
-
   const onPopulationSelectionChanged = () => {
     const selectedRows = populationGridRef.current?.api.getSelectedRows();
     setPopulationHasSelectedRows(!!(selectedRows && selectedRows.length > 0)); // Ensures a boolean value
@@ -702,7 +698,6 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
               <CustomGridBottomPagination
                 gridRef={populationGridRef}
                 paginationInfo={populationPaginationInfo}
-                setPaginationInfo={setPopulationPaginationInfo}
                 onPageChange={() =>
                   updatePaginationInfo(
                     populationGridRef,
@@ -792,7 +787,6 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
               />
               <CustomGridBottomPagination
                 gridRef={sampleGridRef}
-                setPaginationInfo={setSamplePaginationInfo}
                 paginationInfo={samplePaginationInfo}
                 onPageChange={() =>
                   updatePaginationInfo(sampleGridRef, setSamplePaginationInfo)

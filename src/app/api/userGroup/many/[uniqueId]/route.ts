@@ -22,8 +22,6 @@ export async function POST(
       ...receivedData,
     };
 
-    console.log(payload);
-
     // Use the apiClient to make a POST request
     const response = await apiClient("/userGroupMember", {
       method: "POST",

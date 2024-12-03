@@ -12,7 +12,7 @@ export const userFieldDefs: ColDef[] = [
   },
   {
     headerName: "Name",
-    field: "firstName",
+    field: "fullName",
     cellRenderer: UserRenderer,
     rowDrag: true,
     cellRendererParams: {

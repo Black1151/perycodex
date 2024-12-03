@@ -41,6 +41,7 @@ interface DataGridComponentProps<T> {
   defaultColDef?: ColDef;
   onGridReady?: (params: FirstDataRenderedEvent) => void;
   filterModel?: any;
+  defaultPageSize?: number;
 }
 
 // Define the type for pagination info
@@ -62,6 +63,7 @@ const DataGridComponent = <T,>({
   createNewUrl,
   createNewUrlButtonText,
   isModalEnabled,
+  defaultPageSize = 25,
   openModalComponent: ModalComponent,
   showTopBar = true,
   defaultColDef: customDefaultColDef,
@@ -96,7 +98,7 @@ const DataGridComponent = <T,>({
     currentPage: 1,
     totalPages: 0,
     totalRows: 0,
-    pageSize: 25,
+    pageSize: defaultPageSize,
   });
 
   // General function to update pagination info for both grids
@@ -253,6 +255,7 @@ const DataGridComponent = <T,>({
           loading={loading}
           rowData={rowData}
           columnDefs={fields}
+          rowBuffer={25}
           pagination={true}
           suppressPaginationPanel={true}
           onPaginationChanged={() => {
@@ -268,7 +271,6 @@ const DataGridComponent = <T,>({
         <CustomGridBottomPagination
           gridRef={gridRef}
           paginationInfo={paginationInfo}
-          setPaginationInfo={setPaginationInfo}
           onPageChange={() => {
             updatePaginationInfo(gridRef, setPaginationInfo);
           }}
