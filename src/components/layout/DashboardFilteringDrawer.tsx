@@ -70,7 +70,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
       {drawerState === "closed" && (
         <Box
           position="absolute"
-          top={[135, null, 81]}
+          top={[136, null, 84]}
           right={[3, 4, 5]}
           zIndex={1}
           display={["flex"]}
@@ -109,7 +109,6 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
         transform={
           drawerState === "fully-open" ? "translateX(0)" : "translateX(100%)"
         }
-        // pb={20}
         pb={[20, null, 0]}
       >
         <VStack align="stretch" height="100%" pt={"60px"}>
