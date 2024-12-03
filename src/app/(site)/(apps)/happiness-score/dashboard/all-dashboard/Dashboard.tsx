@@ -652,7 +652,7 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <VStack align="stretch" w="full" spacing={8}>
+    <VStack align="stretch" w="full" spacing={6} mb={3}>
       <SurveyModal
         isOpen={isOpen}
         onClose={onClose}
@@ -707,7 +707,7 @@ const Dashboard: React.FC = () => {
         width="100%"
         borderRadius="lg"
       >
-        <Flex width="100%" justifyContent="center" mb={4}>
+        <Flex width="100%" justifyContent={"center"} mb={2}>
           <SectionHeader>All Submissions</SectionHeader>
           <Tooltip label="Click to learn how to filter the dashboard" hasArrow>
             <IconButton
@@ -745,7 +745,11 @@ const Dashboard: React.FC = () => {
           textAlign="center"
           borderRadius="lg"
         >
-          <Flex width="100%" justifyContent="center" mb={4}>
+          <Flex
+            width="100%"
+            justifyContent={isMobile ? "flex-start" : "center"}
+            mb={2}
+          >
             <SectionHeader>Happiness by Department</SectionHeader>
           </Flex>
           <Box
@@ -762,7 +766,11 @@ const Dashboard: React.FC = () => {
           textAlign="center"
           borderRadius="lg"
         >
-          <Flex width="100%" justifyContent="center" mb={4}>
+          <Flex
+            width="100%"
+            justifyContent={isMobile ? "flex-start" : "center"}
+            mb={2}
+          >
             <SectionHeader>Happiness by Office</SectionHeader>
           </Flex>
           <Box
@@ -779,7 +787,11 @@ const Dashboard: React.FC = () => {
           textAlign="center"
           borderRadius="lg"
         >
-          <Flex width="100%" justifyContent="center" mb={4}>
+          <Flex
+            width="100%"
+            justifyContent={isMobile ? "flex-start" : "center"}
+            mb={2}
+          >
             <SectionHeader>Historic Weekly Average</SectionHeader>
           </Flex>
           <Box
@@ -796,7 +808,11 @@ const Dashboard: React.FC = () => {
           textAlign="center"
           borderRadius="lg"
         >
-          <Flex width="100%" justifyContent="center" mb={4}>
+          <Flex
+            width="100%"
+            justifyContent={isMobile ? "flex-start" : "center"}
+            mb={2}
+          >
             <SectionHeader>Historic Monthly Average</SectionHeader>
           </Flex>
           <Box
