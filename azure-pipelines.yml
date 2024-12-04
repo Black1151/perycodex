@@ -1,13 +1,13 @@
 trigger:
-  - master
+  - develop
 
 resources:
   - repo: self
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: "66fad5e1-b8c4-40c7-8b5d-333a33906a9b"
-  imageRepository: "perygon"
+  dockerRegistryServiceConnection: "cded2d3b-6a50-4f45-a781-7e60a4e51b58"
+  imageRepository: "perygon-develop"
   containerRegistry: "sedulocontainerreg.azurecr.io"
   dockerfilePath: "$(Build.SourcesDirectory)/Dockerfile"
   tag: "latest"
