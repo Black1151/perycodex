@@ -186,6 +186,7 @@ const WeeklyDashboard: React.FC = () => {
 
   const modalDefaultColDef: ColDef = {
     resizable: true,
+    filter: true,
     sortable: true,
     suppressHeaderMenuButton: true,
   };
@@ -207,7 +208,6 @@ const WeeklyDashboard: React.FC = () => {
       filter: "agMultiColumnFilter",
       chartDataType: "category",
     },
-    { field: "teamName", headerName: "Team" },
     {
       field: "deptName",
       headerName: "Department",
@@ -230,7 +230,7 @@ const WeeklyDashboard: React.FC = () => {
   const defaultColDef: ColDef = {
     resizable: true,
     filter: true,
-    sortable: false,
+    sortable: true,
     suppressHeaderMenuButton: true,
   };
 
