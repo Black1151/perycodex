@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -10,19 +10,33 @@ import {
   ModalOverlay,
   Text,
   useDisclosure,
+  VStack,
+  Image,
   useTheme,
+  useBreakpointValue,
+  Avatar,
 } from "@chakra-ui/react";
 
-import { AgChartOptions } from "ag-charts-enterprise";
+import {
+  AgBarSeriesItemStylerParams,
+  AgChartOptions,
+} from "ag-charts-enterprise";
 
 import { AgCharts } from "ag-charts-react";
+import useColor from "@/hooks/useColor";
+import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
+import { perygonTheme } from "@/theme/theme";
+import { useRouter } from "next/navigation";
 
 interface HappinessDifferenceRendererProps {
-  value: "Red" | "Amber" | "Green" | "Purple" | null;
   node: {
     data: {
       userId: string;
-      scoresArray?: { score: number }[];
+      fullName: string;
+      userUniqueId: string;
+      userImageUrl?: string;
+      currentRagStatus?: "Red" | "Amber" | "Green" | "Purple" | "Gray" | null;
+      scoreDistribution?: { score: number; count: number }[];
       [key: string]: any;
     };
   };
@@ -30,47 +44,100 @@ interface HappinessDifferenceRendererProps {
 
 const HappinessDifferenceRenderer: React.FC<
   HappinessDifferenceRendererProps
-> = ({ value, node }) => {
+> = ({ node }) => {
   const theme = useTheme();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const userId = node.data.userId;
+  const fullName = node.data.fullName;
+  const userImageUrl = node.data.userImageUrl;
+  const { getColor } = useColor();
+  const router = useRouter();
+  const value = node.data.currentRagStatus;
+  const isMobile = useBreakpointValue({ base: true, sm: false });
+
+  // Parse the scores array safely
   const validScoresArray = (() => {
     try {
-      return Array.isArray(node.data.scoresArray)
-        ? node.data.scoresArray
-        : JSON.parse(node.data.scoresArray || "[]");
+      return Array.isArray(node.data.scoreDistribution)
+        ? node.data.scoreDistribution
+        : JSON.parse(node.data.scoreDistribution || "[]");
     } catch (error) {
-      console.error("Error parsing scoresArray:", error);
       return [];
     }
   })();
 
   const [options, setOptions] = useState<AgChartOptions>({
-    title: {
-      text: "Score Histogram",
-    },
     data: validScoresArray,
+    padding: {
+      top: 20,
+      left: 20,
+      right: 20,
+      bottom: 20,
+    },
     series: [
       {
-        type: "histogram",
+        type: "bar",
         xKey: "score",
-        xName: "Scores",
-        bins: Array.from({ length: 10 }, (_, i) => [i, i + 1]),
+        yKey: "count",
+        xName: "Score",
+        yName: "Count",
+        cornerRadius: 10,
+        shadow: {
+          enabled: true,
+          color: "#191919",
+          xOffset: 1,
+          yOffset: 1,
+          blur: 4,
+        },
+        itemStyler: (params: AgBarSeriesItemStylerParams<any>) => {
+          const { datum, xKey } = params;
+          const score = parseInt(datum[xKey], 10); // Retrieve the score value
+          return { fill: getColor(score) }; // Color based on score
+        },
       },
     ],
     axes: [
-      { type: "number", position: "bottom", title: { text: "Score Rating" } },
-      { type: "number", position: "left", title: { text: "Frequency" } },
+      {
+        type: "number",
+        position: "bottom",
+        label: {
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: theme.colors.perygonPink,
+        },
+        gridLine: {
+          width: 0,
+        },
+      },
+      {
+        type: "number",
+        position: "left",
+        label: {
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: theme.colors.perygonPink,
+        },
+      },
     ],
-    legend: { enabled: false },
+    legend: {
+      enabled: false,
+    },
+    zoom: {
+      enabled: false,
+    },
+    navigator: {
+      enabled: false,
+    },
+    tooltip: {
+      enabled: false,
+    },
   });
 
-  // Define background colors for each value
   const backgroundColorMap: { [key: string]: string } = {
     Red: "red",
     Amber: theme.colors.yellow,
     Green: theme.colors.seduloGreen,
     Purple: theme.colors.purple[500],
+    Gray: "gray",
   };
 
   const backgroundColor = value ? backgroundColorMap[value] : "gray.500";
@@ -90,7 +157,7 @@ const HappinessDifferenceRenderer: React.FC<
           display="flex"
           alignItems="center"
           justifyContent="center"
-          backgroundColor={backgroundColor || "gray.500"}
+          backgroundColor={backgroundColor}
           color="white"
           fontWeight="bold"
           borderRadius="md"
@@ -106,22 +173,76 @@ const HappinessDifferenceRenderer: React.FC<
       {/* Modal Component */}
       <Modal isOpen={isOpen} onClose={onClose} size="6xl">
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader color="black">
-            {`Happiness Details for User ID: ${userId}`}
+        <ModalContent
+          bgGradient={perygonTheme.gradients.perygonBackground}
+          pb={3}
+        >
+          <ModalHeader color="white" fontWeight="bold">
+            Happiness Histogram
           </ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton color="white" />
           <ModalBody>
-            <Flex direction="column" w="100%" h="500px">
-              <Text
-                mb={4}
-                fontSize="xl"
-                fontWeight="bold"
-                color={backgroundColor}
+            <Flex direction={["column", "row"]} alignItems="flex-start" gap={6}>
+              {/* User Image Section */}
+              <Box
+                flex="0 0 auto"
+                maxW="150px"
+                cursor={"pointer"}
+                onClick={() => router.push(`/users/${node.data.userUniqueId}`)}
               >
-                Status: {value}
-              </Text>
-              <AgCharts options={options as any} />
+                <Avatar
+                  src={userImageUrl}
+                  name={fullName}
+                  borderRadius="full"
+                  boxSize="120px"
+                  objectFit="cover"
+                  boxShadow="lg"
+                />
+              </Box>
+
+              {/* User Info and Chart */}
+              <Flex flex="1" direction="column" gap={4}>
+                <VStack align="start">
+                  <Text
+                    fontSize={["xl", "3xl"]}
+                    fontWeight="bold"
+                    color="white"
+                  >
+                    Name: {fullName}
+                  </Text>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    backgroundColor={backgroundColor}
+                    color="white"
+                    fontWeight="bold"
+                    borderRadius="md"
+                    textAlign="center"
+                    h="80%"
+                    px={2}
+                    py={1}
+                  >
+                    <Text fontSize="lg" fontWeight="bold">
+                      Status: {value}
+                    </Text>
+                  </Box>
+                </VStack>
+
+                <Box
+                  minW={["100%", "100%", "48%"]}
+                  flex={1}
+                  textAlign="center"
+                  borderRadius="lg"
+                >
+                  <Flex width="100%" justifyContent="flex-start" mb={2}>
+                    <SectionHeader>Previous 12 month submissions</SectionHeader>
+                  </Flex>
+                  <Box borderRadius={"2xl"} shadow={"xl"} overflow={"hidden"}>
+                    <AgCharts options={options as any} />
+                  </Box>
+                </Box>
+              </Flex>
             </Flex>
           </ModalBody>
         </ModalContent>
