@@ -474,6 +474,7 @@ export async function GET(request: Request) {
 
       weeksData.push({
         weekKey,
+
         avgScore,
         masonryCounts,
         peopleList,
