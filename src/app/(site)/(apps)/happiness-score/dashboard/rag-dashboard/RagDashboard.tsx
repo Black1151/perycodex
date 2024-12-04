@@ -49,37 +49,37 @@ const RagDashboard: React.FC = () => {
 
   const { fetchClient } = useFetchClient();
 
-  useEffect(() => {
-    const getData = async () => {
-      setIsLoading(true);
+  const getData = async () => {
+    setIsLoading(true);
 
-      try {
-        const response = await fetchClient<ApiResponse>(
-          "/api/happiness-graphs/getRagData",
-          {
-            method: "POST",
-            body: {
-              toolId: 1,
-              workflowId: 1,
-              customerId: 1,
-            },
+    try {
+      const response = await fetchClient<ApiResponse>(
+        "/api/happiness-graphs/getRagData",
+        {
+          method: "POST",
+          body: {
+            toolId: 1,
+            workflowId: 1,
+            customerId: 1,
           },
-        );
+        },
+      );
 
-        if (response && response.resource) {
-          setRowData(response.resource);
-        } else {
-          console.error("Invalid response:", response);
-          setRowData([]);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      if (response && response.resource) {
+        setRowData(response.resource);
+      } else {
+        console.error("Invalid response:", response);
         setRowData([]);
-      } finally {
-        setIsLoading(false);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setRowData([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     getData();
   }, []);
 
@@ -233,6 +233,7 @@ const RagDashboard: React.FC = () => {
           initialFields={columnDefs}
           showTopBar={true}
           defaultColDef={defaultColDef}
+          refreshData={getData}
         />
       </Box>
     </VStack>

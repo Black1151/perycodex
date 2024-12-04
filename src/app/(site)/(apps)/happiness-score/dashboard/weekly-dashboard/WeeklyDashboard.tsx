@@ -124,31 +124,31 @@ const WeeklyDashboard: React.FC = () => {
 
   const { fetchClient } = useFetchClient();
 
-  useEffect(() => {
-    const getData = async () => {
-      setIsLoading(true);
+  const getData = async () => {
+    setIsLoading(true);
 
-      try {
-        // Call fetchClient with the expected ApiResponse type
-        const response = await fetchClient<ApiResponse>(
-          "/api/happiness-graphs/getCurrentWeekHappinessData?toolId=1&wfId=1",
-        );
+    try {
+      // Call fetchClient with the expected ApiResponse type
+      const response = await fetchClient<ApiResponse>(
+        "/api/happiness-graphs/getCurrentWeekHappinessData?toolId=1&wfId=1",
+      );
 
-        if (response && response.data.length > 0) {
-          setRowData(response.data); // Use the typed response data
-        } else {
-          setRowData([]);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      if (response && response.data.length > 0) {
+        setRowData(response.data); // Use the typed response data
+      } else {
         setRowData([]);
-      } finally {
-        setIsLoading(false);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setRowData([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     getData();
-  }, []); // Empty dependency array ensures the effect runs only on mount
+  }, []);
 
   const modalColDef: ColDef[] = [
     {
@@ -548,6 +548,7 @@ const WeeklyDashboard: React.FC = () => {
           showTopBar={true}
           defaultColDef={defaultColDef}
           onGridReady={handleGridReady}
+          refreshData={getData}
         />
       </Box>
 

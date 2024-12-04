@@ -92,41 +92,41 @@ const Dashboard: React.FC = () => {
 
   const { fetchClient } = useFetchClient();
 
-  useEffect(() => {
-    const getData = async () => {
-      setIsLoading(true);
+  const getData = async () => {
+    setIsLoading(true);
 
-      try {
-        const response = await fetchClient<ApiResponse>(
-          "/api/happiness-graphs/getAllHappinessData?toolId=1&wfId=1",
-        );
+    try {
+      const response = await fetchClient<ApiResponse>(
+        "/api/happiness-graphs/getAllHappinessData?toolId=1&wfId=1",
+      );
 
-        if (response && typeof response === "object" && "data" in response) {
-          // Preprocess data to include the EOW date
-          const processedData = response.data.map((item: RowData) => {
-            const createdAtDate = parseISO(item.createdAt);
-            const dayOfWeek = createdAtDate.getDay(); // 0 = Sunday, 1 = Monday, ...
-            const eowDate = addDays(createdAtDate, 7 - dayOfWeek); // Move to next Sunday
-            return {
-              ...item,
-              eowDate: format(eowDate, "yyyy-MM-dd"), // Format as "YYYY-MM-DD"
-              monthYear: format(createdAtDate, "MM-yyyy"), // Format as "MM-YYYY"
-            };
-          });
+      if (response && typeof response === "object" && "data" in response) {
+        // Preprocess data to include the EOW date
+        const processedData = response.data.map((item: RowData) => {
+          const createdAtDate = parseISO(item.createdAt);
+          const dayOfWeek = createdAtDate.getDay(); // 0 = Sunday, 1 = Monday, ...
+          const eowDate = addDays(createdAtDate, 7 - dayOfWeek); // Move to next Sunday
+          return {
+            ...item,
+            eowDate: format(eowDate, "yyyy-MM-dd"), // Format as "YYYY-MM-DD"
+            monthYear: format(createdAtDate, "MM-yyyy"), // Format as "MM-YYYY"
+          };
+        });
 
-          setRowData(processedData);
-        } else {
-          console.error("Invalid response:", response);
-          setRowData([]);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+        setRowData(processedData);
+      } else {
+        console.error("Invalid response:", response);
         setRowData([]);
-      } finally {
-        setIsLoading(false);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setRowData([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     getData();
   }, []);
 
@@ -731,6 +731,7 @@ const Dashboard: React.FC = () => {
           showTopBar={true}
           defaultColDef={defaultColDef}
           onGridReady={handleGridReady}
+          refreshData={getData}
         />
       </Box>
 

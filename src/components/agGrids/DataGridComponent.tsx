@@ -23,7 +23,7 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Add, Clear } from "@mui/icons-material";
+import { Add, Clear, Refresh } from "@mui/icons-material";
 import NoDataOverlay from "@/components/agGrids/NoDataOverlay";
 import CustomGridBottomPagination from "@/components/agGrids/CustomGridBottomPagination";
 import LoadingOverlay from "@/components/agGrids/LoadingOverlay";
@@ -42,6 +42,7 @@ interface DataGridComponentProps<T> {
   onGridReady?: (params: FirstDataRenderedEvent) => void;
   filterModel?: any;
   defaultPageSize?: number;
+  refreshData?: () => void;
 }
 
 // Define the type for pagination info
@@ -69,6 +70,7 @@ const DataGridComponent = <T,>({
   defaultColDef: customDefaultColDef,
   onGridReady,
   filterModel,
+  refreshData,
 }: DataGridComponentProps<T>) => {
   const gridRef = useRef<AgGridReact>(null);
   const [rowData, setRowData] = useState<T[]>(data || []);
@@ -210,42 +212,62 @@ const DataGridComponent = <T,>({
             }}
           />
 
-          <Button
-            variant="solid"
-            bg="seduloRed"
-            aria-label="reset-filters"
-            onClick={resetFilter}
-            ml="auto"
-            size="md"
-            color="white"
-            _hover={{ bg: "perygonPink" }}
-            display="flex"
-            alignItems="center"
-            gap={[0, 0, 2]}
-            lineHeight={0}
-          >
-            <Clear />
-            <Text>{resetFiltersButtonText}</Text>
-          </Button>
+          <Flex flex={1} justify={"flex-end"} align={"center"} gap={2}>
+            {refreshData && (
+              <Button
+                variant="solid"
+                bg="seduloRed"
+                aria-label="reset-filters"
+                onClick={refreshData}
+                size="md"
+                color="white"
+                _hover={{ bg: "perygonPink" }}
+                display="flex"
+                alignItems="center"
+                gap={[0, 0, 2]}
+                lineHeight={0}
+              >
+                <Refresh />
+                <Text>Refresh Data</Text>
+              </Button>
+            )}
 
-          {/* Create New Button */}
-          {(createNewUrl || isModalEnabled) && (
             <Button
               variant="solid"
-              bg="lightGreen"
-              aria-label="create-new"
-              onClick={handleCreateNewClick}
+              bg="seduloRed"
+              aria-label="reset-filters"
+              onClick={resetFilter}
               size="md"
               color="white"
+              _hover={{ bg: "perygonPink" }}
               display="flex"
               alignItems="center"
               gap={[0, 0, 2]}
               lineHeight={0}
             >
-              <Add />
-              <Text>{createNewUrlButtonText}</Text>
+              <Clear />
+              <Text>{resetFiltersButtonText}</Text>
             </Button>
-          )}
+
+            {/* Create New Button */}
+            {(createNewUrl || isModalEnabled) && (
+              <Button
+                variant="solid"
+                bg="lightGreen"
+                aria-label="create-new"
+                onClick={handleCreateNewClick}
+                size="md"
+                color="white"
+                display="flex"
+                alignItems="center"
+                gap={[0, 0, 2]}
+                lineHeight={0}
+              >
+                <Add />
+                <Text>{createNewUrlButtonText}</Text>
+              </Button>
+            )}
+          </Flex>
         </Flex>
       )}
 
