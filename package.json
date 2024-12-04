@@ -18,6 +18,8 @@
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^5.16.6",
     "@prisma/client": "^5.17.0",
+    "ag-charts-enterprise": "10.2.x",
+    "ag-charts-react": "10.2.x",
     "ag-grid-charts-enterprise": "^32.2.0",
     "ag-grid-react": "^32.2.0",
     "framer-motion": "^11.3.17",
