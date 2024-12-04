@@ -234,6 +234,7 @@ const RagDashboard: React.FC = () => {
           showTopBar={true}
           defaultColDef={defaultColDef}
           refreshData={getData}
+          enableAutoRefresh={true}
         />
       </Box>
     </VStack>

@@ -549,6 +549,7 @@ const WeeklyDashboard: React.FC = () => {
           defaultColDef={defaultColDef}
           onGridReady={handleGridReady}
           refreshData={getData}
+          enableAutoRefresh={true}
         />
       </Box>
 

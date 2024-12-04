@@ -43,6 +43,8 @@ interface DataGridComponentProps<T> {
   filterModel?: any;
   defaultPageSize?: number;
   refreshData?: () => void;
+  enableAutoRefresh?: boolean;
+  refreshInterval?: number;
 }
 
 // Define the type for pagination info
@@ -71,6 +73,8 @@ const DataGridComponent = <T,>({
   onGridReady,
   filterModel,
   refreshData,
+  enableAutoRefresh = false,
+  refreshInterval = 10,
 }: DataGridComponentProps<T>) => {
   const gridRef = useRef<AgGridReact>(null);
   const [rowData, setRowData] = useState<T[]>(data || []);
@@ -79,9 +83,39 @@ const DataGridComponent = <T,>({
   const [isGridReady, setIsGridReady] = useState(false);
   const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
   const uniqueQuickFilterId = useId();
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Modal disclosure state for Chakra UI
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  // Function to start the timer
+  const startTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current); // Clear any existing timer
+    }
+    if (enableAutoRefresh && refreshData && refreshInterval > 0) {
+      const intervalInMilliseconds = refreshInterval * 60000; // Convert minutes to milliseconds
+      timerRef.current = setInterval(() => {
+        refreshData(); // Call refreshData at the specified interval
+      }, intervalInMilliseconds);
+    }
+  };
+
+  // Clear the timer on unmount
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, []);
+
+  // Start the timer when the component mounts, only if auto-refresh is enabled
+  useEffect(() => {
+    if (enableAutoRefresh && refreshData) {
+      startTimer();
+    }
+  }, [enableAutoRefresh, refreshData]);
 
   // Memoize defaultColDef to avoid re-renders
   const defaultColDef = useMemo(
@@ -146,6 +180,11 @@ const DataGridComponent = <T,>({
     base: "",
     sm: "",
     md: "Reset Filters",
+  });
+  const refreshButtonText = useBreakpointValue({
+    base: "",
+    sm: "",
+    md: "Refresh Data",
   });
 
   // Quick Filter
@@ -228,7 +267,7 @@ const DataGridComponent = <T,>({
                 lineHeight={0}
               >
                 <Refresh />
-                <Text>Refresh Data</Text>
+                <Text>{refreshButtonText}</Text>
               </Button>
             )}
 

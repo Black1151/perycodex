@@ -732,6 +732,7 @@ const Dashboard: React.FC = () => {
           defaultColDef={defaultColDef}
           onGridReady={handleGridReady}
           refreshData={getData}
+          enableAutoRefresh={true}
         />
       </Box>
 
