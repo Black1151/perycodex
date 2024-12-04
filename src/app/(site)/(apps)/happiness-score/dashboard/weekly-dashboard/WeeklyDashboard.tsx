@@ -35,6 +35,7 @@ import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/Happiness
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import { Info } from "@mui/icons-material";
 import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
+import CommentsCellRenderer from "@/components/agGrids/CellRenderers/CommentsCellRenderer";
 
 interface ApiResponse {
   data: RowData[]; // This matches the RowData type you're using
@@ -181,6 +182,7 @@ const WeeklyDashboard: React.FC = () => {
     {
       field: "comments",
       headerName: "Comments",
+      cellRenderer: CommentsCellRenderer,
     },
   ];
 
@@ -223,7 +225,7 @@ const WeeklyDashboard: React.FC = () => {
     {
       field: "comments",
       headerName: "Comments",
-      flex: 3,
+      cellRenderer: CommentsCellRenderer,
     },
   ];
 
