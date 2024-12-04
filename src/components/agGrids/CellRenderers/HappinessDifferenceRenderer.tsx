@@ -35,7 +35,14 @@ interface HappinessDifferenceRendererProps {
       fullName: string;
       userUniqueId: string;
       userImageUrl?: string;
-      currentRagStatus?: "Red" | "Amber" | "Green" | "Purple" | "Gray" | null;
+      currentRagStatus?:
+        | "Red"
+        | "Amber"
+        | "Green"
+        | "Purple"
+        | "Gray"
+        | "N/A"
+        | null;
       scoreDistribution?: { score: number; count: number }[];
       [key: string]: any;
     };
@@ -140,6 +147,19 @@ const HappinessDifferenceRenderer: React.FC<
     Gray: "gray",
   };
 
+  const backgroundColorText: { [key: string]: string } = {
+    Purple: "A lot higher than their average happiness",
+    Green: "Slightly above their average happiness",
+    Amber: "Slightly lower than their average happiness",
+    Red: "A lot lower than their average happiness",
+    Gray: "Has not submitted a score in the last month",
+  };
+
+  const statusText =
+    value && backgroundColorText[value]
+      ? backgroundColorText[value]
+      : "Not enough submissions"; // Fallback for undefined statuses
+
   const backgroundColor = value ? backgroundColorMap[value] : "gray.500";
 
   return (
@@ -182,33 +202,31 @@ const HappinessDifferenceRenderer: React.FC<
           </ModalHeader>
           <ModalCloseButton color="white" />
           <ModalBody>
-            <Flex direction={["column", "row"]} alignItems="flex-start" gap={6}>
+            <Flex direction={["column"]} alignItems="flex-start" gap={6}>
               {/* User Image Section */}
-              <Box
-                flex="0 0 auto"
-                maxW="150px"
+              <Flex
+                w={"full"}
                 cursor={"pointer"}
+                justifyContent={"flex-start"}
+                alignItems={"center"}
+                gap={4}
                 onClick={() => router.push(`/users/${node.data.userUniqueId}`)}
               >
                 <Avatar
                   src={userImageUrl}
                   name={fullName}
                   borderRadius="full"
-                  boxSize="120px"
+                  boxSize={["60px", "120px"]}
                   objectFit="cover"
                   boxShadow="lg"
                 />
-              </Box>
-
-              {/* User Info and Chart */}
-              <Flex flex="1" direction="column" gap={4}>
-                <VStack align="start">
+                <Flex direction={"column"} gap={2}>
                   <Text
-                    fontSize={["xl", "3xl"]}
+                    fontSize={["2xl", "3xl"]}
                     fontWeight="bold"
                     color="white"
                   >
-                    Name: {fullName}
+                    {fullName}
                   </Text>
                   <Box
                     display="flex"
@@ -216,19 +234,23 @@ const HappinessDifferenceRenderer: React.FC<
                     justifyContent="center"
                     backgroundColor={backgroundColor}
                     color="white"
+                    fontSize={["sm", "2xl"]}
                     fontWeight="bold"
                     borderRadius="md"
                     textAlign="center"
-                    h="80%"
-                    px={2}
-                    py={1}
+                    p={1}
                   >
-                    <Text fontSize="lg" fontWeight="bold">
-                      Status: {value}
-                    </Text>
+                    <Text fontWeight="bold">Status: {value ?? "N/A"}</Text>
                   </Box>
-                </VStack>
+                </Flex>
+              </Flex>
 
+              <Text color={"white"} fontSize={"xs"}>
+                {statusText}
+              </Text>
+
+              {/* User Info and Chart */}
+              <Flex flex="1" direction="column" gap={4} width={"full"}>
                 <Box
                   minW={["100%", "100%", "48%"]}
                   flex={1}
