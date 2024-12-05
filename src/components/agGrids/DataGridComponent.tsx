@@ -85,6 +85,10 @@ const DataGridComponent = <T,>({
   const uniqueQuickFilterId = useId();
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+  useEffect(() => {
+    setFields(initialFields);
+  }, [initialFields]);
+
   // Modal disclosure state for Chakra UI
   const { isOpen, onOpen, onClose } = useDisclosure();
 
