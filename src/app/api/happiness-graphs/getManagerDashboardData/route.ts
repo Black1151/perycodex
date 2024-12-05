@@ -281,6 +281,9 @@ export async function GET(request: Request) {
 
       const options = Array.from(optionsSet.values());
 
+      // **Sort options alphabetically by label**
+      options.sort((a, b) => a.label.localeCompare(b.label));
+
       const groupLabels: Record<string, string> = {
         userTags: "User Tags",
         siteTags: "Site Tags",
