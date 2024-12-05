@@ -69,7 +69,7 @@ interface ManagerDashboardPageInnerProps {
   drawerState: "closed" | "fully-open";
 }
 
-export default function ManagerDashboardPageInner({
+export default function ManagerDashboardInner({
   loading,
   speechBubbleData,
   lineGraphData,

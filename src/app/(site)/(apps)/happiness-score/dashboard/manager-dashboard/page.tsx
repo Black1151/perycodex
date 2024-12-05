@@ -28,10 +28,9 @@ export default async function Home({
     await getFilteredDashboards(
       toolId,
       workflowId,
-      "/happiness-score/dashboard/manager-dashboard",
+      "/happiness-score/dashboard/manager-dashboard"
     );
 
-  // Redirect to the first dashboard if the user doesn't have access to the current one
   if (redirectPath) {
     return redirect(redirectPath);
   }
@@ -45,7 +44,7 @@ export default async function Home({
         }
         canStartWorkflow={toolData.startInUi}
       />
-      <ManagerDashboardPage isLeaderDashboard={false} />
+      <ManagerDashboardPage />
     </WorkflowEngine>
   );
 }

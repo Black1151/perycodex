@@ -33,18 +33,18 @@ export interface Person {
   lastName: string;
   jobTitle: string;
   department: string;
-  site: string; // Added site
+  site: string;
   score: number;
   imageUrl: string;
   fullName: string;
 }
 
 interface ManagerDashboardPageProps {
-  isLeaderDashboard: boolean;
+  preFilter?: "teams" | "departments";
 }
 
 export default function ManagerDashboardPage({
-  isLeaderDashboard,
+  preFilter,
 }: ManagerDashboardPageProps) {
   const [drawerState, setDrawerState] = useState<"closed" | "fully-open">(
     "closed"
@@ -107,16 +107,17 @@ export default function ManagerDashboardPage({
           }
         }
       });
-
       if (timeRange && timeRange !== "all") {
         params.append("timeRange", timeRange);
       }
 
-      params.append("isLeaderDashboard", isLeaderDashboard ? "true" : "false");
+      if (preFilter) {
+        params.append("preFilter", preFilter);
+      }
 
       return params.toString();
     },
-    [labelToParamName, isLeaderDashboard]
+    [labelToParamName, preFilter]
   );
 
   const updateFilterOptions = useCallback(

@@ -138,6 +138,8 @@ export async function GET(request: Request) {
 
   const preFilter = queryParams.preFilter;
 
+  console.log("PREFILTER", preFilter);
+
   let managerOfDeptIds: string[] = [];
   let managerOfTeamIds: string[] = [];
 
@@ -432,8 +434,6 @@ export async function GET(request: Request) {
     );
   }
 
-  console.log("ENDPOINTWITHALLFILTERS", endpointWithAllFilters);
-
   let finalData: ApiResponse = { resource: [] };
 
   try {
@@ -449,8 +449,6 @@ export async function GET(request: Request) {
     }
 
     finalData = await response.json();
-
-    console.log("FINAL DATA", finalData);
   } catch (error) {
     console.error("Error fetching final data:", error);
     return NextResponse.json(

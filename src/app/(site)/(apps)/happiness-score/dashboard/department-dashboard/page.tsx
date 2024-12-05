@@ -48,7 +48,7 @@ export default async function Home({
         }
         canStartWorkflow={toolData.startInUi}
       />
-      <ManagerDashboardPage preFilter={"teams"} />
+      <ManagerDashboardPage preFilter={"departments"} />
     </WorkflowEngine>
   );
 }
