@@ -25,9 +25,16 @@ interface HappinessDifferenceRendererProps {
         | "N/A"
         | null;
       scoreDistribution?: { score: number; count: number }[];
+      userScores: Scores[];
       [key: string]: any;
     };
   };
+}
+
+interface Scores {
+  score: number;
+  countOfScore: number;
+  dayOfSubmission: string;
 }
 
 const HappinessDifferenceRenderer: React.FC<
@@ -102,7 +109,7 @@ const HappinessDifferenceRenderer: React.FC<
           fullName={fullName}
           userImageUrl={userImageUrl}
           userUniqueId={userUniqueId}
-          scoreDistribution={node.data.scoreDistribution}
+          userScores={node.data.userScores}
         />
       )}
     </>
