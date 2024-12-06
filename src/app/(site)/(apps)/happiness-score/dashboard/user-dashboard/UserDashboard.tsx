@@ -26,6 +26,7 @@ import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/Happiness
 import HappinessDifferenceRenderer from "@/components/agGrids/CellRenderers/HappinessDifferenceRenderer";
 import HappinessHistogramRenderer from "@/components/agGrids/CellRenderers/HappinessHistogramRenderer";
 import CommentsCellRenderer from "@/components/agGrids/CellRenderers/CommentsCellRenderer";
+import { useUser } from "@/providers/UserProvider";
 
 // Define interfaces for each data type
 interface UserScore {
@@ -105,6 +106,7 @@ const UserDashboard: React.FC = () => {
     MonthlyComparativeItem[]
   >([]);
 
+  const { user } = useUser();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { fetchClient } = useFetchClient();
   const theme = useTheme();
@@ -206,15 +208,6 @@ const UserDashboard: React.FC = () => {
   useEffect(() => {
     getData();
   }, []);
-
-  if (isLoading) {
-    return (
-      <VStack align="center" justify="center" h="100vh">
-        <Spinner size="xl" />
-        <Text>Loading...</Text>
-      </VStack>
-    );
-  }
 
   if (
     rowData.length === 0 &&
@@ -406,45 +399,6 @@ const UserDashboard: React.FC = () => {
 
   return (
     <>
-      <SurveyModal
-        isOpen={isOpen}
-        onClose={onClose}
-        onConfirm={onClose}
-        showButtons={{ close: false, confirm: true }}
-        title={"How to filter"}
-        titleProps={{
-          fontFamily: "Bonfire",
-          fontSize: "2xl",
-          fontWeight: "bold",
-          color: "perygonPink",
-        }}
-        bodyContent={
-          <>
-            <Text mb={4}>To filter the dashboard:</Text>
-            <Text as="ul" ml={4}>
-              <li>
-                Use the filter icon on column headers to find specific entries.
-              </li>
-              <li>Filtering will affect the dashboard charts below</li>
-            </Text>
-            <br />
-            <Text mb={4}>
-              The difference column indicates where the last months average has
-              positively/negatively shifted compared to the previous 12 months
-              average for an individual.
-            </Text>
-            <Text as="ul" ml={4}>
-              <li>Purple: A lot happier</li>
-              <li>Green: Normal happiness</li>
-              <li>Amber: Slightly lower than their normal happiness</li>
-              <li>Red: A lot lower than their normal happiness</li>
-              <li>Gray: Haven't submitted a score in the last month</li>
-              <li>N/A: Not enough submissions</li>
-            </Text>
-          </>
-        }
-      />
-
       <VStack align="stretch" w="full" spacing={6} mb={3}>
         {comparativeData.length > 0 && (
           <Box
@@ -455,22 +409,8 @@ const UserDashboard: React.FC = () => {
           >
             <Flex width="100%" justifyContent="center" mb={4}>
               <SectionHeader>
-                Individuals Stats for previous 12 months{" "}
+                {user?.fullName}'s Stats for previous 12 months
               </SectionHeader>
-              <Tooltip
-                label="Click to learn how to filter the dashboard"
-                hasArrow
-              >
-                <IconButton
-                  aria-label="Filter Help"
-                  icon={<Info />}
-                  variant="ghost"
-                  onClick={onOpen}
-                  color={"white"}
-                  _hover={{ color: "perygonPink", background: "white" }}
-                  ml={2}
-                />
-              </Tooltip>
             </Flex>
             <DataGridComponent
               data={rowData}
@@ -488,7 +428,7 @@ const UserDashboard: React.FC = () => {
         {comparativeData.length > 0 && (
           <>
             <Flex width="100%" justifyContent={"center"} mb={2}>
-              <SectionHeader>All Submissions</SectionHeader>
+              <SectionHeader>Weekly Trend</SectionHeader>
             </Flex>
             <Box
               borderRadius="2xl"
@@ -508,7 +448,7 @@ const UserDashboard: React.FC = () => {
         {monthlyComparativeData.length > 0 && (
           <>
             <Flex width="100%" justifyContent={"center"} mb={2}>
-              <SectionHeader>All Submissions</SectionHeader>
+              <SectionHeader>Monthly Trend</SectionHeader>
             </Flex>
             <Box
               borderRadius="2xl"
@@ -528,7 +468,7 @@ const UserDashboard: React.FC = () => {
         {userDistribution.length > 0 && (
           <>
             <Flex width="100%" justifyContent={"center"} mb={2}>
-              <SectionHeader>All Submissions</SectionHeader>
+              <SectionHeader>Punch Card</SectionHeader>
             </Flex>
             <Box
               borderRadius="2xl"
@@ -545,7 +485,7 @@ const UserDashboard: React.FC = () => {
         {userScores.length > 0 && (
           <>
             <Flex width="100%" justifyContent={"center"} mb={2}>
-              <SectionHeader>All Submissions</SectionHeader>
+              <SectionHeader>Frequency of Scores</SectionHeader>
             </Flex>
             <Box borderRadius="2xl" shadow="xl" overflow="hidden">
               <CompanyHistogram scoreDistribution={userScores} />
