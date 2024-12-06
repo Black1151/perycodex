@@ -401,7 +401,7 @@ const UserDashboard: React.FC = () => {
           >
             <Flex width="100%" justifyContent="center" mb={4}>
               <SectionHeader>
-                {user?.fullName}'s Stats for previous 12 months
+                {user?.fullName} stats for previous 12 months
               </SectionHeader>
             </Flex>
             <DataGridComponent
