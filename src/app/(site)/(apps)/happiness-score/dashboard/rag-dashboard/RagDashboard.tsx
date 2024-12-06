@@ -7,6 +7,7 @@ import {
   IconButton,
   Text,
   Tooltip,
+  useBreakpointValue,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
@@ -22,9 +23,36 @@ import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/HappinessScoreRenderer";
 import HappinessDifferenceRenderer from "@/components/agGrids/CellRenderers/HappinessDifferenceRenderer";
 import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
+import HappinessHistogramRenderer from "@/components/agGrids/CellRenderers/HappinessHistogramRenderer";
+import { CompanyBubble } from "@/app/(site)/(apps)/happiness-score/dashboard/rag-dashboard/CompanyBubble";
+import { CompanyHistogram } from "@/app/(site)/(apps)/happiness-score/dashboard/rag-dashboard/CompanyHistogram";
 
 interface ApiResponse {
-  resource: RowData[]; // This matches the RowData type you're using
+  userResource: RowData[];
+  companyResource: CompanyData;
+}
+
+interface CompanyData {
+  avgHappinessScore: string;
+  stddevHappinessScore: string;
+  minHappinessScore: number;
+  maxHappinessScore: number;
+  totalEntries: number;
+  lastMonthHappinessScore: string;
+  currentRagStatus: string;
+  scoreDistribution: ScoreDistribution[];
+  companyScores: Scores[];
+}
+
+interface ScoreDistribution {
+  count: number;
+  score: number;
+}
+
+interface Scores {
+  score: number;
+  countOfScore: number;
+  dayOfSubmission: string;
 }
 
 interface RowData {
@@ -44,121 +72,218 @@ interface RowData {
 
 const RagDashboard: React.FC = () => {
   const [rowData, setRowData] = useState<RowData[]>([]);
+  const [companyData, setCompanyData] = useState<CompanyData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [columnDefs, setColumnDefs] = useState<ColDef[]>([]);
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   const { fetchClient } = useFetchClient();
 
-  useEffect(() => {
-    const getData = async () => {
-      setIsLoading(true);
+  const getData = async () => {
+    setIsLoading(true);
 
-      try {
-        const response = await fetchClient<ApiResponse>(
-          "/api/happiness-graphs/getRagData",
-          {
-            method: "POST",
-            body: {
-              toolId: 1,
-              workflowId: 1,
-              customerId: 1,
-            },
+    try {
+      const response = await fetchClient<ApiResponse>(
+        "/api/happiness-graphs/getRagData",
+        {
+          method: "POST",
+          body: {
+            toolId: 1,
+            workflowId: 1,
+            customerId: 1,
           },
-        );
+        },
+      );
 
-        if (response && response.resource) {
-          setRowData(response.resource);
-        } else {
-          console.error("Invalid response:", response);
-          setRowData([]);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      if (response) {
+        setRowData(response.userResource || []);
+        setCompanyData(response.companyResource || null);
+      } else {
+        console.error("Invalid response:", response);
         setRowData([]);
-      } finally {
-        setIsLoading(false);
+        setCompanyData(null);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setRowData([]);
+      setCompanyData(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     getData();
   }, []);
 
-  const columnDefs: ColDef[] = [
-    {
-      field: "fullName",
-      headerName: "Name",
-      cellRenderer: UserRenderer,
-      sortable: true,
-      cellRendererParams: {
-        uniqueIdField: "userUniqueId",
-        nameField: "fullName",
-        imageUrlField: "userImageUrl",
+  useEffect(() => {
+    const desktopColumnDefs: ColDef[] = [
+      {
+        field: "fullName",
+        headerName: "Name",
+        cellRenderer: UserRenderer,
+        sortable: true,
+        cellRendererParams: {
+          uniqueIdField: "userUniqueId",
+          nameField: "fullName",
+          imageUrlField: "userImageUrl",
+        },
       },
-    },
-    {
-      field: "siteName",
-      headerName: "Site",
-      sortable: true,
-      filter: "agSetColumnFilter",
-    },
-    {
-      field: "deptName",
-      headerName: "Department",
-      sortable: true,
-      filter: "agSetColumnFilter",
-    },
-    {
-      field: "minHappinessScore",
-      headerName: "Min Score",
-      sortable: true,
-      cellRenderer: HappinessScoreRenderer,
-      filter: "agNumberColumnFilter",
-      cellDataType: "number",
-    },
-    {
-      field: "maxHappinessScore",
-      headerName: "Max Score",
-      sortable: true,
-      cellRenderer: HappinessScoreRenderer,
-      filter: "agNumberColumnFilter",
-      cellDataType: "number",
-    },
-    {
-      field: "totalEntries",
-      headerName: "Submissions",
-      sortable: true,
-      filter: "agNumberColumnFilter",
-      cellDataType: "number",
-    },
-    {
-      field: "avgHappinessScore",
-      headerName: "Average Happiness Score",
-      sortable: true,
-      cellRenderer: HappinessScoreRenderer,
-      filter: "agNumberColumnFilter",
-      cellDataType: "number",
-    },
-    {
-      field: "stddevHappinessScore",
-      headerName: "Std Dev",
-      sortable: true,
-      hide: true,
-    },
-    {
-      field: "lastMonthHappinessScore",
-      headerName: "Last Month Avg",
-      sortable: true,
-      cellRenderer: HappinessScoreRenderer,
-      filter: "agNumberColumnFilter",
-      cellDataType: "number",
-    },
-    {
-      field: "currentRagStatus",
-      headerName: "Difference",
-      sortable: true,
-      cellRenderer: HappinessDifferenceRenderer,
-    },
-  ];
+      {
+        field: "siteName",
+        headerName: "Site",
+        sortable: true,
+        filter: "agSetColumnFilter",
+      },
+      {
+        field: "deptName",
+        headerName: "Department",
+        sortable: true,
+        filter: "agSetColumnFilter",
+      },
+      {
+        field: "minHappinessScore",
+        headerName: "Min Score",
+        sortable: true,
+        cellRenderer: HappinessScoreRenderer,
+        filter: "agNumberColumnFilter",
+        cellDataType: "number",
+      },
+      {
+        field: "maxHappinessScore",
+        headerName: "Max Score",
+        sortable: true,
+        cellRenderer: HappinessScoreRenderer,
+        filter: "agNumberColumnFilter",
+        cellDataType: "number",
+      },
+      {
+        field: "totalEntries",
+        headerName: "Submissions",
+        sortable: true,
+        filter: "agNumberColumnFilter",
+        cellDataType: "number",
+      },
+      {
+        field: "avgHappinessScore",
+        headerName: "Average Happiness Score",
+        sortable: true,
+        cellRenderer: HappinessScoreRenderer,
+        filter: "agNumberColumnFilter",
+        cellDataType: "number",
+      },
+      {
+        field: "stddevHappinessScore",
+        headerName: "Std Dev",
+        sortable: true,
+        hide: true,
+      },
+      {
+        field: "lastMonthHappinessScore",
+        headerName: "Last Month Avg",
+        sortable: true,
+        cellRenderer: HappinessScoreRenderer,
+        filter: "agNumberColumnFilter",
+        cellDataType: "number",
+      },
+      {
+        field: "currentRagStatus",
+        headerName: "Difference",
+        sortable: true,
+        cellRenderer: HappinessDifferenceRenderer,
+      },
+      {
+        field: "action",
+        headerName: "Action",
+        cellRenderer: HappinessHistogramRenderer,
+      },
+    ];
+
+    const mobileColumnDefs: ColDef[] = [
+      {
+        field: "fullName",
+        headerName: "Name",
+        cellRenderer: UserRenderer,
+        sortable: true,
+        cellRendererParams: {
+          uniqueIdField: "userUniqueId",
+          nameField: "fullName",
+          imageUrlField: "userImageUrl",
+        },
+      },
+      {
+        field: "siteName",
+        headerName: "Site",
+        sortable: true,
+        filter: "agSetColumnFilter",
+      },
+      {
+        field: "deptName",
+        headerName: "Department",
+        sortable: true,
+        filter: "agSetColumnFilter",
+      },
+      {
+        field: "minHappinessScore",
+        headerName: "Min Score",
+        sortable: true,
+        cellRenderer: HappinessScoreRenderer,
+        filter: "agNumberColumnFilter",
+        cellDataType: "number",
+      },
+      {
+        field: "maxHappinessScore",
+        headerName: "Max Score",
+        sortable: true,
+        cellRenderer: HappinessScoreRenderer,
+        filter: "agNumberColumnFilter",
+        cellDataType: "number",
+      },
+      {
+        field: "totalEntries",
+        headerName: "Submissions",
+        sortable: true,
+        filter: "agNumberColumnFilter",
+        cellDataType: "number",
+      },
+      {
+        field: "avgHappinessScore",
+        headerName: "Average Happiness Score",
+        sortable: true,
+        cellRenderer: HappinessScoreRenderer,
+        filter: "agNumberColumnFilter",
+        cellDataType: "number",
+      },
+      {
+        field: "stddevHappinessScore",
+        headerName: "Std Dev",
+        sortable: true,
+        hide: true,
+      },
+      {
+        field: "lastMonthHappinessScore",
+        headerName: "Last Month Avg",
+        sortable: true,
+        cellRenderer: HappinessScoreRenderer,
+        filter: "agNumberColumnFilter",
+        cellDataType: "number",
+      },
+      {
+        field: "currentRagStatus",
+        headerName: "Difference",
+        sortable: true,
+        cellRenderer: HappinessDifferenceRenderer,
+      },
+      {
+        field: "action",
+        headerName: "Action",
+        cellRenderer: HappinessHistogramRenderer,
+      },
+    ];
+
+    setColumnDefs(isMobile ? mobileColumnDefs : desktopColumnDefs);
+  }, [isMobile]);
 
   const defaultColDef: ColDef = {
     resizable: true,
@@ -200,6 +325,8 @@ const RagDashboard: React.FC = () => {
               <li>Green: Normal happiness</li>
               <li>Amber: Slightly lower than their normal happiness</li>
               <li>Red: A lot lower than their normal happiness</li>
+              <li>Gray: Haven't submitted a score in the last month</li>
+              <li>N/A: Not enough submissions</li>
             </Text>
           </>
         }
@@ -233,8 +360,16 @@ const RagDashboard: React.FC = () => {
           initialFields={columnDefs}
           showTopBar={true}
           defaultColDef={defaultColDef}
+          refreshData={getData}
+          enableAutoRefresh={true}
         />
       </Box>
+      {companyData && companyData.scoreDistribution && (
+        <CompanyHistogram scoreDistribution={companyData.scoreDistribution} />
+      )}
+      {companyData && companyData.companyScores && (
+        <CompanyBubble scores={companyData.companyScores} />
+      )}
     </VStack>
   );
 };

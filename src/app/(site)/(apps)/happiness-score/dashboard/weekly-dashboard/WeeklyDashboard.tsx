@@ -35,6 +35,7 @@ import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/Happiness
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import { Info } from "@mui/icons-material";
 import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
+import CommentsCellRenderer from "@/components/agGrids/CellRenderers/CommentsCellRenderer";
 
 interface ApiResponse {
   data: RowData[]; // This matches the RowData type you're using
@@ -123,31 +124,31 @@ const WeeklyDashboard: React.FC = () => {
 
   const { fetchClient } = useFetchClient();
 
-  useEffect(() => {
-    const getData = async () => {
-      setIsLoading(true);
+  const getData = async () => {
+    setIsLoading(true);
 
-      try {
-        // Call fetchClient with the expected ApiResponse type
-        const response = await fetchClient<ApiResponse>(
-          "/api/happiness-graphs/getCurrentWeekHappinessData?toolId=1&wfId=1",
-        );
+    try {
+      // Call fetchClient with the expected ApiResponse type
+      const response = await fetchClient<ApiResponse>(
+        "/api/happiness-graphs/getCurrentWeekHappinessData?toolId=1&wfId=1",
+      );
 
-        if (response && response.data.length > 0) {
-          setRowData(response.data); // Use the typed response data
-        } else {
-          setRowData([]);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+      if (response && response.data.length > 0) {
+        setRowData(response.data); // Use the typed response data
+      } else {
         setRowData([]);
-      } finally {
-        setIsLoading(false);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setRowData([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     getData();
-  }, []); // Empty dependency array ensures the effect runs only on mount
+  }, []);
 
   const modalColDef: ColDef[] = [
     {
@@ -181,11 +182,13 @@ const WeeklyDashboard: React.FC = () => {
     {
       field: "comments",
       headerName: "Comments",
+      cellRenderer: CommentsCellRenderer,
     },
   ];
 
   const modalDefaultColDef: ColDef = {
     resizable: true,
+    filter: true,
     sortable: true,
     suppressHeaderMenuButton: true,
   };
@@ -207,7 +210,6 @@ const WeeklyDashboard: React.FC = () => {
       filter: "agMultiColumnFilter",
       chartDataType: "category",
     },
-    { field: "teamName", headerName: "Team" },
     {
       field: "deptName",
       headerName: "Department",
@@ -223,14 +225,14 @@ const WeeklyDashboard: React.FC = () => {
     {
       field: "comments",
       headerName: "Comments",
-      flex: 3,
+      cellRenderer: CommentsCellRenderer,
     },
   ];
 
   const defaultColDef: ColDef = {
     resizable: true,
     filter: true,
-    sortable: false,
+    sortable: true,
     suppressHeaderMenuButton: true,
   };
 
@@ -546,6 +548,8 @@ const WeeklyDashboard: React.FC = () => {
           showTopBar={true}
           defaultColDef={defaultColDef}
           onGridReady={handleGridReady}
+          refreshData={getData}
+          enableAutoRefresh={true}
         />
       </Box>
 

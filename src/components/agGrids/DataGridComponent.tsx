@@ -23,7 +23,7 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Add, Clear } from "@mui/icons-material";
+import { Add, Clear, Refresh } from "@mui/icons-material";
 import NoDataOverlay from "@/components/agGrids/NoDataOverlay";
 import CustomGridBottomPagination from "@/components/agGrids/CustomGridBottomPagination";
 import LoadingOverlay from "@/components/agGrids/LoadingOverlay";
@@ -42,6 +42,9 @@ interface DataGridComponentProps<T> {
   onGridReady?: (params: FirstDataRenderedEvent) => void;
   filterModel?: any;
   defaultPageSize?: number;
+  refreshData?: () => void;
+  enableAutoRefresh?: boolean;
+  refreshInterval?: number;
 }
 
 // Define the type for pagination info
@@ -69,6 +72,9 @@ const DataGridComponent = <T,>({
   defaultColDef: customDefaultColDef,
   onGridReady,
   filterModel,
+  refreshData,
+  enableAutoRefresh = false,
+  refreshInterval = 10,
 }: DataGridComponentProps<T>) => {
   const gridRef = useRef<AgGridReact>(null);
   const [rowData, setRowData] = useState<T[]>(data || []);
@@ -77,9 +83,43 @@ const DataGridComponent = <T,>({
   const [isGridReady, setIsGridReady] = useState(false);
   const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
   const uniqueQuickFilterId = useId();
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    setFields(initialFields);
+  }, [initialFields]);
 
   // Modal disclosure state for Chakra UI
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  // Function to start the timer
+  const startTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current); // Clear any existing timer
+    }
+    if (enableAutoRefresh && refreshData && refreshInterval > 0) {
+      const intervalInMilliseconds = refreshInterval * 60000; // Convert minutes to milliseconds
+      timerRef.current = setInterval(() => {
+        refreshData(); // Call refreshData at the specified interval
+      }, intervalInMilliseconds);
+    }
+  };
+
+  // Clear the timer on unmount
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, []);
+
+  // Start the timer when the component mounts, only if auto-refresh is enabled
+  useEffect(() => {
+    if (enableAutoRefresh && refreshData) {
+      startTimer();
+    }
+  }, [enableAutoRefresh, refreshData]);
 
   // Memoize defaultColDef to avoid re-renders
   const defaultColDef = useMemo(
@@ -144,6 +184,11 @@ const DataGridComponent = <T,>({
     base: "",
     sm: "",
     md: "Reset Filters",
+  });
+  const refreshButtonText = useBreakpointValue({
+    base: "",
+    sm: "",
+    md: "Refresh Data",
   });
 
   // Quick Filter
@@ -210,42 +255,62 @@ const DataGridComponent = <T,>({
             }}
           />
 
-          <Button
-            variant="solid"
-            bg="seduloRed"
-            aria-label="reset-filters"
-            onClick={resetFilter}
-            ml="auto"
-            size="md"
-            color="white"
-            _hover={{ bg: "perygonPink" }}
-            display="flex"
-            alignItems="center"
-            gap={[0, 0, 2]}
-            lineHeight={0}
-          >
-            <Clear />
-            <Text>{resetFiltersButtonText}</Text>
-          </Button>
+          <Flex flex={1} justify={"flex-end"} align={"center"} gap={2}>
+            {refreshData && (
+              <Button
+                variant="solid"
+                bg="seduloRed"
+                aria-label="reset-filters"
+                onClick={refreshData}
+                size="md"
+                color="white"
+                _hover={{ bg: "perygonPink" }}
+                display="flex"
+                alignItems="center"
+                gap={[0, 0, 2]}
+                lineHeight={0}
+              >
+                <Refresh />
+                <Text>{refreshButtonText}</Text>
+              </Button>
+            )}
 
-          {/* Create New Button */}
-          {(createNewUrl || isModalEnabled) && (
             <Button
               variant="solid"
-              bg="lightGreen"
-              aria-label="create-new"
-              onClick={handleCreateNewClick}
+              bg="seduloRed"
+              aria-label="reset-filters"
+              onClick={resetFilter}
               size="md"
               color="white"
+              _hover={{ bg: "perygonPink" }}
               display="flex"
               alignItems="center"
               gap={[0, 0, 2]}
               lineHeight={0}
             >
-              <Add />
-              <Text>{createNewUrlButtonText}</Text>
+              <Clear />
+              <Text>{resetFiltersButtonText}</Text>
             </Button>
-          )}
+
+            {/* Create New Button */}
+            {(createNewUrl || isModalEnabled) && (
+              <Button
+                variant="solid"
+                bg="lightGreen"
+                aria-label="create-new"
+                onClick={handleCreateNewClick}
+                size="md"
+                color="white"
+                display="flex"
+                alignItems="center"
+                gap={[0, 0, 2]}
+                lineHeight={0}
+              >
+                <Add />
+                <Text>{createNewUrlButtonText}</Text>
+              </Button>
+            )}
+          </Flex>
         </Flex>
       )}
 
