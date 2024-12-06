@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useLayoutEffect,
+} from "react";
 import ManagerDashboardPageInner from "./ManagerDashboardPageInner";
 import { DashboardFilteringDrawer } from "@/components/layout/DashboardFilteringDrawer";
 
@@ -50,9 +57,8 @@ export default function ManagerDashboardPage({
     "closed"
   );
   const [isUpdating, setIsUpdating] = useState(false);
-
-  const isInitialMount = useRef(true);
   const [loading, setLoading] = useState(true);
+
   const [masonryData, setMasonryData] = useState<number[]>([]);
   const [lineGraphData, setLineGraphData] = useState<DataPoint[]>([]);
   const [speechBubbleData, setSpeechBubbleData] =
@@ -72,6 +78,15 @@ export default function ManagerDashboardPage({
   const [staffHappinessDetailsModalData, setStaffHappinessDetailsModalData] =
     useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollPosition = useRef<number>(0); // Holds the last known scroll position
+
+  const saveScrollPosition = useCallback(() => {
+    if (scrollRef.current) {
+      scrollPosition.current = scrollRef.current.scrollTop;
+    }
+  }, []);
 
   const labelToParamName: Record<string, string> = useMemo(
     () => ({
@@ -180,6 +195,7 @@ export default function ManagerDashboardPage({
       setWeekOptions(weekTitles);
 
       if (selectedWeek && weekTitles.includes(selectedWeek)) {
+        // Keep current selected week if it still exists
       } else if (weekTitles.length > 0) {
         setSelectedWeek(weekTitles[weekTitles.length - 1]);
       } else {
@@ -190,6 +206,7 @@ export default function ManagerDashboardPage({
   );
 
   const clearAllFilters = useCallback(async () => {
+    saveScrollPosition();
     const clearedFilters = filterOptions.map((group) => ({
       ...group,
       options: group.options.map((option) => ({
@@ -206,10 +223,13 @@ export default function ManagerDashboardPage({
     } finally {
       setIsUpdating(false);
     }
-  }, [filterOptions, fetchFilteredData, selectedTimeRange]);
+  }, [filterOptions, fetchFilteredData, selectedTimeRange, saveScrollPosition]);
 
   const handleCheckboxChange = useCallback(
     async (groupIndex: number, optionIndex: number, isChecked: boolean) => {
+      // Capture scroll position before updating state
+      saveScrollPosition();
+
       const updatedFilters = filterOptions.map((group, gIdx) => {
         if (gIdx === groupIndex) {
           const updatedOptions = group.options.map((option, oIdx) => {
@@ -222,6 +242,7 @@ export default function ManagerDashboardPage({
         }
         return group;
       });
+
       setFilterOptions(updatedFilters);
       setIsUpdating(true);
       try {
@@ -232,12 +253,16 @@ export default function ManagerDashboardPage({
         setIsUpdating(false);
       }
     },
-    [filterOptions, fetchFilteredData, selectedTimeRange]
+    [filterOptions, fetchFilteredData, selectedTimeRange, saveScrollPosition]
   );
 
-  const handleWeekChange = useCallback((week: string) => {
-    setSelectedWeek(week);
-  }, []);
+  const handleWeekChange = useCallback(
+    (week: string) => {
+      saveScrollPosition();
+      setSelectedWeek(week);
+    },
+    [saveScrollPosition]
+  );
 
   const fetchHappinessScoreTwoMonthHistory = useCallback(
     async (userId: number) => {
@@ -306,8 +331,6 @@ export default function ManagerDashboardPage({
         const weekTitles = data.lineGraphData.map((dp: DataPoint) => dp.title);
         setWeekOptions(weekTitles);
         setSelectedWeek(weekTitles[weekTitles.length - 1]);
-
-        isInitialMount.current = false;
       } catch (error) {
         console.error("Failed to fetch initial data:", error);
       } finally {
@@ -346,6 +369,14 @@ export default function ManagerDashboardPage({
     }
   }, [selectedWeek, weeksData]);
 
+  // Use layout effect so that the scroll restoration happens before the browser paints
+  // This helps avoid the visible stutter.
+  useLayoutEffect(() => {
+    if (!isUpdating && scrollRef.current) {
+      scrollRef.current.scrollTop = scrollPosition.current;
+    }
+  }, [isUpdating]);
+
   const dashboardFilteringDrawerProps = useMemo(
     () => ({
       handleCheckboxChange,
@@ -359,6 +390,8 @@ export default function ManagerDashboardPage({
       setDrawerState,
       isUpdating,
       refreshPage: clearAllFilters,
+      scrollRef,
+      saveScrollPosition,
     }),
     [
       handleCheckboxChange,
@@ -370,6 +403,8 @@ export default function ManagerDashboardPage({
       setDrawerState,
       isUpdating,
       clearAllFilters,
+      scrollRef,
+      saveScrollPosition,
     ]
   );
 
