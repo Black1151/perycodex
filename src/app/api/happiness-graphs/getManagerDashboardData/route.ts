@@ -1,5 +1,3 @@
-// File: pages/api/happiness-graphs/getManagerDashboardData.ts
-
 import { NextResponse } from "next/server";
 import apiClient from "@/lib/apiClient";
 import { cookies } from "next/headers";
@@ -138,6 +136,72 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const queryParams = Object.fromEntries(url.searchParams.entries());
 
+  const preFilter = queryParams.preFilter;
+
+  let managerOfDeptIds: string[] = [];
+  let managerOfTeamIds: string[] = [];
+
+  if (preFilter === "departments" || preFilter === "teams") {
+    try {
+      const uniqueId = cookieStore.get("user_uuid")?.value;
+      if (!uniqueId) {
+        return NextResponse.json(
+          { error: "User unique ID not found in cookies." },
+          { status: 400 }
+        );
+      }
+
+      const response = await apiClient("/getTeamsUserIsManagerOf", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+        },
+        body: JSON.stringify({ userUniqueId: uniqueId }),
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch manager of departments and teams: ${response.statusText}`
+        );
+      }
+
+      const data = await response.json();
+      console.log("YYY", data);
+      const deptIds = data.resource.managerOfDeptIds || [];
+      const teamIds = data.resource.managerOfTeamIds || [];
+
+      managerOfDeptIds = deptIds.map(String);
+      managerOfTeamIds = teamIds.map(String);
+
+      console.log("managerOfDeptIds", managerOfDeptIds);
+      console.log("managerOfTeamIds", managerOfTeamIds);
+    } catch (error) {
+      console.error("Error fetching manager of departments and teams:", error);
+      return NextResponse.json(
+        { error: "Failed to fetch manager of departments and teams." },
+        { status: 500 }
+      );
+    }
+
+    // Adjusted code: Check if user manages departments or teams based on preFilter
+    if (preFilter === "departments") {
+      if (managerOfDeptIds.length === 0) {
+        return NextResponse.json(
+          { error: "User does not manage any departments." },
+          { status: 403 }
+        );
+      }
+    } else if (preFilter === "teams") {
+      if (managerOfTeamIds.length === 0) {
+        return NextResponse.json(
+          { error: "User does not manage any teams." },
+          { status: 403 }
+        );
+      }
+    }
+    // If preFilter is not supplied, we don't need to check
+  }
+
   const timeRange = queryParams.timeRange || "all";
 
   const selectedFilters = {
@@ -181,17 +245,59 @@ export async function GET(request: Request) {
     customerTags: "tagId",
   };
 
-  const buildEndpoint = (filters: any) => {
+  function buildEndpoint(
+    filters: any,
+    managerOfDeptIds: string[],
+    managerOfTeamIds: string[],
+    preFilter: string | undefined
+  ) {
     let endpoint = `/getAllView?view=vwDashboardDataFromReportJson&toolConfigId=${toolConfigId}&workflowId=${workflowId}&businessProcessId=${businessProcessId}`;
+
+    if (preFilter === "departments") {
+      // Filter only by departments
+      if (managerOfDeptIds.length > 0) {
+        if (filters.deptId && filters.deptId.length > 0) {
+          filters.deptId = filters.deptId.filter((id: string) =>
+            managerOfDeptIds.includes(id)
+          );
+          if (filters.deptId.length === 0) {
+            return "";
+          }
+        } else {
+          filters.deptId = managerOfDeptIds;
+        }
+      } else {
+        // User does not manage any departments
+        return "";
+      }
+    } else if (preFilter === "teams") {
+      // Filter only by teams
+      if (managerOfTeamIds.length > 0) {
+        if (filters.teamId && filters.teamId.length > 0) {
+          filters.teamId = filters.teamId.filter((id: string) =>
+            managerOfTeamIds.includes(id)
+          );
+          if (filters.teamId.length === 0) {
+            return "";
+          }
+        } else {
+          filters.teamId = managerOfTeamIds;
+        }
+      } else {
+        // User does not manage any teams
+        return "";
+      }
+    }
+    // If preFilter is undefined, do not filter by departments or teams
+
     Object.keys(filters).forEach((key) => {
       if (filters[key]?.length) {
         endpoint += `&${key}=${filters[key].join(",")}`;
       }
     });
 
-    console.log("ENDPOINTXXX", endpoint);
     return endpoint;
-  };
+  }
 
   function getStartDateFromTimeRange(timeRange: string): Date | null {
     const now = new Date();
@@ -220,7 +326,16 @@ export async function GET(request: Request) {
     >;
     delete filtersExcludingCurrentGroup[group.paramName];
 
-    const endpoint = buildEndpoint(filtersExcludingCurrentGroup);
+    const endpoint = buildEndpoint(
+      filtersExcludingCurrentGroup,
+      managerOfDeptIds,
+      managerOfTeamIds,
+      preFilter
+    );
+
+    if (!endpoint) {
+      return null;
+    }
 
     try {
       const response = await apiClient(endpoint, {
@@ -281,6 +396,9 @@ export async function GET(request: Request) {
 
       const options = Array.from(optionsSet.values());
 
+      // **Sort options alphabetically by label**
+      options.sort((a, b) => a.label.localeCompare(b.label));
+
       const groupLabels: Record<string, string> = {
         userTags: "User Tags",
         siteTags: "Site Tags",
@@ -303,7 +421,19 @@ export async function GET(request: Request) {
     (result) => result !== null
   ) as FilterOptionGroup[];
 
-  const endpointWithAllFilters = buildEndpoint(selectedFilters);
+  const endpointWithAllFilters = buildEndpoint(
+    selectedFilters,
+    managerOfDeptIds,
+    managerOfTeamIds,
+    preFilter
+  );
+
+  if (!endpointWithAllFilters) {
+    return NextResponse.json(
+      { error: "No data available based on your filters." },
+      { status: 403 }
+    );
+  }
 
   let finalData: ApiResponse = { resource: [] };
 
@@ -462,8 +592,11 @@ export async function GET(request: Request) {
         });
       });
 
-      const sitesData: { site: string; averageScore: number; count: number }[] =
-        [];
+      const sitesData: {
+        site: string;
+        averageScore: number;
+        count: number;
+      }[] = [];
       siteScores.forEach((value, key) => {
         sitesData.push({
           site: value.mostRecentSiteName,
@@ -474,6 +607,7 @@ export async function GET(request: Request) {
 
       weeksData.push({
         weekKey,
+
         avgScore,
         masonryCounts,
         peopleList,

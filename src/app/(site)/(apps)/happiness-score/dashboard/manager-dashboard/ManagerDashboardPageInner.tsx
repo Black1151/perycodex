@@ -69,7 +69,7 @@ interface ManagerDashboardPageInnerProps {
   drawerState: "closed" | "fully-open";
 }
 
-export default function ManagerDashboardPageInner({
+export default function ManagerDashboardInner({
   loading,
   speechBubbleData,
   lineGraphData,
@@ -191,7 +191,6 @@ export default function ManagerDashboardPageInner({
 
   useEffect(() => {
     const timer = setTimeout(refreshPage, 10 * 60 * 1000);
-
     return () => clearTimeout(timer);
   }, []);
 
