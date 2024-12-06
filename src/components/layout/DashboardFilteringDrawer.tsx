@@ -32,6 +32,8 @@ interface RightHandNavigationDrawerProps {
   setDrawerState: (state: "closed" | "fully-open") => void;
   isUpdating: boolean;
   refreshPage: () => void;
+  scrollRef: React.RefObject<HTMLDivElement>;
+  saveScrollPosition: () => void;
 }
 
 const displayNameMappings: { [key: string]: string } = {
@@ -52,12 +54,14 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
   setDrawerState,
   isUpdating,
   refreshPage,
+  scrollRef,
+  saveScrollPosition,
 }: RightHandNavigationDrawerProps) {
   const theme = useTheme();
   const MotionBox = motion(Box);
   const iconFontSize = useBreakpointValue({ base: "1.3rem", lg: "1.5rem" });
 
-  const drawerRef = useRef<HTMLDivElement>(null); // Create a ref for the drawer
+  const drawerRef = useRef<HTMLDivElement>(null);
 
   const toggleDrawer = () => {
     if (drawerState === "fully-open") {
@@ -116,7 +120,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
       )}
 
       <MotionBox
-        ref={drawerRef} // Assign the ref to the MotionBox
+        ref={drawerRef}
         display={"block"}
         position="fixed"
         top={0}
@@ -185,12 +189,14 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                 </Select>
               </Box>
               <Box
+                ref={scrollRef}
                 flex={1}
                 position="relative"
                 zIndex={1}
                 px={4}
                 p={3}
                 overflowY="auto"
+                onScroll={saveScrollPosition}
               >
                 <VStack spacing={4} align="stretch" width="100%">
                   <Button
@@ -275,7 +281,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                   left={0}
                   right={0}
                   bottom={0}
-                  bg="rgba(255, 255, 255, 0.6)"
+                  bg="rgba(255, 255, 255, 1)"
                   display="flex"
                   alignItems="center"
                   justifyContent="center"
