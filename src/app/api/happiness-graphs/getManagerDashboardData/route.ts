@@ -138,8 +138,6 @@ export async function GET(request: Request) {
 
   const preFilter = queryParams.preFilter;
 
-  console.log("PREFILTER", preFilter);
-
   let managerOfDeptIds: string[] = [];
   let managerOfTeamIds: string[] = [];
 
