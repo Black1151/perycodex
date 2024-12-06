@@ -3,13 +3,10 @@
 import React, { useEffect, useState } from "react";
 import {
   VStack,
-  Spinner,
   Text,
   Flex,
   Box,
   useTheme,
-  Tooltip,
-  IconButton,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useFetchClient } from "@/hooks/useFetchClient";
@@ -18,13 +15,9 @@ import { CompanyBubble } from "@/app/(site)/(apps)/happiness-score/dashboard/rag
 import { AgCharts } from "ag-charts-react";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
-import { Info } from "@mui/icons-material";
-import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import { ColDef } from "ag-grid-community";
 import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
 import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/HappinessScoreRenderer";
-import HappinessDifferenceRenderer from "@/components/agGrids/CellRenderers/HappinessDifferenceRenderer";
-import HappinessHistogramRenderer from "@/components/agGrids/CellRenderers/HappinessHistogramRenderer";
 import CommentsCellRenderer from "@/components/agGrids/CellRenderers/CommentsCellRenderer";
 import { useUser } from "@/providers/UserProvider";
 
@@ -107,7 +100,6 @@ const UserDashboard: React.FC = () => {
   >([]);
 
   const { user } = useUser();
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const { fetchClient } = useFetchClient();
   const theme = useTheme();
 
