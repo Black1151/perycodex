@@ -325,7 +325,7 @@ const RagDashboard: React.FC = () => {
               <li>Green: Normal happiness</li>
               <li>Amber: Slightly lower than their normal happiness</li>
               <li>Red: A lot lower than their normal happiness</li>
-              <li>Gray: Haven't submitted a score in the last month</li>
+              <li>Gray: Have not submitted a score in the last month</li>
               <li>N/A: Not enough submissions</li>
             </Text>
           </>
