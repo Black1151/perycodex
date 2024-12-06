@@ -1,5 +1,7 @@
-import React, { useState } from "react";
-import { Box, useTheme } from "@chakra-ui/react";
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { Box, useBreakpointValue, useTheme } from "@chakra-ui/react";
 import { AgCharts } from "ag-charts-react";
 import useColor from "@/hooks/useColor";
 
@@ -23,9 +25,8 @@ export const CompanyBubble: React.FC<CompanyBubble> = ({ scores }) => {
   const theme = useTheme();
   const { getColor } = useColor();
 
-  // Parse the scores array safely and add `yKey` with a default value of 5
+  // Parse the scores array safely
   const validScoresArray = (() => {
-    console.log(scores);
     try {
       return Array.isArray(scores) ? scores : JSON.parse(scores || "[]");
     } catch (error) {
@@ -60,7 +61,7 @@ export const CompanyBubble: React.FC<CompanyBubble> = ({ scores }) => {
     ); // Default to 0 if dayData is empty
 
     // Calculate the maxSize for this day based on the global maximum
-    const maxSize = (localMaxCount / globalMaxCount) * 40;
+    const maxSize = (localMaxCount / globalMaxCount) * 100;
 
     return {
       data: dayData,

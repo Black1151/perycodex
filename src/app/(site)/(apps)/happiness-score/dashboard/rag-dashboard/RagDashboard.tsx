@@ -364,8 +364,12 @@ const RagDashboard: React.FC = () => {
           enableAutoRefresh={true}
         />
       </Box>
-      <CompanyHistogram scoreDistribution={companyData?.scoreDistribution} />
-      <CompanyBubble scores={companyData?.companyScores} />
+      {companyData && companyData.scoreDistribution && (
+        <CompanyHistogram scoreDistribution={companyData.scoreDistribution} />
+      )}
+      {companyData && companyData.companyScores && (
+        <CompanyBubble scores={companyData.companyScores} />
+      )}
     </VStack>
   );
 };
