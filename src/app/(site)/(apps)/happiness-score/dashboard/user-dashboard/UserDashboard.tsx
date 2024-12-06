@@ -1,0 +1,492 @@
+"use client";
+
+import React, { useEffect, useState } from "react";
+import {
+  VStack,
+  Text,
+  Flex,
+  Box,
+  useTheme,
+  useDisclosure,
+} from "@chakra-ui/react";
+import { useFetchClient } from "@/hooks/useFetchClient";
+import { CompanyHistogram } from "@/app/(site)/(apps)/happiness-score/dashboard/rag-dashboard/CompanyHistogram";
+import { CompanyBubble } from "@/app/(site)/(apps)/happiness-score/dashboard/rag-dashboard/CompanyBubble";
+import { AgCharts } from "ag-charts-react";
+import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
+import DataGridComponent from "@/components/agGrids/DataGridComponent";
+import { ColDef } from "ag-grid-community";
+import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
+import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/HappinessScoreRenderer";
+import CommentsCellRenderer from "@/components/agGrids/CellRenderers/CommentsCellRenderer";
+import { useUser } from "@/providers/UserProvider";
+
+// Define interfaces for each data type
+interface UserScore {
+  score: number;
+  count: number;
+}
+
+interface UserDistributionItem {
+  dayOfSubmission: string;
+  score: number;
+  countOfScore: number;
+}
+
+interface ComparativeItem {
+  site: number;
+  user: number;
+  company: number;
+  department: number;
+  weekEnd: string;
+  weekStart: string;
+}
+
+interface MonthlyComparativeItem {
+  site: number;
+  user: number;
+  company: number;
+  department: number;
+  monthEnd: string;
+  monthStart: string;
+}
+
+interface UserSubmissions {
+  date: string;
+  comments: string;
+  happinessScore: number;
+  fullName: string;
+  userUniqueId: string;
+  userImageUrl: string;
+  siteName: string;
+  departmentName: string;
+}
+
+interface UserStatsResponse {
+  userScores: UserScore[];
+  userDistribution: UserDistributionItem[];
+  comparativeData: ComparativeItem[];
+  monthlyComparativeData?: MonthlyComparativeItem[];
+  userSubmissions: UserSubmissions[];
+}
+
+interface ApiResponse {
+  resource: UserStatsResponse;
+}
+
+// Utility to safely parse data if it's a string
+function parseData<T>(data: T[] | string): T[] {
+  if (Array.isArray(data)) {
+    return data;
+  }
+  try {
+    return JSON.parse(data || "[]") as T[];
+  } catch (error) {
+    console.error("Error parsing data:", error);
+    return [];
+  }
+}
+
+const UserDashboard: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [rowData, setRowData] = useState<UserSubmissions[]>([]);
+  const [userScores, setUserScores] = useState<UserScore[]>([]);
+  const [userDistribution, setUserDistribution] = useState<
+    UserDistributionItem[]
+  >([]);
+  const [comparativeData, setComparativeData] = useState<ComparativeItem[]>([]);
+  const [monthlyComparativeData, setMonthlyComparativeData] = useState<
+    MonthlyComparativeItem[]
+  >([]);
+
+  const { user } = useUser();
+  const { fetchClient } = useFetchClient();
+  const theme = useTheme();
+
+  const defaultColDef: ColDef = {
+    resizable: true,
+    filter: true,
+    suppressHeaderMenuButton: true,
+  };
+
+  const columnDefs: ColDef[] = [
+    {
+      field: "fullName",
+      headerName: "Name",
+      cellRenderer: UserRenderer,
+      sortable: true,
+      cellRendererParams: {
+        uniqueIdField: "userUniqueId",
+        nameField: "fullName",
+        imageUrlField: "userImageUrl",
+      },
+    },
+    {
+      field: "siteName",
+      headerName: "Site",
+      sortable: true,
+      filter: "agSetColumnFilter",
+    },
+    {
+      field: "departmentName",
+      headerName: "Department",
+      sortable: true,
+      filter: "agSetColumnFilter",
+    },
+    {
+      field: "date",
+      headerName: "Date",
+      sortable: true,
+      valueFormatter: (params) => {
+        if (!params.value) return "";
+        const date = new Date(params.value);
+        return date.toLocaleDateString("en-UK", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        });
+      },
+    },
+    {
+      field: "happinessScore",
+      headerName: "Score",
+      sortable: true,
+      cellRenderer: HappinessScoreRenderer,
+      filter: "agNumberColumnFilter",
+      cellDataType: "number",
+    },
+    {
+      field: "comments",
+      headerName: "Comments",
+      cellRenderer: CommentsCellRenderer,
+      flex: 2,
+    },
+  ];
+
+  const getData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetchClient<ApiResponse>(
+        "/api/happiness-graphs/getUserStatsData",
+      );
+      console.log("API Response:", response?.resource);
+
+      if (response && response.resource) {
+        const {
+          userSubmissions,
+          userScores,
+          userDistribution,
+          comparativeData,
+          monthlyComparativeData,
+        } = response.resource;
+
+        setRowData(parseData<UserSubmissions>(userSubmissions));
+        setUserScores(parseData<UserScore>(userScores));
+        setUserDistribution(parseData<UserDistributionItem>(userDistribution));
+        setComparativeData(parseData<ComparativeItem>(comparativeData));
+        setMonthlyComparativeData(
+          parseData<MonthlyComparativeItem>(monthlyComparativeData || []),
+        );
+      } else {
+        console.error("Invalid response:", response);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  if (
+    rowData.length === 0 &&
+    userScores.length === 0 &&
+    userDistribution.length === 0 &&
+    comparativeData.length === 0 &&
+    monthlyComparativeData.length === 0
+  ) {
+    return (
+      <VStack align="center" justify="center" h="100vh">
+        <Text>No data available</Text>
+      </VStack>
+    );
+  }
+
+  // Weekly line chart configuration
+  const weeklyLineChartOptions = {
+    data: comparativeData,
+    series: [
+      {
+        type: "line",
+        xKey: "weekEnd",
+        yKey: "user",
+        yName: "User",
+        stroke: theme.colors.blue[500],
+        marker: { enabled: true },
+        interpolation: {
+          type: "smooth",
+        },
+      },
+      {
+        type: "line",
+        xKey: "weekEnd",
+        yKey: "site",
+        yName: "Site",
+        stroke: theme.colors.green[500],
+        marker: { enabled: true },
+        interpolation: {
+          type: "smooth",
+        },
+      },
+      {
+        type: "line",
+        xKey: "weekEnd",
+        yKey: "department",
+        yName: "Department",
+        stroke: theme.colors.orange[500],
+        marker: { enabled: true },
+        interpolation: {
+          type: "smooth",
+        },
+      },
+      {
+        type: "line",
+        xKey: "weekEnd",
+        yKey: "company",
+        yName: "Company",
+        stroke: theme.colors.red[500],
+        marker: { enabled: true },
+        interpolation: {
+          type: "smooth",
+        },
+      },
+    ],
+    axes: [
+      {
+        type: "category",
+        position: "bottom",
+        label: {
+          rotation: 300,
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: theme.colors.perygonPink,
+        },
+        title: {
+          text: "Week End",
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: "black",
+        },
+      },
+      {
+        type: "number",
+        position: "left",
+        title: {
+          text: "Happiness Score",
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: "black",
+        },
+        label: {
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: theme.colors.perygonPink,
+        },
+      },
+    ],
+    legend: {
+      position: "bottom" as const,
+    },
+    padding: {
+      top: 20,
+      left: 20,
+      right: 20,
+      bottom: 50,
+    },
+  };
+
+  // Monthly line chart configuration
+  const monthlyLineChartOptions = {
+    data: monthlyComparativeData,
+    series: [
+      {
+        type: "line",
+        xKey: "monthEnd",
+        yKey: "user",
+        yName: "User",
+        stroke: theme.colors.blue[500],
+        marker: { enabled: true },
+      },
+      {
+        type: "line",
+        xKey: "monthEnd",
+        yKey: "site",
+        yName: "Site",
+        stroke: theme.colors.green[500],
+        marker: { enabled: true },
+      },
+      {
+        type: "line",
+        xKey: "monthEnd",
+        yKey: "department",
+        yName: "Department",
+        stroke: theme.colors.orange[500],
+        marker: { enabled: true },
+      },
+      {
+        type: "line",
+        xKey: "monthEnd",
+        yKey: "company",
+        yName: "Company",
+        stroke: theme.colors.red[500],
+        marker: { enabled: true },
+      },
+    ],
+    axes: [
+      {
+        type: "category",
+        position: "bottom",
+        label: {
+          rotation: 300,
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: theme.colors.perygonPink,
+        },
+        title: {
+          text: "Month End",
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: "black",
+        },
+      },
+      {
+        type: "number",
+        position: "left",
+        title: {
+          text: "Happiness Score",
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: "black",
+        },
+        label: {
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: theme.colors.perygonPink,
+        },
+      },
+    ],
+    legend: {
+      position: "bottom" as const,
+    },
+    padding: {
+      top: 20,
+      left: 20,
+      right: 20,
+      bottom: 50,
+    },
+  };
+
+  return (
+    <>
+      <VStack align="stretch" w="full" spacing={6} mb={3}>
+        {comparativeData.length > 0 && (
+          <Box
+            className="ag-theme-alpine ag-theme-perygon"
+            width="100%"
+            p={4}
+            borderRadius="lg"
+          >
+            <Flex width="100%" justifyContent="center" mb={4}>
+              <SectionHeader>
+                {user?.fullName}'s Stats for previous 12 months
+              </SectionHeader>
+            </Flex>
+            <DataGridComponent
+              data={rowData}
+              loading={isLoading}
+              initialFields={columnDefs}
+              showTopBar={true}
+              defaultColDef={defaultColDef}
+              refreshData={getData}
+              enableAutoRefresh={true}
+            />
+          </Box>
+        )}
+
+        {/* Line Chart - Comparative Weekly Data */}
+        {comparativeData.length > 0 && (
+          <>
+            <Flex width="100%" justifyContent={"center"} mb={2}>
+              <SectionHeader>Weekly Trend</SectionHeader>
+            </Flex>
+            <Box
+              borderRadius="2xl"
+              shadow="xl"
+              overflow="hidden"
+              height="500px"
+            >
+              <AgCharts
+                options={weeklyLineChartOptions as any}
+                style={{ width: "100%", height: "100%" }}
+              />
+            </Box>
+          </>
+        )}
+
+        {/* Line Chart - Comparative Monthly Data */}
+        {monthlyComparativeData.length > 0 && (
+          <>
+            <Flex width="100%" justifyContent={"center"} mb={2}>
+              <SectionHeader>Monthly Trend</SectionHeader>
+            </Flex>
+            <Box
+              borderRadius="2xl"
+              shadow="xl"
+              overflow="hidden"
+              height="500px"
+            >
+              <AgCharts
+                options={monthlyLineChartOptions as any}
+                style={{ width: "100%", height: "100%" }}
+              />
+            </Box>
+          </>
+        )}
+
+        {/* Bubble Chart - User Distribution */}
+        {userDistribution.length > 0 && (
+          <>
+            <Flex width="100%" justifyContent={"center"} mb={2}>
+              <SectionHeader>Punch Card</SectionHeader>
+            </Flex>
+            <Box
+              borderRadius="2xl"
+              shadow="xl"
+              overflow="hidden"
+              height="500px"
+            >
+              <CompanyBubble scores={userDistribution} />
+            </Box>
+          </>
+        )}
+
+        {/* Histogram - User Scores */}
+        {userScores.length > 0 && (
+          <>
+            <Flex width="100%" justifyContent={"center"} mb={2}>
+              <SectionHeader>Frequency of Scores</SectionHeader>
+            </Flex>
+            <Box borderRadius="2xl" shadow="xl" overflow="hidden">
+              <CompanyHistogram scoreDistribution={userScores} />
+            </Box>
+          </>
+        )}
+      </VStack>
+    </>
+  );
+};
+
+export default UserDashboard;
