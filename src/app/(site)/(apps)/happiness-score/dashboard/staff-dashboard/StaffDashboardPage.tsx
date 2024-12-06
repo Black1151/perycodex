@@ -34,20 +34,19 @@ export default function StaffDashboardPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
-      },
+      }
     );
 
     const data = await response.json();
-
     setHappinessData(data.resource);
 
     // Process historic records for line graph
     const historicRecords = JSON.parse(data.resource.historicrecords);
     setLineGraphData(
       historicRecords.map((record: any) => ({
-        value: record.value,
+        value: parseFloat(record.value),
         title: record.title,
-      })),
+      }))
     );
   };
 
@@ -56,7 +55,9 @@ export default function StaffDashboardPage() {
   }, []);
 
   const getSpeechBubbleData = () => {
-    if (!happinessData) return { score: 0, text: "Loading...", change: 0 };
+    if (!happinessData || lineGraphData.length === 0) {
+      return { score: 0, text: "Loading...", change: 0 };
+    }
 
     const score = parseFloat(happinessData.averagehappiness);
     const change =
@@ -72,6 +73,7 @@ export default function StaffDashboardPage() {
   };
 
   const speechBubbleData = getSpeechBubbleData();
+  const positiveChange = speechBubbleData.change > 0;
 
   const handleStartWorkflow = () => {
     router.push("/happiness-score/workflow/141");
@@ -93,7 +95,10 @@ export default function StaffDashboardPage() {
       >
         <GridItem>
           <SpringScale delay={0.3} style={{ height: "100%" }}>
-            <SpeechBubble {...speechBubbleData} />
+            <SpeechBubble
+              {...speechBubbleData}
+              positiveChange={positiveChange}
+            />
           </SpringScale>
         </GridItem>
         <GridItem>
