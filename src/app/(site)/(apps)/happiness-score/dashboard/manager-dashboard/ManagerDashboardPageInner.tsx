@@ -191,7 +191,6 @@ export default function ManagerDashboardPageInner({
 
   useEffect(() => {
     const timer = setTimeout(refreshPage, 10 * 60 * 1000);
-
     return () => clearTimeout(timer);
   }, []);
 
