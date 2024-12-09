@@ -679,7 +679,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                   )
                 }
                 defaultColDef={defaultColDef}
-                selection={rowSelection}
+                rowSelection={rowSelection}
                 onSelectionChanged={onPopulationSelectionChanged}
                 paginationPageSize={populationPaginationInfo.pageSize}
                 noRowsOverlayComponent={DraggableNoDataOverlay}
@@ -770,7 +770,7 @@ const DraggableGridsComponent: React.FC<DraggableGridsComponentProps> = ({
                 }
                 defaultColDef={defaultColDef}
                 onSelectionChanged={onSampleSelectionChanged}
-                selection={rowSelection}
+                rowSelection={rowSelection}
                 paginationPageSize={samplePaginationInfo.pageSize}
                 noRowsOverlayComponent={DraggableNoDataOverlay}
                 noRowsOverlayComponentParams={{ gridType: "sample" }}

@@ -40,6 +40,8 @@ import { Info } from "@mui/icons-material";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
 import CommentsCellRenderer from "@/components/agGrids/CellRenderers/CommentsCellRenderer";
+import { useWorkflow } from "@/providers/WorkflowProvider";
+import { useUser } from "@/providers/UserProvider";
 
 interface ApiResponse {
   data: RowData[]; // This matches the RowData type you're using
@@ -84,6 +86,8 @@ const Dashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
+  const { toolId, workflowId } = useWorkflow();
+  const { user } = useUser();
 
   // Details Modal for Clicking
   const [isBarModalOpen, setIsBarModalOpen] = useState(false);
@@ -96,8 +100,16 @@ const Dashboard: React.FC = () => {
     setIsLoading(true);
 
     try {
+      // Ensure user and customerId exist before making the request
+      if (!user || !user.customerId) {
+        throw new Error("User or customerId is missing");
+      }
+
+      console.log(toolId);
+      console.log(workflowId);
+
       const response = await fetchClient<ApiResponse>(
-        "/api/happiness-graphs/getAllHappinessData?toolId=1&wfId=1",
+        `/api/happiness-graphs/getAllHappinessData?toolId=${toolId}&wfId=${workflowId}&customerId=${user.customerId}`,
       );
 
       if (response && typeof response === "object" && "data" in response) {
@@ -736,99 +748,100 @@ const Dashboard: React.FC = () => {
         />
       </Box>
 
-      {/* Chart Section */}
-      <Flex
-        width="100%"
-        flexWrap="wrap"
-        gap={6}
-        justify="space-between"
-        flex={1}
-      >
-        <Box
-          minW={["100%", "100%", "48%"]}
+      {rowData.length > 0 && (
+        <Flex
+          width="100%"
+          flexWrap="wrap"
+          gap={6}
+          justify="space-between"
           flex={1}
-          textAlign="center"
-          borderRadius="lg"
         >
-          <Flex
-            width="100%"
-            justifyContent={isMobile ? "flex-start" : "center"}
-            mb={2}
-          >
-            <SectionHeader>Happiness by Department</SectionHeader>
-          </Flex>
           <Box
-            id="chart1"
-            height="400px"
-            w="full"
-            borderRadius={"2xl"}
-            overflow={"hidden"}
-          ></Box>
-        </Box>
-        <Box
-          minW={["100%", "100%", "48%"]}
-          flex={1}
-          textAlign="center"
-          borderRadius="lg"
-        >
-          <Flex
-            width="100%"
-            justifyContent={isMobile ? "flex-start" : "center"}
-            mb={2}
+            minW={["100%", "100%", "48%"]}
+            flex={1}
+            textAlign="center"
+            borderRadius="lg"
           >
-            <SectionHeader>Happiness by Office</SectionHeader>
-          </Flex>
+            <Flex
+              width="100%"
+              justifyContent={isMobile ? "flex-start" : "center"}
+              mb={2}
+            >
+              <SectionHeader>Happiness by Department</SectionHeader>
+            </Flex>
+            <Box
+              id="chart1"
+              height="400px"
+              w="full"
+              borderRadius={"2xl"}
+              overflow={"hidden"}
+            ></Box>
+          </Box>
           <Box
-            id="chart2"
-            height="400px"
-            w="full"
-            borderRadius={"2xl"}
-            overflow={"hidden"}
-          ></Box>
-        </Box>
-        <Box
-          minW={["100%", "100%", "100%"]}
-          flex={1}
-          textAlign="center"
-          borderRadius="lg"
-        >
-          <Flex
-            width="100%"
-            justifyContent={isMobile ? "flex-start" : "center"}
-            mb={2}
+            minW={["100%", "100%", "48%"]}
+            flex={1}
+            textAlign="center"
+            borderRadius="lg"
           >
-            <SectionHeader>Historic Weekly Average</SectionHeader>
-          </Flex>
+            <Flex
+              width="100%"
+              justifyContent={isMobile ? "flex-start" : "center"}
+              mb={2}
+            >
+              <SectionHeader>Happiness by Office</SectionHeader>
+            </Flex>
+            <Box
+              id="chart2"
+              height="400px"
+              w="full"
+              borderRadius={"2xl"}
+              overflow={"hidden"}
+            ></Box>
+          </Box>
           <Box
-            id="chart3"
-            height="400px"
-            w="full"
-            borderRadius={"2xl"}
-            overflow={"hidden"}
-          ></Box>
-        </Box>
-        <Box
-          minW={["100%", "100%", "100%"]}
-          flex={1}
-          textAlign="center"
-          borderRadius="lg"
-        >
-          <Flex
-            width="100%"
-            justifyContent={isMobile ? "flex-start" : "center"}
-            mb={2}
+            minW={["100%", "100%", "100%"]}
+            flex={1}
+            textAlign="center"
+            borderRadius="lg"
           >
-            <SectionHeader>Historic Monthly Average</SectionHeader>
-          </Flex>
+            <Flex
+              width="100%"
+              justifyContent={isMobile ? "flex-start" : "center"}
+              mb={2}
+            >
+              <SectionHeader>Historic Weekly Average</SectionHeader>
+            </Flex>
+            <Box
+              id="chart3"
+              height="400px"
+              w="full"
+              borderRadius={"2xl"}
+              overflow={"hidden"}
+            ></Box>
+          </Box>
           <Box
-            id="chart4"
-            height="400px"
-            w="full"
-            borderRadius={"2xl"}
-            overflow={"hidden"}
-          ></Box>
-        </Box>
-      </Flex>
+            minW={["100%", "100%", "100%"]}
+            flex={1}
+            textAlign="center"
+            borderRadius="lg"
+          >
+            <Flex
+              width="100%"
+              justifyContent={isMobile ? "flex-start" : "center"}
+              mb={2}
+            >
+              <SectionHeader>Historic Monthly Average</SectionHeader>
+            </Flex>
+            <Box
+              id="chart4"
+              height="400px"
+              w="full"
+              borderRadius={"2xl"}
+              overflow={"hidden"}
+            ></Box>
+          </Box>
+        </Flex>
+      )}
     </VStack>
   );
 };

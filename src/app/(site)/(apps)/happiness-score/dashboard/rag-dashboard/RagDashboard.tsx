@@ -26,6 +26,8 @@ import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
 import HappinessHistogramRenderer from "@/components/agGrids/CellRenderers/HappinessHistogramRenderer";
 import { CompanyBubble } from "@/app/(site)/(apps)/happiness-score/dashboard/rag-dashboard/CompanyBubble";
 import { CompanyHistogram } from "@/app/(site)/(apps)/happiness-score/dashboard/rag-dashboard/CompanyHistogram";
+import { useWorkflow } from "@/providers/WorkflowProvider";
+import { useUser } from "@/providers/UserProvider";
 
 interface ApiResponse {
   userResource: RowData[];
@@ -77,6 +79,8 @@ const RagDashboard: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [columnDefs, setColumnDefs] = useState<ColDef[]>([]);
   const isMobile = useBreakpointValue({ base: true, md: false });
+  const { toolId, workflowId } = useWorkflow();
+  const { user } = useUser();
 
   const { fetchClient } = useFetchClient();
 
@@ -84,14 +88,19 @@ const RagDashboard: React.FC = () => {
     setIsLoading(true);
 
     try {
+      // Ensure user and customerId exist before making the request
+      if (!user || !user.customerId) {
+        throw new Error("User or customerId is missing");
+      }
+
       const response = await fetchClient<ApiResponse>(
         "/api/happiness-graphs/getRagData",
         {
           method: "POST",
           body: {
-            toolId: 1,
-            workflowId: 1,
-            customerId: 1,
+            toolId: toolId,
+            workflowId: workflowId,
+            customerId: user.customerId,
           },
         },
       );
@@ -364,11 +373,17 @@ const RagDashboard: React.FC = () => {
           enableAutoRefresh={true}
         />
       </Box>
-      {companyData && companyData.scoreDistribution && (
-        <CompanyHistogram scoreDistribution={companyData.scoreDistribution} />
-      )}
-      {companyData && companyData.companyScores && (
-        <CompanyBubble scores={companyData.companyScores} />
+      {rowData.length > 0 && (
+        <>
+          {companyData && companyData.scoreDistribution && (
+            <CompanyHistogram
+              scoreDistribution={companyData.scoreDistribution}
+            />
+          )}
+          {companyData && companyData.companyScores && (
+            <CompanyBubble scores={companyData.companyScores} />
+          )}
+        </>
       )}
     </VStack>
   );
