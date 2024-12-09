@@ -37,9 +37,10 @@ export async function GET(req: NextRequest) {
   const workflowId = searchParams.get("workflowId") || 1;
   const businessProcessId = searchParams.get("businessProcessId") || 1;
   const toolConfigId = searchParams.get("toolConfigId") || 1;
+  const customerId = searchParams.get("customerId");
 
   try {
-    let endpoint = `/getAllView?view=vwHappinessScoreCurrentWeek&toolConfigId=${toolConfigId}&workflowId=${workflowId}&businessProcessId=${businessProcessId}`;
+    let endpoint = `/getAllView?view=vwHappinessScoreCurrentWeek&toolConfigId=${toolConfigId}&workflowId=${workflowId}&businessProcessId=${businessProcessId}&customerId=${customerId}`;
     const response = await apiClient(endpoint, {
       method: "GET",
     });
