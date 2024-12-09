@@ -23,6 +23,14 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel={"icon"} href={"/images/perygonPinkCheck.ico"} />
+        <meta name="color-scheme" content="light only" />
+        <meta name="supported-color-schemes" content="light" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="white" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
       </head>
 
       <body className={inter.className}>
