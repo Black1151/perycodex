@@ -89,7 +89,6 @@ export function InputField({
     borderRight: "none",
     borderRadius: "none",
     color: "black",
-    // fontSize: "sm",
     _placeholder: { fontSize: "sm", color: "gray.400" },
     _focus: {
       boxShadow: "none",
