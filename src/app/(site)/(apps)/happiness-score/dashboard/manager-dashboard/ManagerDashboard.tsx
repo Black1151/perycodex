@@ -369,8 +369,6 @@ export default function ManagerDashboardPage({
     }
   }, [selectedWeek, weeksData]);
 
-  // Use layout effect so that the scroll restoration happens before the browser paints
-  // This helps avoid the visible stutter.
   useLayoutEffect(() => {
     if (!isUpdating && scrollRef.current) {
       scrollRef.current.scrollTop = scrollPosition.current;
