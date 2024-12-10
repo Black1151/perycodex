@@ -105,9 +105,6 @@ const Dashboard: React.FC = () => {
         throw new Error("User or customerId is missing");
       }
 
-      console.log(toolId);
-      console.log(workflowId);
-
       const response = await fetchClient<ApiResponse>(
         `/api/happiness-graphs/getAllHappinessData?toolId=${toolId}&wfId=${workflowId}&customerId=${user.customerId}`,
       );
