@@ -626,23 +626,31 @@ export async function GET(request: Request) {
       endDate: formatDate(weekEnd),
     });
 
-    const didNotParticipateCount = didNotParticipateData.resource?.length || 0;
-    masonryCounts[4] = didNotParticipateCount;
+    const filteredNonParticipantData =
+      didNotParticipateData?.resource?.filter((item: any) => {
+        if (preFilter === "departments") {
+          return managerOfDeptIds.includes(String(item.departmentId));
+        }
+        if (preFilter === "teams") {
+          return managerOfTeamIds.includes(String(item.teamId));
+        }
+        return true; // If no preFilter or it doesn't match, include all items
+      }) || [];
+
+    masonryCounts[4] = filteredNonParticipantData.length || 0;
 
     // Map non-participants to Person format
-    const nonParticipants = (didNotParticipateData.resource || []).map(
-      (np: any) => ({
-        userId: np.UserId,
-        imageUrl: np.imageUrl,
-        fullName: np.fullName,
-        firstName: np.fullName.split(" ")[0] || "",
-        lastName: np.fullName.split(" ").slice(1).join(" ") || "",
-        jobTitle: np.jobTitle,
-        department: np.deptName,
-        site: np.siteName,
-        score: null, // no score for non-participants
-      }),
-    );
+    let nonParticipants = filteredNonParticipantData.map((np: any) => ({
+      userId: np.UserId,
+      imageUrl: np.imageUrl,
+      fullName: np.fullName,
+      firstName: np.fullName.split(" ")[0] || "",
+      lastName: np.fullName.split(" ").slice(1).join(" ") || "",
+      jobTitle: np.jobTitle,
+      department: np.deptName,
+      site: np.siteName,
+      score: null, // no score for non-participants
+    }));
 
     // Merge non-participants into peopleList
     peopleList.push(...nonParticipants);

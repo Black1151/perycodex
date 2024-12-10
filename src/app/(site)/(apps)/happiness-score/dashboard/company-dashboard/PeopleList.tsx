@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Box,
@@ -14,6 +14,7 @@ import {
   Th,
   Thead,
   Tr,
+  useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
@@ -49,6 +50,9 @@ const PeopleList: React.FC<PeopleListProps> = ({
   onItemsPerPageChange,
   handleUserClick,
 }) => {
+  const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
+  const [paginationText, setPaginationText] = useState("");
+
   const [sortConfig, setSortConfig] = React.useState<{
     key: keyof Person;
     direction: "ascending" | "descending";
@@ -170,6 +174,27 @@ const PeopleList: React.FC<PeopleListProps> = ({
     exit: { opacity: 0, x: -50, transition: { duration: 0.3 } },
   };
 
+  const paginationNumbers = Array.from(
+    new Set(
+      [5, 10, 25, 50, 100, 200, 500]
+        .filter((option) => option <= people.length)
+        .concat(people.length),
+    ),
+  )
+    .sort((a, b) => a - b) // Ensure options are sorted numerically
+    .map((option) => (
+      <option key={option} value={option}>
+        {option}
+      </option>
+    ));
+
+  useEffect(() => {
+    const text = isMobile
+      ? `${currentPage} of ${totalPages}`
+      : `Page ${currentPage} of ${totalPages}`;
+    setPaginationText(text);
+  }, [isMobile, currentPage, totalPages]);
+
   return (
     <VStack
       p={4}
@@ -275,7 +300,7 @@ const PeopleList: React.FC<PeopleListProps> = ({
       <Grid mt={4} width="100%" templateColumns="1fr 1fr">
         <HStack>
           <Text display={["none", null, null, null, "block"]} mr={2}>
-            Rows per page:
+            Showing:
           </Text>
           <Select
             value={itemsPerPage}
@@ -283,13 +308,14 @@ const PeopleList: React.FC<PeopleListProps> = ({
             size="sm"
             width="auto"
           >
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={25}>25</option>
-            <option value={50}>50</option>
+            {paginationNumbers}
           </Select>
+          <Text>of {people.length}</Text>
         </HStack>
         <HStack justifyContent="flex-end">
+          <Text mx={1} minWidth={["60px", null, "120px"]} textAlign="center">
+            {paginationText}
+          </Text>
           <IconButton
             onClick={handlePreviousPage}
             isDisabled={currentPage === 1}
@@ -297,14 +323,6 @@ const PeopleList: React.FC<PeopleListProps> = ({
             aria-label="Previous page"
             size="sm"
           />
-          <Text
-            display={["none", null, null, null, "block"]}
-            mx={2}
-            minWidth={120}
-            textAlign="center"
-          >
-            Page {currentPage} of {totalPages}
-          </Text>
           <IconButton
             onClick={handleNextPage}
             isDisabled={currentPage === totalPages || totalPages === 0}

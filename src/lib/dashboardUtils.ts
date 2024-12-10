@@ -13,6 +13,7 @@ export interface Dashboard {
   dashboardOrder: number;
   availableAs: string;
   teamManagerRequired: boolean;
+  deptManagerRequired: boolean;
 }
 
 export async function getFilteredDashboards(
@@ -27,7 +28,10 @@ export async function getFilteredDashboards(
 }> {
   const user = await getUser();
   const userRole = user.role;
-  const isManager = user.teamManagerCount > 0;
+  const isManagerofDept =
+    user.managementRoleIndicator === 1 || user.managementRoleIndicator === 3;
+  const isManagerofTeam =
+    user.managementRoleIndicator === 2 || user.managementRoleIndicator === 3;
 
   const [dashboardListRes, toolDataRes] = await Promise.all([
     apiClient(
@@ -54,26 +58,40 @@ export async function getFilteredDashboards(
 
   // Filter dashboards based on user role and manager status
   const filteredDashboards = dashboardList.filter((dashboard) => {
-    if (dashboard.teamManagerRequired && !isManager) {
+    // If the dashboard requires a department manager and the user is not one
+    if (dashboard.deptManagerRequired && !isManagerofDept) {
+      return false;
+    }
+
+    // If the dashboard requires a team manager and the user is not one
+    if (dashboard.teamManagerRequired && !isManagerofTeam) {
       return false;
     }
 
     switch (userRole) {
       case "CU":
-        return (
+        const cuCondition =
           dashboard.userRole === "CU" ||
-          (dashboard.teamManagerRequired && dashboard.userRole === "CU")
-        );
+          (dashboard.teamManagerRequired && dashboard.userRole === "CU") ||
+          (dashboard.deptManagerRequired && dashboard.userRole === "CU");
+
+        return cuCondition;
+
       case "CL":
       case "CA":
         return true;
+
       case "CS":
-        return (
+        const csCondition =
           dashboard.userRole === "CU" ||
           dashboard.userRole === "CS" ||
           (dashboard.teamManagerRequired &&
-            (dashboard.userRole === "CU" || dashboard.userRole === "CS"))
-        );
+            (dashboard.userRole === "CU" || dashboard.userRole === "CS")) ||
+          (dashboard.deptManagerRequired &&
+            (dashboard.userRole === "CU" || dashboard.userRole === "CS"));
+
+        return csCondition;
+
       default:
         return false;
     }

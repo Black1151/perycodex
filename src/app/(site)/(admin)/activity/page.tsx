@@ -41,7 +41,8 @@ export interface ActivityResponse {
 export default async function ActivityPage() {
   const user = await getUser(); // Awaiting user data
   const userRole = user.role; // Fetch the user's role
-  const isManager = user.teamManagerCount && user.teamManagerCount > 0;
+  const isManagerofTeams =
+    user.managementRoleIndicator === 2 || user.managementRoleIndicator === 3;
   await checkUserRole("/activity");
 
   let headerTitle = "Activity";
@@ -59,7 +60,7 @@ export default async function ActivityPage() {
   ];
   resArray.push("myActivityRes");
 
-  if (isManager) {
+  if (isManagerofTeams) {
     // Only fetch My Team Activity if the user is a manager
     apiCalls.push(apiClient(myTeamsActivityUrl, { cache: "no-store" }));
     resArray.push("myTeamsActivityRes");
@@ -102,7 +103,7 @@ export default async function ActivityPage() {
     },
   ];
 
-  if (isManager) {
+  if (isManagerofTeams) {
     dataSources.push({
       data: myTeamsActivityData,
       title: "My Teams Activity",

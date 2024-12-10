@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Flex, Grid, GridItem } from "@chakra-ui/react";
 import { SpringScale } from "@/components/animations/SpringScale";
 import SpeechBubble from "@/app/(site)/(apps)/happiness-score/SpeechBubble";
@@ -95,6 +95,9 @@ export default function StaffDashboardPage() {
       >
         <GridItem>
           <SpringScale delay={0.3} style={{ height: "100%" }}>
+            <Flex width="100%" justifyContent="center" mb={4}>
+              <SectionHeader>Average of Prev 2 Months</SectionHeader>
+            </Flex>
             <SpeechBubble
               {...speechBubbleData}
               positiveChange={positiveChange}
