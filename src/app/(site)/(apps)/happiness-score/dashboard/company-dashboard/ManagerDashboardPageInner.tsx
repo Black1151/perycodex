@@ -106,6 +106,7 @@ export default function ManagerDashboardInner({
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
 
   const [barModalData, setBarModalData] = useState<Person[]>([]);
+  const [userListData, setUserListData] = useState<Person[]>([]);
   const [isBarModalOpen, setIsBarModalOpen] = useState(false);
   const [barModalTitle, setBarModalTitle] = useState("");
   const [modalCurrentPage, setModalCurrentPage] = useState<number>(1);
@@ -202,6 +203,14 @@ export default function ManagerDashboardInner({
     [fetchHappinessScoreTwoMonthHistory],
   );
 
+  useEffect(() => {
+    const filteredScoresData = peopleListData.filter(
+      (person) => person.score !== null,
+    );
+
+    setUserListData(filteredScoresData);
+  }, [peopleListData]);
+
   return (
     <>
       {loading ? (
@@ -287,7 +296,7 @@ export default function ManagerDashboardInner({
                   <SectionHeader>Submissions</SectionHeader>
                 </Flex>
                 <PeopleList
-                  people={peopleListData}
+                  people={userListData}
                   currentPage={currentPage}
                   itemsPerPage={itemsPerPage}
                   onPageChange={setCurrentPage}

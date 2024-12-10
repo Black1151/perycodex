@@ -162,7 +162,6 @@ const UserDashboard: React.FC = () => {
       const response = await fetchClient<ApiResponse>(
         "/api/happiness-graphs/getUserStatsData",
       );
-      console.log("API Response:", response?.resource);
 
       if (response && response.resource) {
         const {
@@ -203,8 +202,11 @@ const UserDashboard: React.FC = () => {
         xKey: "weekEnd",
         yKey: "user",
         yName: "User",
-        stroke: theme.colors.blue[500],
-        marker: { enabled: true },
+        stroke: theme.colors.perygonPink,
+        marker: {
+          enabled: true,
+          fill: theme.colors.perygonPink,
+        },
         interpolation: {
           type: "smooth",
         },
@@ -214,7 +216,6 @@ const UserDashboard: React.FC = () => {
         xKey: "weekEnd",
         yKey: "site",
         yName: "Site",
-        stroke: theme.colors.green[500],
         marker: { enabled: true },
         interpolation: {
           type: "smooth",
@@ -225,7 +226,6 @@ const UserDashboard: React.FC = () => {
         xKey: "weekEnd",
         yKey: "department",
         yName: "Department",
-        stroke: theme.colors.orange[500],
         marker: { enabled: true },
         interpolation: {
           type: "smooth",
@@ -236,7 +236,6 @@ const UserDashboard: React.FC = () => {
         xKey: "weekEnd",
         yKey: "company",
         yName: "Company",
-        stroke: theme.colors.red[500],
         marker: { enabled: true },
         interpolation: {
           type: "smooth",
@@ -296,8 +295,8 @@ const UserDashboard: React.FC = () => {
         xKey: "monthEnd",
         yKey: "user",
         yName: "User",
-        stroke: theme.colors.blue[500],
-        marker: { enabled: true },
+        stroke: theme.colors.perygonPink,
+        marker: { enabled: true, fill: theme.colors.perygonPink },
         interpolation: {
           type: "smooth",
         },
@@ -307,7 +306,6 @@ const UserDashboard: React.FC = () => {
         xKey: "monthEnd",
         yKey: "site",
         yName: "Site",
-        stroke: theme.colors.green[500],
         marker: { enabled: true },
         interpolation: {
           type: "smooth",
@@ -318,7 +316,6 @@ const UserDashboard: React.FC = () => {
         xKey: "monthEnd",
         yKey: "department",
         yName: "Department",
-        stroke: theme.colors.orange[500],
         marker: { enabled: true },
         interpolation: {
           type: "smooth",
@@ -329,7 +326,6 @@ const UserDashboard: React.FC = () => {
         xKey: "monthEnd",
         yKey: "company",
         yName: "Company",
-        stroke: theme.colors.red[500],
         marker: { enabled: true },
         interpolation: {
           type: "smooth",
@@ -369,6 +365,15 @@ const UserDashboard: React.FC = () => {
         },
       },
     ],
+    contextMenu: {
+      enabled: false,
+    },
+    zoom: {
+      enabled: false,
+    },
+    navigator: {
+      enabled: false,
+    },
     legend: {
       position: "bottom" as const,
     },
@@ -410,7 +415,7 @@ const UserDashboard: React.FC = () => {
         {/* Line Chart - Comparative Weekly Data */}
         {comparativeData.length > 0 && (
           <>
-            <Flex width="100%" justifyContent={"center"} mb={2}>
+            <Flex width="100%" justifyContent={"center"}>
               <SectionHeader>Weekly Trend</SectionHeader>
             </Flex>
             <Box
@@ -430,7 +435,7 @@ const UserDashboard: React.FC = () => {
         {/* Line Chart - Comparative Monthly Data */}
         {monthlyComparativeData.length > 0 && (
           <>
-            <Flex width="100%" justifyContent={"center"} mb={2}>
+            <Flex width="100%" justifyContent={"center"}>
               <SectionHeader>Monthly Trend</SectionHeader>
             </Flex>
             <Box
@@ -450,7 +455,7 @@ const UserDashboard: React.FC = () => {
         {/* Histogram - User Scores */}
         {userScores.length > 0 && (
           <>
-            <Flex width="100%" justifyContent={"center"} mb={2}>
+            <Flex width="100%" justifyContent={"center"}>
               <SectionHeader>Frequency of Scores</SectionHeader>
             </Flex>
             <Box borderRadius="2xl" shadow="xl" overflow="hidden">
@@ -462,7 +467,7 @@ const UserDashboard: React.FC = () => {
         {/* Bubble Chart - User Distribution */}
         {userDistribution.length > 0 && (
           <>
-            <Flex width="100%" justifyContent={"center"} mb={2}>
+            <Flex width="100%" justifyContent={"center"}>
               <SectionHeader>Punch Card</SectionHeader>
             </Flex>
             <Box

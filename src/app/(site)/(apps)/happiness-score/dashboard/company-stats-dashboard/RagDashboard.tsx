@@ -381,12 +381,22 @@ const RagDashboard: React.FC = () => {
       {rowData.length > 0 && (
         <>
           {companyData && companyData.scoreDistribution && (
-            <CompanyHistogram
-              scoreDistribution={companyData.scoreDistribution}
-            />
+            <>
+              <Flex width="100%" justifyContent="center">
+                <SectionHeader>Frequency of Scores</SectionHeader>
+              </Flex>
+              <CompanyHistogram
+                scoreDistribution={companyData.scoreDistribution}
+              />
+            </>
           )}
           {companyData && companyData.companyScores && (
-            <CompanyBubble scores={companyData.companyScores} />
+            <>
+              <Flex width="100%" justifyContent="center">
+                <SectionHeader>Punch Card</SectionHeader>
+              </Flex>
+              <CompanyBubble scores={companyData.companyScores} />
+            </>
           )}
         </>
       )}
