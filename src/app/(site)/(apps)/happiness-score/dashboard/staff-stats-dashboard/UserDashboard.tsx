@@ -1,17 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  VStack,
-  Text,
-  Flex,
-  Box,
-  useTheme,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Box, Flex, useTheme, VStack } from "@chakra-ui/react";
 import { useFetchClient } from "@/hooks/useFetchClient";
-import { CompanyHistogram } from "@/app/(site)/(apps)/happiness-score/dashboard/rag-dashboard/CompanyHistogram";
-import { CompanyBubble } from "@/app/(site)/(apps)/happiness-score/dashboard/rag-dashboard/CompanyBubble";
+import { CompanyHistogram } from "@/app/(site)/(apps)/happiness-score/dashboard/company-stats-dashboard/CompanyHistogram";
+import { CompanyBubble } from "@/app/(site)/(apps)/happiness-score/dashboard/company-stats-dashboard/CompanyBubble";
 import { AgCharts } from "ag-charts-react";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
@@ -201,20 +194,6 @@ const UserDashboard: React.FC = () => {
     getData();
   }, []);
 
-  if (
-    rowData.length === 0 &&
-    userScores.length === 0 &&
-    userDistribution.length === 0 &&
-    comparativeData.length === 0 &&
-    monthlyComparativeData.length === 0
-  ) {
-    return (
-      <VStack align="center" justify="center" h="100vh">
-        <Text>No data available</Text>
-      </VStack>
-    );
-  }
-
   // Weekly line chart configuration
   const weeklyLineChartOptions = {
     data: comparativeData,
@@ -319,6 +298,9 @@ const UserDashboard: React.FC = () => {
         yName: "User",
         stroke: theme.colors.blue[500],
         marker: { enabled: true },
+        interpolation: {
+          type: "smooth",
+        },
       },
       {
         type: "line",
@@ -327,6 +309,9 @@ const UserDashboard: React.FC = () => {
         yName: "Site",
         stroke: theme.colors.green[500],
         marker: { enabled: true },
+        interpolation: {
+          type: "smooth",
+        },
       },
       {
         type: "line",
@@ -335,6 +320,9 @@ const UserDashboard: React.FC = () => {
         yName: "Department",
         stroke: theme.colors.orange[500],
         marker: { enabled: true },
+        interpolation: {
+          type: "smooth",
+        },
       },
       {
         type: "line",
@@ -343,6 +331,9 @@ const UserDashboard: React.FC = () => {
         yName: "Company",
         stroke: theme.colors.red[500],
         marker: { enabled: true },
+        interpolation: {
+          type: "smooth",
+        },
       },
     ],
     axes: [
@@ -456,6 +447,18 @@ const UserDashboard: React.FC = () => {
           </>
         )}
 
+        {/* Histogram - User Scores */}
+        {userScores.length > 0 && (
+          <>
+            <Flex width="100%" justifyContent={"center"} mb={2}>
+              <SectionHeader>Frequency of Scores</SectionHeader>
+            </Flex>
+            <Box borderRadius="2xl" shadow="xl" overflow="hidden">
+              <CompanyHistogram scoreDistribution={userScores} />
+            </Box>
+          </>
+        )}
+
         {/* Bubble Chart - User Distribution */}
         {userDistribution.length > 0 && (
           <>
@@ -469,18 +472,6 @@ const UserDashboard: React.FC = () => {
               height="500px"
             >
               <CompanyBubble scores={userDistribution} />
-            </Box>
-          </>
-        )}
-
-        {/* Histogram - User Scores */}
-        {userScores.length > 0 && (
-          <>
-            <Flex width="100%" justifyContent={"center"} mb={2}>
-              <SectionHeader>Frequency of Scores</SectionHeader>
-            </Flex>
-            <Box borderRadius="2xl" shadow="xl" overflow="hidden">
-              <CompanyHistogram scoreDistribution={userScores} />
             </Box>
           </>
         )}

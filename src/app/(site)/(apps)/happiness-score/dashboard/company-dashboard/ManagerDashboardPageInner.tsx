@@ -89,7 +89,7 @@ export default function ManagerDashboardInner({
         value: dept.averageScore,
         count: dept.count,
       })),
-    [departmentsData]
+    [departmentsData],
   );
 
   const siteBarData = useMemo(
@@ -99,7 +99,7 @@ export default function ManagerDashboardInner({
         value: site.averageScore,
         count: site.count,
       })),
-    [sitesData]
+    [sitesData],
   );
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -116,32 +116,32 @@ export default function ManagerDashboardInner({
   const handleDepartmentBarClick = useCallback(
     (title: string) => {
       const filteredPeople = peopleListData.filter(
-        (person) => person.department === title
+        (person) => person.department === title,
       );
       setBarModalTitle(`Department: ${title}`);
       setBarModalData(filteredPeople);
       setIsBarModalOpen(true);
     },
-    [peopleListData]
+    [peopleListData],
   );
 
   const handleSiteBarClick = useCallback(
     (title: string) => {
       const filteredPeople = peopleListData.filter(
-        (person) => person.site === title
+        (person) => person.site === title,
       );
       setBarModalTitle(`Site: ${title}`);
       setBarModalData(filteredPeople);
       setIsBarModalOpen(true);
     },
-    [peopleListData]
+    [peopleListData],
   );
 
   const handleMasonryClick = useCallback(
     (category: string) => {
       if (category === "Did not participate") {
         const nonParticipants = peopleListData.filter(
-          (person) => person.score === null || person.score === undefined
+          (person) => person.score === null || person.score === undefined,
         );
         setBarModalTitle("Did Not Participate");
         setBarModalData(nonParticipants);
@@ -172,13 +172,13 @@ export default function ManagerDashboardInner({
         (person) =>
           person.score !== null &&
           person.score >= minScore &&
-          person.score <= maxScore
+          person.score <= maxScore,
       );
       setBarModalTitle(`Score Range: ${category}`);
       setBarModalData(filteredPeople);
       setIsBarModalOpen(true);
     },
-    [peopleListData]
+    [peopleListData],
   );
 
   useEffect(() => {
@@ -199,7 +199,7 @@ export default function ManagerDashboardInner({
       fetchHappinessScoreTwoMonthHistory(userId);
       setIsBarModalOpen(false);
     },
-    [fetchHappinessScoreTwoMonthHistory]
+    [fetchHappinessScoreTwoMonthHistory],
   );
 
   return (

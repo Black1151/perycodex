@@ -1,11 +1,10 @@
-import { Box } from "@chakra-ui/react";
 import { redirect } from "next/navigation";
 import { getFilteredDashboards } from "@/lib/dashboardUtils";
 import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
 import HappinessDashboardLayout from "@/app/(site)/(apps)/happiness-score/dashboard/HappinessDashboardLayout";
 import WorkflowHeader from "@/app/(site)/(apps)/happiness-score/WorkflowHeader";
 import { verifySession } from "@/lib/dal";
-import ManagerDashboardPage from "../manager-dashboard/ManagerDashboard";
+import ManagerDashboardPage from "@/app/(site)/(apps)/happiness-score/dashboard/company-dashboard/ManagerDashboard";
 
 export default async function Home({
   searchParams,
@@ -31,7 +30,7 @@ export default async function Home({
     await getFilteredDashboards(
       toolId,
       workflowId,
-      "/happiness-score/dashboard/team-dashboard"
+      "/happiness-score/dashboard/team-dashboard",
     );
 
   // Redirect to the first dashboard if the user doesn't have access to the current one

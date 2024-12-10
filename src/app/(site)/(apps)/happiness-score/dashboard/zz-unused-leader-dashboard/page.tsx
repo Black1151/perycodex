@@ -1,10 +1,10 @@
+import { Box } from "@chakra-ui/react";
 import { redirect } from "next/navigation";
 import { getFilteredDashboards } from "@/lib/dashboardUtils";
 import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
 import HappinessDashboardLayout from "@/app/(site)/(apps)/happiness-score/dashboard/HappinessDashboardLayout";
 import WorkflowHeader from "@/app/(site)/(apps)/happiness-score/WorkflowHeader";
 import { verifySession } from "@/lib/dal";
-import ManagerDashboardPage from "@/app/(site)/(apps)/happiness-score/dashboard/manager-dashboard/ManagerDashboard";
 
 export default async function Home({
   searchParams,
@@ -13,10 +13,10 @@ export default async function Home({
 }) {
   const session = await verifySession();
 
+  // If there's no session, redirect to login
   if (!session) {
     redirect("/login");
   }
-
   const toolId = searchParams.toolId as string;
   const workflowId = searchParams.wfId as string;
 
@@ -24,13 +24,15 @@ export default async function Home({
     return redirect("/");
   }
 
+  // Fetch filtered dashboards and tool data
   const { filteredDashboards, toolData, activeDashboardName, redirectPath } =
     await getFilteredDashboards(
       toolId,
       workflowId,
-      "/happiness-score/dashboard/manager-dashboard"
+      "/happiness-score/dashboard/zz-unused-leader-dashboard",
     );
 
+  // Redirect to the first dashboard if the user doesn't have access to the current one
   if (redirectPath) {
     return redirect(redirectPath);
   }
@@ -40,11 +42,11 @@ export default async function Home({
       <HappinessDashboardLayout dashboardList={filteredDashboards} />
       <WorkflowHeader
         headingText={
-          activeDashboardName ? activeDashboardName : "Manager Dashboard"
+          activeDashboardName ? activeDashboardName : "Leader Dashboard"
         }
         canStartWorkflow={toolData.startInUi}
       />
-      <ManagerDashboardPage />
+      <Box>This is the leader dashboard</Box>
     </WorkflowEngine>
   );
 }

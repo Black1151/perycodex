@@ -1,13 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Spinner,
-  Text,
-  useBreakpointValue,
-  useTheme,
-} from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Box, useTheme } from "@chakra-ui/react";
 import { AgCharts } from "ag-charts-react";
 import useColor from "@/hooks/useColor";
 

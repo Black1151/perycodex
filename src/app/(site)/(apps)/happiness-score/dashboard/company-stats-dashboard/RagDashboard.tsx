@@ -24,8 +24,8 @@ import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/Happiness
 import HappinessDifferenceRenderer from "@/components/agGrids/CellRenderers/HappinessDifferenceRenderer";
 import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
 import HappinessHistogramRenderer from "@/components/agGrids/CellRenderers/HappinessHistogramRenderer";
-import { CompanyBubble } from "@/app/(site)/(apps)/happiness-score/dashboard/rag-dashboard/CompanyBubble";
-import { CompanyHistogram } from "@/app/(site)/(apps)/happiness-score/dashboard/rag-dashboard/CompanyHistogram";
+import { CompanyBubble } from "@/app/(site)/(apps)/happiness-score/dashboard/company-stats-dashboard/CompanyBubble";
+import { CompanyHistogram } from "@/app/(site)/(apps)/happiness-score/dashboard/company-stats-dashboard/CompanyHistogram";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import { useUser } from "@/providers/UserProvider";
 
@@ -91,6 +91,11 @@ const RagDashboard: React.FC = () => {
       // Ensure user and customerId exist before making the request
       if (!user || !user.customerId) {
         throw new Error("User or customerId is missing");
+      }
+
+      // Ensure user and customerId exist before making the request
+      if (!toolId || !workflowId) {
+        throw new Error("Tool or Workflow ID is missing");
       }
 
       const response = await fetchClient<ApiResponse>(
