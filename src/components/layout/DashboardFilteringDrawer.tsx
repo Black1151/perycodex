@@ -1,6 +1,6 @@
 "use client";
 
-import React, { memo, useRef, useEffect } from "react";
+import React, { memo, useRef } from "react";
 import {
   Box,
   Button,
@@ -14,14 +14,14 @@ import {
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { Clear, Close, FilterAlt, Refresh } from "@mui/icons-material";
-import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/manager-dashboard/ManagerDashboard";
+import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/company-dashboard/ManagerDashboard";
 
 interface RightHandNavigationDrawerProps {
   title?: string;
   handleCheckboxChange: (
     groupIndex: number,
     optionIndex: number,
-    isChecked: boolean
+    isChecked: boolean,
   ) => void;
   filterOptions: FilterOptionGroup[];
   clearAllFilters: () => void;
@@ -70,23 +70,6 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
       setDrawerState("fully-open");
     }
   };
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        drawerState === "fully-open" &&
-        drawerRef.current &&
-        !drawerRef.current.contains(event.target as Node)
-      ) {
-        setDrawerState("closed");
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [drawerState, setDrawerState]);
 
   return (
     <>
@@ -261,7 +244,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                                   handleCheckboxChange(
                                     groupIndex,
                                     optionIndex,
-                                    e.target.checked
+                                    e.target.checked,
                                   )
                                 }
                               >
@@ -281,7 +264,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                   left={0}
                   right={0}
                   bottom={0}
-                  bg="rgba(255, 255, 255, 1)"
+                  bg="rgba(255, 255, 255, 0.6)"
                   display="flex"
                   alignItems="center"
                   justifyContent="center"

@@ -43,7 +43,7 @@ export default async function Home({
       <HappinessDashboardLayout dashboardList={filteredDashboards} />
       <WorkflowHeader
         headingText={
-          activeDashboardName ? activeDashboardName : "AG Test Dashboard"
+          activeDashboardName ? activeDashboardName : "Current Week Happiness"
         }
         canStartWorkflow={toolData.startInUi}
       />

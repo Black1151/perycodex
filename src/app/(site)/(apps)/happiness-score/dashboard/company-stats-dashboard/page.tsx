@@ -4,7 +4,7 @@ import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
 import HappinessDashboardLayout from "@/app/(site)/(apps)/happiness-score/dashboard/HappinessDashboardLayout";
 import WorkflowHeader from "@/app/(site)/(apps)/happiness-score/WorkflowHeader";
 import { verifySession } from "@/lib/dal";
-import UserDashboard from "@/app/(site)/(apps)/happiness-score/dashboard/user-dashboard/UserDashboard";
+import RagDashboard from "@/app/(site)/(apps)/happiness-score/dashboard/company-stats-dashboard/RagDashboard";
 
 export default async function Home({
   searchParams,
@@ -30,7 +30,7 @@ export default async function Home({
     await getFilteredDashboards(
       toolId,
       workflowId,
-      "/happiness-score/dashboard/user-dashboard",
+      "/happiness-score/dashboard/company-stats-dashboard",
     );
 
   // Redirect to the first dashboard if the user doesn't have access to the current one
@@ -45,11 +45,11 @@ export default async function Home({
         headingText={
           activeDashboardName
             ? activeDashboardName
-            : "Your Happiness Statistics"
+            : "My Company Happiness Stats"
         }
         canStartWorkflow={toolData.startInUi}
       />
-      <UserDashboard />
+      <RagDashboard />
     </WorkflowEngine>
   );
 }

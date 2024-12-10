@@ -34,7 +34,7 @@ export default function StaffDashboardPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
-      }
+      },
     );
 
     const data = await response.json();
@@ -46,7 +46,7 @@ export default function StaffDashboardPage() {
       historicRecords.map((record: any) => ({
         value: parseFloat(record.value),
         title: record.title,
-      }))
+      })),
     );
   };
 

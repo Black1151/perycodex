@@ -8,7 +8,7 @@ interface LayoutProps {
 export default async function Layout({ children }: LayoutProps) {
   return (
     <>
-      <Flex flex={1} width="100%" mt={"60px"} mb={["60px", null, "30px"]}>
+      <Flex flex={1} width="100%" mt={"60px"} mb={["60px", "60px", "30px"]}>
         <Box flex={1} overflowY="auto" px={[3, 3, 78]} py={5}>
           {children}
         </Box>
