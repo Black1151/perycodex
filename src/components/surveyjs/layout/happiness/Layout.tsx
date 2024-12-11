@@ -34,13 +34,14 @@ const HappinessLayout: React.FC<HappinessLayoutProps> = ({
       setToEditMode={switchToEditMode}
     >
       <Flex
-        height={"full"}
+        pt={[2, 2, 0]}
+        height={["full"]}
         w="100%"
         justify="center"
         align="center"
         bg={"transparent"}
         direction="column"
-        p={6}
+        gap={[2, 2, 4]}
       >
         {/*TODO: this could be tool logo instead of hard coded*/}
         <Image
@@ -54,6 +55,7 @@ const HappinessLayout: React.FC<HappinessLayoutProps> = ({
           as="h1"
           fontFamily="Metropolis"
           fontWeight={300}
+          fontSize={[18, 18, 36]}
           color={"white"}
           textAlign={"center"}
         >

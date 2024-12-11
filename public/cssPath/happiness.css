@@ -21,13 +21,21 @@
     background: white !important;
 }
 
-/*Rating Smiley padding and min and max width*/
+/* Rating Smiley padding and min and max width */
 .sd-rating__item-smiley {
     min-width: calc(0 * (var(--sjs-base-unit, var(--base-unit, 8px))));
     min-height: calc(0 * (var(--sjs-base-unit, var(--base-unit, 8px))));
-
     padding: calc(0.25 * (var(--sjs-base-unit, var(--base-unit, 8px))));
     --sjs-base-unit: 14px;
+}
+
+@media (max-width: 400px) {
+    .sd-rating__item-smiley {
+        min-width: calc(0 * (var(--sjs-base-unit, var(--base-unit, 6px))));
+        min-height: calc(0 * (var(--sjs-base-unit, var(--base-unit, 6px))));
+        padding: calc(0.15 * (var(--sjs-base-unit, var(--base-unit, 6px))));
+        --sjs-base-unit: 12px; /* Smaller base unit for smaller screens */
+    }
 }
 
 /*Rating smiley min max rating text colour*/
@@ -39,4 +47,8 @@
 /*Question input text colour*/
 .sd-input {
     color: #ff0070;
+}
+
+.sd-rating.sd-rating--labels-bottom fieldset {
+    justify-content: center;
 }
