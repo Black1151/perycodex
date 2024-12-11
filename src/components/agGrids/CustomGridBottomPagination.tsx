@@ -4,7 +4,6 @@ import {
   Button,
   Flex,
   IconButton,
-  Select,
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react";
@@ -87,7 +86,7 @@ const CustomGridBottomPagination: React.FC<CustomGridBottomPaginationProps> = ({
 
         <Flex
           gap={isMobile ? 1 : 2}
-          justifyContent={isMobile ? "space-between" : "center"}
+          justifyContent={isMobile ? "center" : "center"}
           align={"center"}
         >
           <Flex justifyContent="center" align={"center"} gap={isMobile ? 1 : 2}>

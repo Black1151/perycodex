@@ -2,10 +2,10 @@ import React from "react";
 import LineGraph from "@/components/graphs/LineGraph";
 import SpeechBubble from "@/app/(site)/(apps)/happiness-score/SpeechBubble";
 import {
+  Avatar,
   Box,
   Flex,
   HStack,
-  Avatar,
   Modal,
   ModalBody,
   ModalCloseButton,

@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Accordion,
-  AccordionItem,
   AccordionButton,
-  AccordionPanel,
   AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Box,
   Checkbox,
   VStack,
 } from "@chakra-ui/react";
-import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/manager-dashboard/ManagerDashboard";
+import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/company-dashboard/ManagerDashboard";
 
 interface FilterAccordionProps {
   filterOptions: FilterOptionGroup[];

@@ -31,7 +31,6 @@ export default async function Home({
       "/happiness-score/dashboard/staff-dashboard",
     );
 
-  // Redirect to the first dashboard if the user doesn't have access to the current one
   if (redirectPath) {
     return redirect(redirectPath);
   }

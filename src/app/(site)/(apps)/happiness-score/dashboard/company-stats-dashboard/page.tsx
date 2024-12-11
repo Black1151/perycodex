@@ -4,7 +4,7 @@ import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
 import HappinessDashboardLayout from "@/app/(site)/(apps)/happiness-score/dashboard/HappinessDashboardLayout";
 import WorkflowHeader from "@/app/(site)/(apps)/happiness-score/WorkflowHeader";
 import { verifySession } from "@/lib/dal";
-import ManagerDashboardPage from "@/app/(site)/(apps)/happiness-score/dashboard/manager-dashboard/ManagerDashboard";
+import RagDashboard from "@/app/(site)/(apps)/happiness-score/dashboard/company-stats-dashboard/RagDashboard";
 
 export default async function Home({
   searchParams,
@@ -13,6 +13,7 @@ export default async function Home({
 }) {
   const session = await verifySession();
 
+  // If there's no session, redirect to login
   if (!session) {
     redirect("/login");
   }
@@ -24,11 +25,12 @@ export default async function Home({
     return redirect("/");
   }
 
+  // Fetch filtered dashboards and tool data
   const { filteredDashboards, toolData, activeDashboardName, redirectPath } =
     await getFilteredDashboards(
       toolId,
       workflowId,
-      "/happiness-score/dashboard/manager-dashboard",
+      "/happiness-score/dashboard/company-stats-dashboard",
     );
 
   // Redirect to the first dashboard if the user doesn't have access to the current one
@@ -41,11 +43,13 @@ export default async function Home({
       <HappinessDashboardLayout dashboardList={filteredDashboards} />
       <WorkflowHeader
         headingText={
-          activeDashboardName ? activeDashboardName : "Manager Dashboard"
+          activeDashboardName
+            ? activeDashboardName
+            : "My Company Happiness Stats"
         }
         canStartWorkflow={toolData.startInUi}
       />
-      <ManagerDashboardPage isLeaderDashboard={false} />
+      <RagDashboard />
     </WorkflowEngine>
   );
 }

@@ -52,7 +52,7 @@ export const happinessJson = {
           type: "html",
           name: "happinessTitle",
           startWithNewLine: false,
-          html: "<table width = '100%'><tr><td><center><img src='images/Perygon_Happiness_score_icon.png' width='100px' /></center></td></tr><tr><td><center><span style='font-size:20.0pt;color:white;line-height:107%;font-family:Metropolis'>How happy are</span> <b><i><span style='font-size:30.0pt;color:white;line-height:107%;font-family:Bonfire'>YOU</span></i></b><span> </span><span style='font-size:20.0pt;color:white;line-height:107%;font-family:Metropolis'>this week?</span></center></td></tr></table>",
+          html: "<table width = '100%'><tr><td><center><img src='images/Perygon_Happiness_score_icon_festive.png' width='100px' /></center></td></tr><tr><td><center><span style='font-size:20.0pt;color:white;line-height:107%;font-family:Metropolis'>How happy are</span> <b><i><span style='font-size:30.0pt;color:white;line-height:107%;font-family:Bonfire'>YOU</span></i></b><span> </span><span style='font-size:20.0pt;color:white;line-height:107%;font-family:Metropolis'>this week?</span></center></td></tr></table>",
           visibleIf: "1 = 1",
         },
         {

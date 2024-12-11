@@ -35,6 +35,9 @@ import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/Happiness
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import { Info } from "@mui/icons-material";
 import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
+import CommentsCellRenderer from "@/components/agGrids/CellRenderers/CommentsCellRenderer";
+import { useWorkflow } from "@/providers/WorkflowProvider";
+import { useUser } from "@/providers/UserProvider";
 
 interface ApiResponse {
   data: RowData[]; // This matches the RowData type you're using
@@ -115,6 +118,8 @@ const WeeklyDashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
+  const { toolId, workflowId } = useWorkflow();
+  const { user } = useUser();
 
   // Details Modal for Clicking
   const [isBarModalOpen, setIsBarModalOpen] = useState(false);
@@ -123,31 +128,41 @@ const WeeklyDashboard: React.FC = () => {
 
   const { fetchClient } = useFetchClient();
 
-  useEffect(() => {
-    const getData = async () => {
-      setIsLoading(true);
+  const getData = async () => {
+    setIsLoading(true);
 
-      try {
-        // Call fetchClient with the expected ApiResponse type
-        const response = await fetchClient<ApiResponse>(
-          "/api/happiness-graphs/getCurrentWeekHappinessData?toolId=1&wfId=1",
-        );
+    if (!toolId || !workflowId || !user?.customerId) {
+      console.warn(
+        "Required data (toolId, workflowId, or customerId) is missing",
+      );
+      return; // Prevent fetching if values are not ready
+    }
 
-        if (response && response.data.length > 0) {
-          setRowData(response.data); // Use the typed response data
-        } else {
-          setRowData([]);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+    try {
+      // Call fetchClient with the expected ApiResponse type
+      const response = await fetchClient<ApiResponse>(
+        `/api/happiness-graphs/getCurrentWeekHappinessData?toolId=${toolId}&wfId=${workflowId}&customerId=${user.customerId}`,
+      );
+
+      if (response && response.data.length > 0) {
+        setRowData(response.data); // Use the typed response data
+      } else {
         setRowData([]);
-      } finally {
-        setIsLoading(false);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setRowData([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    getData();
-  }, []); // Empty dependency array ensures the effect runs only on mount
+  useEffect(() => {
+    // Fetch data only when toolId, workflowId, and user.customerId are available
+    if (toolId && workflowId && user?.customerId) {
+      getData();
+    }
+  }, [toolId, workflowId, user?.customerId]);
 
   const modalColDef: ColDef[] = [
     {
@@ -181,11 +196,13 @@ const WeeklyDashboard: React.FC = () => {
     {
       field: "comments",
       headerName: "Comments",
+      cellRenderer: CommentsCellRenderer,
     },
   ];
 
   const modalDefaultColDef: ColDef = {
     resizable: true,
+    filter: true,
     sortable: true,
     suppressHeaderMenuButton: true,
   };
@@ -207,7 +224,6 @@ const WeeklyDashboard: React.FC = () => {
       filter: "agMultiColumnFilter",
       chartDataType: "category",
     },
-    { field: "teamName", headerName: "Team" },
     {
       field: "deptName",
       headerName: "Department",
@@ -223,14 +239,14 @@ const WeeklyDashboard: React.FC = () => {
     {
       field: "comments",
       headerName: "Comments",
-      flex: 3,
+      cellRenderer: CommentsCellRenderer,
     },
   ];
 
   const defaultColDef: ColDef = {
     resizable: true,
     filter: true,
-    sortable: false,
+    sortable: true,
     suppressHeaderMenuButton: true,
   };
 
@@ -395,14 +411,6 @@ const WeeklyDashboard: React.FC = () => {
             navigator: {
               enabled: false,
             },
-            overlays: {
-              noData: {
-                text: "NO DATA",
-              },
-              loading: {
-                text: "Loading...",
-              },
-            },
           },
           bar: {
             series: {
@@ -546,62 +554,65 @@ const WeeklyDashboard: React.FC = () => {
           showTopBar={true}
           defaultColDef={defaultColDef}
           onGridReady={handleGridReady}
+          refreshData={getData}
+          enableAutoRefresh={true}
         />
       </Box>
 
-      {/* Chart Section */}
-      <Flex
-        width="100%"
-        flexWrap="wrap"
-        gap={6}
-        justify="space-between"
-        flex={1}
-      >
-        <Box
-          minW={["100%", "100%", "48%"]}
+      {rowData.length > 0 && (
+        <Flex
+          width="100%"
+          flexWrap="wrap"
+          gap={6}
+          justify="space-between"
           flex={1}
-          textAlign="center"
-          borderRadius="lg"
         >
-          <Flex
-            width="100%"
-            justifyContent={isMobile ? "flex-start" : "center"}
-            mb={2}
-          >
-            <SectionHeader>Happiness by Department</SectionHeader>
-          </Flex>
           <Box
-            id="chart1"
-            height="400px"
-            w="full"
-            // bg={"white"}
-            borderRadius={"2xl"}
-            overflow={"hidden"}
-          ></Box>
-        </Box>
-        <Box
-          minW={["100%", "100%", "48%"]}
-          flex={1}
-          textAlign="center"
-          borderRadius="lg"
-        >
-          <Flex
-            width="100%"
-            justifyContent={isMobile ? "flex-start" : "center"}
-            mb={2}
+            minW={["100%", "100%", "48%"]}
+            flex={1}
+            textAlign="center"
+            borderRadius="lg"
           >
-            <SectionHeader>Happiness by Office</SectionHeader>
-          </Flex>
+            <Flex
+              width="100%"
+              justifyContent={isMobile ? "flex-start" : "center"}
+              mb={2}
+            >
+              <SectionHeader>Happiness by Department</SectionHeader>
+            </Flex>
+            <Box
+              id="chart1"
+              height="400px"
+              w="full"
+              // bg={"white"}
+              borderRadius={"2xl"}
+              overflow={"hidden"}
+            ></Box>
+          </Box>
           <Box
-            id="chart2"
-            height="400px"
-            w="full"
-            // bg={"white"}
-            borderRadius={"2xl"}
-            overflow={"hidden"}
-          ></Box>
-        </Box>
-      </Flex>
+            minW={["100%", "100%", "48%"]}
+            flex={1}
+            textAlign="center"
+            borderRadius="lg"
+          >
+            <Flex
+              width="100%"
+              justifyContent={isMobile ? "flex-start" : "center"}
+              mb={2}
+            >
+              <SectionHeader>Happiness by Office</SectionHeader>
+            </Flex>
+            <Box
+              id="chart2"
+              height="400px"
+              w="full"
+              // bg={"white"}
+              borderRadius={"2xl"}
+              overflow={"hidden"}
+            ></Box>
+          </Box>
+        </Flex>
+      )}
     </VStack>
   );
 };

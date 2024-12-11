@@ -1,10 +1,10 @@
-import { Box } from "@chakra-ui/react";
 import { redirect } from "next/navigation";
 import { getFilteredDashboards } from "@/lib/dashboardUtils";
 import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
 import HappinessDashboardLayout from "@/app/(site)/(apps)/happiness-score/dashboard/HappinessDashboardLayout";
 import WorkflowHeader from "@/app/(site)/(apps)/happiness-score/WorkflowHeader";
 import { verifySession } from "@/lib/dal";
+import UserDashboard from "@/app/(site)/(apps)/happiness-score/dashboard/staff-stats-dashboard/UserDashboard";
 
 export default async function Home({
   searchParams,
@@ -17,6 +17,7 @@ export default async function Home({
   if (!session) {
     redirect("/login");
   }
+
   const toolId = searchParams.toolId as string;
   const workflowId = searchParams.wfId as string;
 
@@ -29,7 +30,7 @@ export default async function Home({
     await getFilteredDashboards(
       toolId,
       workflowId,
-      "/happiness-score/dashboard/leader-dashboard",
+      "/happiness-score/dashboard/staff-stats-dashboard",
     );
 
   // Redirect to the first dashboard if the user doesn't have access to the current one
@@ -42,11 +43,11 @@ export default async function Home({
       <HappinessDashboardLayout dashboardList={filteredDashboards} />
       <WorkflowHeader
         headingText={
-          activeDashboardName ? activeDashboardName : "Leader Dashboard"
+          activeDashboardName ? activeDashboardName : "Your Happiness Stats"
         }
         canStartWorkflow={toolData.startInUi}
       />
-      <Box>This is the leader dashboard</Box>
+      <UserDashboard />
     </WorkflowEngine>
   );
 }

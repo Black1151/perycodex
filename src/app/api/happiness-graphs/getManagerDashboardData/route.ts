@@ -1,9 +1,7 @@
-// File: pages/api/happiness-graphs/getManagerDashboardData.ts
-
 import { NextResponse } from "next/server";
 import apiClient from "@/lib/apiClient";
 import { cookies } from "next/headers";
-import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/manager-dashboard/ManagerDashboard";
+import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/company-dashboard/ManagerDashboard";
 
 interface ApiResponse {
   resource: ApiResponseItem[];
@@ -92,7 +90,7 @@ interface Person {
   jobTitle: string;
   department: string;
   site: string;
-  score: number;
+  score: number | null;
 }
 
 function camelCaseToWords(str: string): string {
@@ -114,22 +112,69 @@ const getWeekNumber = (date: Date): [number, number] => {
   return [target.getFullYear(), weekNo];
 };
 
-function getAllWeekKeysBetween(startDate: Date, endDate: Date): string[] {
-  const weeks: string[] = [];
+interface WeekData {
+  weekKey: string;
+  startDate: Date;
+  endDate: Date;
+}
+
+function getAllWeekKeysBetween(startDate: Date, endDate: Date): WeekData[] {
+  const weeks: WeekData[] = [];
   let currentDate = new Date(startDate);
   currentDate.setHours(0, 0, 0, 0);
 
+  // Align to Monday
   currentDate.setDate(currentDate.getDate() - ((currentDate.getDay() + 6) % 7));
 
   while (currentDate <= endDate) {
     const [year, weekNo] = getWeekNumber(currentDate);
     const weekKey = `${year}-W${weekNo}`;
-    if (!weeks.includes(weekKey)) {
-      weeks.push(weekKey);
-    }
+
+    // End of this week is Sunday (Monday + 6 days)
+    const weekStart = new Date(currentDate);
+    const weekEnd = new Date(currentDate);
+    weekEnd.setDate(weekEnd.getDate() + 6); // Sunday
+
+    weeks.push({
+      weekKey: weekKey,
+      startDate: weekStart,
+      endDate: weekEnd,
+    });
+
     currentDate.setDate(currentDate.getDate() + 7);
   }
   return weeks;
+}
+
+interface DidNotParticipateParams {
+  workflowId: number;
+  businessProcessId: number;
+  toolConfigId: number;
+  startDate: string;
+  endDate: string;
+}
+
+async function getDidNotParticipate({
+  workflowId,
+  businessProcessId,
+  toolConfigId,
+  startDate,
+  endDate,
+}: DidNotParticipateParams) {
+  const response = await apiClient("/getUserHappinessParticipants", {
+    method: "POST",
+    body: JSON.stringify({
+      scheduleId: 14,
+      customerId: 1,
+      toolConfigId,
+      workflowId,
+      businessProcessId,
+      startDate,
+      endDate,
+    }),
+  });
+
+  return response.json();
 }
 
 export async function GET(request: Request) {
@@ -137,6 +182,66 @@ export async function GET(request: Request) {
   const apiToken = cookieStore.get("auth_token")?.value;
   const url = new URL(request.url);
   const queryParams = Object.fromEntries(url.searchParams.entries());
+
+  const preFilter = queryParams.preFilter;
+
+  let managerOfDeptIds: string[] = [];
+  let managerOfTeamIds: string[] = [];
+
+  if (preFilter === "departments" || preFilter === "teams") {
+    try {
+      const uniqueId = cookieStore.get("user_uuid")?.value;
+      if (!uniqueId) {
+        return NextResponse.json(
+          { error: "User unique ID not found in cookies." },
+          { status: 400 },
+        );
+      }
+
+      const response = await apiClient("/getTeamsUserIsManagerOf", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+        },
+        body: JSON.stringify({ userUniqueId: uniqueId }),
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch manager of departments and teams: ${response.statusText}`,
+        );
+      }
+
+      const data = await response.json();
+      const deptIds = data.resource.managerOfDeptIds || [];
+      const teamIds = data.resource.managerOfTeamIds || [];
+
+      managerOfDeptIds = deptIds.map(String);
+      managerOfTeamIds = teamIds.map(String);
+    } catch (error) {
+      console.error("Error fetching manager of departments and teams:", error);
+      return NextResponse.json(
+        { error: "Failed to fetch manager of departments and teams." },
+        { status: 500 },
+      );
+    }
+
+    if (preFilter === "departments") {
+      if (managerOfDeptIds.length === 0) {
+        return NextResponse.json(
+          { error: "User does not manage any departments." },
+          { status: 403 },
+        );
+      }
+    } else if (preFilter === "teams") {
+      if (managerOfTeamIds.length === 0) {
+        return NextResponse.json(
+          { error: "User does not manage any teams." },
+          { status: 403 },
+        );
+      }
+    }
+  }
 
   const timeRange = queryParams.timeRange || "all";
 
@@ -181,17 +286,54 @@ export async function GET(request: Request) {
     customerTags: "tagId",
   };
 
-  const buildEndpoint = (filters: any) => {
+  function buildEndpoint(
+    filters: any,
+    managerOfDeptIds: string[],
+    managerOfTeamIds: string[],
+    preFilter: string | undefined,
+  ) {
     let endpoint = `/getAllView?view=vwDashboardDataFromReportJson&toolConfigId=${toolConfigId}&workflowId=${workflowId}&businessProcessId=${businessProcessId}`;
+
+    if (preFilter === "departments") {
+      if (managerOfDeptIds.length > 0) {
+        if (filters.deptId && filters.deptId.length > 0) {
+          filters.deptId = filters.deptId.filter((id: string) =>
+            managerOfDeptIds.includes(id),
+          );
+          if (filters.deptId.length === 0) {
+            return "";
+          }
+        } else {
+          filters.deptId = managerOfDeptIds;
+        }
+      } else {
+        return "";
+      }
+    } else if (preFilter === "teams") {
+      if (managerOfTeamIds.length > 0) {
+        if (filters.teamId && filters.teamId.length > 0) {
+          filters.teamId = filters.teamId.filter((id: string) =>
+            managerOfTeamIds.includes(id),
+          );
+          if (filters.teamId.length === 0) {
+            return "";
+          }
+        } else {
+          filters.teamId = managerOfTeamIds;
+        }
+      } else {
+        return "";
+      }
+    }
+
     Object.keys(filters).forEach((key) => {
       if (filters[key]?.length) {
         endpoint += `&${key}=${filters[key].join(",")}`;
       }
     });
 
-    console.log("ENDPOINTXXX", endpoint);
     return endpoint;
-  };
+  }
 
   function getStartDateFromTimeRange(timeRange: string): Date | null {
     const now = new Date();
@@ -212,7 +354,6 @@ export async function GET(request: Request) {
 
   const startDate = getStartDateFromTimeRange(timeRange);
 
-  // Use Promise.all to fetch filter options in parallel
   const filterGroupPromises = filterGroups.map(async (group) => {
     const filtersExcludingCurrentGroup = { ...selectedFilters } as Record<
       string,
@@ -220,7 +361,16 @@ export async function GET(request: Request) {
     >;
     delete filtersExcludingCurrentGroup[group.paramName];
 
-    const endpoint = buildEndpoint(filtersExcludingCurrentGroup);
+    const endpoint = buildEndpoint(
+      filtersExcludingCurrentGroup,
+      managerOfDeptIds,
+      managerOfTeamIds,
+      preFilter,
+    );
+
+    if (!endpoint) {
+      return null;
+    }
 
     try {
       const response = await apiClient(endpoint, {
@@ -235,8 +385,6 @@ export async function GET(request: Request) {
       }
 
       const dataForGroup: ApiResponse = await response.json();
-
-      // Collect all options for the current group
       const optionsSet = new Map<string, { label: string; value: string }>();
 
       for (const item of dataForGroup.resource) {
@@ -280,6 +428,7 @@ export async function GET(request: Request) {
       }
 
       const options = Array.from(optionsSet.values());
+      options.sort((a, b) => a.label.localeCompare(b.label));
 
       const groupLabels: Record<string, string> = {
         userTags: "User Tags",
@@ -300,10 +449,22 @@ export async function GET(request: Request) {
   const filterGroupResults = await Promise.all(filterGroupPromises);
 
   const availableOptions = filterGroupResults.filter(
-    (result) => result !== null
+    (result) => result !== null,
   ) as FilterOptionGroup[];
 
-  const endpointWithAllFilters = buildEndpoint(selectedFilters);
+  const endpointWithAllFilters = buildEndpoint(
+    selectedFilters,
+    managerOfDeptIds,
+    managerOfTeamIds,
+    preFilter,
+  );
+
+  if (!endpointWithAllFilters) {
+    return NextResponse.json(
+      { error: "No data available based on your filters." },
+      { status: 403 },
+    );
+  }
 
   let finalData: ApiResponse = { resource: [] };
 
@@ -324,11 +485,10 @@ export async function GET(request: Request) {
     console.error("Error fetching final data:", error);
     return NextResponse.json(
       { error: "Failed to fetch data from the API." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
-  // Process the data
   const weekGroups = new Map<
     string,
     { score: number; item: ApiResponseItem }[]
@@ -364,47 +524,54 @@ export async function GET(request: Request) {
 
   const currentDate = new Date();
 
-  const allWeekKeys = getAllWeekKeysBetween(earliestDate, currentDate);
+  const allWeekData = getAllWeekKeysBetween(earliestDate, currentDate);
 
   const dataPointsArray: DataPoint[] = [];
   const weeksData: any[] = [];
 
-  for (const weekKey of allWeekKeys) {
+  function formatDate(d: Date) {
+    return d.toISOString().split("T")[0];
+  }
+
+  for (const {
+    weekKey,
+    startDate: weekStart,
+    endDate: weekEnd,
+  } of allWeekData) {
     const entries = weekGroups.get(weekKey) || [];
+
+    let avgScore = 0;
+    const masonryCounts = [0, 0, 0, 0, 0];
+    const peopleList: Person[] = [];
+
+    const departmentScores = new Map<
+      string,
+      { totalScore: number; count: number }
+    >();
+    const siteScores = new Map<
+      number,
+      {
+        totalScore: number;
+        count: number;
+        mostRecentSiteName: string;
+        mostRecentCreatedAt: Date;
+      }
+    >();
 
     if (entries.length > 0) {
       const totalScore = entries.reduce((sum, entry) => sum + entry.score, 0);
-      const avgScore = totalScore / entries.length;
-
-      dataPointsArray.push({
-        title: weekKey,
-        value: avgScore,
-      });
-
-      const masonryCounts = [0, 0, 0, 0, 0];
-      const peopleList: Person[] = [];
-
-      const departmentScores = new Map<
-        string,
-        { totalScore: number; count: number }
-      >();
-
-      const siteScores = new Map<
-        number,
-        {
-          totalScore: number;
-          count: number;
-          mostRecentSiteName: string;
-          mostRecentCreatedAt: Date;
-        }
-      >();
+      avgScore = totalScore / entries.length;
 
       entries.forEach(({ score, item }) => {
-        if (score >= 9) masonryCounts[3]++;
-        else if (score >= 6) masonryCounts[2]++;
-        else if (score >= 3) masonryCounts[1]++;
-        else if (score > 0) masonryCounts[0]++;
-        else masonryCounts[4]++;
+        // Classify scores
+        if (score >= 9)
+          masonryCounts[3]++; // 9-10
+        else if (score >= 6)
+          masonryCounts[2]++; // 6-8
+        else if (score >= 3)
+          masonryCounts[1]++; // 3-5
+        else if (score > 0) masonryCounts[0]++; // 1-2
+        // Note: We'll handle masonryCounts[4] (non-participants) after fetching them
 
         peopleList.push({
           userId: item.userId,
@@ -448,53 +615,85 @@ export async function GET(request: Request) {
           }
         }
       });
-
-      const departmentsData: {
-        department: string;
-        averageScore: number;
-        count: number;
-      }[] = [];
-      departmentScores.forEach((value, key) => {
-        departmentsData.push({
-          department: key,
-          averageScore: value.totalScore / value.count,
-          count: value.count,
-        });
-      });
-
-      const sitesData: { site: string; averageScore: number; count: number }[] =
-        [];
-      siteScores.forEach((value, key) => {
-        sitesData.push({
-          site: value.mostRecentSiteName,
-          averageScore: value.totalScore / value.count,
-          count: value.count,
-        });
-      });
-
-      weeksData.push({
-        weekKey,
-        avgScore,
-        masonryCounts,
-        peopleList,
-        departmentsData,
-        sitesData,
-      });
-    } else {
-      dataPointsArray.push({
-        title: weekKey,
-        value: 0,
-      });
-
-      weeksData.push({
-        weekKey,
-        avgScore: 0,
-        masonryCounts: [0, 0, 0, 0, 0],
-        peopleList: [],
-        departmentsData: [],
-        sitesData: [],
-      });
     }
+
+    // Fetch non-participants for this week
+    const didNotParticipateData = await getDidNotParticipate({
+      workflowId: Number(workflowId),
+      businessProcessId: Number(businessProcessId),
+      toolConfigId: Number(toolConfigId),
+      startDate: formatDate(weekStart),
+      endDate: formatDate(weekEnd),
+    });
+
+    const filteredNonParticipantData =
+      didNotParticipateData?.resource?.filter((item: any) => {
+        if (preFilter === "departments") {
+          return managerOfDeptIds.includes(String(item.departmentId));
+        }
+        if (preFilter === "teams") {
+          return managerOfTeamIds.includes(String(item.teamId));
+        }
+        return true; // If no preFilter or it doesn't match, include all items
+      }) || [];
+
+    masonryCounts[4] = filteredNonParticipantData.length || 0;
+
+    // Map non-participants to Person format
+    let nonParticipants = filteredNonParticipantData.map((np: any) => ({
+      userId: np.UserId,
+      imageUrl: np.imageUrl,
+      fullName: np.fullName,
+      firstName: np.fullName.split(" ")[0] || "",
+      lastName: np.fullName.split(" ").slice(1).join(" ") || "",
+      jobTitle: np.jobTitle,
+      department: np.deptName,
+      site: np.siteName,
+      score: null, // no score for non-participants
+    }));
+
+    // Merge non-participants into peopleList
+    peopleList.push(...nonParticipants);
+
+    const departmentsData: {
+      department: string;
+      averageScore: number;
+      count: number;
+    }[] = [];
+    departmentScores.forEach((value, key) => {
+      departmentsData.push({
+        department: key,
+        averageScore: value.totalScore / value.count,
+        count: value.count,
+      });
+    });
+
+    const sitesData: {
+      site: string;
+      averageScore: number;
+      count: number;
+    }[] = [];
+    siteScores.forEach((value, key) => {
+      sitesData.push({
+        site: value.mostRecentSiteName,
+        averageScore: value.totalScore / value.count,
+        count: value.count,
+      });
+    });
+
+    dataPointsArray.push({
+      title: weekKey,
+      value: avgScore,
+    });
+
+    weeksData.push({
+      weekKey,
+      avgScore,
+      masonryCounts,
+      peopleList,
+      departmentsData,
+      sitesData,
+    });
   }
 
   let speechBubbleData: SpeechBubbleData = {

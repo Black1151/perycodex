@@ -93,6 +93,30 @@ const LineGraph: React.FC<LineGraphProps> = memo(
       ];
     };
 
+    if (DataPoints.length === 1) {
+      return (
+        <Flex
+          height={`${totalHeight}px`}
+          position="relative"
+          width="100%"
+          flex={1}
+          justifyContent="center"
+          alignItems="center"
+          bg="white"
+          borderRadius={{ base: "8px", md: "16px" }}
+          boxShadow="lg"
+        >
+          <Text
+            color={perygonTheme.colors.perygonPink}
+            fontSize="xl"
+            textAlign="center"
+          >
+            No history to display
+          </Text>
+        </Flex>
+      );
+    }
+
     return (
       <Flex
         height={`${totalHeight}px`}

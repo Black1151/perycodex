@@ -1,5 +1,6 @@
 "use client";
 
+import React, { memo, useRef } from "react";
 import {
   Box,
   Button,
@@ -12,16 +13,15 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import React, { memo } from "react";
 import { Clear, Close, FilterAlt, Refresh } from "@mui/icons-material";
-import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/manager-dashboard/ManagerDashboard";
+import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/company-dashboard/ManagerDashboard";
 
 interface RightHandNavigationDrawerProps {
   title?: string;
   handleCheckboxChange: (
     groupIndex: number,
     optionIndex: number,
-    isChecked: boolean
+    isChecked: boolean,
   ) => void;
   filterOptions: FilterOptionGroup[];
   clearAllFilters: () => void;
@@ -32,6 +32,8 @@ interface RightHandNavigationDrawerProps {
   setDrawerState: (state: "closed" | "fully-open") => void;
   isUpdating: boolean;
   refreshPage: () => void;
+  scrollRef: React.RefObject<HTMLDivElement>;
+  saveScrollPosition: () => void;
 }
 
 const displayNameMappings: { [key: string]: string } = {
@@ -52,10 +54,14 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
   setDrawerState,
   isUpdating,
   refreshPage,
+  scrollRef,
+  saveScrollPosition,
 }: RightHandNavigationDrawerProps) {
   const theme = useTheme();
   const MotionBox = motion(Box);
   const iconFontSize = useBreakpointValue({ base: "1.3rem", lg: "1.5rem" });
+
+  const drawerRef = useRef<HTMLDivElement>(null);
 
   const toggleDrawer = () => {
     if (drawerState === "fully-open") {
@@ -97,6 +103,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
       )}
 
       <MotionBox
+        ref={drawerRef}
         display={"block"}
         position="fixed"
         top={0}
@@ -165,12 +172,14 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                 </Select>
               </Box>
               <Box
+                ref={scrollRef}
                 flex={1}
                 position="relative"
                 zIndex={1}
                 px={4}
                 p={3}
                 overflowY="auto"
+                onScroll={saveScrollPosition}
               >
                 <VStack spacing={4} align="stretch" width="100%">
                   <Button
@@ -235,7 +244,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                                   handleCheckboxChange(
                                     groupIndex,
                                     optionIndex,
-                                    e.target.checked
+                                    e.target.checked,
                                   )
                                 }
                               >

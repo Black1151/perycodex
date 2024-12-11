@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Box, VStack, Flex, useTheme } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { Box, Flex, useTheme, VStack } from "@chakra-ui/react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import "ag-grid-charts-enterprise";
 import {
   ColDef,
-  FirstDataRenderedEvent,
   CreateCrossFilterChartParams,
+  FirstDataRenderedEvent,
 } from "ag-grid-community";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
@@ -378,7 +378,6 @@ const LeaderboardDashboard: React.FC = () => {
       <Box
         className="ag-theme-alpine ag-theme-perygon"
         width="100%"
-        p={4}
         borderRadius="lg"
       >
         <Flex width="100%" justifyContent="center" mb={4}>

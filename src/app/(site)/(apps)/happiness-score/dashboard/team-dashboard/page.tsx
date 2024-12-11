@@ -1,11 +1,10 @@
-import { Box } from "@chakra-ui/react";
 import { redirect } from "next/navigation";
 import { getFilteredDashboards } from "@/lib/dashboardUtils";
 import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
 import HappinessDashboardLayout from "@/app/(site)/(apps)/happiness-score/dashboard/HappinessDashboardLayout";
 import WorkflowHeader from "@/app/(site)/(apps)/happiness-score/WorkflowHeader";
 import { verifySession } from "@/lib/dal";
-import ManagerDashboardPage from "../manager-dashboard/ManagerDashboard";
+import ManagerDashboardPage from "@/app/(site)/(apps)/happiness-score/dashboard/company-dashboard/ManagerDashboard";
 
 export default async function Home({
   searchParams,
@@ -48,7 +47,7 @@ export default async function Home({
         }
         canStartWorkflow={toolData.startInUi}
       />
-      <ManagerDashboardPage isLeaderDashboard={true} />
+      <ManagerDashboardPage preFilter={"teams"} />
     </WorkflowEngine>
   );
 }

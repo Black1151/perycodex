@@ -52,7 +52,7 @@ export function InputField({
 
   const handleFocus = (e: FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
     const iconElement = e.target.previousElementSibling?.querySelector(
-      "svg",
+      "svg"
     ) as HTMLElement | null;
     if (iconElement) {
       iconElement.style.color = error ? "red" : focusBorderColor;
@@ -61,7 +61,7 @@ export function InputField({
 
   const handleBlur = (e: FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
     const iconElement = e.target.previousElementSibling?.querySelector(
-      "svg",
+      "svg"
     ) as HTMLElement | null;
     if (iconElement) {
       iconElement.style.color = error ? "red" : "lightGray";
@@ -79,6 +79,7 @@ export function InputField({
 
   const commonStyles = {
     width: "100%",
+    fontSize: "16px",
     paddingTop: "0.5rem",
     paddingBottom: "0.5rem",
     borderColor: error ? "red" : "gray.400",
@@ -88,7 +89,6 @@ export function InputField({
     borderRight: "none",
     borderRadius: "none",
     color: "black",
-    fontSize: "sm",
     _placeholder: { fontSize: "sm", color: "gray.400" },
     _focus: {
       boxShadow: "none",

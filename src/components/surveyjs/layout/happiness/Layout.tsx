@@ -34,19 +34,16 @@ const HappinessLayout: React.FC<HappinessLayoutProps> = ({
       setToEditMode={switchToEditMode}
     >
       <Flex
-        height={"full"}
-        w="100%"
-        justify="center"
-        align="center"
-        bg={"transparent"}
         direction="column"
-        p={6}
+        justify={"center"}
+        align={"center"}
+        height={"full"}
       >
         {/*TODO: this could be tool logo instead of hard coded*/}
         <Image
-          src="/images/Perygon_Happiness_score_icon.png"
-          maxW="100px"
-          maxH="100px"
+          src="/images/Perygon_Happiness_score_icon_festive.png"
+          maxW="150px"
+          maxH="150px"
           mb={8}
           alt="Happiness Score Icon"
         />
@@ -54,6 +51,7 @@ const HappinessLayout: React.FC<HappinessLayoutProps> = ({
           as="h1"
           fontFamily="Metropolis"
           fontWeight={300}
+          fontSize={[18, 18, 36]}
           color={"white"}
           textAlign={"center"}
         >

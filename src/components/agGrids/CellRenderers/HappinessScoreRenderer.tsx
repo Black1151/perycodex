@@ -38,7 +38,6 @@ const HappinessScoreRenderer: React.FC<HappinessScoreRendererProps> = ({
         borderRadius="md"
         textAlign="center"
         h={"80%"}
-        w={"50%"}
         p={2}
       >
         {value}

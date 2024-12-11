@@ -1,8 +1,14 @@
-import { extendTheme } from "@chakra-ui/react";
+import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
 import { agGridStyles } from "./agGridStyles";
 import { scrollBarThemes } from "@/theme/scrollBarThemes";
 
+const config: ThemeConfig = {
+  initialColorMode: "light",
+  useSystemColorMode: false,
+};
+
 export const perygonTheme = extendTheme({
+  config,
   colors: {
     perygonPink: "#ff0070",
     seduloRed: "#B4213D",
@@ -25,12 +31,23 @@ export const perygonTheme = extendTheme({
   fonts: {
     heading: "Metropolis, sans-serif",
     body: "Metropolis, sans-serif",
+    metropolis: "Metropolis, sans-serif",
     bonfire: "Bonfire, sans-serif",
   },
+  // Using a function for global styles so we can access the colorMode if needed
   styles: {
-    global: {
-      ...agGridStyles,
-      ...scrollBarThemes,
+    global: (props: { colorMode: "light" | "dark" }) => {
+      // For both light and dark modes, we return the same colors
+      return {
+        ...agGridStyles,
+        ...scrollBarThemes,
+        "html, body": {
+          backgroundColor: "#ffffff",
+          color: "#000000",
+        },
+        // If you need to define any other elements, do so here
+        // ensuring that both light and dark paths return identical values.
+      };
     },
   },
   components: {

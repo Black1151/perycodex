@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Flex, Grid, GridItem } from "@chakra-ui/react";
 import { SpringScale } from "@/components/animations/SpringScale";
 import SpeechBubble from "@/app/(site)/(apps)/happiness-score/SpeechBubble";
@@ -34,20 +34,19 @@ export default function StaffDashboardPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
-      },
+      }
     );
 
     const data = await response.json();
-
     setHappinessData(data.resource);
 
     // Process historic records for line graph
     const historicRecords = JSON.parse(data.resource.historicrecords);
     setLineGraphData(
       historicRecords.map((record: any) => ({
-        value: record.value,
+        value: parseFloat(record.value),
         title: record.title,
-      })),
+      }))
     );
   };
 
@@ -56,7 +55,9 @@ export default function StaffDashboardPage() {
   }, []);
 
   const getSpeechBubbleData = () => {
-    if (!happinessData) return { score: 0, text: "Loading...", change: 0 };
+    if (!happinessData || lineGraphData.length === 0) {
+      return { score: 0, text: "Loading...", change: 0 };
+    }
 
     const score = parseFloat(happinessData.averagehappiness);
     const change =
@@ -72,39 +73,26 @@ export default function StaffDashboardPage() {
   };
 
   const speechBubbleData = getSpeechBubbleData();
-
-  const handleStartWorkflow = () => {
-    router.push("/happiness-score/workflow/141");
-  };
+  const positiveChange = speechBubbleData.change > 0;
 
   return (
-    <Flex
-      flex={1}
-      h="100%"
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Grid
-        templateColumns={["1fr", "1fr 1fr"]}
-        gap={6}
-        width="100%"
-        minH="80vh"
-      >
-        <GridItem>
-          <SpringScale delay={0.3} style={{ height: "100%" }}>
-            <SpeechBubble {...speechBubbleData} />
-          </SpringScale>
-        </GridItem>
-        <GridItem>
-          <SpringScale delay={0.5} style={{ height: "100%" }}>
-            <Flex pb={4} flex={1} width="100%" justifyContent="center">
-              <SectionHeader>Happiness History</SectionHeader>
-            </Flex>
-            <LineGraph DataPoints={lineGraphData} />
-          </SpringScale>
-        </GridItem>
-      </Grid>
-    </Flex>
+    <Grid templateColumns={["1fr", "1fr 1fr"]} gap={6} width="100%" minH="70vh">
+      <GridItem>
+        <SpringScale delay={0.3} style={{ height: "100%" }}>
+          <Flex width="100%" justifyContent="center" mb={4}>
+            <SectionHeader>Average of Prev 2 Months</SectionHeader>
+          </Flex>
+          <SpeechBubble {...speechBubbleData} positiveChange={positiveChange} />
+        </SpringScale>
+      </GridItem>
+      <GridItem>
+        <SpringScale delay={0.5} style={{ height: "100%" }}>
+          <Flex pb={4} flex={1} width="100%" justifyContent="center">
+            <SectionHeader>Happiness History</SectionHeader>
+          </Flex>
+          <LineGraph DataPoints={lineGraphData} />
+        </SpringScale>
+      </GridItem>
+    </Grid>
   );
 }

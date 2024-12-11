@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server";
 import apiClient from "@/lib/apiClient";
 import { cookies } from "next/headers";
-import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/manager-dashboard/ManagerDashboard";
 
-interface ApiResponse {
-  resource: ApiResponseItem[];
+interface UserApiResponse {
+  resource: UserApiResponseItem[];
 }
 
-interface ApiResponseItem {
+interface UserApiResponseItem {
   userId: number;
   fullName: string;
   deptName: string;
@@ -20,6 +19,35 @@ interface ApiResponseItem {
   totalEntries: number;
   lastMonthHappinessScore: string;
   currentRagStatus: string;
+  scoreDistribution: ScoreDistribution[];
+  companyScores: Scores[];
+}
+
+interface CompanyApiResponse {
+  resource: CompanyApiResponseItem;
+}
+
+interface ScoreDistribution {
+  count: number;
+  score: number;
+}
+
+interface Scores {
+  score: number;
+  countOfScore: number;
+  dayOfSubmission: string;
+}
+
+interface CompanyApiResponseItem {
+  avgHappinessScore: string;
+  stddevHappinessScore: string;
+  minHappinessScore: number;
+  maxHappinessScore: number;
+  totalEntries: number;
+  lastMonthHappinessScore: string;
+  currentRagStatus: string;
+  scoreDistribution: ScoreDistribution[];
+  companyScores: Scores[];
 }
 
 export async function POST(request: Request) {
@@ -39,23 +67,39 @@ export async function POST(request: Request) {
 
   try {
     // Make the POST request to the external API
-    const response = await apiClient("/getHappinessScoreRag", {
-      method: "POST",
-      body: JSON.stringify({
-        toolId: toolId,
-        workflowId: workflowId,
-        customerId: customerId,
+    const [userResponse, companyResponse] = await Promise.all([
+      apiClient("/getHappinessScoreRag", {
+        method: "POST",
+        body: JSON.stringify({
+          toolId: toolId,
+          workflowId: workflowId,
+          customerId: customerId,
+        }),
       }),
-    });
+      apiClient("/getCompanyHappinessStats", {
+        method: "POST",
+        body: JSON.stringify({
+          toolId: toolId,
+          workflowId: workflowId,
+          customerId: customerId,
+        }),
+      }),
+    ]);
 
-    if (!response.ok) {
+    // Check responses
+    if (!userResponse.ok) {
       throw new Error("Failed to fetch happiness score RAG data");
     }
+    if (!companyResponse.ok) {
+      throw new Error("Failed to fetch company happiness stats");
+    }
 
-    const apiResponse: { resource: ApiResponseItem[] } = await response.json();
+    const userApiResponse: UserApiResponse = await userResponse.json();
+    const companyApiResponse: CompanyApiResponse = await companyResponse.json();
 
     return NextResponse.json({
-      resource: apiResponse.resource,
+      userResource: userApiResponse.resource,
+      companyResource: companyApiResponse.resource,
     });
   } catch (error) {
     console.error("Error fetching happiness score RAG data:", error);
