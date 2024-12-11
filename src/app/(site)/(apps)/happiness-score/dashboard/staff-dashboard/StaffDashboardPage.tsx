@@ -34,7 +34,7 @@ export default function StaffDashboardPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
-      },
+      }
     );
 
     const data = await response.json();
@@ -46,7 +46,7 @@ export default function StaffDashboardPage() {
       historicRecords.map((record: any) => ({
         value: parseFloat(record.value),
         title: record.title,
-      })),
+      }))
     );
   };
 
@@ -75,44 +75,24 @@ export default function StaffDashboardPage() {
   const speechBubbleData = getSpeechBubbleData();
   const positiveChange = speechBubbleData.change > 0;
 
-  const handleStartWorkflow = () => {
-    router.push("/happiness-score/workflow/141");
-  };
-
   return (
-    <Flex
-      flex={1}
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-      mb={3}
-    >
-      <Grid
-        templateColumns={["1fr", "1fr 1fr"]}
-        gap={6}
-        width="100%"
-        minH="70vh"
-      >
-        <GridItem>
-          <SpringScale delay={0.3} style={{ height: "100%" }}>
-            <Flex width="100%" justifyContent="center" mb={4}>
-              <SectionHeader>Average of Prev 2 Months</SectionHeader>
-            </Flex>
-            <SpeechBubble
-              {...speechBubbleData}
-              positiveChange={positiveChange}
-            />
-          </SpringScale>
-        </GridItem>
-        <GridItem>
-          <SpringScale delay={0.5} style={{ height: "100%" }}>
-            <Flex pb={4} flex={1} width="100%" justifyContent="center">
-              <SectionHeader>Happiness History</SectionHeader>
-            </Flex>
-            <LineGraph DataPoints={lineGraphData} />
-          </SpringScale>
-        </GridItem>
-      </Grid>
-    </Flex>
+    <Grid templateColumns={["1fr", "1fr 1fr"]} gap={6} width="100%" minH="70vh">
+      <GridItem>
+        <SpringScale delay={0.3} style={{ height: "100%" }}>
+          <Flex width="100%" justifyContent="center" mb={4}>
+            <SectionHeader>Average of Prev 2 Months</SectionHeader>
+          </Flex>
+          <SpeechBubble {...speechBubbleData} positiveChange={positiveChange} />
+        </SpringScale>
+      </GridItem>
+      <GridItem>
+        <SpringScale delay={0.5} style={{ height: "100%" }}>
+          <Flex pb={4} flex={1} width="100%" justifyContent="center">
+            <SectionHeader>Happiness History</SectionHeader>
+          </Flex>
+          <LineGraph DataPoints={lineGraphData} />
+        </SpringScale>
+      </GridItem>
+    </Grid>
   );
 }
