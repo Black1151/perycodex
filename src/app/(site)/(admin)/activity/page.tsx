@@ -42,7 +42,7 @@ export default async function ActivityPage() {
   const user = await getUser(); // Awaiting user data
   const userRole = user.role; // Fetch the user's role
   const isManagerofTeams =
-    user.managementRoleIndicator === 2 || user.managementRoleIndicator === 3;
+    user.teamManagerCount === 2 || user.teamManagerCount === 3;
   await checkUserRole("/activity");
 
   let headerTitle = "Activity";
