@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "co.median.android.nexrjy",
+      "sha256_cert_fingerprints": [
+        "2A:40:6E:88:EC:2C:3A:1F:5C:B4:8C:3D:FF:32:C7:7E:FF:8C:FC:40:8D:0B:98:00:61:20:FB:05:1A:08:D0:74"
+      ]
+    }
+  }
+]
