@@ -99,12 +99,14 @@ const Dashboard: React.FC = () => {
   const getData = async () => {
     setIsLoading(true);
 
-    try {
-      // Ensure user and customerId exist before making the request
-      if (!user || !user.customerId) {
-        throw new Error("User or customerId is missing");
-      }
+    if (!toolId || !workflowId || !user?.customerId) {
+      console.warn(
+        "Required data (toolId, workflowId, or customerId) is missing",
+      );
+      return; // Prevent fetching if values are not ready
+    }
 
+    try {
       const response = await fetchClient<ApiResponse>(
         `/api/happiness-graphs/getAllHappinessData?toolId=${toolId}&wfId=${workflowId}&customerId=${user.customerId}`,
       );
@@ -136,8 +138,11 @@ const Dashboard: React.FC = () => {
   };
 
   useEffect(() => {
-    getData();
-  }, []);
+    // Fetch data only when toolId, workflowId, and user.customerId are available
+    if (toolId && workflowId && user?.customerId) {
+      getData();
+    }
+  }, [toolId, workflowId, user?.customerId]);
 
   const columnDefs: ColDef[] = [
     {

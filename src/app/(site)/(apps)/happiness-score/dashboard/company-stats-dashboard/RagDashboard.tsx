@@ -115,20 +115,24 @@ const RagDashboard: React.FC = () => {
 
   const { fetchClient } = useFetchClient();
 
+  useEffect(() => {
+    // Fetch data only when toolId, workflowId, and user.customerId are available
+    if (toolId && workflowId && user?.customerId) {
+      getData();
+    }
+  }, [toolId, workflowId, user?.customerId]);
+
   const getData = async () => {
+    if (!toolId || !workflowId || !user?.customerId) {
+      console.warn(
+        "Required data (toolId, workflowId, or customerId) is missing",
+      );
+      return; // Prevent fetching if values are not ready
+    }
+
     setIsLoading(true);
 
     try {
-      // Ensure user and customerId exist before making the request
-      if (!user || !user.customerId) {
-        throw new Error("User or customerId is missing");
-      }
-
-      // Ensure user and customerId exist before making the request
-      if (!toolId || !workflowId) {
-        throw new Error("Tool or Workflow ID is missing");
-      }
-
       const response = await fetchClient<ApiResponse>(
         "/api/happiness-graphs/getRagData",
         {
@@ -157,10 +161,6 @@ const RagDashboard: React.FC = () => {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   useEffect(() => {
     const desktopColumnDefs: ColDef[] = [
