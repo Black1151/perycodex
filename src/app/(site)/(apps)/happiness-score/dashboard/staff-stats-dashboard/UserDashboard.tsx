@@ -1,7 +1,16 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Box, Flex, useTheme, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  IconButton,
+  Text,
+  Tooltip,
+  useDisclosure,
+  useTheme,
+  VStack,
+} from "@chakra-ui/react";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { CompanyHistogram } from "@/app/(site)/(apps)/happiness-score/dashboard/company-stats-dashboard/CompanyHistogram";
 import { CompanyBubble } from "@/app/(site)/(apps)/happiness-score/dashboard/company-stats-dashboard/CompanyBubble";
@@ -13,6 +22,8 @@ import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
 import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/HappinessScoreRenderer";
 import CommentsCellRenderer from "@/components/agGrids/CellRenderers/CommentsCellRenderer";
 import { useUser } from "@/providers/UserProvider";
+import { Info } from "@mui/icons-material";
+import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 
 // Define interfaces for each data type
 interface UserScore {
@@ -95,6 +106,14 @@ const UserDashboard: React.FC = () => {
   const { user } = useUser();
   const { fetchClient } = useFetchClient();
   const theme = useTheme();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [modalData, setModalData] = useState<{
+    title: string;
+    body: string | React.ReactNode;
+  }>({
+    title: "",
+    body: "",
+  });
 
   const defaultColDef: ColDef = {
     resizable: true,
@@ -192,6 +211,27 @@ const UserDashboard: React.FC = () => {
   useEffect(() => {
     getData();
   }, []);
+
+  const showPunchCardHelp = () => {
+    setModalData({
+      title: "What is a Punch Card?",
+      body: (
+        <>
+          <Text mb={4}>
+            A punch card visualization shows how frequently events occur over
+            time. In this context, each circle represents a specific day and the
+            size of the circle corresponds to the number of happiness scores
+            submitted on that day.
+          </Text>
+          <Text>
+            This helps you quickly identify patterns: for example, heavier usage
+            (larger circles) on certain days or dips in engagement on others.
+          </Text>
+        </>
+      ),
+    });
+    onOpen();
+  };
 
   // Weekly line chart configuration
   const weeklyLineChartOptions = {
@@ -387,6 +427,21 @@ const UserDashboard: React.FC = () => {
 
   return (
     <>
+      <SurveyModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onConfirm={onClose}
+        showButtons={{ close: false, confirm: true }}
+        title={modalData.title}
+        titleProps={{
+          fontFamily: "Bonfire",
+          fontSize: "2xl",
+          fontWeight: "bold",
+          color: "perygonPink",
+        }}
+        bodyContent={modalData.body}
+      />
+
       <VStack align="stretch" w="full" spacing={6} mb={3}>
         {comparativeData.length > 0 && (
           <Box
@@ -467,8 +522,22 @@ const UserDashboard: React.FC = () => {
         {/* Bubble Chart - User Distribution */}
         {userDistribution.length > 0 && (
           <>
-            <Flex width="100%" justifyContent={"center"}>
+            <Flex width="100%" justifyContent={"center"} align="center">
               <SectionHeader>Punch Card</SectionHeader>
+              <Tooltip
+                label="Click to learn more about the Punch Card visualization"
+                hasArrow
+              >
+                <IconButton
+                  aria-label="Punch Card Help"
+                  icon={<Info />}
+                  variant="ghost"
+                  onClick={showPunchCardHelp}
+                  color={"white"}
+                  _hover={{ color: "perygonPink", background: "white" }}
+                  ml={2}
+                />
+              </Tooltip>
             </Flex>
             <Box
               borderRadius="2xl"
