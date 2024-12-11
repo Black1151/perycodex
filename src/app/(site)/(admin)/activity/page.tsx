@@ -41,15 +41,15 @@ export interface ActivityResponse {
 export default async function ActivityPage() {
   const user = await getUser(); // Awaiting user data
   const userRole = user.role; // Fetch the user's role
-  const isManagerofTeams =
-    user.teamManagerCount === 2 || user.teamManagerCount === 3;
+  const isManagerofDepts =
+    user.teamManagerCount === 1 || user.teamManagerCount === 3;
   await checkUserRole("/activity");
 
   let headerTitle = "Activity";
 
   // URLs for different activity types
   let myActivityUrl = `/getAllView?view=vwProgressList&wfInstStartedBy=${user.userId}`; // Everyone
-  let myTeamsActivityUrl = `/getAllView?view=vwProgressList&wfStarterTeamManagerId=${user.userId}`; // User who is manager
+  let myDeptsActivityUrl = `/getAllView?view=vwProgressList&wfStarterTeamManagerId=${user.userId}`; // User who is manager
   let ourActivityUrl = `/getAllView?view=vwProgressList&wfInstCustId=${user.customerId}`; // CS CL CA
 
   let resArray: string[] = [];
@@ -60,14 +60,14 @@ export default async function ActivityPage() {
   ];
   resArray.push("myActivityRes");
 
-  if (isManagerofTeams) {
-    // Only fetch My Team Activity if the user is a manager
-    apiCalls.push(apiClient(myTeamsActivityUrl, { cache: "no-store" }));
-    resArray.push("myTeamsActivityRes");
+  if (isManagerofDepts) {
+    // Only fetch My Department Activity if the user is a manager
+    apiCalls.push(apiClient(myDeptsActivityUrl, { cache: "no-store" }));
+    resArray.push("myDeptsActivityRes");
   }
 
   if (["CS", "CL", "CA"].includes(userRole)) {
-    // Only fetch Our Activity and Team Activity if the role matches
+    // Only fetch Our Activity and Department Activity if the role matches
     apiCalls.push(apiClient(ourActivityUrl, { cache: "no-store" }));
     resArray.push("ourActivityRes");
   }
@@ -91,7 +91,7 @@ export default async function ActivityPage() {
 
   // Map responses to their respective data arrays
   const myActivityData = responses["myActivityRes"] || [];
-  const myTeamsActivityData = responses["myTeamsActivityRes"] || [];
+  const myDeptsActivityData = responses["myDeptsActivityRes"] || [];
   const ourActivityData = responses["ourActivityRes"] || [];
 
   // Create data sources for TabbedGrids
@@ -103,10 +103,10 @@ export default async function ActivityPage() {
     },
   ];
 
-  if (isManagerofTeams) {
+  if (isManagerofDepts) {
     dataSources.push({
-      data: myTeamsActivityData,
-      title: "My Teams Activity",
+      data: myDeptsActivityData,
+      title: "My Departments Activity",
       fields: activityFields,
     });
   }

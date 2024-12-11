@@ -40,7 +40,7 @@ export const activityFields: ColDef[] = [
   },
   {
     field: "wfStarterTeamName",
-    headerName: "Team",
+    headerName: "Department",
     filter: "agMultiColumnFilter",
   },
   {
@@ -75,11 +75,13 @@ export const activityFields: ColDef[] = [
     field: "noStagesPending",
     headerName: "Pending Stages",
     filter: "agMultiColumnFilter",
+    hide: true,
   },
   {
     field: "noStagesStarted",
     headerName: "Started Stages",
     filter: "agMultiColumnFilter",
+    hide: true,
   },
   {
     field: "noStagesCompleted",
