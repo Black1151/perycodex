@@ -82,16 +82,16 @@ export default function StaffDashboardPage() {
   return (
     <Flex
       flex={1}
-      h="100%"
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
+      mb={3}
     >
       <Grid
         templateColumns={["1fr", "1fr 1fr"]}
         gap={6}
         width="100%"
-        minH="80vh"
+        minH="70vh"
       >
         <GridItem>
           <SpringScale delay={0.3} style={{ height: "100%" }}>

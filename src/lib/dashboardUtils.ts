@@ -29,9 +29,9 @@ export async function getFilteredDashboards(
   const user = await getUser();
   const userRole = user.role;
   const isManagerofDept =
-    user.managementRoleIndicator === 1 || user.managementRoleIndicator === 3;
+    user.teamManagerCount === 1 || user.teamManagerCount === 3;
   const isManagerofTeam =
-    user.managementRoleIndicator === 2 || user.managementRoleIndicator === 3;
+    user.teamManagerCount === 2 || user.teamManagerCount === 3;
 
   const [dashboardListRes, toolDataRes] = await Promise.all([
     apiClient(
