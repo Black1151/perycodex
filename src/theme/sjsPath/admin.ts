@@ -4,6 +4,9 @@ export const baseSurveyCssVariablesTheme = {
   "--sjs-corner-radius": "8px",
 
   // Font Family
+  "--sjs-font-family": "Metropolis",
+  "--sjs-font-questiontitle-family": "Metropolis",
+  "--sjs-default-font-family": "Metropolis",
   "--font-family": "Metropolis",
 
   // Panels
