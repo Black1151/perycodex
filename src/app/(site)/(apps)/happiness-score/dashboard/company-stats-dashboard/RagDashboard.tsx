@@ -351,7 +351,7 @@ const RagDashboard: React.FC = () => {
           </Text>
           <br />
           <Text mb={4}>
-            The difference column indicates how last month's average compares to
+            The difference column indicates how last months average compares to
             the previous 12 months for an individual.
           </Text>
           <Text as="ul" ml={4}>
