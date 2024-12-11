@@ -34,14 +34,10 @@ const HappinessLayout: React.FC<HappinessLayoutProps> = ({
       setToEditMode={switchToEditMode}
     >
       <Flex
-        pt={[2, 2, 0]}
-        height={["full"]}
-        w="100%"
-        justify="center"
-        align="center"
-        bg={"transparent"}
         direction="column"
-        gap={[2, 2, 4]}
+        justify={"center"}
+        align={"center"}
+        height={"full"}
       >
         {/*TODO: this could be tool logo instead of hard coded*/}
         <Image

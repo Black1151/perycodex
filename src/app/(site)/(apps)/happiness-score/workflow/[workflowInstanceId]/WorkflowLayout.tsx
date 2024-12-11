@@ -197,16 +197,7 @@ export default function WorkflowLayout({
 
       {/* Render main content only if modal is not open */}
       {!isModalOpen && (
-        <Box
-          mt={[0, 0, "64px"]}
-          mb={["12px", "12px", "35px"]}
-          width="full"
-          height={[
-            "calc(100vh - 64px - 12px)",
-            "calc(100vh - 64px - 12px)",
-            "calc(100vh - 64px - 35px)",
-          ]}
-        >
+        <>
           {stages.length > 1 && (
             <LeftHandNavigationDrawer
               menuItems={menuItems}
@@ -233,7 +224,7 @@ export default function WorkflowLayout({
               layoutOptions={{ showTitle: true }}
             />
           )}
-        </Box>
+        </>
       )}
     </>
   );
