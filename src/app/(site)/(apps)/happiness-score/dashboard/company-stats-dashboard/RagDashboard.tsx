@@ -81,6 +81,37 @@ const RagDashboard: React.FC = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const { toolId, workflowId } = useWorkflow();
   const { user } = useUser();
+  const [modalData, setModalData] = useState<{
+    title: string;
+    body: string | React.ReactNode;
+  }>({
+    title: "How to Filter",
+    body: (
+      <>
+        <Text mb={4}>To filter the dashboard:</Text>
+        <Text as="ul" ml={4}>
+          <li>
+            Use the filter icon on column headers to find specific entries.
+          </li>
+          <li>Filtering will affect the dashboard charts below</li>
+        </Text>
+        <br />
+        <Text mb={4}>
+          The difference column indicates where the last months average has
+          positively/negatively shifted compared to the previous 12 months
+          average for an individual.
+        </Text>
+        <Text as="ul" ml={4}>
+          <li>Purple: A lot happier</li>
+          <li>Green: Normal happiness</li>
+          <li>Amber: Slightly lower than their normal happiness</li>
+          <li>Red: A lot lower than their normal happiness</li>
+          <li>Gray: Have not submitted a score in the last month</li>
+          <li>N/A: Not enough submissions</li>
+        </Text>
+      </>
+    ),
+  });
 
   const { fetchClient } = useFetchClient();
 
@@ -305,6 +336,60 @@ const RagDashboard: React.FC = () => {
     suppressHeaderMenuButton: true,
   };
 
+  // Handler for the "How to Filter" modal
+  const showFilterHelp = () => {
+    setModalData({
+      title: "How to Filter",
+      body: (
+        <>
+          <Text mb={4}>To filter the dashboard:</Text>
+          <Text as="ul" ml={4}>
+            <li>
+              Use the filter icon on column headers to find specific entries.
+            </li>
+            <li>Filtering will affect the dashboard charts below.</li>
+          </Text>
+          <br />
+          <Text mb={4}>
+            The difference column indicates how last months average compares to
+            the previous 12 months for an individual.
+          </Text>
+          <Text as="ul" ml={4}>
+            <li>Purple: A lot happier</li>
+            <li>Green: Normal happiness</li>
+            <li>Amber: Slightly lower than normal</li>
+            <li>Red: A lot lower than normal</li>
+            <li>Gray: No recent submission</li>
+            <li>N/A: Not enough submissions</li>
+          </Text>
+        </>
+      ),
+    });
+    onOpen();
+  };
+
+  // Handler for the "What is a Punch Card?" modal
+  const showPunchCardHelp = () => {
+    setModalData({
+      title: "What is a Punch Card?",
+      body: (
+        <>
+          <Text mb={4}>
+            A punch card visualization shows how frequently events occur over
+            time. In this context, each circle represents a specific day and the
+            size of the circle corresponds to the number of happiness scores
+            submitted on that day.
+          </Text>
+          <Text>
+            This helps you quickly identify patterns: for example, heavier usage
+            (larger) on certain days or dips in engagement on others.
+          </Text>
+        </>
+      ),
+    });
+    onOpen();
+  };
+
   return (
     <VStack align="stretch" w="full" spacing={8}>
       <SurveyModal
@@ -312,44 +397,19 @@ const RagDashboard: React.FC = () => {
         onClose={onClose}
         onConfirm={onClose}
         showButtons={{ close: false, confirm: true }}
-        title={"How to filter"}
+        title={modalData.title}
         titleProps={{
           fontFamily: "Bonfire",
           fontSize: "2xl",
           fontWeight: "bold",
           color: "perygonPink",
         }}
-        bodyContent={
-          <>
-            <Text mb={4}>To filter the dashboard:</Text>
-            <Text as="ul" ml={4}>
-              <li>
-                Use the filter icon on column headers to find specific entries.
-              </li>
-              <li>Filtering will affect the dashboard charts below</li>
-            </Text>
-            <br />
-            <Text mb={4}>
-              The difference column indicates where the last months average has
-              positively/negatively shifted compared to the previous 12 months
-              average for an individual.
-            </Text>
-            <Text as="ul" ml={4}>
-              <li>Purple: A lot happier</li>
-              <li>Green: Normal happiness</li>
-              <li>Amber: Slightly lower than their normal happiness</li>
-              <li>Red: A lot lower than their normal happiness</li>
-              <li>Gray: Have not submitted a score in the last month</li>
-              <li>N/A: Not enough submissions</li>
-            </Text>
-          </>
-        }
+        bodyContent={modalData.body}
       />
       {/* Grid Section */}
       <Box
         className="ag-theme-alpine ag-theme-perygon"
         width="100%"
-        p={4}
         borderRadius="lg"
       >
         <Flex width="100%" justifyContent="center" mb={4}>
@@ -361,7 +421,7 @@ const RagDashboard: React.FC = () => {
               aria-label="Filter Help"
               icon={<Info />}
               variant="ghost"
-              onClick={onOpen}
+              onClick={showFilterHelp}
               color={"white"}
               _hover={{ color: "perygonPink", background: "white" }}
               ml={2}
@@ -392,8 +452,22 @@ const RagDashboard: React.FC = () => {
           )}
           {companyData && companyData.companyScores && (
             <>
-              <Flex width="100%" justifyContent="center">
+              <Flex width="100%" justifyContent="center" align="center">
                 <SectionHeader>Punch Card</SectionHeader>
+                <Tooltip
+                  label="Click to learn more about the Punch Card visualization"
+                  hasArrow
+                >
+                  <IconButton
+                    aria-label="Punch Card Help"
+                    icon={<Info />}
+                    variant="ghost"
+                    onClick={showPunchCardHelp}
+                    color={"white"}
+                    _hover={{ color: "perygonPink", background: "white" }}
+                    ml={2}
+                  />
+                </Tooltip>
               </Flex>
               <CompanyBubble scores={companyData.companyScores} />
             </>

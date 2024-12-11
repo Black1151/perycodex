@@ -378,7 +378,6 @@ const LeaderboardDashboard: React.FC = () => {
       <Box
         className="ag-theme-alpine ag-theme-perygon"
         width="100%"
-        p={4}
         borderRadius="lg"
       >
         <Flex width="100%" justifyContent="center" mb={4}>
