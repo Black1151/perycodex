@@ -31,6 +31,7 @@ export const perygonTheme = extendTheme({
   fonts: {
     heading: "Metropolis, sans-serif",
     body: "Metropolis, sans-serif",
+    metropolis: "Metropolis, sans-serif",
     bonfire: "Bonfire, sans-serif",
   },
   // Using a function for global styles so we can access the colorMode if needed
