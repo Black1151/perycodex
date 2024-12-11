@@ -212,7 +212,7 @@ const HappinessRagHistogramModal: React.FC<HappinessRagBubbleModal> = ({
         pb={3}
       >
         <ModalHeader color="white" fontWeight="bold">
-          Happiness Histogram
+          Happiness Punch Card
         </ModalHeader>
         <ModalCloseButton color="white" />
         <ModalBody>
