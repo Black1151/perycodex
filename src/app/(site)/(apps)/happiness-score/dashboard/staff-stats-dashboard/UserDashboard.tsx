@@ -171,7 +171,6 @@ const UserDashboard: React.FC = () => {
       field: "comments",
       headerName: "Comments",
       cellRenderer: CommentsCellRenderer,
-      flex: 2,
     },
   ];
 
@@ -210,7 +209,7 @@ const UserDashboard: React.FC = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [user]);
 
   const showPunchCardHelp = () => {
     setModalData({
