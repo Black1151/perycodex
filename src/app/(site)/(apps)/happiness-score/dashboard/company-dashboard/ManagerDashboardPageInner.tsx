@@ -117,7 +117,7 @@ export default function ManagerDashboardInner({
   const handleDepartmentBarClick = useCallback(
     (title: string) => {
       const filteredPeople = peopleListData.filter(
-        (person) => person.department === title,
+        (person) => person.department === title && person.score !== null,
       );
       setBarModalTitle(`Department: ${title}`);
       setBarModalData(filteredPeople);
@@ -129,7 +129,7 @@ export default function ManagerDashboardInner({
   const handleSiteBarClick = useCallback(
     (title: string) => {
       const filteredPeople = peopleListData.filter(
-        (person) => person.site === title,
+        (person) => person.site === title && person.score !== null,
       );
       setBarModalTitle(`Site: ${title}`);
       setBarModalData(filteredPeople);
