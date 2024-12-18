@@ -218,6 +218,7 @@ export const userJson = {
           name: "mobile",
           title: "Mobile Number",
           minWidth: "256px",
+          isRequired: false,
           descriptionLocation: "underInput",
           inputType: "tel",
           maskType: "pattern",
