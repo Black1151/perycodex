@@ -219,7 +219,6 @@ export const userJson = {
           title: "Mobile Number",
           minWidth: "256px",
           descriptionLocation: "underInput",
-          isRequired: true,
           inputType: "tel",
           maskType: "pattern",
           maskSettings: {
