@@ -8,14 +8,16 @@ interface LoginCardProps {
   titleComponent: ReactNode;
   children: ReactNode;
   height?: number | string;
-  imageOffset?: number | string;
+  imageOffset?: number;
+  backgroundOffset?: number;
 }
 
 export function LoginCard({
   titleComponent,
   children,
-  height = 700,
-  imageOffset = -350,
+  height = 800,
+  imageOffset = -480,
+  backgroundOffset = imageOffset-100
 }: LoginCardProps) {
   return (
     <SpringScale>
@@ -38,7 +40,7 @@ export function LoginCard({
           position="absolute"
           boxSize="100%"
           objectFit="cover"
-          top={imageOffset}
+          top={backgroundOffset}
           objectPosition="bottom"
         />
         {titleComponent}

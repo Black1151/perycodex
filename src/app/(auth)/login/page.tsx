@@ -23,7 +23,10 @@ export default async function LoginPage({
   // Check if user is already authenticated
   const cookieStore = cookies();
   const authToken = cookieStore.get("auth_token")?.value;
+  const token = cookieStore.get('token');
 
+
+  console.log(token);
   if (authToken) {
     // Verify token with the backend
     const authCheckResponse = await apiClient(`/authentication/check`, {

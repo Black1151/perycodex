@@ -16,7 +16,8 @@ import { InputField } from "./InputField";
 import { useRouter, useSearchParams } from "next/navigation";
 import { emailValidation } from "./validationSchema/validationSchema";
 import { useFetchClient } from "@/hooks/useFetchClient";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { signIn } from 'next-auth/react';
 
 export type LoginFormInputs = {
   email: string;
@@ -27,8 +28,9 @@ export function LoginForm() {
   const theme = useTheme();
   const router = useRouter();
   const searchParams = useSearchParams();
-
+  const [clickedButton, setClickedButton] = useState<ButtonId | null>(null);
   const secureLink = searchParams.get("l");
+  type ButtonId = 'email' | 'microsoft' | 'google';
 
   useEffect(() => {
     router.refresh();
@@ -41,10 +43,26 @@ export function LoginForm() {
     formState: { errors: formErrors },
   } = useForm<LoginFormInputs>();
 
+  const handleButtonClick = (buttonId: ButtonId) => {
+    switch (buttonId) {
+      case 'email':
+        handleSubmit(handleFormSubmit)();
+        break;
+      case 'microsoft':
+        signIn();
+        break;
+      case 'google':
+        router.push("/api/auth/sso-google-sign-in");
+        break;
+      default:
+        // Handle default or error case
+    }
+  };
+
   const handleFormSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
     const endpoint = secureLink
-      ? `/api/auth/sign-in?l=${secureLink}`
-      : "/api/auth/sign-in";
+        ? `/api/auth/sign-in?l=${secureLink}`
+        : "/api/auth/sign-in";
 
     const result: { redirectUrl: string } | null = await fetchClient(endpoint, {
       method: "POST",
@@ -64,8 +82,8 @@ export function LoginForm() {
       onSubmit={handleSubmit(handleFormSubmit)}
       style={{ width: "100%", maxWidth: "md" }}
     >
-      <VStack spacing={4} w="100%">
-        <VStack spacing={0} w={300}>
+      <VStack spacing={4} w="100%" >
+        <VStack spacing={0} w={300} gap={2} position="absolute" top="300px">
           <InputField
             name="email"
             placeholder="Email"
@@ -126,10 +144,36 @@ export function LoginForm() {
               border: `1px solid ${theme.colors.perygonPink}`,
               backgroundColor: "white",
             }}
+            onClick={() => handleButtonClick('email')}
           >
-            Login
+            Login with email
           </Button>
-        </VStack>
+          <Button
+              bgColor="none"
+              w="full"
+              height={12}
+              isLoading={loading}
+              color="white"
+              backgroundColor="lightBlue"
+              border="1px solid lightBlue"
+              _hover={{ color: "lightBlue", backgroundColor: "white", border: `1px solid lightBlue` }}
+              onClick={() => signIn('azure-ad', { callbackUrl: '/' })}
+          >
+            Sign in with Microsoft
+          </Button>
+          <Button
+              bgColor="none"
+              w="full"
+              height={12}
+              isLoading={loading}
+              color="white"
+              backgroundColor="lightGray"
+              border="1px solid lightGray"
+              _hover={{ color: "lightGray", backgroundColor: "white", border: `1px solid lightGray` }}
+              onClick={() => handleButtonClick('google')}
+          >
+            Sign in with Google
+          </Button>
         <HStack>
           <Box borderBottom="1px solid lightGray" width="100px" />
           <Text color="lightGray" fontSize="xs">
@@ -137,17 +181,16 @@ export function LoginForm() {
           </Text>
           <Box borderBottom="1px solid lightGray" width="100px" />
         </HStack>
-        <VStack w={300}>
           <Button
-            bgColor="none"
-            w="full"
-            height={12}
-            isLoading={loading}
-            color="lightGray"
-            backgroundColor="white"
-            border="1px solid lightGray"
-            _hover={{ color: "white", backgroundColor: "lightGray" }}
-            onClick={() => router.push("sign-up")}
+              bgColor="none"
+              w="full"
+              height={12}
+              isLoading={loading}
+              color="lightGray"
+              backgroundColor="white"
+              border="1px solid lightGray"
+              _hover={{ color: "white", backgroundColor: "lightGray" }}
+              onClick={() => router.push("sign-up")}
           >
             Sign-up
           </Button>
@@ -159,3 +202,4 @@ export function LoginForm() {
     </form>
   );
 }
+

@@ -1,56 +1,15 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import apiClient from "./lib/apiClient";
+// middleware.ts
+import { NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
 
-export async function middleware(request: NextRequest) {
-  const apiToken = request.cookies.get("auth_token")?.value;
+export async function middleware(req) {
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-  if (!apiToken) {
-    const response = NextResponse.redirect(new URL("/login", request.url));
-    response.cookies.delete("auth_token");
-    response.cookies.delete("user_uuid");
-    response.headers.set(
-      "Cache-Control",
-      "no-store, no-cache, must-revalidate"
-    );
-    return response;
+  // If no token, redirect to the login page
+  if (!token) {
+    console.log(req);
+    // return NextResponse.redirect(new URL('/login', req.url));
   }
 
-  try {
-    const { status, ok } = await apiClient(`/authentication/check`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${apiToken}` },
-    });
-
-    if (!ok || status !== 200) {
-      const response = NextResponse.redirect(new URL("/login", request.url));
-      response.cookies.delete("auth_token");
-      response.cookies.delete("user_uuid");
-      response.headers.set(
-        "Cache-Control",
-        "no-store, no-cache, must-revalidate"
-      );
-      return response;
-    }
-
-    const response = NextResponse.next();
-    response.headers.set(
-      "Cache-Control",
-      "no-store, no-cache, must-revalidate"
-    );
-    return response;
-  } catch (error: any) {
-    const response = NextResponse.redirect(new URL("/login", request.url));
-    response.cookies.delete("auth_token");
-    response.cookies.delete("user_uuid");
-    response.headers.set(
-      "Cache-Control",
-      "no-store, no-cache, must-revalidate"
-    );
-    return response;
-  }
+  return NextResponse.next(); // Allow the request to continue if authenticated
 }
-
-export const config = {
-  matcher: ["/", "/profile-setup"],
-};
