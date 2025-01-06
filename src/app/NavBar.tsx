@@ -28,6 +28,7 @@ import React, { useState } from "react";
 import ResetPasswordModal from "@/app/ResetPasswordModal";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import Link from "next/link";
+import { tId } from "@/lib/testing/testingUtils";
 
 const MotionBox = motion(Box);
 const MotionHStack = motion(HStack);
@@ -90,31 +91,37 @@ export const NavBar: React.FC<NavBarProps> = ({
         label: "My Tools",
         icon: <HomeIcon />,
         onClick: () => router.push("/"),
+        ...tId("navbar-my-tools-button"),
       },
       {
         label: "My Profile",
         icon: <PersonIcon />,
         onClick: () => router.push("/my-profile"),
+        ...tId("navbar-my-profile-button"),
       },
       {
         label: "My Company",
         icon: <BusinessIcon />,
         onClick: () => router.push("/my-company"),
+        ...tId("navbar-my-company-button"),
       },
       {
         label: "Activity",
         icon: <Timeline />,
         onClick: () => router.push("/activity"),
+        ...tId("navbar-activity-button"),
       },
       {
         label: "Reset Password",
         icon: <LockIcon />,
         onClick: () => setPasswordResetModalOpen(true),
+        ...tId("navbar-reset-password-button"),
       },
       {
         label: "Logout",
         icon: <ExitToAppIcon />,
         onClick: handleLogout,
+        ...tId("navbar-logout-button"),
       },
     ];
 
@@ -234,7 +241,12 @@ export const NavBar: React.FC<NavBarProps> = ({
               </Flex>
             )}
           </MenuButton>
-          <MenuList bg="white" color={theme.colors.perygonPink} px={2}>
+          <MenuList
+            bg="white"
+            color={theme.colors.perygonPink}
+            px={2}
+            {...tId("navbar-profile-menu-button")}
+          >
             {menuItems.map((item) => (
               <MenuItem
                 key={item.label}

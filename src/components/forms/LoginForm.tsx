@@ -17,6 +17,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { emailValidation } from "./validationSchema/validationSchema";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { useEffect } from "react";
+import { tId } from "@/lib/testing/testingUtils";
 
 export type LoginFormInputs = {
   email: string;
@@ -67,6 +68,7 @@ export function LoginForm() {
       <VStack spacing={4} w="100%">
         <VStack spacing={0} w={300}>
           <InputField
+            {...tId("login-form-email-input")}
             name="email"
             placeholder="Email"
             type="text"
@@ -84,6 +86,7 @@ export function LoginForm() {
           />
           <InputField
             name="password"
+            {...tId("login-form-password-input")}
             placeholder="Password"
             type="password"
             error={formErrors.password}
@@ -109,11 +112,13 @@ export function LoginForm() {
               color={theme.colors.perygonPink}
               _hover={{ cursor: "pointer" }}
               onClick={() => router.push("/password-recovery")}
+              {...tId("login-form-forgot-password-text")}
             >
               Forgot password?
             </Text>
           </Flex>
           <Button
+            {...tId("login-form-login-button")}
             mt={5}
             backgroundColor={theme.colors.perygonPink}
             type="submit"
@@ -148,6 +153,7 @@ export function LoginForm() {
             border="1px solid lightGray"
             _hover={{ color: "white", backgroundColor: "lightGray" }}
             onClick={() => router.push("sign-up")}
+            {...tId("login-form-sign-up-button")}
           >
             Sign-up
           </Button>
