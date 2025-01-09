@@ -41,7 +41,7 @@ const HappinessLayout: React.FC<HappinessLayoutProps> = ({
       >
         {/*TODO: this could be tool logo instead of hard coded*/}
         <Image
-          src="/images/Perygon_Happiness_score_icon_festive.png"
+          src="/images/Perygon_Happiness_score_icon.png"
           maxW="150px"
           maxH="150px"
           mb={8}
