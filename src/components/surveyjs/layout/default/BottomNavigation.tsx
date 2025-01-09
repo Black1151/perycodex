@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Button, Flex, Stack, useBreakpointValue } from "@chakra-ui/react";
-import { NavigationProps } from "@/components/surveyjs/SurveyProps";
+import { NavigationProps } from "@/types/surveyJs";
 import { motion } from "framer-motion";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";

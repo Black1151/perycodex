@@ -2,7 +2,7 @@ import React from "react";
 import {Survey} from "survey-react-ui";
 import {Button, Flex, Heading, Image} from "@chakra-ui/react";
 import useSurveyNavigation from "@/components/surveyjs/useSurveyNavigation";
-import {eNPSLayoutProps} from "@/components/surveyjs/SurveyProps";
+import {eNPSLayoutProps} from "@/types/surveyJs";
 import SurveyNavigationGuard from "@/components/surveyjs/SurveyNavigationGuard";
 import {LetterFlyIn} from "@/components/animations/text/LetterFlyIn";
 import {useUser} from "@/providers/UserProvider";
