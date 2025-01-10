@@ -17,7 +17,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { emailValidation } from "./validationSchema/validationSchema";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { useEffect, useState } from "react";
-import { signIn } from 'next-auth/react';
+import { useCookies } from 'next-client-cookies';
+import { useSession, signIn, signOut } from 'next-auth/react';
+import { SessionProvider } from "next-auth/react";
+
+import apiClient from "@/lib/apiClient";
+import {NextResponse} from "next/server";
 
 export type LoginFormInputs = {
   email: string;
@@ -32,8 +37,11 @@ export function LoginForm() {
   const secureLink = searchParams.get("l");
   type ButtonId = 'email' | 'microsoft' | 'google';
 
-  useEffect(() => {
+  const { data: session, status } = useSession();
+
+  useEffect(({session}) => {
     router.refresh();
+    handleMSOSignin(session);
   }, []);
 
   const { fetchClient, loading } = useFetchClient();
@@ -42,6 +50,7 @@ export function LoginForm() {
     handleSubmit,
     formState: { errors: formErrors },
   } = useForm<LoginFormInputs>();
+
 
   const handleButtonClick = (buttonId: ButtonId) => {
     switch (buttonId) {
@@ -77,7 +86,60 @@ export function LoginForm() {
     }
   };
 
+  const handleMSOSignin = async ({session}) => {
+    const cookieStore = useCookies();
+    const authToken = cookieStore.get("auth_token")?.value;
+     if (!authToken) {
+      if (session !== null) {
+        if (session.user?.name != undefined) {
+          const response = await fetchClient("/authentication/login", {
+            method: "POST",
+            body: JSON.stringify({
+              loginType: "sso",
+              email: session.user.email
+            }),
+          });
+
+          console.log('response below:');
+          console.log(response);
+          const data = await response.json();
+
+          if (!response.ok) {
+            const errorMessage = data?.error || "Invalid login credentials";
+            throw new Error(errorMessage);  // Throw error if API call fails
+          }
+
+          const { authToken, UUID, role, isProfileRegistered } = data.resource;
+
+          let redirectUrl = `${process.env.NEXT_PUBLIC_BASE_URL}`;
+
+          if (!isProfileRegistered) {
+            redirectUrl += "/profile-setup";
+          } else if (role === "PA") {
+            redirectUrl += "/customers";
+          }
+          const res = NextResponse.json({ redirectUrl });
+
+          res.cookies.set("auth_token", authToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+          });
+
+          res.cookies.set("user_uuid", UUID, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+          });
+        }
+      }
+    }
+    signIn('azure-ad', { callbackUrl: '/login' });
+  //   Call API to sign in sso
+  }
+
   return (
+      <SessionProvider>
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
       style={{ width: "100%", maxWidth: "md" }}
@@ -157,7 +219,7 @@ export function LoginForm() {
               backgroundColor="lightBlue"
               border="1px solid lightBlue"
               _hover={{ color: "lightBlue", backgroundColor: "white", border: `1px solid lightBlue` }}
-              onClick={() => signIn('azure-ad', { callbackUrl: '/' })}
+              onClick={handleMSOSignin}
           >
             Sign in with Microsoft
           </Button>
@@ -200,6 +262,7 @@ export function LoginForm() {
         </Text>
       </VStack>
     </form>
+      </SessionProvider>
   );
 }
 

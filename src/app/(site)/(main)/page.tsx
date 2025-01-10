@@ -1,30 +1,100 @@
-'use client';
+// Force dynamic rendering to prevent caching issues
+import apiClient from "@/lib/apiClient";
+import { CarouselItemProps } from "@/components/carousel/CarouselItem";
+import { cookies } from "next/headers";
+import { PerygonMainClient } from "../../PerygonMainClient";
+import { redirect } from "next/navigation";
+import { verifySession } from "@/lib/dal";
+import {getSession} from "next-auth/react";
 
-import { useSession, signIn, signOut } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+export const dynamic = "force-dynamic";
 
-export default function Page() {
-    const { data: session, status } = useSession();
-    const router = useRouter();
+type CarouselItemWithoutIsSelected = Omit<CarouselItemProps, "isSelected">;
 
-    if (status === 'loading') {
-        return <div>Loading...</div>;
+function transformCarouselItems(data: any[]): CarouselItemWithoutIsSelected[] {
+  return data.map((item) => ({
+    toolId: item.toolId,
+    logoImage: item.logoImageUrl,
+    iconImage: item.iconImageUrl,
+    thumbNailImage: item.thumbnailImageUrl,
+    backgroundImage: item.previewImageUrl,
+    alt: item.displayName,
+    name: item.displayName,
+    description: item.previewText,
+    appUrl: item.appUrl,
+    toolWfId: item.toolWfId,
+  }));
+}
+
+export default async function PerygonMain() {
+  const session = await verifySession();
+
+  // If there's no session, redirect to login
+  // if (!session) {
+  //   redirect("/login");
+  // }
+
+  const cookieStore = cookies();
+  const authToken = cookieStore.get("auth_token")?.value;
+  const uniqueId = cookieStore.get("user_uuid")?.value;
+
+  let userRole;
+  let carouselItems: CarouselItemWithoutIsSelected[] = [];
+  let isProfileRegistered = false;
+
+  if (authToken) {
+    try {
+      const [fetchLoggedInUserData, fetchCarouselItems, fetchProfileStatus] =
+        await Promise.all([
+          apiClient(
+            `/getView?view=vwLoggedInUserIdentity&selectColumns=role&userUniqueId=${uniqueId}`,
+            {
+              method: "GET",
+              cache: "no-store",
+            },
+          ),
+          apiClient(`/getAllView?view=vwToolsCarouselList`, {
+            method: "GET",
+          }),
+          apiClient(`/user/isProfileComplete`, {
+            method: "POST",
+            body: JSON.stringify({ uniqueId }),
+          }),
+        ]);
+
+      const loggedInUserData = await fetchLoggedInUserData.json();
+      const carouselItemsData = await fetchCarouselItems.json();
+      const profileStatusData = await fetchProfileStatus.json();
+
+      userRole = loggedInUserData?.resource.role;
+      carouselItems = transformCarouselItems(carouselItemsData.resource ?? []);
+      isProfileRegistered = profileStatusData.resource.isProfileRegistered;
+    } catch (error: any) {
+      console.error("Error details:", error);
+      redirect("/error");
     }
+  } else {
+    redirect("/login");
+  }
 
-    if (!session) {
-        return (
-            <div>
-                <button onClick={() => signIn('azure-ad-b2c')}>Sign in</button>
-            </div>
-        );
-    }
+  if (userRole === "PA") {
+    return redirect("/customers");
+  }
 
-    return (
-        <div>
-            <h1>Welcome {session.user?.name}</h1>
-            <h1>Your user email is: {session.user?.email}</h1>
+  if (!isProfileRegistered) {
+    return redirect("/profile-setup");
+  }
 
-            <button onClick={() => signOut({callbackUrl: '/login'})}>Sign out</button>
-        </div>
+  if (carouselItems.length === 1) {
+    return redirect(
+      `${carouselItems[0].appUrl}?toolId=${carouselItems[0].toolId}&wfId=${carouselItems[0].toolWfId}`,
     );
+  }
+
+  return (
+    <PerygonMainClient
+      carouselItems={carouselItems}
+      showNoToolsModal={carouselItems.length === 0}
+    />
+  );
 }

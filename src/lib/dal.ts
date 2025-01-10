@@ -186,13 +186,13 @@ export const verifySession = async () => {
   const authToken = cookieStore.get("auth_token")?.value;
   const uniqueId = cookieStore.get("user_uuid")?.value;
 
-  if (!authToken) {
-    redirect("/login");
-  }
-
-  if (!uniqueId) {
-    redirect("/login");
-  }
+  // if (!authToken) {
+  //   redirect("/login");
+  // }
+  //
+  // if (!uniqueId) {
+  //   redirect("/login");
+  // }
 
   return { isAuth: true, userId: uniqueId };
 };
@@ -201,9 +201,9 @@ export const getUser = async (): Promise<User> => {
   const session = await verifySession();
 
   // If there's no session, redirect to login
-  if (!session) {
-    redirect("/login");
-  }
+  // if (!session) {
+  //   redirect("/login");
+  // }
 
   const cookieStore = cookies();
   const authToken = cookieStore.get("auth_token")?.value;
@@ -230,7 +230,7 @@ export const getUser = async (): Promise<User> => {
 
     return userData.resource as User; // Cast the response to the User type
   } catch (error) {
-    redirect("/login"); // Redirect to login if there's an error
+    // redirect("/login"); // Redirect to login if there's an error
     throw error; // Optional: re-throw if additional handling is needed
   }
 };
@@ -239,7 +239,7 @@ export async function checkUserRole(targetPathname: string): Promise<boolean> {
   const user = await getUser();
 
   if (!user) {
-    redirect("/login");
+    // redirect("/login");
     return false;
   }
 

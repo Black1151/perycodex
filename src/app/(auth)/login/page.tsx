@@ -6,9 +6,23 @@ import { LoginCard } from "@/components/login/LoginCard";
 import { cookies } from "next/headers";
 import apiClient from "@/lib/apiClient";
 import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "./../../api/auth/[...nextauth]"
 
 interface SearchParams {
   l?: string;
+}
+
+export async function getServerSideProps(context) {
+  return {
+    props: {
+      session: await getServerSession(
+          context.req,
+          context.res,
+          authOptions
+      ),
+    },
+  }
 }
 
 export default async function LoginPage({
@@ -16,6 +30,11 @@ export default async function LoginPage({
 }: {
   searchParams: SearchParams;
 }) {
+
+  const { data: session } = useSession();
+
+  console.log(session);
+
   // Check if user is already authenticated and if so redirect based on if l is present
   // Extract query parameter `l`
   const secureLink = searchParams.l;
@@ -71,8 +90,9 @@ export default async function LoginPage({
               <LetterFlyIn>Perygon</LetterFlyIn>
             </VStack>
           }
-        >
+        ><SessionProvider session={session}>
           <LoginForm />
+        </SessionProvider>
         </LoginCard>
       </Center>
     </PerygonContainer>
