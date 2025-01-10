@@ -10,10 +10,6 @@ interface apiBodyType {
 export async function POST(req: NextRequest) {
     const {loginType, email, password} = await req.json();
 
-    console.log("-----------------------------------")
-    console.log(loginType, email, password);
-    console.log("-----------------------------------")
-
     // Extract searchParams from the incoming request
     const {searchParams} = req.nextUrl;
 

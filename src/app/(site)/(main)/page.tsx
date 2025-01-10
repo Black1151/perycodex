@@ -30,9 +30,9 @@ export default async function PerygonMain() {
   const session = await verifySession();
 
   // If there's no session, redirect to login
-  // if (!session) {
-  //   redirect("/login");
-  // }
+  if (!session) {
+    redirect("/login");
+  }
 
   const cookieStore = cookies();
   const authToken = cookieStore.get("auth_token")?.value;

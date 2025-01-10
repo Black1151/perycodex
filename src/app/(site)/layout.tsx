@@ -28,9 +28,9 @@ export default async function MainLayout({
   const authToken = cookieStore.get("auth_token")?.value;
   const uniqueId = cookieStore.get("user_uuid")?.value;
 
-  // if (!authToken) {
-  //   redirect("/login");
-  // }
+  if (!authToken) {
+    redirect("/login");
+  }
 
   let navBarProps = {
     userFirstName: "",

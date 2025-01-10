@@ -90,24 +90,27 @@ export function LoginForm() {
             ? `/api/auth/sign-in?l=${secureLink}`
             : "/api/auth/sign-in";
 
-        if ((session !== null) && (session.user?.email != undefined)) {
-            console.log("----------------------")
-            console.log(session)
-            console.log("----------------------")
-            const result: { redirectUrl: string } | null = await fetchClient(endpoint, {
-                method: "POST",
-                body: {
-                    loginType: "sso",
-                    email: session.user.email,
-                    password: null
-                },
-            });
+        if (session !== undefined) {
+            if (session !== null) {
+                if (session.user?.email != undefined) {
+                    const result: { redirectUrl: string } | null = await fetchClient(endpoint, {
+                        method: "POST",
+                        body: {
+                            loginType: "sso",
+                            email: session.user.email,
+                            password: null
+                        },
+                    });
 
-            if (result) {
-                router.push(result.redirectUrl);
+                    if (result) {
+                        router.push(result.redirectUrl);
+                    }
+                }
             }
+        } else {
+            signIn('azure-ad', {callbackUrl: '/login'});
         }
-        signIn('azure-ad', {callbackUrl: '/login'});
+
     }
 
     return (
