@@ -22,6 +22,7 @@ import {
   Schema,
   Sell,
   ShoppingCartCheckout,
+  Dashboard,
 } from "@mui/icons-material";
 import { usePathname, useRouter } from "next/navigation";
 import { useUser } from "@/providers/UserProvider";
@@ -180,6 +181,12 @@ export default function SideBars() {
             icon: <FormatAlignCenter sx={{ height: "100%", width: "100%" }} />,
             onClick: () => router.push("/forms"),
             category: "Workflows",
+          },
+          {
+            label: "Dashboards",
+            icon: <Dashboard sx={{ height: "100%", width: "100%" }} />,
+            onClick: () => router.push("/dashboards"),
+            category: "Dashboards",
           },
           {
             label: "Email Templates",
