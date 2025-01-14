@@ -380,8 +380,6 @@ export async function GET(request: Request) {
         },
       });
 
-      console.log(await response.json());
-
       if (!response.ok) {
         throw new Error(`Failed to fetch data for ${group.key}`);
       }
@@ -719,8 +717,6 @@ export async function GET(request: Request) {
       positiveChange: true,
     };
   }
-
-  console.log(finalData.resource);
 
   return NextResponse.json({
     filterOptions: availableOptions,

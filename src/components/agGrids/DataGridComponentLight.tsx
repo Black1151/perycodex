@@ -94,8 +94,6 @@ const DataGridComponentLight = <T,>({
   const uniqueQuickFilterId = useId();
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  console.log(data);
-
   useEffect(() => {
     setFields(initialFields);
   }, [initialFields]);

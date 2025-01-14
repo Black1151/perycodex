@@ -68,8 +68,6 @@ export async function processResponseData(
 
     // build department summary
 
-    console.log("departmentscores", departmentScores);
-
     const departmentsData = Array.from(departmentScores.entries()).map(
       ([deptName, { totalScore, count }]) => ({
         department: deptName,

@@ -69,8 +69,5 @@ export function buildEndpoint(
     }
   });
 
-  console.log("filters", filters);
-  console.log("endpoint", endpoint);
-
   return endpoint;
 }

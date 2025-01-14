@@ -157,14 +157,6 @@ export async function GET(request: Request) {
       managerOfTeamIds
     );
 
-  console.log({
-    filterOptions,
-    lineGraphData,
-    speechBubbleData,
-    weeksData,
-    data: finalData.resource,
-  });
-
   // 5) Return JSON response
   return NextResponse.json({
     filterOptions, // The parallel-fetched filter groups
