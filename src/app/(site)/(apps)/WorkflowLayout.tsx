@@ -16,7 +16,7 @@ import {useRouter} from "next/navigation";
 
 interface WorkflowLayoutProps {
     stages: WorkflowStage[];
-    layout?: 'default' | 'happiness' | 'enps';
+    layout: 'default' | 'happiness' | 'enps';
     workflowInstanceId: string | null;
 }
 
