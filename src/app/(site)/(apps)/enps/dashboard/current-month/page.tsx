@@ -4,7 +4,7 @@ import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
 import HappinessDashboardLayout from "@/app/(site)/(apps)/happiness-score/dashboard/HappinessDashboardLayout";
 import DashboardHeader from "@/app/(site)/(apps)/DashboardHeader";
 import {verifySession} from "@/lib/dal";
-import Dashboard from "@/app/(site)/(apps)/enps/dashboard/basic-dashboard/Dashboard";
+import Dashboard from "@/app/(site)/(apps)/enps/dashboard/current-month/Dashboard";
 
 export default async function Home({
                                        searchParams,
@@ -30,7 +30,7 @@ export default async function Home({
         await getFilteredDashboards(
             toolId,
             workflowId,
-            "/enps/dashboard/basic-dashboard",
+            "/enps/dashboard/current-month",
         );
 
     // Redirect to the first dashboard if the user doesn't have access to the current one
