@@ -194,7 +194,7 @@ export async function GET(request: Request) {
       if (!uniqueId) {
         return NextResponse.json(
           { error: "User unique ID not found in cookies." },
-          { status: 400 },
+          { status: 400 }
         );
       }
 
@@ -208,7 +208,7 @@ export async function GET(request: Request) {
 
       if (!response.ok) {
         throw new Error(
-          `Failed to fetch manager of departments and teams: ${response.statusText}`,
+          `Failed to fetch manager of departments and teams: ${response.statusText}`
         );
       }
 
@@ -222,7 +222,7 @@ export async function GET(request: Request) {
       console.error("Error fetching manager of departments and teams:", error);
       return NextResponse.json(
         { error: "Failed to fetch manager of departments and teams." },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
@@ -230,14 +230,14 @@ export async function GET(request: Request) {
       if (managerOfDeptIds.length === 0) {
         return NextResponse.json(
           { error: "User does not manage any departments." },
-          { status: 403 },
+          { status: 403 }
         );
       }
     } else if (preFilter === "teams") {
       if (managerOfTeamIds.length === 0) {
         return NextResponse.json(
           { error: "User does not manage any teams." },
-          { status: 403 },
+          { status: 403 }
         );
       }
     }
@@ -290,7 +290,7 @@ export async function GET(request: Request) {
     filters: any,
     managerOfDeptIds: string[],
     managerOfTeamIds: string[],
-    preFilter: string | undefined,
+    preFilter: string | undefined
   ) {
     let endpoint = `/getAllView?view=vwDashboardDataFromReportJson&toolConfigId=${toolConfigId}&workflowId=${workflowId}&businessProcessId=${businessProcessId}`;
 
@@ -298,7 +298,7 @@ export async function GET(request: Request) {
       if (managerOfDeptIds.length > 0) {
         if (filters.deptId && filters.deptId.length > 0) {
           filters.deptId = filters.deptId.filter((id: string) =>
-            managerOfDeptIds.includes(id),
+            managerOfDeptIds.includes(id)
           );
           if (filters.deptId.length === 0) {
             return "";
@@ -313,7 +313,7 @@ export async function GET(request: Request) {
       if (managerOfTeamIds.length > 0) {
         if (filters.teamId && filters.teamId.length > 0) {
           filters.teamId = filters.teamId.filter((id: string) =>
-            managerOfTeamIds.includes(id),
+            managerOfTeamIds.includes(id)
           );
           if (filters.teamId.length === 0) {
             return "";
@@ -365,7 +365,7 @@ export async function GET(request: Request) {
       filtersExcludingCurrentGroup,
       managerOfDeptIds,
       managerOfTeamIds,
-      preFilter,
+      preFilter
     );
 
     if (!endpoint) {
@@ -379,6 +379,8 @@ export async function GET(request: Request) {
           Authorization: `Bearer ${apiToken}`,
         },
       });
+
+      console.log(await response.json());
 
       if (!response.ok) {
         throw new Error(`Failed to fetch data for ${group.key}`);
@@ -449,20 +451,20 @@ export async function GET(request: Request) {
   const filterGroupResults = await Promise.all(filterGroupPromises);
 
   const availableOptions = filterGroupResults.filter(
-    (result) => result !== null,
+    (result) => result !== null
   ) as FilterOptionGroup[];
 
   const endpointWithAllFilters = buildEndpoint(
     selectedFilters,
     managerOfDeptIds,
     managerOfTeamIds,
-    preFilter,
+    preFilter
   );
 
   if (!endpointWithAllFilters) {
     return NextResponse.json(
       { error: "No data available based on your filters." },
-      { status: 403 },
+      { status: 403 }
     );
   }
 
@@ -485,7 +487,7 @@ export async function GET(request: Request) {
     console.error("Error fetching final data:", error);
     return NextResponse.json(
       { error: "Failed to fetch data from the API." },
-      { status: 500 },
+      { status: 500 }
     );
   }
 
@@ -717,6 +719,8 @@ export async function GET(request: Request) {
       positiveChange: true,
     };
   }
+
+  console.log(finalData.resource);
 
   return NextResponse.json({
     filterOptions: availableOptions,

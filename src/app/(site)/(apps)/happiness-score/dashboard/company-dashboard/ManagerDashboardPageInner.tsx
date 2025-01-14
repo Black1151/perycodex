@@ -17,15 +17,24 @@ import {
   useTheme,
   VStack,
 } from "@chakra-ui/react";
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-alpine.css";
+import "ag-grid-charts-enterprise";
+
 import LineGraph from "@/components/graphs/LineGraph";
 import { HappinessScoreMasonry } from "../../HappinessScoreMasonry";
 import SpeechBubble from "../../SpeechBubble";
-import PeopleList from "./PeopleList";
-import AnimatedBarChart from "@/components/graphs/BarGraph";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import { SpringScale } from "@/components/animations/SpringScale";
 import StaffHappinessDetailModal from "./StaffHappinessDetailModal";
 import { useRouter } from "next/navigation";
+import { ColDef } from "ag-grid-community";
+
+import "ag-grid-community/styles/ag-theme-alpine.css";
+import "ag-grid-community/styles/ag-grid.css";
+
+import { AgBarChart } from "@/components/graphs/AgBarChart";
+import DataGridComponentLight from "@/components/agGrids/DataGridComponentLight";
 
 interface DataPoint {
   value: number;
@@ -82,67 +91,107 @@ export default function ManagerDashboardInner({
   setIsModalOpen,
   staffHappinessDetailsModalData,
 }: ManagerDashboardPageInnerProps) {
-  const departmentBarData = useMemo(
-    () =>
-      departmentsData.map((dept) => ({
-        title: dept.department,
-        value: dept.averageScore,
-        count: dept.count,
-      })),
-    [departmentsData],
-  );
+  const theme = useTheme();
+  const router = useRouter();
 
-  const siteBarData = useMemo(
-    () =>
-      sitesData.map((site) => ({
-        title: site.site,
-        value: site.averageScore,
-        count: site.count,
-      })),
-    [sitesData],
+  // Column definitions for AG Grid to match `Person` interface
+  const columnDefs = useMemo<ColDef<Person>[]>(
+    () => [
+      {
+        headerName: "Name",
+        field: "fullName",
+        sortable: true,
+        filter: true,
+        flex: 1,
+        cellStyle: { color: "black" },
+      },
+      {
+        headerName: "Job Title",
+        field: "jobTitle",
+        sortable: true,
+        filter: true,
+        flex: 1,
+        cellStyle: { color: "black" },
+      },
+      {
+        headerName: "Department",
+        field: "department",
+        sortable: true,
+        filter: true,
+        flex: 1,
+        cellStyle: { color: "black" },
+      },
+      {
+        headerName: "Site",
+        field: "site",
+        sortable: true,
+        filter: true,
+        flex: 1,
+        cellStyle: { color: "black" },
+      },
+      {
+        headerName: "Score",
+        field: "score",
+        sortable: true,
+        filter: true,
+        flex: 1,
+        valueFormatter: (params) => {
+          return params.value === null ? "N/A" : `${params.value}`;
+        },
+        cellStyle: { color: "black" },
+      },
+    ],
+    []
   );
-
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(10);
 
   const [barModalData, setBarModalData] = useState<Person[]>([]);
-  const [userListData, setUserListData] = useState<Person[]>([]);
   const [isBarModalOpen, setIsBarModalOpen] = useState(false);
   const [barModalTitle, setBarModalTitle] = useState("");
   const [modalCurrentPage, setModalCurrentPage] = useState<number>(1);
   const [modalItemsPerPage, setModalItemsPerPage] = useState<number>(10);
-  const theme = useTheme();
-  const router = useRouter();
 
+  const refreshPage = useCallback(() => {
+    router.refresh();
+  }, [router]);
+
+  useEffect(() => {
+    // Auto refresh every 10 minutes
+    const timer = setTimeout(refreshPage, 10 * 60 * 1000);
+    return () => clearTimeout(timer);
+  }, [refreshPage]);
+
+  // Department bar chart click
   const handleDepartmentBarClick = useCallback(
     (title: string) => {
       const filteredPeople = peopleListData.filter(
-        (person) => person.department === title && person.score !== null,
+        (person) => person.department === title && person.score !== null
       );
       setBarModalTitle(`Department: ${title}`);
       setBarModalData(filteredPeople);
       setIsBarModalOpen(true);
     },
-    [peopleListData],
+    [peopleListData]
   );
 
+  // Site bar chart click
   const handleSiteBarClick = useCallback(
     (title: string) => {
       const filteredPeople = peopleListData.filter(
-        (person) => person.site === title && person.score !== null,
+        (person) => person.site === title && person.score !== null
       );
       setBarModalTitle(`Site: ${title}`);
       setBarModalData(filteredPeople);
       setIsBarModalOpen(true);
     },
-    [peopleListData],
+    [peopleListData]
   );
 
+  // Masonry clicks
   const handleMasonryClick = useCallback(
     (category: string) => {
       if (category === "Did not participate") {
         const nonParticipants = peopleListData.filter(
-          (person) => person.score === null || person.score === undefined,
+          (person) => person.score === null || person.score === undefined
         );
         setBarModalTitle("Did Not Participate");
         setBarModalData(nonParticipants);
@@ -173,43 +222,44 @@ export default function ManagerDashboardInner({
         (person) =>
           person.score !== null &&
           person.score >= minScore &&
-          person.score <= maxScore,
+          person.score <= maxScore
       );
+
       setBarModalTitle(`Score Range: ${category}`);
       setBarModalData(filteredPeople);
       setIsBarModalOpen(true);
     },
-    [peopleListData],
+    [peopleListData]
   );
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [peopleListData]);
-
-  const refreshPage = () => {
-    router.refresh();
-  };
-
-  useEffect(() => {
-    const timer = setTimeout(refreshPage, 10 * 60 * 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
+  // Clicking a user in a modal or PeopleList
   const handleUserClick = useCallback(
     (userId: number) => {
       fetchHappinessScoreTwoMonthHistory(userId);
       setIsBarModalOpen(false);
     },
-    [fetchHappinessScoreTwoMonthHistory],
+    [fetchHappinessScoreTwoMonthHistory]
   );
 
-  useEffect(() => {
-    const filteredScoresData = peopleListData.filter(
-      (person) => person.score !== null,
-    );
+  const departmentBarData = useMemo(
+    () =>
+      departmentsData.map((dept) => ({
+        title: dept.department,
+        value: dept.averageScore,
+        count: dept.count,
+      })),
+    [departmentsData]
+  );
 
-    setUserListData(filteredScoresData);
-  }, [peopleListData]);
+  const siteBarData = useMemo(
+    () =>
+      sitesData.map((site) => ({
+        title: site.site,
+        value: site.averageScore,
+        count: site.count,
+      })),
+    [sitesData]
+  );
 
   return (
     <>
@@ -219,6 +269,7 @@ export default function ManagerDashboardInner({
         </Flex>
       ) : (
         <Box mb={[10, 0]}>
+          {/* StaffHappinessDetailModal for single user happiness details */}
           {staffHappinessDetailsModalData && (
             <StaffHappinessDetailModal
               isOpen={isModalOpen}
@@ -226,6 +277,8 @@ export default function ManagerDashboardInner({
               {...staffHappinessDetailsModalData}
             />
           )}
+
+          {/* Modal for bar chart or masonry breakdown results */}
           <Modal
             isOpen={isBarModalOpen}
             onClose={() => setIsBarModalOpen(false)}
@@ -238,14 +291,29 @@ export default function ManagerDashboardInner({
               <ModalBody pb={10}>
                 <VStack minHeight={520}>
                   {barModalData.length > 0 ? (
-                    <PeopleList
-                      people={barModalData}
-                      currentPage={modalCurrentPage}
-                      itemsPerPage={modalItemsPerPage}
-                      onPageChange={setModalCurrentPage}
-                      onItemsPerPageChange={setModalItemsPerPage}
-                      handleUserClick={handleUserClick}
-                    />
+                    <Box
+                      className="ag-theme-alpine"
+                      w="100%"
+                      p={1}
+                      pb="7px"
+                      borderRadius="xl"
+                      boxShadow="md"
+                      bgColor="white"
+                    >
+                      <DataGridComponentLight
+                        data={barModalData}
+                        initialFields={columnDefs}
+                        defaultColDef={{
+                          flex: 1,
+                          minWidth: 100,
+                          resizable: true,
+                        }}
+                        showTopBar={false}
+                        handleRowClick={(person) =>
+                          handleUserClick(person.userId)
+                        }
+                      />
+                    </Box>
                   ) : (
                     <Text color="white">No data available.</Text>
                   )}
@@ -253,6 +321,7 @@ export default function ManagerDashboardInner({
               </ModalBody>
             </ModalContent>
           </Modal>
+
           <Grid
             templateColumns={["1fr", null, null, "1fr 1fr 1fr 1fr 1fr 1fr"]}
             gap={[8, 6]}
@@ -281,6 +350,7 @@ export default function ManagerDashboardInner({
                 <LineGraph DataPoints={lineGraphData} />
               </SpringScale>
             </GridItem>
+
             <GridItem colSpan={[1, null, null, 2]}>
               <Flex width="100%" justifyContent="center" mb={4}>
                 <SectionHeader>Breakdown</SectionHeader>
@@ -290,39 +360,64 @@ export default function ManagerDashboardInner({
                 onStatClick={handleMasonryClick}
               />
             </GridItem>
+
             <GridItem colSpan={[1, null, null, 4]}>
               <VStack minH="100%">
                 <Flex width="100%" justifyContent="center" mb={2}>
                   <SectionHeader>Submissions</SectionHeader>
                 </Flex>
-                <PeopleList
-                  people={userListData}
-                  currentPage={currentPage}
-                  itemsPerPage={itemsPerPage}
-                  onPageChange={setCurrentPage}
-                  onItemsPerPageChange={setItemsPerPage}
-                  handleUserClick={fetchHappinessScoreTwoMonthHistory}
-                />
+
+                <Box
+                  className="ag-theme-alpine"
+                  w="100%"
+                  p={1}
+                  pb="7px"
+                  borderRadius="xl"
+                  boxShadow="md"
+                  bgColor="white"
+                >
+                  {/* 
+                    Update: Pass handleRowClick 
+                    so each row click calls handleUserClick(person.userId).
+                  */}
+                  <DataGridComponentLight
+                    data={peopleListData}
+                    initialFields={columnDefs}
+                    defaultColDef={{
+                      flex: 1,
+                      minWidth: 100,
+                      resizable: true,
+                    }}
+                    showTopBar={false}
+                    /* Here is the key line: 
+                       hooking up handleUserClick to the row click callback */
+                    handleRowClick={(person) => handleUserClick(person.userId)}
+                  />
+                </Box>
               </VStack>
             </GridItem>
+
             <GridItem colSpan={[1, null, null, 3]}>
-              <VStack>
-                <Flex width="100%" justifyContent="center" mb={4}>
-                  <SectionHeader>Department Comparison</SectionHeader>
-                </Flex>
-                <AnimatedBarChart
-                  DataPoints={departmentBarData}
-                  onBarClick={handleDepartmentBarClick}
-                />
-              </VStack>
+              {departmentBarData && (
+                <VStack height="100%">
+                  <Flex width="100%" justifyContent="center" mb={4}>
+                    <SectionHeader>Department Comparison</SectionHeader>
+                  </Flex>
+                  <AgBarChart
+                    data={departmentBarData}
+                    onBarClick={handleDepartmentBarClick}
+                  />
+                </VStack>
+              )}
             </GridItem>
+
             <GridItem colSpan={[1, null, null, 3]}>
               <VStack>
                 <Flex width="100%" justifyContent="center" mb={4}>
                   <SectionHeader>Site Comparison</SectionHeader>
                 </Flex>
-                <AnimatedBarChart
-                  DataPoints={siteBarData}
+                <AgBarChart
+                  data={siteBarData}
                   onBarClick={handleSiteBarClick}
                 />
               </VStack>

@@ -101,14 +101,14 @@ const Dashboard: React.FC = () => {
 
     if (!toolId || !workflowId || !user?.customerId) {
       console.warn(
-        "Required data (toolId, workflowId, or customerId) is missing",
+        "Required data (toolId, workflowId, or customerId) is missing"
       );
       return; // Prevent fetching if values are not ready
     }
 
     try {
       const response = await fetchClient<ApiResponse>(
-        `/api/happiness-graphs/getAllHappinessData?toolId=${toolId}&wfId=${workflowId}&customerId=${user.customerId}`,
+        `/api/happiness-graphs/getAllHappinessData?toolId=${toolId}&wfId=${workflowId}&customerId=${user.customerId}`
       );
 
       if (response && typeof response === "object" && "data" in response) {
@@ -435,8 +435,8 @@ const Dashboard: React.FC = () => {
               },
               itemStyler: (params) => {
                 const { datum, yKey } = params;
-                const score = datum[yKey]; // Retrieve the score value
-                const fillColor = getColor(score); // Determine color based on range
+                const score = datum[yKey];
+                const fillColor = getColor(score);
 
                 return {
                   fill: fillColor,
@@ -447,7 +447,6 @@ const Dashboard: React.FC = () => {
                   const { xKey, datum } = params;
 
                   if (datum && xKey) {
-                    // Ensure `datum[xKey]` is processed correctly
                     const value =
                       typeof datum[xKey] === "object"
                         ? datum[xKey]?.value

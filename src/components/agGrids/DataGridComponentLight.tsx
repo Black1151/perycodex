@@ -25,9 +25,9 @@ import {
 } from "@chakra-ui/react";
 import { Add, Clear, Refresh } from "@mui/icons-material";
 import NoDataOverlay from "@/components/agGrids/NoDataOverlay";
-import CustomGridBottomPagination from "@/components/agGrids/CustomGridBottomPagination";
 import LoadingOverlay from "@/components/agGrids/LoadingOverlay";
 import { ColDef, FirstDataRenderedEvent } from "ag-grid-community";
+import CustomGridBottomPaginationLight from "./CustomGridBottomPaginationLight";
 
 interface DataGridComponentProps<T> {
   data: T[] | null;
@@ -46,6 +46,12 @@ interface DataGridComponentProps<T> {
   enableAutoRefresh?: boolean;
   refreshInterval?: number;
   height?: string;
+
+  /**
+   * Callback invoked when a row is clicked.
+   * The callback will receive the row's data.
+   */
+  handleRowClick?: (rowData: T) => void;
 }
 
 // Define the type for pagination info
@@ -60,7 +66,7 @@ LicenseManager.setLicenseKey(
   "Using_this_{AG_Charts_and_AG_Grid}_Enterprise_key_{AG-066268}_in_excess_of_the_licence_granted_is_not_permitted___Please_report_misuse_to_legal@ag-grid.com___For_help_with_changing_this_key_please_contact_info@ag-grid.com___{Sedulo_Limited}_is_granted_a_{Multiple_Applications}_Developer_License_for_{2}_Front-End_JavaScript_developers___All_Front-End_JavaScript_developers_need_to_be_licensed_in_addition_to_the_ones_working_with_{AG_Charts_and_AG_Grid}_Enterprise___This_key_has_been_granted_a_Deployment_License_Add-on_for_{1}_Production_Environment___This_key_works_with_{AG_Charts_and_AG_Grid}_Enterprise_versions_released_before_{30_September_2025}____[v3]_[0102]_MTc1OTE4NjgwMDAwMA==8e565c62a9475b11e35b2c3b1f037177"
 );
 
-const DataGridComponent = <T,>({
+const DataGridComponentLight = <T,>({
   data,
   loading,
   initialFields,
@@ -77,6 +83,7 @@ const DataGridComponent = <T,>({
   enableAutoRefresh = false,
   refreshInterval = 10,
   height = "500px",
+  handleRowClick,
 }: DataGridComponentProps<T>) => {
   const gridRef = useRef<AgGridReact>(null);
   const [rowData, setRowData] = useState<T[]>(data || []);
@@ -86,6 +93,8 @@ const DataGridComponent = <T,>({
   const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
   const uniqueQuickFilterId = useId();
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  console.log(data);
 
   useEffect(() => {
     setFields(initialFields);
@@ -203,7 +212,7 @@ const DataGridComponent = <T,>({
         ) as HTMLInputElement
       ).value
     );
-  }, []);
+  }, [uniqueQuickFilterId]);
 
   // Reset all filters and quick filter
   const resetFilter = useCallback(() => {
@@ -216,9 +225,9 @@ const DataGridComponent = <T,>({
         ) as HTMLInputElement
       ).value = "")
     );
-  }, []);
+  }, [uniqueQuickFilterId]);
 
-  // Effect to update rowData when the prop `data` changes
+  // Effect to update rowData when the prop data changes
   useEffect(() => {
     if (data) {
       setRowData(data);
@@ -234,11 +243,12 @@ const DataGridComponent = <T,>({
   const handleFilterChanged = () => {
     if (gridRef.current?.api) {
       const currentFilterModel = gridRef.current.api.getFilterModel();
+      // do something with currentFilterModel if needed
     }
   };
 
   return (
-    <Box className={`ag-theme-alpine ag-theme-perygon`} w={"full"} pb={2}>
+    <Box className={"ag-theme-alpine"} w={"full"} p={2} pb={0}>
       {showTopBar && (
         <Flex w={"full"} justify={"flex-start"} align={"center"} my={4} gap={2}>
           {/* Quick Filter */}
@@ -257,7 +267,13 @@ const DataGridComponent = <T,>({
             }}
           />
 
-          <Flex flex={1} justify={"flex-end"} align={"center"} gap={2}>
+          <Flex
+            flex={1}
+            justify={"flex-end"}
+            align={"center"}
+            gap={2}
+            color="white"
+          >
             {refreshData && (
               <Button
                 variant="solid"
@@ -334,8 +350,17 @@ const DataGridComponent = <T,>({
           loadingOverlayComponent={LoadingOverlay}
           onFirstDataRendered={handleGridReady}
           onFilterChanged={handleFilterChanged}
+          /* New/Updated Props: Disable single-cell selection, 
+             and call handleRowClick if defined. */
+          // rowSelection="none"
+          // suppressCellSelection={true}
+          onRowClicked={
+            handleRowClick
+              ? (params) => handleRowClick(params.data as T)
+              : undefined
+          }
         />
-        <CustomGridBottomPagination
+        <CustomGridBottomPaginationLight
           gridRef={gridRef}
           paginationInfo={paginationInfo}
           onPageChange={() => {
@@ -352,4 +377,4 @@ const DataGridComponent = <T,>({
   );
 };
 
-export default DataGridComponent;
+export default DataGridComponentLight;

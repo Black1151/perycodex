@@ -54,7 +54,7 @@ export default function ManagerDashboardPage({
   preFilter,
 }: ManagerDashboardPageProps) {
   const [drawerState, setDrawerState] = useState<"closed" | "fully-open">(
-    "closed",
+    "closed"
   );
   const [isUpdating, setIsUpdating] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -74,10 +74,11 @@ export default function ManagerDashboardPage({
   const [weeksData, setWeeksData] = useState<any[]>([]);
   const [weekOptions, setWeekOptions] = useState<string[]>([]);
   const [selectedWeek, setSelectedWeek] = useState<string | null>(null);
-  const [selectedTimeRange, setSelectedTimeRange] = useState<string>("all");
+
   const [staffHappinessDetailsModalData, setStaffHappinessDetailsModalData] =
     useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [AgGridTableData, setAgGridTableData] = useState<Person[]>([]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollPosition = useRef<number>(0); // Holds the last known scroll position
@@ -88,6 +89,10 @@ export default function ManagerDashboardPage({
     }
   }, []);
 
+  /**
+   * Map UI labels to the query parameter names your backend expects.
+   * Make sure these labels match what's returned in your FilterOptionGroup.
+   */
   const labelToParamName: Record<string, string> = useMemo(
     () => ({
       "Dept Name": "deptId",
@@ -101,16 +106,20 @@ export default function ManagerDashboardPage({
       "Site Tags": "siteTagId",
       "Customer Tags": "customerTagId",
     }),
-    [],
+    []
   );
 
+  /**
+   * Build a query string based on the user’s filter selections.
+   * We no longer append `timeRange` because we removed that feature.
+   */
   const constructQueryParams = useCallback(
-    (filters: FilterOptionGroup[], timeRange: string): string => {
+    (filters: FilterOptionGroup[]): string => {
       const params = new URLSearchParams();
 
       filters.forEach((group) => {
         const selectedOptions = group.options.filter(
-          (option) => option.isSelected,
+          (option) => option.isSelected
         );
         if (selectedOptions.length > 0) {
           const paramName = labelToParamName[group.label];
@@ -122,19 +131,22 @@ export default function ManagerDashboardPage({
           }
         }
       });
-      if (timeRange && timeRange !== "all") {
-        params.append("timeRange", timeRange);
-      }
 
+      // If we have a preFilter (teams or departments), pass it along
       if (preFilter) {
         params.append("preFilter", preFilter);
       }
 
       return params.toString();
     },
-    [labelToParamName, preFilter],
+    [labelToParamName, preFilter]
   );
 
+  /**
+   * Update filter options in the UI after we fetch new filter data from the server.
+   * This logic ensures that any newly fetched "valid" filters remain enabled, while
+   * options that the server no longer includes become disabled.
+   */
   const updateFilterOptions = useCallback(
     (newFilters: FilterOptionGroup[], currentFilters: FilterOptionGroup[]) => {
       const updatedFilters = currentFilters.map((group) => {
@@ -142,7 +154,7 @@ export default function ManagerDashboardPage({
         if (newGroup) {
           const updatedOptions = group.options.map((option) => {
             const newOption = newGroup.options.find(
-              (o) => o.value === option.value,
+              (o) => o.value === option.value
             );
             return {
               ...option,
@@ -154,6 +166,7 @@ export default function ManagerDashboardPage({
             options: updatedOptions,
           };
         } else {
+          // If the backend didn't return a matching group at all, disable all
           const updatedOptions = group.options.map((option) => ({
             ...option,
             isDisabled: true,
@@ -167,17 +180,22 @@ export default function ManagerDashboardPage({
 
       setFilterOptions(updatedFilters);
     },
-    [],
+    []
   );
 
+  /**
+   * Fetch data from your server route based on the user's current selected filters.
+   */
   const fetchFilteredData = useCallback(
-    async (
-      currentFilters: FilterOptionGroup[],
-      timeRange: string = selectedTimeRange,
-    ) => {
-      const queryParams = constructQueryParams(currentFilters, timeRange);
+    async (currentFilters: FilterOptionGroup[]) => {
+      // Build the query string
+      const queryParams = constructQueryParams(currentFilters);
+
+      console.log("queryParams", queryParams);
+      console.log("currentFilters", currentFilters);
+
       const response = await fetch(
-        `/api/happiness-graphs/getManagerDashboardData?${queryParams}`,
+        `/api/happiness-score/dashboards/getCompanyDashboardData?${queryParams}`
       );
 
       if (!response.ok) {
@@ -186,32 +204,36 @@ export default function ManagerDashboardPage({
 
       const data = await response.json();
 
+      // Update the filter options so the UI remains consistent
       updateFilterOptions(data.filterOptions, currentFilters);
 
+      // Update your page data
       setLineGraphData(data.lineGraphData);
       setWeeksData(data.weeksData);
 
       const weekTitles = data.lineGraphData.map((dp: DataPoint) => dp.title);
       setWeekOptions(weekTitles);
 
+      // If the current selectedWeek is still valid, keep it
       if (selectedWeek && weekTitles.includes(selectedWeek)) {
-        // Keep current selected week if it still exists
+        // keep existing
       } else if (weekTitles.length > 0) {
+        // auto-select the latest
         setSelectedWeek(weekTitles[weekTitles.length - 1]);
       } else {
+        // no weeks at all
         setSelectedWeek(null);
       }
     },
-    [
-      constructQueryParams,
-      updateFilterOptions,
-      selectedTimeRange,
-      selectedWeek,
-    ],
+    [constructQueryParams, updateFilterOptions, selectedWeek]
   );
 
+  /**
+   * Clear all filters (set isSelected = false), then fetch fresh data with no filters.
+   */
   const clearAllFilters = useCallback(async () => {
     saveScrollPosition();
+
     const clearedFilters = filterOptions.map((group) => ({
       ...group,
       options: group.options.map((option) => ({
@@ -219,22 +241,28 @@ export default function ManagerDashboardPage({
         isSelected: false,
       })),
     }));
+
     setFilterOptions(clearedFilters);
     setIsUpdating(true);
+
     try {
-      await fetchFilteredData(clearedFilters, selectedTimeRange);
+      // Re-fetch with no filters selected
+      await fetchFilteredData(clearedFilters);
     } catch (error) {
       console.error("Failed to clear filters:", error);
     } finally {
       setIsUpdating(false);
     }
-  }, [filterOptions, fetchFilteredData, selectedTimeRange, saveScrollPosition]);
+  }, [filterOptions, fetchFilteredData, saveScrollPosition]);
 
+  /**
+   * Toggle a checkbox selection for a single filter option, then refetch data.
+   */
   const handleCheckboxChange = useCallback(
     async (groupIndex: number, optionIndex: number, isChecked: boolean) => {
-      // Capture scroll position before updating state
       saveScrollPosition();
 
+      // Create updated filters
       const updatedFilters = filterOptions.map((group, gIdx) => {
         if (gIdx === groupIndex) {
           const updatedOptions = group.options.map((option, oIdx) => {
@@ -250,25 +278,32 @@ export default function ManagerDashboardPage({
 
       setFilterOptions(updatedFilters);
       setIsUpdating(true);
+
       try {
-        await fetchFilteredData(updatedFilters, selectedTimeRange);
+        await fetchFilteredData(updatedFilters);
       } catch (error) {
         console.error("Failed to update filters:", error);
       } finally {
         setIsUpdating(false);
       }
     },
-    [filterOptions, fetchFilteredData, selectedTimeRange, saveScrollPosition],
+    [filterOptions, fetchFilteredData, saveScrollPosition]
   );
 
+  /**
+   * Switch which week is currently selected in the UI.
+   */
   const handleWeekChange = useCallback(
     (week: string) => {
       saveScrollPosition();
       setSelectedWeek(week);
     },
-    [saveScrollPosition],
+    [saveScrollPosition]
   );
 
+  /**
+   * Example: fetch a user's "2-month happiness" chart data.
+   */
   const fetchHappinessScoreTwoMonthHistory = useCallback(
     async (userId: number) => {
       const payload = {
@@ -286,7 +321,7 @@ export default function ManagerDashboardPage({
             "Content-Type": "application/json",
           },
           body: JSON.stringify(payload),
-        },
+        }
       );
 
       if (!response.ok) {
@@ -297,15 +332,19 @@ export default function ManagerDashboardPage({
       setStaffHappinessDetailsModalData(data.resource);
       setIsModalOpen(true);
     },
-    [],
+    []
   );
 
+  /**
+   * On mount, fetch the initial data with no filters selected.
+   */
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        const queryParams = constructQueryParams([], selectedTimeRange);
+        // Build query params from empty filters
+        const queryParams = constructQueryParams([]);
         const response = await fetch(
-          `/api/happiness-graphs/getManagerDashboardData?${queryParams}`,
+          `/api/happiness-score/dashboards/getCompanyDashboardData?${queryParams}`
         );
 
         if (!response.ok) {
@@ -314,8 +353,9 @@ export default function ManagerDashboardPage({
 
         const data = await response.json();
 
+        // Initialize filter options: set isSelected/isDisabled = false
         const initializeFilterOptions = (
-          filters: FilterOptionGroup[],
+          filters: FilterOptionGroup[]
         ): FilterOptionGroup[] => {
           return filters.map((group) => ({
             ...group,
@@ -328,14 +368,21 @@ export default function ManagerDashboardPage({
         };
 
         const initializedFilters = initializeFilterOptions(data.filterOptions);
-
         setFilterOptions(initializedFilters);
+
+        // Update line graph and weeks data
         setLineGraphData(data.lineGraphData);
         setWeeksData(data.weeksData);
 
+        // For your table display
+        setAgGridTableData(data.data);
+
+        // Build the list of available weeks
         const weekTitles = data.lineGraphData.map((dp: DataPoint) => dp.title);
         setWeekOptions(weekTitles);
-        setSelectedWeek(weekTitles[weekTitles.length - 1]);
+        if (weekTitles.length > 0) {
+          setSelectedWeek(weekTitles[weekTitles.length - 1]);
+        }
       } catch (error) {
         console.error("Failed to fetch initial data:", error);
       } finally {
@@ -343,12 +390,15 @@ export default function ManagerDashboardPage({
       }
     };
     fetchInitialData();
-  }, [constructQueryParams, selectedTimeRange]);
+  }, [constructQueryParams]);
 
+  /**
+   * When `selectedWeek` changes, update the UI to reflect that week's data.
+   */
   useEffect(() => {
     if (selectedWeek && weeksData.length > 0) {
       const weekDataIndex = weeksData.findIndex(
-        (wd) => wd.weekKey === selectedWeek,
+        (wd) => wd.weekKey === selectedWeek
       );
       if (weekDataIndex !== -1) {
         const weekData = weeksData[weekDataIndex];
@@ -374,12 +424,18 @@ export default function ManagerDashboardPage({
     }
   }, [selectedWeek, weeksData]);
 
+  /**
+   * Restore scroll position after data updates, if we're not in the middle of an update.
+   */
   useLayoutEffect(() => {
     if (!isUpdating && scrollRef.current) {
       scrollRef.current.scrollTop = scrollPosition.current;
     }
   }, [isUpdating]);
 
+  /**
+   * Props for the filtering drawer component
+   */
   const dashboardFilteringDrawerProps = useMemo(
     () => ({
       handleCheckboxChange,
@@ -408,9 +464,12 @@ export default function ManagerDashboardPage({
       clearAllFilters,
       scrollRef,
       saveScrollPosition,
-    ],
+    ]
   );
 
+  /**
+   * Props for the main dashboard page
+   */
   const managerDashboardPageInnerProps = useMemo(
     () => ({
       speechBubbleData,
@@ -425,6 +484,7 @@ export default function ManagerDashboardPage({
       setIsModalOpen,
       staffHappinessDetailsModalData,
       drawerState,
+      AgGridTableData,
     }),
     [
       loading,
@@ -439,7 +499,8 @@ export default function ManagerDashboardPage({
       setIsModalOpen,
       staffHappinessDetailsModalData,
       drawerState,
-    ],
+      AgGridTableData,
+    ]
   );
 
   return (
