@@ -244,12 +244,36 @@ export async function checkUserRole(targetPathname: string): Promise<boolean> {
   }
 
   const allowedRoutes = roleBasedRoutes[user.role] || [];
+
+  // Split the targetPathname to get the base route and the dynamic segment
+  const pathSegments = targetPathname.split("/");
+
+  if (pathSegments.length > 1) {
+    const lastSegment = pathSegments[pathSegments.length - 1];
+
+    if (lastSegment === "create") {
+      const explicitCreateRoute =
+        pathSegments.slice(0, -1).join("/") + "/create";
+      if (allowedRoutes.includes(explicitCreateRoute)) {
+        return true;
+      } else {
+        const fallbackRoute = redirectRoutes[user.role] || "/";
+        redirect(fallbackRoute);
+        return false;
+      }
+    }
+  }
+
+  // Check for other routes and dynamic segments
   const isAllowed = allowedRoutes.some((route) => {
     if (!route.includes("[dynamicSegment]")) {
+      // Direct route match
       return route === targetPathname;
     }
+
+    // Handle dynamic segments using a regex
     const routeRegex = new RegExp(
-      `^${route.replace("[dynamicSegment]", "[^/]+")}$`,
+      `^${route.replace("[dynamicSegment]", "([^/]+)")}$`,
     );
     return routeRegex.test(targetPathname);
   });
