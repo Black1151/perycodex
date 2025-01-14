@@ -133,6 +133,9 @@ const roleBasedRoutes: { [key: string]: string[] } = {
     "/dashboards",
     "/dashboards/create",
     "/dashboards/[dynamicSegment]",
+    "/dashboard-workflows",
+    "/dashboard-workflows/create",
+    "/dashboard-workflows/[dynamicSegment]",
   ],
   CU: [
     "/my-profile",
