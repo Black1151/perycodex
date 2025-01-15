@@ -176,14 +176,14 @@ export default function ManagerDashboardInner({
   const [isBarModalOpen, setIsBarModalOpen] = useState(false);
   const [barModalTitle, setBarModalTitle] = useState("");
 
-  const refreshPage = useCallback(() => {
-    router.refresh();
-  }, [router]);
+  // const refreshPage = useCallback(() => {
+  //   router.refresh();
+  // }, [router]);
 
-  useEffect(() => {
-    const timer = setTimeout(refreshPage, 10 * 60 * 1000);
-    return () => clearTimeout(timer);
-  }, [refreshPage]);
+  // useEffect(() => {
+  //   const timer = setTimeout(refreshPage, 10 * 60 * 1000);
+  //   return () => clearTimeout(timer);
+  // }, [refreshPage]);
 
   const handleDepartmentBarClick = useCallback(
     (title: string) => {

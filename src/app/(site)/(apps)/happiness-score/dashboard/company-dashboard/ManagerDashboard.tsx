@@ -81,18 +81,10 @@ export default function ManagerDashboardPage({
   const [AgGridTableData, setAgGridTableData] = useState<Person[]>([]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
-  const scrollPosition = useRef<number>(0); // Holds the last known scroll position
+  const scrollPosition = useRef<number>(0);
 
-  const saveScrollPosition = useCallback(() => {
-    if (scrollRef.current) {
-      scrollPosition.current = scrollRef.current.scrollTop;
-    }
-  }, []);
+  // --- KEEPING THIS MEMO AND CALLBACK LOGIC FOR BUILDING QUERY PARAMS ---
 
-  /**
-   * Map UI labels to the query parameter names your backend expects.
-   * Make sure these labels match what's returned in your FilterOptionGroup.
-   */
   const labelToParamName: Record<string, string> = useMemo(
     () => ({
       "Dept Name": "deptId",
@@ -109,10 +101,6 @@ export default function ManagerDashboardPage({
     []
   );
 
-  /**
-   * Build a query string based on the user’s filter selections.
-   * We no longer append `timeRange` because we removed that feature.
-   */
   const constructQueryParams = useCallback(
     (filters: FilterOptionGroup[]): string => {
       const params = new URLSearchParams();
@@ -132,7 +120,6 @@ export default function ManagerDashboardPage({
         }
       });
 
-      // If we have a preFilter (teams or departments), pass it along
       if (preFilter) {
         params.append("preFilter", preFilter);
       }
@@ -142,11 +129,14 @@ export default function ManagerDashboardPage({
     [labelToParamName, preFilter]
   );
 
-  /**
-   * Update filter options in the UI after we fetch new filter data from the server.
-   * This logic ensures that any newly fetched "valid" filters remain enabled, while
-   * options that the server no longer includes become disabled.
-   */
+  // --- HELPER HOOKS AND FUNCTIONS ---
+
+  const saveScrollPosition = useCallback(() => {
+    if (scrollRef.current) {
+      scrollPosition.current = scrollRef.current.scrollTop;
+    }
+  }, []);
+
   const updateFilterOptions = useCallback(
     (newFilters: FilterOptionGroup[], currentFilters: FilterOptionGroup[]) => {
       const updatedFilters = currentFilters.map((group) => {
@@ -166,7 +156,6 @@ export default function ManagerDashboardPage({
             options: updatedOptions,
           };
         } else {
-          // If the backend didn't return a matching group at all, disable all
           const updatedOptions = group.options.map((option) => ({
             ...option,
             isDisabled: true,
@@ -183,12 +172,8 @@ export default function ManagerDashboardPage({
     []
   );
 
-  /**
-   * Fetch data from your server route based on the user's current selected filters.
-   */
   const fetchFilteredData = useCallback(
     async (currentFilters: FilterOptionGroup[]) => {
-      // Build the query string
       const queryParams = constructQueryParams(currentFilters);
 
       console.log("queryParams", queryParams);
@@ -204,33 +189,29 @@ export default function ManagerDashboardPage({
 
       const data = await response.json();
 
-      // Update the filter options so the UI remains consistent
+      // Update filter options
       updateFilterOptions(data.filterOptions, currentFilters);
 
-      // Update your page data
+      // Update relevant state
       setLineGraphData(data.lineGraphData);
       setWeeksData(data.weeksData);
 
+      // Prepare new week options
       const weekTitles = data.lineGraphData.map((dp: DataPoint) => dp.title);
       setWeekOptions(weekTitles);
 
-      // If the current selectedWeek is still valid, keep it
+      // Keep or reset selectedWeek
       if (selectedWeek && weekTitles.includes(selectedWeek)) {
-        // keep existing
+        // do nothing, keep it
       } else if (weekTitles.length > 0) {
-        // auto-select the latest
         setSelectedWeek(weekTitles[weekTitles.length - 1]);
       } else {
-        // no weeks at all
         setSelectedWeek(null);
       }
     },
     [constructQueryParams, updateFilterOptions, selectedWeek]
   );
 
-  /**
-   * Clear all filters (set isSelected = false), then fetch fresh data with no filters.
-   */
   const clearAllFilters = useCallback(async () => {
     saveScrollPosition();
 
@@ -246,7 +227,6 @@ export default function ManagerDashboardPage({
     setIsUpdating(true);
 
     try {
-      // Re-fetch with no filters selected
       await fetchFilteredData(clearedFilters);
     } catch (error) {
       console.error("Failed to clear filters:", error);
@@ -255,14 +235,10 @@ export default function ManagerDashboardPage({
     }
   }, [filterOptions, fetchFilteredData, saveScrollPosition]);
 
-  /**
-   * Toggle a checkbox selection for a single filter option, then refetch data.
-   */
   const handleCheckboxChange = useCallback(
     async (groupIndex: number, optionIndex: number, isChecked: boolean) => {
       saveScrollPosition();
 
-      // Create updated filters
       const updatedFilters = filterOptions.map((group, gIdx) => {
         if (gIdx === groupIndex) {
           const updatedOptions = group.options.map((option, oIdx) => {
@@ -290,9 +266,6 @@ export default function ManagerDashboardPage({
     [filterOptions, fetchFilteredData, saveScrollPosition]
   );
 
-  /**
-   * Switch which week is currently selected in the UI.
-   */
   const handleWeekChange = useCallback(
     (week: string) => {
       saveScrollPosition();
@@ -301,9 +274,6 @@ export default function ManagerDashboardPage({
     [saveScrollPosition]
   );
 
-  /**
-   * Example: fetch a user's "2-month happiness" chart data.
-   */
   const fetchHappinessScoreTwoMonthHistory = useCallback(
     async (userId: number) => {
       const payload = {
@@ -335,13 +305,14 @@ export default function ManagerDashboardPage({
     []
   );
 
-  /**
-   * On mount, fetch the initial data with no filters selected.
-   */
+  // ----------------------------------------------------------------------
+  //  REVISED useEffect WITH EMPTY DEPENDENCY ARRAY FOR POLLING EVERY 30 MIN
+  // ----------------------------------------------------------------------
   useEffect(() => {
+    // This function is defined inside the effect
+    // so it doesn’t break the stable reference to `constructQueryParams`.
     const fetchInitialData = async () => {
       try {
-        // Build query params from empty filters
         const queryParams = constructQueryParams([]);
         const response = await fetch(
           `/api/happiness-score/dashboards/getCompanyDashboardData?${queryParams}`
@@ -353,7 +324,7 @@ export default function ManagerDashboardPage({
 
         const data = await response.json();
 
-        // Initialize filter options: set isSelected/isDisabled = false
+        // Initialize filter options
         const initializeFilterOptions = (
           filters: FilterOptionGroup[]
         ): FilterOptionGroup[] => {
@@ -370,14 +341,12 @@ export default function ManagerDashboardPage({
         const initializedFilters = initializeFilterOptions(data.filterOptions);
         setFilterOptions(initializedFilters);
 
-        // Update line graph and weeks data
+        // Update relevant state
         setLineGraphData(data.lineGraphData);
         setWeeksData(data.weeksData);
-
-        // For your table display
         setAgGridTableData(data.data);
 
-        // Build the list of available weeks
+        // Build the weekOptions from lineGraphData
         const weekTitles = data.lineGraphData.map((dp: DataPoint) => dp.title);
         setWeekOptions(weekTitles);
         if (weekTitles.length > 0) {
@@ -389,18 +358,23 @@ export default function ManagerDashboardPage({
         setLoading(false);
       }
     };
+
+    // Fetch once on mount
     fetchInitialData();
 
-    // Set up interval to refresh data every 30 minutes
-    const intervalId = setInterval(fetchInitialData, 1800000);
+    // Set up an interval to re-fetch data every 30 minutes (1800000 ms)
+    const intervalId = setInterval(() => {
+      fetchInitialData();
+    }, 1800000);
 
-    // Clear interval on component unmount
-    return () => clearInterval(intervalId);
-  }, [constructQueryParams]);
+    // Cleanup: clear interval on unmount
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []); // IMPORTANT: empty dependency array ensures polling is set up ONLY once
 
-  /**
-   * When `selectedWeek` changes, update the UI to reflect that week's data.
-   */
+  // ----------------------------------------------------------------------
+
   useEffect(() => {
     if (selectedWeek && weeksData.length > 0) {
       const weekDataIndex = weeksData.findIndex(
@@ -430,18 +404,16 @@ export default function ManagerDashboardPage({
     }
   }, [selectedWeek, weeksData]);
 
-  /**
-   * Restore scroll position after data updates, if we're not in the middle of an update.
-   */
   useLayoutEffect(() => {
     if (!isUpdating && scrollRef.current) {
       scrollRef.current.scrollTop = scrollPosition.current;
     }
   }, [isUpdating]);
 
-  /**
-   * Props for the filtering drawer component
-   */
+  // ------------------------------------------------------------
+  //  Props passed to child components for clarity and reusability
+  // ------------------------------------------------------------
+
   const dashboardFilteringDrawerProps = useMemo(
     () => ({
       handleCheckboxChange,
@@ -473,9 +445,6 @@ export default function ManagerDashboardPage({
     ]
   );
 
-  /**
-   * Props for the main dashboard page
-   */
   const managerDashboardPageInnerProps = useMemo(
     () => ({
       speechBubbleData,
