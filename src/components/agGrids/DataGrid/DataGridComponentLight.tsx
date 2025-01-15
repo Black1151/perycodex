@@ -47,26 +47,12 @@ interface DataGridComponentProps<T> {
   refreshInterval?: number;
   height?: string;
 
-  /**
-   * Callback invoked when a row is clicked.
-   * The callback will receive the row's data.
-   */
   handleRowClick?: (rowData: T) => void;
 }
 
-// Define the type for pagination info
-interface PaginationInfo {
-  currentPage: number;
-  totalPages: number;
-  totalRows: number;
-  pageSize: number;
-}
+LicenseManager.setLicenseKey("YOUR_LICENSE_KEY");
 
-LicenseManager.setLicenseKey(
-  "Using_this_{AG_Charts_and_AG_Grid}_Enterprise_key_{AG-066268}_in_excess_of_the_licence_granted_is_not_permitted___Please_report_misuse_to_legal@ag-grid.com___For_help_with_changing_this_key_please_contact_info@ag-grid.com___{Sedulo_Limited}_is_granted_a_{Multiple_Applications}_Developer_License_for_{2}_Front-End_JavaScript_developers___All_Front-End_JavaScript_developers_need_to_be_licensed_in_addition_to_the_ones_working_with_{AG_Charts_and_AG_Grid}_Enterprise___This_key_has_been_granted_a_Deployment_License_Add-on_for_{1}_Production_Environment___This_key_works_with_{AG_Charts_and_AG_Grid}_Enterprise_versions_released_before_{30_September_2025}____[v3]_[0102]_MTc1OTE4NjgwMDAwMA==8e565c62a9475b11e35b2c3b1f037177"
-);
-
-const DataGridComponentLight = <T,>({
+function DataGridComponentLight<T>({
   data,
   loading,
   initialFields,
@@ -84,53 +70,64 @@ const DataGridComponentLight = <T,>({
   refreshInterval = 10,
   height = "500px",
   handleRowClick,
-}: DataGridComponentProps<T>) => {
+}: DataGridComponentProps<T>) {
   const gridRef = useRef<AgGridReact>(null);
-  const [rowData, setRowData] = useState<T[]>(data || []);
-  const [fields, setFields] = useState<any[]>(initialFields);
   const router = useRouter();
-  const [isGridReady, setIsGridReady] = useState(false);
+
   const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
   const uniqueQuickFilterId = useId();
+
+  const [fields, setFields] = useState<ColDef[]>(initialFields);
+  const [isGridReady, setIsGridReady] = useState(false);
+
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    setFields(initialFields);
-  }, [initialFields]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(defaultPageSize);
 
-  // Modal disclosure state for Chakra UI
+  const [rawData, setRawData] = useState<T[]>(() => data || []);
+
+  const totalRows = rawData.length;
+  const totalPages = totalRows > 0 ? Math.ceil(totalRows / pageSize) : 1;
+
+  const displayedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return rawData.slice(startIndex, endIndex);
+  }, [rawData, currentPage, pageSize]);
+
+  useEffect(() => setFields(initialFields), [initialFields]);
+
+  useEffect(() => {
+    if (data) {
+      setRawData(data);
+    }
+  }, [data]);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  // Function to start the timer
   const startTimer = () => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current); // Clear any existing timer
-    }
+    if (timerRef.current) clearInterval(timerRef.current);
     if (enableAutoRefresh && refreshData && refreshInterval > 0) {
-      const intervalInMilliseconds = refreshInterval * 60000; // Convert minutes to milliseconds
+      const intervalMs = refreshInterval * 60_000;
       timerRef.current = setInterval(() => {
-        refreshData(); // Call refreshData at the specified interval
-      }, intervalInMilliseconds);
+        refreshData();
+      }, intervalMs);
     }
   };
 
-  // Clear the timer on unmount
   useEffect(() => {
     return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-      }
+      if (timerRef.current) clearInterval(timerRef.current);
     };
   }, []);
 
-  // Start the timer when the component mounts, only if auto-refresh is enabled
   useEffect(() => {
     if (enableAutoRefresh && refreshData) {
       startTimer();
     }
-  }, [enableAutoRefresh, refreshData]);
+  }, [enableAutoRefresh, refreshData, refreshInterval]);
 
-  // Memoize defaultColDef to avoid re-renders
   const defaultColDef = useMemo(
     () => ({
       flex: isMobile ? 0 : 1,
@@ -143,48 +140,51 @@ const DataGridComponentLight = <T,>({
     [isMobile, customDefaultColDef]
   );
 
-  const [paginationInfo, setPaginationInfo] = useState({
-    currentPage: 1,
-    totalPages: 0,
-    totalRows: 0,
-    pageSize: defaultPageSize,
-  });
-
-  // General function to update pagination info for both grids
-  const updatePaginationInfo = useCallback(
-    (
-      gridRef: React.RefObject<AgGridReact<any>>,
-      setPaginationInfo: React.Dispatch<React.SetStateAction<PaginationInfo>>
-    ) => {
-      if (gridRef.current?.api) {
-        setPaginationInfo({
-          currentPage: gridRef.current.api.paginationGetCurrentPage() + 1,
-          totalPages: gridRef.current.api.paginationGetTotalPages(),
-          pageSize: gridRef.current.api.paginationGetPageSize(),
-          totalRows: gridRef.current.api.paginationGetRowCount(),
-        });
-      }
-    },
-    []
-  );
-
   const handleGridReady = (params: FirstDataRenderedEvent) => {
-    setIsGridReady(true); // Mark the grid as ready
-    if (onGridReady) {
-      onGridReady(params); // Call the provided onGridReady callback
-    }
+    setIsGridReady(true);
+    if (onGridReady) onGridReady(params);
   };
 
-  // Handle the click for creating new items
+  const onFilterTextBoxChanged = useCallback(() => {
+    // @ts-ignore
+    gridRef.current?.api.setQuickFilter(
+      (
+        document.getElementById(
+          `filter-text-box-${uniqueQuickFilterId}`
+        ) as HTMLInputElement
+      )?.value
+    );
+  }, [uniqueQuickFilterId]);
+
+  const resetFilter = useCallback(() => {
+    gridRef.current?.api.setFilterModel(null);
+    // @ts-ignore
+    gridRef.current?.api.setQuickFilter("");
+    const input = document.getElementById(
+      `filter-text-box-${uniqueQuickFilterId}`
+    ) as HTMLInputElement;
+    if (input) input.value = "";
+  }, [uniqueQuickFilterId]);
+
+  useEffect(() => {
+    if (isGridReady && gridRef.current?.api && filterModel) {
+      gridRef.current.api.setFilterModel(filterModel);
+    }
+  }, [filterModel, isGridReady]);
+
+  const handleFilterChanged = () => {
+    const currentFilterModel = gridRef.current?.api.getFilterModel();
+  };
+
   const handleCreateNewClick = () => {
     if (isModalEnabled && ModalComponent) {
-      onOpen(); // Open the modal if enabled
+      onOpen();
     } else if (createNewUrl) {
-      router.push(createNewUrl); // Navigate to the URL if modal is not enabled
+      router.push(createNewUrl);
     }
   };
 
-  createNewUrlButtonText = useBreakpointValue({
+  const finalCreateNewUrlButtonText = useBreakpointValue({
     base: "",
     sm: "",
     md: createNewUrlButtonText ?? "Create New",
@@ -200,56 +200,25 @@ const DataGridComponentLight = <T,>({
     md: "Refresh Data",
   });
 
-  // Quick Filter
-  const onFilterTextBoxChanged = useCallback(() => {
-    gridRef.current!.api.setGridOption(
-      "quickFilterText",
-      (
-        document.getElementById(
-          `filter-text-box-${uniqueQuickFilterId}`
-        ) as HTMLInputElement
-      ).value
-    );
-  }, [uniqueQuickFilterId]);
-
-  // Reset all filters and quick filter
-  const resetFilter = useCallback(() => {
-    gridRef.current?.api.setFilterModel(null);
-    gridRef.current?.api.setGridOption(
-      "quickFilterText",
-      ((
-        document.getElementById(
-          `filter-text-box-${uniqueQuickFilterId}`
-        ) as HTMLInputElement
-      ).value = "")
-    );
-  }, [uniqueQuickFilterId]);
-
-  // Effect to update rowData when the prop data changes
-  useEffect(() => {
-    if (data) {
-      setRowData(data);
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
     }
-  }, [data]); // Run this effect whenever the data prop changes
-
-  useEffect(() => {
-    if (isGridReady && gridRef.current?.api && filterModel) {
-      gridRef.current.api.setFilterModel(filterModel); // Apply the filter model when grid is ready
+  };
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
     }
-  }, [filterModel, isGridReady]);
-
-  const handleFilterChanged = () => {
-    if (gridRef.current?.api) {
-      const currentFilterModel = gridRef.current.api.getFilterModel();
-      // do something with currentFilterModel if needed
-    }
+  };
+  const handlePageSizeChange = (newSize: number) => {
+    setPageSize(newSize);
+    setCurrentPage(1);
   };
 
   return (
-    <Box className={"ag-theme-alpine"} w={"full"} p={2} pb={0}>
+    <Box className="ag-theme-alpine" w="full" p={2} pb={0}>
       {showTopBar && (
-        <Flex w={"full"} justify={"flex-start"} align={"center"} my={4} gap={2}>
-          {/* Quick Filter */}
+        <Flex w="full" justify="flex-start" align="center" my={4} gap={2}>
           <Input
             variant="outline"
             id={`filter-text-box-${uniqueQuickFilterId}`}
@@ -267,8 +236,8 @@ const DataGridComponentLight = <T,>({
 
           <Flex
             flex={1}
-            justify={"flex-end"}
-            align={"center"}
+            justify="flex-end"
+            align="center"
             gap={2}
             color="white"
           >
@@ -276,7 +245,7 @@ const DataGridComponentLight = <T,>({
               <Button
                 variant="solid"
                 bg="seduloRed"
-                aria-label="reset-filters"
+                aria-label="refresh-data"
                 onClick={refreshData}
                 size="md"
                 color="white"
@@ -308,7 +277,6 @@ const DataGridComponentLight = <T,>({
               <Text>{resetFiltersButtonText}</Text>
             </Button>
 
-            {/* Create New Button */}
             {(createNewUrl || isModalEnabled) && (
               <Button
                 variant="solid"
@@ -323,56 +291,67 @@ const DataGridComponentLight = <T,>({
                 lineHeight={0}
               >
                 <Add />
-                <Text>{createNewUrlButtonText}</Text>
+                <Text>{finalCreateNewUrlButtonText}</Text>
               </Button>
             )}
           </Flex>
         </Flex>
       )}
 
-      <Flex direction={"column"} height={height}>
+      <Flex direction="column" height={height}>
+        <style jsx global>{`
+          .ag-theme-alpine .ag-header,
+          .ag-theme-alpine .ag-row,
+          .ag-theme-alpine .ag-cell,
+          .ag-theme-alpine .ag-root-wrapper,
+          .ag-theme-alpine .ag-body-viewport {
+            border: none !important;
+          }
+          .ag-theme-alpine .ag-header {
+            background-color: transparent !important;
+          }
+          .ag-theme-alpine .ag-row:nth-child(odd) {
+            background-color: #ffffff !important;
+          }
+          .ag-theme-alpine .ag-row:nth-child(even) {
+            background-color: #eef2f7 !important;
+          }
+        `}</style>
         <AgGridReact
           ref={gridRef}
           loading={loading}
-          rowData={rowData}
+          rowData={displayedData}
           columnDefs={fields}
           rowBuffer={25}
-          pagination={true}
-          suppressPaginationPanel={true}
-          onPaginationChanged={() => {
-            updatePaginationInfo(gridRef, setPaginationInfo);
-          }}
+          pagination={false}
           defaultColDef={defaultColDef}
-          paginationPageSize={paginationInfo.pageSize}
           noRowsOverlayComponent={NoDataOverlay}
           loadingOverlayComponent={LoadingOverlay}
           onFirstDataRendered={handleGridReady}
           onFilterChanged={handleFilterChanged}
-          /* New/Updated Props: Disable single-cell selection, 
-             and call handleRowClick if defined. */
-          // rowSelection="none"
-          // suppressCellSelection={true}
           onRowClicked={
             handleRowClick
               ? (params) => handleRowClick(params.data as T)
               : undefined
           }
         />
+
         <CustomGridBottomPaginationLight
-          gridRef={gridRef}
-          paginationInfo={paginationInfo}
-          onPageChange={() => {
-            updatePaginationInfo(gridRef, setPaginationInfo);
-          }}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalRows={totalRows}
+          pageSize={pageSize}
+          onPreviousPage={handlePreviousPage}
+          onNextPage={handleNextPage}
+          onChangePageSize={handlePageSizeChange}
         />
       </Flex>
 
-      {/* Render the modal component with modal state control */}
       {isModalEnabled && ModalComponent && (
         <ModalComponent isOpen={isOpen} onClose={onClose} />
       )}
     </Box>
   );
-};
+}
 
 export default DataGridComponentLight;

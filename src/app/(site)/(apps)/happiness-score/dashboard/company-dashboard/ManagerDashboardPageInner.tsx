@@ -34,7 +34,7 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 import "ag-grid-community/styles/ag-grid.css";
 
 import { AgBarChart } from "@/components/graphs/AgBarChart";
-import DataGridComponentLight from "@/components/agGrids/DataGridComponentLight";
+import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridComponentLight";
 
 interface DataPoint {
   value: number;
