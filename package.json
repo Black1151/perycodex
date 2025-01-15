@@ -31,6 +31,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.52.2",
     "react-icons": "^5.2.1",
+    "sass": "^1.83.4",
     "survey-react-ui": "^1.12.2"
   },
   "devDependencies": {
