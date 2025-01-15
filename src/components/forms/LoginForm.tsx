@@ -20,9 +20,11 @@ import {useEffect, useState} from "react";
 import {useCookies} from 'next-client-cookies';
 import {useSession, signIn, signOut} from 'next-auth/react';
 import {SessionProvider} from "next-auth/react";
+import { getSession } from 'next-auth/react';
 
 import apiClient from "@/lib/apiClient";
 import {NextResponse} from "next/server";
+import callbackUrl = mockProviders.github.callbackUrl;
 
 export type LoginFormInputs = {
     email: string;
@@ -40,6 +42,7 @@ export function LoginForm() {
     const {data: session, status} = useSession();
 
     useEffect(() => {
+        handleMSOSignin();
         router.refresh();
     }, []);
 
@@ -57,7 +60,8 @@ export function LoginForm() {
                 handleSubmit(handleFormSubmit)();
                 break;
             case 'microsoft':
-                signIn();
+                console.log('microsoft button click;');
+                signIn('azure-ad',  {callbackUrl: '/'});
                 break;
             case 'google':
                 router.push("/api/auth/sso-google-sign-in");
@@ -90,26 +94,35 @@ export function LoginForm() {
             ? `/api/auth/sign-in?l=${secureLink}`
             : "/api/auth/sign-in";
 
-        if (session !== undefined) {
-            if (session !== null) {
-                if (session.user?.email != undefined) {
+        let NextsAuthSession = await getSession();
+        console.log('###===|Session (From LoginForm handleMSOSignin)|===###');
+        console.log(NextsAuthSession);
+
+
+        if (NextsAuthSession !== undefined) {
+            if (NextsAuthSession !== null) {
+                if (NextsAuthSession.user?.email != undefined) {
                     const result: { redirectUrl: string } | null = await fetchClient(endpoint, {
                         method: "POST",
                         body: {
                             loginType: "sso",
-                            email: session.user.email,
+                            email: NextsAuthSession.user.email,
                             password: null
                         },
                     });
 
+
+
                     if (result) {
-                        router.push(result.redirectUrl);
+                        router.push('/');
                     }
+
                 }
             }
-        } else {
-            signIn('azure-ad', {callbackUrl: '/login'});
         }
+        // else {
+        //     signIn('azure-ad', {callbackUrl: '/login'});
+        // }
 
     }
 
@@ -194,7 +207,7 @@ export function LoginForm() {
                             backgroundColor="lightBlue"
                             border="1px solid lightBlue"
                             _hover={{color: "lightBlue", backgroundColor: "white", border: `1px solid lightBlue`}}
-                            onClick={handleMSOSignin}
+                            onClick={() => handleButtonClick('microsoft')}
                         >
                             Sign in with Microsoft
                         </Button>

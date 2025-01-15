@@ -34,6 +34,10 @@ export async function POST() {
     const res = NextResponse.json({ success: true });
     res.cookies.delete("auth_token");
     res.cookies.delete("user_uuid");
+    res.cookies.delete('next-auth.callback-url');
+    res.cookies.delete('next-auth.csrf-token');
+    res.cookies.delete('next-auth.session-token');
+
 
     return res;
   } catch (error: any) {
