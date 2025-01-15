@@ -6,57 +6,18 @@ interface ManagingPartnersResponse {
 }
 
 interface UserStatsResponse {
-  userScores: ScoreDistribution[];
-  userDistribution: Scores[];
-  comparativeData: ComparativeScores[];
-  monthlyComparativeData: MonthlyComparativeScores[];
-  userSubmissions: UserSubmissions[];
-}
-
-interface ScoreDistribution {
-  count: number;
-  score: number;
-}
-
-interface Scores {
-  score: number;
-  countOfScore: number;
-  dayOfSubmission: string;
-}
-
-interface ComparativeScores {
-  site: number;
-  user: number;
-  company: number;
-  department: number;
-  weekEnd: string;
-  weekStart: string;
-}
-
-interface MonthlyComparativeScores {
-  site: number;
-  user: number;
-  company: number;
-  department: number;
-  monthEnd: string;
-  monthStart: string;
-}
-
-interface UserSubmissions {
-  date: string;
-  comments: string;
-  happinessScore: number;
-  fullName: string;
-  userUniqueId: string;
-  userImageUrl: string;
-  siteName: string;
-  departmentName: string;
+  totalAvg: any;
+  gridData: any;
+  weeklyLineChartComparisonData: any;
+  monthlyLineChartComparisonData: any;
+  currentWeekLeaderboard: any;
+  leaderboardData: any;
 }
 
 export async function GET(request: Request) {
   try {
     // Make the POST request to the external API
-    const userResponse = await apiClient("/getEightWeekUserHappiness", {
+    const userResponse = await apiClient("/getManagingPartnersDashboard", {
       method: "POST",
     });
 
@@ -72,7 +33,10 @@ export async function GET(request: Request) {
       resource: managingPartnersResponse.resource,
     });
   } catch (error) {
-    console.error("Error fetching happiness score RAG data:", error);
+    console.error(
+      "Error fetching happiness score Managing Partners data:",
+      error,
+    );
     return NextResponse.json(
       { error: "Failed to fetch data from the API." },
       { status: 500 },

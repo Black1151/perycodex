@@ -30,7 +30,7 @@ export default async function Home({
     await getFilteredDashboards(
       toolId,
       workflowId,
-      "/happiness-score/dashboard/staff-stats-dashboard",
+      "/happiness-score/dashboard/managing-partners-dashboard",
     );
 
   // Redirect to the first dashboard if the user doesn't have access to the current one
