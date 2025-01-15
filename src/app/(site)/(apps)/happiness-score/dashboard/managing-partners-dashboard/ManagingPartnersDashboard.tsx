@@ -1,7 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Box, Flex, VStack, Heading, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  VStack,
+  useTheme,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { useUser } from "@/providers/UserProvider";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
@@ -9,34 +15,40 @@ import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
 import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/HappinessScoreRenderer";
 import CommentsCellRenderer from "@/components/agGrids/CellRenderers/CommentsCellRenderer";
+import { AgCharts } from "ag-charts-react";
+import { AgCartesianChartOptions } from "ag-charts-enterprise";
+import useColor from "@/hooks/useColor";
 
 interface ManagingPartnersResponse {
   resource: {
     totalAvg: any;
     gridData: any;
-    weeklyLineChartComparisonData: any;
-    monthlyLineChartComparisonData: any;
+    weeklyLineChartComparisonData: any[];
+    monthlyLineChartComparisonData: any[];
     currentWeekLeaderboard: any;
     leaderboardData: any;
   };
 }
 
-// Utility to safely parse data if it's a string
-function parseData<T>(data: T[] | string): T[] {
-  if (Array.isArray(data)) {
-    return data;
-  }
-  try {
-    return JSON.parse(data || "[]") as T[];
-  } catch (error) {
-    console.error("Error parsing data:", error);
-    return [];
-  }
+// A helper function to create a separate series for each site name
+// (i.e. each key except the xKey).
+function generateSiteSeries(siteNames: string[], xKey: string) {
+  return siteNames.map((siteName) => ({
+    type: "line",
+    xKey: xKey, // "week" or "month"
+    yKey: siteName, // e.g. "Ambler Club (Leeds)"
+    yName: siteName,
+    marker: { enabled: true },
+    interpolation: { type: "smooth" },
+  }));
 }
 
 const ManagingPartnersDashboard: React.FC = () => {
   const { fetchClient } = useFetchClient();
   const { user } = useUser();
+  const theme = useTheme();
+  const { getColor } = useColor();
+  const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -98,9 +110,14 @@ const ManagingPartnersDashboard: React.FC = () => {
     suppressHeaderMenuButton: true,
   };
 
+  // ------------------------------------------------------------------------------
+  // 1) Fetch the data from our Next.js API route (which does the flattening)
+  // ------------------------------------------------------------------------------
   const getData = async () => {
     setIsLoading(true);
     try {
+      // This route calls /getManagingPartnersDashboard on the server,
+      // flattens the weekly/monthly data, and returns an object.
       const response = await fetchClient<ManagingPartnersResponse>(
         "/api/happiness-graphs/getMpsData",
       );
@@ -115,12 +132,13 @@ const ManagingPartnersDashboard: React.FC = () => {
           leaderboardData: resLeaderboardData,
         } = response.resource;
 
-        setTotalAvg(parseData(resTotalAvg));
-        setGridData(parseData(resGridData));
-        setWeeklyLineChartComparisonData(parseData(resWeeklyData));
-        setMonthlyLineChartComparisonData(parseData(resMonthlyData));
-        setCurrentWeekLeaderboard(parseData(resWeekLeaderboard));
-        setLeaderboardData(parseData(resLeaderboardData));
+        // Because the server is already returning them as arrays, just set them:
+        setTotalAvg(resTotalAvg);
+        setGridData(resGridData);
+        setWeeklyLineChartComparisonData(resWeeklyData);
+        setMonthlyLineChartComparisonData(resMonthlyData);
+        setCurrentWeekLeaderboard(resWeekLeaderboard);
+        setLeaderboardData(resLeaderboardData);
       } else {
         console.error("Invalid response:", response);
       }
@@ -131,136 +149,336 @@ const ManagingPartnersDashboard: React.FC = () => {
     }
   };
 
+  // Fetch data once we know we have a user
   useEffect(() => {
     if (user) {
       getData();
     }
   }, [user]);
 
+  // ------------------------------------------------------------------------------
+  // 2) Build dynamic "site" lines for the weekly data
+  //    The flattened weekly data has shape:
+  //    [ { week: '2024-01-07', 'Ambler Club (Leeds)': 7.11, ...}, ... ]
+  // ------------------------------------------------------------------------------
+  const weeklySiteNames =
+    weeklyLineChartComparisonData.length > 0
+      ? Object.keys(weeklyLineChartComparisonData[0]).filter(
+          (key) => key !== "week",
+        )
+      : [];
+
+  const weeklySeries = generateSiteSeries(weeklySiteNames, "week");
+
+  // We'll define a weekly chart config that uses `weeklyLineChartComparisonData` and `weeklySeries`.
+  const weeklyLineChartOptions = {
+    data: weeklyLineChartComparisonData,
+    series: weeklySeries,
+    axes: [
+      {
+        type: "category",
+        position: "bottom",
+        label: {
+          rotation: 300,
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: theme.colors.perygonPink,
+        },
+        title: {
+          text: "Week",
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: "black",
+        },
+      },
+      {
+        type: "number",
+        position: "left",
+        title: {
+          text: "Happiness Score",
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: "black",
+        },
+        label: {
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: theme.colors.perygonPink,
+        },
+      },
+    ],
+    contextMenu: { enabled: false },
+    zoom: { enabled: false },
+    navigator: { enabled: false },
+    legend: {
+      position: "bottom" as const,
+    },
+    padding: {
+      top: 20,
+      left: 20,
+      right: 20,
+      bottom: 50,
+    },
+  };
+
+  // ------------------------------------------------------------------------------
+  // 3) Build dynamic "site" lines for the monthly data
+  //    The flattened monthly data has shape:
+  //    [ { month: '2024-01-01', 'Ambler Club (Leeds)': 7.11, ...}, ... ]
+  //    or might be { monthEnd: '2024-01-01', ... } – depends on your flatten code
+  // ------------------------------------------------------------------------------
+  const monthlySiteNames =
+    monthlyLineChartComparisonData.length > 0
+      ? Object.keys(monthlyLineChartComparisonData[0]).filter(
+          (key) => key !== "month",
+        )
+      : [];
+
+  const monthlySeries = generateSiteSeries(monthlySiteNames, "month");
+
+  const monthlyLineChartOptions = {
+    data: monthlyLineChartComparisonData,
+    series: monthlySeries,
+    axes: [
+      {
+        type: "category",
+        position: "bottom",
+        label: {
+          rotation: 300,
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: theme.colors.perygonPink,
+        },
+        title: {
+          text: "Month",
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: "black",
+        },
+      },
+      {
+        type: "number",
+        position: "left",
+        title: {
+          text: "Happiness Score",
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: "black",
+        },
+        label: {
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: theme.colors.perygonPink,
+        },
+      },
+    ],
+    contextMenu: { enabled: false },
+    zoom: { enabled: false },
+    navigator: { enabled: false },
+    legend: {
+      position: "bottom" as const,
+    },
+    padding: {
+      top: 20,
+      left: 20,
+      right: 20,
+      bottom: 50,
+    },
+  };
+
+  // ------------------------------------------------------------------------------
+  // 4) Current Week Leaderboard Bar Chart
+  // ------------------------------------------------------------------------------
+  // Sort descending by 'currentScore'
+  const sortedCurrentWeek = [...currentWeekLeaderboard].sort(
+    (a, b) => b.currentScore - a.currentScore,
+  );
+
+  const currentWeekBarOptions: AgCartesianChartOptions = {
+    data: sortedCurrentWeek,
+    padding: {
+      top: 20,
+      left: 20,
+      right: 20,
+      bottom: 50,
+    },
+    series: [
+      {
+        type: "bar",
+        xKey: "siteName",
+        yKey: "leaderboardScore",
+        yName: "Score",
+        cornerRadius: 10,
+        shadow: {
+          enabled: true,
+          color: "#191919",
+          xOffset: 1,
+          yOffset: 1,
+          blur: 4,
+        },
+        itemStyler: (params) => {
+          const { datum, xKey } = params;
+          const score = parseInt(datum[xKey], 10);
+          return { fill: getColor(score) };
+        },
+      },
+    ],
+  };
+
+  // ------------------------------------------------------------------------------
+  // 5) Leaderboard for Period Bar Chart
+  // ------------------------------------------------------------------------------
+  // Sort descending by 'leaderboardScore'
+  const sortedLeaderboard = [...leaderboardData].sort(
+    (a, b) => b.leaderboardScore - a.leaderboardScore,
+  );
+
+  const leaderboardBarOptions: AgCartesianChartOptions = {
+    data: sortedLeaderboard,
+    padding: {
+      top: 20,
+      left: 20,
+      right: 20,
+      bottom: 50,
+    },
+    series: [
+      {
+        type: "bar",
+        xKey: "siteName",
+        yKey: "leaderboardScore",
+        yName: "Score",
+        cornerRadius: 10,
+        shadow: {
+          enabled: true,
+          color: "#191919",
+          xOffset: 1,
+          yOffset: 1,
+          blur: 4,
+        },
+        itemStyler: (params) => {
+          const { datum, xKey } = params;
+          const score = parseInt(datum[xKey], 10);
+          return { fill: getColor(score) };
+        },
+      },
+    ],
+    axes: [
+      { type: "category", position: "bottom" },
+      { type: "number", position: "left" },
+    ],
+    legend: { position: "bottom" as const },
+  };
+
+  // ------------------------------------------------------------------------------
+  // Render
+  // ------------------------------------------------------------------------------
   return (
     <VStack align="stretch" spacing={6} w="full" p={4}>
+      {/* Loading Indicator */}
       {isLoading && (
         <Box textAlign="center">
           <p>Loading...</p>
         </Box>
       )}
 
-      {/*
-        Below are example boxes (placeholders).
-        Each Box is 400px high and half the screen wide (on md+).
-        We’re just showing a slice of the data for demonstration.
-      */}
-      <Flex width="100%" justifyContent={"center"} align="center">
-        <SectionHeader>Average</SectionHeader>
-      </Flex>
+      {/* Average */}
       <Box
-        w="100%"
-        h="400px"
-        border="1px solid"
-        borderColor="gray.200"
-        borderRadius="md"
-        p={4}
-        overflow="auto"
+        minW={["100%", "100%", "48%"]}
+        flex={1}
+        textAlign="center"
+        borderRadius="lg"
       >
-        <Heading size="md" mb={2}>
-          Total Avg (Sample)
-        </Heading>
-        <pre style={{ whiteSpace: "pre-wrap" }}>{totalAvg}</pre>
+        <Flex
+          width="100%"
+          justifyContent={isMobile ? "flex-start" : "center"}
+          mb={2}
+        >
+          <SectionHeader>Average</SectionHeader>
+        </Flex>
+        <Box
+          id="chart2"
+          height="400px"
+          w="full"
+          borderRadius={"2xl"}
+          overflow={"hidden"}
+        >
+          <pre style={{ whiteSpace: "pre-wrap" }}>
+            {JSON.stringify(totalAvg, null, 2)}
+          </pre>
+        </Box>
       </Box>
 
-      {/*  Scores and Comments */}
-      <Flex width="100%" justifyContent={"center"} align="center">
-        <SectionHeader>Scores and Comments</SectionHeader>
-      </Flex>
-      <DataGridComponent
-        data={gridData}
-        loading={isLoading}
-        initialFields={columnDefs}
-        showTopBar={true}
-        defaultColDef={defaultColDef}
-        refreshData={getData}
-        enableAutoRefresh={true}
-      />
-
-      <Flex width="100%" justifyContent={"center"} align="center">
-        <SectionHeader>Weekly Comparison</SectionHeader>
-      </Flex>
+      {/* Scores and Comments */}
       <Box
-        w="100%"
-        h="400px"
-        border="1px solid"
-        borderColor="gray.200"
-        borderRadius="md"
-        p={4}
-        overflow="auto"
+        minW={["100%", "100%", "48%"]}
+        flex={1}
+        textAlign="center"
+        borderRadius="lg"
       >
-        <Heading size="md" mb={2}>
-          Weekly Comparison (Sample)
-        </Heading>
-        <pre style={{ whiteSpace: "pre-wrap" }}>
-          {JSON.stringify(weeklyLineChartComparisonData.slice(0, 5), null, 2)}
-        </pre>
+        <Flex width="100%" justifyContent="center" align="center">
+          <SectionHeader>Scores and Comments</SectionHeader>
+        </Flex>
+        <DataGridComponent
+          data={gridData}
+          loading={isLoading}
+          initialFields={columnDefs}
+          showTopBar={true}
+          defaultColDef={defaultColDef}
+          refreshData={getData}
+          enableAutoRefresh={true}
+        />
       </Box>
 
-      <Flex width="100%" justifyContent={"center"} align="center">
-        <SectionHeader>Monthly Comparison</SectionHeader>
-      </Flex>
-      <Box
-        w="100%"
-        h="400px"
-        border="1px solid"
-        borderColor="gray.200"
-        borderRadius="md"
-        p={4}
-        overflow="auto"
-      >
-        <Heading size="md" mb={2}>
-          Monthly Comparison (Sample)
-        </Heading>
-        <pre style={{ whiteSpace: "pre-wrap" }}>
-          {JSON.stringify(monthlyLineChartComparisonData.slice(0, 5), null, 2)}
-        </pre>
-      </Box>
+      {/* Weekly Chart */}
+      {weeklyLineChartComparisonData.length > 0 && (
+        <>
+          <Flex width="100%" justifyContent="center">
+            <SectionHeader>Weekly Trend</SectionHeader>
+          </Flex>
+          <Box borderRadius="2xl" shadow="xl" overflow="hidden" height="500px">
+            <AgCharts
+              options={weeklyLineChartOptions as any}
+              style={{ width: "100%", height: "100%" }}
+            />
+          </Box>
+        </>
+      )}
 
-      <Flex width="100%" justifyContent={"center"} align="center">
+      {/* Monthly Chart */}
+      {monthlyLineChartComparisonData.length > 0 && (
+        <>
+          <Flex width="100%" justifyContent="center">
+            <SectionHeader>Monthly Comparison</SectionHeader>
+          </Flex>
+          <Box borderRadius="2xl" shadow="xl" overflow="hidden" height="500px">
+            <AgCharts
+              options={monthlyLineChartOptions as any}
+              style={{ width: "100%", height: "100%" }}
+            />
+          </Box>
+        </>
+      )}
+
+      {/* Current Week Leaderboard */}
+      <Flex width="100%" justifyContent="center" align="center">
         <SectionHeader>Current Week Leaderboard</SectionHeader>
       </Flex>
-      <Box
-        w="100%"
-        h="400px"
-        border="1px solid"
-        borderColor="gray.200"
-        borderRadius="md"
-        p={4}
-        overflow="auto"
-      >
-        <Heading size="md" mb={2}>
-          Current Week Leaderboard (Sample)
-        </Heading>
-        <pre style={{ whiteSpace: "pre-wrap" }}>
-          {JSON.stringify(currentWeekLeaderboard.slice(0, 5), null, 2)}
-        </pre>
+      <Box borderRadius="2xl" shadow="xl" overflow="hidden" height="500px">
+        <AgCharts
+          options={currentWeekBarOptions as any}
+          style={{ width: "100%", height: "100%" }}
+        />
       </Box>
 
-      <Flex width="100%" justifyContent={"center"} align="center">
+      {/* Leaderboard for Period */}
+      <Flex width="100%" justifyContent="center" align="center">
         <SectionHeader>Leaderboard for Period</SectionHeader>
       </Flex>
-
-      <Box
-        w="100%"
-        h="400px"
-        border="1px solid"
-        borderColor="gray.200"
-        borderRadius="md"
-        p={4}
-        overflow="auto"
-      >
-        <Heading size="md" mb={2}>
-          Leaderboard Data (Sample)
-        </Heading>
-        <pre style={{ whiteSpace: "pre-wrap" }}>
-          {JSON.stringify(leaderboardData.slice(0, 5), null, 2)}
-        </pre>
+      <Box borderRadius="2xl" shadow="xl" overflow="hidden" height="500px">
+        <AgCharts
+          options={leaderboardBarOptions as any}
+          style={{ width: "100%", height: "100%" }}
+        />
       </Box>
     </VStack>
   );
