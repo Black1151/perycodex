@@ -8,6 +8,7 @@ import useColor from "@/hooks/useColor";
 import {
   AgBarSeriesItemStylerParams,
   AgCartesianChartOptions,
+  AgCartesianSeriesTooltipRendererParams,
 } from "ag-charts-enterprise";
 
 interface DataPoint {
@@ -31,6 +32,25 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({ data, onBarClick }) => {
     [data]
   );
 
+  // Replace your old tooltip renderer with the appearance from the Dashboard snippet.
+  const tooltipRenderer = (params: AgCartesianSeriesTooltipRendererParams) => {
+    // Because you have custom fields (title, value, count),
+    // you can destructure them from `params.datum`.
+    const datum = params.datum as DataPoint;
+
+    // params.color is the fill color used for the bar/marker
+    // params.xKey and params.yKey are the keys you defined in series
+    // so xKey => 'title', yKey => 'value'
+    // We'll show `title`, `value`, and `count`.
+    return `<div class="ag-chart-tooltip-title" style="background-color:${params.color}">
+        ${datum.title}
+      </div>
+      <div class="ag-chart-tooltip-content">
+        Score: ${datum.value.toFixed(1)}<br/>
+        Count: ${datum.count}
+      </div>`;
+  };
+
   const chartOptions: AgCartesianChartOptions = useMemo(
     () => ({
       data: validData,
@@ -46,7 +66,6 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({ data, onBarClick }) => {
           xKey: "title",
           yKey: "value",
           xName: "Score",
-          // yName: "Count",
           cornerRadius: 10,
           shadow: {
             enabled: true,
@@ -66,19 +85,9 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({ data, onBarClick }) => {
               fillOpacity: 1,
             },
           },
+          // Use the new renderer function we created
           tooltip: {
-            renderer: (params: any) => {
-              const dp = params.datum as DataPoint;
-              return {
-                content: `
-                  <div style="text-align:center;">
-                    <strong>${dp.title}</strong><br/>
-                    Score: ${dp.value.toFixed(1)}<br/>
-                    Count: ${dp.count}
-                  </div>
-                `,
-              };
-            },
+            renderer: tooltipRenderer,
           },
           listeners: {
             nodeClick: (event: any) => {
@@ -97,18 +106,18 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({ data, onBarClick }) => {
             fontSize: 12,
             fontWeight: "bold",
             rotation: -45,
+            color: theme.colors.perygonPink,
             formatter: ({ value }: { value: string }) =>
-              value.length > 8 ? `${value.slice(0, 8)}...` : value, // Truncate to 8 characters
+              value.length > 8 ? `${value.slice(0, 8)}...` : value,
           },
         },
         {
           type: "number",
           position: "left",
-
           label: {
             enabled: true,
             fontSize: 12,
-            color: theme.colors.gray[600],
+            color: theme.colors.perygonPink,
           },
         },
       ],
@@ -125,7 +134,7 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({ data, onBarClick }) => {
         enabled: true,
       },
     }),
-    [validData, getColor, onBarClick]
+    [validData, getColor, onBarClick, theme.colors.perygonPink]
   );
 
   return (
@@ -140,6 +149,17 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({ data, onBarClick }) => {
         .ag-charts-container rect:hover {
           transition: filter 0.3s ease-in-out;
           filter: drop-shadow(0 0 10px ${theme.colors.pink[400]});
+        }
+        /* Additional styling for the new tooltip (optional) */
+        .ag-chart-tooltip-title {
+          font-weight: bold;
+          padding: 4px 8px;
+          color: #fff;
+        }
+        .ag-chart-tooltip-content {
+          padding: 4px 8px;
+          background: #fff;
+          color: #000;
         }
       `}</style>
       <AgCharts
