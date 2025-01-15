@@ -340,13 +340,9 @@ export default function ManagerDashboardPage({
 
         const initializedFilters = initializeFilterOptions(data.filterOptions);
         setFilterOptions(initializedFilters);
-
-        // Update relevant state
         setLineGraphData(data.lineGraphData);
         setWeeksData(data.weeksData);
         setAgGridTableData(data.data);
-
-        // Build the weekOptions from lineGraphData
         const weekTitles = data.lineGraphData.map((dp: DataPoint) => dp.title);
         setWeekOptions(weekTitles);
         if (weekTitles.length > 0) {
@@ -359,21 +355,16 @@ export default function ManagerDashboardPage({
       }
     };
 
-    // Fetch once on mount
     fetchInitialData();
 
-    // Set up an interval to re-fetch data every 30 minutes (1800000 ms)
     const intervalId = setInterval(() => {
       fetchInitialData();
-    }, 1800000);
+    }, 600000);
 
-    // Cleanup: clear interval on unmount
     return () => {
       clearInterval(intervalId);
     };
-  }, []); // IMPORTANT: empty dependency array ensures polling is set up ONLY once
-
-  // ----------------------------------------------------------------------
+  }, []);
 
   useEffect(() => {
     if (selectedWeek && weeksData.length > 0) {
