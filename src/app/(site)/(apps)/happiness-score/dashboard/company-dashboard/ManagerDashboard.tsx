@@ -83,8 +83,6 @@ export default function ManagerDashboardPage({
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollPosition = useRef<number>(0);
 
-  // --- KEEPING THIS MEMO AND CALLBACK LOGIC FOR BUILDING QUERY PARAMS ---
-
   const labelToParamName: Record<string, string> = useMemo(
     () => ({
       "Dept Name": "deptId",
