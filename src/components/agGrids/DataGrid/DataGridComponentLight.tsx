@@ -18,16 +18,19 @@ import {
   Box,
   Button,
   Flex,
+  Icon,
   Input,
   Text,
   useBreakpointValue,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
-import { Add, Clear, Refresh } from "@mui/icons-material";
-import NoDataOverlay from "@/components/agGrids/NoDataOverlay";
+import { Add, Clear, QueryStats, Refresh } from "@mui/icons-material";
+
 import LoadingOverlay from "@/components/agGrids/LoadingOverlay";
 import { ColDef, FirstDataRenderedEvent } from "ag-grid-community";
 import CustomGridBottomPaginationLight from "./CustomGridBottomPaginationLight";
+import LoadingOverlayPink from "../LoadingOverlayPink";
 
 interface DataGridComponentProps<T> {
   data: T[] | null;
@@ -135,6 +138,8 @@ function DataGridComponentLight<T>({
       filter: true,
       floatingFilter: false,
       resizable: true,
+      cellStyle: { fontSize: "16px" },
+      fontFamily: "Metropolis",
       ...customDefaultColDef,
     }),
     [isMobile, customDefaultColDef]
@@ -325,8 +330,8 @@ function DataGridComponentLight<T>({
           rowBuffer={25}
           pagination={false}
           defaultColDef={defaultColDef}
-          noRowsOverlayComponent={NoDataOverlay}
-          loadingOverlayComponent={LoadingOverlay}
+          noRowsOverlayComponent={NoDataOverlayPink}
+          loadingOverlayComponent={LoadingOverlayPink}
           onFirstDataRendered={handleGridReady}
           onFilterChanged={handleFilterChanged}
           onRowClicked={
@@ -353,5 +358,40 @@ function DataGridComponentLight<T>({
     </Box>
   );
 }
+
+export const NoDataOverlayPink: React.FC = () => {
+  return (
+    <Flex
+      direction="column"
+      align="center"
+      justify="center"
+      py={20}
+      px={5}
+      width="100%"
+      height="100%"
+      borderRadius="md"
+    >
+      <VStack spacing={4}>
+        <Icon as={QueryStats} boxSize={20} color="perygonPink" />
+        <Text
+          fontSize="2xl"
+          fontWeight="bold"
+          color="perygonPink"
+          fontFamily="heading"
+        >
+          No Data Available
+        </Text>
+        <Text
+          fontSize="lg"
+          color="perygonPink"
+          textAlign="center"
+          fontFamily="body"
+        >
+          It looks like there is nothing to display at the moment.
+        </Text>
+      </VStack>
+    </Flex>
+  );
+};
 
 export default DataGridComponentLight;

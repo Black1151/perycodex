@@ -1,15 +1,18 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { Flex, useTheme } from "@chakra-ui/react";
+import { Flex, useTheme, Spinner, Text, VStack, Icon } from "@chakra-ui/react";
 import { AgCharts } from "ag-charts-react";
 import useColor from "@/hooks/useColor";
+import { QueryStats } from "@mui/icons-material";
 
 import {
   AgBarSeriesItemStylerParams,
   AgCartesianChartOptions,
   AgCartesianSeriesTooltipRendererParams,
 } from "ag-charts-enterprise";
+import { NoDataOverlayPink } from "../agGrids/DataGrid/DataGridComponentLight";
+import LoadingOverlayPink from "../agGrids/LoadingOverlayPink";
 
 interface DataPoint {
   title: string;
@@ -18,11 +21,16 @@ interface DataPoint {
 }
 
 interface AgBarChartProps {
-  data: DataPoint[];
+  data: DataPoint[] | null;
+  loading?: boolean;
   onBarClick?: (title: string) => void;
 }
 
-export const AgBarChart: React.FC<AgBarChartProps> = ({ data, onBarClick }) => {
+export const AgBarChart: React.FC<AgBarChartProps> = ({
+  data,
+  loading = false,
+  onBarClick,
+}) => {
   const theme = useTheme();
   const { getColor } = useColor();
 
@@ -32,16 +40,8 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({ data, onBarClick }) => {
     [data]
   );
 
-  // Replace your old tooltip renderer with the appearance from the Dashboard snippet.
   const tooltipRenderer = (params: AgCartesianSeriesTooltipRendererParams) => {
-    // Because you have custom fields (title, value, count),
-    // you can destructure them from `params.datum`.
     const datum = params.datum as DataPoint;
-
-    // params.color is the fill color used for the bar/marker
-    // params.xKey and params.yKey are the keys you defined in series
-    // so xKey => 'title', yKey => 'value'
-    // We'll show `title`, `value`, and `count`.
     return `<div class="ag-chart-tooltip-title" style="background-color:${params.color}">
         ${datum.title}
       </div>
@@ -56,7 +56,7 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({ data, onBarClick }) => {
       data: validData,
       padding: {
         top: 20,
-        left: 40, // Keep enough space for the y-axis labels
+        left: 40,
         right: 20,
         bottom: 20,
       },
@@ -85,7 +85,6 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({ data, onBarClick }) => {
               fillOpacity: 1,
             },
           },
-          // Use the new renderer function we created
           tooltip: {
             renderer: tooltipRenderer,
           },
@@ -137,6 +136,18 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({ data, onBarClick }) => {
     [validData, getColor, onBarClick, theme.colors.perygonPink]
   );
 
+  if (loading) {
+    return (
+      <Flex justifyContent="center" alignItems="center" height="100%">
+        <LoadingOverlayPink />
+      </Flex>
+    );
+  }
+
+  if (!data || data.length === 0) {
+    return <NoDataOverlayPink />;
+  }
+
   return (
     <Flex
       borderRadius="2xl"
@@ -150,7 +161,6 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({ data, onBarClick }) => {
           transition: filter 0.3s ease-in-out;
           filter: drop-shadow(0 0 10px ${theme.colors.pink[400]});
         }
-        /* Additional styling for the new tooltip (optional) */
         .ag-chart-tooltip-title {
           font-weight: bold;
           padding: 4px 8px;

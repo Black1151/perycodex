@@ -390,6 +390,12 @@ export default function ManagerDashboardPage({
       }
     };
     fetchInitialData();
+
+    // Set up interval to refresh data every 30 minutes
+    const intervalId = setInterval(fetchInitialData, 1800000);
+
+    // Clear interval on component unmount
+    return () => clearInterval(intervalId);
   }, [constructQueryParams]);
 
   /**
