@@ -16,6 +16,8 @@ import {
   Text,
   useTheme,
   VStack,
+  Avatar,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
@@ -29,9 +31,6 @@ import { SpringScale } from "@/components/animations/SpringScale";
 import StaffHappinessDetailModal from "./StaffHappinessDetailModal";
 import { useRouter } from "next/navigation";
 import { ColDef } from "ag-grid-community";
-
-import "ag-grid-community/styles/ag-theme-alpine.css";
-import "ag-grid-community/styles/ag-grid.css";
 
 import { AgBarChart } from "@/components/graphs/AgBarChart";
 import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridComponentLight";
@@ -54,7 +53,7 @@ export interface Person {
   jobTitle: string;
   department: string;
   site: string;
-  score: number;
+  score: number | null;
   imageUrl: string;
   fullName: string;
 }
@@ -94,36 +93,39 @@ export default function ManagerDashboardInner({
   const theme = useTheme();
   const router = useRouter();
 
-  // Column definitions for AG Grid to match `Person` interface
-  const columnDefs = useMemo<ColDef<Person>[]>(
-    () => [
+  const hideJobTitle = useBreakpointValue({ base: true, sm: false });
+  const hideSite = useBreakpointValue({ base: true, lg: false });
+  const hideDepartment = useBreakpointValue({ base: true, lg: false });
+
+  useEffect(() => {
+    console.log(peopleListData);
+  }, [peopleListData]);
+
+  const columnDefs = useMemo<ColDef<Person>[]>(() => {
+    return [
+      {
+        headerName: "Image",
+        field: "imageUrl",
+        sortable: false,
+        filter: false,
+        flex: 1,
+        cellRenderer: (params: any) => {
+          return (
+            <Flex justifyContent="center" alignItems="center" w="100%">
+              <Avatar
+                name={params.data.fullName}
+                src={params.data.imageUrl}
+                boxSize="40px"
+                objectFit="cover"
+              />
+            </Flex>
+          );
+        },
+        cellStyle: { color: "black" },
+      },
       {
         headerName: "Name",
         field: "fullName",
-        sortable: true,
-        filter: true,
-        flex: 1,
-        cellStyle: { color: "black" },
-      },
-      {
-        headerName: "Job Title",
-        field: "jobTitle",
-        sortable: true,
-        filter: true,
-        flex: 1,
-        cellStyle: { color: "black" },
-      },
-      {
-        headerName: "Department",
-        field: "department",
-        sortable: true,
-        filter: true,
-        flex: 1,
-        cellStyle: { color: "black" },
-      },
-      {
-        headerName: "Site",
-        field: "site",
         sortable: true,
         filter: true,
         flex: 1,
@@ -140,27 +142,49 @@ export default function ManagerDashboardInner({
         },
         cellStyle: { color: "black" },
       },
-    ],
-    []
-  );
+      {
+        headerName: "Job Title",
+        field: "jobTitle",
+        sortable: true,
+        filter: true,
+        flex: 1,
+        hide: hideJobTitle,
+        cellStyle: { color: "black" },
+      },
+      {
+        headerName: "Department",
+        field: "department",
+        sortable: true,
+        filter: true,
+        flex: 1,
+        hide: hideDepartment,
+        cellStyle: { color: "black" },
+      },
+      {
+        headerName: "Site",
+        field: "site",
+        sortable: true,
+        filter: true,
+        flex: 1,
+        hide: hideSite,
+        cellStyle: { color: "black" },
+      },
+    ];
+  }, [hideJobTitle, hideSite, hideDepartment]);
 
   const [barModalData, setBarModalData] = useState<Person[]>([]);
   const [isBarModalOpen, setIsBarModalOpen] = useState(false);
   const [barModalTitle, setBarModalTitle] = useState("");
-  const [modalCurrentPage, setModalCurrentPage] = useState<number>(1);
-  const [modalItemsPerPage, setModalItemsPerPage] = useState<number>(10);
 
   const refreshPage = useCallback(() => {
     router.refresh();
   }, [router]);
 
   useEffect(() => {
-    // Auto refresh every 10 minutes
     const timer = setTimeout(refreshPage, 10 * 60 * 1000);
     return () => clearTimeout(timer);
   }, [refreshPage]);
 
-  // Department bar chart click
   const handleDepartmentBarClick = useCallback(
     (title: string) => {
       const filteredPeople = peopleListData.filter(
@@ -173,7 +197,6 @@ export default function ManagerDashboardInner({
     [peopleListData]
   );
 
-  // Site bar chart click
   const handleSiteBarClick = useCallback(
     (title: string) => {
       const filteredPeople = peopleListData.filter(
@@ -186,7 +209,6 @@ export default function ManagerDashboardInner({
     [peopleListData]
   );
 
-  // Masonry clicks
   const handleMasonryClick = useCallback(
     (category: string) => {
       if (category === "Did not participate") {
@@ -214,7 +236,6 @@ export default function ManagerDashboardInner({
         minScore = 9;
         maxScore = 10;
       } else {
-        // Invalid category
         return;
       }
 
@@ -232,7 +253,6 @@ export default function ManagerDashboardInner({
     [peopleListData]
   );
 
-  // Clicking a user in a modal or PeopleList
   const handleUserClick = useCallback(
     (userId: number) => {
       fetchHappinessScoreTwoMonthHistory(userId);
@@ -269,7 +289,6 @@ export default function ManagerDashboardInner({
         </Flex>
       ) : (
         <Box mb={[10, 0]}>
-          {/* StaffHappinessDetailModal for single user happiness details */}
           {staffHappinessDetailsModalData && (
             <StaffHappinessDetailModal
               isOpen={isModalOpen}
@@ -278,7 +297,6 @@ export default function ManagerDashboardInner({
             />
           )}
 
-          {/* Modal for bar chart or masonry breakdown results */}
           <Modal
             isOpen={isBarModalOpen}
             onClose={() => setIsBarModalOpen(false)}
@@ -376,10 +394,6 @@ export default function ManagerDashboardInner({
                   boxShadow="md"
                   bgColor="white"
                 >
-                  {/* 
-                    Update: Pass handleRowClick 
-                    so each row click calls handleUserClick(person.userId).
-                  */}
                   <DataGridComponentLight
                     data={peopleListData}
                     initialFields={columnDefs}
@@ -389,8 +403,6 @@ export default function ManagerDashboardInner({
                       resizable: true,
                     }}
                     showTopBar={false}
-                    /* Here is the key line: 
-                       hooking up handleUserClick to the row click callback */
                     handleRowClick={(person) => handleUserClick(person.userId)}
                   />
                 </Box>
