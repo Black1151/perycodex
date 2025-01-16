@@ -25,6 +25,7 @@ export default async function MyCustomerPage() {
       <CustomerDetailsBanner customer={customerData} />
       <SurveyComponent
         surveyJson={customerJson}
+        layout={"default"}
         endpoint={`/customer/${customerUniqueId}`}
         rolesCanEdit={["CA", "PA"]}
         isNew={false}

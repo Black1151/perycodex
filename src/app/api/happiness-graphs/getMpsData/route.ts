@@ -93,8 +93,6 @@ export async function POST(request: Request) {
       leaderboardData: rawLeaderboardDataData,
     };
 
-    console.log(managingPartnersResponse.resource.totalAvg);
-
     // 5) Return the final JSON
     return NextResponse.json({
       resource: transformedResource,
