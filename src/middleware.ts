@@ -2,25 +2,6 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import apiClient from "./lib/apiClient";
 
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {
-      session
-    },
-  };
-}
-
 export async function middleware(request: NextRequest) {
   const apiToken = request.cookies.get("auth_token")?.value;
 
@@ -29,8 +10,8 @@ export async function middleware(request: NextRequest) {
     response.cookies.delete("auth_token");
     response.cookies.delete("user_uuid");
     response.headers.set(
-      "Cache-Control",
-      "no-store, no-cache, must-revalidate"
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate"
     );
     return response;
   }
@@ -46,16 +27,16 @@ export async function middleware(request: NextRequest) {
       response.cookies.delete("auth_token");
       response.cookies.delete("user_uuid");
       response.headers.set(
-        "Cache-Control",
-        "no-store, no-cache, must-revalidate"
+          "Cache-Control",
+          "no-store, no-cache, must-revalidate"
       );
       return response;
     }
 
     const response = NextResponse.next();
     response.headers.set(
-      "Cache-Control",
-      "no-store, no-cache, must-revalidate"
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate"
     );
     return response;
   } catch (error: any) {
@@ -63,8 +44,8 @@ export async function middleware(request: NextRequest) {
     response.cookies.delete("auth_token");
     response.cookies.delete("user_uuid");
     response.headers.set(
-      "Cache-Control",
-      "no-store, no-cache, must-revalidate"
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate"
     );
     return response;
   }
