@@ -4,12 +4,12 @@ import Google from "next-auth/providers/google";
 import apiClient from "@/lib/apiClient";
 import {NextResponse} from "next/server";
 
-const { AZURE_AD_CLIENT_ID, AZURE_AD_CLIENT_SECRET, AZURE_AD_TENANT_ID } =
-    process.env;
 
-if (!AZURE_AD_CLIENT_ID || !AZURE_AD_CLIENT_SECRET || !AZURE_AD_TENANT_ID) {
-    throw new Error("The Azure AD environment variables are not set.");
-}
+const AZURE_AD_CLIENT_ID='80b0a206-ea3a-4f28-a8d0-aadbb1655bd5';
+const AZURE_AD_CLIENT_SECRET='0gj8Q~moeoK0GMU1gE2.GemT_Gf~hrbU036cKdkr';
+const AZURE_AD_TENANT_ID='7104784f-19f4-44e4-9fea-2f732f3134e4';
+const GOOGLE_CLIENT_ID='482345564570-3bmg8qh4snqfrlo25dlj8k4kvrh3fn37.apps.googleusercontent.com';
+const GOOGLE_CLIENT_SECRET='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';
 
 const handler = NextAuth({
     debug: true,
