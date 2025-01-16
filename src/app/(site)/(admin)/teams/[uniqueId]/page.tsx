@@ -57,6 +57,7 @@ export default async function TeamsDetailPage({
           <TabPanel p={0}>
             <SurveyComponent
               surveyJson={userTeamJson}
+              layout={"default"}
               endpoint={`/userTeam/${params.uniqueId}`}
               isNew={false}
               rolesCanEdit={["PA", "CA"]}

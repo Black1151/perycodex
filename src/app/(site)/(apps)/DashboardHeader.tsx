@@ -5,12 +5,12 @@ import AddButton from "@/components/Buttons/AddButton";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import BackButton from "@/components/BackButton";
 
-interface WorkflowHeaderProps {
+interface DashboardHeaderProps {
   headingText: string;
   canStartWorkflow: boolean;
 }
 
-const WorkflowHeader: React.FC<WorkflowHeaderProps> = ({
+const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   headingText,
   canStartWorkflow,
 }) => {
@@ -56,4 +56,4 @@ const WorkflowHeader: React.FC<WorkflowHeaderProps> = ({
   );
 };
 
-export default WorkflowHeader;
+export default DashboardHeader;

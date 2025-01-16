@@ -49,6 +49,7 @@ export default async function UsersCreatePage({
         surveyJson={userJson}
         endpoint={"/user"}
         isNew={true}
+        layout={"default"}
         excludeKeys={["imageUrl"]}
         includeVariables={surveyVariables}
         redirectUrl={"/users"}

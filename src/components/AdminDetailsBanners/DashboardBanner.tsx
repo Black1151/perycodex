@@ -1,0 +1,112 @@
+"use client";
+
+import React from "react";
+import {
+  Box,
+  Flex,
+  FormControl,
+  Heading,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
+import moment from "moment/moment";
+import CreateIcon from "@mui/icons-material/Create";
+import UpdateIcon from "@mui/icons-material/Update";
+import { Dashboard } from "@mui/icons-material";
+import BackButton from "@/components/BackButton";
+
+interface Dashboard {
+  id: number;
+  name: string;
+  description: string;
+  userRole?: string;
+  dashboardUrl: string;
+  availableAs: string;
+  isActive?: boolean;
+  createdBy?: number;
+  updatedBy?: number;
+  updatedAt: string;
+  createdAt: string;
+  userAccessGroupNames?: string;
+  smallIconImageUrl?: string;
+  largeIconImageUrl?: string;
+  teamManagerRequired?: boolean;
+  deptManagerRequired?: boolean;
+}
+
+interface DashboardDetailsBannerProps {
+  dashboard: Dashboard;
+}
+
+export const DashboardDetailsBanner: React.FC<DashboardDetailsBannerProps> = ({
+  dashboard,
+}) => {
+  return (
+    <Flex mb={4} p={4} color={"white"} overflow={"hidden"} gap={2}>
+      <BackButton />
+      {/* Form Status */}
+      <FormControl
+        w={"100px"}
+        h={"100px"}
+        aspectRatio={1}
+        borderRadius={"full"}
+      >
+        <Box
+          position="relative"
+          w={"100px"}
+          h={"100px"}
+          borderRadius="full"
+          bg="gray.100"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Dashboard
+            fontSize="large"
+            sx={{ color: "var(--chakra-colors-perygonPink)" }}
+          />
+        </Box>
+      </FormControl>
+
+      {/* Form Information */}
+      <VStack align="start" ml={4} spacing={3}>
+        <Flex alignItems="center" gap={2}>
+          <Box
+            w={"1.4rem"}
+            h={"1.4rem"}
+            borderRadius="full"
+            border={"white 1px solid"}
+            bg={dashboard.isActive ? "green.500" : "red.500"}
+          />
+          <Heading fontWeight={300} size={["md", "md", "lg"]}>
+            {dashboard.name || "No Name"}
+          </Heading>
+        </Flex>
+      </VStack>
+
+      {/* Metadata Information */}
+      <VStack
+        ml="auto"
+        alignItems="end"
+        justifyContent="flex-start"
+        display={["none", "none", "flex"]}
+      >
+        <Heading size={["md", "md", "lg"]} fontWeight={100}>
+          ID: {dashboard.id}
+        </Heading>
+        <Flex direction="row" justify="center" align="center" gap={2}>
+          <CreateIcon />
+          <Text fontSize="sm">
+            {moment(dashboard.createdAt).format("D/MM/YYYY")}
+          </Text>
+        </Flex>
+        <Flex direction="row" justify="center" align="center" gap={2}>
+          <UpdateIcon />
+          <Text fontSize="sm">
+            {moment(dashboard.updatedAt).format("D/MM/YYYY")}
+          </Text>
+        </Flex>
+      </VStack>
+    </Flex>
+  );
+};

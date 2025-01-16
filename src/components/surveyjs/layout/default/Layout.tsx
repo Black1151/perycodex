@@ -5,7 +5,7 @@ import { Box, Flex } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import useSurveyNavigation from "@/components/surveyjs/useSurveyNavigation";
 import BottomNavigation from "@/components/surveyjs/layout/default/BottomNavigation";
-import { DefaultLayoutProps } from "@/components/surveyjs/SurveyProps";
+import { DefaultLayoutProps } from "@/types/surveyJs";
 import SurveyNavigationGuard from "@/components/surveyjs/SurveyNavigationGuard";
 
 const MotionBox = motion(Box); // Create a motion-wrapped Box for animations
