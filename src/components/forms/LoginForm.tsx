@@ -24,7 +24,6 @@ import { getSession } from 'next-auth/react';
 
 import apiClient from "@/lib/apiClient";
 import {NextResponse} from "next/server";
-import callbackUrl = mockProviders.github.callbackUrl;
 
 export type LoginFormInputs = {
     email: string;
