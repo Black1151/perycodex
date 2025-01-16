@@ -64,7 +64,7 @@ export function LoginForm() {
                 signIn('azure-ad',  {callbackUrl: '/'});
                 break;
             case 'google':
-                router.push("/api/auth/sso-google-sign-in");
+                signIn('google',  {callbackUrl: '/'});
                 break;
             default:
             // Handle default or error case
