@@ -41,11 +41,17 @@ function flattenSiteScores(rawData: any[] | undefined, xKey: string): any[] {
   });
 }
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
   try {
-    // 1) Fetch data from external API
+    const body = await request.json();
+    const { startDate, endDate } = body;
+
     const userResponse = await apiClient("/getManagingPartnersDashboard", {
       method: "POST",
+      body: JSON.stringify({
+        startDate,
+        endDate,
+      }),
     });
 
     if (!userResponse.ok) {
@@ -86,6 +92,8 @@ export async function GET(request: Request) {
       currentWeekLeaderboard: rawCurrentWeekLeaderboardData,
       leaderboardData: rawLeaderboardDataData,
     };
+
+    console.log(managingPartnersResponse.resource.totalAvg);
 
     // 5) Return the final JSON
     return NextResponse.json({
