@@ -57,17 +57,17 @@ export async function fetchAndMergeNonParticipants(
   masonryCounts[4] = filteredNonParticipantData.length;
 
   // Merge them into the overall peopleList
-  // const nonParticipants = filteredNonParticipantData.map((np: any) => ({
-  //   userId: np.UserId,
-  //   imageUrl: np.imageUrl,
-  //   fullName: np.fullName,
-  //   firstName: np.fullName.split(" ")[0] || "",
-  //   lastName: np.fullName.split(" ").slice(1).join(" ") || "",
-  //   jobTitle: np.jobTitle,
-  //   department: np.deptName,
-  //   site: np.siteName,
-  //   score: null,
-  // }));
+  const nonParticipants = filteredNonParticipantData.map((np: any) => ({
+    userId: np.UserId,
+    imageUrl: np.imageUrl,
+    fullName: np.fullName,
+    firstName: np.fullName.split(" ")[0] || "",
+    lastName: np.fullName.split(" ").slice(1).join(" ") || "",
+    jobTitle: np.jobTitle,
+    department: np.deptName,
+    site: np.siteName,
+    score: null,
+  }));
 
-  // peopleList.push(...nonParticipants);
+  peopleList.push(...nonParticipants);
 }

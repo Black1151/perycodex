@@ -13,7 +13,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
-  Text,
   useTheme,
   VStack,
   Avatar,
@@ -29,7 +28,6 @@ import SpeechBubble from "../../SpeechBubble";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import { SpringScale } from "@/components/animations/SpringScale";
 import StaffHappinessDetailModal from "./StaffHappinessDetailModal";
-import { useRouter } from "next/navigation";
 import { ColDef } from "ag-grid-community";
 
 import { AgBarChart } from "@/components/graphs/AgBarChart";
@@ -91,7 +89,6 @@ export default function ManagerDashboardInner({
   staffHappinessDetailsModalData,
 }: ManagerDashboardPageInnerProps) {
   const theme = useTheme();
-  const router = useRouter();
 
   const hideJobTitle = useBreakpointValue({ base: true, sm: false });
   const hideSite = useBreakpointValue({ base: true, lg: false });
@@ -101,89 +98,17 @@ export default function ManagerDashboardInner({
     console.log(peopleListData);
   }, [peopleListData]);
 
-  const columnDefs = useMemo<ColDef<Person>[]>(() => {
-    return [
-      {
-        headerName: "Image",
-        field: "imageUrl",
-        sortable: false,
-        filter: false,
-        flex: 1,
-        cellRenderer: (params: any) => {
-          return (
-            <Flex justifyContent="center" alignItems="center" w="100%">
-              <Avatar
-                name={params.data.fullName}
-                src={params.data.imageUrl}
-                boxSize="40px"
-                objectFit="cover"
-              />
-            </Flex>
-          );
-        },
-        cellStyle: { color: "black" },
-      },
-      {
-        headerName: "Name",
-        field: "fullName",
-        sortable: true,
-        filter: true,
-        flex: 1,
-        cellStyle: { color: "black" },
-      },
-      {
-        headerName: "Score",
-        field: "score",
-        sortable: true,
-        filter: true,
-        flex: 1,
-        valueFormatter: (params) => {
-          return params.value === null ? "N/A" : `${params.value}`;
-        },
-        cellStyle: { color: "black" },
-      },
-      {
-        headerName: "Job Title",
-        field: "jobTitle",
-        sortable: true,
-        filter: true,
-        flex: 1,
-        hide: hideJobTitle,
-        cellStyle: { color: "black" },
-      },
-      {
-        headerName: "Department",
-        field: "department",
-        sortable: true,
-        filter: true,
-        flex: 1,
-        hide: hideDepartment,
-        cellStyle: { color: "black" },
-      },
-      {
-        headerName: "Site",
-        field: "site",
-        sortable: true,
-        filter: true,
-        flex: 1,
-        hide: hideSite,
-        cellStyle: { color: "black" },
-      },
-    ];
-  }, [hideJobTitle, hideSite, hideDepartment]);
-
   const [barModalData, setBarModalData] = useState<Person[]>([]);
   const [isBarModalOpen, setIsBarModalOpen] = useState(false);
   const [barModalTitle, setBarModalTitle] = useState("");
 
-  // const refreshPage = useCallback(() => {
-  //   router.refresh();
-  // }, [router]);
-
-  // useEffect(() => {
-  //   const timer = setTimeout(refreshPage, 10 * 60 * 1000);
-  //   return () => clearTimeout(timer);
-  // }, [refreshPage]);
+  const handleUserClick = useCallback(
+    (userId: number) => {
+      fetchHappinessScoreTwoMonthHistory(userId);
+      setIsBarModalOpen(false);
+    },
+    [fetchHappinessScoreTwoMonthHistory]
+  );
 
   const handleDepartmentBarClick = useCallback(
     (title: string) => {
@@ -253,14 +178,6 @@ export default function ManagerDashboardInner({
     [peopleListData]
   );
 
-  const handleUserClick = useCallback(
-    (userId: number) => {
-      fetchHappinessScoreTwoMonthHistory(userId);
-      setIsBarModalOpen(false);
-    },
-    [fetchHappinessScoreTwoMonthHistory]
-  );
-
   const departmentBarData = useMemo(
     () =>
       departmentsData.map((dept) => ({
@@ -280,6 +197,92 @@ export default function ManagerDashboardInner({
       })),
     [sitesData]
   );
+
+  /**
+   * ------------------------------------------------------------------
+   *  The key change is in how we render the Avatar (smaller text + space).
+   * ------------------------------------------------------------------
+   */
+  const columnDefs = useMemo<ColDef<Person>[]>(() => {
+    return [
+      {
+        headerName: "",
+        field: "imageUrl",
+        sortable: false,
+        filter: false,
+        flex: 1,
+        cellRenderer: (params: any) => {
+          return (
+            <Flex
+              justifyContent="center"
+              alignItems="center"
+              w="100%"
+              h="100%"
+              py={1}
+              onClick={() => handleUserClick(params.data.userId)}
+              cursor="pointer"
+            >
+              <Avatar
+                name={params.data.fullName}
+                src={params.data.imageUrl}
+                size="sm"
+                sx={{
+                  fontSize: "0.65rem",
+                }}
+              />
+            </Flex>
+          );
+        },
+        cellStyle: { color: "black" },
+      },
+      {
+        headerName: "Name",
+        field: "fullName",
+        sortable: true,
+        filter: true,
+        flex: 1,
+        cellStyle: { color: "black" },
+      },
+      {
+        headerName: "Score",
+        field: "score",
+        sortable: true,
+        filter: true,
+        flex: 1,
+        valueFormatter: (params) => {
+          return params.value === null ? "N/A" : `${params.value}`;
+        },
+        cellStyle: { color: "black" },
+      },
+      {
+        headerName: "Job Title",
+        field: "jobTitle",
+        sortable: true,
+        filter: true,
+        flex: 1,
+        hide: hideJobTitle,
+        cellStyle: { color: "black" },
+      },
+      {
+        headerName: "Department",
+        field: "department",
+        sortable: true,
+        filter: true,
+        flex: 1,
+        hide: hideDepartment,
+        cellStyle: { color: "black" },
+      },
+      {
+        headerName: "Site",
+        field: "site",
+        sortable: true,
+        filter: true,
+        flex: 1,
+        hide: hideSite,
+        cellStyle: { color: "black" },
+      },
+    ];
+  }, [hideJobTitle, hideSite, hideDepartment, handleUserClick]);
 
   return (
     <>
@@ -301,6 +304,9 @@ export default function ManagerDashboardInner({
             isOpen={isBarModalOpen}
             onClose={() => setIsBarModalOpen(false)}
             size="5xl"
+            autoFocus={false}
+            trapFocus={false}
+            returnFocusOnClose={false}
           >
             <ModalOverlay />
             <ModalContent bgGradient={theme.gradients.perygonBackground}>
@@ -308,33 +314,26 @@ export default function ManagerDashboardInner({
               <ModalCloseButton color="white" />
               <ModalBody pb={10}>
                 <VStack minHeight={520}>
-                  {barModalData.length > 0 ? (
-                    <Box
-                      className="ag-theme-alpine"
-                      w="100%"
-                      p={1}
-                      pb="7px"
-                      borderRadius="xl"
-                      boxShadow="md"
-                      bgColor="white"
-                    >
-                      <DataGridComponentLight
-                        data={barModalData}
-                        initialFields={columnDefs}
-                        defaultColDef={{
-                          flex: 1,
-                          minWidth: 100,
-                          resizable: true,
-                        }}
-                        showTopBar={false}
-                        handleRowClick={(person) =>
-                          handleUserClick(person.userId)
-                        }
-                      />
-                    </Box>
-                  ) : (
-                    <Text color="white">No data available.</Text>
-                  )}
+                  <Box
+                    className="ag-theme-alpine"
+                    w="100%"
+                    p={1}
+                    pb="7px"
+                    borderRadius="xl"
+                    boxShadow="md"
+                    bgColor="white"
+                  >
+                    <DataGridComponentLight
+                      data={barModalData}
+                      initialFields={columnDefs}
+                      defaultColDef={{
+                        flex: 1,
+                        minWidth: 100,
+                        resizable: true,
+                      }}
+                      showTopBar={false}
+                    />
+                  </Box>
                 </VStack>
               </ModalBody>
             </ModalContent>
@@ -395,15 +394,19 @@ export default function ManagerDashboardInner({
                   bgColor="white"
                 >
                   <DataGridComponentLight
-                    data={peopleListData}
+                    data={peopleListData.filter(
+                      (person) =>
+                        person.score !== null && person.score !== undefined
+                    )}
                     initialFields={columnDefs}
                     defaultColDef={{
                       flex: 1,
                       minWidth: 100,
                       resizable: true,
+                      // If needed:
+                      // autoHeight: true,
                     }}
                     showTopBar={false}
-                    handleRowClick={(person) => handleUserClick(person.userId)}
                   />
                 </Box>
               </VStack>

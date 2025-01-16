@@ -307,8 +307,6 @@ export default function ManagerDashboardPage({
   //  REVISED useEffect WITH EMPTY DEPENDENCY ARRAY FOR POLLING EVERY 30 MIN
   // ----------------------------------------------------------------------
   useEffect(() => {
-    // This function is defined inside the effect
-    // so it doesn’t break the stable reference to `constructQueryParams`.
     const fetchInitialData = async () => {
       try {
         const queryParams = constructQueryParams([]);
