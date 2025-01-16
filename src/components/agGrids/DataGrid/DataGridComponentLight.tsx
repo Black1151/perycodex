@@ -26,8 +26,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { Add, Clear, QueryStats, Refresh } from "@mui/icons-material";
-
-import LoadingOverlay from "@/components/agGrids/LoadingOverlay";
 import { ColDef, FirstDataRenderedEvent } from "ag-grid-community";
 import CustomGridBottomPaginationLight from "./CustomGridBottomPaginationLight";
 import LoadingOverlayPink from "../LoadingOverlayPink";

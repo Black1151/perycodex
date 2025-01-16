@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { Flex, useTheme, Spinner, Text, VStack, Icon } from "@chakra-ui/react";
+import { Flex, useTheme } from "@chakra-ui/react";
 import { AgCharts } from "ag-charts-react";
 import useColor from "@/hooks/useColor";
-import { QueryStats } from "@mui/icons-material";
 
 import {
   AgBarSeriesItemStylerParams,
@@ -42,10 +41,10 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
 
   const tooltipRenderer = (params: AgCartesianSeriesTooltipRendererParams) => {
     const datum = params.datum as DataPoint;
-    return `<div class="ag-chart-tooltip-title" style="background-color:${params.color}">
+    return `<div class="ag-chart-tooltip-title" style="background-color:${params.color}; border: 1px solid white; border-radius: 8px 8px 0 0;">
         ${datum.title}
       </div>
-      <div class="ag-chart-tooltip-content">
+      <div class="ag-chart-tooltip-content" style=" border: 1px solid white; border-radius: 0 0 8px 8px;">
         Score: ${datum.value.toFixed(1)}<br/>
         Count: ${datum.count}
       </div>`;
@@ -103,8 +102,7 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
           position: "bottom",
           label: {
             fontSize: 12,
-            fontWeight: "bold",
-            rotation: -45,
+            rotation: -65,
             color: theme.colors.perygonPink,
             formatter: ({ value }: { value: string }) =>
               value.length > 8 ? `${value.slice(0, 8)}...` : value,
@@ -145,7 +143,18 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
   }
 
   if (!data || data.length === 0) {
-    return <NoDataOverlayPink />;
+    return (
+      <Flex
+        borderRadius="2xl"
+        shadow="xl"
+        overflow="hidden"
+        width="100%"
+        height="100%"
+        bg="white"
+      >
+        <NoDataOverlayPink />
+      </Flex>
+    );
   }
 
   return (
