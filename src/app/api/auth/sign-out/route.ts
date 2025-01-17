@@ -23,16 +23,6 @@ export async function POST() {
       },
     });
 
-    const data = await response.json();
-
-    if (!response.ok || response.status !== 200) {
-      const errorMessage = data?.error || "Logout failed.";
-      return NextResponse.json(
-        { error: errorMessage },
-        { status: response.status },
-      );
-    }
-
     const res = NextResponse.json({ success: true });
     res.cookies.delete("auth_token");
     res.cookies.delete("user_uuid");
@@ -42,8 +32,6 @@ export async function POST() {
     res.cookies.delete('__Host-next-auth.csrf-token');
     res.cookies.delete('__Secure-next-auth.callback-url');
     res.cookies.delete('__Secure-next-auth.session-token');
-
-    await signOut();
 
     return res;
   } catch (error: any) {

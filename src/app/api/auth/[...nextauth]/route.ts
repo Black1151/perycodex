@@ -24,7 +24,7 @@ const handler = NextAuth({
                     authorizationUrl: `https://login.microsoftonline.com/${AZURE_AD_TENANT_ID}/oauth2/v2.0/authorize`,
                     tokenUrl: `https://login.microsoftonline.com/${AZURE_AD_TENANT_ID}/oauth2/v2.0/token`,
                     scope: 'openid profile email',
-                    redirect_uri: "https://dev.perygon.co.uk/api/auth/callback/azure-ad",
+                    redirect_uri: `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/azure-ad`,
                 }
             },
         }),
@@ -35,6 +35,10 @@ const handler = NextAuth({
     ],
     session: {
         strategy: 'jwt',
+    },
+    events: {
+        async signOut() {
+        },
     },
     pages: {
         signIn: 'auth/sign-in',

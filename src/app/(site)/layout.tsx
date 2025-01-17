@@ -71,6 +71,7 @@ export default async function MainLayout({
   }
 
   return (
+
     <SiteProviders userMetadata={userMetadata as UserContextProps}>
       <PerygonContainer>
         <NavBar {...(navBarProps as NavBarProps)} />
