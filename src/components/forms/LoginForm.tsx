@@ -128,7 +128,7 @@ export function LoginForm() {
 
             <form
                 onSubmit={handleSubmit(handleFormSubmit)}
-                style={{width: "100%", maxWidth: "md"}}
+                style={{width: "100%", maxWidth: "sm"}}
             >
                 <VStack spacing={4} w="100%">
                     <VStack spacing={0} w={300} gap={2} position="absolute" top="300px">
@@ -196,32 +196,6 @@ export function LoginForm() {
                         >
                             Login with email
                         </Button>
-                        <Button
-                            bgColor="none"
-                            w="full"
-                            height={12}
-                            isLoading={loading}
-                            color="white"
-                            backgroundColor="lightBlue"
-                            border="1px solid lightBlue"
-                            _hover={{color: "lightBlue", backgroundColor: "white", border: `1px solid lightBlue`}}
-                            onClick={() => handleButtonClick('microsoft')}
-                        >
-                            Sign in with Microsoft
-                        </Button>
-                        <Button
-                            bgColor="none"
-                            w="full"
-                            height={12}
-                            isLoading={loading}
-                            color="white"
-                            backgroundColor="lightGray"
-                            border="1px solid lightGray"
-                            _hover={{color: "lightGray", backgroundColor: "white", border: `1px solid lightGray`}}
-                            onClick={() => handleButtonClick('google')}
-                        >
-                            Sign in with Google
-                        </Button>
                         <HStack>
                             <Box borderBottom="1px solid lightGray" width="100px"/>
                             <Text color="lightGray" fontSize="xs">
@@ -229,6 +203,40 @@ export function LoginForm() {
                             </Text>
                             <Box borderBottom="1px solid lightGray" width="100px"/>
                         </HStack>
+                        <Button
+                            bgColor="none"
+                            w="full"
+                            px={12}
+                            height={12}
+                            isLoading={loading}
+                            color="lightGray"
+                            backgroundColor="white"
+                            justifyContent="left"
+                            border="1px solid lightGray"
+                            background="white url('https://perygonblob.blob.core.windows.net/public/Microsoft.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D') 15px 12px"
+                            backgroundRepeat="no-repeat"
+                            _hover={{color: "white", backgroundColor: "lightGray"}}
+                            onClick={() => handleButtonClick('microsoft')}
+                        >
+                            Continue with Microsoft
+                        </Button>
+                        <Button
+                            bgColor="none"
+                            w="full"
+                            px={12}
+                            height={12}
+                            isLoading={loading}
+                            color="lightGray"
+                            backgroundColor="white"
+                            justifyContent="left"
+                            border="1px solid lightGray"
+                            background="white url('https://perygonblob.blob.core.windows.net/public/google.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D') 15px 12px"
+                            backgroundRepeat="no-repeat"
+                            _hover={{color: "white", backgroundColor: "lightGray"}}
+                            onClick={() => handleButtonClick('google')}
+                        >
+                            Continue with Google
+                        </Button>
                         <Button
                             bgColor="none"
                             w="full"
