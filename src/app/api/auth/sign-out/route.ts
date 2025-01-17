@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import apiClient from "@/lib/apiClient";
 import { cookies } from "next/headers";
+import {useSession, signIn, signOut} from 'next-auth/react';
+
 
 export async function POST() {
   try {
@@ -37,7 +39,11 @@ export async function POST() {
     res.cookies.delete('next-auth.callback-url');
     res.cookies.delete('next-auth.csrf-token');
     res.cookies.delete('next-auth.session-token');
+    res.cookies.delete('__Host-next-auth.csrf-token');
+    res.cookies.delete('__Secure-next-auth.callback-url');
+    res.cookies.delete('__Secure-next-auth.session-token');
 
+    await signOut();
 
     return res;
   } catch (error: any) {
