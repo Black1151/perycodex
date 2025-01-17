@@ -13,6 +13,7 @@ export default async function UserGroupsCreatePage() {
         surveyJson={userGroupJson}
         endpoint={"/userGroup"}
         isNew={true}
+        layout={"default"}
         redirectUrl={"/user-groups"}
         sjsPath={"admin"}
       />

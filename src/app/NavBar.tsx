@@ -28,6 +28,7 @@ import React, { useState } from "react";
 import ResetPasswordModal from "@/app/ResetPasswordModal";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import Link from "next/link";
+import {signOut} from "next-auth/react";
 
 const MotionBox = motion(Box);
 const MotionHStack = motion(HStack);
@@ -64,6 +65,7 @@ export const NavBar: React.FC<NavBarProps> = ({
     await fetch("/api/auth/sign-out", {
       method: "POST",
     });
+    await signOut();
     router.push("/login");
   };
 

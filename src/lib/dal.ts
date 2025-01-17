@@ -130,6 +130,12 @@ const roleBasedRoutes: { [key: string]: string[] } = {
     "/users/[dynamicSegment]",
     "/survey-test",
     "/grid-test",
+    "/dashboards",
+    "/dashboards/create",
+    "/dashboards/[dynamicSegment]",
+    "/dashboard-workflows",
+    "/dashboard-workflows/create",
+    "/dashboard-workflows/[dynamicSegment]",
   ],
   CU: [
     "/my-profile",
@@ -186,13 +192,13 @@ export const verifySession = async () => {
   const authToken = cookieStore.get("auth_token")?.value;
   const uniqueId = cookieStore.get("user_uuid")?.value;
 
-  if (!authToken) {
-    redirect("/login");
-  }
-
-  if (!uniqueId) {
-    redirect("/login");
-  }
+  // if (!authToken) {
+  //   redirect("/login");
+  // }
+  //
+  // if (!uniqueId) {
+  //   redirect("/login");
+  // }
 
   return { isAuth: true, userId: uniqueId };
 };
@@ -201,9 +207,9 @@ export const getUser = async (): Promise<User> => {
   const session = await verifySession();
 
   // If there's no session, redirect to login
-  if (!session) {
-    redirect("/login");
-  }
+  // if (!session) {
+  //   redirect("/login");
+  // }
 
   const cookieStore = cookies();
   const authToken = cookieStore.get("auth_token")?.value;
@@ -230,7 +236,7 @@ export const getUser = async (): Promise<User> => {
 
     return userData.resource as User; // Cast the response to the User type
   } catch (error) {
-    redirect("/login"); // Redirect to login if there's an error
+    // redirect("/login"); // Redirect to login if there's an error
     throw error; // Optional: re-throw if additional handling is needed
   }
 };
@@ -239,17 +245,41 @@ export async function checkUserRole(targetPathname: string): Promise<boolean> {
   const user = await getUser();
 
   if (!user) {
-    redirect("/login");
+    // redirect("/login");
     return false;
   }
 
   const allowedRoutes = roleBasedRoutes[user.role] || [];
+
+  // Split the targetPathname to get the base route and the dynamic segment
+  const pathSegments = targetPathname.split("/");
+
+  if (pathSegments.length > 1) {
+    const lastSegment = pathSegments[pathSegments.length - 1];
+
+    if (lastSegment === "create") {
+      const explicitCreateRoute =
+        pathSegments.slice(0, -1).join("/") + "/create";
+      if (allowedRoutes.includes(explicitCreateRoute)) {
+        return true;
+      } else {
+        const fallbackRoute = redirectRoutes[user.role] || "/";
+        redirect(fallbackRoute);
+        return false;
+      }
+    }
+  }
+
+  // Check for other routes and dynamic segments
   const isAllowed = allowedRoutes.some((route) => {
     if (!route.includes("[dynamicSegment]")) {
+      // Direct route match
       return route === targetPathname;
     }
+
+    // Handle dynamic segments using a regex
     const routeRegex = new RegExp(
-      `^${route.replace("[dynamicSegment]", "[^/]+")}$`,
+      `^${route.replace("[dynamicSegment]", "([^/]+)")}$`,
     );
     return routeRegex.test(targetPathname);
   });

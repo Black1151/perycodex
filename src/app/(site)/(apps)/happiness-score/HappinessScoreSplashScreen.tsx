@@ -1,28 +1,54 @@
+"use client";
+
 import LoadingBar from "@/components/LoadingBar/LoadingBar";
 import { Box, Center, Flex, Image, keyframes, VStack } from "@chakra-ui/react";
 
 import { motion } from "framer-motion";
 
 const fadeIn = keyframes`
-  0% { opacity: 0; transform: rotate(0deg); }
-  100% { opacity: 1; transform: rotate(360deg); }
+    0% {
+        opacity: 0;
+        transform: rotate(0deg);
+    }
+    100% {
+        opacity: 1;
+        transform: rotate(360deg);
+    }
 `;
 
 const fadeOut = keyframes`
-  0% { opacity: 1; transform: rotate(0deg); }
-  100% { opacity: 0; transform: rotate(-360deg); }
+    0% {
+        opacity: 1;
+        transform: rotate(0deg);
+    }
+    100% {
+        opacity: 0;
+        transform: rotate(-360deg);
+    }
 `;
 
 const enlargeRotate = keyframes`
-  0% { transform: scale(0) rotate(360deg); }
-  100% { transform: scale(1) rotate(0deg); }
+    0% {
+        transform: scale(0) rotate(360deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
 `;
 
 const pulsate = keyframes`
-  0% { transform: scale(1) rotate(0); }
-  25% { transform: scale(1.25) rotate(25deg); }
-  50% { transform: scale(1.5) rotate(-25deg); }
-  100% { transform: scale(1) rotate(0); }
+    0% {
+        transform: scale(1) rotate(0);
+    }
+    25% {
+        transform: scale(1.25) rotate(25deg);
+    }
+    50% {
+        transform: scale(1.5) rotate(-25deg);
+    }
+    100% {
+        transform: scale(1) rotate(0);
+    }
 `;
 
 export const HappinessScoreSplashScreen = () => {

@@ -28,6 +28,7 @@ export default async function SelectItemsDetailPage({
         surveyJson={selectItemsJson}
         endpoint={`/selectItem/${params.uniqueId}`}
         isNew={false}
+        layout={"default"}
         dataset={selectItemData}
         sjsPath={"admin"}
         reloadPageOnSuccess={true}
