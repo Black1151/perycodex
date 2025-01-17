@@ -170,7 +170,8 @@ export function LoginForm() {
                         />
                         <Flex w="100%" justifyContent="flex-end">
                             <Text
-                                fontSize="2xs"
+                                pt="10px"
+                                fontSize="12px"
                                 cursor="pointer"
                                 color={theme.colors.perygonPink}
                                 _hover={{cursor: "pointer"}}
@@ -196,6 +197,21 @@ export function LoginForm() {
                         >
                             Login with email
                         </Button>
+                        <HStack>
+                            <Text pt="10px" fontSize="12px" color="gray">
+                                Don't have an account?
+                            </Text>
+                            <Text
+                                pt="10px"
+                                fontSize="12px"
+                                cursor="pointer"
+                                color={theme.colors.perygonPink}
+                                _hover={{cursor: "pointer"}}
+                                onClick={() => router.push("sign-up")}
+                            >
+                                 Sign Up
+                            </Text>
+                        </HStack>
                         <HStack>
                             <Box borderBottom="1px solid lightGray" width="100px"/>
                             <Text color="lightGray" fontSize="xs">
@@ -237,19 +253,7 @@ export function LoginForm() {
                         >
                             Continue with Google
                         </Button>
-                        <Button
-                            bgColor="none"
-                            w="full"
-                            height={12}
-                            isLoading={loading}
-                            color="lightGray"
-                            backgroundColor="white"
-                            border="1px solid lightGray"
-                            _hover={{color: "white", backgroundColor: "lightGray"}}
-                            onClick={() => router.push("sign-up")}
-                        >
-                            Sign-up
-                        </Button>
+
                     </VStack>
                     <Text pt="10px" fontSize="12px" color="gray">
                         Copyright &copy; 2024 Sedulo Limited (v1.0.1)
