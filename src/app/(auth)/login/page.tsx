@@ -6,7 +6,7 @@ import {LoginCard} from "@/components/login/LoginCard";
 import {cookies} from "next/headers";
 import apiClient from "@/lib/apiClient";
 import {redirect} from "next/navigation";
-import NextAuthProvider from "@/providers/NextAuthProvider";
+
 
 interface SearchParams {
     l?: string;
@@ -64,7 +64,7 @@ export default async function LoginPage({
     }
 
     return (
-        <NextAuthProvider>
+
             <PerygonContainer>
                 <Center flex={1}>
                     <LoginCard
@@ -79,7 +79,6 @@ export default async function LoginPage({
                     </LoginCard>
                 </Center>
             </PerygonContainer>
-        </NextAuthProvider>
     );
 }
 

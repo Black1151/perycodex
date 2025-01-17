@@ -19,7 +19,6 @@ import {useFetchClient} from "@/hooks/useFetchClient";
 import {useEffect, useState} from "react";
 import {useCookies} from 'next-client-cookies';
 import {useSession, signIn, signOut} from 'next-auth/react';
-import {SessionProvider} from "next-auth/react";
 import { getSession } from 'next-auth/react';
 
 import apiClient from "@/lib/apiClient";
@@ -126,7 +125,7 @@ export function LoginForm() {
     }
 
     return (
-        <SessionProvider>
+
             <form
                 onSubmit={handleSubmit(handleFormSubmit)}
                 style={{width: "100%", maxWidth: "md"}}
@@ -249,7 +248,6 @@ export function LoginForm() {
                     </Text>
                 </VStack>
             </form>
-        </SessionProvider>
     );
 }
 

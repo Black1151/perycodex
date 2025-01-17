@@ -28,6 +28,7 @@ import React, { useState } from "react";
 import ResetPasswordModal from "@/app/ResetPasswordModal";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import Link from "next/link";
+import {signOut} from "next-auth/react";
 
 const MotionBox = motion(Box);
 const MotionHStack = motion(HStack);
