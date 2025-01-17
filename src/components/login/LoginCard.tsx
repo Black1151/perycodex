@@ -25,7 +25,7 @@ export function LoginCard({
         bg="white"
         spacing={4}
         align="center"
-        p={[6, 8]}
+        p={[12, 8]}
         overflow="hidden"
         borderRadius="md"
         boxShadow="md"
