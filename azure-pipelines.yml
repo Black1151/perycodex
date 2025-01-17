@@ -1,5 +1,5 @@
 trigger:
-  - wip/next-sso-test
+  - develop
 
 resources:
   - repo: self
