@@ -15,37 +15,36 @@ interface LoginCardProps {
 export function LoginCard({
   titleComponent,
   children,
-  height = 800,
-  imageOffset = -480,
-  backgroundOffset = imageOffset-100
+  height = 700,
+  imageOffset = -350,
 }: LoginCardProps) {
   return (
-    <SpringScale>
-      <VStack
-        bg="white"
-        spacing={4}
-        align="center"
-        p={[12, 8]}
-        overflow="hidden"
-        borderRadius="md"
-        boxShadow="md"
-        position="relative"
-        height={height}
-        justifyContent="flex-end"
-        width={["100%", 480]}
-      >
-        <Image
-          src="/perygonSpeechBubble.png"
-          alt="Perygon"
-          position="absolute"
-          boxSize="100%"
-          objectFit="cover"
-          top={backgroundOffset}
-          objectPosition="bottom"
-        />
-        {titleComponent}
-        <Box width="100%">{children}</Box>
-      </VStack>
-    </SpringScale>
+      <SpringScale>
+        <VStack
+            bg="white"
+            spacing={4}
+            align="center"
+            p={[12, 8]}
+            overflow="hidden"
+            borderRadius="md"
+            boxShadow="md"
+            position="relative"
+            height={height}
+            justifyContent="flex-end"
+            width={["100%", 480]}
+        >
+          <Image
+              src="/perygonSpeechBubble.png"
+              alt="Perygon"
+              position="absolute"
+              boxSize="100%"
+              objectFit="cover"
+              top={imageOffset}
+              objectPosition="bottom"
+          />
+          {titleComponent}
+          <Box width="100%">{children}</Box>
+        </VStack>
+      </SpringScale>
   );
 }
