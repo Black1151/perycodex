@@ -68,14 +68,18 @@ export default async function LoginPage({
             <PerygonContainer>
                 <Center flex={1}>
                     <LoginCard
-                        imageOffset={-421}
+                        height={800}
+                        imageOffset={-520}
+                        backgroundOffset={-580}
                         titleComponent={
                             <VStack position="absolute" top="100px">
                                 <LetterFlyIn>Perygon</LetterFlyIn>
                             </VStack>
                         }
                     >
-                        <LoginForm/>
+                        <LoginForm
+
+                        />
                     </LoginCard>
                 </Center>
             </PerygonContainer>
