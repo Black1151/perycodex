@@ -93,9 +93,6 @@ export function LoginForm() {
             : "/api/auth/sign-in";
 
         let NextsAuthSession = await getSession();
-        console.log('###===|Session (From LoginForm handleMSOSignin)|===###');
-        console.log(NextsAuthSession);
-
 
         if (NextsAuthSession !== undefined) {
             if (NextsAuthSession !== null) {
@@ -255,9 +252,11 @@ export function LoginForm() {
                         </Button>
 
                     </VStack>
-                    <Text pt="10px" fontSize="12px" color="gray">
-                        Copyright &copy; 2024 Sedulo Limited (v1.0.1)
-                    </Text>
+                    <VStack spacing={4} w="100%" top={2} position="relative">
+                        <Text pt="10px" fontSize="12px" color="gray">
+                            Copyright &copy; 2024 Sedulo Limited (v1.0.1)
+                        </Text>
+                    </VStack>
                 </VStack>
             </form>
     );
