@@ -199,7 +199,7 @@ export function LoginForm() {
                         </Button>
                         <HStack>
                             <Text pt="10px" fontSize="12px" color="gray">
-                                Don't have an account?
+                                Don&apos;t have an account?
                             </Text>
                             <Text
                                 pt="10px"
