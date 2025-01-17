@@ -2,7 +2,7 @@ import React from "react";
 import { Survey } from "survey-react-ui";
 import { Button, Flex, Heading, Image } from "@chakra-ui/react";
 import useSurveyNavigation from "@/components/surveyjs/useSurveyNavigation";
-import { HappinessLayoutProps } from "@/components/surveyjs/SurveyProps";
+import { HappinessLayoutProps } from "@/types/surveyJs";
 import SurveyNavigationGuard from "@/components/surveyjs/SurveyNavigationGuard";
 import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
 
@@ -41,7 +41,7 @@ const HappinessLayout: React.FC<HappinessLayoutProps> = ({
       >
         {/*TODO: this could be tool logo instead of hard coded*/}
         <Image
-          src="/images/Perygon_Happiness_score_icon_festive.png"
+          src="/images/Perygon_Happiness_score_icon.png"
           maxW="150px"
           maxH="150px"
           mb={8}

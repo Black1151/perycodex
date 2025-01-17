@@ -178,7 +178,7 @@ const UserDashboard: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await fetchClient<ApiResponse>(
-        "/api/happiness-graphs/getUserStatsData",
+        "/api/happiness-graphs/getUserStatsData"
       );
 
       if (response && response.resource) {
@@ -195,7 +195,7 @@ const UserDashboard: React.FC = () => {
         setUserDistribution(parseData<UserDistributionItem>(userDistribution));
         setComparativeData(parseData<ComparativeItem>(comparativeData));
         setMonthlyComparativeData(
-          parseData<MonthlyComparativeItem>(monthlyComparativeData || []),
+          parseData<MonthlyComparativeItem>(monthlyComparativeData || [])
         );
       } else {
         console.error("Invalid response:", response);

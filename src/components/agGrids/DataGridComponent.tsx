@@ -45,6 +45,7 @@ interface DataGridComponentProps<T> {
   refreshData?: () => void;
   enableAutoRefresh?: boolean;
   refreshInterval?: number;
+  height?: string;
 }
 
 // Define the type for pagination info
@@ -56,7 +57,7 @@ interface PaginationInfo {
 }
 
 LicenseManager.setLicenseKey(
-  "Using_this_{AG_Charts_and_AG_Grid}_Enterprise_key_{AG-066268}_in_excess_of_the_licence_granted_is_not_permitted___Please_report_misuse_to_legal@ag-grid.com___For_help_with_changing_this_key_please_contact_info@ag-grid.com___{Sedulo_Limited}_is_granted_a_{Multiple_Applications}_Developer_License_for_{2}_Front-End_JavaScript_developers___All_Front-End_JavaScript_developers_need_to_be_licensed_in_addition_to_the_ones_working_with_{AG_Charts_and_AG_Grid}_Enterprise___This_key_has_been_granted_a_Deployment_License_Add-on_for_{1}_Production_Environment___This_key_works_with_{AG_Charts_and_AG_Grid}_Enterprise_versions_released_before_{30_September_2025}____[v3]_[0102]_MTc1OTE4NjgwMDAwMA==8e565c62a9475b11e35b2c3b1f037177",
+  "Using_this_{AG_Charts_and_AG_Grid}_Enterprise_key_{AG-066268}_in_excess_of_the_licence_granted_is_not_permitted___Please_report_misuse_to_legal@ag-grid.com___For_help_with_changing_this_key_please_contact_info@ag-grid.com___{Sedulo_Limited}_is_granted_a_{Multiple_Applications}_Developer_License_for_{2}_Front-End_JavaScript_developers___All_Front-End_JavaScript_developers_need_to_be_licensed_in_addition_to_the_ones_working_with_{AG_Charts_and_AG_Grid}_Enterprise___This_key_has_been_granted_a_Deployment_License_Add-on_for_{1}_Production_Environment___This_key_works_with_{AG_Charts_and_AG_Grid}_Enterprise_versions_released_before_{30_September_2025}____[v3]_[0102]_MTc1OTE4NjgwMDAwMA==8e565c62a9475b11e35b2c3b1f037177"
 );
 
 const DataGridComponent = <T,>({
@@ -75,6 +76,7 @@ const DataGridComponent = <T,>({
   refreshData,
   enableAutoRefresh = false,
   refreshInterval = 10,
+  height = "500px",
 }: DataGridComponentProps<T>) => {
   const gridRef = useRef<AgGridReact>(null);
   const [rowData, setRowData] = useState<T[]>(data || []);
@@ -131,7 +133,7 @@ const DataGridComponent = <T,>({
       resizable: true,
       ...customDefaultColDef,
     }),
-    [isMobile, customDefaultColDef],
+    [isMobile, customDefaultColDef]
   );
 
   const [paginationInfo, setPaginationInfo] = useState({
@@ -145,7 +147,7 @@ const DataGridComponent = <T,>({
   const updatePaginationInfo = useCallback(
     (
       gridRef: React.RefObject<AgGridReact<any>>,
-      setPaginationInfo: React.Dispatch<React.SetStateAction<PaginationInfo>>,
+      setPaginationInfo: React.Dispatch<React.SetStateAction<PaginationInfo>>
     ) => {
       if (gridRef.current?.api) {
         setPaginationInfo({
@@ -156,7 +158,7 @@ const DataGridComponent = <T,>({
         });
       }
     },
-    [],
+    []
   );
 
   const handleGridReady = (params: FirstDataRenderedEvent) => {
@@ -197,9 +199,9 @@ const DataGridComponent = <T,>({
       "quickFilterText",
       (
         document.getElementById(
-          `filter-text-box-${uniqueQuickFilterId}`,
+          `filter-text-box-${uniqueQuickFilterId}`
         ) as HTMLInputElement
-      ).value,
+      ).value
     );
   }, []);
 
@@ -210,9 +212,9 @@ const DataGridComponent = <T,>({
       "quickFilterText",
       ((
         document.getElementById(
-          `filter-text-box-${uniqueQuickFilterId}`,
+          `filter-text-box-${uniqueQuickFilterId}`
         ) as HTMLInputElement
-      ).value = ""),
+      ).value = "")
     );
   }, []);
 
@@ -314,7 +316,7 @@ const DataGridComponent = <T,>({
         </Flex>
       )}
 
-      <Flex direction={"column"} height={"500px"}>
+      <Flex direction={"column"} height={height}>
         <AgGridReact
           ref={gridRef}
           loading={loading}

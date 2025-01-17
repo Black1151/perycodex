@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { getFilteredDashboards } from "@/lib/dashboardUtils";
 import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
 import HappinessDashboardLayout from "@/app/(site)/(apps)/happiness-score/dashboard/HappinessDashboardLayout";
-import WorkflowHeader from "@/app/(site)/(apps)/happiness-score/WorkflowHeader";
+import DashboardHeader from "@/app/(site)/(apps)/DashboardHeader";
 import { verifySession } from "@/lib/dal";
 import WeeklyDashboard from "@/app/(site)/(apps)/happiness-score/dashboard/weekly-dashboard/WeeklyDashboard";
 
@@ -41,7 +41,7 @@ export default async function Home({
   return (
     <WorkflowEngine toolId={toolId} workflowId={workflowId}>
       <HappinessDashboardLayout dashboardList={filteredDashboards} />
-      <WorkflowHeader
+      <DashboardHeader
         headingText={
           activeDashboardName ? activeDashboardName : "Current Week Happiness"
         }
