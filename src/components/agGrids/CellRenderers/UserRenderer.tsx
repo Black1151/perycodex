@@ -1,10 +1,9 @@
 "use client";
 
 import React from "react";
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Flex, Text, Avatar, Box } from "@chakra-ui/react";
 import Link from "next/link";
 import { CustomCellRendererProps } from "ag-grid-react";
-import { Person } from "@mui/icons-material";
 
 // Define the interface for the component's props
 interface UserRendererProps extends CustomCellRendererProps {
@@ -47,54 +46,9 @@ const UserRenderer: React.FC<UserRendererProps> = ({
       maxH={"42px"}
       gap={4}
     >
-      {imageUrl ? (
-        <Flex
-          width={"50px"}
-          height={"full"}
-          align={"center"}
-          justify={"center"}
-        >
-          <Box
-            flexShrink={0}
-            height="80%"
-            aspectRatio={1}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            borderRadius={"full"}
-          >
-            <Image
-              alt={fullName}
-              src={imageUrl}
-              height="30px"
-              aspectRatio={1}
-              borderRadius="50%"
-              objectFit="cover"
-              boxShadow="md"
-            />
-          </Box>
-        </Flex>
-      ) : (
-        <Flex
-          width={"50px"}
-          height={"full"}
-          align={"center"}
-          justify={"center"}
-        >
-          <Box
-            flexShrink={0}
-            height="80%"
-            aspectRatio={1}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            borderRadius={"full"}
-            bg={"gray.100"}
-          >
-            <Person sx={{ color: "var(--chakra-colors-perygonPink)" }} />
-          </Box>
-        </Flex>
-      )}
+      <Box height={"80%"}>
+        <Avatar name={fullName} src={imageUrl} size={"sm"} />
+      </Box>
       <Text
         fontSize={"14px"}
         flex={1}
