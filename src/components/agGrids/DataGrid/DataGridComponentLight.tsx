@@ -136,7 +136,12 @@ function DataGridComponentLight<T>({
       filter: true,
       floatingFilter: false,
       resizable: true,
-      cellStyle: { fontSize: "16px" },
+      cellStyle: {
+        fontSize: "16px",
+        display: "flex",
+        alignItems: "center",
+        // justifyContent: "center",
+      },
       fontFamily: "Metropolis",
       ...customDefaultColDef,
     }),
@@ -337,6 +342,8 @@ function DataGridComponentLight<T>({
               ? (params) => handleRowClick(params.data as T)
               : undefined
           }
+          // Add the rowHeight prop here:
+          rowHeight={50}
         />
 
         <CustomGridBottomPaginationLight

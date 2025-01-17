@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { Flex, useTheme } from "@chakra-ui/react";
+import { Box, Flex, useTheme } from "@chakra-ui/react";
 import { AgCharts } from "ag-charts-react";
 import useColor from "@/hooks/useColor";
 
@@ -54,8 +54,8 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
     () => ({
       data: validData,
       padding: {
-        top: 20,
-        left: 40,
+        top: 40,
+        left: 10,
         right: 20,
         bottom: 20,
       },
@@ -104,18 +104,20 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
             fontSize: 12,
             rotation: -65,
             color: theme.colors.perygonPink,
-            formatter: ({ value }: { value: string }) =>
-              value.length > 8 ? `${value.slice(0, 8)}...` : value,
+            formatter: ({ value }: { value: string }) => value,
           },
         },
         {
           type: "number",
           position: "left",
-          label: {
-            enabled: true,
-            fontSize: 12,
-            color: theme.colors.perygonPink,
-          },
+          interval: { step: 2 },
+          min: 0,
+          max: 10,
+          // label: {
+          //   enabled: true,
+          //   fontSize: 12,
+          //   color: theme.colors.perygonPink,
+          // },
         },
       ],
       legend: {
@@ -164,6 +166,7 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
       overflow="hidden"
       width="100%"
       height="100%"
+      flex={1}
     >
       <style jsx global>{`
         .ag-charts-container rect:hover {
@@ -183,7 +186,7 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
       `}</style>
       <AgCharts
         options={chartOptions as any}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100%", height: "600px" }}
       />
     </Flex>
   );

@@ -198,11 +198,6 @@ export default function ManagerDashboardInner({
     [sitesData]
   );
 
-  /**
-   * ------------------------------------------------------------------
-   *  The key change is in how we render the Avatar (smaller text + space).
-   * ------------------------------------------------------------------
-   */
   const columnDefs = useMemo<ColDef<Person>[]>(() => {
     return [
       {
@@ -210,7 +205,9 @@ export default function ManagerDashboardInner({
         field: "imageUrl",
         sortable: false,
         filter: false,
-        flex: 1,
+        width: 100,
+        maxWidth: 60,
+        resizable: false,
         cellRenderer: (params: any) => {
           return (
             <Flex
@@ -284,6 +281,20 @@ export default function ManagerDashboardInner({
     ];
   }, [hideJobTitle, hideSite, hideDepartment, handleUserClick]);
 
+  const defaultColDef = useMemo(() => {
+    return {
+      flex: 1,
+      minWidth: 100,
+      resizable: true,
+    };
+  }, []);
+
+  const submittedPeopleListData = useMemo(() => {
+    return peopleListData.filter(
+      (person) => person.score !== null && person.score !== undefined
+    );
+  }, [peopleListData]);
+
   return (
     <>
       {loading ? (
@@ -326,11 +337,7 @@ export default function ManagerDashboardInner({
                     <DataGridComponentLight
                       data={barModalData}
                       initialFields={columnDefs}
-                      defaultColDef={{
-                        flex: 1,
-                        minWidth: 100,
-                        resizable: true,
-                      }}
+                      defaultColDef={defaultColDef}
                       showTopBar={false}
                     />
                   </Box>
@@ -394,18 +401,9 @@ export default function ManagerDashboardInner({
                   bgColor="white"
                 >
                   <DataGridComponentLight
-                    data={peopleListData.filter(
-                      (person) =>
-                        person.score !== null && person.score !== undefined
-                    )}
+                    data={submittedPeopleListData}
                     initialFields={columnDefs}
-                    defaultColDef={{
-                      flex: 1,
-                      minWidth: 100,
-                      resizable: true,
-                      // If needed:
-                      // autoHeight: true,
-                    }}
+                    defaultColDef={defaultColDef}
                     showTopBar={false}
                   />
                 </Box>
