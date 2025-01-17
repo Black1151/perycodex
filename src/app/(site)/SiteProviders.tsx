@@ -8,6 +8,7 @@ import { UserModal } from "@/components/modals/userModal/UserModal";
 import { WorkflowModal } from "@/components/modals/workflowModal/WorkflowModal";
 import { DeveloperBoard } from "@mui/icons-material";
 import DeveloperBoardOptions from "@/app/(site)/DeveloperBoardOptions";
+import NextAuthProvider from "@/providers/NextAuthProvider";
 
 interface ClientUserProviderProps {
   children: ReactNode;
@@ -19,11 +20,13 @@ export default function SiteProviders({
   userMetadata,
 }: ClientUserProviderProps) {
   return (
+      <NextAuthProvider>
     <UserProvider value={userMetadata}>
       <WorkflowProvider>
         {children}
         <DeveloperBoardOptions userMetadata={userMetadata} />
       </WorkflowProvider>
     </UserProvider>
+      </NextAuthProvider>
   );
 }

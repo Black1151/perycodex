@@ -1,79 +1,86 @@
-import { Center, VStack } from "@chakra-ui/react";
-import { PerygonContainer } from "@/components/layout/PerygonContainer";
-import { LoginForm } from "@/components/forms/LoginForm";
-import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
-import { LoginCard } from "@/components/login/LoginCard";
-import { cookies } from "next/headers";
+import {Center, VStack} from "@chakra-ui/react";
+import {PerygonContainer} from "@/components/layout/PerygonContainer";
+import {LoginForm} from "@/components/forms/LoginForm";
+import {LetterFlyIn} from "@/components/animations/text/LetterFlyIn";
+import {LoginCard} from "@/components/login/LoginCard";
+import {cookies} from "next/headers";
 import apiClient from "@/lib/apiClient";
-import { redirect } from "next/navigation";
+import {redirect} from "next/navigation";
+import NextAuthProvider from "@/providers/NextAuthProvider";
 
 interface SearchParams {
-  l?: string;
+    l?: string;
 }
 
 export default async function LoginPage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
+                                            searchParams,
+                                        }: {
+    searchParams: SearchParams;
 }) {
-  // Check if user is already authenticated and if so redirect based on if l is present
-  // Extract query parameter `l`
-  const secureLink = searchParams.l;
 
-  // Check if user is already authenticated
-  const cookieStore = cookies();
-  const authToken = cookieStore.get("auth_token")?.value;
+    // Check if user is already authenticated and if so redirect based on if l is present
+    // Extract query parameter `l`
+    const secureLink = searchParams.l;
 
-  if (authToken) {
-    // Verify token with the backend
-    const authCheckResponse = await apiClient(`/authentication/check`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${authToken}` },
-    });
+    // Check if user is already authenticated
+    const cookieStore = cookies();
+    const authToken = cookieStore.get("auth_token")?.value;
+    const token = cookieStore.get('token');
 
-    if (authCheckResponse.ok) {
-      const authCheck = await authCheckResponse.json();
 
-      if (authCheck.resource.Authenticated) {
+    console.log(token);
+    if (authToken) {
         // Verify token with the backend
-        const isProfileCompleteResponse = await apiClient(
-          `/user/isProfileComplete`,
-          {
-            method: "POST",
-            headers: { Authorization: `Bearer ${authToken}` },
-          },
-        );
+        const authCheckResponse = await apiClient(`/authentication/check`, {
+            method: "GET",
+            headers: {Authorization: `Bearer ${authToken}`},
+        });
 
-        const profileCompleteCheck = await isProfileCompleteResponse.json();
+        if (authCheckResponse.ok) {
+            const authCheck = await authCheckResponse.json();
 
-        if (!profileCompleteCheck.resource.isProfileRegistered) {
-          redirect("/profile-setup");
+            if (authCheck.resource.Authenticated) {
+                // Verify token with the backend
+                const isProfileCompleteResponse = await apiClient(
+                    `/user/isProfileComplete`,
+                    {
+                        method: "POST",
+                        headers: {Authorization: `Bearer ${authToken}`},
+                    },
+                );
+
+                const profileCompleteCheck = await isProfileCompleteResponse.json();
+
+                if (!profileCompleteCheck.resource.isProfileRegistered) {
+                    redirect("/profile-setup");
+                }
+
+                // Redirect to the link processing page if authenticated
+                redirect(
+                    secureLink ? `/link?l=${encodeURIComponent(secureLink)}` : `/`,
+                );
+            }
         }
-
-        // Redirect to the link processing page if authenticated
-        redirect(
-          secureLink ? `/link?l=${encodeURIComponent(secureLink)}` : `/`,
-        );
-      }
     }
-  }
 
-  return (
-    <PerygonContainer>
-      <Center flex={1}>
-        <LoginCard
-          imageOffset={-421}
-          titleComponent={
-            <VStack position="absolute" top="100px">
-              <LetterFlyIn>Perygon</LetterFlyIn>
-            </VStack>
-          }
-        >
-          <LoginForm />
-        </LoginCard>
-      </Center>
-    </PerygonContainer>
-  );
+    return (
+        <NextAuthProvider>
+            <PerygonContainer>
+                <Center flex={1}>
+                    <LoginCard
+                        imageOffset={-421}
+                        titleComponent={
+                            <VStack position="absolute" top="100px">
+                                <LetterFlyIn>Perygon</LetterFlyIn>
+                            </VStack>
+                        }
+                    >
+                        <LoginForm/>
+                    </LoginCard>
+                </Center>
+            </PerygonContainer>
+        </NextAuthProvider>
+    );
 }
 
 // On login grab parameter l

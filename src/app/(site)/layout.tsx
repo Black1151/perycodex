@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import SiteProviders from "./SiteProviders";
 import { UserContextProps } from "@/providers/UserProvider";
 import apiClient from "@/lib/apiClient";
+import {getSession} from "next-auth/react";
 
 interface NavBarProps {
   userFirstName: string;
