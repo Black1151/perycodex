@@ -43,6 +43,7 @@ export const useWorkflow = (): WorkflowContextType => {
 
 const pathsToResetToolLogo = [
   "/happiness-score",
+  "/enps",
   "/client-satisfaction",
   "/business-score",
   "/risk-management",
