@@ -33,6 +33,13 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
   const theme = useTheme();
   const { getColor } = useColor();
 
+  const isMobile = useMemo(() => {
+    const isTouchDevice =
+      "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    const isSmallScreen = window.innerWidth <= 768;
+    return isTouchDevice && isSmallScreen;
+  }, []);
+
   const validData = useMemo(
     () =>
       Array.isArray(data) ? [...data].sort((a, b) => a.value - b.value) : [],
@@ -84,6 +91,13 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
               fillOpacity: 1,
             },
           },
+          label: isMobile
+            ? {
+                enabled: true,
+                color: "#fff",
+                formatter: ({ value }: { value: number }) => value.toFixed(1),
+              }
+            : undefined,
           tooltip: {
             renderer: tooltipRenderer,
           },
@@ -113,11 +127,6 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
           interval: { step: 2 },
           min: 0,
           max: 10,
-          // label: {
-          //   enabled: true,
-          //   fontSize: 12,
-          //   color: theme.colors.perygonPink,
-          // },
         },
       ],
       legend: {
@@ -130,10 +139,10 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
         enabled: false,
       },
       tooltip: {
-        enabled: true,
+        enabled: !isMobile,
       },
     }),
-    [validData, getColor, onBarClick, theme.colors.perygonPink]
+    [validData, getColor, onBarClick, theme.colors.perygonPink, isMobile]
   );
 
   if (loading) {
