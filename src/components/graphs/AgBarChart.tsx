@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { Box, Flex, useTheme } from "@chakra-ui/react";
+import { Flex, useTheme, useMediaQuery } from "@chakra-ui/react";
 import { AgCharts } from "ag-charts-react";
 import useColor from "@/hooks/useColor";
 
@@ -33,6 +33,10 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
   const theme = useTheme();
   const { getColor } = useColor();
 
+  const [isMobile] = useMediaQuery("(max-width: 48em)", {
+    ssr: false,
+  });
+
   const validData = useMemo(
     () =>
       Array.isArray(data) ? [...data].sort((a, b) => a.value - b.value) : [],
@@ -41,10 +45,13 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
 
   const tooltipRenderer = (params: AgCartesianSeriesTooltipRendererParams) => {
     const datum = params.datum as DataPoint;
-    return `<div class="ag-chart-tooltip-title" style="background-color:${params.color}; border: 1px solid white; border-radius: 8px 8px 0 0;">
+    return `
+      <div class="ag-chart-tooltip-title"
+           style="background-color:${params.color}; border: 1px solid white; border-radius: 8px 8px 0 0;">
         ${datum.title}
       </div>
-      <div class="ag-chart-tooltip-content" style=" border: 1px solid white; border-radius: 0 0 8px 8px;">
+      <div class="ag-chart-tooltip-content"
+           style="border: 1px solid white; border-radius: 0 0 8px 8px;">
         Score: ${datum.value.toFixed(1)}<br/>
         Count: ${datum.count}
       </div>`;
@@ -72,6 +79,14 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
             xOffset: 1,
             yOffset: 1,
             blur: 4,
+          },
+          label: {
+            enabled: isMobile || false,
+            placement: "inside",
+            color: isMobile ? theme.colors.perygonPink : "black",
+            fontSize: 10,
+            fontWeight: "bold",
+            formatter: ({ value }: { value: number }) => value.toFixed(1),
           },
           itemStyler: (params: AgBarSeriesItemStylerParams<any>) => {
             const { datum } = params;
@@ -104,7 +119,6 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
             fontSize: 12,
             rotation: -65,
             color: theme.colors.perygonPink,
-            formatter: ({ value }: { value: string }) => value,
           },
         },
         {
@@ -113,27 +127,14 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
           interval: { step: 2 },
           min: 0,
           max: 10,
-          // label: {
-          //   enabled: true,
-          //   fontSize: 12,
-          //   color: theme.colors.perygonPink,
-          // },
         },
       ],
-      legend: {
-        enabled: false,
-      },
-      zoom: {
-        enabled: false,
-      },
-      navigator: {
-        enabled: false,
-      },
-      tooltip: {
-        enabled: true,
-      },
+      legend: { enabled: false },
+      zoom: { enabled: false },
+      navigator: { enabled: false },
+      tooltip: { enabled: true },
     }),
-    [validData, getColor, onBarClick, theme.colors.perygonPink]
+    [validData, getColor, isMobile, onBarClick, theme.colors.perygonPink]
   );
 
   if (loading) {
