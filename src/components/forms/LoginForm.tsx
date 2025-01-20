@@ -7,9 +7,9 @@ import {
     Flex,
     HStack,
     Text,
-    useTheme,
+    useTheme, useToast,
     VStack,
-} from "@chakra-ui/react";
+} from "@chakra-ui/react"
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
 import {InputField} from "./InputField";
@@ -30,6 +30,7 @@ export type LoginFormInputs = {
 };
 
 export function LoginForm() {
+
     const theme = useTheme();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -92,33 +93,40 @@ export function LoginForm() {
             ? `/api/auth/sign-in?l=${secureLink}`
             : "/api/auth/sign-in";
 
-        let NextsAuthSession = await getSession();
+        let NextAuthSession = await getSession();
 
-        if (NextsAuthSession !== undefined) {
-            if (NextsAuthSession !== null) {
-                if (NextsAuthSession.user?.email != undefined) {
-                    const result: { redirectUrl: string } | null = await fetchClient(endpoint, {
+        if (NextAuthSession !== undefined) {
+            if (NextAuthSession !== null) {
+                if (NextAuthSession.user?.email != undefined) {
+
+                    const result: { redirectUrl: string } | null = await fetchClient(
+                        endpoint, {
                         method: "POST",
                         body: {
                             loginType: "sso",
-                            email: NextsAuthSession.user.email,
+                            email: NextAuthSession.user.email,
                             password: null
                         },
+                        suppressError: true
                     });
-
-
 
                     if (result) {
                         router.push('/');
+                    } else {
+                        const res = NextResponse.json({ success: false });
+                        res.cookies.delete('next-auth.callback-url');
+                        res.cookies.delete('next-auth.csrf-token');
+                        res.cookies.delete('next-auth.session-token');
+                        res.cookies.delete('__Host-next-auth.csrf-token');
+                        res.cookies.delete('__Secure-next-auth.callback-url');
+                        res.cookies.delete('__Secure-next-auth.session-token');
+
+                        router.push('/login');
                     }
 
                 }
             }
         }
-        // else {
-        //     signIn('azure-ad', {callbackUrl: '/login'});
-        // }
-
     }
 
     return (
