@@ -81,7 +81,7 @@ export const useFetchClient = () => {
 
       return data;
     } catch (error: any) {
-      if (suppressError == true) {
+      if (suppressError) {
         toast.closeAll();
       }
         toast({
@@ -93,7 +93,7 @@ export const useFetchClient = () => {
           position: toastPosition,
         });
 
-      if (redirectOnError) {
+      if (redirectOnError && !suppressError) {
         router.push("/error");
       }
 
