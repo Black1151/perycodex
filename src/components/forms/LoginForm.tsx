@@ -59,7 +59,6 @@ export function LoginForm() {
                 handleSubmit(handleFormSubmit)();
                 break;
             case 'microsoft':
-                console.log('microsoft button click;');
                 signIn('azure-ad',  {callbackUrl: '/'});
                 break;
             case 'google':
@@ -94,7 +93,6 @@ export function LoginForm() {
             : "/api/auth/sign-in";
 
         let NextAuthSession = await getSession();
-
         if (NextAuthSession !== undefined) {
             if (NextAuthSession !== null) {
                 if (NextAuthSession.user?.email != undefined) {
@@ -105,7 +103,9 @@ export function LoginForm() {
                         body: {
                             loginType: "sso",
                             email: NextAuthSession.user.email,
-                            password: null
+                            password: null,
+                            accessToken: NextAuthSession.accessToken,
+                            type: NextAuthSession.accountProvider == 'google' ? 2 : 1
                         },
                         suppressError: true
                     });
