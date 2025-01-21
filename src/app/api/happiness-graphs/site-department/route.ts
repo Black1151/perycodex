@@ -6,11 +6,10 @@ interface ManagingPartnersResponse {
 }
 
 interface UserStatsResponse {
-  totalAvg: any;
+  totalAvg: number;
   gridData: any;
-  weeklyLineChartComparisonData: any; // API returns this as a string
-  monthlyLineChartComparisonData: any; // API returns this as a string
-  currentWeekLeaderboard: any;
+  weeklyLineChartComparisonData: any;
+  monthlyLineChartComparisonData: any;
   leaderboardData: any;
 }
 
@@ -46,13 +45,16 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { startDate, endDate } = body;
 
-    const userResponse = await apiClient("/getManagingPartnersDashboard", {
-      method: "POST",
-      body: JSON.stringify({
-        startDate,
-        endDate,
-      }),
-    });
+    const userResponse = await apiClient(
+      "/dashboards/getSiteDepartmentDashboard",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          startDate,
+          endDate,
+        }),
+      },
+    );
 
     if (!userResponse.ok) {
       throw new Error("Failed to fetch happiness score RAG data");
@@ -61,39 +63,24 @@ export async function POST(request: Request) {
     const managingPartnersResponse: ManagingPartnersResponse =
       await userResponse.json();
 
-    const rawGridDataStr = managingPartnersResponse.resource.gridData;
-    const rawWeeklyStr =
-      managingPartnersResponse.resource.weeklyLineChartComparisonData;
-    const rawMonthlyStr =
-      managingPartnersResponse.resource.monthlyLineChartComparisonData;
-    const rawCurrentWeekLeaderboardStr =
-      managingPartnersResponse.resource.currentWeekLeaderboard;
-    const rawLeaderboardDataStr =
-      managingPartnersResponse.resource.leaderboardData;
-
-    const rawGridData = JSON.parse(rawGridDataStr || "[]");
-    const rawWeeklyData = JSON.parse(rawWeeklyStr || "[]");
-    const rawMonthlyData = JSON.parse(rawMonthlyStr || "[]");
-    const rawCurrentWeekLeaderboardData = JSON.parse(
-      rawCurrentWeekLeaderboardStr || "[]",
+    // Flatten weekly and monthly data
+    const flattenedWeekly = flattenSiteScores(
+      managingPartnersResponse.resource.weeklyLineChartComparisonData,
+      "week",
     );
-    const rawLeaderboardDataData = JSON.parse(rawLeaderboardDataStr || "[]");
+    const flattenedMonthly = flattenSiteScores(
+      managingPartnersResponse.resource.monthlyLineChartComparisonData,
+      "month",
+    );
 
-    // 3) Flatten them
-    const flattenedWeekly = flattenSiteScores(rawWeeklyData, "week");
-    const flattenedMonthly = flattenSiteScores(rawMonthlyData, "month");
-
-    // 4) Overwrite original string fields with the new arrays
+    // Overwrite original string fields with the new arrays
     const transformedResource = {
       ...managingPartnersResponse.resource,
-      gridData: rawGridData,
       weeklyLineChartComparisonData: flattenedWeekly,
       monthlyLineChartComparisonData: flattenedMonthly,
-      currentWeekLeaderboard: rawCurrentWeekLeaderboardData,
-      leaderboardData: rawLeaderboardDataData,
     };
 
-    // 5) Return the final JSON
+    // Return the final JSON
     return NextResponse.json({
       resource: transformedResource,
     });
