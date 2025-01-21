@@ -371,6 +371,7 @@ function DataGridComponentLight<T>({
                     onPageChange={() => {
                         updatePaginationInfo(gridRef, setPaginationInfo);
                     }}
+                    setPaginationInfo={setPaginationInfo}
                 />
             </Flex>
 

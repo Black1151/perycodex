@@ -48,7 +48,6 @@ interface DataGridComponentProps<T> {
   height?: string;
 }
 
-// Define the type for pagination info
 interface PaginationInfo {
   currentPage: number;
   totalPages: number;
@@ -79,13 +78,17 @@ const DataGridComponent = <T,>({
   height = "500px",
 }: DataGridComponentProps<T>) => {
   const gridRef = useRef<AgGridReact>(null);
-  const [rowData, setRowData] = useState<T[]>(data || []);
-  const [fields, setFields] = useState<any[]>(initialFields);
   const router = useRouter();
-  const [isGridReady, setIsGridReady] = useState(false);
+
   const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
   const uniqueQuickFilterId = useId();
+
+  const [fields, setFields] = useState<any[]>(initialFields);
+  const [isGridReady, setIsGridReady] = useState(false);
+
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const [rowData, setRowData] = useState<T[]>(data || []);
 
   useEffect(() => {
     setFields(initialFields);
