@@ -92,13 +92,13 @@ const CustomGridBottomPaginationLight: React.FC<
                         onChange={(e) => {
                             const newPageSize = Number(e.target.value);
                             if (gridRef.current?.api) {
-                                // Update the AG Grid's page size
+                                // Correct method to set the page size
                                 gridRef.current.api.setGridOption('paginationPageSize', newPageSize);
                                 // Update the pagination info state
                                 setPaginationInfo((prev) => ({
                                     ...prev,
                                     pageSize: newPageSize,
-                                    totalPages: Math.ceil(paginationInfo.totalRows / newPageSize),
+                                    totalPages: Math.ceil(prev.totalRows / newPageSize), // Use prev to access the current totalRows
                                 }));
                             }
                         }}
@@ -109,6 +109,7 @@ const CustomGridBottomPaginationLight: React.FC<
                             </option>
                         ))}
                     </Select>
+
                     <Text>of {paginationInfo.totalRows}</Text>
                 </HStack>
                 <HStack justifyContent="flex-end">
