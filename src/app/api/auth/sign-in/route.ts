@@ -5,7 +5,8 @@ interface apiBodyType {
   loginType?: string;
   email?: string;
   password?: string;
-  accessToken?: accessToken;
+  accessToken?: string;
+  type?: number;
 }
 
 export async function POST(req: NextRequest) {
