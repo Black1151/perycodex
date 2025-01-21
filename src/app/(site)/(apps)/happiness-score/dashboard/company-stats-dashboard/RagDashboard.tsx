@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import {
+  Avatar,
   Box,
   Flex,
   IconButton,
@@ -15,14 +16,13 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import "ag-grid-charts-enterprise";
 import { ColDef } from "ag-grid-community";
-import DataGridComponent from "@/components/agGrids/DataGridComponent";
+import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridComponentLight";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { Info } from "@mui/icons-material";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/HappinessScoreRenderer";
 import HappinessDifferenceRenderer from "@/components/agGrids/CellRenderers/HappinessDifferenceRenderer";
-import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
 import HappinessHistogramRenderer from "@/components/agGrids/CellRenderers/HappinessHistogramRenderer";
 import { CompanyBubble } from "@/app/(site)/(apps)/happiness-score/dashboard/company-stats-dashboard/CompanyBubble";
 import { CompanyHistogram } from "@/app/(site)/(apps)/happiness-score/dashboard/company-stats-dashboard/CompanyHistogram";
@@ -165,15 +165,42 @@ const RagDashboard: React.FC = () => {
   useEffect(() => {
     const desktopColumnDefs: ColDef[] = [
       {
-        field: "fullName",
-        headerName: "Name",
-        cellRenderer: UserRenderer,
-        sortable: true,
-        cellRendererParams: {
-          uniqueIdField: "userUniqueId",
-          nameField: "fullName",
-          imageUrlField: "userImageUrl",
+        headerName: "",
+        field: "userImageUrl",
+        sortable: false,
+        filter: false,
+        width: 100,
+        maxWidth: 60,
+        resizable: false,
+        cellRenderer: (params: any) => {
+          return (
+              <Flex
+                  justifyContent="center"
+                  alignItems="center"
+                  w="100%"
+                  h="100%"
+                  py={1}
+              >
+                <Avatar
+                    name={params.data.fullName}
+                    src={params.data.userImageUrl}
+                    size="sm"
+                    sx={{
+                      fontSize: "0.65rem",
+                    }}
+                />
+              </Flex>
+          );
         },
+        cellStyle: {color: "black"},
+      },
+      {
+        headerName: "Name",
+        field: "fullName",
+        sortable: true,
+        filter: true,
+        flex: 1,
+        cellStyle: {color: "black"},
       },
       {
         field: "siteName",
@@ -247,15 +274,42 @@ const RagDashboard: React.FC = () => {
 
     const mobileColumnDefs: ColDef[] = [
       {
-        field: "fullName",
-        headerName: "Name",
-        cellRenderer: UserRenderer,
-        sortable: true,
-        cellRendererParams: {
-          uniqueIdField: "userUniqueId",
-          nameField: "fullName",
-          imageUrlField: "userImageUrl",
+        headerName: "",
+        field: "userImageUrl",
+        sortable: false,
+        filter: false,
+        width: 100,
+        maxWidth: 60,
+        resizable: false,
+        cellRenderer: (params: any) => {
+          return (
+              <Flex
+                  justifyContent="center"
+                  alignItems="center"
+                  w="100%"
+                  h="100%"
+                  py={1}
+              >
+                <Avatar
+                    name={params.data.fullName}
+                    src={params.data.userImageUrl}
+                    size="sm"
+                    sx={{
+                      fontSize: "0.65rem",
+                    }}
+                />
+              </Flex>
+          );
         },
+        cellStyle: {color: "black"},
+      },
+      {
+        headerName: "Name",
+        field: "fullName",
+        sortable: true,
+        filter: true,
+        flex: 1,
+        cellStyle: {color: "black"},
       },
       {
         field: "siteName",
@@ -408,7 +462,7 @@ const RagDashboard: React.FC = () => {
       />
       {/* Grid Section */}
       <Box
-        className="ag-theme-alpine ag-theme-perygon"
+        className="ag-theme-alpine"
         width="100%"
         borderRadius="lg"
       >
@@ -428,7 +482,16 @@ const RagDashboard: React.FC = () => {
             />
           </Tooltip>
         </Flex>
-        <DataGridComponent
+        <Box
+            className="ag-theme-alpine"
+            w="100%"
+            p={1}
+            pb="7px"
+            borderRadius="xl"
+            boxShadow="md"
+            bgColor="white"
+        >
+        <DataGridComponentLight
           data={rowData}
           loading={isLoading}
           initialFields={columnDefs}
@@ -437,6 +500,7 @@ const RagDashboard: React.FC = () => {
           refreshData={getData}
           enableAutoRefresh={true}
         />
+      </Box>
       </Box>
       {rowData.length > 0 && (
         <>
