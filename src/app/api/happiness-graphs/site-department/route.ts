@@ -10,7 +10,8 @@ interface UserStatsResponse {
   gridData: any;
   weeklyLineChartComparisonData: any;
   monthlyLineChartComparisonData: any;
-  leaderboardData: any;
+  officeLeaderboardData: any;
+  departmentLeaderboardData: any;
 }
 
 /**

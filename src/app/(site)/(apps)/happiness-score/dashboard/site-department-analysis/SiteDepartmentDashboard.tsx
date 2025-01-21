@@ -41,7 +41,8 @@ interface ManagingPartnersResponse {
         gridData: any;
         weeklyLineChartComparisonData: any[];
         monthlyLineChartComparisonData: any[];
-        leaderboardData: any[];
+        officeLeaderboardData: any[];
+        departmentLeaderboardData: any[];
     };
 }
 
@@ -79,9 +80,9 @@ const SiteDepartmentDashboard: React.FC = () => {
         useState<any[]>([]);
     const [monthlyLineChartComparisonData, setMonthlyLineChartComparisonData] =
         useState<any[]>([]);
-    const [leaderboardData, setLeaderboardData] = useState<any[]>([]);
+    const [officeLeaderboardData, setOfficeLeaderboardData] = useState<any[]>([]);
+    const [departmentLeaderboardData, setDepartmentLeaderboardData] = useState<any[]>([]);
 
-    // Example column definitions for the grid
     const columnDefs = [
         {
             field: "fullName",
@@ -127,9 +128,6 @@ const SiteDepartmentDashboard: React.FC = () => {
         suppressHeaderMenuButton: true,
     };
 
-    // ------------------------------------------------------------------------------
-    // 1) Fetch the data from our Next.js API route (which does the flattening)
-    // ------------------------------------------------------------------------------
     const getData = async (overrideStart?: string, overrideEnd?: string) => {
         setIsLoading(true);
         try {
@@ -163,15 +161,16 @@ const SiteDepartmentDashboard: React.FC = () => {
                     gridData: resGridData,
                     weeklyLineChartComparisonData: resWeeklyData,
                     monthlyLineChartComparisonData: resMonthlyData,
-                    leaderboardData: resLeaderboardData,
+                    officeLeaderboardData: resOfficeLeaderboardData,
+                    departmentLeaderboardData: resDepartmentLeaderboardData,
                 } = response.resource;
 
-                // Because the server is already returning them as arrays, just set them:
                 setTotalAvg(resTotalAvg);
                 setGridData(resGridData);
                 setWeeklyLineChartComparisonData(resWeeklyData);
                 setMonthlyLineChartComparisonData(resMonthlyData);
-                setLeaderboardData(resLeaderboardData);
+                setOfficeLeaderboardData(resOfficeLeaderboardData);
+                setDepartmentLeaderboardData(resDepartmentLeaderboardData);
             } else {
                 console.error("Invalid response:", response);
             }
@@ -391,19 +390,19 @@ const SiteDepartmentDashboard: React.FC = () => {
     };
 
     // Leaderboard for Period Bar Chart
-    const sortedLeaderboard = [...leaderboardData].sort(
+    const sortedOfficeLeaderboard = [...officeLeaderboardData].sort(
         (a, b) => b.currentWeekScore - a.currentWeekScore,
     );
 
-    const leaderboardBarOptions: AgCartesianChartOptions = {
-        data: sortedLeaderboard,
+    const officeLeaderboardBarOptions: AgCartesianChartOptions = {
+        data: sortedOfficeLeaderboard,
         padding: {top: 20, left: 20, right: 20, bottom: 50},
         series: [
             {
                 type: "bar",
                 xKey: "siteName",
                 yKey: "currentWeekScore",
-                yName: "Current Week",
+                yName: "Current Week (Avg)",
                 cornerRadius: 10,
                 fill: theme.colors.seduloGreen,
                 shadow: {
@@ -418,7 +417,71 @@ const SiteDepartmentDashboard: React.FC = () => {
                 type: "bar",
                 xKey: "siteName",
                 yKey: "periodScore",
-                yName: "Current Week",
+                yName: "Period (Avg)",
+                cornerRadius: 10,
+                fill: theme.colors.yellow,
+                shadow: {
+                    enabled: true,
+                    color: "#191919",
+                    xOffset: 1,
+                    yOffset: 1,
+                    blur: 4,
+                },
+            },
+        ],
+        axes: [
+            {
+                type: "category",
+                position: "bottom",
+                label: {
+                    rotation: 300,
+                    fontSize: 10,
+                    fontFamily: "Metropolis",
+                    color: theme.colors.perygonPink,
+                },
+            },
+            {
+                type: "number",
+                position: "left",
+                label: {
+                    fontSize: 10,
+                    fontFamily: "Metropolis",
+                    color: theme.colors.perygonPink,
+                },
+            },
+        ],
+        legend: {position: "bottom" as const},
+    };
+
+    // Leaderboard for Period Bar Chart
+    const sortedDepartmentLeaderboard = [...departmentLeaderboardData].sort(
+        (a, b) => b.currentWeekScore - a.currentWeekScore,
+    );
+
+    const departmentLeaderboardBarOptions: AgCartesianChartOptions = {
+        data: sortedDepartmentLeaderboard,
+        padding: {top: 20, left: 20, right: 20, bottom: 50},
+        series: [
+            {
+                type: "bar",
+                xKey: "name",
+                yKey: "currentWeekScore",
+                yName: "Current Week (Avg)",
+                cornerRadius: 10,
+                fill: theme.colors.seduloGreen,
+                shadow: {
+                    enabled: true,
+                    color: "#191919",
+                    xOffset: 1,
+                    yOffset: 1,
+                    blur: 4,
+                },
+            },
+            {
+                type: "bar",
+                xKey: "name",
+                yKey: "periodScore",
+                yName: "Period (Avg)",
                 cornerRadius: 10,
                 fill: theme.colors.yellow,
                 shadow: {
@@ -482,7 +545,7 @@ const SiteDepartmentDashboard: React.FC = () => {
             </Flex>
             {/* Dashboard Layout */}
             <Flex w={"100%"} gap={6} flexWrap={"wrap"}>
-                <Box flex={"1 1 250px"} textAlign="center" borderRadius="lg">
+                <Box flex={"1 1 250px"} borderRadius="lg">
                     {/* Average Score */}
                     <Flex width="100%" justifyContent="center" align="center" mb={4}>
                         <SectionHeader>Average</SectionHeader>
@@ -493,7 +556,7 @@ const SiteDepartmentDashboard: React.FC = () => {
                 </Box>
 
                 {/* Scores and Comments */}
-                <Box flex={"1 1 50%"} textAlign="center" borderRadius="lg">
+                <Box flex={"1 1 50%"} borderRadius="lg">
                     <Flex width="100%" justifyContent="center" align="center" mb={4}>
                         <SectionHeader>Scores and Comments</SectionHeader>
                     </Flex>
@@ -508,18 +571,32 @@ const SiteDepartmentDashboard: React.FC = () => {
                     />
                 </Box>
 
-                {/* Period Leaderboard */}
-                <Box flex={"1 1 50%"} textAlign="center" borderRadius="lg">
+                {/* Office Leaderboard */}
+                <Box flex={"1 1 50%"} borderRadius="lg">
                     <Flex width="100%" justifyContent="center" align="center" mb={4}>
-                        <SectionHeader>Leaderboard for Period</SectionHeader>
+                        <SectionHeader>Office Leaderboard</SectionHeader>
                     </Flex>
                     <Box borderRadius="2xl" shadow="xl" overflow="hidden" height="500px">
                         <AgCharts
-                            options={leaderboardBarOptions as any}
+                            options={officeLeaderboardBarOptions as any}
                             style={{width: "100%", height: "100%"}}
                         />
                     </Box>
                 </Box>
+
+                {/* Department Leaderboard */}
+                <Box flex={"1 1 50%"} borderRadius="lg">
+                    <Flex width="100%" justifyContent="center" align="center" mb={4}>
+                        <SectionHeader>Department Leaderboard</SectionHeader>
+                    </Flex>
+                    <Box borderRadius="2xl" shadow="xl" overflow="hidden" height="500px">
+                        <AgCharts
+                            options={departmentLeaderboardBarOptions as any}
+                            style={{width: "100%", height: "100%"}}
+                        />
+                    </Box>
+                </Box>
+
 
                 {/*Weekly Chart*/}
                 <Box flex={"1 1 100%"}>
@@ -533,10 +610,11 @@ const SiteDepartmentDashboard: React.FC = () => {
                         />
                     </Box>
                 </Box>
+
                 {/* Monthly Chart */}
                 <Box flex={"1 1 100%"}>
                     <Flex width="100%" justifyContent="center" align="center" mb={4}>
-                        <SectionHeader>Monthly Comparison</SectionHeader>
+                        <SectionHeader>Monthly Trend</SectionHeader>
                     </Flex>
                     <Box borderRadius="2xl" shadow="xl" overflow="hidden" height="500px">
                         <AgCharts
