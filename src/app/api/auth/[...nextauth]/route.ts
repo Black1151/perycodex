@@ -55,9 +55,6 @@ const handler = NextAuth({
         },
         async session({ session, token }) {
 
-            console.log('Session below:');
-            console.log(session);
-            // Modify the session object as needed
             session.accessToken = token.accessToken;
             session.idToken = token.idToken;
             session.accountProvider = token.accountProvider;
