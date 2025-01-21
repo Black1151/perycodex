@@ -3,7 +3,7 @@ import AzureADProvider from 'next-auth/providers/azure-ad';
 import Google from "next-auth/providers/google";
 import apiClient from "@/lib/apiClient";
 import {NextResponse} from "next/server";
-
+import { signIn } from "next-auth/react";
 
 const AZURE_AD_CLIENT_ID='80b0a206-ea3a-4f28-a8d0-aadbb1655bd5';
 const AZURE_AD_CLIENT_SECRET='0gj8Q~moeoK0GMU1gE2.GemT_Gf~hrbU036cKdkr';
@@ -23,7 +23,7 @@ const handler = NextAuth({
                 params: {
                     authorizationUrl: `https://login.microsoftonline.com/${AZURE_AD_TENANT_ID}/oauth2/v2.0/authorize`,
                     tokenUrl: `https://login.microsoftonline.com/${AZURE_AD_TENANT_ID}/oauth2/v2.0/token`,
-                    scope: 'openid profile email',
+                    scope: 'openid profile email User.Read',
                     redirect_uri: `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/azure-ad`,
                 }
             },
@@ -45,7 +45,26 @@ const handler = NextAuth({
         signOut: 'auth/sign-out'
     },
     callbacks: {
+        async jwt({ token, account }) {
+            if (account) {
+                token.accessToken = account.access_token;
+                token.idToken = account.id_token;
+                token.accountProvider = account.provider;
+            }
+            return token;
+        },
+        async session({ session, token }) {
 
+            console.log('Session below:');
+            console.log(session);
+            // Modify the session object as needed
+            session.accessToken = token.accessToken;
+            session.idToken = token.idToken;
+            session.accountProvider = token.accountProvider;
+
+            // Return the modified session object
+            return session;
+        },
     },
 });
 
