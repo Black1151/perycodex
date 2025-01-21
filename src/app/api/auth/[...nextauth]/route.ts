@@ -55,9 +55,15 @@ const handler = NextAuth({
         },
         async session({ session, token }) {
 
-            session.accessToken = token.accessToken;
-            session.idToken = token.idToken;
-            session.accountProvider = token.accountProvider;
+            if (token && typeof token.accessToken === 'string') {
+                session.accessToken = token.accessToken;
+            }
+            if (token && typeof token.idToken === 'string') {
+                session.idToken = token.idToken;
+            }
+            if (token && typeof token.accountProvider === 'string') {
+                session.accountProvider = token.accountProvider;
+            }
 
             // Return the modified session object
             return session;
