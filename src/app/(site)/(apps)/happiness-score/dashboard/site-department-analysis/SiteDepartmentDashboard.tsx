@@ -7,18 +7,17 @@ import {
     VStack,
     useTheme,
     useBreakpointValue,
-    Select,
+    Select, Avatar,
 } from "@chakra-ui/react";
 import {useUser} from "@/providers/UserProvider";
 import {useFetchClient} from "@/hooks/useFetchClient";
 import {SectionHeader} from "@/components/sectionHeader/SectionHeader";
-import DataGridComponent from "@/components/agGrids/DataGridComponent";
-import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
 import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/HappinessScoreRenderer";
 import CommentsCellRenderer from "@/components/agGrids/CellRenderers/CommentsCellRenderer";
 import {AgCharts} from "ag-charts-react";
 import {AgCartesianChartOptions} from "ag-charts-enterprise";
 import useColor from "@/hooks/useColor";
+import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridComponentLight";
 
 import {
     startOfWeek,
@@ -85,15 +84,42 @@ const SiteDepartmentDashboard: React.FC = () => {
 
     const columnDefs = [
         {
-            field: "fullName",
-            headerName: "Name",
-            cellRenderer: UserRenderer,
-            sortable: true,
-            cellRendererParams: {
-                uniqueIdField: "userUniqueId",
-                nameField: "fullName",
-                imageUrlField: "userImageUrl",
+            headerName: "",
+            field: "userImageUrl",
+            sortable: false,
+            filter: false,
+            width: 100,
+            maxWidth: 60,
+            resizable: false,
+            cellRenderer: (params: any) => {
+                return (
+                    <Flex
+                        justifyContent="center"
+                        alignItems="center"
+                        w="100%"
+                        h="100%"
+                        py={1}
+                    >
+                        <Avatar
+                            name={params.data.fullName}
+                            src={params.data.userImageUrl}
+                            size="sm"
+                            sx={{
+                                fontSize: "0.65rem",
+                            }}
+                        />
+                    </Flex>
+                );
             },
+            cellStyle: {color: "black"},
+        },
+        {
+            headerName: "Name",
+            field: "fullName",
+            sortable: true,
+            filter: true,
+            flex: 1,
+            cellStyle: {color: "black"},
         },
         {
             field: "siteName",
@@ -560,15 +586,25 @@ const SiteDepartmentDashboard: React.FC = () => {
                     <Flex width="100%" justifyContent="center" align="center" mb={4}>
                         <SectionHeader>Scores and Comments</SectionHeader>
                     </Flex>
-                    <DataGridComponent
-                        data={gridData}
-                        loading={isLoading}
-                        initialFields={columnDefs}
-                        showTopBar
-                        defaultColDef={defaultColDef}
-                        refreshData={getData}
-                        enableAutoRefresh
-                    />
+                    <Box
+                        className="ag-theme-alpine"
+                        w="100%"
+                        p={1}
+                        pb="7px"
+                        borderRadius="xl"
+                        boxShadow="md"
+                        bgColor="white"
+                    >
+                        <DataGridComponentLight
+                            data={gridData}
+                            loading={isLoading}
+                            initialFields={columnDefs}
+                            showTopBar={false}
+                            defaultColDef={defaultColDef}
+                            refreshData={getData}
+                            enableAutoRefresh
+                        />
+                    </Box>
                 </Box>
 
                 {/* Office Leaderboard */}
