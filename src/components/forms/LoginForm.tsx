@@ -92,38 +92,54 @@ export function LoginForm() {
             ? `/api/auth/sign-in?l=${secureLink}`
             : "/api/auth/sign-in";
 
-        let NextAuthSession = await getSession();
-        if (NextAuthSession !== undefined) {
-            if (NextAuthSession !== null) {
-                if (NextAuthSession.user?.email != undefined) {
+        const searchParams = new URLSearchParams(window.location.search);
+        const isMissingToken = searchParams.get('MissingAuthToken');
+        if (isMissingToken !== null) {
+            if (isMissingToken == 'true') {
+                try {
+                    await signOut();
+                } catch (error) {
+                    // continue;
+                }
+            }
+        } else {
+            let NextAuthSession = await getSession();
+            if (NextAuthSession !== undefined) {
+                if (NextAuthSession !== null) {
+                    if (NextAuthSession.user?.email != undefined) {
 
-                    const result: { redirectUrl: string } | null = await fetchClient(
-                        endpoint, {
-                        method: "POST",
-                        body: {
-                            loginType: "sso",
-                            email: NextAuthSession.user.email,
-                            password: null,
-                            accessToken: NextAuthSession.accessToken,
-                            type: NextAuthSession.accountProvider == 'google' ? 2 : 1
-                        },
-                        suppressError: true
-                    });
+                        const result: { redirectUrl: string } | null = await fetchClient(
+                            endpoint, {
+                                method: "POST",
+                                body: {
+                                    loginType: "sso",
+                                    email: NextAuthSession.user.email,
+                                    password: null,
+                                    accessToken: NextAuthSession.accessToken,
+                                    type: NextAuthSession.accountProvider == 'google' ? 2 : 1
+                                },
+                                suppressError: true
+                            });
 
-                    if (result) {
-                        router.push('/');
-                    } else {
-                        const res = NextResponse.json({ success: false });
-                        res.cookies.delete('next-auth.callback-url');
-                        res.cookies.delete('next-auth.csrf-token');
-                        res.cookies.delete('next-auth.session-token');
-                        res.cookies.delete('__Host-next-auth.csrf-token');
-                        res.cookies.delete('__Secure-next-auth.callback-url');
-                        res.cookies.delete('__Secure-next-auth.session-token');
+                        if (result) {
+                            router.push('/');
+                        } else {
+                            const res = NextResponse.json({success: false});
+                            res.cookies.delete('next-auth.callback-url');
+                            res.cookies.delete('next-auth.csrf-token');
+                            res.cookies.delete('next-auth.session-token');
+                            res.cookies.delete('__Host-next-auth.csrf-token');
+                            res.cookies.delete('__Secure-next-auth.callback-url');
+                            res.cookies.delete('__Secure-next-auth.session-token');
 
-                        router.push('/login');
+                            try {
+                                await signOut();
+                            } catch (error) {
+                                // continue;
+                            }
+                        }
+
                     }
-
                 }
             }
         }

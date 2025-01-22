@@ -23,7 +23,7 @@ export async function middleware(request: NextRequest) {
     });
 
     if (!ok || status !== 200) {
-      const response = NextResponse.redirect(new URL("/login", request.url));
+      const response = NextResponse.redirect(new URL("/login?MissingAuthToken=true", request.url));
       response.cookies.delete("auth_token");
       response.cookies.delete("user_uuid");
       response.cookies.delete('next-auth.callback-url');
