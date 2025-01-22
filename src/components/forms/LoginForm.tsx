@@ -97,7 +97,7 @@ export function LoginForm() {
         if (isMissingToken !== null) {
             if (isMissingToken == 'true') {
                 try {
-                    await signOut();
+                    await signOut({callbackUrl: '/login'});
                 } catch (error) {
                     // continue;
                 }
@@ -133,7 +133,7 @@ export function LoginForm() {
                             res.cookies.delete('__Secure-next-auth.session-token');
 
                             try {
-                                await signOut();
+                                await signOut({callbackUrl: '/login'});
                             } catch (error) {
                                 // continue;
                             }
