@@ -67,6 +67,7 @@ export default async function LoginPage({
                         height={800}
                         imageOffset={-520}
                         backgroundOffset={-580}
+
                         titleComponent={
                             <VStack position="absolute" top="100px">
                                 <LetterFlyIn>Perygon</LetterFlyIn>
