@@ -28,6 +28,8 @@ import { CompanyBubble } from "@/app/(site)/(apps)/happiness-score/dashboard/com
 import { CompanyHistogram } from "@/app/(site)/(apps)/happiness-score/dashboard/company-stats-dashboard/CompanyHistogram";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import { useUser } from "@/providers/UserProvider";
+import StaffHappinessDetailsRenderer
+  from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
 
 interface ApiResponse {
   userResource: RowData[];
@@ -172,26 +174,7 @@ const RagDashboard: React.FC = () => {
         width: 100,
         maxWidth: 60,
         resizable: false,
-        cellRenderer: (params: any) => {
-          return (
-              <Flex
-                  justifyContent="center"
-                  alignItems="center"
-                  w="100%"
-                  h="100%"
-                  py={1}
-              >
-                <Avatar
-                    name={params.data.fullName}
-                    src={params.data.userImageUrl}
-                    size="sm"
-                    sx={{
-                      fontSize: "0.65rem",
-                    }}
-                />
-              </Flex>
-          );
-        },
+        cellRenderer: StaffHappinessDetailsRenderer,
         cellStyle: {color: "black"},
       },
       {
@@ -281,26 +264,7 @@ const RagDashboard: React.FC = () => {
         width: 100,
         maxWidth: 60,
         resizable: false,
-        cellRenderer: (params: any) => {
-          return (
-              <Flex
-                  justifyContent="center"
-                  alignItems="center"
-                  w="100%"
-                  h="100%"
-                  py={1}
-              >
-                <Avatar
-                    name={params.data.fullName}
-                    src={params.data.userImageUrl}
-                    size="sm"
-                    sx={{
-                      fontSize: "0.65rem",
-                    }}
-                />
-              </Flex>
-          );
-        },
+        cellRenderer: HappinessScoreRenderer,
         cellStyle: {color: "black"},
       },
       {

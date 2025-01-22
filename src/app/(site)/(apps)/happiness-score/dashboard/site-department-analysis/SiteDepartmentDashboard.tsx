@@ -33,6 +33,8 @@ import {
     format,
 } from "date-fns";
 import SpeechBubble from "../../SpeechBubble";
+import StaffHappinessDetailsRenderer
+    from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
 
 interface ManagingPartnersResponse {
     resource: {
@@ -91,26 +93,7 @@ const SiteDepartmentDashboard: React.FC = () => {
             width: 100,
             maxWidth: 60,
             resizable: false,
-            cellRenderer: (params: any) => {
-                return (
-                    <Flex
-                        justifyContent="center"
-                        alignItems="center"
-                        w="100%"
-                        h="100%"
-                        py={1}
-                    >
-                        <Avatar
-                            name={params.data.fullName}
-                            src={params.data.userImageUrl}
-                            size="sm"
-                            sx={{
-                                fontSize: "0.65rem",
-                            }}
-                        />
-                    </Flex>
-                );
-            },
+            cellRenderer: StaffHappinessDetailsRenderer,
             cellStyle: {color: "black"},
         },
         {

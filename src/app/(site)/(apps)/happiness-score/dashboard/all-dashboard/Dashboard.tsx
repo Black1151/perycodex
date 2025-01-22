@@ -42,6 +42,8 @@ import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import CommentsCellRenderer from "@/components/agGrids/CellRenderers/CommentsCellRenderer";
 import {useWorkflow} from "@/providers/WorkflowProvider";
 import {useUser} from "@/providers/UserProvider";
+import StaffHappinessDetailsRenderer
+    from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
 
 interface ApiResponse {
     data: RowData[]; // This matches the RowData type you're using
@@ -137,6 +139,7 @@ const Dashboard: React.FC = () => {
         }
     };
 
+
     useEffect(() => {
         // Fetch data only when toolId, workflowId, and user.customerId are available
         if (toolId && workflowId && user?.customerId) {
@@ -153,26 +156,7 @@ const Dashboard: React.FC = () => {
             width: 100,
             maxWidth: 60,
             resizable: false,
-            cellRenderer: (params: any) => {
-                return (
-                    <Flex
-                        justifyContent="center"
-                        alignItems="center"
-                        w="100%"
-                        h="100%"
-                        py={1}
-                    >
-                        <Avatar
-                            name={params.data.fullName}
-                            src={params.data.userImageUrl}
-                            size="sm"
-                            sx={{
-                                fontSize: "0.65rem",
-                            }}
-                        />
-                    </Flex>
-                );
-            },
+            cellRenderer: StaffHappinessDetailsRenderer,
             cellStyle: {color: "black"},
         },
         {
@@ -226,26 +210,7 @@ const Dashboard: React.FC = () => {
             width: 100,
             maxWidth: 60,
             resizable: false,
-            cellRenderer: (params: any) => {
-                return (
-                    <Flex
-                        justifyContent="center"
-                        alignItems="center"
-                        w="100%"
-                        h="100%"
-                        py={1}
-                    >
-                        <Avatar
-                            name={params.data.fullName}
-                            src={params.data.userImageUrl}
-                            size="sm"
-                            sx={{
-                                fontSize: "0.65rem",
-                            }}
-                        />
-                    </Flex>
-                );
-            },
+            cellRenderer: HappinessScoreRenderer,
             cellStyle: {color: "black"},
         },
         {
