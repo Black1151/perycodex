@@ -185,9 +185,6 @@ const HappinessRagHistogramModal: React.FC<HappinessRagBubbleModal> = ({
           padding: 0,
           color: theme.colors.perygonPink,
         },
-        crosshair: {
-          enabled: false,
-        },
       },
     ],
     legend: {

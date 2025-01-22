@@ -303,14 +303,6 @@ const Dashboard: React.FC = () => {
                                 gridLine: {
                                     width: 0,
                                 },
-                                crosshair: {
-                                    enabled: false,
-                                },
-                            },
-                            number: {
-                                crosshair: {
-                                    enabled: false,
-                                },
                             },
                         },
                         legend: {
@@ -412,14 +404,6 @@ const Dashboard: React.FC = () => {
                                 gridLine: {
                                     width: 0,
                                 },
-                                crosshair: {
-                                    enabled: false,
-                                },
-                            },
-                            number: {
-                                crosshair: {
-                                    enabled: false,
-                                },
                             },
                         },
                         legend: {
@@ -520,14 +504,6 @@ const Dashboard: React.FC = () => {
                                 gridLine: {
                                     width: 0,
                                 },
-                                crosshair: {
-                                    enabled: false,
-                                },
-                            },
-                            number: {
-                                crosshair: {
-                                    enabled: false,
-                                },
                             },
                         },
                         legend: {
@@ -602,14 +578,6 @@ const Dashboard: React.FC = () => {
                                 },
                                 gridLine: {
                                     width: 0,
-                                },
-                                crosshair: {
-                                    enabled: false,
-                                },
-                            },
-                            number: {
-                                crosshair: {
-                                    enabled: false,
                                 },
                             },
                         },

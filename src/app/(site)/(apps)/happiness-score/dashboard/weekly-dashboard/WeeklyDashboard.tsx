@@ -340,14 +340,6 @@ const WeeklyDashboard: React.FC = () => {
                                 gridLine: {
                                     width: 0,
                                 },
-                                crosshair: {
-                                    enabled: false,
-                                },
-                            },
-                            number: {
-                                crosshair: {
-                                    enabled: false,
-                                },
                             },
                         },
                         legend: {
@@ -448,14 +440,6 @@ const WeeklyDashboard: React.FC = () => {
                                 },
                                 gridLine: {
                                     width: 0,
-                                },
-                                crosshair: {
-                                    enabled: false,
-                                },
-                            },
-                            number: {
-                                crosshair: {
-                                    enabled: false,
                                 },
                             },
                         },

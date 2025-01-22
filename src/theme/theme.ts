@@ -89,6 +89,24 @@ export const perygonTheme = extendTheme({
             boxShadow: "outline",
           },
         },
+        agPrimaryLight: {
+          bg: "transparent",
+          color: "perygonPink",
+          border: "1px solid var(--chakra-colors-perygonPink)",
+          _hover: {
+            color: "white",
+            bg: "perygonPink",
+            boxShadow: "md",
+            _disabled: {
+              color: "white",
+              bg: "transparent",
+              boxShadow: "none",
+            },
+          },
+          _focus: {
+            boxShadow: "outline",
+          },
+        },
         darkGray: {
           bgColor: "darkGray",
           border: "1px solid",

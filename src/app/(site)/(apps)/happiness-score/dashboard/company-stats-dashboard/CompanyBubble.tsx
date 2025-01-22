@@ -117,9 +117,6 @@ export const CompanyBubble: React.FC<CompanyBubble> = ({ scores }) => {
           padding: 0,
           color: theme.colors.perygonPink,
         },
-        crosshair: {
-          enabled: false,
-        },
       },
     ],
     legend: {

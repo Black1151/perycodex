@@ -219,6 +219,7 @@ const RagDashboard: React.FC = () => {
         sortable: true,
         filter: "agNumberColumnFilter",
         cellDataType: "number",
+        type: 'rightAligned'
       },
       {
         field: "avgHappinessScore",
@@ -309,6 +310,7 @@ const RagDashboard: React.FC = () => {
         sortable: true,
         filter: "agNumberColumnFilter",
         cellDataType: "number",
+        type: 'rightAligned'
       },
       {
         field: "avgHappinessScore",
