@@ -195,7 +195,8 @@ function DataGridComponentLight<T>({
 
     const onFilterTextBoxChanged = useCallback(() => {
         // @ts-ignore
-        gridRef.current?.api.setQuickFilter(
+        gridRef.current?.api.setGridOption(
+            'quickFilterText',
             (
                 document.getElementById(
                     `filter-text-box-${uniqueQuickFilterId}`

@@ -11,6 +11,8 @@ import {
   BubbleSeriesItemStylerParams,
 } from "ag-charts-enterprise";
 
+import BubbleScoresTooltipRenderer from "@/components/agCharts/BubbleScoresTooltipRenderer";
+
 interface UserScores {
   score: number;
   countOfScore: number;
@@ -67,13 +69,16 @@ export const CompanyBubble: React.FC<CompanyBubble> = ({ scores }) => {
       data: dayData,
       type: "bubble",
       xKey: "score",
-      yKey: "dayOfSubmission",
       xName: "Score",
-      yName: day,
+      yKey: "dayOfSubmission",
+      yName: "Day",
       sizeKey: "countOfScore",
       sizeName: "Submissions",
       size: 0,
       maxSize: maxSize,
+      tooltip: {
+        renderer: BubbleScoresTooltipRenderer
+      },
       itemStyler: (params: BubbleSeriesItemStylerParams<any>) => {
         const { datum, xKey } = params;
         const score = parseInt(datum[xKey], 10); // Retrieve the score value
@@ -116,9 +121,6 @@ export const CompanyBubble: React.FC<CompanyBubble> = ({ scores }) => {
           fontFamily: "Metropolis",
           padding: 0,
           color: theme.colors.perygonPink,
-        },
-        crosshair: {
-          enabled: false,
         },
       },
     ],

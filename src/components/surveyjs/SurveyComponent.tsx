@@ -144,7 +144,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
   return (
     <>
       {isLoading || !model || !ready ? (
-        <Box mt={4}>
+        <Box mt={4} w={'full'} textAlign={'center'}>
           <Spinner color={"white"} />
         </Box>
       ) : (

@@ -33,6 +33,10 @@ import {
     format,
 } from "date-fns";
 import SpeechBubble from "../../SpeechBubble";
+import StaffHappinessDetailsRenderer
+    from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
+import ScoreTooltipRenderer from "@/components/agCharts/ScoreTooltipRenderer";
+
 
 interface ManagingPartnersResponse {
     resource: {
@@ -55,6 +59,7 @@ function generateSiteSeries(siteNames: string[], xKey: string) {
         yName: siteName,
         marker: {enabled: true},
         interpolation: {type: "smooth"},
+        tooltip: {renderer: ScoreTooltipRenderer}
     }));
 }
 
@@ -91,26 +96,7 @@ const SiteDepartmentDashboard: React.FC = () => {
             width: 100,
             maxWidth: 60,
             resizable: false,
-            cellRenderer: (params: any) => {
-                return (
-                    <Flex
-                        justifyContent="center"
-                        alignItems="center"
-                        w="100%"
-                        h="100%"
-                        py={1}
-                    >
-                        <Avatar
-                            name={params.data.fullName}
-                            src={params.data.userImageUrl}
-                            size="sm"
-                            sx={{
-                                fontSize: "0.65rem",
-                            }}
-                        />
-                    </Flex>
-                );
-            },
+            cellRenderer: StaffHappinessDetailsRenderer,
             cellStyle: {color: "black"},
         },
         {
@@ -431,6 +417,7 @@ const SiteDepartmentDashboard: React.FC = () => {
                 yName: "Current Week (Avg)",
                 cornerRadius: 10,
                 fill: theme.colors.seduloGreen,
+                tooltip: {renderer: ScoreTooltipRenderer},
                 shadow: {
                     enabled: true,
                     color: "#191919",
@@ -446,6 +433,7 @@ const SiteDepartmentDashboard: React.FC = () => {
                 yName: "Period (Avg)",
                 cornerRadius: 10,
                 fill: theme.colors.yellow,
+                tooltip: {renderer: ScoreTooltipRenderer},
                 shadow: {
                     enabled: true,
                     color: "#191919",
@@ -495,6 +483,7 @@ const SiteDepartmentDashboard: React.FC = () => {
                 yName: "Current Week (Avg)",
                 cornerRadius: 10,
                 fill: theme.colors.seduloGreen,
+                tooltip: {renderer: ScoreTooltipRenderer},
                 shadow: {
                     enabled: true,
                     color: "#191919",
@@ -510,6 +499,7 @@ const SiteDepartmentDashboard: React.FC = () => {
                 yName: "Period (Avg)",
                 cornerRadius: 10,
                 fill: theme.colors.yellow,
+                tooltip: {renderer: ScoreTooltipRenderer},
                 shadow: {
                     enabled: true,
                     color: "#191919",
@@ -602,7 +592,7 @@ const SiteDepartmentDashboard: React.FC = () => {
                             showTopBar={false}
                             defaultColDef={defaultColDef}
                             refreshData={getData}
-                            enableAutoRefresh
+                            enableAutoRefresh={true}
                         />
                     </Box>
                 </Box>
