@@ -67,12 +67,12 @@ export async function processResponseData(
     );
 
     // build department summary
-
     const departmentsData = Array.from(departmentScores.entries()).map(
-      ([deptName, { totalScore, count }]) => ({
+      ([deptName, { deptId, totalScore, count }]) => ({
         department: deptName,
         averageScore: totalScore / count,
         count,
+        deptId: deptId,
       })
     );
 
@@ -81,6 +81,7 @@ export async function processResponseData(
       site: s.mostRecentSiteName,
       averageScore: s.totalScore / s.count,
       count: s.count,
+      siteId: s.siteId,
     }));
 
     dataPointsArray.push({ title: weekKey, value: avgScore });

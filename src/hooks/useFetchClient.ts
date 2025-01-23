@@ -13,6 +13,8 @@ type FetchOptions = {
   onUnauthorised?: () => void;
 };
 
+
+
 export const useFetchClient = () => {
   const toast = useToast();
   const [loading, setLoading] = useState(false);

@@ -1,20 +1,24 @@
-// helpers/computeWeeklyStats.ts
 import {
   ApiResponseItem,
   Person,
 } from "@/app/api/happiness-score/dashboards/getCompanyDashboardData/types";
 
-/**
- * Data we return after computing stats for the participants of a given week.
- */
 export interface WeeklyStatsResult {
   avgScore: number;
-  masonryCounts: number[]; // e.g. [1-2, 3-5, 6-8, 9-10, placeholder for non-participants]
+  masonryCounts: number[];
   peopleList: Person[];
-  departmentScores: Map<string, { totalScore: number; count: number }>;
+  departmentScores: Map<
+    string,
+    {
+      deptId: number;
+      totalScore: number;
+      count: number;
+    }
+  >;
   siteScores: Map<
     number,
     {
+      siteId: number;
       totalScore: number;
       count: number;
       mostRecentSiteName: string;
@@ -23,33 +27,32 @@ export interface WeeklyStatsResult {
   >;
 }
 
-/**
- * Classify a participant’s numeric score into the correct "masonry bin".
- */
 function classifyScore(score: number, masonryCounts: number[]) {
-  if (score >= 9)
-    masonryCounts[3]++; // 9-10
-  else if (score >= 6)
-    masonryCounts[2]++; // 6-8
-  else if (score >= 3)
-    masonryCounts[1]++; // 3-5
-  else if (score > 0) masonryCounts[0]++; // 1-2
+  if (score >= 9) masonryCounts[3]++;
+  else if (score >= 6) masonryCounts[2]++;
+  else if (score >= 3) masonryCounts[1]++;
+  else if (score > 0) masonryCounts[0]++;
 }
 
 export function computeWeeklyStats(
   entries: { score: number; item: ApiResponseItem }[]
 ): WeeklyStatsResult {
   let avgScore = 0;
-  const masonryCounts = [0, 0, 0, 0, 0]; // The last slot is for non-participants, fill later
+  const masonryCounts = [0, 0, 0, 0, 0];
 
   const peopleList: Person[] = [];
   const departmentScores = new Map<
     string,
-    { totalScore: number; count: number }
+    {
+      deptId: number;
+      totalScore: number;
+      count: number;
+    }
   >();
   const siteScores = new Map<
     number,
     {
+      siteId: number;
       totalScore: number;
       count: number;
       mostRecentSiteName: string;
@@ -64,7 +67,6 @@ export function computeWeeklyStats(
     for (const { score, item } of entries) {
       classifyScore(score, masonryCounts);
 
-      // Person
       peopleList.push({
         userId: item.userId,
         imageUrl: item.userImageUrl,
@@ -77,22 +79,26 @@ export function computeWeeklyStats(
         score,
       });
 
-      // Department grouping
       const deptName = item.deptName;
+      const deptId = item.deptId;
       if (deptName) {
         if (!departmentScores.has(deptName)) {
-          departmentScores.set(deptName, { totalScore: 0, count: 0 });
+          departmentScores.set(deptName, {
+            deptId: deptId,
+            totalScore: 0,
+            count: 0,
+          });
         }
         const deptData = departmentScores.get(deptName)!;
         deptData.totalScore += score;
         deptData.count += 1;
       }
 
-      // Site grouping
       const siteId = item.siteId;
-      if (siteId) {
+      if (siteId !== undefined && siteId !== null) {
         if (!siteScores.has(siteId)) {
           siteScores.set(siteId, {
+            siteId: siteId,
             totalScore: 0,
             count: 0,
             mostRecentSiteName: item.siteName,

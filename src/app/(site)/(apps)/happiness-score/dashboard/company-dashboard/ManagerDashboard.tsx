@@ -10,41 +10,14 @@ import {
 } from "react";
 import ManagerDashboardPageInner from "./ManagerDashboardPageInner";
 import { DashboardFilteringDrawer } from "@/components/layout/DashboardFilteringDrawer";
-
-interface DataPoint {
-  value: number;
-  title: string;
-}
-
-export interface FilterOption {
-  label: string;
-  value: string;
-  isSelected?: boolean;
-  isDisabled?: boolean;
-}
-
-export interface FilterOptionGroup {
-  label: string;
-  options: FilterOption[];
-}
-
-export interface SpeechBubbleData {
-  currentScore: number;
-  change: number;
-  positiveChange: boolean;
-}
-
-export interface Person {
-  userId: number;
-  firstName: string;
-  lastName: string;
-  jobTitle: string;
-  department: string;
-  site: string;
-  score: number;
-  imageUrl: string;
-  fullName: string;
-}
+import {
+  DataPoint,
+  DepartmentBarGraphData,
+  FilterOptionGroup,
+  Person,
+  SiteBarGraphData,
+  SpeechBubbleData,
+} from "./types";
 
 interface ManagerDashboardPageProps {
   preFilter?: "teams" | "departments";
@@ -66,11 +39,9 @@ export default function ManagerDashboardPage({
   const [peopleListData, setPeopleListData] = useState<Person[]>([]);
   const [filterOptions, setFilterOptions] = useState<FilterOptionGroup[]>([]);
   const [departmentsData, setDepartmentsData] = useState<
-    { department: string; averageScore: number; count: number }[]
+    DepartmentBarGraphData[]
   >([]);
-  const [sitesData, setSitesData] = useState<
-    { site: string; averageScore: number; count: number }[]
-  >([]);
+  const [sitesData, setSitesData] = useState<SiteBarGraphData[]>([]);
   const [weeksData, setWeeksData] = useState<any[]>([]);
   const [weekOptions, setWeekOptions] = useState<string[]>([]);
   const [selectedWeek, setSelectedWeek] = useState<string | null>(null);
@@ -170,12 +141,15 @@ export default function ManagerDashboardPage({
     []
   );
 
+  // const fetchDepartmentHistoricalData = useCallback(async () => {
+  //   const response = await fetch(
+  //     `/api/happiness-score/dashboards/getCompanyDashboardData?${queryParams}`
+  //   );
+  // }, []);
+
   const fetchFilteredData = useCallback(
     async (currentFilters: FilterOptionGroup[]) => {
       const queryParams = constructQueryParams(currentFilters);
-
-      console.log("queryParams", queryParams);
-      console.log("currentFilters", currentFilters);
 
       const response = await fetch(
         `/api/happiness-score/dashboards/getCompanyDashboardData?${queryParams}`
@@ -303,9 +277,6 @@ export default function ManagerDashboardPage({
     []
   );
 
-  // ----------------------------------------------------------------------
-  //  REVISED useEffect WITH EMPTY DEPENDENCY ARRAY FOR POLLING EVERY 30 MIN
-  // ----------------------------------------------------------------------
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
@@ -382,6 +353,8 @@ export default function ManagerDashboardPage({
           change: Math.abs(change),
           positiveChange: positiveChange,
         });
+
+        console.log("weekData", weekData);
 
         setMasonryData(weekData.masonryCounts);
         setPeopleListData(weekData.peopleList);
@@ -464,7 +437,6 @@ export default function ManagerDashboardPage({
       AgGridTableData,
     ]
   );
-  //
 
   return (
     <>

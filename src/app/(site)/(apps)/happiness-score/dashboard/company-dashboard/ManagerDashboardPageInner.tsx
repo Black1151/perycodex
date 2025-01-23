@@ -17,6 +17,8 @@ import {
   VStack,
   Avatar,
   useBreakpointValue,
+  HStack,
+  Text,
 } from "@chakra-ui/react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
@@ -32,29 +34,15 @@ import { ColDef } from "ag-grid-community";
 
 import { AgBarChart } from "@/components/graphs/AgBarChart";
 import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridComponentLight";
-
-interface DataPoint {
-  value: number;
-  title: string;
-}
-
-export interface SpeechBubbleData {
-  currentScore: number;
-  change: number;
-  positiveChange: boolean;
-}
-
-export interface Person {
-  userId: number;
-  firstName: string;
-  lastName: string;
-  jobTitle: string;
-  department: string;
-  site: string;
-  score: number | null;
-  imageUrl: string;
-  fullName: string;
-}
+import {
+  DataPoint,
+  DepartmentBarGraphData,
+  Person,
+  SiteBarGraphData,
+  SpeechBubbleData,
+} from "./types";
+import apiClient from "@/lib/apiClient";
+import { useFetchClient } from "@/hooks/useFetchClient";
 
 interface ManagerDashboardPageInnerProps {
   loading: boolean;
@@ -62,17 +50,18 @@ interface ManagerDashboardPageInnerProps {
   lineGraphData: DataPoint[];
   masonryData: number[];
   peopleListData: Person[];
-  departmentsData: {
-    department: string;
-    averageScore: number;
-    count: number;
-  }[];
-  sitesData: { site: string; averageScore: number; count: number }[];
+  departmentsData: DepartmentBarGraphData[];
+  sitesData: SiteBarGraphData[];
   fetchHappinessScoreTwoMonthHistory: (userId: number) => void;
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
   staffHappinessDetailsModalData: any;
   drawerState: "closed" | "fully-open";
+}
+
+interface HappinessResponse {
+  success: boolean;
+  data: DataPoint[];
 }
 
 export default function ManagerDashboardInner({
@@ -94,13 +83,54 @@ export default function ManagerDashboardInner({
   const hideSite = useBreakpointValue({ base: true, lg: false });
   const hideDepartment = useBreakpointValue({ base: true, lg: false });
 
-  useEffect(() => {
-    console.log(peopleListData);
-  }, [peopleListData]);
+  const { fetchClient } = useFetchClient();
+
+  const [barModalLineGraphData, setBarModalLineGraphData] = useState<
+    DataPoint[]
+  >([]);
 
   const [barModalData, setBarModalData] = useState<Person[]>([]);
   const [isBarModalOpen, setIsBarModalOpen] = useState(false);
   const [barModalTitle, setBarModalTitle] = useState("");
+
+  const [barModalAverageScore, setBarModalAverageScore] = useState<
+    number | null
+  >(null);
+  const [barModalCount, setBarModalCount] = useState<number | null>(null);
+
+  const fetchSiteHistory = useCallback(
+    async (siteId: number) => {
+      const response = await fetchClient<HappinessResponse>(
+        `/api/happiness-score/dashboards/getHistoricLineGraphData?siteId=${siteId}`,
+        {
+          method: "GET",
+          successMessage: "Site data fetched successfully!",
+          errorMessage: "Could not retrieve site data.",
+          redirectOnError: false,
+        }
+      );
+      setBarModalLineGraphData(response?.data ?? []);
+      return response;
+    },
+    [fetchClient]
+  );
+
+  const fetchDeptHistory = useCallback(
+    async (deptId: number) => {
+      const response = await fetchClient<HappinessResponse>(
+        `/api/happiness-score/dashboards/getHistoricLineGraphData?deptId=${deptId}`,
+        {
+          method: "GET",
+          successMessage: "Department data fetched successfully!",
+          errorMessage: "Could not retrieve department data.",
+          redirectOnError: false,
+        }
+      );
+      setBarModalLineGraphData((response?.data as DataPoint[]) ?? []);
+      return response;
+    },
+    [fetchClient]
+  );
 
   const handleUserClick = useCallback(
     (userId: number) => {
@@ -110,28 +140,66 @@ export default function ManagerDashboardInner({
     [fetchHappinessScoreTwoMonthHistory]
   );
 
+  const departmentBarData = useMemo(
+    () =>
+      departmentsData.map((dept) => ({
+        title: dept.department,
+        value: dept.averageScore,
+        count: dept.count,
+        deptId: dept.deptId,
+      })),
+    [departmentsData]
+  );
+
+  const siteBarData = useMemo(
+    () =>
+      sitesData.map((site) => ({
+        title: site.site,
+        siteId: site.siteId,
+        value: site.averageScore,
+        count: site.count,
+      })),
+    [sitesData]
+  );
+
   const handleDepartmentBarClick = useCallback(
-    (title: string) => {
+    async (title: string) => {
+      const dataPoint = departmentBarData.find((d) => d.title === title);
       const filteredPeople = peopleListData.filter(
         (person) => person.department === title && person.score !== null
       );
+
       setBarModalTitle(`Department: ${title}`);
       setBarModalData(filteredPeople);
-      setIsBarModalOpen(true);
+      setBarModalAverageScore(dataPoint?.value ?? null);
+      setBarModalCount(dataPoint?.count ?? null);
+
+      if (dataPoint?.deptId) {
+        await fetchDeptHistory(dataPoint.deptId);
+        setIsBarModalOpen(true);
+      }
     },
-    [peopleListData]
+    [peopleListData, departmentBarData, fetchDeptHistory]
   );
 
   const handleSiteBarClick = useCallback(
-    (title: string) => {
+    async (title: string) => {
+      const dataPoint = siteBarData.find((d) => d.title === title);
       const filteredPeople = peopleListData.filter(
         (person) => person.site === title && person.score !== null
       );
+
       setBarModalTitle(`Site: ${title}`);
       setBarModalData(filteredPeople);
-      setIsBarModalOpen(true);
+      setBarModalAverageScore(dataPoint?.value ?? null);
+      setBarModalCount(dataPoint?.count ?? null);
+
+      if (dataPoint?.siteId) {
+        await fetchSiteHistory(dataPoint.siteId);
+        setIsBarModalOpen(true);
+      }
     },
-    [peopleListData]
+    [peopleListData, siteBarData, fetchSiteHistory]
   );
 
   const handleMasonryClick = useCallback(
@@ -142,6 +210,9 @@ export default function ManagerDashboardInner({
         );
         setBarModalTitle("Did Not Participate");
         setBarModalData(nonParticipants);
+        setBarModalAverageScore(null);
+        setBarModalCount(null);
+        setBarModalLineGraphData([]);
         setIsBarModalOpen(true);
         return;
       }
@@ -173,29 +244,12 @@ export default function ManagerDashboardInner({
 
       setBarModalTitle(`Score Range: ${category}`);
       setBarModalData(filteredPeople);
+      setBarModalAverageScore(null);
+      setBarModalCount(null);
+      setBarModalLineGraphData([]);
       setIsBarModalOpen(true);
     },
     [peopleListData]
-  );
-
-  const departmentBarData = useMemo(
-    () =>
-      departmentsData.map((dept) => ({
-        title: dept.department,
-        value: dept.averageScore,
-        count: dept.count,
-      })),
-    [departmentsData]
-  );
-
-  const siteBarData = useMemo(
-    () =>
-      sitesData.map((site) => ({
-        title: site.site,
-        value: site.averageScore,
-        count: site.count,
-      })),
-    [sitesData]
   );
 
   const columnDefs = useMemo<ColDef<Person>[]>(() => {
@@ -324,7 +378,26 @@ export default function ManagerDashboardInner({
               <ModalHeader color="white">{barModalTitle}</ModalHeader>
               <ModalCloseButton color="white" />
               <ModalBody pb={10}>
-                <VStack minHeight={520}>
+                {(barModalAverageScore !== null || barModalCount !== null) && (
+                  <HStack spacing={6} align="center" mb={6} color="white">
+                    <Box w="120px" h="120px">
+                      <SpeechBubble
+                        score={barModalAverageScore ?? 0}
+                        change={0}
+                        positiveChange={false}
+                        fill="#fff"
+                        textColor="black"
+                      />
+                    </Box>
+                    {barModalCount !== null && (
+                      <Text fontWeight="semibold">Count: {barModalCount}</Text>
+                    )}
+                  </HStack>
+                )}
+
+                <LineGraph DataPoints={barModalLineGraphData} />
+
+                <VStack minHeight={520} mt={6}>
                   <Box
                     className="ag-theme-alpine"
                     w="100%"
@@ -390,7 +463,6 @@ export default function ManagerDashboardInner({
                 <Flex width="100%" justifyContent="center" mb={2}>
                   <SectionHeader>Submissions</SectionHeader>
                 </Flex>
-
                 <Box
                   className="ag-theme-alpine"
                   w="100%"
