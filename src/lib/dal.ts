@@ -236,7 +236,7 @@ export const getUser = async (): Promise<User> => {
 
     return userData.resource as User; // Cast the response to the User type
   } catch (error) {
-    redirect("/login"); // Redirect to login if there's an error
+    redirect("/login?MissingAuthToken=true"); // Redirect to login if there's an error
     throw error; // Optional: re-throw if additional handling is needed
   }
 };
