@@ -193,11 +193,11 @@ export const verifySession = async () => {
   const uniqueId = cookieStore.get("user_uuid")?.value;
 
   if (!authToken) {
-    redirect("/login");
+    redirect("/login?MissingAuthToken=true");
   }
 
   if (!uniqueId) {
-    redirect("/login");
+    redirect("/login?MissingAuthToken=true");
   }
 
   return { isAuth: true, userId: uniqueId };
@@ -208,7 +208,7 @@ export const getUser = async (): Promise<User> => {
 
   // If there's no session, redirect to login
   if (!session) {
-    redirect("/login");
+    redirect("/login?MissingAuthToken=true");
   }
 
   const cookieStore = cookies();
