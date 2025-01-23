@@ -337,6 +337,7 @@ const DataGridComponent = <T,>({
           loadingOverlayComponent={LoadingOverlay}
           onFirstDataRendered={handleGridReady}
           onFilterChanged={handleFilterChanged}
+          suppressCellFocus={true}
         />
         <CustomGridBottomPagination
           gridRef={gridRef}

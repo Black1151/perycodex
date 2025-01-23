@@ -43,7 +43,7 @@ const SurveyModal: React.FC<ModalProps> = ({
   cancelLabel = "Cancel",
 }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} returnFocusOnClose={false}>
       {" "}
       <ModalOverlay />
       <ModalContent>

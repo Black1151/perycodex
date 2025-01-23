@@ -357,6 +357,7 @@ function DataGridComponentLight<T>({
                     loadingOverlayComponent={LoadingOverlayPink}
                     onFirstDataRendered={handleGridReady}
                     onFilterChanged={handleFilterChanged}
+                    suppressCellFocus={true}
                     onRowClicked={
                         handleRowClick
                             ? (params) => handleRowClick(params.data as T)

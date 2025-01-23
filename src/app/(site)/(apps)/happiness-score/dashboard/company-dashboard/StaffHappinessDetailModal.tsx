@@ -57,7 +57,7 @@ const StaffHappinessDetailModal: React.FC<StaffHappinessDetailModalProps> = ({
     }
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} size="6xl">
+        <Modal isOpen={isOpen} onClose={onClose} size="6xl" returnFocusOnClose={false}>
             <ModalOverlay/>
             <ModalContent
                 mx={0}

@@ -34,7 +34,7 @@ const CommentsCellRenderer: React.FC<CommentsCellRendererProps> = ({
             gap={2}
             height="100%"
         >
-            <Tooltip label="Click to view!" fontSize="sm" placement={"bottom-start"}>
+            <Tooltip label={comment ? "Click to view!" : ""} placement="bottom-start" hasArrow>
                 <Box
                     as="button"
                     onClick={openModal}
