@@ -379,23 +379,34 @@ export default function ManagerDashboardInner({
               <ModalCloseButton color="white" />
               <ModalBody pb={10}>
                 {(barModalAverageScore !== null || barModalCount !== null) && (
-                  <HStack spacing={6} align="center" mb={6} color="white">
-                    <Box w="120px" h="120px">
+                  <Grid
+                    templateColumns={["1fr", null, "1fr 2fr"]}
+                    gap={6}
+                    mb={6}
+                    color="white"
+                    alignItems="center"
+                  >
+                    <VStack>
                       <SpeechBubble
                         score={barModalAverageScore ?? 0}
                         change={0}
                         positiveChange={false}
-                        fill="#fff"
-                        textColor="black"
+                        // fill="#fff"
+                        // textColor="black"
                       />
-                    </Box>
-                    {barModalCount !== null && (
-                      <Text fontWeight="semibold">Count: {barModalCount}</Text>
-                    )}
-                  </HStack>
-                )}
+                      {barModalCount !== null && (
+                        <Text fontWeight="semibold">
+                          Count: {barModalCount}
+                        </Text>
+                      )}
+                    </VStack>
 
-                <LineGraph DataPoints={barModalLineGraphData} />
+                    <LineGraph
+                      graphHeight={150}
+                      DataPoints={barModalLineGraphData}
+                    />
+                  </Grid>
+                )}
 
                 <VStack minHeight={520} mt={6}>
                   <Box

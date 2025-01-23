@@ -81,12 +81,17 @@ export async function GET(request: NextRequest) {
         averageScore = totalScore / weeklyEntries.length;
       }
 
+      const year = weekStart.getFullYear();
+      const weekNumber = Math.ceil(
+        ((weekStart.getTime() - new Date(year, 0, 1).getTime()) / 86400000 +
+          1) /
+          7
+      );
+      const weekLabel = `${year}-W${weekNumber.toString().padStart(2, "0")}`;
+
       dataPoints.push({
         value: averageScore,
-        title: `Week of ${weekStart.toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-        })}`,
+        title: weekLabel,
       });
     }
 

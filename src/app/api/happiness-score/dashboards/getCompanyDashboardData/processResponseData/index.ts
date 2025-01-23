@@ -1,4 +1,3 @@
-// index.ts (formerly processResponseData.ts)
 import {
   ApiResponseItem,
   DataPoint,
@@ -24,24 +23,19 @@ export async function processResponseData(
   managerOfDeptIds: string[],
   managerOfTeamIds: string[]
 ) {
-  // 1) Earliest date
   const earliestDate = findEarliestDate(apiResponseItems);
   const currentDate = new Date();
 
-  // 2) Group items by weeks
   const weekGroups = groupByWeeks(apiResponseItems);
 
-  // 3) Build a list of all weeks between earliestDate & currentDate
   const allWeekData = getAllWeekKeysBetween(earliestDate, currentDate);
 
   const dataPointsArray: DataPoint[] = [];
   const weeksData: any[] = [];
 
-  // 4) For each week, compute stats & fetch non-participants
   for (const { weekKey, startDate, endDate } of allWeekData) {
     const entries = weekGroups.get(weekKey) || [];
 
-    // participants
     const {
       avgScore,
       masonryCounts,
@@ -50,7 +44,6 @@ export async function processResponseData(
       siteScores,
     } = computeWeeklyStats(entries);
 
-    // fetch + merge non-participants
     await fetchAndMergeNonParticipants(
       {
         workflowId,
@@ -66,7 +59,6 @@ export async function processResponseData(
       masonryCounts
     );
 
-    // build department summary
     const departmentsData = Array.from(departmentScores.entries()).map(
       ([deptName, { deptId, totalScore, count }]) => ({
         department: deptName,
@@ -76,7 +68,6 @@ export async function processResponseData(
       })
     );
 
-    // build site summary
     const sitesData = Array.from(siteScores.values()).map((s) => ({
       site: s.mostRecentSiteName,
       averageScore: s.totalScore / s.count,
@@ -95,10 +86,8 @@ export async function processResponseData(
     });
   }
 
-  // 5) Build speech bubble from the lineGraph
   const speechBubbleData = buildSpeechBubbleData(dataPointsArray);
 
-  // 6) Return final object
   return {
     lineGraphData: dataPointsArray,
     speechBubbleData,
