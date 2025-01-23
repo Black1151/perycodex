@@ -65,7 +65,7 @@ export const NavBar: React.FC<NavBarProps> = ({
     await fetch("/api/auth/sign-out", {
       method: "POST",
     });
-    await signOut();
+    await signOut({redirect: false});
     router.push("/login");
   };
 
