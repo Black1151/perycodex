@@ -1,84 +1,80 @@
 "use client";
 
-import React, { useState } from "react";
-import { Avatar, Box, Tooltip } from "@chakra-ui/react";
+import React, {useState} from "react";
+import {Avatar, Box, Tooltip} from "@chakra-ui/react";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 
 interface CommentsCellRendererProps {
-  node: {
-    data: {
-      [key: string]: any;
-      comments?: string;
-      fullName?: string;
-      userImageUrl?: string;
+    node: {
+        data: {
+            [key: string]: any;
+            comments?: string;
+            fullName?: string;
+            userImageUrl?: string;
+        };
     };
-  }; // Support dynamic keys for node data
 }
 
 const CommentsCellRenderer: React.FC<CommentsCellRendererProps> = ({
-  node,
-}) => {
-  const [isModalOpen, setModalOpen] = useState(false);
+                                                                       node,
+                                                                   }) => {
+    const [isModalOpen, setModalOpen] = useState(false);
 
-  const comment = node.data.comments;
+    const comment = node.data.comments;
 
-  // Handlers for modal
-  const openModal = () => setModalOpen(true);
-  const closeModal = () => setModalOpen(false);
+    // Handlers for modal
+    const openModal = () => setModalOpen(true);
+    const closeModal = () => setModalOpen(false);
 
-  if (!comment) {
-    return null; // Render nothing if no comment
-  }
-
-  return (
-    <Box
-      display="flex"
-      justifyContent="flex-start"
-      alignItems="center"
-      gap={2}
-      height="100%"
-    >
-      <Tooltip label="Click to view!" fontSize="sm" placement={"bottom-start"}>
+    return (
         <Box
-          as="button"
-          onClick={openModal}
-          p={2}
-          borderRadius="md"
-          cursor="pointer"
+            display="flex"
+            justifyContent="flex-start"
+            alignItems="center"
+            gap={2}
+            height="100%"
         >
-          {comment}
-        </Box>
-      </Tooltip>
+            <Tooltip label="Click to view!" fontSize="sm" placement={"bottom-start"}>
+                <Box
+                    as="button"
+                    onClick={openModal}
+                    p={2}
+                    borderRadius="md"
+                    cursor="pointer"
+                >
+                    {comment}
+                </Box>
+            </Tooltip>
 
-      {/* Modal */}
+            {/* Modal */}
 
-      <SurveyModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onConfirm={closeModal}
-        showButtons={{
-          close: false,
-          confirm: true,
-        }}
-        title="Comment Details"
-        bodyContent={
-          <Box display="flex" alignItems="flex-start" gap={4}>
-            <Avatar
-              name={node.data.fullName}
-              borderRadius="full"
-              boxSize="50px"
-              src={node.data.userImageUrl}
+            <SurveyModal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                onConfirm={closeModal}
+                showButtons={{
+                    close: false,
+                    confirm: true,
+                }}
+                title="Comment Details"
+                bodyContent={
+                    <Box display="flex" alignItems="flex-start" gap={4}>
+                        <Avatar
+                            name={node.data.fullName}
+                            borderRadius="full"
+                            boxSize="50px"
+                            src={node.data.userImageUrl}
+                        />
+                        <Box>
+                            <Box fontWeight="bold">{node.data.fullName}</Box>
+                            <Box>{comment}</Box>
+                        </Box>
+                    </Box>
+                }
+                confirmLabel="Close"
             />
-            <Box>
-              <Box fontWeight="bold">{node.data.fullName}</Box>
-              <Box>{comment}</Box>
-            </Box>
-          </Box>
-        }
-        confirmLabel="Close"
-      />
-    </Box>
-  );
+        </Box>
+    );
 };
 
 export default CommentsCellRenderer;

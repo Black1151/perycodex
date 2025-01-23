@@ -592,7 +592,7 @@ const SiteDepartmentDashboard: React.FC = () => {
                             showTopBar={false}
                             defaultColDef={defaultColDef}
                             refreshData={getData}
-                            enableAutoRefresh
+                            enableAutoRefresh={true}
                         />
                     </Box>
                 </Box>
