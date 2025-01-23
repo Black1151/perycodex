@@ -14,9 +14,9 @@ export default function ResetPasswordPage({
 }: ActivateAccountPageProps) {
   const token = searchParams.token!;
 
-  // if (!token) {
-  //   redirect("/login");
-  // }
+  if (!token) {
+    redirect("/login");
+  }
 
   return (
     <PerygonContainer>

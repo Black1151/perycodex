@@ -133,7 +133,7 @@ export function LoginForm() {
                             res.cookies.delete('__Secure-next-auth.session-token');
 
                             try {
-                                await signOut({callbackUrl: '/login'});
+                                await signOut({redirect: false});
                             } catch (error) {
                                 // continue;
                             }
