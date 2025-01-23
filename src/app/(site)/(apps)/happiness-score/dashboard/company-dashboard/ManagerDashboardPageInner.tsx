@@ -391,8 +391,6 @@ export default function ManagerDashboardInner({
                         score={barModalAverageScore ?? 0}
                         change={0}
                         positiveChange={false}
-                        // fill="#fff"
-                        // textColor="black"
                       />
                       {barModalCount !== null && (
                         <Text fontWeight="semibold">
