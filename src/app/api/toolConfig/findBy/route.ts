@@ -23,6 +23,7 @@ export async function GET(req: NextRequest) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
         Authorization: authToken ? `Bearer ${authToken}` : "",
       },
     });
