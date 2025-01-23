@@ -35,6 +35,8 @@ import {
 import SpeechBubble from "../../SpeechBubble";
 import StaffHappinessDetailsRenderer
     from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
+import ScoreTooltipRenderer from "@/components/agCharts/ScoreTooltipRenderer";
+
 
 interface ManagingPartnersResponse {
     resource: {
@@ -57,6 +59,7 @@ function generateSiteSeries(siteNames: string[], xKey: string) {
         yName: siteName,
         marker: {enabled: true},
         interpolation: {type: "smooth"},
+        tooltip: {renderer: ScoreTooltipRenderer}
     }));
 }
 
@@ -414,6 +417,7 @@ const SiteDepartmentDashboard: React.FC = () => {
                 yName: "Current Week (Avg)",
                 cornerRadius: 10,
                 fill: theme.colors.seduloGreen,
+                tooltip: {renderer: ScoreTooltipRenderer},
                 shadow: {
                     enabled: true,
                     color: "#191919",
@@ -429,6 +433,7 @@ const SiteDepartmentDashboard: React.FC = () => {
                 yName: "Period (Avg)",
                 cornerRadius: 10,
                 fill: theme.colors.yellow,
+                tooltip: {renderer: ScoreTooltipRenderer},
                 shadow: {
                     enabled: true,
                     color: "#191919",
@@ -478,6 +483,7 @@ const SiteDepartmentDashboard: React.FC = () => {
                 yName: "Current Week (Avg)",
                 cornerRadius: 10,
                 fill: theme.colors.seduloGreen,
+                tooltip: {renderer: ScoreTooltipRenderer},
                 shadow: {
                     enabled: true,
                     color: "#191919",
@@ -493,6 +499,7 @@ const SiteDepartmentDashboard: React.FC = () => {
                 yName: "Period (Avg)",
                 cornerRadius: 10,
                 fill: theme.colors.yellow,
+                tooltip: {renderer: ScoreTooltipRenderer},
                 shadow: {
                     enabled: true,
                     color: "#191919",
