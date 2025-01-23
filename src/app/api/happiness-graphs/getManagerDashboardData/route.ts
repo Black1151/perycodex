@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import apiClient from "@/lib/apiClient";
 import { cookies } from "next/headers";
-import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/company-dashboard/ManagerDashboard";
+import { FilterOptionGroup } from "../../happiness-score/dashboards/getCompanyDashboardData/types";
 
 interface ApiResponse {
   resource: ApiResponseItem[];
