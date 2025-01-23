@@ -7,14 +7,13 @@ import {cookies} from "next/headers";
 import apiClient from "@/lib/apiClient";
 import {redirect} from "next/navigation";
 
-
 interface SearchParams {
     l?: string;
 }
 
 export default async function LoginPage({
-                                            searchParams,
-                                        }: {
+    searchParams,
+}: {
     searchParams: SearchParams;
 }) {
 
@@ -26,9 +25,6 @@ export default async function LoginPage({
     const cookieStore = cookies();
     const authToken = cookieStore.get("auth_token")?.value;
     const token = cookieStore.get('token');
-
-
-    console.log(token);
     if (authToken) {
         // Verify token with the backend
         const authCheckResponse = await apiClient(`/authentication/check`, {
@@ -71,15 +67,14 @@ export default async function LoginPage({
                         height={800}
                         imageOffset={-520}
                         backgroundOffset={-580}
+
                         titleComponent={
                             <VStack position="absolute" top="100px">
                                 <LetterFlyIn>Perygon</LetterFlyIn>
                             </VStack>
                         }
                     >
-                        <LoginForm
-
-                        />
+                        <LoginForm/>
                     </LoginCard>
                 </Center>
             </PerygonContainer>

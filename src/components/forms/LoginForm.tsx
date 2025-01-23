@@ -7,9 +7,9 @@ import {
     Flex,
     HStack,
     Text,
-    useTheme,
+    useTheme, useToast,
     VStack,
-} from "@chakra-ui/react";
+} from "@chakra-ui/react"
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
 import {InputField} from "./InputField";
@@ -30,6 +30,7 @@ export type LoginFormInputs = {
 };
 
 export function LoginForm() {
+
     const theme = useTheme();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -58,7 +59,6 @@ export function LoginForm() {
                 handleSubmit(handleFormSubmit)();
                 break;
             case 'microsoft':
-                console.log('microsoft button click;');
                 signIn('azure-ad',  {callbackUrl: '/'});
                 break;
             case 'google':
@@ -92,33 +92,57 @@ export function LoginForm() {
             ? `/api/auth/sign-in?l=${secureLink}`
             : "/api/auth/sign-in";
 
-        let NextsAuthSession = await getSession();
+        const searchParams = new URLSearchParams(window.location.search);
+        const isMissingToken = searchParams.get('MissingAuthToken');
+        if (isMissingToken !== null) {
+            if (isMissingToken == 'true') {
+                try {
+                    await signOut({callbackUrl: '/login'});
+                } catch (error) {
+                    // continue;
+                }
+            }
+        } else {
+            let NextAuthSession = await getSession();
+            if (NextAuthSession !== undefined) {
+                if (NextAuthSession !== null) {
+                    if (NextAuthSession.user?.email != undefined) {
 
-        if (NextsAuthSession !== undefined) {
-            if (NextsAuthSession !== null) {
-                if (NextsAuthSession.user?.email != undefined) {
-                    const result: { redirectUrl: string } | null = await fetchClient(endpoint, {
-                        method: "POST",
-                        body: {
-                            loginType: "sso",
-                            email: NextsAuthSession.user.email,
-                            password: null
-                        },
-                    });
+                        const result: { redirectUrl: string } | null = await fetchClient(
+                            endpoint, {
+                                method: "POST",
+                                body: {
+                                    loginType: "sso",
+                                    email: NextAuthSession.user.email,
+                                    password: null,
+                                    accessToken: NextAuthSession.accessToken,
+                                    type: NextAuthSession.accountProvider == 'google' ? 2 : 1
+                                },
+                                suppressError: true
+                            });
 
+                        if (result) {
+                            router.push('/');
+                        } else {
+                            const res = NextResponse.json({success: false});
+                            res.cookies.delete('next-auth.callback-url');
+                            res.cookies.delete('next-auth.csrf-token');
+                            res.cookies.delete('next-auth.session-token');
+                            res.cookies.delete('__Host-next-auth.csrf-token');
+                            res.cookies.delete('__Secure-next-auth.callback-url');
+                            res.cookies.delete('__Secure-next-auth.session-token');
 
+                            try {
+                                await signOut({callbackUrl: '/login'});
+                            } catch (error) {
+                                // continue;
+                            }
+                        }
 
-                    if (result) {
-                        router.push('/');
                     }
-
                 }
             }
         }
-        // else {
-        //     signIn('azure-ad', {callbackUrl: '/login'});
-        // }
-
     }
 
     return (
@@ -252,7 +276,7 @@ export function LoginForm() {
                         </Button>
 
                     </VStack>
-                    <VStack spacing={4} w="100%" top={2} position="relative">
+                    <VStack spacing={4} w="100%" top={6} position="relative">
                         <Text pt="10px" fontSize="12px" color="gray">
                             Copyright &copy; 2024 Sedulo Limited (v1.0.1)
                         </Text>

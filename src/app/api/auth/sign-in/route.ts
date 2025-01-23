@@ -5,10 +5,12 @@ interface apiBodyType {
   loginType?: string;
   email?: string;
   password?: string;
+  accessToken?: string;
+  type?: number;
 }
 
 export async function POST(req: NextRequest) {
-    const {loginType, email, password} = await req.json();
+    const {loginType, email, password, accessToken, type} = await req.json();
 
     // Extract searchParams from the incoming request
     const {searchParams} = req.nextUrl;
@@ -22,7 +24,9 @@ export async function POST(req: NextRequest) {
         if (loginType === "sso") {
             apiBody = {
                 loginType: loginType,
-                email: email
+                email: email,
+                accessToken: accessToken,
+                type: type
             }
         }
 

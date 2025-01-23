@@ -4,7 +4,7 @@ import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
 import HappinessDashboardLayout from "@/app/(site)/(apps)/happiness-score/dashboard/HappinessDashboardLayout";
 import DashboardHeader from "@/app/(site)/(apps)/DashboardHeader";
 import { verifySession } from "@/lib/dal";
-import WeeklyDashboard from "@/app/(site)/(apps)/happiness-score/dashboard/weekly-dashboard/WeeklyDashboard";
+import SiteDepartmentDashboard from "@/app/(site)/(apps)/happiness-score/dashboard/site-department-analysis/SiteDepartmentDashboard";
 
 export default async function Home({
   searchParams,
@@ -30,7 +30,7 @@ export default async function Home({
     await getFilteredDashboards(
       toolId,
       workflowId,
-      "/happiness-score/dashboard/zz-unused-leaderboard-dashboard",
+      "/happiness-score/dashboard/site-department-analysis",
     );
 
   // Redirect to the first dashboard if the user doesn't have access to the current one
@@ -42,10 +42,14 @@ export default async function Home({
     <WorkflowEngine toolId={toolId} workflowId={workflowId}>
       <HappinessDashboardLayout dashboardList={filteredDashboards} />
       <DashboardHeader
-        headingText={activeDashboardName ? activeDashboardName : "Leaderboard"}
+        headingText={
+          activeDashboardName
+            ? activeDashboardName
+            : "Site & Department Analysis"
+        }
         canStartWorkflow={toolData.startInUi}
       />
-      <WeeklyDashboard />
+      <SiteDepartmentDashboard />
     </WorkflowEngine>
   );
 }

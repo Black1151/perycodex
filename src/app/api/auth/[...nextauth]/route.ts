@@ -3,7 +3,7 @@ import AzureADProvider from 'next-auth/providers/azure-ad';
 import Google from "next-auth/providers/google";
 import apiClient from "@/lib/apiClient";
 import {NextResponse} from "next/server";
-
+import { signIn } from "next-auth/react";
 
 const AZURE_AD_CLIENT_ID='80b0a206-ea3a-4f28-a8d0-aadbb1655bd5';
 const AZURE_AD_CLIENT_SECRET='0gj8Q~moeoK0GMU1gE2.GemT_Gf~hrbU036cKdkr';
@@ -23,7 +23,7 @@ const handler = NextAuth({
                 params: {
                     authorizationUrl: `https://login.microsoftonline.com/${AZURE_AD_TENANT_ID}/oauth2/v2.0/authorize`,
                     tokenUrl: `https://login.microsoftonline.com/${AZURE_AD_TENANT_ID}/oauth2/v2.0/token`,
-                    scope: 'openid profile email',
+                    scope: 'openid profile email User.Read',
                     redirect_uri: `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/azure-ad`,
                 }
             },
@@ -44,67 +44,31 @@ const handler = NextAuth({
         signIn: 'auth/sign-in',
         signOut: 'auth/sign-out'
     },
-    // callbacks: {
-    //     async session({ session, token }) {
-    //
-    //         console.log('Session below:');
-    //         console.log(session);
-    //         // Modify the session object as needed
-    //         session.accessToken = token.accessToken;
-    //         session.idToken = token.idToken;
-    //
-    //         // Make an API call to handle further logic, like saving or updating user data
-    //         const response = await apiClient("/authentication/login", {
-    //             method: "POST",
-    //             body: JSON.stringify({
-    //                 loginType: "sso",
-    //                 email: session.user.email
-    //             }),
-    //         });
-    //
-    //         console.log('response below:');
-    //         console.log(response);
-    //         const data = await response.json();
-    //         console.log('response body:');
-    //         console.log(data);
-    //
-    //         if (!response.ok) {
-    //             const errorMessage = data?.error || "Invalid login credentials";
-    //             throw new Error(errorMessage);  // Throw error if API call fails
-    //         }
-    //
-    //         const { authToken, UUID, role, isProfileRegistered } = data.resource;
-    //
-    //         let redirectUrl = `${process.env.NEXT_PUBLIC_BASE_URL}`;
-    //
-    //         if (!isProfileRegistered) {
-    //             redirectUrl += "/profile-setup";
-    //         } else if (role === "PA") {
-    //             redirectUrl += "/customers";
-    //         }
-    //         const res = NextResponse.json({ redirectUrl });
-    //
-    //         res.cookies.set("auth_token", authToken, {
-    //             httpOnly: true,
-    //             secure: process.env.NODE_ENV === "production",
-    //             sameSite: "strict",
-    //         });
-    //
-    //         res.cookies.set("user_uuid", UUID, {
-    //             httpOnly: true,
-    //             secure: process.env.NODE_ENV === "production",
-    //             sameSite: "strict",
-    //         });
-    //
-    //         // Modify session based on API response
-    //         session.redirectUrl = redirectUrl;
-    //         session.authToken = authToken;
-    //         session.userUuid = UUID;
-    //
-    //         // Return the modified session object
-    //         return session;
-    //     },
-    // },
+    callbacks: {
+        async jwt({ token, account }) {
+            if (account) {
+                token.accessToken = account.access_token;
+                token.idToken = account.id_token;
+                token.accountProvider = account.provider;
+            }
+            return token;
+        },
+        async session({ session, token }) {
+
+            if (token && typeof token.accessToken === 'string') {
+                session.accessToken = token.accessToken;
+            }
+            if (token && typeof token.idToken === 'string') {
+                session.idToken = token.idToken;
+            }
+            if (token && typeof token.accountProvider === 'string') {
+                session.accountProvider = token.accountProvider;
+            }
+
+            // Return the modified session object
+            return session;
+        },
+    },
 });
 
 export { handler as GET, handler as POST }

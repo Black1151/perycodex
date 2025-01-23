@@ -1,4 +1,4 @@
-import { FunctionFactory } from "survey-core";
+import {FunctionFactory} from "survey-core";
 
 /**
  * Retrieves a specific property from an object that is the original item of a dropdown choice.
@@ -11,21 +11,21 @@ import { FunctionFactory } from "survey-core";
  * @throws An error if the dropdown or the selected item is not found.
  */
 const getObjectFieldFromDropdown = (survey) => (props) => {
-  const dropdown = survey.getQuestionByName(props[0]);
+    const dropdown = survey.getQuestionByName(props[0]);
 
-  if (!dropdown) {
-    return 0;
-  }
-  if (!dropdown.selectedItem) {
-    return 0;
-  }
+    if (!dropdown) {
+        return 0;
+    }
+    if (!dropdown.selectedItem) {
+        return 0;
+    }
 
-  if (
-    dropdown.selectedItem.originalItem &&
-    dropdown.selectedItem.originalItem[props[1]]
-  ) {
-    return dropdown.selectedItem.originalItem[props[1]];
-  }
+    if (
+        dropdown.selectedItem.originalItem &&
+        dropdown.selectedItem.originalItem[props[1]]
+    ) {
+        return dropdown.selectedItem.originalItem[props[1]];
+    }
 };
 
 /**
@@ -38,42 +38,42 @@ const getObjectFieldFromDropdown = (survey) => (props) => {
  * @throws An error if the question is not found or does not contain the specified property.
  */
 const getObjectField = (survey) => (props) => {
-  const [questionKey, propertyName] = props;
+    const [questionKey, propertyName] = props;
 
-  // Validate the questionKey
-  if (!questionKey) {
-    return 0;
-  }
+    // Validate the questionKey
+    if (!questionKey) {
+        return 0;
+    }
 
-  // Validate the propertyName
-  if (!propertyName) {
-    return 0;
-  }
+    // Validate the propertyName
+    if (!propertyName) {
+        return 0;
+    }
 
-  // Retrieve the question data from the survey
-  const questionData = survey.data[questionKey];
+    // Retrieve the question data from the survey
+    const questionData = survey.data[questionKey];
 
-  // Validate the question data
-  if (!questionData || typeof questionData !== "object") {
-    return 0;
-    throw new Error(
-      `The question with key '${questionKey}' does not exist or is not an object.`,
-    );
-  }
+    // Validate the question data
+    if (!questionData || typeof questionData !== "object") {
+        return 0;
+        throw new Error(
+            `The question with key '${questionKey}' does not exist or is not an object.`,
+        );
+    }
 
-  // Retrieve the property from the question data
-  const propertyValue = questionData[propertyName];
+    // Retrieve the property from the question data
+    const propertyValue = questionData[propertyName];
 
-  // Validate the property
-  if (propertyValue === undefined) {
-    return 0;
-    throw new Error(
-      `The property '${propertyName}' does not exist in the question with key '${questionKey}'.`,
-    );
-  }
+    // Validate the property
+    if (propertyValue === undefined) {
+        return 0;
+        throw new Error(
+            `The property '${propertyName}' does not exist in the question with key '${questionKey}'.`,
+        );
+    }
 
-  // Return the retrieved property value
-  return propertyValue;
+    // Return the retrieved property value
+    return propertyValue;
 };
 
 /**
@@ -88,67 +88,67 @@ const getObjectField = (survey) => (props) => {
  * @throws An error if the dropdown or image field is not found, or if the selected item does not have the specified image URL.
  */
 const setImageField = (survey) => (props) => {
-  const dropdown = survey.getQuestionByName(props[0]);
-  const imageField = survey.getQuestionByName(props[1]);
-  if (!dropdown) {
-    throw new Error(`Dropdown with name "${props[0]}" not found.`);
-  }
-  if (!dropdown.selectedItem) {
-    throw new Error(`No item is selected in the dropdown "${props[0]}".`);
-  }
-  if (!imageField) {
-    throw new Error(`Image field with name "${props[1]}" not found.`);
-  }
-  if (imageField.jsonObj.type !== "image") {
-    throw new Error(`Question "${props[1]}" is not of type 'image'.`);
-  }
-  const imageUrl = dropdown.selectedItem.originalItem[props[2]];
-  if (!imageUrl) {
-    throw new Error(
-      `Property "${props[2]}" not found in the selected dropdown item.`,
-    );
-  }
-  imageField.imageLink = imageUrl;
+    const dropdown = survey.getQuestionByName(props[0]);
+    const imageField = survey.getQuestionByName(props[1]);
+    if (!dropdown) {
+        throw new Error(`Dropdown with name "${props[0]}" not found.`);
+    }
+    if (!dropdown.selectedItem) {
+        throw new Error(`No item is selected in the dropdown "${props[0]}".`);
+    }
+    if (!imageField) {
+        throw new Error(`Image field with name "${props[1]}" not found.`);
+    }
+    if (imageField.jsonObj.type !== "image") {
+        throw new Error(`Question "${props[1]}" is not of type 'image'.`);
+    }
+    const imageUrl = dropdown.selectedItem.originalItem[props[2]];
+    if (!imageUrl) {
+        throw new Error(
+            `Property "${props[2]}" not found in the selected dropdown item.`,
+        );
+    }
+    imageField.imageLink = imageUrl;
 };
 
 // Function to sum up values of a array form object
 // This is to help us on the businessScore
 const arraySum = (props) => {
-  var arr = props[0];
-  if (!arr || !Array.isArray(arr)) return 0;
-  var sum = 0;
-  for (const item of props[0]) {
-    const score = parseInt(item[props[1]], 10);
-    sum += score;
-  }
-  return sum;
+    var arr = props[0];
+    if (!arr || !Array.isArray(arr)) return 0;
+    var sum = 0;
+    for (const item of props[0]) {
+        const score = parseInt(item[props[1]], 10);
+        sum += score;
+    }
+    return sum;
 };
 
 // Function to validate Json on a JSON MASK INPUT
 const validateJson = (props) => {
-  const jsonInput = props[0];
+    const jsonInput = props[0];
 
-  // Check if the input is empty
-  if (!jsonInput) {
-    return true; // Allow empty input
-  }
+    // Check if the input is empty
+    if (!jsonInput) {
+        return true; // Allow empty input
+    }
 
-  // Validate if the input is a valid JSON
-  try {
-    JSON.parse(jsonInput);
-    return true; // It's valid JSON
-  } catch (e) {
-    return false; // Invalid JSON
-  }
+    // Validate if the input is a valid JSON
+    try {
+        JSON.parse(jsonInput);
+        return true; // It's valid JSON
+    } catch (e) {
+        return false; // Invalid JSON
+    }
 };
 
 // Function to decode a single JSON object and return as a string
 const decodeJson = (props) => {
-  if (!props[0]) {
-    return "";
-  } else {
-    return JSON.stringify(props[0], null, 2);
-  }
+    if (!props[0]) {
+        return "";
+    } else {
+        return JSON.stringify(props[0], null, 2);
+    }
 };
 
 /**
@@ -158,64 +158,99 @@ const decodeJson = (props) => {
  * @returns {Promise<any>} - Returns a promise that resolves with the field's value or an error message.
  */
 async function fetchPostcodeData(props) {
-  const [postcode, resultField] = props;
+    const [postcode, resultField] = props;
 
-  // Check if both postcode and resultField are provided
-  if (!postcode || !resultField) {
-    return Promise.reject("Both postcode and resultField are required");
-  }
-
-  try {
-    // Fetch data from the API
-    const response = await fetch(`/api/surveyjs/postcode?postcode=${postcode}`);
-
-    // Check if response is OK (status code 200-299)
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
+    // Check if both postcode and resultField are provided
+    if (!postcode || !resultField) {
+        return Promise.reject("Both postcode and resultField are required");
     }
 
-    // Parse the response as JSON
-    const data = await response.json();
+    try {
+        // Fetch data from the API
+        const response = await fetch(`/api/surveyjs/postcode?postcode=${postcode}`);
 
-    // Function to dynamically access nested properties using dot notation
-    const getNestedField = (obj, path) => {
-      return path.split(".").reduce((acc, part) => acc && acc[part], obj);
-    };
+        // Check if response is OK (status code 200-299)
+        if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`);
+        }
 
-    // Get the nested field's value using the dot-separated field string
-    const result = getNestedField(data, resultField);
+        // Parse the response as JSON
+        const data = await response.json();
 
-    // If the result is undefined, return an error
-    if (result === undefined) {
-      throw new Error(`Field "${resultField}" not found in the API response`);
+        // Function to dynamically access nested properties using dot notation
+        const getNestedField = (obj, path) => {
+            return path.split(".").reduce((acc, part) => acc && acc[part], obj);
+        };
+
+        // Get the nested field's value using the dot-separated field string
+        const result = getNestedField(data, resultField);
+
+        // If the result is undefined, return an error
+        if (result === undefined) {
+            throw new Error(`Field "${resultField}" not found in the API response`);
+        }
+
+        // Return the field's value
+        return this.returnResult(result);
+    } catch (error) {
+        // Handle any errors that occurred during the fetch
+        console.error("Error fetching postcode data:", error.message);
+        return this.returnResult(0.0);
     }
-
-    // Return the field's value
-    return this.returnResult(result);
-  } catch (error) {
-    // Handle any errors that occurred during the fetch
-    console.error("Error fetching postcode data:", error.message);
-    return this.returnResult(0.0);
-  }
 }
+const checkEqual = (survey) => (props) => {
+    // Start with basic validation of the props
+    if (!props || props.length < 2) {
+        console.warn("checkEqual: Invalid props provided. Expected at least two arguments.");
+        return false;
+    }
+
+    const [variableName, valueName] = props;
+
+    // Validate that variableName and valueName are not null or undefined
+    if (!variableName || !valueName) {
+        return false;
+    }
+
+    try {
+        // Retrieve the value from the survey model
+        const val2 = survey.getValue(valueName);
+
+        // Handle cases where val2 might be undefined or null
+        if (val2 === null || val2 === undefined) {
+            return false;
+        }
+
+        // Perform the comparison
+        const isEqual = String(variableName).trim() === String(val2).trim();
+
+        // Log the comparison result
+        return isEqual;
+    } catch (error) {
+        // Catch and log any unexpected errors
+        return false;
+    }
+};
+
 
 // Registers every function below with the appropriate name
 export const registerSurveyFunctionsWithoutSurvey = () => {
-  FunctionFactory.Instance.register(
-    "fetchPostcodeData",
-    fetchPostcodeData,
-    true,
-  );
-  FunctionFactory.Instance.register("validateJson", validateJson);
-  FunctionFactory.Instance.register("decodeJson", decodeJson);
-  FunctionFactory.Instance.register("arraySum", arraySum);
+    FunctionFactory.Instance.register(
+        "fetchPostcodeData",
+        fetchPostcodeData,
+        true,
+    );
+    FunctionFactory.Instance.register("validateJson", validateJson);
+    FunctionFactory.Instance.register("decodeJson", decodeJson);
+    FunctionFactory.Instance.register("arraySum", arraySum);
 };
 
 export const registerSurveyJsFunctionsWithSurvey = (survey) => {
-  FunctionFactory.Instance.register(
-    "getObjectFieldFromDropdown",
-    getObjectFieldFromDropdown(survey),
-  );
-  FunctionFactory.Instance.register("getObjectField", getObjectField(survey));
-  FunctionFactory.Instance.register("setImageField", setImageField(survey));
+    FunctionFactory.Instance.register(
+        "getObjectFieldFromDropdown",
+        getObjectFieldFromDropdown(survey),
+    );
+    FunctionFactory.Instance.register("getObjectField", getObjectField(survey));
+    FunctionFactory.Instance.register("setImageField", setImageField(survey));
+    FunctionFactory.Instance.register("checkEqual", checkEqual(survey));
 };
