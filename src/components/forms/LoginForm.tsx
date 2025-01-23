@@ -97,7 +97,7 @@ export function LoginForm() {
         if (isMissingToken !== null) {
             if (isMissingToken == 'true') {
                 try {
-                    await signOut({callbackUrl: '/login'});
+                    await signOut({redirect: false});
                 } catch (error) {
                     // continue;
                 }
