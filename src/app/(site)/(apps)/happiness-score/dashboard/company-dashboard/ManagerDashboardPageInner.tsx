@@ -99,39 +99,39 @@ export default function ManagerDashboardInner({
   >(null);
   const [barModalCount, setBarModalCount] = useState<number | null>(null);
 
-  const fetchSiteHistory = useCallback(
-    async (siteId: number) => {
-      const response = await fetchClient<HappinessResponse>(
-        `/api/happiness-score/dashboards/getHistoricLineGraphData?siteId=${siteId}`,
-        {
-          method: "GET",
-          successMessage: "Site data fetched successfully!",
-          errorMessage: "Could not retrieve site data.",
-          redirectOnError: false,
-        }
-      );
-      setBarModalLineGraphData(response?.data ?? []);
-      return response;
-    },
-    [fetchClient]
-  );
+    const fetchSiteHistory = useCallback(
+        async (siteId: number) => {
+            const response = await fetchClient<HappinessResponse>(
+                `/api/happiness-score/dashboards/getHistoricLineGraphData?siteId=${siteId}`,
+                {
+                    method: "GET",
+                    // successMessage: "Site data fetched successfully!",
+                    errorMessage: "Could not retrieve site data.",
+                    redirectOnError: false,
+                }
+            );
+            setBarModalLineGraphData(response?.data ?? []);
+            return response;
+        },
+        [fetchClient]
+    );
 
-  const fetchDeptHistory = useCallback(
-    async (deptId: number) => {
-      const response = await fetchClient<HappinessResponse>(
-        `/api/happiness-score/dashboards/getHistoricLineGraphData?deptId=${deptId}`,
-        {
-          method: "GET",
-          successMessage: "Department data fetched successfully!",
-          errorMessage: "Could not retrieve department data.",
-          redirectOnError: false,
-        }
-      );
-      setBarModalLineGraphData((response?.data as DataPoint[]) ?? []);
-      return response;
-    },
-    [fetchClient]
-  );
+    const fetchDeptHistory = useCallback(
+        async (deptId: number) => {
+            const response = await fetchClient<HappinessResponse>(
+                `/api/happiness-score/dashboards/getHistoricLineGraphData?deptId=${deptId}`,
+                {
+                    method: "GET",
+                    // successMessage: "Department data fetched successfully!",
+                    errorMessage: "Could not retrieve department data.",
+                    redirectOnError: false,
+                }
+            );
+            setBarModalLineGraphData((response?.data as DataPoint[]) ?? []);
+            return response;
+        },
+        [fetchClient]
+    );
 
   const handleUserClick = useCallback(
     (userId: number) => {
