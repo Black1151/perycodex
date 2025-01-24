@@ -106,7 +106,7 @@ export default function ManagerDashboardInner({
                 `/api/happiness-score/dashboards/getHistoricLineGraphData?siteId=${siteId}`,
                 {
                     method: "GET",
-                    successMessage: "Site data fetched successfully!",
+                    // successMessage: "Site data fetched successfully!",
                     errorMessage: "Could not retrieve site data.",
                     redirectOnError: false,
                 }
@@ -123,7 +123,7 @@ export default function ManagerDashboardInner({
                 `/api/happiness-score/dashboards/getHistoricLineGraphData?deptId=${deptId}`,
                 {
                     method: "GET",
-                    successMessage: "Department data fetched successfully!",
+                    // successMessage: "Department data fetched successfully!",
                     errorMessage: "Could not retrieve department data.",
                     redirectOnError: false,
                 }
