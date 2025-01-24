@@ -2,7 +2,6 @@
 
 import React, {useEffect, useState} from "react";
 import {
-    Avatar,
     Box,
     Flex,
     IconButton,
@@ -32,21 +31,21 @@ import {SectionHeader} from "@/components/sectionHeader/SectionHeader";
 import {useFetchClient} from "@/hooks/useFetchClient";
 import {addDays, format, parseISO} from "date-fns";
 import {
-    AgCartesianSeriesTooltipRendererParams,
     AgNodeClickEvent,
 } from "ag-charts-types";
 import useColor from "@/hooks/useColor";
-import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/HappinessScoreRenderer";
 import {Info} from "@mui/icons-material";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
-import CommentsCellRenderer from "@/components/agGrids/CellRenderers/CommentsCellRenderer";
 import {useWorkflow} from "@/providers/WorkflowProvider";
 import {useUser} from "@/providers/UserProvider";
-import StaffHappinessDetailsRenderer
-    from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
+
+import {columnDefs} from "@/app/(site)/(apps)/happiness-score/dashboard/scores-and-comments/GridColumnDefs";
+import {modalColDef} from "@/app/(site)/(apps)/happiness-score/dashboard/scores-and-comments/ModalColumnDefs";
+import ScoreTooltipRenderer from "@/components/agCharts/ScoreTooltipRenderer";
+
 
 interface ApiResponse {
-    data: RowData[]; // This matches the RowData type you're using
+    data: RowData[];
 }
 
 interface RowData {
@@ -81,22 +80,25 @@ interface SeduloCrossFilterChartParams extends CreateCrossFilterChartParams {
     id: string;
 }
 
-const Dashboard: React.FC = () => {
+const ScoresCommentsDashboard: React.FC = () => {
     const [rowData, setRowData] = useState<RowData[]>([]);
+    const [barRowData, setBarRowData] = useState<RowData[]>([]);
     const theme = useTheme();
     const {getColor} = useColor();
     const [isLoading, setIsLoading] = useState(false);
-    const {isOpen, onOpen, onClose} = useDisclosure();
     const isMobile = useBreakpointValue({base: true, sm: true, md: false});
+
     const {toolId, workflowId} = useWorkflow();
     const {user} = useUser();
 
-    // Details Modal for Clicking
-    const [isBarModalOpen, setIsBarModalOpen] = useState(false);
     const [barModalTitle, setBarModalTitle] = useState("");
     const [filterModel, setFilterModel] = useState({});
-
     const {fetchClient} = useFetchClient();
+
+    // Modals
+    const {isOpen: isFilterModalOpen, onOpen: onFilterModalOpen, onClose: onFilterModalClose} = useDisclosure();
+    const {isOpen: isBarModalOpen, onOpen: onBarModalOpen, onClose: onBarModalClose} = useDisclosure();
+
 
     const getData = async () => {
         setIsLoading(true);
@@ -127,13 +129,16 @@ const Dashboard: React.FC = () => {
                 });
 
                 setRowData(processedData);
+                setBarRowData(processedData);
             } else {
                 console.error("Invalid response:", response);
                 setRowData([]);
+                setBarRowData([]);
             }
         } catch (error) {
             console.error("Error fetching data:", error);
             setRowData([]);
+            setBarRowData([]);
         } finally {
             setIsLoading(false);
         }
@@ -141,119 +146,10 @@ const Dashboard: React.FC = () => {
 
 
     useEffect(() => {
-        // Fetch data only when toolId, workflowId, and user.customerId are available
-        if (toolId && workflowId && user?.customerId) {
+        if (user) {
             getData();
         }
-    }, [toolId, workflowId, user?.customerId]);
-
-    const columnDefs: ColDef[] = [
-        {
-            headerName: "",
-            field: "userImageUrl",
-            sortable: false,
-            filter: false,
-            width: 100,
-            maxWidth: 60,
-            resizable: false,
-            cellRenderer: StaffHappinessDetailsRenderer,
-            cellStyle: {color: "black"},
-        },
-        {
-            headerName: "Name",
-            field: "fullName",
-            flex: 1,
-            cellStyle: {color: "black"},
-        },
-        {
-            field: "siteName",
-            headerName: "Site",
-            filter: "agMultiColumnFilter",
-            chartDataType: "category",
-        },
-        {
-            field: "deptName",
-            headerName: "Department",
-            filter: "agMultiColumnFilter",
-            chartDataType: "category",
-        },
-        {
-            field: "eowDate",
-            headerName: "Week",
-            sort: "asc",
-            chartDataType: "category",
-        },
-        {
-            field: "monthYear",
-            headerName: "Month - Year",
-            chartDataType: "category",
-        },
-        {
-            field: "happinessScore",
-            headerName: "Happiness Score",
-            chartDataType: "series",
-            cellRenderer: HappinessScoreRenderer,
-        },
-        {
-            field: "comments",
-            headerName: "Comments",
-            cellRenderer: CommentsCellRenderer,
-        },
-    ];
-
-    const modalColDef: ColDef[] = [
-        {
-            headerName: "",
-            field: "userImageUrl",
-            sortable: false,
-            filter: false,
-            width: 100,
-            maxWidth: 60,
-            resizable: false,
-            cellRenderer: HappinessScoreRenderer,
-            cellStyle: {color: "black"},
-        },
-        {
-            headerName: "Name",
-            field: "fullName",
-            flex: 1,
-            cellStyle: {color: "black"},
-        },
-        {
-            field: "deptName",
-            headerName: "Department",
-            filter: "agMultiColumnFilter",
-            chartDataType: "category",
-        },
-        {
-            field: "siteName",
-            headerName: "Site",
-            filter: "agMultiColumnFilter",
-            chartDataType: "category",
-        },
-        {
-            field: "eowDate",
-            headerName: "Week",
-            sort: "asc",
-            chartDataType: "category",
-        },
-        {
-            field: "monthYear",
-            headerName: "Month - Year",
-            chartDataType: "category",
-        },
-        {
-            field: "happinessScore",
-            headerName: "Happiness Score",
-            chartDataType: "series",
-            cellRenderer: HappinessScoreRenderer,
-        },
-        {
-            field: "comments",
-            headerName: "Comments",
-            cellRenderer: CommentsCellRenderer,
-        },
-    ];
+    }, [user]);
 
     const defaultColDef: ColDef = {
         resizable: true,
@@ -326,6 +222,7 @@ const Dashboard: React.FC = () => {
                     bar: {
                         series: {
                             cornerRadius: 10,
+                            tooltip: {renderer: ScoreTooltipRenderer},
                             shadow: {
                                 enabled: true,
                                 color: "#191919",
@@ -367,7 +264,7 @@ const Dashboard: React.FC = () => {
                                         };
                                         setBarModalTitle(`Department: ${value}`);
                                         setFilterModel(newFilterModel);
-                                        setIsBarModalOpen(true);
+                                        onBarModalOpen();
                                     }
                                 },
                             },
@@ -427,6 +324,7 @@ const Dashboard: React.FC = () => {
                     bar: {
                         series: {
                             cornerRadius: 10,
+                            tooltip: {renderer: ScoreTooltipRenderer},
                             shadow: {
                                 enabled: true,
                                 color: "#191919",
@@ -467,7 +365,7 @@ const Dashboard: React.FC = () => {
                                         };
                                         setBarModalTitle(`Site: ${value}`);
                                         setFilterModel(newFilterModel);
-                                        setIsBarModalOpen(true);
+                                        onBarModalOpen();
                                     }
                                 },
                             },
@@ -527,6 +425,7 @@ const Dashboard: React.FC = () => {
                     line: {
                         series: {
                             stroke: theme.colors.perygonPink,
+                            tooltip: {renderer: ScoreTooltipRenderer},
                             interpolation: {
                                 type: "smooth",
                             },
@@ -542,9 +441,6 @@ const Dashboard: React.FC = () => {
                                         size: 10,
                                     };
                                 },
-                            },
-                            tooltip: {
-                                renderer: renderer,
                             },
                         },
                     },
@@ -602,6 +498,7 @@ const Dashboard: React.FC = () => {
                     line: {
                         series: {
                             stroke: theme.colors.perygonPink,
+                            tooltip: {renderer: ScoreTooltipRenderer},
                             interpolation: {
                                 type: "smooth",
                             },
@@ -618,9 +515,7 @@ const Dashboard: React.FC = () => {
                                     };
                                 },
                             },
-                            tooltip: {
-                                renderer: renderer,
-                            },
+
                         },
                     },
                 },
@@ -629,9 +524,11 @@ const Dashboard: React.FC = () => {
 
         chartConfigs.forEach((config) => {
             const container = document.getElementById(config.id);
+
             if (container) {
+                const {id, ...rest} = config
                 gridApi.createRangeChart({
-                    ...config,
+                    ...rest,
                     chartContainer: container,
                     suppressChartRanges: true,
                 });
@@ -639,78 +536,69 @@ const Dashboard: React.FC = () => {
         });
     };
 
-    const renderer = (params: AgCartesianSeriesTooltipRendererParams) => {
-        return (
-            '<div class="ag-chart-tooltip-title" style="background-color:' +
-            params.color +
-            '">' +
-            params.datum[params.xKey] +
-            "</div>" +
-            '<div class="ag-chart-tooltip-content">' +
-            params.datum[params.yKey].toFixed(2) +
-            "</div>"
-        );
-    };
-
     return (
         <VStack align="stretch" w="full" spacing={6} mb={3}>
-            <SurveyModal
-                isOpen={isOpen}
-                onClose={onClose}
-                onConfirm={onClose}
-                showButtons={{close: false, confirm: true}}
-                title={"How to filter"}
-                titleProps={{
-                    fontFamily: "Bonfire",
-                    fontSize: "2xl",
-                    fontWeight: "bold",
-                    color: "perygonPink",
-                }}
-                bodyContent={
-                    <>
-                        <Text mb={4}>To filter the dashboard:</Text>
-                        <Text as="ul" ml={4}>
-                            <li>
-                                Use the filter icon on column headers to find specific entries.
-                            </li>
-                            <li>Filtering will affect the dashboard charts below</li>
-                        </Text>
-                    </>
-                }
-            />
+            {isFilterModalOpen && (
+                <SurveyModal
+                    isOpen={isFilterModalOpen}
+                    onClose={onFilterModalClose}
+                    onConfirm={onFilterModalClose}
+                    showButtons={{close: false, confirm: true}}
+                    title={"How to filter"}
+                    titleProps={{
+                        fontFamily: "Bonfire",
+                        fontSize: "2xl",
+                        fontWeight: "bold",
+                        color: "perygonPink",
+                    }}
+                    bodyContent={
+                        <>
+                            <Text mb={4}>To filter the dashboard:</Text>
+                            <Text as="ul" ml={4}>
+                                <li>
+                                    Use the filter icon on column headers to find specific entries.
+                                </li>
+                                <li>Filtering will affect the dashboard charts below</li>
+                            </Text>
+                        </>
+                    }
+                />
+            )}
 
-            <Modal
-                isOpen={isBarModalOpen}
-                onClose={() => setIsBarModalOpen(false)}
-                size="5xl"
-            >
-                <ModalOverlay/>
-                <ModalContent bgGradient={theme.gradients.perygonBackground}>
-                    <ModalHeader color="white">{barModalTitle}</ModalHeader>
-                    <ModalCloseButton color="white"/>
-                    <ModalBody pb={10}>
-                        <VStack minHeight={520}>
-                            <Box
-                                className="ag-theme-alpine"
-                                w="100%"
-                                p={1}
-                                pb="7px"
-                                borderRadius="xl"
-                                boxShadow="md"
-                                bgColor="white"
-                            >
-                                <DataGridComponentLight
-                                    data={rowData}
-                                    initialFields={modalColDef}
-                                    showTopBar={false}
-                                    defaultColDef={modalDefaultColDef}
-                                    filterModel={filterModel}
-                                />
-                            </Box>
-                        </VStack>
-                    </ModalBody>
-                </ModalContent>
-            </Modal>
+            {isBarModalOpen && (
+                <Modal
+                    isOpen={isBarModalOpen}
+                    onClose={onBarModalClose}
+                    size="5xl"
+                >
+                    <ModalOverlay/>
+                    <ModalContent bgGradient={theme.gradients.perygonBackground}>
+                        <ModalHeader color="white">{barModalTitle}</ModalHeader>
+                        <ModalCloseButton color="white"/>
+                        <ModalBody pb={10}>
+                            <VStack minHeight={520}>
+                                <Box
+                                    className="ag-theme-alpine"
+                                    w="100%"
+                                    p={1}
+                                    pb="7px"
+                                    borderRadius="xl"
+                                    boxShadow="md"
+                                    bgColor="white"
+                                >
+                                    <DataGridComponentLight
+                                        data={barRowData}
+                                        initialFields={modalColDef}
+                                        showTopBar={false}
+                                        defaultColDef={modalDefaultColDef}
+                                        filterModel={filterModel}
+                                    />
+                                </Box>
+                            </VStack>
+                        </ModalBody>
+                    </ModalContent>
+                </Modal>
+            )}
 
             {/* Grid Section */}
             <Box
@@ -725,7 +613,7 @@ const Dashboard: React.FC = () => {
                             aria-label="Filter Help"
                             icon={<Info/>}
                             variant="ghost"
-                            onClick={onOpen}
+                            onClick={onFilterModalOpen}
                             color={"white"}
                             _hover={{color: "perygonPink", background: "white"}}
                             ml={2}
@@ -753,8 +641,7 @@ const Dashboard: React.FC = () => {
                     />
                 </Box>
             </Box>
-
-            {rowData.length > 0 && (
+            {!isLoading && (
                 <Flex
                     width="100%"
                     flexWrap="wrap"
@@ -851,4 +738,4 @@ const Dashboard: React.FC = () => {
         </VStack>
     );
 };
-export default Dashboard;
+export default ScoresCommentsDashboard;

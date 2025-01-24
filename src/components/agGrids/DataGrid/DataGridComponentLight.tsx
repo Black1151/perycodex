@@ -195,7 +195,8 @@ function DataGridComponentLight<T>({
 
     const onFilterTextBoxChanged = useCallback(() => {
         // @ts-ignore
-        gridRef.current?.api.setQuickFilter(
+        gridRef.current?.api.setGridOption(
+            'quickFilterText',
             (
                 document.getElementById(
                     `filter-text-box-${uniqueQuickFilterId}`
@@ -356,6 +357,7 @@ function DataGridComponentLight<T>({
                     loadingOverlayComponent={LoadingOverlayPink}
                     onFirstDataRendered={handleGridReady}
                     onFilterChanged={handleFilterChanged}
+                    suppressCellFocus={true}
                     onRowClicked={
                         handleRowClick
                             ? (params) => handleRowClick(params.data as T)

@@ -241,7 +241,7 @@ const DataGridComponent = <T,>({
   };
 
   return (
-    <Box className={`ag-theme-alpine ag-theme-perygon`} w={"full"} pb={2}>
+    <Box className={`ag-theme-alpine ag-theme-perygon`} w={"full"} borderRadius={'xl'} overflow={'hidden'} outline={'auto'}>
       {showTopBar && (
         <Flex w={"full"} justify={"flex-start"} align={"center"} my={4} gap={2}>
           {/* Quick Filter */}
@@ -337,6 +337,7 @@ const DataGridComponent = <T,>({
           loadingOverlayComponent={LoadingOverlay}
           onFirstDataRendered={handleGridReady}
           onFilterChanged={handleFilterChanged}
+          suppressCellFocus={true}
         />
         <CustomGridBottomPagination
           gridRef={gridRef}
@@ -344,6 +345,7 @@ const DataGridComponent = <T,>({
           onPageChange={() => {
             updatePaginationInfo(gridRef, setPaginationInfo);
           }}
+          setPaginationInfo={setPaginationInfo}
         />
       </Flex>
 

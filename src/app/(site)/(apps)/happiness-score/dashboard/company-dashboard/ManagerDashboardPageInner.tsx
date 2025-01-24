@@ -43,6 +43,7 @@ import {
 } from "./types";
 import apiClient from "@/lib/apiClient";
 import { useFetchClient } from "@/hooks/useFetchClient";
+import StaffHappinessDetailsRenderer from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
 
 interface ManagerDashboardPageInnerProps {
   loading: boolean;
@@ -262,28 +263,7 @@ export default function ManagerDashboardInner({
         width: 100,
         maxWidth: 60,
         resizable: false,
-        cellRenderer: (params: any) => {
-          return (
-            <Flex
-              justifyContent="center"
-              alignItems="center"
-              w="100%"
-              h="100%"
-              py={1}
-              onClick={() => handleUserClick(params.data.userId)}
-              cursor="pointer"
-            >
-              <Avatar
-                name={params.data.fullName}
-                src={params.data.imageUrl}
-                size="sm"
-                sx={{
-                  fontSize: "0.65rem",
-                }}
-              />
-            </Flex>
-          );
-        },
+        cellRenderer: StaffHappinessDetailsRenderer,
         cellStyle: { color: "black" },
       },
       {
