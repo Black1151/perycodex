@@ -28,7 +28,7 @@ export default async function Home({
     await getFilteredDashboards(
       toolId,
       workflowId,
-      "/happiness-score/dashboard/staff-dashboard",
+      "/happiness-score/dashboard/staff-dashboard"
     );
 
   if (redirectPath) {

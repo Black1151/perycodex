@@ -76,7 +76,13 @@ export default function StaffDashboardPage() {
   const positiveChange = speechBubbleData.change > 0;
 
   return (
-    <Grid templateColumns={["1fr", "1fr 1fr"]} gap={6} width="100%" minH="70vh">
+    <Grid
+      mb={[16, null, 0]}
+      templateColumns={["1fr", "1fr 1fr"]}
+      gap={6}
+      width="100%"
+      minH="70vh"
+    >
       <GridItem>
         <SpringScale delay={0.3} style={{ height: "100%" }}>
           <Flex width="100%" justifyContent="center" mb={4}>
