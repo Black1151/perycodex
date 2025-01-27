@@ -63,6 +63,7 @@ export default async function TeamsDetailPage({
               rolesCanEdit={["PA", "CA"]}
               dataset={userTeamData}
               sjsPath={"admin"}
+              cssPath={"admin"}
               reloadPageOnSuccess={true}
             />
           </TabPanel>

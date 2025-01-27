@@ -54,6 +54,7 @@ export default async function UsersCreatePage({
         includeVariables={surveyVariables}
         redirectUrl={"/users"}
         sjsPath={"admin"}
+        cssPath={"admin"}
       />
     </>
   );

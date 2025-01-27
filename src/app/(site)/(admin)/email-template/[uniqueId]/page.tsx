@@ -31,6 +31,7 @@ export default async function EmailTemplatesDetailPage({
         dataset={emailTemplateData}
         layout={"default"}
         sjsPath={"admin"}
+        cssPath={"admin"}
         reloadPageOnSuccess={true}
       />
     </>

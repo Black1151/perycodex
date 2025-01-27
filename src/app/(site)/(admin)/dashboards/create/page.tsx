@@ -18,6 +18,7 @@ export default async function DashboardsCreatePage() {
         layout={"default"}
         redirectUrl={"/dashboards"}
         sjsPath={"admin"}
+        cssPath={"admin"}
       />
     </>
   );

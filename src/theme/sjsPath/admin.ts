@@ -14,26 +14,26 @@ export const baseSurveyCssVariablesTheme = {
 
   // Question Titles
   "--sjs-font-questiontitle-weight": "500",
-  "--sjs-font-questiontitle-size": "16px",
+  "--sjs-font-questiontitle-size": "14px",
 
   // Question Description
-  "--sjs-font-questiondescription-size": "12px",
+  "--sjs-font-questiondescription-size": "10px",
 
   // Header
   "--sjs-header-backcolor": "transparent",
 
   // Header Title
-  "--sjs-font-headertitle-size": "24px",
+  "--sjs-font-headertitle-size": "20px",
 
   // Header description
-  "--sjs-font-headerdescription-size": "12px",
+  "--sjs-font-headerdescription-size": "10px",
   "--sjs-font-headerdescription-weight": "600",
 
   // Editor Panel - This looks like the background of a field
   "--sjs-editorpanel-cornerRadius": "0px", // Corner radius of the input fields
 
   // Font Editor
-  "--sjs-font-editorfont-size": "16px",
+  "--sjs-font-editorfont-size": "14px",
 
   // Article Font ??
   "--sjs-article-font-xx-large-textDecoration": "none",

@@ -31,6 +31,7 @@ export default async function MyProfilePage() {
         excludeKeys={["imageUrl"]}
         dataset={pageUserData}
         sjsPath={"admin"}
+        cssPath={"admin"}
         reloadPageOnSuccess={true}
       />
     </>

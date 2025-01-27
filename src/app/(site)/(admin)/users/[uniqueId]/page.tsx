@@ -33,6 +33,7 @@ export default async function UsersDetailPage({
         dataset={pageUserData}
         excludeKeys={["imageUrl"]}
         sjsPath={"admin"}
+        cssPath={"admin"}
         reloadPageOnSuccess={true}
       />
     </>

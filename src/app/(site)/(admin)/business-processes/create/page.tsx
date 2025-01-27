@@ -16,6 +16,7 @@ export default async function BusinessProcessCreatePage() {
         layout={"default"}
         redirectUrl={"/business-processes"}
         sjsPath={"admin"}
+        cssPath={"admin"}
       />
     </>
   );
