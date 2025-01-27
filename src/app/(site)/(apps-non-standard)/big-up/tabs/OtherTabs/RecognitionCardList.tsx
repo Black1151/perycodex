@@ -25,7 +25,7 @@ interface RecognitionListProps {
 
 export const RecognitionList: React.FC<RecognitionListProps> = ({ items }) => {
   return (
-    <Stack spacing={4} bg={"white"} p={4} rounded="md">
+    <Stack spacing={4}>
       {items.map((item) => (
         <Box key={item.id} bg={"white"} boxShadow="md" p={4} rounded="md">
           <Flex align="center" mb={2}>

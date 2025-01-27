@@ -1,4 +1,12 @@
-import { Tab, TabList, TabPanels, TabPanel, Tabs } from "@chakra-ui/react";
+import {
+  Tab,
+  TabList,
+  TabPanels,
+  TabPanel,
+  Tabs,
+  Text,
+  Box,
+} from "@chakra-ui/react";
 
 interface TabsProps {
   tabs: { header: string; content: JSX.Element }[];
@@ -7,11 +15,13 @@ interface TabsProps {
 export const PerygonTabs: React.FC<TabsProps> = ({ tabs }) => {
   return (
     <Tabs
+      display="flex"
+      flexDirection="column"
       width="100%"
-      bg="white"
-      borderRadius="lg"
+      height="80vh"
       maxWidth="90vh"
-      overflow="hidden"
+      bg="rgba(0, 0, 0, 0.85)"
+      borderRadius="lg"
     >
       <TabList justifyContent="space-between">
         {tabs.map((tab, index) => (
@@ -25,13 +35,16 @@ export const PerygonTabs: React.FC<TabsProps> = ({ tabs }) => {
               borderTopRadius: "lg",
             }}
           >
-            {tab.header}
+            <Text color="white">{tab.header}</Text>
           </Tab>
         ))}
       </TabList>
-      <TabPanels>
+
+      <TabPanels flex="1" overflowY="auto">
         {tabs.map((tab, index) => (
-          <TabPanel key={index}>{tab.content}</TabPanel>
+          <TabPanel key={index} bg="rgba(0, 0, 0, 0)">
+            {tab.content}
+          </TabPanel>
         ))}
       </TabPanels>
     </Tabs>
