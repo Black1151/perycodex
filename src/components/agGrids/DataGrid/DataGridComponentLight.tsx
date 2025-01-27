@@ -129,7 +129,7 @@ function DataGridComponentLight<T>({
             floatingFilter: false,
             resizable: true,
             cellStyle: {
-                fontSize: "16px",
+                fontSize: "13px",
                 display: "flex",
                 alignItems: "center",
                 // justifyContent: "center",

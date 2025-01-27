@@ -83,7 +83,7 @@ const ToolConfigRenderer: React.FC<ToolConfigRendererProps> = ({
         </Flex>
       )}
       <Text
-        fontSize={"14px"}
+        fontSize={"13px"}
         flex={1}
         overflow="hidden"
         textOverflow="ellipsis"

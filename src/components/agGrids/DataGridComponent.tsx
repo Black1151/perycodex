@@ -134,6 +134,7 @@ const DataGridComponent = <T,>({
       filter: true,
       floatingFilter: false,
       resizable: true,
+      cellStyle: {"font-size": '13px'},
       ...customDefaultColDef,
     }),
     [isMobile, customDefaultColDef]
