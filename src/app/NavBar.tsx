@@ -240,7 +240,7 @@ export const NavBar: React.FC<NavBarProps> = ({
             {menuItems.map((item) => (
               <MenuItem
                 key={item.label}
-                fontSize={18}
+                fontSize={[14, 16, 18]}
                 display="flex"
                 alignItems="center"
                 position="relative"
