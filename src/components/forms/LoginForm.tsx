@@ -152,7 +152,7 @@ export function LoginForm() {
                 style={{width: "100%", maxWidth: "sm"}}
             >
                 <VStack spacing={4} w="100%">
-                    <VStack spacing={0} w={300} gap={2} position="absolute" top="300px">
+                    <VStack spacing={0} w={300} gap={2} position="absolute" top="275px">
                         <InputField
                             name="email"
                             placeholder="Email"
