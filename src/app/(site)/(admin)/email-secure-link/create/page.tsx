@@ -16,6 +16,7 @@ export default async function EmailSecureLinkCreatePage() {
         layout={"default"}
         redirectUrl={"/email-secure-link"}
         sjsPath={"admin"}
+        cssPath={"admin"}
       />
     </>
   );

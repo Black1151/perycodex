@@ -16,6 +16,7 @@ export default async function EmailTemplateCreatePage() {
         layout={"default"}
         redirectUrl={"/email-schedule"}
         sjsPath={"admin"}
+        cssPath={"admin"}
       />
     </>
   );

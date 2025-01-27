@@ -53,7 +53,7 @@ const TeamRenderer: React.FC<TeamRendererProps> = ({
         <People sx={{ color: "var(--chakra-colors-perygonPink)" }} />
       </Box>
       <Text
-        fontSize={"14px"}
+        fontSize={"13px"}
         flex={1}
         overflow="hidden"
         textOverflow="ellipsis"

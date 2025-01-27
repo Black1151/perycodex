@@ -92,6 +92,7 @@ export default async function UserGroupsDetailPage({
           layout={"default"}
           dataset={userGroupData}
           sjsPath={"admin"}
+          cssPath={"admin"}
           reloadPageOnSuccess={true}
         />
       </>

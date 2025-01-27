@@ -16,6 +16,7 @@ export default async function ToolsCreatePage() {
         layout={"default"}
         redirectUrl={"/tools"}
         sjsPath={"admin"}
+        cssPath={"admin"}
       />
     </>
   );

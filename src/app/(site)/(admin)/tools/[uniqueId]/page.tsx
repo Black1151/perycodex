@@ -31,6 +31,7 @@ export default async function ToolsDetailPage({
         dataset={toolData}
         layout={"default"}
         sjsPath={"admin"}
+        cssPath={"admin"}
         reloadPageOnSuccess={true}
       />
     </>

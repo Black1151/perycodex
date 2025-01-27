@@ -18,6 +18,7 @@ export default async function DashboardWorkflowsCreatePage() {
         layout={"default"}
         redirectUrl={"/dashboard-workflows"}
         sjsPath={"admin"}
+        cssPath={"admin"}
       />
     </>
   );

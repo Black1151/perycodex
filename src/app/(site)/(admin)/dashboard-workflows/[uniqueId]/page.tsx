@@ -37,6 +37,7 @@ export default async function DashboardWorkflowDetailsPage({
         excludeKeys={["imageUrl"]}
         layout={"default"}
         sjsPath={"admin"}
+        cssPath={"admin"}
         reloadPageOnSuccess={true}
       />
     </div>

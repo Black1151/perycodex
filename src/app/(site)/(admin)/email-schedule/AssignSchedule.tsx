@@ -51,6 +51,7 @@ const AssignSchedule = ({ isOpen, onClose, id }: AssignScheduleProps) => {
             dataset={data}
             layout={"default"}
             sjsPath={"admin"}
+            cssPath={"admin"}
             onSurveySuccess={handleSurveySuccess}
             onSurveyFailure={handleSurveyFailure}
             layoutOptions={{

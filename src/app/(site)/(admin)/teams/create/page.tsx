@@ -22,6 +22,7 @@ export default async function TeamsCreatePage() {
         layout={"default"}
         redirectUrl={"/teams"}
         sjsPath={"admin"}
+        cssPath={"admin"}
       />
     </>
   );
