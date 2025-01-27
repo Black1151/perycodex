@@ -152,7 +152,7 @@ export function LoginForm() {
                 style={{width: "100%", maxWidth: "sm"}}
             >
                 <VStack spacing={4} w="100%">
-                    <VStack spacing={0} w={300} gap={2} position="absolute" top="300px">
+                    <VStack spacing={0} w={300} gap={2} position="absolute" top="275px">
                         <InputField
                             name="email"
                             placeholder="Email"
@@ -191,8 +191,7 @@ export function LoginForm() {
                         />
                         <Flex w="100%" justifyContent="flex-end">
                             <Text
-                                pt="10px"
-                                fontSize="12px"
+                                fontSize={["16px", "12px"]}
                                 cursor="pointer"
                                 color={theme.colors.perygonPink}
                                 _hover={{cursor: "pointer"}}
@@ -219,12 +218,12 @@ export function LoginForm() {
                             Login with email
                         </Button>
                         <HStack>
-                            <Text pt="10px" fontSize="12px" color="gray">
+                            <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
                                 Don&apos;t have an account?
                             </Text>
                             <Text
                                 pt="10px"
-                                fontSize="12px"
+                                fontSize={["16px", "12px"]}
                                 cursor="pointer"
                                 color={theme.colors.perygonPink}
                                 _hover={{cursor: "pointer"}}
@@ -276,8 +275,8 @@ export function LoginForm() {
                         </Button>
 
                     </VStack>
-                    <VStack spacing={4} w="100%" top={6} position="relative">
-                        <Text pt="10px" fontSize="12px" color="gray">
+                    <VStack spacing={4} w={[300, "100%"]} top={[12,6]} position="relative">
+                        <Text p="0" pt="10px" fontSize={["14px","12px"]} color="gray">
                             Copyright &copy; 2024 Sedulo Limited (v1.0.1)
                         </Text>
                     </VStack>
