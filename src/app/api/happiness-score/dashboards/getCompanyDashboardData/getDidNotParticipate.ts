@@ -1,5 +1,6 @@
 // getDidNotParticipate.ts
 import apiClient from "@/lib/apiClient";
+import {getUser} from "@/lib/dal";
 
 interface DidNotParticipateParams {
   workflowId: number;
@@ -16,11 +17,14 @@ export async function getDidNotParticipate({
   startDate,
   endDate,
 }: DidNotParticipateParams) {
+
+  const user = await getUser();
+
   const response = await apiClient("/getUserHappinessParticipants", {
     method: "POST",
     body: JSON.stringify({
       scheduleId: 14,
-      customerId: 1,
+      customerId: user.customerId,
       toolConfigId,
       workflowId,
       businessProcessId,
