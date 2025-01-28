@@ -149,20 +149,12 @@ const Dashboard: React.FC = () => {
 
     const columnDefs: ColDef[] = [
         {
-            headerName: "",
+            headerName: "Name",
             field: "userImageUrl",
             sortable: false,
             filter: false,
-            width: 100,
-            maxWidth: 60,
             resizable: false,
             cellRenderer: StaffHappinessDetailsRenderer,
-            cellStyle: {color: "black"},
-        },
-        {
-            headerName: "Name",
-            field: "fullName",
-            flex: 1,
             cellStyle: {color: "black"},
         },
         {
@@ -211,12 +203,6 @@ const Dashboard: React.FC = () => {
             maxWidth: 60,
             resizable: false,
             cellRenderer: HappinessScoreRenderer,
-            cellStyle: {color: "black"},
-        },
-        {
-            headerName: "Name",
-            field: "fullName",
-            flex: 1,
             cellStyle: {color: "black"},
         },
         {

@@ -89,22 +89,12 @@ const SiteDepartmentDashboard: React.FC = () => {
 
     const columnDefs = [
         {
-            headerName: "",
+            headerName: "Name",
             field: "userImageUrl",
             sortable: false,
             filter: false,
-            width: 100,
-            maxWidth: 60,
             resizable: false,
             cellRenderer: StaffHappinessDetailsRenderer,
-            cellStyle: {color: "black"},
-        },
-        {
-            headerName: "Name",
-            field: "fullName",
-            sortable: true,
-            filter: true,
-            flex: 1,
             cellStyle: {color: "black"},
         },
         {

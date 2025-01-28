@@ -256,22 +256,12 @@ export default function ManagerDashboardInner({
   const columnDefs = useMemo<ColDef<Person>[]>(() => {
     return [
       {
-        headerName: "",
+          headerName: "Name",
         field: "imageUrl",
         sortable: false,
         filter: false,
-        width: 100,
-        maxWidth: 60,
         resizable: false,
         cellRenderer: StaffHappinessDetailsRenderer,
-        cellStyle: { color: "black" },
-      },
-      {
-        headerName: "Name",
-        field: "fullName",
-        sortable: true,
-        filter: true,
-        flex: 1,
         cellStyle: { color: "black" },
       },
       {
@@ -332,7 +322,7 @@ export default function ManagerDashboardInner({
   return (
     <>
       {loading ? (
-        <Flex justifyContent="center" alignItems="center" height="100vh">
+        <Flex justifyContent="center" alignItems="center">
           <Spinner size="xl" color="perygonPink" />
         </Flex>
       ) : (

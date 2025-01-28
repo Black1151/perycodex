@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useState} from 'react';
-import {Avatar, Flex} from "@chakra-ui/react";
+import {Avatar, Flex, Text} from "@chakra-ui/react";
 import StaffHappinessDetailModal
     from "@/app/(site)/(apps)/happiness-score/dashboard/company-dashboard/StaffHappinessDetailModal";
 import {useWorkflow} from "@/providers/WorkflowProvider";
@@ -45,15 +45,16 @@ const StaffHappinessDetailsRenderer: React.FC<StaffHappinessDetailsProps> = ({da
     return (
         <>
             <Flex
-                justifyContent="center"
                 alignItems="center"
                 w="100%"
                 h="100%"
                 py={1}
                 onClick={handleUserClick}
                 cursor="pointer"
+                gap={[2, 4]}
             >
                 <Avatar name={data.fullName} src={data.userImageUrl} size="sm" sx={{fontSize: "0.65rem"}}/>
+                <Text>{data.fullName}</Text>
             </Flex>
 
             {isUserModalOpen && staffHappinessDetailsModalData && (

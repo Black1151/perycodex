@@ -6,20 +6,12 @@ import CommentsCellRenderer from "@/components/agGrids/CellRenderers/CommentsCel
 
 export const columnDefs: ColDef[] = [
     {
-        headerName: "Image",
+        headerName: "Name",
         field: "userImageUrl",
         sortable: false,
         filter: false,
-        width: 100,
-        maxWidth: 60,
         resizable: false,
         cellRenderer: StaffHappinessDetailsRenderer,
-        // cellRenderer: CommentsCellRenderer,
-    },
-    {
-        headerName: "Name",
-        field: "fullName",
-        flex: 1,
     },
     {
         field: "siteName",

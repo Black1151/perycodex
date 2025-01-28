@@ -15,12 +15,6 @@ export const modalColDef: ColDef[] = [
         cellStyle: {color: "black"},
     },
     {
-        headerName: "Name",
-        field: "fullName",
-        flex: 1,
-        cellStyle: {color: "black"},
-    },
-    {
         field: "deptName",
         headerName: "Department",
         filter: "agMultiColumnFilter",

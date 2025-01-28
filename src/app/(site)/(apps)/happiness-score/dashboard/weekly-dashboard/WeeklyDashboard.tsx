@@ -197,14 +197,6 @@ const WeeklyDashboard: React.FC = () => {
             cellStyle: {color: "black"},
         },
         {
-            headerName: "Name",
-            field: "fullName",
-            sortable: true,
-            filter: true,
-            flex: 1,
-            cellStyle: {color: "black"},
-        },
-        {
             field: "deptName",
             headerName: "Department",
             filter: "agMultiColumnFilter",
@@ -265,14 +257,6 @@ const WeeklyDashboard: React.FC = () => {
                     </Flex>
                 );
             },
-            cellStyle: {color: "black"},
-        },
-        {
-            headerName: "Name",
-            field: "fullName",
-            sortable: true,
-            filter: true,
-            flex: 1,
             cellStyle: {color: "black"},
         },
         {
