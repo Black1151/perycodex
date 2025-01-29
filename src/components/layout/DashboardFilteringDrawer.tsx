@@ -179,6 +179,13 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                                 px={4}
                                 p={3}
                                 overflowY="auto"
+                                css={{
+                                    scrollbarWidth: "none",
+                                    "-ms-overflow-style": "none",
+                                    "&::-webkit-scrollbar": {
+                                        display: "none"
+                                    }
+                                }}
                                 onScroll={saveScrollPosition}
                             >
                                 <VStack spacing={4} align="stretch" width="100%">
@@ -234,9 +241,10 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                                                             {displayNameMappings[group.label] || group.label}
                                                         </Text>
                                                     </Box>
-                                                    {group.options.map((option, optionIndex) => (
-                                                        <VStack align="start" key={option.value}>
+                                                    <VStack align="start" spacing={2}>
+                                                        {group.options.map((option, optionIndex) => (
                                                             <Checkbox
+                                                                key={option.value}
                                                                 size={['sm', 'md']}
                                                                 isChecked={option.isSelected}
                                                                 isDisabled={
@@ -253,8 +261,8 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                                                             >
                                                                 {option.label}
                                                             </Checkbox>
-                                                        </VStack>
-                                                    ))}
+                                                        ))}
+                                                    </VStack>
                                                 </Box>
                                             );
                                         })}
