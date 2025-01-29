@@ -29,6 +29,7 @@ import {Add, Clear, QueryStats, Refresh} from "@mui/icons-material";
 import {ColDef, FirstDataRenderedEvent} from "ag-grid-community";
 import CustomGridBottomPaginationLight from "./CustomGridBottomPaginationLight";
 import LoadingOverlayPink from "../LoadingOverlayPink";
+import {SectionHeader} from "@/components/sectionHeader/SectionHeader";
 
 interface DataGridComponentProps<T> {
     data: T[] | null;
@@ -47,7 +48,8 @@ interface DataGridComponentProps<T> {
     enableAutoRefresh?: boolean;
     refreshInterval?: number;
     height?: string;
-
+    flex?: string;
+    title?: string;
     handleRowClick?: (rowData: T) => void;
 }
 
@@ -79,6 +81,8 @@ function DataGridComponentLight<T>({
                                        enableAutoRefresh = false,
                                        refreshInterval = 10,
                                        height = "500px",
+                                       flex = "1 1 100%",
+                                       title,
                                        handleRowClick,
                                    }: DataGridComponentProps<T>) {
     const gridRef = useRef<AgGridReact>(null);
@@ -236,150 +240,167 @@ function DataGridComponentLight<T>({
     }
 
     return (
-        <Box className="ag-theme-alpine" w="full" p={2} pb={0}>
-            {showTopBar && (
-                <Flex w="full" justify="flex-start" align="center" my={0} gap={2}>
-                    <Input
-                        variant="outline"
-                        id={`filter-text-box-${uniqueQuickFilterId}`}
-                        placeholder="Search..."
-                        onInput={onFilterTextBoxChanged}
-                        w={256}
-                        bg="white"
-                        borderColor="gray.300"
-                        _hover={{borderColor: "gray.400"}}
-                        _focus={{
-                            borderColor: "perygonPink",
-                            boxShadow: "0 0 0 1px #ff0070",
-                        }}
-                    />
-
-                    <Flex
-                        flex={1}
-                        justify="flex-end"
-                        align="center"
-                        gap={2}
-                        color="white"
-                    >
-                        {refreshData && (
-                            <Button
-                                variant="solid"
-                                bg="seduloRed"
-                                aria-label="refresh-data"
-                                onClick={refreshData}
-                                size="md"
-                                color="white"
-                                _hover={{bg: "perygonPink"}}
-                                display="flex"
-                                alignItems="center"
-                                gap={[0, 0, 2]}
-                                lineHeight={0}
-                            >
-                                <Refresh/>
-                                <Text>{refreshButtonText}</Text>
-                            </Button>
-                        )}
-
-                        <Button
-                            variant="solid"
-                            bg="seduloRed"
-                            aria-label="reset-filters"
-                            onClick={resetFilter}
-                            size="md"
-                            color="white"
-                            _hover={{bg: "perygonPink"}}
-                            display="flex"
-                            alignItems="center"
-                            gap={[0, 0, 2]}
-                            lineHeight={0}
-                        >
-                            <Clear/>
-                            <Text>{resetFiltersButtonText}</Text>
-                        </Button>
-
-                        {(createNewUrl || isModalEnabled) && (
-                            <Button
-                                variant="solid"
-                                bg="lightGreen"
-                                aria-label="create-new"
-                                onClick={handleCreateNewClick}
-                                size="md"
-                                color="white"
-                                display="flex"
-                                alignItems="center"
-                                gap={[0, 0, 2]}
-                                lineHeight={0}
-                            >
-                                <Add/>
-                                <Text>{finalCreateNewUrlButtonText}</Text>
-                            </Button>
-                        )}
-                    </Flex>
+        <Box flex={flex} borderRadius={'lg'}>
+            {title && (
+                <Flex width="100%" justifyContent="center" align="center" mb={4}>
+                    <SectionHeader>Scores and Comments</SectionHeader>
                 </Flex>
             )}
+            <Box
+                className="ag-theme-alpine"
+                w="100%"
+                p={1}
+                pb="7px"
+                borderRadius="xl"
+                boxShadow="md"
+                bgColor="white"
+            >
+                <Box w="full" p={2} pb={0}>
+                    {showTopBar && (
+                        <Flex w="full" justify="flex-start" align="center" my={0} gap={2}>
+                            <Input
+                                variant="outline"
+                                id={`filter-text-box-${uniqueQuickFilterId}`}
+                                placeholder="Search..."
+                                onInput={onFilterTextBoxChanged}
+                                w={256}
+                                bg="white"
+                                borderColor="gray.300"
+                                _hover={{borderColor: "gray.400"}}
+                                _focus={{
+                                    borderColor: "perygonPink",
+                                    boxShadow: "0 0 0 1px #ff0070",
+                                }}
+                            />
 
-            <Flex direction="column" height={height}>
-                <style jsx global>{`
-                    .ag-theme-alpine .ag-header,
-                    .ag-theme-alpine .ag-row,
-                    .ag-theme-alpine .ag-cell,
-                    .ag-theme-alpine .ag-root-wrapper,
-                    .ag-theme-alpine .ag-body-viewport {
-                        border: none !important;
-                    }
+                            <Flex
+                                flex={1}
+                                justify="flex-end"
+                                align="center"
+                                gap={2}
+                                color="white"
+                            >
+                                {refreshData && (
+                                    <Button
+                                        variant="solid"
+                                        bg="seduloRed"
+                                        aria-label="refresh-data"
+                                        onClick={refreshData}
+                                        size="md"
+                                        color="white"
+                                        _hover={{bg: "perygonPink"}}
+                                        display="flex"
+                                        alignItems="center"
+                                        gap={[0, 0, 2]}
+                                        lineHeight={0}
+                                    >
+                                        <Refresh/>
+                                        <Text>{refreshButtonText}</Text>
+                                    </Button>
+                                )}
 
-                    .ag-theme-alpine .ag-header {
-                        background-color: transparent !important;
-                    }
+                                <Button
+                                    variant="solid"
+                                    bg="seduloRed"
+                                    aria-label="reset-filters"
+                                    onClick={resetFilter}
+                                    size="md"
+                                    color="white"
+                                    _hover={{bg: "perygonPink"}}
+                                    display="flex"
+                                    alignItems="center"
+                                    gap={[0, 0, 2]}
+                                    lineHeight={0}
+                                >
+                                    <Clear/>
+                                    <Text>{resetFiltersButtonText}</Text>
+                                </Button>
 
-                    .ag-theme-alpine .ag-row:nth-child(odd) {
-                        background-color: #ffffff !important;
-                    }
+                                {(createNewUrl || isModalEnabled) && (
+                                    <Button
+                                        variant="solid"
+                                        bg="lightGreen"
+                                        aria-label="create-new"
+                                        onClick={handleCreateNewClick}
+                                        size="md"
+                                        color="white"
+                                        display="flex"
+                                        alignItems="center"
+                                        gap={[0, 0, 2]}
+                                        lineHeight={0}
+                                    >
+                                        <Add/>
+                                        <Text>{finalCreateNewUrlButtonText}</Text>
+                                    </Button>
+                                )}
+                            </Flex>
+                        </Flex>
+                    )}
 
-                    .ag-theme-alpine .ag-row:nth-child(even) {
-                        background-color: #eef2f7 !important;
-                    }
-                `}</style>
-                <AgGridReact
-                    ref={gridRef}
-                    loading={loading}
-                    rowData={rowData}
-                    columnDefs={fields}
-                    rowBuffer={25}
-                    pagination={true}
-                    suppressPaginationPanel={true}
-                    onPaginationChanged={() => {
-                        updatePaginationInfo(gridRef, setPaginationInfo);
-                    }}
-                    defaultColDef={defaultColDef}
-                    paginationPageSize={paginationInfo.pageSize}
-                    noRowsOverlayComponent={NoDataOverlayPink}
-                    loadingOverlayComponent={LoadingOverlayPink}
-                    onFirstDataRendered={handleGridReady}
-                    onFilterChanged={handleFilterChanged}
-                    suppressCellFocus={true}
-                    onRowClicked={
-                        handleRowClick
-                            ? (params) => handleRowClick(params.data as T)
-                            : undefined
-                    }
-                    // Add the rowHeight prop here:
-                    rowHeight={50}
-                />
+                    <Flex direction="column" height={height}>
+                        <style jsx global>{`
+                            .ag-theme-alpine .ag-header,
+                            .ag-theme-alpine .ag-row,
+                            .ag-theme-alpine .ag-cell,
+                            .ag-theme-alpine .ag-root-wrapper,
+                            .ag-theme-alpine .ag-body-viewport {
+                                border: none !important;
+                            }
 
-                <CustomGridBottomPaginationLight
-                    gridRef={gridRef}
-                    paginationInfo={paginationInfo}
-                    onPageChange={() => {
-                        updatePaginationInfo(gridRef, setPaginationInfo);
-                    }}
-                    setPaginationInfo={setPaginationInfo}
-                />
-            </Flex>
+                            .ag-theme-alpine .ag-header {
+                                background-color: transparent !important;
+                            }
 
-            {isModalEnabled && ModalComponent && (
-                <ModalComponent isOpen={isOpen} onClose={onClose}/>
-            )}
+                            .ag-theme-alpine .ag-row:nth-child(odd) {
+                                background-color: #ffffff !important;
+                            }
+
+                            .ag-theme-alpine .ag-row:nth-child(even) {
+                                background-color: #eef2f7 !important;
+                            }
+                        `}</style>
+                        <AgGridReact
+                            ref={gridRef}
+                            loading={loading}
+                            rowData={rowData}
+                            columnDefs={fields}
+                            rowBuffer={25}
+                            pagination={true}
+                            suppressPaginationPanel={true}
+                            onPaginationChanged={() => {
+                                updatePaginationInfo(gridRef, setPaginationInfo);
+                            }}
+                            defaultColDef={defaultColDef}
+                            paginationPageSize={paginationInfo.pageSize}
+                            noRowsOverlayComponent={NoDataOverlayPink}
+                            loadingOverlayComponent={LoadingOverlayPink}
+                            onFirstDataRendered={handleGridReady}
+                            onFilterChanged={handleFilterChanged}
+                            suppressCellFocus={true}
+                            onRowClicked={
+                                handleRowClick
+                                    ? (params) => handleRowClick(params.data as T)
+                                    : undefined
+                            }
+                            // Add the rowHeight prop here:
+                            rowHeight={50}
+                        />
+
+                        <CustomGridBottomPaginationLight
+                            gridRef={gridRef}
+                            paginationInfo={paginationInfo}
+                            onPageChange={() => {
+                                updatePaginationInfo(gridRef, setPaginationInfo);
+                            }}
+                            setPaginationInfo={setPaginationInfo}
+                        />
+                    </Flex>
+
+                    {isModalEnabled && ModalComponent && (
+                        <ModalComponent isOpen={isOpen} onClose={onClose}/>
+                    )}
+                </Box>
+            </Box>
         </Box>
     );
 }
