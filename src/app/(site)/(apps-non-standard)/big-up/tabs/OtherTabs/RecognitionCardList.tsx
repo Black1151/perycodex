@@ -1,58 +1,68 @@
-import React from "react";
-import {
-  Box,
-  Text,
-  Avatar,
-  Stack,
-  Flex,
-  Heading,
-  useColorModeValue,
-} from "@chakra-ui/react";
+"use client";
 
-export interface RecognitionItem {
-  id: string;
-  name: string;
-  recognizedBy: string;
-  message: string;
-  date: string;
-  avatarUrl?: string;
-  badge?: string;
-}
+import React from "react";
+import { Box, Grid, Avatar, Text, Flex } from "@chakra-ui/react";
+import {
+  AnimatedList,
+  AnimatedListItem,
+} from "@/components/animations/AnimatedList";
+import { BigUpWallEntry } from "../../types";
 
 interface RecognitionListProps {
-  items: RecognitionItem[];
+  items: BigUpWallEntry[];
 }
 
 export const RecognitionList: React.FC<RecognitionListProps> = ({ items }) => {
   return (
-    <Stack spacing={4}>
-      {items.map((item) => (
-        <Box key={item.id} bg={"white"} boxShadow="md" p={4} rounded="md">
-          <Flex align="center" mb={2}>
-            <Avatar size="md" name={item.name} src={item.avatarUrl} mr={3} />
-            <Box flex="1">
-              <Heading as="h3" size="sm">
-                {item.name}
-
-                <Text as="span" fontWeight="normal">
-                  has been recognised by {item.recognizedBy}
-                </Text>
-              </Heading>
-              {item.badge && (
-                <Text fontSize="xs" color="teal.500" fontWeight="bold">
-                  {item.badge}
-                </Text>
-              )}
-            </Box>
-            <Box>
-              <Text fontSize="xs" color="gray.600">
-                {item.date}
-              </Text>
-            </Box>
-          </Flex>
-          <Text fontSize="sm">{item.message}</Text>
-        </Box>
-      ))}
-    </Stack>
+    <Grid
+      templateColumns={["1fr", null, "1fr 1fr", null, null, "1fr 1fr"]}
+      gap={6}
+    >
+      <AnimatedList>
+        {items &&
+          items.map((item, index) => (
+            <AnimatedListItem key={item.userIdUrlTo} index={index}>
+              <Box
+                bg="rgba(0, 0, 0, 0.85)"
+                boxShadow="0 0 10px 2px rgba(255, 20, 147, 0.8)"
+                p={4}
+                rounded="md"
+              >
+                <Flex alignItems="center" justify="space-between">
+                  <Flex flexDirection="column" flex="1">
+                    <Text fontSize="xl" color="perygonPink" fontWeight="bold">
+                      {item.userNameTo}
+                    </Text>
+                    <Text fontSize="xs" color="white">
+                      recognised by {item.userNameFrom}
+                    </Text>
+                    <Text fontSize="xs" color="pink.300" pt={1}>
+                      {item.createdAt.split(" ")[0]}
+                    </Text>
+                    <Text
+                      mt={1}
+                      fontSize="lg"
+                      color="perygonPink"
+                      fontWeight="bold"
+                    >
+                      {item.bigUpCategory}
+                    </Text>
+                  </Flex>
+                  <Avatar
+                    size="xl"
+                    name={item.userNameTo}
+                    src={item.userImageUrlTo}
+                  />
+                </Flex>
+                <Box mt={4}>
+                  <Text fontSize="sm" color="white">
+                    {item.bigUpMessage}
+                  </Text>
+                </Box>
+              </Box>
+            </AnimatedListItem>
+          ))}
+      </AnimatedList>
+    </Grid>
   );
 };
