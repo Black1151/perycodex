@@ -13,7 +13,6 @@ import {
     format,
 } from "date-fns";
 import {Clear, Close, FilterAlt, FilterList} from "@mui/icons-material";
-import {useUser} from "@/providers/UserProvider";
 import {useFetchClient} from "@/hooks/useFetchClient";
 
 interface Site {
@@ -117,57 +116,48 @@ const FilterArea: React.FC<FilterAreaProps> = ({
             },
         ];
 
-        const getSites = async () => {
-            try {
-                const response = await fetchClient<SiteResponse>(
-                    "/api/site/allBy?selectColumns=id,siteName",
-                    {method: "GET", redirectOnError: false}
-                );
-
-                if (response && response.resource) {
-                    setSites(response.resource);
+        useEffect(() => {
+            if (!filterOptions.showSitesFilter) return;
+            (async () => {
+                try {
+                    const response = await fetchClient<SiteResponse>("/api/site/allBy?selectColumns=id,siteName", {
+                        method: "GET",
+                        redirectOnError: false
+                    });
+                    if (response && response.resource) setSites(response.resource);
+                } catch (error) {
+                    console.error("Error fetching sites:", error);
                 }
-            } catch (error) {
-                console.error("Error fetching sites:", error);
-            }
-        };
-
-        const getDepartments = async () => {
-            try {
-                const response = await fetchClient<DepartmentResponse>(
-                    "/api/userTeam/allBy?selectColumns=id,name&parentTeamId=null",
-                    {method: "GET", redirectOnError: false}
-                );
-
-                if (response && response.resource) {
-                    setDepartments(response.resource);
-                }
-            } catch (error) {
-                console.error("Error fetching departments:", error);
-            }
-        };
+            })();
+        }, [filterOptions.showSitesFilter]);
 
         useEffect(() => {
-            getSites();
-            getDepartments()
-        }, [])
+            if (!filterOptions.showDepartmentsFilter) return;
+            (async () => {
+                try {
+                    const response = await fetchClient<DepartmentResponse>("/api/userTeam/allBy?selectColumns=id,name&parentTeamId=null", {
+                        method: "GET",
+                        redirectOnError: false
+                    });
+                    if (response && response.resource) setDepartments(response.resource);
+                } catch (error) {
+                    console.error("Error fetching departments:", error);
+                }
+            })();
+        }, [filterOptions.showDepartmentsFilter]);
 
         const handleSiteChange = (siteId: number) => {
-            setSelectedSites((prev) =>
-                prev.includes(siteId) ? prev.filter((id) => id !== siteId) : [...prev, siteId]
-            );
+            setSelectedSites((prev) => (prev.includes(siteId) ? prev.filter((id) => id !== siteId) : [...prev, siteId]));
         };
 
         const handleDepartmentChange = (deptId: number) => {
-            setSelectedDepartments((prev) =>
-                prev.includes(deptId) ? prev.filter((id) => id !== deptId) : [...prev, deptId]
-            );
+            setSelectedDepartments((prev) => (prev.includes(deptId) ? prev.filter((id) => id !== deptId) : [...prev, deptId]));
         };
 
         const clearAllFilters = () => {
-            setDateFilter(""); // Reset date filter dropdown to default
-            setSelectedSites([]); // Uncheck all site checkboxes
-            setSelectedDepartments([]); // Uncheck all department checkboxes
+            setDateFilter("");
+            setSelectedSites([]);
+            setSelectedDepartments([]);
         };
 
         const handleApplyFilters = () => {
@@ -183,7 +173,6 @@ const FilterArea: React.FC<FilterAreaProps> = ({
             if (selectedDepartments.length > 0) postBody.departmentIds = selectedDepartments;
 
             onApplyFilters(postBody);
-
             setIsOpen(false);
         };
 
