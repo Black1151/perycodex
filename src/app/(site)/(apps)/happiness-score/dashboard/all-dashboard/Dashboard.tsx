@@ -150,7 +150,7 @@ const Dashboard: React.FC = () => {
     const columnDefs: ColDef[] = [
         {
             headerName: "Name",
-            field: "userImageUrl",
+            field: "fullName",
             sortable: false,
             filter: false,
             resizable: false,

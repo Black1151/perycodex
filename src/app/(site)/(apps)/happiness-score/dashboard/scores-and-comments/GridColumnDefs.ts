@@ -7,7 +7,7 @@ import CommentsCellRenderer from "@/components/agGrids/CellRenderers/CommentsCel
 export const columnDefs: ColDef[] = [
     {
         headerName: "Name",
-        field: "userImageUrl",
+        field: "fullName",
         sortable: false,
         filter: false,
         resizable: false,

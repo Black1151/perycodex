@@ -127,10 +127,10 @@ const UserDashboard: React.FC = () => {
     const columnDefs: ColDef[] = [
         {
             headerName: "Name",
-            field: "userImageUrl",
-            sortable: false,
-            filter: false,
-            resizable: false,
+            field: "fullName",
+            sortable: true,
+            filter: true,
+            resizable: true,
             cellRenderer: StaffHappinessDetailsRenderer,
             cellStyle: {color: "black"},
         },
