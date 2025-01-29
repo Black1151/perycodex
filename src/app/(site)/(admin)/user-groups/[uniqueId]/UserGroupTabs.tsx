@@ -121,6 +121,7 @@ const UserGroupsTabs: React.FC<UserGroupsTabsProps> = ({
               layout={"default"}
               dataset={userGroupData}
               sjsPath="admin"
+              cssPath={"admin"}
               reloadPageOnSuccess={true}
             />
           </TabPanel>

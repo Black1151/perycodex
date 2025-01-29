@@ -39,6 +39,10 @@ li:focus .sv-list__item.sv-list__item--selected > .sv-list__item-body {
     font-size: 14px !important;
   }
 
+  .sd-input .sd-text {
+    font-size: 14px !important;
+  }
+
   .sd-dropdown__filter-string-input {
     font-size: 14px !important;
   }

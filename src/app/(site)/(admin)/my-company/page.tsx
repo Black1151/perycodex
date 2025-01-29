@@ -32,6 +32,7 @@ export default async function MyCustomerPage() {
         dataset={customerData}
         excludeKeys={["imageUrl"]}
         sjsPath={"admin"}
+        cssPath={"admin"}
         reloadPageOnSuccess={true}
       />
     </>

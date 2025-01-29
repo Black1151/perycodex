@@ -16,6 +16,7 @@ export default async function ToolSubscriptionsCreatePage() {
         layout={"default"}
         redirectUrl={"/tool-subscriptions"}
         sjsPath={"admin"}
+        cssPath={"admin"}
       />
     </>
   );

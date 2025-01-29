@@ -16,6 +16,7 @@ export default async function TagsCreatePage() {
         layout={"default"}
         redirectUrl={"/tags"}
         sjsPath={"admin"}
+        cssPath={"admin"}
       />
     </>
   );

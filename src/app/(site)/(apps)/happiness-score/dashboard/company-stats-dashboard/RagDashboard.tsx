@@ -28,6 +28,8 @@ import { CompanyBubble } from "@/app/(site)/(apps)/happiness-score/dashboard/com
 import { CompanyHistogram } from "@/app/(site)/(apps)/happiness-score/dashboard/company-stats-dashboard/CompanyHistogram";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import { useUser } from "@/providers/UserProvider";
+import StaffHappinessDetailsRenderer
+  from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
 
 interface ApiResponse {
   userResource: RowData[];
@@ -165,41 +167,12 @@ const RagDashboard: React.FC = () => {
   useEffect(() => {
     const desktopColumnDefs: ColDef[] = [
       {
-        headerName: "",
-        field: "userImageUrl",
-        sortable: false,
-        filter: false,
-        width: 100,
-        maxWidth: 60,
-        resizable: false,
-        cellRenderer: (params: any) => {
-          return (
-              <Flex
-                  justifyContent="center"
-                  alignItems="center"
-                  w="100%"
-                  h="100%"
-                  py={1}
-              >
-                <Avatar
-                    name={params.data.fullName}
-                    src={params.data.userImageUrl}
-                    size="sm"
-                    sx={{
-                      fontSize: "0.65rem",
-                    }}
-                />
-              </Flex>
-          );
-        },
-        cellStyle: {color: "black"},
-      },
-      {
         headerName: "Name",
         field: "fullName",
         sortable: true,
         filter: true,
-        flex: 1,
+        resizable: true,
+        cellRenderer: StaffHappinessDetailsRenderer,
         cellStyle: {color: "black"},
       },
       {
@@ -236,6 +209,7 @@ const RagDashboard: React.FC = () => {
         sortable: true,
         filter: "agNumberColumnFilter",
         cellDataType: "number",
+        type: 'rightAligned'
       },
       {
         field: "avgHappinessScore",
@@ -276,39 +250,12 @@ const RagDashboard: React.FC = () => {
       {
         headerName: "",
         field: "userImageUrl",
-        sortable: false,
-        filter: false,
-        width: 100,
-        maxWidth: 60,
-        resizable: false,
-        cellRenderer: (params: any) => {
-          return (
-              <Flex
-                  justifyContent="center"
-                  alignItems="center"
-                  w="100%"
-                  h="100%"
-                  py={1}
-              >
-                <Avatar
-                    name={params.data.fullName}
-                    src={params.data.userImageUrl}
-                    size="sm"
-                    sx={{
-                      fontSize: "0.65rem",
-                    }}
-                />
-              </Flex>
-          );
-        },
-        cellStyle: {color: "black"},
-      },
-      {
-        headerName: "Name",
-        field: "fullName",
         sortable: true,
         filter: true,
-        flex: 1,
+        width: 100,
+        maxWidth: 60,
+        resizable: true,
+        cellRenderer: HappinessScoreRenderer,
         cellStyle: {color: "black"},
       },
       {
@@ -345,6 +292,7 @@ const RagDashboard: React.FC = () => {
         sortable: true,
         filter: "agNumberColumnFilter",
         cellDataType: "number",
+        type: 'rightAligned'
       },
       {
         field: "avgHappinessScore",

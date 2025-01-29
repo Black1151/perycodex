@@ -31,6 +31,7 @@ export default async function OptionListItemsDetailPage({
         layout={"default"}
         dataset={optionListItemData}
         sjsPath={"admin"}
+        cssPath={"admin"}
         reloadPageOnSuccess={true}
       />
     </>

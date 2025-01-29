@@ -31,6 +31,7 @@ export default async function SelectItemsDetailPage({
         layout={"default"}
         dataset={selectItemData}
         sjsPath={"admin"}
+        cssPath={"admin"}
         reloadPageOnSuccess={true}
       />
     </>

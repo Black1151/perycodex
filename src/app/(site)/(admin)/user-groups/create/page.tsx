@@ -1,22 +1,23 @@
-import { userGroupJson } from "@/components/surveyjs/forms/userGroup";
+import {userGroupJson} from "@/components/surveyjs/forms/userGroup";
 import AdminHeader from "@/components/AdminHeader";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
-import { checkUserRole } from "@/lib/dal";
+import {checkUserRole} from "@/lib/dal";
 
 export default async function UserGroupsCreatePage() {
-  await checkUserRole(`/user-groups/create`);
+    await checkUserRole(`/user-groups/create`);
 
-  return (
-    <>
-      <AdminHeader headingText={"Create User Group"} />
-      <SurveyComponent
-        surveyJson={userGroupJson}
-        endpoint={"/userGroup"}
-        isNew={true}
-        layout={"default"}
-        redirectUrl={"/user-groups"}
-        sjsPath={"admin"}
-      />
-    </>
-  );
+    return (
+        <>
+            <AdminHeader headingText={"Create User Group"}/>
+            <SurveyComponent
+                surveyJson={userGroupJson}
+                endpoint={"/userGroup"}
+                isNew={true}
+                layout={"default"}
+                redirectUrl={"/user-groups"}
+                sjsPath={"admin"}
+                cssPath={"admin"}
+            />
+        </>
+    );
 }

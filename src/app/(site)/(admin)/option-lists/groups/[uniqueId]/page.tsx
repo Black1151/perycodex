@@ -31,6 +31,7 @@ export default async function OptionListGroupsDetailPage({
         layout={"default"}
         dataset={optionListGroupData}
         sjsPath={"admin"}
+        cssPath={"admin"}
         reloadPageOnSuccess={true}
       />
     </>

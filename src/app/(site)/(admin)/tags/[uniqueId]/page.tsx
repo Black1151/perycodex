@@ -31,6 +31,7 @@ export default async function TagsDetailPage({
         dataset={tagData}
         layout={"default"}
         sjsPath={"admin"}
+        cssPath={"admin"}
         reloadPageOnSuccess={true}
       />
     </>

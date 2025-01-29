@@ -91,13 +91,7 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
               fillOpacity: 1,
             },
           },
-          label: isMobile
-            ? {
-                enabled: true,
-                color: "#fff",
-                formatter: ({ value }: { value: number }) => value.toFixed(1),
-              }
-            : undefined,
+          label: undefined, // Removed logic for showing score on small screens
           tooltip: {
             renderer: tooltipRenderer,
           },

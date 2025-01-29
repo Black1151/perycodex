@@ -19,12 +19,14 @@ import {AgCharts} from "ag-charts-react";
 import {SectionHeader} from "@/components/sectionHeader/SectionHeader";
 import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridComponentLight";
 import {ColDef} from "ag-grid-community";
-import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
 import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/HappinessScoreRenderer";
 import CommentsCellRenderer from "@/components/agGrids/CellRenderers/CommentsCellRenderer";
 import {useUser} from "@/providers/UserProvider";
 import {Info} from "@mui/icons-material";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
+import StaffHappinessDetailsRenderer
+    from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
+import ScoreTooltipRenderer from "@/components/agCharts/ScoreTooltipRenderer";
 
 // Define interfaces for each data type
 interface UserScore {
@@ -124,41 +126,12 @@ const UserDashboard: React.FC = () => {
 
     const columnDefs: ColDef[] = [
         {
-            headerName: "",
-            field: "userImageUrl",
-            sortable: false,
-            filter: false,
-            width: 100,
-            maxWidth: 60,
-            resizable: false,
-            cellRenderer: (params: any) => {
-                return (
-                    <Flex
-                        justifyContent="center"
-                        alignItems="center"
-                        w="100%"
-                        h="100%"
-                        py={1}
-                    >
-                        <Avatar
-                            name={params.data.fullName}
-                            src={params.data.userImageUrl}
-                            size="sm"
-                            sx={{
-                                fontSize: "0.65rem",
-                            }}
-                        />
-                    </Flex>
-                );
-            },
-            cellStyle: {color: "black"},
-        },
-        {
             headerName: "Name",
             field: "fullName",
             sortable: true,
             filter: true,
-            flex: 1,
+            resizable: true,
+            cellRenderer: StaffHappinessDetailsRenderer,
             cellStyle: {color: "black"},
         },
         {
@@ -274,6 +247,7 @@ const UserDashboard: React.FC = () => {
                     enabled: true,
                     fill: theme.colors.perygonPink,
                 },
+                tooltip: {renderer: ScoreTooltipRenderer},
                 interpolation: {
                     type: "smooth",
                 },
@@ -284,6 +258,7 @@ const UserDashboard: React.FC = () => {
                 yKey: "site",
                 yName: "Site",
                 marker: {enabled: true},
+                tooltip: {renderer: ScoreTooltipRenderer},
                 interpolation: {
                     type: "smooth",
                 },
@@ -294,6 +269,7 @@ const UserDashboard: React.FC = () => {
                 yKey: "department",
                 yName: "Department",
                 marker: {enabled: true},
+                tooltip: {renderer: ScoreTooltipRenderer},
                 interpolation: {
                     type: "smooth",
                 },
@@ -304,6 +280,7 @@ const UserDashboard: React.FC = () => {
                 yKey: "company",
                 yName: "Company",
                 marker: {enabled: true},
+                tooltip: {renderer: ScoreTooltipRenderer},
                 interpolation: {
                     type: "smooth",
                 },
@@ -364,6 +341,7 @@ const UserDashboard: React.FC = () => {
                 yName: "User",
                 stroke: theme.colors.perygonPink,
                 marker: {enabled: true, fill: theme.colors.perygonPink},
+                tooltip: {renderer: ScoreTooltipRenderer},
                 interpolation: {
                     type: "smooth",
                 },
@@ -374,6 +352,7 @@ const UserDashboard: React.FC = () => {
                 yKey: "site",
                 yName: "Site",
                 marker: {enabled: true},
+                tooltip: {renderer: ScoreTooltipRenderer},
                 interpolation: {
                     type: "smooth",
                 },
@@ -384,6 +363,7 @@ const UserDashboard: React.FC = () => {
                 yKey: "department",
                 yName: "Department",
                 marker: {enabled: true},
+                tooltip: {renderer: ScoreTooltipRenderer},
                 interpolation: {
                     type: "smooth",
                 },
@@ -394,6 +374,7 @@ const UserDashboard: React.FC = () => {
                 yKey: "company",
                 yName: "Company",
                 marker: {enabled: true},
+                tooltip: {renderer: ScoreTooltipRenderer},
                 interpolation: {
                     type: "smooth",
                 },
