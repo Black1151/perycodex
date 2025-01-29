@@ -11,6 +11,7 @@ interface StaffHappinessDetailsProps {
         userId?: number;
         fullName?: string;
         userImageUrl?: string;
+        imageUrl?: string;
     }
 }
 
@@ -30,7 +31,7 @@ const StaffHappinessDetailsRenderer: React.FC<StaffHappinessDetailsProps> = ({da
             const response = await fetch("/api/happiness-graphs/getUserHappinessDetails", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({toolId: 1, workflowId: 1, businessProcessId: 1, userId}),
+                body: JSON.stringify({toolId: toolId, workflowId: workflowId, businessProcessId: 1, userId}),
             });
 
             if (!response.ok) throw new Error("Failed to fetch happiness scores.");
@@ -53,7 +54,9 @@ const StaffHappinessDetailsRenderer: React.FC<StaffHappinessDetailsProps> = ({da
                 cursor="pointer"
                 gap={[2, 4]}
             >
-                <Avatar name={data.fullName} src={data.userImageUrl} size="sm" sx={{fontSize: "0.65rem"}}/>
+                <Avatar name={data.fullName}
+                        src={data.userImageUrl || data.imageUrl || ""}
+                        size="sm" sx={{fontSize: "0.65rem"}}/>
                 <Text>{data.fullName}</Text>
             </Flex>
 
