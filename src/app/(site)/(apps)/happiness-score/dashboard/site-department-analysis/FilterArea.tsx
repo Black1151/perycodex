@@ -12,7 +12,7 @@ import {
     subYears,
     format,
 } from "date-fns";
-import {Clear, Close, FilterAlt, FilterList, Refresh} from "@mui/icons-material";
+import {Clear, Close, FilterAlt, FilterList} from "@mui/icons-material";
 import {useUser} from "@/providers/UserProvider";
 import {useFetchClient} from "@/hooks/useFetchClient";
 
@@ -34,8 +34,21 @@ interface DepartmentResponse {
     resource: Department[]
 }
 
+interface FilterAreaProps {
+    onApplyFilters: (postBody: Record<string, any>) => void;
+    filterOptions?: {
+        showDateFilter?: boolean;
+        showSitesFilter?: boolean;
+        showDepartmentsFilter?: boolean;
+    }
+}
 
-const FilterArea = ({onApplyFilters}: { onApplyFilters: (postBody: Record<string, any>) => void }) => {
+const FilterArea: React.Fc = ({
+    onApplyFilters,
+    filterOptions = {showDateFilter: true, showSitesFilter: true, showDepartmentsFilter: true},
+};
+}) =>
+{
     const theme = useTheme();
     const {fetchClient} = useFetchClient();
     const {user} = useUser();
@@ -267,21 +280,22 @@ const FilterArea = ({onApplyFilters}: { onApplyFilters: (postBody: Record<string
                         />
                     </Flex>
 
-                    {/* Date Filter Dropdown */}
-                    <Select
-                        placeholder="All (no date filter)"
-                        value={dateFilter}
-                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                            setDateFilter(e.target.value)
-                        }
-                        w="full"
-                    >
-                        {dateRanges.map((range) => (
-                            <option key={range.value} value={range.value}>
-                                {range.name}
-                            </option>
-                        ))}
-                    </Select>
+                    {filterOptions.showDateFilter && (
+                        <Select
+                            placeholder="All (no date filter)"
+                            value={dateFilter}
+                            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                                setDateFilter(e.target.value)
+                            }
+                            w="full"
+                        >
+                            {dateRanges.map((range) => (
+                                <option key={range.value} value={range.value}>
+                                    {range.name}
+                                </option>
+                            ))}
+                        </Select>
+                    )}
                     <Button
                         width="100%"
                         minH={'40px'}
@@ -381,9 +395,12 @@ const FilterArea = ({onApplyFilters}: { onApplyFilters: (postBody: Record<string
                         </VStack>
                     </Box>
                 </Flex>
-            )}
+            )
+            }
         </>
-    );
-};
+    )
+        ;
+}
+;
 
 export default FilterArea;
