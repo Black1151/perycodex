@@ -48,6 +48,7 @@ export default async function Home({
             : "Site & Department Analysis"
         }
         canStartWorkflow={toolData.startInUi}
+        toolUrl={'/happiness-score'}
       />
       <SiteDepartmentDashboard />
     </WorkflowEngine>

@@ -93,9 +93,8 @@ const RagDashboard: React.FC = () => {
                 <Text mb={4}>To filter the dashboard:</Text>
                 <Text as="ul" ml={4}>
                     <li>
-                        Use the filter icon on column headers to find specific entries.
+                        Use the filter icon on column headers to find specific entries of your choice.
                     </li>
-                    <li>Filtering will affect the dashboard charts below</li>
                 </Text>
                 <br/>
                 <Text mb={4}>

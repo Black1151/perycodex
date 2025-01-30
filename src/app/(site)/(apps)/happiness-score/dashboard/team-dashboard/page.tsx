@@ -46,6 +46,7 @@ export default async function Home({
           activeDashboardName ? activeDashboardName : "Team Dashboard"
         }
         canStartWorkflow={toolData.startInUi}
+        toolUrl={'/happiness-score'}
       />
       <ManagerDashboardPage preFilter={"teams"} />
     </WorkflowEngine>

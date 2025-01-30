@@ -42,7 +42,7 @@ interface ApiResponse {
     resource: WorkflowStage[];
 }
 
-export default async function HappinessScoreWorkflowPage({
+export default async function ENPSWorkflowPage({
                                                              params,
                                                          }: {
     params: { workflowInstanceId: string };
