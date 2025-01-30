@@ -103,7 +103,7 @@ export const PageClientInner: React.FC<PageClientInnerProps> = ({
               flex={1}
               onClick={handleButtonClick}
             >
-              Big Up Someone!
+              Recognise Someone!
             </Button>
           </SpringScale>
         </VStack>

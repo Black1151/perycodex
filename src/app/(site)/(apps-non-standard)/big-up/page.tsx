@@ -43,6 +43,8 @@ export default function BigUpPage() {
     return <div>Loading...</div>;
   }
 
+  console.log(data.bigUpLeaderboard);
+
   const tabsData = [
     {
       header: "Leader Board",
@@ -64,9 +66,9 @@ export default function BigUpPage() {
 
   const masonryData = {
     items: [
-      { title: "Sedulo Total", content: data.totalBigUp },
-      { title: "Sed. Mnth. Average", content: data.averageBigUpMonthly },
-      { title: "Sedulo This Month", content: data.totalCurrentMonthBigUp },
+      { title: "Company Total", content: data.totalBigUp },
+      { title: "Co. Mnth. Average", content: data.averageBigUpMonthly },
+      { title: "Company this Month", content: data.totalCurrentMonthBigUp },
       { title: "Your Total", content: data.yourBigUpStats.bigUpGivenPoints },
     ],
     userStats: data.yourBigUpStats,

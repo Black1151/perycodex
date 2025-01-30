@@ -1,6 +1,7 @@
 import React from "react";
 import { Flex, Avatar, Text, Divider, BoxProps } from "@chakra-ui/react";
 import Card from "../../Card";
+import { EmojiEvents } from "@mui/icons-material";
 
 export interface LeaderboardCardProps extends BoxProps {
   name: string;
@@ -8,6 +9,9 @@ export interface LeaderboardCardProps extends BoxProps {
   received: number;
   given: number;
   score: number;
+  image: string;
+  rank: string;
+  medalColor?: string;
 }
 
 export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
@@ -16,6 +20,9 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
   received,
   given,
   score,
+  image,
+  rank,
+  medalColor,
   ...props
 }) => {
   return (
@@ -26,7 +33,7 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
       {...props}
     >
       <Flex align="center" mb={3}>
-        <Avatar size="lg" name={name} />
+        <Avatar size="lg" name={name} src={image} />
         <Flex direction="column" ml={4}>
           <Text fontWeight="bold" fontSize="xl" color="perygonPink">
             {name}
@@ -35,10 +42,24 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
             {location}
           </Text>
         </Flex>
-        <Text ml="auto" fontWeight="bold" color="perygonPink" fontSize="lg">
-          {score}
-        </Text>
+        <Flex ml="auto" align="center" flexDirection="column">
+          <Flex alignItems="center">
+            {medalColor && (
+              <EmojiEvents
+                style={{ color: medalColor, marginRight: "0.5rem" }}
+                fontSize="large"
+              />
+            )}
+            <Text fontWeight="bold" color="perygonPink" fontSize="lg" mr={2}>
+              {rank}
+            </Text>
+          </Flex>
+          <Text fontWeight="bold" color="perygonPink" fontSize="lg">
+            {score} Points!
+          </Text>
+        </Flex>
       </Flex>
+
       <Divider mb={3} />
       <Flex justify="space-between">
         <Text fontSize="sm" fontWeight="bold" color="white">
