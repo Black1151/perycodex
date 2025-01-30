@@ -29,6 +29,7 @@
     "next-auth": "^4.24.11",
     "next-client-cookies": "^1.1.1",
     "react": "^18",
+    "react-canvas-confetti": "^2.0.7",
     "react-datepicker": "^7.3.0",
     "react-dom": "^18",
     "react-hook-form": "^7.52.2",
