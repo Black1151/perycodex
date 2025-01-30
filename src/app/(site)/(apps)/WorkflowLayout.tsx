@@ -53,6 +53,12 @@ interface FormDataResponse {
     statusName: string;
 }
 
+const REDIRECT_PATHS: Record<string, string> = {
+    happiness: "/happiness-score",
+    enps: "/enps",
+    default: "/"
+}
+
 export default function WorkflowLayout({
                                            stages,
                                            layout,
@@ -154,8 +160,12 @@ export default function WorkflowLayout({
                     setFormData(parsedResponse);
 
                     const isAuthorized =
+                        // Yours form
                         formDataset.createdBy === user?.userId ||
-                        formDataset.startedBy === user?.userId;
+                        formDataset.startedBy === user?.userId ||
+                        // Anonymous users
+                        formDataset.createdBy === 0 ||
+                        formDataset.startedBy === 0;
 
                     if (!isAuthorized) {
                         setIsModalOpen(true);
@@ -178,6 +188,9 @@ export default function WorkflowLayout({
 
         fetchStageData();
     }, [currentStage]);
+
+    const redirectPath = REDIRECT_PATHS[layout] || REDIRECT_PATHS.default;
+    const redirectUrl = `${redirectPath}?wfId=${workflowId}&toolId=${toolId}`;
 
     return (
         <>
@@ -218,7 +231,7 @@ export default function WorkflowLayout({
                             dataset={formData}
                             formSubmission="workflow"
                             layout={layout}
-                            redirectUrl={`/happiness-score?wfId=${workflowId}&toolId=${toolId}`}
+                            redirectUrl={redirectUrl}
                             jsPath={currentStage.jsAdditionalFileUrl}
                             cssPath={currentStage.cssThemeFileUrl}
                             sjsPath={currentStage.sjsThemeFileUrl}
