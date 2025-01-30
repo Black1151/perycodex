@@ -54,7 +54,7 @@ export async function POST(request: Request) {
         );
 
         if (!userResponse.ok) {
-            throw new Error("Failed to fetch happiness score RAG data");
+            throw new Error("Failed to fetch happiness score data");
         }
 
         const managingPartnersResponse: ManagingPartnersResponse =

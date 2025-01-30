@@ -308,82 +308,88 @@ const FilterArea: React.FC<FilterAreaProps> = ({
                         </Button>
 
                         {/* Sites Filter */}
-                        <Box border="1px solid"
-                             borderColor={theme.colors.perygonPink}
-                             borderRadius="md"
-                             p={2}
-                             fontSize={['14px', '16px']}
-                             boxShadow="lg">
-                            <Box
-                                width="100%"
-                                display="flex"
-                                justifyContent="center"
-                            >
-                                <Text
-                                    fontWeight="bold"
-                                    mb={2}
-                                    bg={theme.colors.perygonPink}
-                                    color="white"
+                        {filterOptions.showSitesFilter && (
+                            <Box border="1px solid"
+                                 borderColor={theme.colors.perygonPink}
+                                 borderRadius="md"
+                                 p={2}
+                                 fontSize={['14px', '16px']}
+                                 boxShadow="lg">
+                                <Box
                                     width="100%"
-                                    p={2}
-                                    fontSize={['14px', '16px']}
-                                    borderRadius="md"
+                                    display="flex"
+                                    justifyContent="center"
                                 >
-                                    Sites
-                                </Text>
-                            </Box>
-                            <VStack align="start" spacing={2}>
-                                {sites.map((site) => (
-                                    <Checkbox
-                                        key={site.id}
-                                        size={['sm', 'md']}
-                                        isChecked={selectedSites.includes(site.id)}
-                                        onChange={() => handleSiteChange(site.id)}
+                                    <Text
+                                        fontWeight="bold"
+                                        mb={2}
+                                        bg={theme.colors.perygonPink}
+                                        color="white"
+                                        width="100%"
+                                        p={2}
+                                        fontSize={['14px', '16px']}
+                                        borderRadius="md"
                                     >
-                                        {site.siteName}
-                                    </Checkbox>
-                                ))}
-                            </VStack>
-                        </Box>
+                                        Sites
+                                    </Text>
+                                </Box>
+                                <VStack align="start" spacing={2}>
+                                    {sites.map((site) => (
+                                        <Checkbox
+                                            key={site.id}
+                                            size={['sm', 'md']}
+                                            isChecked={selectedSites.includes(site.id)}
+                                            onChange={() => handleSiteChange(site.id)}
+                                        >
+                                            {site.siteName}
+                                        </Checkbox>
+                                    ))}
+                                </VStack>
+                            </Box>
+                        )}
 
                         {/* Departments Filter */}
-                        <Box border="1px solid"
-                             borderColor={theme.colors.perygonPink}
-                             borderRadius="md"
-                             p={2}
-                             fontSize={['14px', '16px']}
-                             boxShadow="lg">
-                            <Box
-                                width="100%"
-                                display="flex"
-                                justifyContent="center"
-                            >
-                                <Text
-                                    fontWeight="bold"
-                                    mb={2}
-                                    bg={theme.colors.perygonPink}
-                                    color="white"
+                        {filterOptions.showDepartmentsFilter && (
+
+
+                            <Box border="1px solid"
+                                 borderColor={theme.colors.perygonPink}
+                                 borderRadius="md"
+                                 p={2}
+                                 fontSize={['14px', '16px']}
+                                 boxShadow="lg">
+                                <Box
                                     width="100%"
-                                    p={2}
-                                    fontSize={['14px', '16px']}
-                                    borderRadius="md"
+                                    display="flex"
+                                    justifyContent="center"
                                 >
-                                    Departments
-                                </Text>
-                            </Box>
-                            <VStack align="start" spacing={2}>
-                                {departments.map((dept) => (
-                                    <Checkbox
-                                        key={dept.id}
-                                        size={['sm', 'md']}
-                                        isChecked={selectedDepartments.includes(dept.id)}
-                                        onChange={() => handleDepartmentChange(dept.id)}
+                                    <Text
+                                        fontWeight="bold"
+                                        mb={2}
+                                        bg={theme.colors.perygonPink}
+                                        color="white"
+                                        width="100%"
+                                        p={2}
+                                        fontSize={['14px', '16px']}
+                                        borderRadius="md"
                                     >
-                                        {dept.name}
-                                    </Checkbox>
-                                ))}
-                            </VStack>
-                        </Box>
+                                        Departments
+                                    </Text>
+                                </Box>
+                                <VStack align="start" spacing={2}>
+                                    {departments.map((dept) => (
+                                        <Checkbox
+                                            key={dept.id}
+                                            size={['sm', 'md']}
+                                            isChecked={selectedDepartments.includes(dept.id)}
+                                            onChange={() => handleDepartmentChange(dept.id)}
+                                        >
+                                            {dept.name}
+                                        </Checkbox>
+                                    ))}
+                                </VStack>
+                            </Box>
+                        )}
                     </Flex>
                 )
                 }

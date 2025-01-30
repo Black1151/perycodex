@@ -1,16 +1,19 @@
 "use client";
 
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
+    Box,
+    Flex,
     Text,
     useBreakpointValue,
+    useTheme,
 } from "@chakra-ui/react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import "ag-grid-charts-enterprise";
 import {
     ColDef,
-    CreateCrossFilterChartParams,
+    CreateCrossFilterChartParams, FirstDataRenderedEvent,
 } from "ag-grid-community";
 import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridComponentLight";
 import FilterArea from "@/app/(site)/(apps)/happiness-score/dashboard/site-department-analysis/FilterArea";
@@ -18,6 +21,13 @@ import StaffHappinessDetailsRenderer
     from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
 import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/HappinessScoreRenderer";
 import CommentsCellRenderer from "@/components/agGrids/CellRenderers/CommentsCellRenderer";
+import {useWorkflow} from "@/providers/WorkflowProvider";
+import {useUser} from "@/providers/UserProvider";
+import {addDays, format, parseISO} from "date-fns";
+import {useFetchClient} from "@/hooks/useFetchClient";
+import {AgCartesianSeriesTooltipRendererParams, AgNodeClickEvent} from "ag-charts-types";
+import useColor from "@/hooks/useColor";
+import {SectionHeader} from "@/components/sectionHeader/SectionHeader";
 
 
 interface ApiResponse {
@@ -57,98 +67,638 @@ interface SeduloCrossFilterChartParams extends CreateCrossFilterChartParams {
 }
 
 const ScoresCommentsDashboard: React.FC = () => {
-    const isMobile = useBreakpointValue({base: true, sm: true, md: false});
-    const [gridData, setGridData] = useState<Record<string, any>[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
+        const isMobile = useBreakpointValue({base: true, sm: true, md: false});
+        const theme = useTheme();
+        const [gridData, setGridData] = useState<Record<string, any>[]>([]);
+        const [loading, setLoading] = useState<boolean>(false);
+        const [filterOptions, setFilterOptions] = useState<Record<string, any>>({});
+        const {toolId, workflowId} = useWorkflow();
+        const {fetchClient} = useFetchClient();
+        const {user} = useUser();
+        const {getColor} = useColor();
 
+        // Details Modal for Clicking
+        const [isBarModalOpen, setIsBarModalOpen] = useState(false);
+        const [barModalTitle, setBarModalTitle] = useState("");
+        const [filterModel, setFilterModel] = useState({});
 
-    const [filterOptions, setFilterOptions] = useState<Record<string, any>>({});
-
-    const defaultColDef: ColDef = {
-        resizable: true,
-        filter: false,
-        sortable: false,
-        flex: isMobile ? 0 : 1,
-        suppressHeaderMenuButton: true,
-    };
-
-    const columnDefs: ColDef[] = [
-        {
-            headerName: "Name",
-            field: "fullName",
-            sortable: false,
+        const defaultColDef: ColDef = {
+            resizable: true,
             filter: false,
-            resizable: false,
-            cellRenderer: StaffHappinessDetailsRenderer,
-            cellStyle: {color: "black"},
-        },
-        {
-            field: "siteName",
-            headerName: "Site",
-            filter: "agMultiColumnFilter",
-            chartDataType: "category",
-        },
-        {
-            field: "deptName",
-            headerName: "Department",
-            filter: "agMultiColumnFilter",
-            chartDataType: "category",
-        },
-        {
-            field: "eowDate",
-            headerName: "Week",
-            sort: "asc",
-            chartDataType: "category",
-        },
-        {
-            field: "monthYear",
-            headerName: "Month - Year",
-            chartDataType: "category",
-        },
-        {
-            field: "happinessScore",
-            headerName: "Happiness Score",
-            chartDataType: "series",
-            cellRenderer: HappinessScoreRenderer,
-        },
-        {
-            field: "comments",
-            headerName: "Comments",
-            cellRenderer: CommentsCellRenderer,
-        },
-    ];
+            sortable: false,
+            flex: isMobile ? 0 : 1,
+            suppressHeaderMenuButton: true,
+        };
+
+        const columnDefs: ColDef[] = [
+            {
+                headerName: "Name",
+                field: "fullName",
+                sortable: false,
+                filter: true,
+                resizable: true,
+                cellRenderer: StaffHappinessDetailsRenderer,
+                cellStyle: {color: "black"},
+            },
+            {
+                field: "siteName",
+                headerName: "Site",
+                filter: "agMultiColumnFilter",
+                chartDataType: "category",
+            },
+            {
+                field: "deptName",
+                headerName: "Department",
+                filter: "agMultiColumnFilter",
+                chartDataType: "category",
+            },
+            {
+                field: "eowDate",
+                headerName: "Week",
+                sort: "asc",
+                chartDataType: "category",
+            },
+            {
+                field: "monthYear",
+                headerName: "Month - Year",
+                chartDataType: "category",
+            },
+            {
+                field: "happinessScore",
+                headerName: "Happiness Score",
+                chartDataType: "series",
+                cellRenderer: HappinessScoreRenderer,
+            },
+            {
+                field: "comments",
+                headerName: "Comments",
+                cellRenderer: CommentsCellRenderer,
+            },
+        ];
 
 
-    const getData = async (postBody: Record<string, any> = filterOptions) => {
-        console.log("Getting data:", postBody);
+        const getData = async (postBody: Record<string, any> = filterOptions) => {
+            setLoading(true);
+
+            if (!toolId || !workflowId || !user?.customerId) {
+                console.warn(
+                    "Required data (toolId, workflowId, or customerId) is missing"
+                );
+                return; // Prevent fetching if values are not ready
+            }
+
+            try {
+                const response = await fetchClient<ApiResponse>(
+                    `/api/happiness-graphs/getAllHappinessData`,
+                    {
+                        method: 'POST',
+                        body: {
+                            toolId,
+                            workflowId,
+                            ...postBody
+                        },
+                        redirectOnError: false,
+                    }
+                );
+
+                if (response && typeof response === "object" && "data" in response) {
+                    // Preprocess data to include the EOW date
+                    const processedData = response.data.map((item: RowData) => {
+                        const createdAtDate = parseISO(item.createdAt);
+                        const dayOfWeek = createdAtDate.getDay(); // 0 = Sunday, 1 = Monday, ...
+                        const eowDate = addDays(createdAtDate, 7 - dayOfWeek); // Move to next Sunday
+                        return {
+                            ...item,
+                            eowDate: format(eowDate, "yyyy-MM-dd"), // Format as "YYYY-MM-DD"
+                            monthYear: format(createdAtDate, "MM-yyyy"), // Format as "MM-YYYY"
+                        };
+                    });
+
+                    setGridData(processedData);
+                } else {
+                    console.error("Invalid response:", response);
+                    setGridData([]);
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                setGridData([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        const handleGridReady = (params: FirstDataRenderedEvent) => {
+            const gridApi = params.api;
+
+            const chartConfigs: SeduloCrossFilterChartParams[] = [
+                {
+                    id: "chart1",
+                    cellRange: {
+                        columns: ["deptName", "happinessScore"],
+                    },
+                    chartType: "bar",
+                    aggFunc: "avg",
+                    chartThemeOverrides: {
+                        common: {
+                            padding: {
+                                top: 20,
+                                left: 20,
+                                right: 20,
+                                bottom: 20,
+                            },
+                            contextMenu: {
+                                enabled: false,
+                            },
+                            axes: {
+                                category: {
+                                    label: {
+                                        rotation: 340,
+                                        fontSize: 10,
+                                        fontFamily: "Metropolis",
+                                        color: theme.colors.perygonPink,
+                                    },
+                                    gridLine: {
+                                        width: 0,
+                                    },
+                                },
+                            },
+                            legend: {
+                                enabled: false,
+                            },
+                            zoom: {
+                                enabled: false,
+                            },
+                            navigator: {
+                                enabled: false,
+                            },
+                            overlays: {
+                                noData: {
+                                    text: "NO DATA",
+                                },
+                                loading: {
+                                    text: "Loading...",
+                                },
+                            },
+                        },
+                        bar: {
+                            series: {
+                                cornerRadius: 10,
+                                shadow: {
+                                    enabled: true,
+                                    color: "#191919",
+                                    xOffset: 1,
+                                    yOffset: 1,
+                                    blur: 4,
+                                },
+                                itemStyler: (params) => {
+                                    const {datum, yKey} = params;
+                                    const score = datum[yKey]; // Retrieve the score value
+                                    const fillColor = getColor(score); // Determine color based on range
+
+                                    return {
+                                        fill: fillColor,
+                                    };
+                                },
+                                listeners: {
+                                    nodeClick: (params: AgNodeClickEvent<any, any>) => {
+                                        const {xKey, datum} = params;
+
+                                        if (datum && xKey) {
+                                            // Ensure `datum[xKey]` is processed correctly
+                                            const value =
+                                                typeof datum[xKey] === "object"
+                                                    ? datum[xKey]?.value
+                                                    : datum[xKey];
+
+                                            const newFilterModel = {
+                                                [xKey]: {
+                                                    filterType: "multi",
+                                                    filterModels: [
+                                                        null,
+                                                        {
+                                                            values: value ? [value] : [], // Extract the value or use an empty array
+                                                            filterType: "set",
+                                                        },
+                                                    ],
+                                                },
+                                            };
+                                            setBarModalTitle(`Department: ${value}`);
+                                            setFilterModel(newFilterModel);
+                                            setIsBarModalOpen(true);
+                                        }
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                {
+                    id: "chart2",
+                    cellRange: {
+                        columns: ["siteName", "happinessScore"],
+                    },
+                    chartType: "column",
+                    aggFunc: "avg",
+                    chartThemeOverrides: {
+                        common: {
+                            padding: {
+                                top: 20,
+                                left: 20,
+                                right: 20,
+                                bottom: 20,
+                            },
+                            contextMenu: {
+                                enabled: false,
+                            },
+                            axes: {
+                                category: {
+                                    label: {
+                                        rotation: 300,
+                                        fontSize: 10,
+                                        fontFamily: "Metropolis",
+                                        color: theme.colors.perygonPink,
+                                    },
+                                    gridLine: {
+                                        width: 0,
+                                    },
+                                },
+                            },
+                            legend: {
+                                enabled: false,
+                            },
+                            zoom: {
+                                enabled: false,
+                            },
+                            navigator: {
+                                enabled: false,
+                            },
+                            overlays: {
+                                noData: {
+                                    text: "NO DATA",
+                                },
+                                loading: {
+                                    text: "Loading...",
+                                },
+                            },
+                        },
+                        bar: {
+                            series: {
+                                cornerRadius: 10,
+                                shadow: {
+                                    enabled: true,
+                                    color: "#191919",
+                                    xOffset: 1,
+                                    yOffset: 1,
+                                    blur: 4,
+                                },
+                                itemStyler: (params) => {
+                                    const {datum, yKey} = params;
+                                    const score = datum[yKey];
+                                    const fillColor = getColor(score);
+
+                                    return {
+                                        fill: fillColor,
+                                    };
+                                },
+                                listeners: {
+                                    nodeClick: (params: AgNodeClickEvent<any, any>) => {
+                                        const {xKey, datum} = params;
+
+                                        if (datum && xKey) {
+                                            const value =
+                                                typeof datum[xKey] === "object"
+                                                    ? datum[xKey]?.value
+                                                    : datum[xKey];
+
+                                            const newFilterModel = {
+                                                [xKey]: {
+                                                    filterType: "multi",
+                                                    filterModels: [
+                                                        null,
+                                                        {
+                                                            values: value ? [value] : [], // Extract the value or use an empty array
+                                                            filterType: "set",
+                                                        },
+                                                    ],
+                                                },
+                                            };
+                                            setBarModalTitle(`Site: ${value}`);
+                                            setFilterModel(newFilterModel);
+                                            setIsBarModalOpen(true);
+                                        }
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                {
+                    id: "chart3",
+                    cellRange: {
+                        columns: ["eowDate", "happinessScore"],
+                    },
+                    chartType: "line",
+                    aggFunc: "avg",
+                    chartThemeOverrides: {
+                        common: {
+                            padding: {
+                                top: 20,
+                                left: 20,
+                                right: 20,
+                                bottom: 20,
+                            },
+                            contextMenu: {
+                                enabled: false,
+                            },
+                            axes: {
+                                category: {
+                                    label: {
+                                        rotation: 300,
+                                        fontSize: 10,
+                                        fontFamily: "Metropolis",
+                                        color: theme.colors.perygonPink,
+                                    },
+                                    gridLine: {
+                                        width: 0,
+                                    },
+                                },
+                            },
+                            legend: {
+                                enabled: false,
+                            },
+                            zoom: {
+                                enabled: false,
+                            },
+                            navigator: {
+                                enabled: false,
+                            },
+                            overlays: {
+                                noData: {
+                                    text: "NO DATA",
+                                },
+                                loading: {
+                                    text: "Loading...",
+                                },
+                            },
+                        },
+                        line: {
+                            series: {
+                                stroke: theme.colors.perygonPink,
+                                interpolation: {
+                                    type: "smooth",
+                                },
+                                marker: {
+                                    enabled: true,
+                                    itemStyler: (params) => {
+                                        const {datum, yKey} = params;
+                                        const score = datum[yKey]; // Retrieve the score value
+                                        const fillColor = getColor(score); // Determine color based on range
+
+                                        return {
+                                            fill: fillColor,
+                                            size: 10,
+                                        };
+                                    },
+                                },
+                                tooltip: {
+                                    renderer: renderer,
+                                },
+                            },
+                        },
+                    },
+                },
+                {
+                    id: "chart4",
+                    cellRange: {
+                        columns: ["monthYear", "happinessScore"],
+                    },
+                    chartType: "line",
+                    aggFunc: "avg",
+                    chartThemeOverrides: {
+                        common: {
+                            padding: {
+                                top: 20,
+                                left: 20,
+                                right: 20,
+                                bottom: 20,
+                            },
+                            contextMenu: {
+                                enabled: false,
+                            },
+                            axes: {
+                                category: {
+                                    label: {
+                                        rotation: 300,
+                                        fontSize: 10,
+                                        fontFamily: "Metropolis",
+                                        color: theme.colors.perygonPink,
+                                    },
+                                    gridLine: {
+                                        width: 0,
+                                    },
+                                },
+                            },
+                            legend: {
+                                enabled: false,
+                            },
+                            zoom: {
+                                enabled: false,
+                            },
+                            navigator: {
+                                enabled: false,
+                            },
+                            overlays: {
+                                noData: {
+                                    text: "NO DATA",
+                                },
+                                loading: {
+                                    text: "Loading...",
+                                },
+                            },
+                        },
+                        line: {
+                            series: {
+                                stroke: theme.colors.perygonPink,
+                                interpolation: {
+                                    type: "smooth",
+                                },
+                                marker: {
+                                    enabled: true,
+                                    itemStyler: (params) => {
+                                        const {datum, yKey} = params;
+                                        const score = datum[yKey]; // Retrieve the score value
+                                        const fillColor = getColor(score); // Determine color based on range
+
+                                        return {
+                                            fill: fillColor,
+                                            size: 10,
+                                        };
+                                    },
+                                },
+                                tooltip: {
+                                    renderer: renderer,
+                                },
+                            },
+                        },
+                    },
+                },
+            ];
+
+            chartConfigs.forEach((config) => {
+                const container = document.getElementById(config.id);
+                if (container) {
+                    gridApi.createRangeChart({
+                        ...config,
+                        chartContainer: container,
+                        suppressChartRanges: true,
+                    });
+                }
+            });
+        };
+
+        const renderer = (params: AgCartesianSeriesTooltipRendererParams) => {
+            return (
+                '<div class="ag-chart-tooltip-title" style="background-color:' +
+                params.color +
+                '">' +
+                params.datum[params.xKey] +
+                "</div>" +
+                '<div class="ag-chart-tooltip-content">' +
+                params.datum[params.yKey].toFixed(2) +
+                "</div>"
+            );
+        };
+
+
+        const onFilterChange = (postBody: Record<string, any>) => {
+            setFilterOptions(postBody);
+            getData(postBody);
+        }
+
+        useEffect(() => {
+            if (user) {
+                getData({});
+            }
+        }, [user]);
+
+
+        return (
+
+            <>
+                <FilterArea onApplyFilters={onFilterChange}
+                            filterOptions={{showDateFilter: true, showSitesFilter: false, showDepartmentsFilter: false}}/>
+
+                <Flex w={"100%"} gap={6} flexWrap={"wrap"}>
+                    <DataGridComponentLight
+                        data={gridData}
+                        loading={loading}
+                        initialFields={columnDefs}
+                        showTopBar={false}
+                        defaultColDef={defaultColDef}
+                        onGridReady={handleGridReady}
+                        refreshData={getData}
+                        enableAutoRefresh={true}
+                        title={'Score and Comments'}
+
+                    />
+
+                    {gridData.length > 0 && (
+                        <Flex
+                            width="100%"
+                            flexWrap="wrap"
+                            gap={6}
+                            justify="space-between"
+                            flex={1}
+                        >
+                            <Box
+                                minW={["100%", "100%", "48%"]}
+                                flex={1}
+                                textAlign="center"
+                                borderRadius="lg"
+                            >
+                                <Flex
+                                    width="100%"
+                                    justifyContent={isMobile ? "flex-start" : "center"}
+                                    mb={2}
+                                >
+                                    <SectionHeader>Happiness by Department</SectionHeader>
+                                </Flex>
+                                <Box
+                                    id="chart1"
+                                    height="400px"
+                                    w="full"
+                                    borderRadius={"2xl"}
+                                    overflow={"hidden"}
+                                ></Box>
+                            </Box>
+                            <Box
+                                minW={["100%", "100%", "48%"]}
+                                flex={1}
+                                textAlign="center"
+                                borderRadius="lg"
+                            >
+                                <Flex
+                                    width="100%"
+                                    justifyContent={isMobile ? "flex-start" : "center"}
+                                    mb={2}
+                                >
+                                    <SectionHeader>Happiness by Office</SectionHeader>
+                                </Flex>
+                                <Box
+                                    id="chart2"
+                                    height="400px"
+                                    w="full"
+                                    borderRadius={"2xl"}
+                                    overflow={"hidden"}
+                                ></Box>
+                            </Box>
+                            <Box
+                                minW={["100%", "100%", "100%"]}
+                                flex={1}
+                                textAlign="center"
+                                borderRadius="lg"
+                            >
+                                <Flex
+                                    width="100%"
+                                    justifyContent={isMobile ? "flex-start" : "center"}
+                                    mb={2}
+                                >
+                                    <SectionHeader>Historic Weekly Average</SectionHeader>
+                                </Flex>
+                                <Box
+                                    id="chart3"
+                                    height="400px"
+                                    w="full"
+                                    borderRadius={"2xl"}
+                                    overflow={"hidden"}
+                                ></Box>
+                            </Box>
+                            <Box
+                                minW={["100%", "100%", "100%"]}
+                                flex={1}
+                                textAlign="center"
+                                borderRadius="lg"
+                            >
+                                <Flex
+                                    width="100%"
+                                    justifyContent={isMobile ? "flex-start" : "center"}
+                                    mb={2}
+                                >
+                                    <SectionHeader>Historic Monthly Average</SectionHeader>
+                                </Flex>
+                                <Box
+                                    id="chart4"
+                                    height="400px"
+                                    w="full"
+                                    borderRadius={"2xl"}
+                                    overflow={"hidden"}
+                                ></Box>
+                            </Box>
+                        </Flex>
+                    )}
+                </Flex>
+            </>
+        )
     }
-
-    const onFilterChange = (postBody: Record<string, any>) => {
-        setFilterOptions(postBody);
-        getData(postBody);
-    }
-
-
-    return (
-
-        <>
-            <FilterArea onApplyFilters={onFilterChange}/>
-            <Text>
-                Scores and Comments Dashboard
-            </Text>
-            <DataGridComponentLight
-                data={gridData}
-                loading={loading}
-                initialFields={columnDefs}
-                showTopBar={true}
-                defaultColDef={defaultColDef}
-                // onGridReady={handleGridReady}
-                refreshData={getData}
-                enableAutoRefresh={true}
-                title={'Score and Comments'}
-
-            />
-        </>
-    )
-};
+;
 export default ScoresCommentsDashboard;
