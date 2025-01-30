@@ -67,7 +67,7 @@ export default function BigUpPage() {
   const masonryData = {
     items: [
       { title: "Company Total", content: data.totalBigUp },
-      { title: "Co. Mnth. Average", content: data.averageBigUpMonthly },
+      { title: "Company Month Avg", content: data.averageBigUpMonthly },
       { title: "Company this Month", content: data.totalCurrentMonthBigUp },
       { title: "Your Total", content: data.yourBigUpStats.bigUpGivenPoints },
     ],
