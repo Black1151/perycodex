@@ -25,8 +25,6 @@ export default function BigUpPage() {
 
       const result = await response.json();
 
-      console.log(result);
-
       if (response.ok) {
         setData(result.resource);
       } else {

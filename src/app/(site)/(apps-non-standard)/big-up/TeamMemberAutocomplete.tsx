@@ -1,4 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  FC,
+  ChangeEvent,
+} from "react";
+import debounce from "lodash/debounce";
 import { Input, Box, Text, Avatar, HStack } from "@chakra-ui/react";
 import { BigUpTeamMember } from "./types";
 import {
@@ -14,7 +22,7 @@ interface TeamMemberAutocompleteProps {
   placeholder?: string;
 }
 
-const TeamMemberAutocomplete: React.FC<TeamMemberAutocompleteProps> = ({
+const TeamMemberAutocomplete: FC<TeamMemberAutocompleteProps> = ({
   value,
   onChange,
   onBlur,
@@ -22,21 +30,33 @@ const TeamMemberAutocomplete: React.FC<TeamMemberAutocompleteProps> = ({
   placeholder = "Search team member...",
 }) => {
   const [search, setSearch] = useState("");
-  const [filteredMembers, setFilteredMembers] = useState<BigUpTeamMember[]>([]);
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
 
-  useEffect(() => {
-    if (search.trim() === "") {
-      setFilteredMembers([]);
-      return;
-    }
+  const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+    setShowDropdown(true);
+  }, []);
 
-    const lowerSearch = search.toLowerCase();
-    const matches = teamMembers.filter((member) =>
+  useEffect(() => {
+    const handler = debounce((value: string) => {
+      setDebouncedSearch(value);
+    }, 300);
+
+    handler(search);
+
+    return () => {
+      handler.cancel();
+    };
+  }, [search]);
+
+  const filteredMembers = useMemo(() => {
+    if (!debouncedSearch.trim()) return [];
+    const lowerSearch = debouncedSearch.toLowerCase();
+    return teamMembers.filter((member) =>
       member.fullName.toLowerCase().includes(lowerSearch)
     );
-    setFilteredMembers(matches);
-  }, [search, teamMembers]);
+  }, [debouncedSearch, teamMembers]);
 
   const handleSelectMember = (member: BigUpTeamMember) => {
     setSearch(member.fullName);
@@ -49,10 +69,7 @@ const TeamMemberAutocomplete: React.FC<TeamMemberAutocompleteProps> = ({
       <Input
         placeholder={placeholder}
         value={search}
-        onChange={(e) => {
-          setSearch(e.target.value);
-          setShowDropdown(true);
-        }}
+        onChange={handleInputChange}
         onBlur={onBlur}
         onFocus={() => setShowDropdown(true)}
         bg="rgba(0, 0, 0, 0.85)"
