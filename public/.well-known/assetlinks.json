@@ -17,7 +17,7 @@
     ],
     "target": {
       "namespace": "android_app",
-      "package_name": "co.median.android.lxmmok",
+      "package_name": "uk.co.sedulo.perygon",
       "sha256_cert_fingerprints": [
         "82:7C:80:9F:00:6E:8B:34:24:B9:AD:D4:AF:EB:E4:9C:21:C7:AF:16:C4:9D:21:3E:24:B3:F0:72:EA:67:60:E7"
       ]
