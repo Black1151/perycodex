@@ -48,6 +48,7 @@ export default async function Home({
             : "My Company Happiness Stats"
         }
         canStartWorkflow={toolData.startInUi}
+        toolUrl={'/happiness-score'}
       />
       <RagDashboard />
     </WorkflowEngine>

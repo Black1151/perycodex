@@ -46,6 +46,7 @@ export default async function Home({
           activeDashboardName ? activeDashboardName : "Your Happiness Stats"
         }
         canStartWorkflow={toolData.startInUi}
+        toolUrl={'/happiness-score'}
       />
       <UserDashboard />
     </WorkflowEngine>
