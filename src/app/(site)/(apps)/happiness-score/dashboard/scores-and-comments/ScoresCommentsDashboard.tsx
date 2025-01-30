@@ -3,10 +3,10 @@
 import React, {useEffect, useState} from "react";
 import {
     Box,
-    Flex,
+    Flex, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay,
     Text,
     useBreakpointValue,
-    useTheme,
+    useTheme, VStack,
 } from "@chakra-ui/react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
@@ -17,10 +17,6 @@ import {
 } from "ag-grid-community";
 import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridComponentLight";
 import FilterArea from "@/app/(site)/(apps)/happiness-score/dashboard/site-department-analysis/FilterArea";
-import StaffHappinessDetailsRenderer
-    from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
-import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/HappinessScoreRenderer";
-import CommentsCellRenderer from "@/components/agGrids/CellRenderers/CommentsCellRenderer";
 import {useWorkflow} from "@/providers/WorkflowProvider";
 import {useUser} from "@/providers/UserProvider";
 import {addDays, format, parseISO} from "date-fns";
@@ -28,6 +24,8 @@ import {useFetchClient} from "@/hooks/useFetchClient";
 import {AgCartesianSeriesTooltipRendererParams, AgNodeClickEvent} from "ag-charts-types";
 import useColor from "@/hooks/useColor";
 import {SectionHeader} from "@/components/sectionHeader/SectionHeader";
+import {columnDefs} from "@/app/(site)/(apps)/happiness-score/dashboard/scores-and-comments/GridColumnDefs";
+import {modalColDef} from "@/app/(site)/(apps)/happiness-score/dashboard/scores-and-comments/ModalColumnDefs";
 
 
 interface ApiResponse {
@@ -90,51 +88,12 @@ const ScoresCommentsDashboard: React.FC = () => {
             suppressHeaderMenuButton: true,
         };
 
-        const columnDefs: ColDef[] = [
-            {
-                headerName: "Name",
-                field: "fullName",
-                sortable: false,
-                filter: true,
-                resizable: true,
-                cellRenderer: StaffHappinessDetailsRenderer,
-                cellStyle: {color: "black"},
-            },
-            {
-                field: "siteName",
-                headerName: "Site",
-                filter: "agMultiColumnFilter",
-                chartDataType: "category",
-            },
-            {
-                field: "deptName",
-                headerName: "Department",
-                filter: "agMultiColumnFilter",
-                chartDataType: "category",
-            },
-            {
-                field: "eowDate",
-                headerName: "Week",
-                sort: "asc",
-                chartDataType: "category",
-            },
-            {
-                field: "monthYear",
-                headerName: "Month - Year",
-                chartDataType: "category",
-            },
-            {
-                field: "happinessScore",
-                headerName: "Happiness Score",
-                chartDataType: "series",
-                cellRenderer: HappinessScoreRenderer,
-            },
-            {
-                field: "comments",
-                headerName: "Comments",
-                cellRenderer: CommentsCellRenderer,
-            },
-        ];
+        const modalDefaultColDef: ColDef = {
+            resizable: true,
+            sortable: true,
+            flex: isMobile ? 0 : 1,
+            suppressHeaderMenuButton: true,
+        };
 
 
         const getData = async (postBody: Record<string, any> = filterOptions) => {
@@ -587,6 +546,39 @@ const ScoresCommentsDashboard: React.FC = () => {
             <>
                 <FilterArea onApplyFilters={onFilterChange}
                             filterOptions={{showDateFilter: true, showSitesFilter: false, showDepartmentsFilter: false}}/>
+
+                <Modal
+                    isOpen={isBarModalOpen}
+                    onClose={() => setIsBarModalOpen(false)}
+                    size="5xl"
+                >
+                    <ModalOverlay/>
+                    <ModalContent bgGradient={theme.gradients.perygonBackground}>
+                        <ModalHeader color="white">{barModalTitle}</ModalHeader>
+                        <ModalCloseButton color="white"/>
+                        <ModalBody pb={10}>
+                            <VStack minHeight={520}>
+                                <Box
+                                    className="ag-theme-alpine"
+                                    w="100%"
+                                    p={1}
+                                    pb="7px"
+                                    borderRadius="xl"
+                                    boxShadow="md"
+                                    bgColor="white"
+                                >
+                                    <DataGridComponentLight
+                                        data={gridData}
+                                        initialFields={modalColDef}
+                                        showTopBar={false}
+                                        defaultColDef={modalDefaultColDef}
+                                        filterModel={filterModel}
+                                    />
+                                </Box>
+                            </VStack>
+                        </ModalBody>
+                    </ModalContent>
+                </Modal>
 
                 <Flex w={"100%"} gap={6} flexWrap={"wrap"}>
                     <DataGridComponentLight
