@@ -608,11 +608,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                                 textAlign="center"
                                 borderRadius="lg"
                             >
-                                <Flex
-                                    width="100%"
-                                    justifyContent={isMobile ? "flex-start" : "center"}
-                                    mb={2}
-                                >
+                                <Flex width="100%" justifyContent="center" align="center" mb={4}>
                                     <SectionHeader>Happiness by Department</SectionHeader>
                                 </Flex>
                                 <Box
@@ -629,11 +625,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                                 textAlign="center"
                                 borderRadius="lg"
                             >
-                                <Flex
-                                    width="100%"
-                                    justifyContent={isMobile ? "flex-start" : "center"}
-                                    mb={2}
-                                >
+                                <Flex width="100%" justifyContent="center" align="center" mb={4}>
                                     <SectionHeader>Happiness by Office</SectionHeader>
                                 </Flex>
                                 <Box
@@ -650,11 +642,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                                 textAlign="center"
                                 borderRadius="lg"
                             >
-                                <Flex
-                                    width="100%"
-                                    justifyContent={isMobile ? "flex-start" : "center"}
-                                    mb={2}
-                                >
+                                <Flex width="100%" justifyContent="center" align="center" mb={4}>
                                     <SectionHeader>Historic Weekly Average</SectionHeader>
                                 </Flex>
                                 <Box
@@ -671,11 +659,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                                 textAlign="center"
                                 borderRadius="lg"
                             >
-                                <Flex
-                                    width="100%"
-                                    justifyContent={isMobile ? "flex-start" : "center"}
-                                    mb={2}
-                                >
+                                <Flex width="100%" justifyContent="center" align="center" mb={4}>
                                     <SectionHeader>Historic Monthly Average</SectionHeader>
                                 </Flex>
                                 <Box
