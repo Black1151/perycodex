@@ -11,12 +11,14 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
+  Box,
 } from "@chakra-ui/react";
 import { BigUpMasonry, BigUpMasonryProps } from "./masonry/BigUpMasonry";
 import { PerygonTabs } from "./tabs/PerygonTabs";
 import SubmitScoreModal from "./SubmitScoreModal";
 import { BigUpCategory, BigUpTeamMember } from "./types";
 import { useUser } from "@/providers/UserProvider";
+import Confetti from "@/components/animations/confetti/Confetti";
 
 interface PageClientInnerProps {
   masonryData: BigUpMasonryProps;
@@ -36,6 +38,7 @@ export const PageClientInner: React.FC<PageClientInnerProps> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   const { user } = useUser();
 
@@ -69,11 +72,14 @@ export const PageClientInner: React.FC<PageClientInnerProps> = ({
         }),
       });
 
-      const result = await response.json();
+      await response.json();
       onDataUpdated();
       setShowSuccessModal(true);
+      setShowConfetti(true);
+
       setTimeout(() => {
         setShowSuccessModal(false);
+        setShowConfetti(false);
       }, 3000);
     } catch (error) {
       console.error("Error submitting BigUp:", error);
@@ -119,6 +125,9 @@ export const PageClientInner: React.FC<PageClientInnerProps> = ({
           categories={modalData.categories}
         />
       </Grid>
+
+      {/* Confetti Animation */}
+      {showConfetti && <Confetti show={showConfetti} />}
 
       {/* Success modal */}
       <Modal
