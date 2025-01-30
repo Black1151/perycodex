@@ -49,12 +49,12 @@ export const RecognitionList: React.FC<RecognitionListProps> = ({ items }) => {
                     </Text>
                   </Flex>
                   <Avatar
-                    size="xl"
+                    size="lg"
                     name={item.userNameTo}
                     src={item.userImageUrlTo}
                   />
                 </Flex>
-                <Box mt={4}>
+                <Box mt={4} minHeight={30}>
                   <Text fontSize="sm" color="white">
                     {item.bigUpMessage}
                   </Text>
