@@ -34,7 +34,7 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
     >
       <Flex align="center" mb={3}>
         <Avatar size="lg" name={name} src={image} />
-        <Flex direction="column" ml={4}>
+        <Flex direction="column" ml={4} flex="1">
           <Text fontWeight="bold" fontSize="xl" color="perygonPink">
             {name}
           </Text>
@@ -42,22 +42,25 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
             {location}
           </Text>
         </Flex>
-        <Flex ml="auto" align="center" flexDirection="column">
-          <Flex alignItems="center">
-            {medalColor && (
-              <EmojiEvents
-                style={{ color: medalColor, marginRight: "0.5rem" }}
-                fontSize="large"
-              />
-            )}
-            <Text fontWeight="bold" color="perygonPink" fontSize="lg" mr={2}>
-              {rank}
-            </Text>
-          </Flex>
-          <Text fontWeight="bold" color="perygonPink" fontSize="lg">
-            {score} Points!
-          </Text>
-        </Flex>
+      </Flex>
+      <Flex alignItems="center" mb={2} width="100%" justifyContent="flex-end">
+        {medalColor && (
+          <EmojiEvents
+            style={{ color: medalColor, marginRight: "0.5rem" }}
+            fontSize="large"
+          />
+        )}
+        <Text fontWeight="bold" color="perygonPink" fontSize="lg" mr={2}>
+          {rank}
+        </Text>
+        <Text
+          fontWeight="bold"
+          color="perygonPink"
+          fontSize="lg"
+          whiteSpace="nowrap"
+        >
+          {score} Points!
+        </Text>
       </Flex>
 
       <Divider mb={3} />
