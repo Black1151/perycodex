@@ -23,7 +23,7 @@ export const RecognitionList: React.FC<RecognitionListProps> = ({ items }) => {
           items.map((item, index) => (
             <AnimatedListItem key={item.userIdUrlTo} index={index}>
               <Box
-                bg="rgba(0, 0, 0, 0.85)"
+                bg="perygonBlueTransparent"
                 boxShadow="0 0 10px 2px rgba(255, 20, 147, 0.8)"
                 p={4}
                 rounded="md"

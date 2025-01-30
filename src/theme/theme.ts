@@ -1,7 +1,7 @@
 import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
 import { agGridStyles } from "./agGridStyles";
 import { scrollBarThemes } from "@/theme/scrollBarThemes";
-import {agChartStyles} from "@/theme/agChartStyles";
+import { agChartStyles } from "@/theme/agChartStyles";
 
 const config: ThemeConfig = {
   initialColorMode: "light",
@@ -12,6 +12,8 @@ export const perygonTheme = extendTheme({
   config,
   colors: {
     perygonPink: "#ff0070",
+    perygonBlue: "#0D003D",
+    perygonBlueTransparent: "rgba(13, 0, 61, 0.85)",
     seduloRed: "#B4213D",
     yellow: "#EFC718",
     lightGreen: "#92C01F",

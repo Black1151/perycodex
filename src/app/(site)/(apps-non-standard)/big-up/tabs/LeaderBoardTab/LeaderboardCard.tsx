@@ -28,7 +28,7 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
   return (
     <Card
       width="100%"
-      bg="rgba(0, 0, 0, 0.85)"
+      bg="perygonBlueTransparent"
       boxShadow="0 0 10px 2px rgba(255, 20, 147, 0.8)"
       {...props}
     >

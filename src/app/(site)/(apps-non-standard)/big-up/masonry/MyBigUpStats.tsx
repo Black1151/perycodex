@@ -23,7 +23,7 @@ export const MyBigUpStats: React.FC<MyBigUpStatsProps> = ({
     <Card
       width="100%"
       height="100%"
-      bg="rgba(0, 0, 0, 0.85)"
+      bg="perygonBlueTransparent"
       justifyContent="space-between"
     >
       <Flex flexDirection="column" justifyContent="space-between" height="100%">

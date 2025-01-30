@@ -58,7 +58,7 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
     <Modal isOpen={isOpen} onClose={handleClose} isCentered>
       <ModalOverlay />
       <ModalContent
-        bg="rgba(0, 0, 0, 0.85)"
+        bg="perygonBlueTransparent"
         boxShadow="0 0 10px 2px rgba(255, 20, 147, 0.8)"
         mx={4}
       >
@@ -96,7 +96,7 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                   <Select
                     placeholder="Choose a category..."
                     {...field}
-                    bg="rgba(0, 0, 0, 0.85)"
+                    bg="perygonBlueTransparent"
                     color="perygonPink"
                     borderColor="perygonPink"
                     _hover={{ borderColor: "perygonPink" }}

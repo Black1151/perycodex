@@ -19,7 +19,7 @@ export const PerygonTabs: React.FC<PerygonTabsProps> = ({ tabs }) => {
       flexDirection="column"
       width="100%"
       height="80vh"
-      bg="rgba(0, 0, 0, 0.85)"
+      bg="perygonBlueTransparent"
       borderRadius="lg"
     >
       <TabList justifyContent="space-between">

@@ -8,7 +8,7 @@ interface MasonryCardProps {
 
 export const MasonryCard: React.FC<MasonryCardProps> = ({ title, content }) => {
   return (
-    <Card bg="rgba(0, 0, 0, 0.85)" height="100%" width="100%" p={4} flex="1">
+    <Card bg="perygonBlueTransparent" height="100%" width="100%" p={4} flex="1">
       <Flex direction="column" justify="center" align="center" height="100%">
         <Text
           fontSize={["lg", null, null, "xs"]}
