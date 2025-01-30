@@ -8,7 +8,7 @@ export const themeJson = {
     backgroundImageFit: "cover",
     cssVariables: {
         "--sjs-corner-radius": "8px",
-        "--sjs-base-unit": "6px",
+        "--sjs-base-unit": "7px",
 
         "--sjs-shadow-small": "0px 0px 0px 0px rgba(228, 228, 228, 1), 0px 0px 0px 1px rgba(228, 228, 228, 1)",
         "--sjs-shadow-inner": "0px 0px 0px 0px rgba(228, 228, 228, 1), 0px 0px 0px 1px rgba(228, 228, 228, 1)",
