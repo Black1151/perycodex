@@ -190,7 +190,6 @@ const FilterArea: React.FC<FilterAreaProps> = ({
                         justifyContent="center"
                         color={"rgba(248,248,248,0.8)"}
                         borderRadius="full"
-                        aspectRatio={1}
                         w={["30px", "30px", "36px"]}
                         h={["30px", "30px", "36px"]}
                         backgroundColor={"rgba(255,255,255,0.2)"}
@@ -213,6 +212,7 @@ const FilterArea: React.FC<FilterAreaProps> = ({
                     position="fixed"
                     top="20px"
                     right="20px"
+
                     zIndex={20}
                     bg={theme.colors.perygonPink}
                     color="white"
@@ -229,9 +229,8 @@ const FilterArea: React.FC<FilterAreaProps> = ({
                         flexDirection="column"
                         top={0}
                         right={0}
-                        pl={5}
-                        pr={2}
-                        pb={[32, 6]}
+                        px={2}
+                        pb={[24, 6]}
                         gap={4}
                         height="100%"
                         zIndex={10}
@@ -257,6 +256,7 @@ const FilterArea: React.FC<FilterAreaProps> = ({
                             w="full"
                             color={theme.colors.perygonPink}
                             fontWeight="bold"
+                            pl={3}
                             fontSize="1.2rem"
                             position={'sticky'}
                             top={0}
@@ -269,6 +269,7 @@ const FilterArea: React.FC<FilterAreaProps> = ({
                                 onClick={() => setIsOpen(false)}
                             />
                         </Flex>
+
 
                         {filterOptions.showDateFilter && (
                             <Select
