@@ -327,7 +327,7 @@ export default function ManagerDashboardInner({
                     <Spinner size="xl" color="perygonPink"/>
                 </Flex>
             ) : (
-                <Box mb={[32, 0]}>
+                <Box pb={[8, 0]}>
                     {staffHappinessDetailsModalData && (
                         <StaffHappinessDetailModal
                             isOpen={isModalOpen}

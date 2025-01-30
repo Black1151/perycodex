@@ -450,7 +450,7 @@ const UserDashboard: React.FC = () => {
                 bodyContent={modalData.body}
             />
 
-            <VStack align="stretch" w="full" spacing={6} mb={3}>
+            <VStack align="stretch" w="full" spacing={6} py={4}>
                 {comparativeData.length > 0 && (
                     <Box
                         className="ag-theme-alpine"

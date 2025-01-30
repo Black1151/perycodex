@@ -580,7 +580,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                     </ModalContent>
                 </Modal>
 
-                <Flex w={"100%"} gap={6} flexWrap={"wrap"}>
+                <Flex w={"100%"} gap={6} flexWrap={"wrap"} pb={4}>
                     <DataGridComponentLight
                         data={gridData}
                         loading={loading}

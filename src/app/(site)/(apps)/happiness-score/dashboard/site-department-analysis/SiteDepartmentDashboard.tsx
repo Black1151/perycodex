@@ -391,7 +391,7 @@ const SiteDepartmentDashboard: React.FC = () => {
     }
 
     return (
-        <VStack align="stretch" spacing={6} w="full" p={4}>
+        <VStack align="stretch" spacing={6} w="full" py={4}>
             <FilterArea onApplyFilters={onFilterChange}/>
             {/* Dashboard Layout */}
             <Flex w={"100%"} gap={6} flexWrap={"wrap"}>
