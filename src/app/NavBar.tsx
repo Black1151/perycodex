@@ -23,6 +23,7 @@ import {
     Person as PersonIcon,
     Settings as SettingsIcon,
     Timeline,
+    Celebration
 } from "@mui/icons-material";
 import React, {useState} from "react";
 import ResetPasswordModal from "@/app/ResetPasswordModal";
@@ -109,6 +110,11 @@ export const NavBar: React.FC<NavBarProps> = ({
                 label: "Activity",
                 icon: <Timeline/>,
                 onClick: () => router.push("/activity"),
+            },
+            {
+                label: "Big Up",
+                icon: <Celebration/>,
+                onClick: () => router.push("/big-up"),
             },
             {
                 label: "Reset Password",
@@ -203,31 +209,33 @@ export const NavBar: React.FC<NavBarProps> = ({
                     {greeting}, {userFirstName}!
                 </Text>
 
-                {user?.custImageUrl ? (
-                    <Image
-                        src={user.custImageUrl}
-                        alt={user.customerName || "User"}
-                        maxHeight="40px"
-                        maxWidth={["80px", "unset"]}
-                        objectFit="cover"
-                        borderRadius={'md'}
-                    />
-                ) : (
-                    <Flex
-                        bg="gray.100"
-                        align="center"
-                        justify="center"
-                        borderRadius="md"
-                    >
-                        <Text
-                            fontSize="md"
-                            fontWeight="bold"
-                            color="white"
+                <Link href={'/my-company'}>
+                    {user?.custImageUrl ? (
+                        <Image
+                            src={user.custImageUrl}
+                            alt={user.customerName || "User"}
+                            maxHeight="40px"
+                            maxWidth={["80px", "unset"]}
+                            objectFit="cover"
+                            borderRadius={'md'}
+                        />
+                    ) : (
+                        <Flex
+                            bg="gray.100"
+                            align="center"
+                            justify="center"
+                            borderRadius="md"
                         >
-                            {user?.customerName?.charAt(0)?.toUpperCase() || ""}
-                        </Text>
-                    </Flex>
-                )}
+                            <Text
+                                fontSize="md"
+                                fontWeight="bold"
+                                color="white"
+                            >
+                                {user?.customerName?.charAt(0)?.toUpperCase() || ""}
+                            </Text>
+                        </Flex>
+                    )}
+                </Link>
 
                 <Menu>
                     <MenuButton
