@@ -24,7 +24,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(data);
   } catch (error: any) {
-    console.log(error);
 
     const errorMessage =
       error.message || "An error occurred while submitting BigUp.";

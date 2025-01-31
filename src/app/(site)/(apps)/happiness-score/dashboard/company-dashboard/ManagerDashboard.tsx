@@ -354,8 +354,6 @@ export default function ManagerDashboardPage({
           positiveChange: positiveChange,
         });
 
-        console.log("weekData", weekData);
-
         setMasonryData(weekData.masonryCounts);
         setPeopleListData(weekData.peopleList);
         setDepartmentsData(weekData.departmentsData);

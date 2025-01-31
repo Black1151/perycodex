@@ -67,7 +67,6 @@ const useSurvey = ({
           );
         }
       } else {
-        // console.log("No JS path supplied")
       }
     };
 
