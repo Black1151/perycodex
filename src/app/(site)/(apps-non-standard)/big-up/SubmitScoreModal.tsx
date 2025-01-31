@@ -100,10 +100,10 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                     color="perygonPink"
                     borderColor="perygonPink"
                     _hover={{ borderColor: "perygonPink" }}
-                    _focus={{ bg: "black", color: "perygonPink" }}
+                    _focus={{ bg: "perygonBlueTransparent", color: "perygonPink" }}
                     sx={{
                       option: {
-                        backgroundColor: "black",
+                        backgroundColor: "perygonBlueTransparent",
                         color: "perygonPink",
                       },
                     }}
@@ -130,7 +130,7 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                       placeholder="Enter your message here..."
                       maxLength={maxLength}
                       {...field}
-                      bg="rgba(0, 0, 0, 0.85)"
+                      bg="perygonBlueTransparent"
                       color="white"
                       borderColor="perygonPink"
                       _hover={{ borderColor: "perygonPink" }}

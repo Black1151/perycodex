@@ -72,7 +72,7 @@ const TeamMemberAutocomplete: FC<TeamMemberAutocompleteProps> = ({
         onChange={handleInputChange}
         onBlur={onBlur}
         onFocus={() => setShowDropdown(true)}
-        bg="rgba(0, 0, 0, 0.85)"
+        bg="perygonBlueTransparent"
         color="perygonPink"
         borderColor="perygonPink"
         _hover={{ borderColor: "perygonPink" }}
