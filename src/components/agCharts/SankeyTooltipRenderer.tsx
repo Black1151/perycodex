@@ -1,7 +1,7 @@
 // SankeyTooltipRenderer.ts
 import { AgSankeySeriesTooltipRendererParams } from 'ag-charts-enterprise';
 
-const SankeyTooltipRenderer = (params: AgSankeySeriesTooltipRendererParams): string => {
+const SankeyTooltipRenderer = (params: AgSankeySeriesTooltipRendererParams<any>): string => {
     const { datum, color } = params;
     // For Sankey links, "datum" will typically have { from, to, value }
     // For Sankey nodes, "datum" might have { label } and be flagged as "isNode"
