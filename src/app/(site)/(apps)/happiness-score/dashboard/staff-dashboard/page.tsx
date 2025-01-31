@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getFilteredDashboards } from "@/lib/dashboardUtils";
 import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
-import HappinessDashboardLayout from "@/app/(site)/(apps)/happiness-score/dashboard/HappinessDashboardLayout";
+import ToolDashboardLayout from "@/app/(site)/(apps)/happiness-score/dashboard/ToolDashboardLayout";
 import DashboardHeader from "@/app/(site)/(apps)/DashboardHeader";
 import StaffDashboardPage from "@/app/(site)/(apps)/happiness-score/dashboard/staff-dashboard/StaffDashboardPage";
 import { verifySession } from "@/lib/dal";
@@ -37,7 +37,7 @@ export default async function Home({
 
   return (
     <WorkflowEngine toolId={toolId} workflowId={workflowId}>
-      <HappinessDashboardLayout dashboardList={filteredDashboards} />
+      <ToolDashboardLayout dashboardList={filteredDashboards} />
       <DashboardHeader
         headingText={
           activeDashboardName ? activeDashboardName : "Staff Dashboard"
