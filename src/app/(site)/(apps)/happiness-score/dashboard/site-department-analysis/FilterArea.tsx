@@ -1,5 +1,16 @@
 import React, {useState, useEffect} from "react";
-import {Flex, Select, Text, Button, useTheme, Box, Divider, Checkbox, VStack, Spinner} from "@chakra-ui/react";
+import {
+    Flex,
+    Select,
+    Text,
+    Button,
+    useTheme,
+    Box,
+    Checkbox,
+    VStack,
+    Fade,
+    Slide
+} from "@chakra-ui/react";
 import {
     endOfMonth,
     endOfWeek,
@@ -146,6 +157,19 @@ const FilterArea: React.FC<FilterAreaProps> = ({
             })();
         }, [filterOptions.showDepartmentsFilter]);
 
+
+        useEffect(() => {
+            if (isOpen) {
+                document.body.style.overflow = "hidden";
+            } else {
+                document.body.style.overflow = "auto";
+            }
+            // Cleanup: Reset overflow on unmount or whenever isOpen changes
+            return () => {
+                document.body.style.overflow = "auto";
+            };
+        }, [isOpen]);
+
         const handleSiteChange = (siteId: number) => {
             setSelectedSites((prev) => (prev.includes(siteId) ? prev.filter((id) => id !== siteId) : [...prev, siteId]));
         };
@@ -207,193 +231,197 @@ const FilterArea: React.FC<FilterAreaProps> = ({
                 )}
 
                 {/* Filter Toggle Button */}
-                <Button
-                    onClick={() => setIsOpen((prev) => !prev)}
-                    position="fixed"
-                    top="20px"
-                    right="20px"
+                    <Button
+                        onClick={() => setIsOpen((prev) => !prev)}
+                        position="fixed"
+                        top="20px"
+                        right="20px"
 
-                    zIndex={20}
-                    bg={theme.colors.perygonPink}
-                    color="white"
-                    _hover={{bg: theme.colors.perygonPinkDark}}
-                >
-                    <FilterList style={{marginRight: "8px"}}/>
-                    Filters
-                </Button>
+                        zIndex={20}
+                        bg={theme.colors.perygonPink}
+                        color="white"
+                        _hover={{bg: theme.colors.perygonPinkDark}}
+                    >
+                        <FilterList style={{marginRight: "8px"}}/>
+                        Filters
+                    </Button>
 
                 {/* Filter Area */}
-                {isOpen && (
-                    <Flex
-                        position="fixed"
-                        flexDirection="column"
-                        top={0}
-                        right={0}
-                        px={2}
-                        pb={[24, 6]}
-                        gap={4}
-                        height="100%"
-                        zIndex={10}
-                        w={225}
-                        boxShadow="xl"
-                        bg="white"
-                        pt="60px"
-                        overflowY="auto"
-                        css={{
-                            scrollbarWidth: "none",
-                            "-ms-overflow-style": "none",
-                            "&::-webkit-scrollbar": {
-                                display: "none"
-                            }
-                        }}
-                    >
-                        {/* Header */}
+                    <Fade in={isOpen}>
+                        <Box position={"fixed"} zIndex={5} bg={'rgba(0,0,0,0.5)'} height={'100svh'} width={'100svw'}
+                             top={0}
+                             left={0}>
+                        </Box>
+                    </Fade>
+                    <Slide direction={"right"} in={isOpen} style={{zIndex: 6}}>
                         <Flex
-                            alignItems="center"
-                            justifyContent="space-between"
-                            zIndex={2}
-                            backgroundColor={"white"}
-                            w="full"
-                            color={theme.colors.perygonPink}
-                            fontWeight="bold"
-                            pl={3}
-                            fontSize="1.2rem"
-                            position={'sticky'}
+                            position="fixed"
+                            flexDirection="column"
                             top={0}
-                        >
-                            <Text>Filter Options</Text>
-                            <Close
-                                style={{
-                                    cursor: "pointer",
-                                }}
-                                onClick={() => setIsOpen(false)}
-                            />
-                        </Flex>
-
-
-                        {filterOptions.showDateFilter && (
-                            <Select
-                                placeholder="All (no date filter)"
-                                value={dateFilter}
-                                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                                    setDateFilter(e.target.value)
+                            right={0}
+                            px={2}
+                            pb={[24, 6]}
+                            gap={3}
+                            height="100%"
+                            w={225}
+                            boxShadow="xl"
+                            bg="white"
+                            pt="60px"
+                            overflowY="auto"
+                            css={{
+                                scrollbarWidth: "none",
+                                "-ms-overflow-style": "none",
+                                "&::-webkit-scrollbar": {
+                                    display: "none"
                                 }
+                            }}
+                        >
+                            {/* Header */}
+                            <Flex
+                                alignItems="center"
+                                justifyContent="space-between"
+                                zIndex={2}
+                                backgroundColor={"white"}
                                 w="full"
+                                color={theme.colors.perygonPink}
+                                fontWeight="bold"
+                                pl={3}
+                                fontSize="1.2rem"
+                                position={'sticky'}
+                                top={0}
                             >
-                                {dateRanges.map((range) => (
-                                    <option key={range.value} value={range.value}>
-                                        {range.name}
-                                    </option>
-                                ))}
-                            </Select>
-                        )}
-                        <Button
-                            width="100%"
-                            minH={'40px'}
-                            variant="red"
-                            onClick={clearAllFilters}
-                            leftIcon={<Clear component="svg"/>}
-                        >
-                            Clear Filters
-                        </Button>
+                                <Text>Filter Options</Text>
+                                <Close
+                                    style={{
+                                        cursor: "pointer",
+                                    }}
+                                    onClick={() => setIsOpen(false)}
+                                />
+                            </Flex>
 
-                        {/* Apply Filter Button */}
-                        <Button
-                            width="100%"
-                            minH={'40px'}
-                            variant="green"
-                            onClick={handleApplyFilters}
-                            _hover={{bg: theme.colors.perygonPinkDark}}
-                        >
-                            Apply Filters
-                        </Button>
 
-                        {/* Sites Filter */}
-                        {filterOptions.showSitesFilter && (
-                            <Box border="1px solid"
-                                 borderColor={theme.colors.perygonPink}
-                                 borderRadius="md"
-                                 p={2}
-                                 fontSize={['14px', '16px']}
-                                 boxShadow="lg">
-                                <Box
-                                    width="100%"
-                                    display="flex"
-                                    justifyContent="center"
+                            {filterOptions.showDateFilter && (
+                                <Select
+                                    placeholder="All (no date filter)"
+                                    value={dateFilter}
+                                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                                        setDateFilter(e.target.value)
+                                    }
+                                    w="full"
                                 >
-                                    <Text
-                                        fontWeight="bold"
-                                        mb={2}
-                                        bg={theme.colors.perygonPink}
-                                        color="white"
-                                        width="100%"
-                                        p={2}
-                                        fontSize={['14px', '16px']}
-                                        borderRadius="md"
-                                    >
-                                        Sites
-                                    </Text>
-                                </Box>
-                                <VStack align="start" spacing={2}>
-                                    {sites.map((site) => (
-                                        <Checkbox
-                                            key={site.id}
-                                            size={['sm', 'md']}
-                                            isChecked={selectedSites.includes(site.id)}
-                                            onChange={() => handleSiteChange(site.id)}
-                                        >
-                                            {site.siteName}
-                                        </Checkbox>
+                                    {dateRanges.map((range) => (
+                                        <option key={range.value} value={range.value}>
+                                            {range.name}
+                                        </option>
                                     ))}
-                                </VStack>
-                            </Box>
-                        )}
+                                </Select>
+                            )}
+                            <Button
+                                width="100%"
+                                minH={'40px'}
+                                variant="red"
+                                onClick={clearAllFilters}
+                                leftIcon={<Clear component="svg"/>}
+                            >
+                                Clear Filters
+                            </Button>
 
-                        {/* Departments Filter */}
-                        {filterOptions.showDepartmentsFilter && (
+                            {/* Apply Filter Button */}
+                            <Button
+                                width="100%"
+                                minH={'40px'}
+                                variant="green"
+                                onClick={handleApplyFilters}
+                                _hover={{bg: theme.colors.perygonPinkDark}}
+                            >
+                                Apply Filters
+                            </Button>
 
-
-                            <Box border="1px solid"
-                                 borderColor={theme.colors.perygonPink}
-                                 borderRadius="md"
-                                 p={2}
-                                 fontSize={['14px', '16px']}
-                                 boxShadow="lg">
-                                <Box
-                                    width="100%"
-                                    display="flex"
-                                    justifyContent="center"
-                                >
-                                    <Text
-                                        fontWeight="bold"
-                                        mb={2}
-                                        bg={theme.colors.perygonPink}
-                                        color="white"
+                            {/* Sites Filter */}
+                            {filterOptions.showSitesFilter && (
+                                <Box border="1px solid"
+                                     borderColor={theme.colors.perygonPink}
+                                     borderRadius="md"
+                                     p={2}
+                                     fontSize={['14px', '16px']}
+                                     boxShadow="lg">
+                                    <Box
                                         width="100%"
-                                        p={2}
-                                        fontSize={['14px', '16px']}
-                                        borderRadius="md"
+                                        display="flex"
+                                        justifyContent="center"
                                     >
-                                        Departments
-                                    </Text>
-                                </Box>
-                                <VStack align="start" spacing={2}>
-                                    {departments.map((dept) => (
-                                        <Checkbox
-                                            key={dept.id}
-                                            size={['sm', 'md']}
-                                            isChecked={selectedDepartments.includes(dept.id)}
-                                            onChange={() => handleDepartmentChange(dept.id)}
+                                        <Text
+                                            fontWeight="bold"
+                                            mb={2}
+                                            bg={theme.colors.perygonPink}
+                                            color="white"
+                                            width="100%"
+                                            p={2}
+                                            fontSize={['14px', '16px']}
+                                            borderRadius="md"
                                         >
-                                            {dept.name}
-                                        </Checkbox>
-                                    ))}
-                                </VStack>
-                            </Box>
-                        )}
-                    </Flex>
-                )
-                }
+                                            Sites
+                                        </Text>
+                                    </Box>
+                                    <VStack align="start" spacing={2}>
+                                        {sites.map((site) => (
+                                            <Checkbox
+                                                key={site.id}
+                                                size={['sm', 'md']}
+                                                isChecked={selectedSites.includes(site.id)}
+                                                onChange={() => handleSiteChange(site.id)}
+                                            >
+                                                {site.siteName}
+                                            </Checkbox>
+                                        ))}
+                                    </VStack>
+                                </Box>
+                            )}
+
+                            {/* Departments Filter */}
+                            {filterOptions.showDepartmentsFilter && (
+
+
+                                <Box border="1px solid"
+                                     borderColor={theme.colors.perygonPink}
+                                     borderRadius="md"
+                                     p={2}
+                                     fontSize={['14px', '16px']}
+                                     boxShadow="lg">
+                                    <Box
+                                        width="100%"
+                                        display="flex"
+                                        justifyContent="center"
+                                    >
+                                        <Text
+                                            fontWeight="bold"
+                                            mb={2}
+                                            bg={theme.colors.perygonPink}
+                                            color="white"
+                                            width="100%"
+                                            p={2}
+                                            fontSize={['14px', '16px']}
+                                            borderRadius="md"
+                                        >
+                                            Departments
+                                        </Text>
+                                    </Box>
+                                    <VStack align="start" spacing={2}>
+                                        {departments.map((dept) => (
+                                            <Checkbox
+                                                key={dept.id}
+                                                size={['sm', 'md']}
+                                                isChecked={selectedDepartments.includes(dept.id)}
+                                                onChange={() => handleDepartmentChange(dept.id)}
+                                            >
+                                                {dept.name}
+                                            </Checkbox>
+                                        ))}
+                                    </VStack>
+                                </Box>
+                            )}
+                        </Flex>
+                    </Slide>
             </>
         );
     }
