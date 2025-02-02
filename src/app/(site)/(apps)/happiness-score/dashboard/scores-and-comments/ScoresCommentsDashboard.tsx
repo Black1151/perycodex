@@ -19,7 +19,7 @@ import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridCompon
 import FilterArea from "@/app/(site)/(apps)/happiness-score/dashboard/site-department-analysis/FilterArea";
 import {useWorkflow} from "@/providers/WorkflowProvider";
 import {useUser} from "@/providers/UserProvider";
-import {addDays, format, parseISO} from "date-fns";
+import {addDays, endOfWeek, format, parseISO, startOfWeek} from "date-fns";
 import {useFetchClient} from "@/hooks/useFetchClient";
 import {AgCartesianSeriesTooltipRendererParams, AgNodeClickEvent} from "ag-charts-types";
 import useColor from "@/hooks/useColor";
@@ -536,7 +536,10 @@ const ScoresCommentsDashboard: React.FC = () => {
 
         useEffect(() => {
             if (user) {
-                getData({});
+                getData({
+                    startDate: startOfWeek(new Date(), {weekStartsOn: 1}),
+                    endDate: endOfWeek(new Date(), {weekStartsOn: 1})
+                });
             }
         }, [user]);
 
@@ -545,7 +548,13 @@ const ScoresCommentsDashboard: React.FC = () => {
 
             <>
                 <FilterArea onApplyFilters={onFilterChange}
-                            filterOptions={{showDateFilter: true, showSitesFilter: false, showDepartmentsFilter: false}}/>
+                            filterOptions={{
+                                showDateFilter: true,
+                                showSitesFilter: false,
+                                showDepartmentsFilter: false
+                            }}
+                            defaultDateFilter={'currentWeek'}
+                />
 
                 <Modal
                     isOpen={isBarModalOpen}

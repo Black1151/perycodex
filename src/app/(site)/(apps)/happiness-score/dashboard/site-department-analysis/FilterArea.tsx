@@ -51,6 +51,7 @@ interface FilterAreaProps {
         showSitesFilter?: boolean;
         showDepartmentsFilter?: boolean;
     }
+    defaultDateFilter?: string;
 }
 
 const FilterArea: React.FC<FilterAreaProps> = ({
@@ -59,7 +60,8 @@ const FilterArea: React.FC<FilterAreaProps> = ({
                                                        showDateFilter: true,
                                                        showSitesFilter: true,
                                                        showDepartmentsFilter: true
-                                                   }
+                                                   },
+                                                   defaultDateFilter
                                                }) => {
         const theme = useTheme();
         const {fetchClient} = useFetchClient();
@@ -69,7 +71,7 @@ const FilterArea: React.FC<FilterAreaProps> = ({
         const [selectedDepartments, setSelectedDepartments] = useState<number[]>([]);
         const [sites, setSites] = useState<Site[]>([]);
         const [departments, setDepartments] = useState<Department[]>([]);
-        const [dateFilter, setDateFilter] = useState<string>("");
+        const [dateFilter, setDateFilter] = useState<string>(defaultDateFilter || "");
 
 
         const dateRanges = [
@@ -179,7 +181,7 @@ const FilterArea: React.FC<FilterAreaProps> = ({
         };
 
         const clearAllFilters = () => {
-            setDateFilter("");
+            setDateFilter(defaultDateFilter || "");
             setSelectedSites([]);
             setSelectedDepartments([]);
         };
@@ -248,12 +250,12 @@ const FilterArea: React.FC<FilterAreaProps> = ({
 
                 {/* Filter Area */}
                     <Fade in={isOpen}>
-                        <Box position={"fixed"} zIndex={5} bg={'rgba(0,0,0,0.5)'} height={'100svh'} width={'100svw'}
+                        <Box position={"fixed"} zIndex={98} bg={'rgba(0,0,0,0.5)'} height={'100svh'} width={'100svw'}
                              top={0}
                              left={0}>
                         </Box>
                     </Fade>
-                    <Slide direction={"right"} in={isOpen} style={{zIndex: 6}}>
+                    <Slide direction={"right"} in={isOpen} style={{zIndex: 99}}>
                         <Flex
                             position="fixed"
                             flexDirection="column"
