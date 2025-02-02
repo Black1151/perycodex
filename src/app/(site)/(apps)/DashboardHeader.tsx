@@ -27,7 +27,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             w="full"
             gap={4}
             lineHeight={0}
-            mb={4}
+            my={2}
         >
             <BackButton/>
 
@@ -39,6 +39,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                 fontSize={{base: "2xl", md: "4xl"}}
                 fontFamily="Bonfire"
                 textAlign="center"
+                mt={2}
             >
                 {headingText}
             </Heading>

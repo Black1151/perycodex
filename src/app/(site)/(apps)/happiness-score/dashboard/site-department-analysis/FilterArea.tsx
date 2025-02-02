@@ -208,7 +208,7 @@ const FilterArea: React.FC<FilterAreaProps> = ({
                 {!isOpen && (
                     <Box
                         position="absolute"
-                        top={[76, null, 84]}
+                        top={[76, null, 95]}
                         right={[3, 4, 5]}
                         zIndex={1}
                         display={["flex"]}
@@ -231,22 +231,6 @@ const FilterArea: React.FC<FilterAreaProps> = ({
                         />
                     </Box>
                 )}
-
-                {/* Filter Toggle Button */}
-                    <Button
-                        onClick={() => setIsOpen((prev) => !prev)}
-                        position="fixed"
-                        top="20px"
-                        right="20px"
-
-                        zIndex={20}
-                        bg={theme.colors.perygonPink}
-                        color="white"
-                        _hover={{bg: theme.colors.perygonPinkDark}}
-                    >
-                        <FilterList style={{marginRight: "8px"}}/>
-                        Filters
-                    </Button>
 
                 {/* Filter Area */}
                     <Fade in={isOpen}>
@@ -276,8 +260,8 @@ const FilterArea: React.FC<FilterAreaProps> = ({
                                     "-ms-overflow-style": "none",
                                     "&::-webkit-scrollbar": {
                                         display: "none",
+                                    },
                                 },
-                            },
                             }}
                         >
                             {/* Header */}
