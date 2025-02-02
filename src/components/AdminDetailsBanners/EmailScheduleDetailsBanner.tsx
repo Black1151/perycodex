@@ -40,19 +40,19 @@ export const EmailScheduleDetailsBanner: React.FC<
   EmailScheduleDetailsBannerProps
 > = ({ emailSchedule }) => {
   return (
-    <Flex mb={4} p={4} color={"white"} overflow={"hidden"} gap={2}>
+    <Flex p={4} color={"white"} overflow={"hidden"} gap={2}>
       <BackButton />
       {/* Form Status */}
       <FormControl
-        w={"100px"}
-        h={"100px"}
+        w={["50px", "125px"]}
+        h={["50px", "125px"]}
         aspectRatio={1}
         borderRadius={"full"}
       >
         <Box
           position="relative"
-          w={"100px"}
-          h={"100px"}
+          w={["50px", "125px"]}
+          h={["50px", "125px"]}
           borderRadius="full"
           bg="gray.100"
           display="flex"
@@ -76,7 +76,7 @@ export const EmailScheduleDetailsBanner: React.FC<
             border={"white 1px solid"}
             bg={emailSchedule.isActive ? "green.500" : "red.500"}
           />
-          <Heading fontWeight={300} size={["md", "md", "lg"]}>
+          <Heading fontWeight={300} size={["sm", "md", "lg"]}>
             {emailSchedule.name || "No Name"}
           </Heading>
         </Flex>
@@ -89,7 +89,7 @@ export const EmailScheduleDetailsBanner: React.FC<
         justifyContent="flex-start"
         display={["none", "none", "flex"]}
       >
-        <Heading size={["md", "md", "lg"]} fontWeight={100}>
+        <Heading size={["sm", "md", "lg"]} fontWeight={100}>
           ID: {emailSchedule.id}
         </Heading>
         <Flex direction="row" justify="center" align="center" gap={2}>
