@@ -271,11 +271,13 @@ const FilterArea: React.FC<FilterAreaProps> = ({
                             pt="60px"
                             overflowY="auto"
                             css={{
-                                scrollbarWidth: "none",
-                                "-ms-overflow-style": "none",
-                                "&::-webkit-scrollbar": {
-                                    display: "none"
-                                }
+                                "@media (max-width: 768px)": {
+                                    scrollbarWidth: "none",
+                                    "-ms-overflow-style": "none",
+                                    "&::-webkit-scrollbar": {
+                                        display: "none",
+                                },
+                            },
                             }}
                         >
                             {/* Header */}
