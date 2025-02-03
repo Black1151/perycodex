@@ -27,13 +27,13 @@ interface CustomGridBottomPaginationLightProps {
 }
 
 function getPageSizeOptions(totalRows: number) {
-    const baseSizes = [10, 25, 50, 100, 250, 500];
+    const baseSizes = [10, 25, 50, 100, 250];
     let filtered = baseSizes.filter((size) => size <= totalRows);
 
-    if (totalRows <= 1000) {
+    if (totalRows <= 500) {
         filtered.push(totalRows); // Add totalRows if it's less than or equal to 1000
     } else {
-        filtered.push(1000); // Add 1000 as the max if totalRows exceeds 1000
+        filtered.push(500); // Add 1000 as the max if totalRows exceeds 1000
     }
 
     return filtered;
