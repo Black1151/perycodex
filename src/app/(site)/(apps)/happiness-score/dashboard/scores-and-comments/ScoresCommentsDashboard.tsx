@@ -97,15 +97,13 @@ const ScoresCommentsDashboard: React.FC = () => {
 
 
         const getData = async (postBody: Record<string, any> = filterOptions) => {
-            setLoading(true);
 
             if (!toolId || !workflowId || !user?.customerId) {
-                console.warn(
-                    "Required data (toolId, workflowId, or customerId) is missing"
-                );
-                return; // Prevent fetching if values are not ready
+                console.warn("Skipping getData call: Required data is missing.");
+                return;
             }
 
+            setLoading(true);
             try {
                 const response = await fetchClient<ApiResponse>(
                     `/api/happiness-graphs/getAllHappinessData`,
@@ -535,13 +533,15 @@ const ScoresCommentsDashboard: React.FC = () => {
         }
 
         useEffect(() => {
-            if (user) {
-                getData({
-                    startDate: startOfWeek(new Date(), {weekStartsOn: 1}),
-                    endDate: endOfWeek(new Date(), {weekStartsOn: 1})
-                });
+            if (!toolId || !workflowId || !user?.customerId) {
+                return; // Do nothing if the necessary data is not yet available
             }
-        }, [user]);
+
+            getData({
+                startDate: startOfWeek(new Date(), {weekStartsOn: 1}),
+                endDate: endOfWeek(new Date(), {weekStartsOn: 1}),
+            });
+        }, [toolId, workflowId, user]);
 
 
         return (
