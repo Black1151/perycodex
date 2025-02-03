@@ -25,7 +25,7 @@ const AddButton: React.FC<AddButtonProps> = ({
                                                  redirectUrl,
                                                  onAddButtonClick,
                                                  AddIcon,
-                                                 workflow
+                                                 workflow = true
                                              }) => {
     const isMobile = useBreakpointValue({base: true, sm: true, md: false});
     const {fetchClient, loading} = useFetchClient();

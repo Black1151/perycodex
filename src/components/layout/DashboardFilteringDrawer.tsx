@@ -1,6 +1,6 @@
 "use client";
 
-import React, {memo, useRef} from "react";
+import React, {memo, useEffect, useRef} from "react";
 import {
     Box,
     Button,
@@ -11,6 +11,7 @@ import {
     useBreakpointValue,
     useTheme,
     VStack,
+    Fade
 } from "@chakra-ui/react";
 import {motion} from "framer-motion";
 import {Clear, Close, FilterAlt, Refresh} from "@mui/icons-material";
@@ -71,6 +72,18 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
         }
     };
 
+    useEffect(() => {
+        if (drawerState === "fully-open") {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "auto";
+        }
+        // Cleanup: Reset overflow on unmount or whenever isOpen changes
+        return () => {
+            document.body.style.overflow = "auto";
+        };
+    }, [drawerState]);
+
     return (
         <>
             {drawerState === "closed" && (
@@ -102,6 +115,12 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                 </Box>
             )}
 
+            <Fade in={drawerState === "fully-open"}>
+                <Box position={"fixed"} zIndex={98} bg={'rgba(0,0,0,0.5)'} height={'100svh'} width={'100svw'}
+                     top={0}
+                     left={0}>
+                </Box>
+            </Fade>
             <MotionBox
                 ref={drawerRef}
                 display={"block"}
@@ -110,7 +129,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                 right={0}
                 bottom={0}
                 width={225}
-                zIndex={5}
+                zIndex={99}
                 bg="white"
                 boxShadow="xl"
                 transform={
@@ -180,11 +199,13 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                                 p={3}
                                 overflowY="auto"
                                 css={{
-                                    scrollbarWidth: "none",
-                                    "-ms-overflow-style": "none",
-                                    "&::-webkit-scrollbar": {
-                                        display: "none"
-                                    }
+                                    "@media (max-width: 768px)": {
+                                        scrollbarWidth: "none",
+                                        "-ms-overflow-style": "none",
+                                        "&::-webkit-scrollbar": {
+                                            display: "none",
+                                        },
+                                    },
                                 }}
                                 onScroll={saveScrollPosition}
                             >
