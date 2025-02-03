@@ -114,13 +114,14 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                     />
                 </Box>
             )}
-
-            <Fade in={drawerState === "fully-open"}>
-                <Box position={"fixed"} zIndex={98} bg={'rgba(0,0,0,0.5)'} height={'100svh'} width={'100svw'}
-                     top={0}
-                     left={0}>
-                </Box>
-            </Fade>
+            {drawerState === "fully-open" && (
+                <Fade in={drawerState === "fully-open"}>
+                    <Box position={"fixed"} zIndex={98} bg={'rgba(0,0,0,0.5)'} height={'100svh'} width={'100svw'}
+                         top={0}
+                         left={0}>
+                    </Box>
+                </Fade>
+            )}
             <MotionBox
                 ref={drawerRef}
                 display={"block"}
