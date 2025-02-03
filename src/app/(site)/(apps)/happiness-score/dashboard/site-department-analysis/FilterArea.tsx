@@ -51,6 +51,7 @@ interface FilterAreaProps {
         showSitesFilter?: boolean;
         showDepartmentsFilter?: boolean;
     }
+    dateFilterOption?: "monthly" | "all";
     defaultDateFilter?: string;
 }
 
@@ -61,6 +62,7 @@ const FilterArea: React.FC<FilterAreaProps> = ({
                                                        showSitesFilter: true,
                                                        showDepartmentsFilter: true
                                                    },
+                                                   dateFilterOption,
                                                    defaultDateFilter
                                                }) => {
         const theme = useTheme();
@@ -88,43 +90,58 @@ const FilterArea: React.FC<FilterAreaProps> = ({
             {
                 name: "Current Month",
                 value: "currentMonth",
+                filterOptions: ['monthly'],
                 getRange: () => [startOfMonth(new Date()), endOfMonth(new Date())]
             },
             {
                 name: "Previous Month",
                 value: "previousMonth",
+                filterOptions: ['monthly'],
                 getRange: () => [startOfMonth(subMonths(new Date(), 1)), endOfMonth(subMonths(new Date(), 1))]
             },
             {
                 name: "Last 3 Months",
                 value: "last3Months",
+                filterOptions: ['monthly'],
                 getRange: () => [startOfMonth(subMonths(new Date(), 2)), endOfMonth(new Date())]
             },
             {
                 name: "Last 6 Months",
                 value: "last6Months",
+                filterOptions: ['monthly'],
                 getRange: () => [startOfMonth(subMonths(new Date(), 5)), endOfMonth(new Date())]
             },
             {
                 name: "Last 9 Months",
                 value: "last9Months",
+                filterOptions: ['monthly'],
                 getRange: () => [startOfMonth(subMonths(new Date(), 8)), endOfMonth(new Date())]
             },
             {
                 name: "Last 12 Months",
                 value: "last12Months",
+                filterOptions: ['monthly'],
                 getRange: () => [startOfMonth(subMonths(new Date(), 11)), endOfMonth(new Date())]
             },
-            {name: "Current Year", value: "currentYear", getRange: () => [startOfYear(new Date()), endOfYear(new Date())]},
             {
-                name: "Previous Year", value: "previousYear", getRange: () => {
+                name: "Current Year",
+                value: "currentYear",
+                filterOptions: ['monthly'],
+                getRange: () => [startOfYear(new Date()), endOfYear(new Date())]
+            },
+            {
+                name: "Previous Year",
+                value: "previousYear",
+                filterOptions: ['monthly'],
+                getRange: () => {
                     const lastYearDate = subYears(new Date(), 1);
                     return [startOfYear(lastYearDate), endOfYear(lastYearDate)];
-                }
+                },
             },
             {
                 name: "Last 2 Years",
                 value: "last2Years",
+                filterOptions: ['monthly'],
                 getRange: () => [startOfYear(subYears(new Date(), 1)), endOfYear(new Date())]
             },
         ];
@@ -299,11 +316,18 @@ const FilterArea: React.FC<FilterAreaProps> = ({
                                 }
                                 w="full"
                             >
-                                {dateRanges.map((range) => (
-                                    <option key={range.value} value={range.value}>
-                                        {range.name}
-                                    </option>
-                                ))}
+                                {dateRanges
+                                    .filter((item) => {
+                                        if (!dateFilterOption || dateFilterOption === "all") {
+                                            return true; // Show all options
+                                        }
+                                        return item.filterOptions && item.filterOptions.includes(dateFilterOption);
+                                    })
+                                    .map((range) => (
+                                        <option key={range.value} value={range.value}>
+                                            {range.name}
+                                        </option>
+                                    ))}
                             </Select>
                         )}
                         <Button

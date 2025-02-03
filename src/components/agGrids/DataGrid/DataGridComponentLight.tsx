@@ -373,6 +373,7 @@ function DataGridComponentLight<T>({
                             defaultColDef={defaultColDef}
                             paginationPageSize={paginationInfo.pageSize}
                             noRowsOverlayComponent={NoDataOverlayPink}
+                            suppressDragLeaveHidesColumns={true}
                             loadingOverlayComponent={LoadingOverlayPink}
                             onFirstDataRendered={handleGridReady}
                             onFilterChanged={handleFilterChanged}

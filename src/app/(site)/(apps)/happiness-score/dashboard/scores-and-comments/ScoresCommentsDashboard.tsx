@@ -21,11 +21,12 @@ import {useWorkflow} from "@/providers/WorkflowProvider";
 import {useUser} from "@/providers/UserProvider";
 import {addDays, endOfWeek, format, parseISO, startOfWeek} from "date-fns";
 import {useFetchClient} from "@/hooks/useFetchClient";
-import {AgCartesianSeriesTooltipRendererParams, AgNodeClickEvent} from "ag-charts-types";
 import useColor from "@/hooks/useColor";
 import {SectionHeader} from "@/components/sectionHeader/SectionHeader";
 import {columnDefs} from "@/app/(site)/(apps)/happiness-score/dashboard/scores-and-comments/GridColumnDefs";
 import {modalColDef} from "@/app/(site)/(apps)/happiness-score/dashboard/scores-and-comments/ModalColumnDefs";
+import {AgNodeClickEvent} from "ag-charts-types";
+import SubmissionsTooltipRenderer from "@/components/agCharts/SubmissionsTooltipRenderer";
 
 
 interface ApiResponse {
@@ -199,6 +200,9 @@ const ScoresCommentsDashboard: React.FC = () => {
                         },
                         bar: {
                             series: {
+                                tooltip: {
+                                    renderer: SubmissionsTooltipRenderer,
+                                },
                                 cornerRadius: 10,
                                 shadow: {
                                     enabled: true,
@@ -301,6 +305,9 @@ const ScoresCommentsDashboard: React.FC = () => {
                         bar: {
                             series: {
                                 cornerRadius: 10,
+                                tooltip: {
+                                    renderer: SubmissionsTooltipRenderer,
+                                },
                                 shadow: {
                                     enabled: true,
                                     color: "#191919",
@@ -418,7 +425,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                                     },
                                 },
                                 tooltip: {
-                                    renderer: renderer,
+                                    renderer: SubmissionsTooltipRenderer,
                                 },
                             },
                         },
@@ -493,7 +500,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                                     },
                                 },
                                 tooltip: {
-                                    renderer: renderer,
+                                    renderer: SubmissionsTooltipRenderer,
                                 },
                             },
                         },
@@ -512,20 +519,6 @@ const ScoresCommentsDashboard: React.FC = () => {
                 }
             });
         };
-
-        const renderer = (params: AgCartesianSeriesTooltipRendererParams) => {
-            return (
-                '<div class="ag-chart-tooltip-title" style="background-color:' +
-                params.color +
-                '">' +
-                params.datum[params.xKey] +
-                "</div>" +
-                '<div class="ag-chart-tooltip-content">' +
-                params.datum[params.yKey].toFixed(2) +
-                "</div>"
-            );
-        };
-
 
         const onFilterChange = (postBody: Record<string, any>) => {
             setFilterOptions(postBody);
