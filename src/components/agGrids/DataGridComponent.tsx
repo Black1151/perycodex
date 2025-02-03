@@ -327,7 +327,9 @@ const DataGridComponent = <T, >({
                     loading={loading}
                     rowData={rowData}
                     columnDefs={fields}
-                    rowBuffer={25}
+                    rowBuffer={100}
+                    suppressColumnVirtualisation={true}
+                    suppressRowVirtualisation={true}
                     pagination={true}
                     suppressPaginationPanel={true}
                     onPaginationChanged={() => {
