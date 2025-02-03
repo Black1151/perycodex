@@ -9,12 +9,14 @@ interface DashboardHeaderProps {
     headingText: string;
     canStartWorkflow: boolean;
     toolUrl: string;
+    onAddButtonClick?: () => void
 }
 
 const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                                                              headingText,
                                                              canStartWorkflow,
-                                                             toolUrl
+                                                             toolUrl,
+                                                             onAddButtonClick
                                                          }) => {
     const {toolId, workflowId} = useWorkflow();
 
@@ -52,6 +54,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                         toolId={toolId}
                         workflowId={workflowId}
                         redirectUrl={toolUrl}
+                        onAddButtonClick={onAddButtonClick}
                     />
                 </Box>
             )}

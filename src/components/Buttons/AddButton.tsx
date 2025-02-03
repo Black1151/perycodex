@@ -1,6 +1,6 @@
 import React from "react";
 import {Text, Button, useBreakpointValue} from "@chakra-ui/react";
-import AddIcon from "@mui/icons-material/Add";
+import {Add} from "@mui/icons-material";
 import {useFetchClient} from "@/hooks/useFetchClient";
 import {useRouter} from "next/navigation";
 
@@ -9,6 +9,9 @@ interface AddButtonProps {
     toolId: string;
     workflowId: string;
     redirectUrl: string;
+    onAddButtonClick?: () => void;
+    AddIcon?: React.FC<any>;
+    workflow?: boolean;
 }
 
 interface WorkflowInstanceResponse {
@@ -20,6 +23,9 @@ const AddButton: React.FC<AddButtonProps> = ({
                                                  toolId,
                                                  workflowId,
                                                  redirectUrl,
+                                                 onAddButtonClick,
+                                                 AddIcon,
+                                                 workflow
                                              }) => {
     const isMobile = useBreakpointValue({base: true, sm: true, md: false});
     const {fetchClient, loading} = useFetchClient();
@@ -53,9 +59,9 @@ const AddButton: React.FC<AddButtonProps> = ({
     return (
         <Button
             position={isMobile ? "fixed" : "relative"}
-            bottom={isMobile ? "110px" : undefined}
+            bottom={isMobile ? (!workflow ? ["10px", "45px"] : "110px") : undefined}
             right={isMobile ? "12px" : undefined}
-            onClick={handleClick}
+            onClick={onAddButtonClick ? onAddButtonClick : handleClick}
             backgroundColor="lightGreen"
             color="white"
             _hover={{backgroundColor: "seduloGreen"}}
@@ -66,7 +72,8 @@ const AddButton: React.FC<AddButtonProps> = ({
             isLoading={loading}
             zIndex={isMobile ? 20 : undefined}
         >
-            <AddIcon style={addIconStyle}/>
+
+            {AddIcon ? <AddIcon style={addIconStyle}/> : <Add style={addIconStyle}/>}
             {!isMobile && <Text fontSize={"md"}>{label}</Text>}
         </Button>
     );

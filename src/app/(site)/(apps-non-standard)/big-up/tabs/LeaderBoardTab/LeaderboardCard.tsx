@@ -29,7 +29,7 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
     <Card
       width="100%"
       bg="perygonBlueTransparent"
-      boxShadow="0 0 10px 2px rgba(255, 20, 147, 0.8)"
+      boxShadow="0 0 10px 2px rgba(192, 192, 192, 0.8)"
       {...props}
     >
       <Flex align="center" mb={3}>

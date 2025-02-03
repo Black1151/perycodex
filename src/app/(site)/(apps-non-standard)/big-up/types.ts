@@ -32,6 +32,9 @@ export interface BigUpWallEntry {
   userIdUrlTo: number;
   userUniqueIdUrlTo: string;
   userNameFrom: string;
+  userImageUrlFrom: string;
+  userIdUrlFrom: string;
+  userUniqueIdUrlFrom: string;
   createdAt: string;
   bigUpMessage: string;
   bigUpCategory: string;

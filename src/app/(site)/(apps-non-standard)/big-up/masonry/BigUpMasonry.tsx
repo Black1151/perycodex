@@ -34,6 +34,7 @@ export const BigUpMasonry: React.FC<BigUpMasonryProps> = ({
             given={userStats.bigUpGivenPoints}
             score={userStats.bigUpTotal}
             userImage={userStats.userImage}
+            ranking={userStats.bigUpRanking}
           />
         </SpringScale>
       </GridItem>
