@@ -9,7 +9,7 @@ import {
 import { BigUpLeaderboardEntry } from "../../types";
 
 // Helper function to convert rank number to an ordinal string
-const getOrdinalSuffix = (rank: number): string => {
+export const getOrdinalSuffix = (rank: number): string => {
   const remainder10 = rank % 10;
   const remainder100 = rank % 100;
 
@@ -30,7 +30,7 @@ const getOrdinalSuffix = (rank: number): string => {
 };
 
 // Helper function to get medal color based on rank
-const getMedalColor = (rank: number): string | undefined => {
+export const getMedalColor = (rank: number): string | undefined => {
   if (rank === 1) return "gold";
   if (rank === 2) return "silver";
   if (rank === 3) return "#cd7f32"; // bronze

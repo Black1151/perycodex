@@ -55,7 +55,7 @@ export default function BigUpPage() {
         },
         {
             header: "To Me",
-            content: <RecognitionList items={data.bigUpToMe}/>,
+            content: <RecognitionList items={data.bigUpToMe} reverseRecognition={true}/>,
         },
         {
             header: "From Me",
@@ -93,9 +93,6 @@ export default function BigUpPage() {
             pb={[4, 51, null, null, null]}
             px={[2, null, null, 5]}
         >
-            <Flex bg="perygonBlueTransparent" w={'full'} alignItems="center" borderRadius={'lg'} p={2}>
-                <DashboardHeader headingText={'Recognition Hub'} canStartWorkflow={false} toolUrl={'/big-up'}/>
-            </Flex>
             <PageClientInner
                 masonryData={masonryData}
                 tabsData={tabsData}
