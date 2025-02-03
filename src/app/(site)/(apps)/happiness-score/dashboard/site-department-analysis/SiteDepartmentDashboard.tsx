@@ -21,6 +21,7 @@ import StaffHappinessDetailsRenderer
 import ScoreTooltipRenderer from "@/components/agCharts/ScoreTooltipRenderer";
 import FilterArea from "@/app/(site)/(apps)/happiness-score/dashboard/site-department-analysis/FilterArea";
 import AgChartComponent from "@/components/agCharts/AgChartComponent";
+import {endOfWeek, startOfWeek} from "date-fns";
 
 
 interface ManagingPartnersResponse {
@@ -147,7 +148,10 @@ const SiteDepartmentDashboard: React.FC = () => {
 
     useEffect(() => {
         if (user) {
-            getData({});
+            getData({
+                startDate: startOfWeek(new Date(), {weekStartsOn: 1}),
+                endDate: endOfWeek(new Date(), {weekStartsOn: 1})
+            });
         }
     }, [user]);
 
@@ -392,7 +396,7 @@ const SiteDepartmentDashboard: React.FC = () => {
 
     return (
         <VStack align="stretch" spacing={6} w="full" py={4}>
-            <FilterArea onApplyFilters={onFilterChange}/>
+            <FilterArea onApplyFilters={onFilterChange} defaultDateFilter={'currentWeek'}/>
             {/* Dashboard Layout */}
             <Flex w={"100%"} gap={6} flexWrap={"wrap"}>
                 <Box flex={"1 1 250px"} borderRadius="lg">
