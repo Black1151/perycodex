@@ -59,7 +59,7 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
           fontSize="lg"
           whiteSpace="nowrap"
         >
-          {score} Points!
+          {score.toLocaleString()} Points!
         </Text>
       </Flex>
 
@@ -69,7 +69,7 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
           Received:
         </Text>
         <Text fontWeight="bold" fontSize="lg" color="perygonPink">
-          {received}
+          {received.toLocaleString()}
         </Text>
       </Flex>
       <Flex justify="space-between" mt={1}>
@@ -77,7 +77,7 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
           Given:
         </Text>
         <Text fontWeight="bold" fontSize="lg" color="perygonPink">
-          {given}
+          {given.toLocaleString()}
         </Text>
       </Flex>
     </Card>

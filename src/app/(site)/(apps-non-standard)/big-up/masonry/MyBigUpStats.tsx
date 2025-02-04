@@ -86,7 +86,7 @@ export const MyBigUpStats: React.FC<MyBigUpStatsProps> = ({
                         color="perygonPink"
                         fontSize={["xl", null, null, "2xl", null, "4xl"]}
                     >
-                        {score}
+                        {score.toLocaleString()}
                     </Text>
                 </Flex>
                 <Divider mb={3}/>
@@ -95,7 +95,7 @@ export const MyBigUpStats: React.FC<MyBigUpStatsProps> = ({
                         Received:
                     </Text>
                     <Text fontWeight="bold" fontSize="lg" color="perygonPink">
-                        {received}
+                        {received.toLocaleString()}
                     </Text>
                 </Flex>
                 <Flex justify="space-between" mt={1}>
@@ -103,7 +103,7 @@ export const MyBigUpStats: React.FC<MyBigUpStatsProps> = ({
                         Given:
                     </Text>
                     <Text fontWeight="bold" fontSize="lg" color="perygonPink">
-                        {given}
+                        {given.toLocaleString()}
                     </Text>
                 </Flex>
             </Flex>

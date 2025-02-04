@@ -87,10 +87,10 @@ export default function BigUpPage() {
 
     const masonryData = {
         items: [
-            {title: "Company: Total", content: totalBigUp},
-            {title: "Company: Monthly Avg", content: averageBigUpMonthly},
-            {title: "Company: Current Month", content: totalCurrentMonthBigUp},
-            {title: "You: Total Given", content: yourBigUpStats.bigUpGivenPoints},
+            {title: "Company: Total", content: totalBigUp.toLocaleString()},
+            {title: "Company: Monthly Avg", content: averageBigUpMonthly.toFixed(2)},
+            {title: "Company: Current Month", content: totalCurrentMonthBigUp.toLocaleString()},
+            {title: "You: Total Given", content: yourBigUpStats.bigUpGivenPoints.toLocaleString()},
         ],
         userStats: yourBigUpStats,
     };
