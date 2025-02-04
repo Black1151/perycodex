@@ -107,7 +107,6 @@ const SiteDepartmentDashboard: React.FC = () => {
     const defaultColDef = {
         resizable: true,
         filter: true,
-        suppressHeaderMenuButton: true,
     };
 
     const getData = async (postBody: Record<string, any> = filterOptions) => {

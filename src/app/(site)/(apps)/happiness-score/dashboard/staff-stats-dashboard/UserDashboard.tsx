@@ -121,7 +121,6 @@ const UserDashboard: React.FC = () => {
     const defaultColDef: ColDef = {
         resizable: true,
         filter: true,
-        suppressHeaderMenuButton: true,
     };
 
     const columnDefs: ColDef[] = [

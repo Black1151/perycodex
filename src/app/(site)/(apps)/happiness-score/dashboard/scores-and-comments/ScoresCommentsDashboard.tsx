@@ -86,14 +86,12 @@ const ScoresCommentsDashboard: React.FC = () => {
             filter: false,
             sortable: false,
             flex: isMobile ? 0 : 1,
-            suppressHeaderMenuButton: true,
         };
 
         const modalDefaultColDef: ColDef = {
             resizable: true,
             sortable: true,
             flex: isMobile ? 0 : 1,
-            suppressHeaderMenuButton: true,
         };
 
 

@@ -332,7 +332,6 @@ const RagDashboard: React.FC = () => {
     const defaultColDef: ColDef = {
         resizable: true,
         filter: true,
-        suppressHeaderMenuButton: true,
     };
 
     // Handler for the "How to Filter" modal
