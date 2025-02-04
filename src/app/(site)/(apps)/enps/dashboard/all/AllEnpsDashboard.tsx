@@ -220,7 +220,6 @@ const AllEnpsDashboard = () => {
             legend: {enabled: false},
             zoom: {enabled: false},
             navigator: {enabled: false},
-            contextMenu: {enabled: false},
         };
 
         const pieChartSeries: AgPieSeriesOptions<any> = {

@@ -412,9 +412,6 @@ const UserDashboard: React.FC = () => {
                 },
             },
         ],
-        contextMenu: {
-            enabled: false,
-        },
         zoom: {
             enabled: false,
         },
