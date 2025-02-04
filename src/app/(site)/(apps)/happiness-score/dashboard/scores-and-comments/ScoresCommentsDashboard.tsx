@@ -162,9 +162,6 @@ const ScoresCommentsDashboard: React.FC = () => {
                                 right: 20,
                                 bottom: 20,
                             },
-                            contextMenu: {
-                                enabled: false,
-                            },
                             axes: {
                                 category: {
                                     label: {
@@ -266,9 +263,6 @@ const ScoresCommentsDashboard: React.FC = () => {
                                 right: 20,
                                 bottom: 20,
                             },
-                            contextMenu: {
-                                enabled: false,
-                            },
                             axes: {
                                 category: {
                                     label: {
@@ -369,9 +363,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                                 right: 20,
                                 bottom: 20,
                             },
-                            contextMenu: {
-                                enabled: false,
-                            },
+
                             axes: {
                                 category: {
                                     label: {
@@ -444,9 +436,6 @@ const ScoresCommentsDashboard: React.FC = () => {
                                 right: 20,
                                 bottom: 20,
                             },
-                            contextMenu: {
-                                enabled: false,
-                            },
                             axes: {
                                 category: {
                                     label: {
@@ -507,7 +496,7 @@ const ScoresCommentsDashboard: React.FC = () => {
             ];
 
             chartConfigs.forEach((config) => {
-                const container = document.getElementById(config.id);
+                const container = document.getElementById(config.id) as HTMLElement;
                 if (container) {
                     gridApi.createRangeChart({
                         ...config,
@@ -616,7 +605,6 @@ const ScoresCommentsDashboard: React.FC = () => {
                                     height="400px"
                                     w="full"
                                     borderRadius={"2xl"}
-                                    overflow={"hidden"}
                                 ></Box>
                             </Box>
                             <Box
@@ -633,7 +621,6 @@ const ScoresCommentsDashboard: React.FC = () => {
                                     height="400px"
                                     w="full"
                                     borderRadius={"2xl"}
-                                    overflow={"hidden"}
                                 ></Box>
                             </Box>
                             <Box
@@ -650,7 +637,6 @@ const ScoresCommentsDashboard: React.FC = () => {
                                     height="400px"
                                     w="full"
                                     borderRadius={"2xl"}
-                                    overflow={"hidden"}
                                 ></Box>
                             </Box>
                             <Box
@@ -667,7 +653,6 @@ const ScoresCommentsDashboard: React.FC = () => {
                                     height="400px"
                                     w="full"
                                     borderRadius={"2xl"}
-                                    overflow={"hidden"}
                                 ></Box>
                             </Box>
                         </Flex>

@@ -387,6 +387,7 @@ function DataGridComponentLight<T>({
                             }
                             // Add the rowHeight prop here:
                             rowHeight={50}
+                            getChartToolbarItems={() => []}
                         />
 
                         <CustomGridBottomPaginationLight
