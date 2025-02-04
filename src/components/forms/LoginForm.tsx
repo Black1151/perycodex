@@ -277,7 +277,7 @@ export function LoginForm() {
                     </VStack>
                     <VStack spacing={4} w={[300, "100%"]} top={[6,6]} position="relative">
                         <Text p="0" pt="10px" fontSize={["14px","12px"]} color="gray">
-                            Copyright &copy; 2024 Sedulo Limited (v1.0.1)
+                            Copyright &copy; 2024 Sedulo Limited (v1.1.0)
                         </Text>
                     </VStack>
                 </VStack>
