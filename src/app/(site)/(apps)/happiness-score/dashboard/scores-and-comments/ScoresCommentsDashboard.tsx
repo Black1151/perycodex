@@ -537,7 +537,7 @@ const ScoresCommentsDashboard: React.FC = () => {
 
         return (
 
-            <>
+            <VStack align="stretch" spacing={6} w="full" py={4}>
                 <FilterArea onApplyFilters={onFilterChange}
                             filterOptions={{
                                 showDateFilter: true,
@@ -673,7 +673,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                         </Flex>
                     )}
                 </Flex>
-            </>
+            </VStack>
         )
     }
 ;
