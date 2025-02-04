@@ -25,11 +25,13 @@ export default async function MyProfilePage() {
       <UserDetailsBanner surveyUser={pageUserData} />
       <SurveyComponent
         surveyJson={userJson}
+        layout={"default"}
         endpoint={`/user/${userUniqueId}`}
         isNew={false}
         excludeKeys={["imageUrl"]}
         dataset={pageUserData}
         sjsPath={"admin"}
+        cssPath={"admin"}
         reloadPageOnSuccess={true}
       />
     </>

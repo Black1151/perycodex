@@ -48,6 +48,7 @@ const InviteNewUserModalForPA = ({
             excludeKeys={["imageUrl"]}
             layout={"default"}
             sjsPath={"admin"}
+            cssPath={"admin"}
             onSurveySuccess={handleSurveySuccess}
             onSurveyFailure={handleSurveyFailure}
             layoutOptions={{

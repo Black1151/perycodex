@@ -43,6 +43,7 @@ const AssignGroupModal = ({ isOpen, onClose }: AssignGroupModalProps) => {
             isNew={true}
             layout={"default"}
             sjsPath={"admin"}
+            cssPath={"admin"}
             onSurveySuccess={handleSurveySuccess}
             surveySuccessMessage={"Groups assigned successfully"}
             onSurveyFailure={handleSurveyFailure}

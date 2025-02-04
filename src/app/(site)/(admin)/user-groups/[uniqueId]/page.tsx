@@ -89,8 +89,10 @@ export default async function UserGroupsDetailPage({
           surveyJson={userGroupJson}
           endpoint={`/userGroup/${params.uniqueId}`}
           isNew={false}
+          layout={"default"}
           dataset={userGroupData}
           sjsPath={"admin"}
+          cssPath={"admin"}
           reloadPageOnSuccess={true}
         />
       </>

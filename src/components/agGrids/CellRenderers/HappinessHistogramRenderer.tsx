@@ -73,7 +73,7 @@ const HappinessDifferenceRenderer: React.FC<
           <IconButton
             aria-label="View Histogram"
             aspectRatio={1}
-            variant="agPrimary"
+            variant="agPrimaryLight"
             icon={<Analytics />}
             sx={{
               height: "80%",
@@ -86,7 +86,7 @@ const HappinessDifferenceRenderer: React.FC<
           <IconButton
             aria-label="View Bubble Chart"
             aspectRatio={1}
-            variant="agPrimary"
+            variant="agPrimaryLight"
             icon={<BubbleChart />}
             sx={{
               height: "80%",

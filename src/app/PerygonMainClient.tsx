@@ -23,6 +23,14 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
   carouselItems,
   showNoToolsModal,
 }) => {
+
+  useEffect(() => {
+    localStorage.removeItem("toolId");
+    localStorage.removeItem("workflowId");
+    localStorage.removeItem("currentBusinessProcessInstanceId");
+    localStorage.removeItem("currentWorkflowInstanceId");
+  }, [])
+
   const [countdown, setCountdown] = useState(5);
   const router = useRouter();
 

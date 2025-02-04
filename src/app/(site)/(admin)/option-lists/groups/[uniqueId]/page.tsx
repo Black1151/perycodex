@@ -28,8 +28,10 @@ export default async function OptionListGroupsDetailPage({
         surveyJson={optionListGroupsJson}
         endpoint={`/optionListGroup/${params.uniqueId}`}
         isNew={false}
+        layout={"default"}
         dataset={optionListGroupData}
         sjsPath={"admin"}
+        cssPath={"admin"}
         reloadPageOnSuccess={true}
       />
     </>

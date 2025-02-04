@@ -54,7 +54,7 @@ const EmailSecureLinkRenderer: React.FC<EmailSecureLinkRendererProps> = ({
         <MailLock sx={{ color: "var(--chakra-colors-perygonPink)" }} />
       </Box>
       <Text
-        fontSize={"14px"}
+        fontSize={"13px"}
         flex={1}
         overflow="hidden"
         textOverflow="ellipsis"

@@ -1,6 +1,7 @@
 import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
 import { agGridStyles } from "./agGridStyles";
 import { scrollBarThemes } from "@/theme/scrollBarThemes";
+import { agChartStyles } from "@/theme/agChartStyles";
 
 const config: ThemeConfig = {
   initialColorMode: "light",
@@ -11,6 +12,8 @@ export const perygonTheme = extendTheme({
   config,
   colors: {
     perygonPink: "#ff0070",
+    perygonBlue: "#0D003D",
+    perygonBlueTransparent: "rgba(13, 0, 61, 0.85)",
     seduloRed: "#B4213D",
     yellow: "#EFC718",
     lightGreen: "#92C01F",
@@ -41,6 +44,7 @@ export const perygonTheme = extendTheme({
       return {
         ...agGridStyles,
         ...scrollBarThemes,
+        ...agChartStyles,
         "html, body": {
           backgroundColor: "#ffffff",
           color: "#000000",
@@ -78,6 +82,24 @@ export const perygonTheme = extendTheme({
           _hover: {
             color: "perygonPink",
             bg: "white",
+            boxShadow: "md",
+            _disabled: {
+              color: "white",
+              bg: "transparent",
+              boxShadow: "none",
+            },
+          },
+          _focus: {
+            boxShadow: "outline",
+          },
+        },
+        agPrimaryLight: {
+          bg: "transparent",
+          color: "perygonPink",
+          border: "1px solid var(--chakra-colors-perygonPink)",
+          _hover: {
+            color: "white",
+            bg: "perygonPink",
             boxShadow: "md",
             _disabled: {
               color: "white",

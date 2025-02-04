@@ -57,11 +57,13 @@ export default async function TeamsDetailPage({
           <TabPanel p={0}>
             <SurveyComponent
               surveyJson={userTeamJson}
+              layout={"default"}
               endpoint={`/userTeam/${params.uniqueId}`}
               isNew={false}
               rolesCanEdit={["PA", "CA"]}
               dataset={userTeamData}
               sjsPath={"admin"}
+              cssPath={"admin"}
               reloadPageOnSuccess={true}
             />
           </TabPanel>

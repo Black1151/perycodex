@@ -35,19 +35,19 @@ export const FormDetailsBanner: React.FC<FormDetailsBannerProps> = ({
   form,
 }) => {
   return (
-    <Flex mb={4} p={4} color={"white"} overflow={"hidden"} gap={2}>
+    <Flex p={4} color={"white"} overflow={"hidden"} gap={2}>
       <BackButton />
       {/* Form Status */}
       <FormControl
-        w={"100px"}
-        h={"100px"}
+        w={["50px", "125px"]}
+        h={["50px", "125px"]}
         aspectRatio={1}
         borderRadius={"full"}
       >
         <Box
           position="relative"
-          w={"100px"}
-          h={"100px"}
+          w={["50px", "125px"]}
+          h={["50px", "125px"]}
           borderRadius="full"
           bg="gray.100"
           display="flex"
@@ -71,7 +71,7 @@ export const FormDetailsBanner: React.FC<FormDetailsBannerProps> = ({
             border={"white 1px solid"}
             bg={form.isActive ? "green.500" : "red.500"}
           />
-          <Heading fontWeight={300} size={["md", "md", "lg"]}>
+          <Heading fontWeight={300} size={["sm", "md", "lg"]}>
             {form.name}
           </Heading>
         </Flex>
@@ -84,7 +84,7 @@ export const FormDetailsBanner: React.FC<FormDetailsBannerProps> = ({
         justifyContent="flex-start"
         display={["none", "none", "flex"]}
       >
-        <Heading size={["md", "md", "lg"]} fontWeight={100}>
+        <Heading size={["sm", "md", "lg"]} fontWeight={100}>
           ID: {form.id}
         </Heading>
         <Flex direction="row" justify="center" align="center" gap={2}>

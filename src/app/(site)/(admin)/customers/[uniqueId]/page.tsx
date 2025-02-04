@@ -33,6 +33,7 @@ export default async function CustomersDetailsPage({
         excludeKeys={["imageUrl"]}
         layout={"default"}
         sjsPath={"admin"}
+        cssPath={"admin"}
         reloadPageOnSuccess={true}
       />
     </div>

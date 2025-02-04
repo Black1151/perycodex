@@ -1,10 +1,11 @@
 "use client";
 
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Button, useTheme, VStack } from "@chakra-ui/react";
+import {Button, Flex, Text, useTheme, VStack} from "@chakra-ui/react";
 import EmailIcon from "@mui/icons-material/Email";
 import { InputField } from "./InputField";
 import { emailValidation } from "./validationSchema/validationSchema";
+import {useRouter, useSearchParams} from "next/navigation";
 
 export type SignUpFormInputs = {
   email: string;
@@ -20,6 +21,7 @@ export function PasswordRecoveryForm({
   isSubmitting,
 }: PasswordRecoveryFormProps) {
   const theme = useTheme();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -29,10 +31,10 @@ export function PasswordRecoveryForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      style={{ width: "100%", maxWidth: "md" }}
+      style={{ width: "100%", maxWidth: "md"}}
     >
-      <VStack spacing={4} w="100%">
-        <VStack gap="70px" w={300}>
+      <VStack spacing={0} w="100%">
+        <VStack gap="0px" w={300} >
           <InputField
             name="email"
             placeholder="Email"
@@ -49,6 +51,18 @@ export function PasswordRecoveryForm({
             register={() => register("email", emailValidation)}
             focusBorderColor={theme.colors.perygonPink}
           />
+          <Flex w="100%" justifyContent="flex-end" pb={[58,100]}>
+            <Text
+                fontSize={["16px", "12px"]}
+                cursor="pointer"
+                color={theme.colors.perygonPink}
+                _hover={{cursor: "pointer"}}
+                onClick={() => router.push("/login")}
+            >
+              &laquo; Go back to login
+            </Text>
+          </Flex>
+
           <Button type="submit" variant="primary" isLoading={isSubmitting}>
             Request Password Reset
           </Button>

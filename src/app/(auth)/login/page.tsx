@@ -1,79 +1,84 @@
-import { Center, VStack } from "@chakra-ui/react";
-import { PerygonContainer } from "@/components/layout/PerygonContainer";
-import { LoginForm } from "@/components/forms/LoginForm";
-import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
-import { LoginCard } from "@/components/login/LoginCard";
-import { cookies } from "next/headers";
+import {Center, VStack} from "@chakra-ui/react";
+import {PerygonContainer} from "@/components/layout/PerygonContainer";
+import {LoginForm} from "@/components/forms/LoginForm";
+import {LetterFlyIn} from "@/components/animations/text/LetterFlyIn";
+import {LoginCard} from "@/components/login/LoginCard";
+import {cookies} from "next/headers";
 import apiClient from "@/lib/apiClient";
-import { redirect } from "next/navigation";
+import {redirect} from "next/navigation";
 
 interface SearchParams {
-  l?: string;
+    l?: string;
 }
 
 export default async function LoginPage({
-  searchParams,
+    searchParams,
 }: {
-  searchParams: SearchParams;
+    searchParams: SearchParams;
 }) {
-  // Check if user is already authenticated and if so redirect based on if l is present
-  // Extract query parameter `l`
-  const secureLink = searchParams.l;
 
-  // Check if user is already authenticated
-  const cookieStore = cookies();
-  const authToken = cookieStore.get("auth_token")?.value;
+    // Check if user is already authenticated and if so redirect based on if l is present
+    // Extract query parameter `l`
+    const secureLink = searchParams.l;
 
-  if (authToken) {
-    // Verify token with the backend
-    const authCheckResponse = await apiClient(`/authentication/check`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${authToken}` },
-    });
-
-    if (authCheckResponse.ok) {
-      const authCheck = await authCheckResponse.json();
-
-      if (authCheck.resource.Authenticated) {
+    // Check if user is already authenticated
+    const cookieStore = cookies();
+    const authToken = cookieStore.get("auth_token")?.value;
+    const token = cookieStore.get('token');
+    if (authToken) {
         // Verify token with the backend
-        const isProfileCompleteResponse = await apiClient(
-          `/user/isProfileComplete`,
-          {
-            method: "POST",
-            headers: { Authorization: `Bearer ${authToken}` },
-          },
-        );
+        const authCheckResponse = await apiClient(`/authentication/check`, {
+            method: "GET",
+            headers: {Authorization: `Bearer ${authToken}`},
+        });
 
-        const profileCompleteCheck = await isProfileCompleteResponse.json();
+        if (authCheckResponse.ok) {
+            const authCheck = await authCheckResponse.json();
 
-        if (!profileCompleteCheck.resource.isProfileRegistered) {
-          redirect("/profile-setup");
+            if (authCheck.resource.Authenticated) {
+                // Verify token with the backend
+                const isProfileCompleteResponse = await apiClient(
+                    `/user/isProfileComplete`,
+                    {
+                        method: "POST",
+                        headers: {Authorization: `Bearer ${authToken}`},
+                    },
+                );
+
+                const profileCompleteCheck = await isProfileCompleteResponse.json();
+
+                if (!profileCompleteCheck.resource.isProfileRegistered) {
+                    redirect("/profile-setup");
+                }
+
+                // Redirect to the link processing page if authenticated
+                redirect(
+                    secureLink ? `/link?l=${encodeURIComponent(secureLink)}` : `/`,
+                );
+            }
         }
-
-        // Redirect to the link processing page if authenticated
-        redirect(
-          secureLink ? `/link?l=${encodeURIComponent(secureLink)}` : `/`,
-        );
-      }
     }
-  }
 
-  return (
-    <PerygonContainer>
-      <Center flex={1}>
-        <LoginCard
-          imageOffset={-421}
-          titleComponent={
-            <VStack position="absolute" top="100px">
-              <LetterFlyIn>Perygon</LetterFlyIn>
-            </VStack>
-          }
-        >
-          <LoginForm />
-        </LoginCard>
-      </Center>
-    </PerygonContainer>
-  );
+    return (
+
+            <PerygonContainer>
+                <Center flex={1}>
+                    <LoginCard
+                        height={800}
+                        imageOffset={-545}
+                        backgroundOffset={-605}
+
+                        titleComponent={
+                            <VStack position="absolute" top="75px">
+                                <LetterFlyIn>Perygon</LetterFlyIn>
+                            </VStack>
+                        }
+                    >
+                        <LoginForm/>
+                    </LoginCard>
+                </Center>
+            </PerygonContainer>
+    );
 }
 
 // On login grab parameter l

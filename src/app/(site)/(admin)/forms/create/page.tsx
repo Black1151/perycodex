@@ -16,6 +16,7 @@ export default async function FormsCreatePage() {
         layout={"default"}
         redirectUrl={"/forms"}
         sjsPath={"admin"}
+        cssPath={"admin"}
       />
     </>
   );

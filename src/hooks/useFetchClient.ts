@@ -11,7 +11,10 @@ type FetchOptions = {
   redirectOnError?: boolean;
   toastPosition?: ToastPosition;
   onUnauthorised?: () => void;
+  suppressError?: boolean;
 };
+
+
 
 export const useFetchClient = () => {
   const toast = useToast();
@@ -32,6 +35,7 @@ export const useFetchClient = () => {
       redirectOnError = true,
       toastPosition = "bottom",
       onUnauthorised,
+      suppressError = false,
     }: FetchOptions = {},
   ): Promise<T | null> => {
     setLoading(true);
@@ -79,16 +83,19 @@ export const useFetchClient = () => {
 
       return data;
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || errorMessage,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: toastPosition,
-      });
+      if (suppressError) {
+        toast.closeAll();
+      }
+        toast({
+          title: "Error",
+          description: error.message || errorMessage,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: toastPosition,
+        });
 
-      if (redirectOnError) {
+      if (redirectOnError && !suppressError) {
         router.push("/error");
       }
 

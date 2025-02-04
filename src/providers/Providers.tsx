@@ -3,6 +3,7 @@
 import { perygonTheme } from "@/theme/theme";
 import { ChakraProvider } from "@chakra-ui/react";
 import { useEffect } from "react";
+import NextAuthProvider from "@/providers/NextAuthProvider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   // fix apple iOS zooming on focusout
@@ -17,5 +18,5 @@ export function Providers({ children }: { children: React.ReactNode }) {
     // }
   }, []);
 
-  return <ChakraProvider theme={perygonTheme}>{children}</ChakraProvider>;
+  return <NextAuthProvider><ChakraProvider theme={perygonTheme}>{children}</ChakraProvider></NextAuthProvider>;
 }

@@ -29,8 +29,10 @@ export default async function SitesDetailPage({
         endpoint={`/site/${params.uniqueId}`}
         rolesCanEdit={["PA", "CA"]}
         isNew={false}
+        layout={"default"}
         dataset={siteData}
         sjsPath={"admin"}
+        cssPath={"admin"}
         reloadPageOnSuccess={true}
       />
     </div>

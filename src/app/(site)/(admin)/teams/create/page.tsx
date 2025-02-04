@@ -19,8 +19,10 @@ export default async function TeamsCreatePage() {
         surveyJson={userTeamJson}
         endpoint={"/userTeam"}
         isNew={true}
+        layout={"default"}
         redirectUrl={"/teams"}
         sjsPath={"admin"}
+        cssPath={"admin"}
       />
     </>
   );

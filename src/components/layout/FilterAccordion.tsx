@@ -9,14 +9,14 @@ import {
   Checkbox,
   VStack,
 } from "@chakra-ui/react";
-import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/company-dashboard/ManagerDashboard";
+import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/company-dashboard/types";
 
 interface FilterAccordionProps {
   filterOptions: FilterOptionGroup[];
   handleCheckboxChange: (
     groupIndex: number,
     optionIndex: number,
-    isChecked: boolean,
+    isChecked: boolean
   ) => void;
 }
 
@@ -44,7 +44,7 @@ const FilterAccordion: React.FC<FilterAccordionProps> = ({
                     handleCheckboxChange(
                       groupIndex,
                       optionIndex,
-                      e.target.checked,
+                      e.target.checked
                     )
                   }
                   colorScheme={option.isDisabled ? "gray" : "blue"}

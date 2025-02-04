@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Model, Serializer, settings, SurveyModel } from "survey-core";
-import { ThemeModule, UseSurveyProps } from "@/components/surveyjs/SurveyProps";
+import { ThemeModule, UseSurveyProps } from "@/types/surveyJs";
 import { useUser } from "@/providers/UserProvider";
 
 const useSurvey = ({
@@ -67,7 +67,6 @@ const useSurvey = ({
           );
         }
       } else {
-        // console.log("No JS path supplied")
       }
     };
 

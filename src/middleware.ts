@@ -10,8 +10,8 @@ export async function middleware(request: NextRequest) {
     response.cookies.delete("auth_token");
     response.cookies.delete("user_uuid");
     response.headers.set(
-      "Cache-Control",
-      "no-store, no-cache, must-revalidate"
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate"
     );
     return response;
   }
@@ -23,20 +23,26 @@ export async function middleware(request: NextRequest) {
     });
 
     if (!ok || status !== 200) {
-      const response = NextResponse.redirect(new URL("/login", request.url));
+      const response = NextResponse.redirect(new URL("/login?MissingAuthToken=true", request.url));
       response.cookies.delete("auth_token");
       response.cookies.delete("user_uuid");
+      response.cookies.delete('next-auth.callback-url');
+      response.cookies.delete('next-auth.csrf-token');
+      response.cookies.delete('next-auth.session-token');
+      response.cookies.delete('__Host-next-auth.csrf-token');
+      response.cookies.delete('__Secure-next-auth.callback-url');
+      response.cookies.delete('__Secure-next-auth.session-token');
       response.headers.set(
-        "Cache-Control",
-        "no-store, no-cache, must-revalidate"
+          "Cache-Control",
+          "no-store, no-cache, must-revalidate"
       );
       return response;
     }
 
     const response = NextResponse.next();
     response.headers.set(
-      "Cache-Control",
-      "no-store, no-cache, must-revalidate"
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate"
     );
     return response;
   } catch (error: any) {
@@ -44,8 +50,8 @@ export async function middleware(request: NextRequest) {
     response.cookies.delete("auth_token");
     response.cookies.delete("user_uuid");
     response.headers.set(
-      "Cache-Control",
-      "no-store, no-cache, must-revalidate"
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate"
     );
     return response;
   }

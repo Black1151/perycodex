@@ -16,6 +16,7 @@ export default async function OptionListGroupsCreatePage() {
         layout={"default"}
         redirectUrl={"/option-lists"}
         sjsPath={"admin"}
+        cssPath={"admin"}
       />
     </>
   );

@@ -31,6 +31,7 @@ export default async function FormsDetailPage({
         dataset={formData}
         layout={"default"}
         sjsPath={"admin"}
+        cssPath={"admin"}
         reloadPageOnSuccess={true}
       />
     </>

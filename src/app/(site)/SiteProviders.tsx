@@ -19,6 +19,8 @@ export default function SiteProviders({
   userMetadata,
 }: ClientUserProviderProps) {
   return (
+
+
     <UserProvider value={userMetadata}>
       <WorkflowProvider>
         {children}

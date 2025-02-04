@@ -51,9 +51,11 @@ export default async function SitesCreatePage({
         surveyJson={siteJson}
         endpoint={"/site"}
         isNew={true}
+        layout={"default"}
         includeVariables={surveyVariables}
         redirectUrl={"/sites"}
         sjsPath={"admin"}
+        cssPath={"admin"}
       />
     </>
   );

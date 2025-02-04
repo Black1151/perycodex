@@ -51,6 +51,7 @@ export interface UserContextProps {
   customerParentName?: string | null;
   customerIsActive?: boolean;
   userImageUrl?: string;
+  custImageUrl?: string;
 }
 
 interface UserProviderProps {

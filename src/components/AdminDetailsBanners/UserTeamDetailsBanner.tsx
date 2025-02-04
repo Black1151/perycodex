@@ -47,15 +47,15 @@ export const UserTeamDetailsBanner: React.FC<UserTeamDetailsBannerProps> = ({
       <BackButton />
       {/* Team/Department Icon and Name */}
       <FormControl
-        w={"100px"}
-        h={"100px"}
+        w={["50px", "125px"]}
+        h={["50px", "125px"]}
         aspectRatio={1}
         borderRadius={"full"}
       >
         <Box
           position="relative"
-          w={"100px"}
-          h={"100px"}
+          w={["50px", "125px"]}
+          h={["50px", "125px"]}
           borderRadius="full"
           bg="gray.100"
           display="flex"

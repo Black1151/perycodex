@@ -118,8 +118,10 @@ const UserGroupsTabs: React.FC<UserGroupsTabsProps> = ({
               surveyJson={userGroupJson}
               endpoint={`/userGroup/${userGroupId}`}
               isNew={false}
+              layout={"default"}
               dataset={userGroupData}
               sjsPath="admin"
+              cssPath={"admin"}
               reloadPageOnSuccess={true}
             />
           </TabPanel>

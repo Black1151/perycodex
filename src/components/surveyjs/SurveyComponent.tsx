@@ -7,7 +7,7 @@ import HappinessLayout from "@/components/surveyjs/layout/happiness/Layout";
 import {
   LayoutProps,
   SurveyComponentProps,
-} from "@/components/surveyjs/SurveyProps";
+} from "@/types/surveyJs";
 import useSurvey from "@/components/surveyjs/useSurvey";
 import useSurveySubmission from "@/components/surveyjs/useSurveySubmission";
 import { Box, Flex, Spinner } from "@chakra-ui/react";
@@ -16,6 +16,7 @@ import {
   registerSurveyFunctionsWithoutSurvey,
   registerSurveyJsFunctionsWithSurvey,
 } from "@/components/surveyjs/globalJsFunctions";
+import eNPSLayout from "@/components/surveyjs/layout/enps/Layout";
 
 type LayoutMap = {
   [key: string]: React.FC<LayoutProps>;
@@ -135,6 +136,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
   const layoutMap: LayoutMap = {
     default: DefaultLayout,
     happiness: HappinessLayout,
+    enps: eNPSLayout
   };
 
   const SurveyLayout = layoutMap[layout];
@@ -142,7 +144,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
   return (
     <>
       {isLoading || !model || !ready ? (
-        <Box mt={4}>
+        <Box mt={4} w={'full'} textAlign={'center'}>
           <Spinner color={"white"} />
         </Box>
       ) : (

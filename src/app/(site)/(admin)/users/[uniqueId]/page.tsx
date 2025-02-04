@@ -27,11 +27,13 @@ export default async function UsersDetailPage({
       <SurveyComponent
         surveyJson={userJson}
         endpoint={`/user/${params.uniqueId}`}
+        layout={"default"}
         isNew={false}
         rolesCanEdit={["PA", "CA"]}
         dataset={pageUserData}
         excludeKeys={["imageUrl"]}
         sjsPath={"admin"}
+        cssPath={"admin"}
         reloadPageOnSuccess={true}
       />
     </>

@@ -16,6 +16,7 @@ export default async function WorkflowsCreatePage() {
         layout={"default"}
         redirectUrl={"/workflows"}
         sjsPath={"admin"}
+        cssPath={"admin"}
       />
     </>
   );

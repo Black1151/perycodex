@@ -108,7 +108,7 @@ export function LeftHandNavigationDrawer({
                 alignItems="center"
                 justifyContent={"flex-end"}
                 gap={2}
-                mr={2}
+                mr={3}
                 position={"absolute"}
                 right={0}
                 zIndex={2}
@@ -175,7 +175,8 @@ export function LeftHandNavigationDrawer({
                 flex={1}
                 position="relative"
                 zIndex={1}
-                p={4}
+                py={4}
+                px={2}
                 pt={7}
                 overflowY="auto"
               >

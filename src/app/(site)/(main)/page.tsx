@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { PerygonMainClient } from "../../PerygonMainClient";
 import { redirect } from "next/navigation";
 import { verifySession } from "@/lib/dal";
+import {getSession} from "next-auth/react";
 
 export const dynamic = "force-dynamic";
 

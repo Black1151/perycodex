@@ -25,12 +25,14 @@ export default async function MyCustomerPage() {
       <CustomerDetailsBanner customer={customerData} />
       <SurveyComponent
         surveyJson={customerJson}
+        layout={"default"}
         endpoint={`/customer/${customerUniqueId}`}
         rolesCanEdit={["CA", "PA"]}
         isNew={false}
         dataset={customerData}
         excludeKeys={["imageUrl"]}
         sjsPath={"admin"}
+        cssPath={"admin"}
         reloadPageOnSuccess={true}
       />
     </>
