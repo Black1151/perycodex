@@ -10,6 +10,7 @@ import {
 import {useUser} from "@/providers/UserProvider";
 import {useFetchClient} from "@/hooks/useFetchClient";
 import {SectionHeader} from "@/components/sectionHeader/SectionHeader";
+import {useWorkflow} from "@/providers/WorkflowProvider";
 import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/HappinessScoreRenderer";
 import CommentsCellRenderer from "@/components/agGrids/CellRenderers/CommentsCellRenderer";
 import {AgCartesianChartOptions} from "ag-charts-enterprise";
@@ -51,6 +52,7 @@ const SiteDepartmentDashboard: React.FC = () => {
     const {fetchClient} = useFetchClient();
     const {user} = useUser();
     const theme = useTheme();
+    const {toolId, workflowId} = useWorkflow();
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -115,7 +117,11 @@ const SiteDepartmentDashboard: React.FC = () => {
                 "/api/happiness-graphs/site-department",
                 {
                     method: "POST",
-                    body: postBody,
+                    body: {
+                        toolId,
+                        workflowId,
+                        ...postBody
+                    },
                     redirectOnError: false,
                 },
             );
@@ -147,13 +153,16 @@ const SiteDepartmentDashboard: React.FC = () => {
     };
 
     useEffect(() => {
-        if (user) {
-            getData({
-                startDate: startOfWeek(new Date(), {weekStartsOn: 1}),
-                endDate: endOfWeek(new Date(), {weekStartsOn: 1})
-            });
+
+        if (!user || !workflowId || !toolId) {
+            return;
         }
-    }, [user]);
+
+        getData({
+            startDate: startOfWeek(new Date(), {weekStartsOn: 1}),
+            endDate: endOfWeek(new Date(), {weekStartsOn: 1})
+        });
+    }, [user, workflowId, toolId]);
 
     const weeklySiteNames =
         weeklyLineChartComparisonData.length > 0
