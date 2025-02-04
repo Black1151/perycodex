@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, {useState, useEffect} from "react";
 import {Box, Grid, Avatar, Text, Flex} from "@chakra-ui/react";
 import {
     AnimatedList,
@@ -31,6 +31,11 @@ const getPersonDetails = (item: BigUpWallEntry, reverseRecognition: boolean) => 
 
 
 export const RecognitionList: React.FC<RecognitionListProps> = ({items, reverseRecognition = false}) => {
+    const [itemsList, setItemsList] = useState<BigUpWallEntry[]>([]);
+
+    useEffect(() => {
+        setItemsList(items)
+    }, [items]);
 
     return (
         <Grid
@@ -38,12 +43,12 @@ export const RecognitionList: React.FC<RecognitionListProps> = ({items, reverseR
             gap={6}
         >
             <AnimatedList>
-                {items &&
-                    items.map((item, index) => {
+                {itemsList &&
+                    itemsList.map((item, index) => {
                         const personDetails = getPersonDetails(item, reverseRecognition);
 
                         return (
-                            <AnimatedListItem key={item.userIdUrlTo} index={index}>
+                            <AnimatedListItem key={index} index={index}>
                                 <Box
                                     bg="perygonBlueTransparent"
                                     boxShadow="0 0 10px 2px rgba(192, 192, 192, 0.8)"

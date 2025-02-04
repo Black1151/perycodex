@@ -1,15 +1,38 @@
 "use client";
 
 import {useEffect, useState} from "react";
-import {Box, Flex} from "@chakra-ui/react";
+import {Flex} from "@chakra-ui/react";
 import {LeaderBoardTabContent} from "./tabs/LeaderBoardTab/LeaderBoardTabContent";
 import {RecognitionList} from "./tabs/OtherTabs/RecognitionCardList";
 import {PageClientInner} from "./PageClientInner";
-import {BigUpData} from "./types";
-import DashboardHeader from "@/app/(site)/(apps)/DashboardHeader";
+import {
+    BigUpCategory,
+    BigUpLeaderboardEntry,
+    BigUpStats,
+    BigUpTeamMember,
+    BigUpWallEntry,
+} from "./types";
 
 export default function BigUpPage() {
-    const [data, setData] = useState<BigUpData | null>(null);
+    const [bigUpLeaderboard, setBigUpLeaderboard] = useState<BigUpLeaderboardEntry[]>([]);
+    const [bigUpWall, setBigUpWall] = useState<BigUpWallEntry[]>([]);
+    const [bigUpToMe, setBigUpToMe] = useState<BigUpWallEntry[]>([]);
+    const [bigUpFromMe, setBigUpFromMe] = useState<BigUpWallEntry[]>([]);
+    const [totalBigUp, setTotalBigUp] = useState<number>(0);
+    const [averageBigUpMonthly, setAverageBigUpMonthly] = useState<number>(0);
+    const [totalCurrentMonthBigUp, setTotalCurrentMonthBigUp] = useState<number>(0);
+    const [yourBigUpStats, setYourBigUpStats] = useState<BigUpStats>({
+        bigUpGivenPoints: 0,
+        bigUpReceivedPoints: 0,
+        bigUpTotal: 0,
+        bigUpRanking: 0,
+        userName: "",
+        userLocation: "",
+        userImage: ""
+    });
+    const [teamMembers, setTeamMembers] = useState<BigUpTeamMember[]>([]);
+    const [bigUpCategories, setBigUpCategories] = useState<BigUpCategory[]>([]);
+    const [loading, setLoading] = useState(true);
 
     async function fetchData() {
         try {
@@ -27,12 +50,23 @@ export default function BigUpPage() {
             const result = await response.json();
 
             if (response.ok) {
-                setData(result.resource);
+                setBigUpLeaderboard(result.resource.bigUpLeaderboard || []);
+                setBigUpWall(result.resource.bigUpWall || []);
+                setBigUpToMe(result.resource.bigUpToMe || []);
+                setBigUpFromMe(result.resource.bigUpFromMe || []);
+                setTotalBigUp(result.resource.totalBigUp || 0);
+                setAverageBigUpMonthly(result.resource.averageBigUpMonthly || 0);
+                setTotalCurrentMonthBigUp(result.resource.totalCurrentMonthBigUp || 0);
+                setYourBigUpStats(result.resource.yourBigUpStats || null);
+                setTeamMembers(result.resource.users || []);
+                setBigUpCategories(result.resource.bigUpTypes || []);
             } else {
                 console.error("Error from server response:", result);
             }
         } catch (error) {
             console.error("An error occurred while fetching data:", error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -40,48 +74,37 @@ export default function BigUpPage() {
         fetchData();
     }, []);
 
-    if (!data) {
+    if (loading) {
         return <div>Loading...</div>;
     }
 
     const tabsData = [
-        {
-            header: "Leader Board",
-            content: <LeaderBoardTabContent items={data.bigUpLeaderboard}/>,
-        },
-        {
-            header: "The Wall",
-            content: <RecognitionList items={data.bigUpWall}/>,
-        },
-        {
-            header: "To Me",
-            content: <RecognitionList items={data.bigUpToMe} reverseRecognition={true}/>,
-        },
-        {
-            header: "From Me",
-            content: <RecognitionList items={data.bigUpFromMe}/>,
-        },
+        {header: "Leader Board", content: <LeaderBoardTabContent items={bigUpLeaderboard}/>},
+        {header: "The Wall", content: <RecognitionList items={bigUpWall}/>},
+        {header: "To Me", content: <RecognitionList items={bigUpToMe} reverseRecognition={true}/>},
+        {header: "From Me", content: <RecognitionList items={bigUpFromMe}/>},
     ];
 
     const masonryData = {
         items: [
-            {title: "Company: Total", content: data.totalBigUp},
-            {title: "Company: Monthly Avg", content: data.averageBigUpMonthly},
-            {title: "Company: Current Month", content: data.totalCurrentMonthBigUp},
-            {title: "You: Total Given", content: data.yourBigUpStats.bigUpGivenPoints},
+            {title: "Company: Total", content: totalBigUp},
+            {title: "Company: Monthly Avg", content: averageBigUpMonthly},
+            {title: "Company: Current Month", content: totalCurrentMonthBigUp},
+            {title: "You: Total Given", content: yourBigUpStats.bigUpGivenPoints},
         ],
-        userStats: data.yourBigUpStats,
+        userStats: yourBigUpStats,
     };
 
     const modalData = {
-        teamMembers: data.users,
-        categories: data.bigUpTypes,
+        teamMembers: teamMembers,
+        categories: bigUpCategories,
     };
 
     return (
         <Flex
             w="100%"
-            minH={["100%", "100vh"]} gap={2}
+            maxH="100%"
+            gap={2}
             alignItems="center"
             justifyContent="center"
             flexDirection="column"

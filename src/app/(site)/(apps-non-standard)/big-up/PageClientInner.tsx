@@ -3,7 +3,6 @@
 import React, {useState} from "react";
 import {SpringScale} from "@/components/animations/SpringScale";
 import {
-    Button,
     Grid,
     VStack,
     Modal,
@@ -11,7 +10,7 @@ import {
     ModalContent,
     ModalHeader,
     ModalBody,
-    Box, Flex,
+    Flex,
 } from "@chakra-ui/react";
 import {BigUpMasonry, BigUpMasonryProps} from "./masonry/BigUpMasonry";
 import {PerygonTabs} from "./tabs/PerygonTabs";
@@ -20,7 +19,7 @@ import {BigUpCategory, BigUpTeamMember} from "./types";
 import {useUser} from "@/providers/UserProvider";
 import Confetti from "@/components/animations/confetti/Confetti";
 import RecognitionHeader from "./RecognitionHeader";
-
+import {useRouter} from "next/navigation"
 
 interface PageClientInnerProps {
     masonryData: BigUpMasonryProps;
@@ -42,6 +41,7 @@ export const PageClientInner: React.FC<PageClientInnerProps> = ({
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showConfetti, setShowConfetti] = useState(false);
 
+    const router = useRouter();
     const {user} = useUser();
 
     const handleButtonClick = () => {
@@ -70,7 +70,7 @@ export const PageClientInner: React.FC<PageClientInnerProps> = ({
                     toUserId: formData.teamMember,
                     reason: formData.message,
                     bigupTypeId: formData.category,
-                    customerId: "1",
+                    customerId: user?.customerId,
                 }),
             });
 
@@ -82,6 +82,7 @@ export const PageClientInner: React.FC<PageClientInnerProps> = ({
             setTimeout(() => {
                 setShowSuccessModal(false);
                 setShowConfetti(false);
+                router.refresh();
             }, 3000);
         } catch (error) {
             console.error("Error submitting BigUp:", error);
@@ -90,7 +91,7 @@ export const PageClientInner: React.FC<PageClientInnerProps> = ({
 
     return (
         <>
-            <Flex bg="perygonBlueTransparent" w={'full'} alignItems="center" borderRadius={'lg'} p={2}>
+            <Flex bg="perygonBlueTransparent" w={'full'} alignItems="center" borderRadius={'lg'} p={2} pr={6}>
                 <RecognitionHeader headingText={'Recognition Hub'} onAddButtonClick={handleButtonClick}/>
             </Flex>
             <Grid
