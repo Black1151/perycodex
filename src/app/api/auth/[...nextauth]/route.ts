@@ -31,6 +31,7 @@ const handler = NextAuth({
         Google({
             clientId: process.env.GOOGLE_CLIENT_ID!,  // Your Google Client ID
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,  // Your Google Client Secret
+            checks: ['none']
         }),
     ],
     session: {
