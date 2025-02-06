@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, Flex, Heading, Button, Link, Menu, MenuButton, MenuList, MenuItem} from "@chakra-ui/react";
+import {Text, Heading, Button} from "@chakra-ui/react";
 import PublicLayout from "@/components/public/PublicLayout";
 
 const Page = () => {

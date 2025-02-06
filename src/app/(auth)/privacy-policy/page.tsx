@@ -38,11 +38,12 @@ export default function PrivacyPolicyPage() {
 
                         <Text mb={4}>
                             <Text as={'span'} fontFamily={'bonfire'} fontSize={'32px'} fontWeight={200}
-                                  color={'perygonPink'}>Perygon</Text> ("we," "us," or "our") respects your
+                                  color={'perygonPink'}>Perygon</Text> (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;)
+                            respects your
                             privacy
                             and is committed to protecting your personal information. This Privacy
                             Policy explains how we collect, use, disclose, and safeguard your
-                            information when you use our application ("App").
+                            information when you use our application (&quot;App&quot;).
                         </Text>
 
                         <Text mb={4}>
