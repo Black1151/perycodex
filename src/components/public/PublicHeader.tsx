@@ -1,0 +1,48 @@
+import React from 'react';
+import {Button, Flex, Heading, Link, Menu, MenuButton, MenuItem, MenuList} from "@chakra-ui/react";
+
+const menuItems = [
+    {title: "Home", link: "/"},
+    {title: "Marketing", link: "/marketing"},
+    {title: "Support", link: "/support"},
+    {title: "Privacy Policy", link: "/privacy-policy"},
+    {title: "Delete My Data", link: "/delete-my-data"},
+    {title: "Login", link: "/login"},
+];
+
+const PublicHeader = () => {
+    return (
+        <Flex justify={'space-between'} align={'center'} w={["95%", "90%", "85%"]}>
+            <Heading
+                fontFamily="bonfire"
+                color="white"
+                fontSize="48px"
+                fontWeight="400"
+            >
+                Perygon
+            </Heading>
+
+            <Menu>
+                <MenuButton
+                    as={Button}
+                    bg="transparent"
+                    color="white"
+                    border="1px solid white"
+                    _hover={{bg: 'perygonPink'}}
+                    _active={{bg: 'white', color: 'perygonPink'}}
+                >
+                    Navigate
+                </MenuButton>
+                <MenuList>
+                    {menuItems.map((item) => (
+                        <MenuItem as={Link} href={item.link} key={item.link}>
+                            {item.title}
+                        </MenuItem>
+                    ))}
+                </MenuList>
+            </Menu>
+        </Flex>
+    );
+};
+
+export default PublicHeader;
