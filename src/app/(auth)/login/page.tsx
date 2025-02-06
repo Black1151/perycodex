@@ -12,8 +12,8 @@ interface SearchParams {
 }
 
 export default async function LoginPage({
-    searchParams,
-}: {
+                                            searchParams,
+                                        }: {
     searchParams: SearchParams;
 }) {
 
@@ -61,23 +61,22 @@ export default async function LoginPage({
 
     return (
 
-            <PerygonContainer>
-                <Center flex={1}>
-                    <LoginCard
-                        height={800}
-                        imageOffset={-545}
-                        backgroundOffset={-605}
-
-                        titleComponent={
-                            <VStack position="absolute" top="75px">
-                                <LetterFlyIn>Perygon</LetterFlyIn>
-                            </VStack>
-                        }
-                    >
-                        <LoginForm/>
-                    </LoginCard>
-                </Center>
-            </PerygonContainer>
+        <PerygonContainer>
+            <Center flex={1} w={['full', 300]}>
+                <LoginCard
+                    height={700}
+                    imageOffset={-454}
+                    backgroundOffset={-505}
+                    titleComponent={
+                        <VStack position="absolute" top="75px">
+                            <LetterFlyIn>Perygon</LetterFlyIn>
+                        </VStack>
+                    }
+                >
+                    <LoginForm/>
+                </LoginCard>
+            </Center>
+        </PerygonContainer>
     );
 }
 
