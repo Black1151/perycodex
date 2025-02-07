@@ -51,7 +51,7 @@ export default async function Home({
         }
     }
 
-    const {filteredDashboards, toolData} = await getFilteredDashboards(
+    const {filteredDashboards} = await getFilteredDashboards(
         toolId,
         workflowId,
         "/enps"

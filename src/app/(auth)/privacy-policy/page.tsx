@@ -7,7 +7,6 @@ import {
     ListItem,
     Box,
     Stack,
-    Link as ChakraLink
 } from "@chakra-ui/react";
 import Link from "next/link";
 import PublicLayout from "@/components/public/PublicLayout";

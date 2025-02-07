@@ -16,7 +16,7 @@ import {
     CreateCrossFilterChartParams, FirstDataRenderedEvent,
 } from "ag-grid-community";
 import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridComponentLight";
-import FilterArea from "@/app/(site)/(apps)/happiness-score/dashboard/site-department-analysis/FilterArea";
+import FilterArea from "@/components/DashboardFilterDrawer/FilterArea";
 import {useWorkflow} from "@/providers/WorkflowProvider";
 import {useUser} from "@/providers/UserProvider";
 import {addDays, endOfWeek, format, parseISO, startOfWeek} from "date-fns";
@@ -27,6 +27,7 @@ import {columnDefs} from "@/app/(site)/(apps)/happiness-score/dashboard/scores-a
 import {modalColDef} from "@/app/(site)/(apps)/happiness-score/dashboard/scores-and-comments/ModalColumnDefs";
 import {AgNodeClickEvent} from "ag-charts-types";
 import SubmissionsTooltipRenderer from "@/components/agCharts/SubmissionsTooltipRenderer";
+import {dateRangeOptions} from "@/components/DashboardFilterDrawer/dateRangeUtils";
 
 
 interface ApiResponse {
@@ -512,15 +513,24 @@ const ScoresCommentsDashboard: React.FC = () => {
             getData(postBody);
         }
 
+        const dateRangeOption = "weekly";
+        const defaultDateFilterOption = "currentWeek"
+
         useEffect(() => {
             if (!toolId || !workflowId || !user?.customerId) {
                 return; // Do nothing if the necessary data is not yet available
             }
 
-            getData({
-                startDate: startOfWeek(new Date(), {weekStartsOn: 1}),
-                endDate: endOfWeek(new Date(), {weekStartsOn: 1}),
-            });
+            const weeklyOption = dateRangeOptions[dateRangeOption].find(
+                (opt) => opt.value === defaultDateFilterOption
+            );
+
+            if (weeklyOption) {
+                const [startDate, endDate] = weeklyOption.getRange();
+                getData({startDate, endDate});
+            } else {
+                getData();
+            }
         }, [toolId, workflowId, user]);
 
 
@@ -533,7 +543,8 @@ const ScoresCommentsDashboard: React.FC = () => {
                                 showSitesFilter: false,
                                 showDepartmentsFilter: false
                             }}
-                            defaultDateFilter={'currentWeek'}
+                            dateFilterMode={dateRangeOption}
+                            defaultDateFilter={defaultDateFilterOption}
                 />
 
                 <Modal

@@ -3,7 +3,7 @@
 import React, {useState, useEffect} from "react";
 import AgChartComponent from "@/components/agCharts/AgChartComponent";
 import {Flex, VStack, useTheme} from "@chakra-ui/react";
-import FilterArea from "@/app/(site)/(apps)/happiness-score/dashboard/site-department-analysis/FilterArea";
+import FilterArea from "@/components/DashboardFilterDrawer/FilterArea";
 import {
     AgChartOptions,
     AgRadialGaugeOptions,
@@ -15,8 +15,7 @@ import SubmissionsTooltipRenderer from "@/components/agCharts/SubmissionsTooltip
 import ScoreTooltipRenderer from "@/components/agCharts/ScoreTooltipRenderer";
 import {useFetchClient} from "@/hooks/useFetchClient";
 import useColor from "@/hooks/useColor";
-import {AgCartesianChartOptions} from "ag-charts-enterprise";
-import {endOfMonth, endOfWeek, startOfMonth, startOfWeek, subMonths} from "date-fns";
+import {dateRangeOptions} from "@/components/DashboardFilterDrawer/dateRangeUtils";
 
 interface enpsMainDashboardResponse {
     resource: {
@@ -298,11 +297,21 @@ const AllEnpsDashboard = () => {
             getData(postBody);
         };
 
+        const dateRangeOption = "monthly";
+        const defaultDateFilterOption = "last6Months"
+
         useEffect(() => {
-            getData({
-                startDate: startOfMonth(subMonths(new Date(), 2)),
-                endDate: endOfMonth(new Date())
-            });
+
+            const monthlyOption = dateRangeOptions[dateRangeOption].find(
+                (opt) => opt.value === defaultDateFilterOption
+            );
+
+            if (monthlyOption) {
+                const [startDate, endDate] = monthlyOption.getRange();
+                getData({startDate, endDate});
+            } else {
+                getData();
+            }
         }, []);
 
         return (
@@ -314,8 +323,8 @@ const AllEnpsDashboard = () => {
                         showSitesFilter: false,
                         showDateFilter: true,
                     }}
-                    defaultDateFilter={"last3Months"}
-                    dateFilterOption={"monthly"}
+                    dateFilterMode={dateRangeOption}
+                    defaultDateFilter={defaultDateFilterOption}
                 />
                 <Flex w={"100%"} gap={6} flexWrap={"wrap"}>
                     {/* Gauge */}
@@ -345,8 +354,6 @@ const AllEnpsDashboard = () => {
                         title={"eNPS Trend"}
                         chartOptions={lineChartOptions}
                     />
-
-
                 </Flex>
             </VStack>
         );

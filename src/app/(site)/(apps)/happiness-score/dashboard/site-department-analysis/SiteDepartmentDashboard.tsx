@@ -20,9 +20,10 @@ import SpeechBubble from "../../SpeechBubble";
 import StaffHappinessDetailsRenderer
     from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
 import ScoreTooltipRenderer from "@/components/agCharts/ScoreTooltipRenderer";
-import FilterArea from "@/app/(site)/(apps)/happiness-score/dashboard/site-department-analysis/FilterArea";
+import FilterArea from "@/components/DashboardFilterDrawer/FilterArea";
 import AgChartComponent from "@/components/agCharts/AgChartComponent";
 import {endOfWeek, startOfWeek} from "date-fns";
+import {dateRangeOptions} from "@/components/DashboardFilterDrawer/dateRangeUtils";
 
 
 interface ManagingPartnersResponse {
@@ -151,16 +152,26 @@ const SiteDepartmentDashboard: React.FC = () => {
         }
     };
 
+    const dateRangeOption = "weekly";
+    const defaultDateFilterOption = "currentWeek"
+
     useEffect(() => {
 
         if (!user || !workflowId || !toolId) {
             return;
         }
 
-        getData({
-            startDate: startOfWeek(new Date(), {weekStartsOn: 1}),
-            endDate: endOfWeek(new Date(), {weekStartsOn: 1})
-        });
+        const weeklyOption = dateRangeOptions[dateRangeOption].find(
+            (opt) => opt.value === defaultDateFilterOption
+        );
+
+        if (weeklyOption) {
+            const [startDate, endDate] = weeklyOption.getRange();
+            getData({startDate, endDate});
+        } else {
+            getData();
+        }
+
     }, [user, workflowId, toolId]);
 
     const weeklySiteNames =
@@ -402,7 +413,11 @@ const SiteDepartmentDashboard: React.FC = () => {
 
     return (
         <VStack align="stretch" spacing={6} w="full" py={4}>
-            <FilterArea onApplyFilters={onFilterChange} defaultDateFilter={'currentWeek'}/>
+            <FilterArea
+                onApplyFilters={onFilterChange}
+                dateFilterMode={dateRangeOption}
+                defaultDateFilter={defaultDateFilterOption}
+            />
             {/* Dashboard Layout */}
             <Flex w={"100%"} gap={6} flexWrap={"wrap"}>
                 <Box flex={"1 1 250px"} borderRadius="lg">

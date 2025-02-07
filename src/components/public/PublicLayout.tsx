@@ -1,6 +1,6 @@
 import React, {ReactNode} from 'react';
 import {PerygonContainer} from "@/components/layout/PerygonContainer";
-import {Flex, FlexProps} from "@chakra-ui/react";
+import {Flex} from "@chakra-ui/react";
 import PublicHeader from "@/components/public/PublicHeader";
 import PublicFooter from "@/components/public/PublicFooter";
 
