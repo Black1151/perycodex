@@ -6,6 +6,8 @@ import {
     getOrdinalSuffix
 } from "@/app/(site)/(apps-non-standard)/big-up/tabs/LeaderBoardTab/LeaderBoardTabContent";
 import {EmojiEvents} from "@mui/icons-material";
+import Link from "next/link";
+
 
 export interface MyBigUpStatsProps {
     name: string;
@@ -40,7 +42,9 @@ export const MyBigUpStats: React.FC<MyBigUpStatsProps> = ({
         >
             <Flex flexDirection="column" justifyContent="space-between" height="100%">
                 <Flex align="center" mb={3} gap={5}>
-                    <Avatar size="xl" name={name} src={userImage}/>
+                    <Link href={'/my-profile'}>
+                        <Avatar size="xl" name={name} src={userImage}/>
+                    </Link>
                     <Flex
                         direction="column"
                         ml={2}
