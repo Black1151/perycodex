@@ -92,21 +92,21 @@ const UserGroupsTabs: React.FC<UserGroupsTabsProps> = ({
         <TabList>
           <Tab
             color={"white"}
-            fontSize={["sm", "sm", "md"]}
+            fontSize={["xs", "sm", "md"]}
             _selected={{ color: "white", bg: "#FFFFFF44" }}
           >
             Edit User Group
           </Tab>
           <Tab
             color={"white"}
-            fontSize={["sm", "sm", "md"]}
+            fontSize={["xs", "sm", "md"]}
             _selected={{ color: "white", bg: "#FFFFFF44" }}
           >
             User Group Members
           </Tab>
           <Tab
             color={"white"}
-            fontSize={["sm", "sm", "md"]}
+            fontSize={["xs", "sm", "md"]}
             _selected={{ color: "white", bg: "#FFFFFF44" }}
           >
             Department / Team Group Members
