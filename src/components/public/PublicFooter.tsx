@@ -10,8 +10,7 @@ const PublicFooter = () => {
             </Link>
             <Link href={'/privacy-policy'}
                   color="white"
-                  _hover={{textDecoration: 'underline', cursor: 'pointer'}}
-                  isExternal>
+                  _hover={{textDecoration: 'underline', cursor: 'pointer'}}>
                 Privacy Policy
             </Link>
         </Flex>
