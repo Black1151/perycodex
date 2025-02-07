@@ -405,8 +405,8 @@ export default function PrivacyPolicyPage() {
                             <ListItem fontSize={["sm", "md"]}>To monitor app performance and analyse trends.</ListItem>
                         </UnorderedList>
 
-                        <Heading as="h3" size="md" mt={6} mb={2}>
-                            CHILDREN’S PRIVACY
+                        <Heading as="h3" size="md" mt={4} mb={2}>
+                            Children&apos;s Privacy
                         </Heading>
                         <Text fontSize={["sm", "md"]} mb={4}>
                             Our Apps are not intended for children under 13 years of age. We do not knowingly collect
