@@ -1,9 +1,6 @@
 import NextAuth from 'next-auth';
 import AzureADProvider from 'next-auth/providers/azure-ad';
 import Google from "next-auth/providers/google";
-import apiClient from "@/lib/apiClient";
-import {NextResponse} from "next/server";
-import { signIn } from "next-auth/react";
 
 const AZURE_AD_CLIENT_ID='80b0a206-ea3a-4f28-a8d0-aadbb1655bd5';
 const AZURE_AD_CLIENT_SECRET='0gj8Q~moeoK0GMU1gE2.GemT_Gf~hrbU036cKdkr';
@@ -47,9 +44,7 @@ const handler = NextAuth({
     },
     callbacks: {
         async redirect({ url, baseUrl }) {
-            const redirectUrl = url.startsWith('/') ? new URL(url, baseUrl).toString() : url;
-            console.log(`[next-auth] Redirecting to "${redirectUrl}" (resolved from url "${url}" and baseUrl "${baseUrl}")`);
-            return redirectUrl;
+            return url.startsWith('/') ? new URL(url, baseUrl).toString() : url;
         },
         async jwt({ token, account }) {
             if (account) {
