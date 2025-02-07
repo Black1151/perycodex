@@ -18,7 +18,7 @@ import {LetterFlyIn} from "@/components/animations/text/LetterFlyIn";
 export default function PrivacyPolicyPage() {
     return (
         <PublicLayout>
-            <Container maxW="container.xl" py={8}>
+            <Container maxW="container.lg" py={[4, 8]} px={[2, 4]}>
                 {/* MAIN LAYOUT: Two Columns */}
                 <Stack
                     direction={["column", "row"]}
