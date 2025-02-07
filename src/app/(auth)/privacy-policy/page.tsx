@@ -30,10 +30,10 @@ export default function PrivacyPolicyPage() {
                         </Heading>
 
                         <Text fontWeight="bold">
-                            Effective Date: 01/04/2025
+                            Effective Date: 01/02/2025
                         </Text>
                         <Text fontWeight="bold" mb={4}>
-                            Last Updated: 06/02/2025
+                            Last Updated: 07/02/2025
                         </Text>
 
                         <Text mb={4}>
@@ -50,6 +50,31 @@ export default function PrivacyPolicyPage() {
                             By using the App, you agree to the terms outlined in this Privacy Policy.
                         </Text>
 
+                        <Heading as="h2" size="lg" mt={6} mb={2}>
+                            GDPR
+                        </Heading>
+
+                        <Text mb={2}>
+                            The General Data Protection Regulation (GDPR) became effective on 25th May 2018, and all
+                            organisations
+                            that process personal data must ensure to be compliant with the regulations and principles.
+                        </Text>
+
+                        <Text>
+                            We must make sure that:
+                        </Text>
+                        <UnorderedList pl={5} mb={4}>
+                            <ListItem>We are lawful, fair and transparent in the way that data is processed.</ListItem>
+                            <ListItem>Personal data is used for a specific purpose.</ListItem>
+                            <ListItem>We only record the data that is required.</ListItem>
+                            <ListItem>Have a duty to keep the data accurate.</ListItem>
+                            <ListItem>Data is only kept for as long as is required.</ListItem>
+                            <ListItem>All data is stored securely.</ListItem>
+                        </UnorderedList>
+                        <Text mb={2}>
+                            This Privacy Notice will detail how we comply with the above principles as well as your
+                            rights as the data owner.
+                        </Text>
                         {/* 1. Information We Collect */}
                         <Heading as="h2" size="lg" mt={6} mb={2}>
                             1. Information We Collect
@@ -62,6 +87,9 @@ export default function PrivacyPolicyPage() {
                             a) Personal Information
                         </Text>
                         <UnorderedList pl={5} mb={4}>
+                            <ListItem>
+                                <strong>Email and Password Login Data</strong>
+                            </ListItem>
                             <ListItem>
                                 <strong>SSO Login Data:</strong> If you log in using Google or Microsoft
                                 SSO, we receive your email address, name, and profile picture (depending on
@@ -102,6 +130,9 @@ export default function PrivacyPolicyPage() {
                             We use your information for the following purposes:
                         </Text>
                         <UnorderedList pl={5} mb={4}>
+                            <ListItem>
+                                To authenticate users and provide access through email and password.
+                            </ListItem>
                             <ListItem>
                                 To authenticate users and provide access through SSO (Google/Microsoft).
                             </ListItem>
@@ -149,8 +180,12 @@ export default function PrivacyPolicyPage() {
                         </Text>
                         <UnorderedList pl={5} mb={4}>
                             <ListItem>Access or update your personal information.</ListItem>
-                            <ListItem>Request deletion of your account and data. <Text as={"span"}><Link
-                                href={'/delete-my-data'}>Click here</Link></Text></ListItem>
+                            <ListItem>Request deletion of your account and data.
+                                <Text as={"span"} color={"perygonPink"}>
+                                    <Link href={'/delete-my-data'}>
+                                        {" "}Click here
+                                    </Link>
+                                </Text></ListItem>
                             <ListItem>Opt-out of certain data collection (e.g., analytics).</ListItem>
                         </UnorderedList>
                         <Text mb={4}>
@@ -192,9 +227,7 @@ export default function PrivacyPolicyPage() {
                         <Text mb={4}>
                             If you have any questions, contact us at:
                             <br/>
-                            Email: [your support email]
-                            <br/>
-                            Website: [your website URL]
+                            Email: supportteam@perygon.co.uk
                         </Text>
                     </Box>
 
