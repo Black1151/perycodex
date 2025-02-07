@@ -679,7 +679,7 @@ export default function PrivacyPolicyPage() {
                             </Text>
                         </Box>
                         <Text mb={4}>
-                            Please title any post and/or email “In relation to GDPR” to ensure it is passed to the
+                            Please title any post and/or email “Perygon - In relation to GDPR” to ensure it is passed to the
                             correct person.
                             Emails or calls made to other employees outside of these methods may not promptly reach the
                             Data
