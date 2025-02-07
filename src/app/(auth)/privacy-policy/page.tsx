@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import Link from "next/link";
 import PublicLayout from "@/components/public/PublicLayout";
+import {LetterFlyIn} from "@/components/animations/text/LetterFlyIn";
 
 export default function PrivacyPolicyPage() {
     return (
@@ -203,18 +204,17 @@ export default function PrivacyPolicyPage() {
                         flex="1"
                         textAlign="center"
                         position="sticky"
-                        top="0"
+                        top="1rem"
                         display={["none", "none", "none", "block"]}
                     >
-                        <Text
+                        <LetterFlyIn
                             as="span"
-                            fontSize="96px"
+                            fontSize="102px"
                             fontWeight={200}
-                            fontFamily="Bonfire"
                             color="perygonPink"
                         >
-                            Privacy
-                        </Text>
+                            Your Data
+                        </LetterFlyIn>
                     </Box>
                 </Stack>
             </Container>

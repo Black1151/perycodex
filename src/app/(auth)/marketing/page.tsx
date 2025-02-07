@@ -11,40 +11,54 @@ import {
 } from '@chakra-ui/react';
 import React from "react";
 import PublicLayout from "@/components/public/PublicLayout";
+import {LetterFlyIn} from "@/components/animations/text/LetterFlyIn";
 
 export default function MarketingPage() {
     return (
         <PublicLayout>
-            <Container maxW="container.lg" py={8}>
+            <Container maxW="container.lg" py={[4, 8]} px={[2, 4]}>
                 <Stack
                     direction={['column', 'row']}
-                    spacing={8}
+                    spacing={[4, 8]}
                     align="flex-start"
                 >
                     <Box flex="1">
-                        <Heading as="h1" size="2xl" mb={4}>
+                        <Heading as="h1" size={["lg", "2xl"]} mb={[2, 4]}>
                             Introducing{" "}
                         </Heading>
 
-                        <Text fontSize="lg" mb={4}>
+                        <Box
+                            display={['block', 'block', 'block', 'none']}
+                        >
+                            <LetterFlyIn
+                                as="span"
+                                fontSize="64px"
+                                fontWeight={200}
+                                color="perygonPink"
+                            >
+                                Perygon
+                            </LetterFlyIn>
+                        </Box>
+
+                        <Text fontSize={["md", "lg"]} mb={4}>
                             Perygon is your all-in-one, 360° business growth toolkit—merging easily
                             accessible data capture, business workflows, and intuitive data analytics
                             with engaging, modern design.
                         </Text>
-                        <Text fontSize="lg" mb={4}>
+                        <Text fontSize={["md", "lg"]} mb={4}>
                             Many problems, unlimited solutions—Perygon provides valuable insights, letting
                             teams easily explore metrics, reveal patterns, and foster improvement.
                         </Text>
-                        <Text fontSize="lg" mb={4}>
+                        <Text fontSize={["md", "lg"]} mb={4}>
                             This solution provides an ecosystem of varied business tools both simple and
                             complex, including staff happiness pulse, employee net promoter score, client
                             satisfaction levels, business maturity analysis, and many more.
                         </Text>
-                        <Text fontSize="lg" mb={4}>
+                        <Text fontSize={["md", "lg"]} mb={4}>
                             Perygon’s flexible framework clarifies direction and sparks meaningful
                             business progress and growth.
                         </Text>
-                        <Text fontSize="lg" mb={6}>
+                        <Text fontSize={["md", "lg"]} mb={6}>
                             This initial release introduces our first tool, the <strong>“Happiness Score”</strong>,
                             allowing you to manage company staff, services, teams, and patterns of engagement.
                             It works as a smart pocket companion to our Perygon Platform.
@@ -57,18 +71,17 @@ export default function MarketingPage() {
                         flex="1"
                         textAlign="center"
                         position="sticky"
-                        top="0"
+                        top="1rem"
                         display={['none', 'none', 'none', 'block']}
                     >
-                        <Text
+                        <LetterFlyIn
                             as="span"
                             fontSize="102px"
                             fontWeight={200}
-                            fontFamily="Bonfire"
                             color="perygonPink"
                         >
                             Perygon
-                        </Text>
+                        </LetterFlyIn>
                     </Box>
                 </Stack>
 

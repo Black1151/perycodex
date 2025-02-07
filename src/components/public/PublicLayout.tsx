@@ -30,7 +30,7 @@ const PublicLayout: React.FC<PublicLayoutProps> = ({children}) => {
                     w={["95%", "90%", "85%"]}
                     bg="white"
                     borderRadius="2xl"
-                    p={4}
+                    p={[2, 2, 4]}
                     shadow="xl"
                     gap={2}
                     overflowY="auto"

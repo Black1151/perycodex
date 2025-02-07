@@ -4,12 +4,12 @@ import {
     Button,
     Container,
     Heading,
-    Link as ChakraLink,
     Stack,
     Text,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import PublicLayout from "@/components/public/PublicLayout";
+import {LetterFlyIn} from "@/components/animations/text/LetterFlyIn";
 
 export default function SupportPage() {
     return (
@@ -38,13 +38,12 @@ export default function SupportPage() {
                         </Heading>
                         <Text mb={2} fontSize="lg">
                             Prefer email? Reach out to us at{" "}
-                            <ChakraLink
+                            <Link
                                 href="mailto:supportteam@perygon.co.uk"
-                                textDecoration="underline"
-                                color="blue.500"
+                                style={{textDecoration: "underline", color: "blue.500"}}
                             >
                                 supportteam@perygon.co.uk
-                            </ChakraLink>
+                            </Link>
                             .
                         </Text>
 
@@ -67,26 +66,19 @@ export default function SupportPage() {
                             United Kingdom
                         </Text>
 
-                        <Box mt={6}>
-                            <a
-                                href="mailto:supportteam@perygon.co.uk"
-                                style={{textAlign: "end", maxWidth: "100%"}}
-                            >
+                        <Box textAlign={'center'} width="100%" mt={4}>
+                            <Link href="mailto:supportteam@perygon.co.uk">
                                 <Button
                                     color="white"
                                     bg="green"
+
                                     fontSize={["12px", "18px"]}
-                                    _hover={{
-                                        bg: "perygonPink",
-                                    }}
-                                    _active={{
-                                        bg: "white",
-                                        color: "perygonPink",
-                                    }}
+                                    _hover={{bg: "perygonPink"}}
+                                    _active={{bg: "white", color: "perygonPink"}}
                                 >
                                     Click here to email our Support Team
                                 </Button>
-                            </a>
+                            </Link>
                         </Box>
                     </Box>
 
@@ -95,18 +87,17 @@ export default function SupportPage() {
                         flex="1"
                         textAlign="center"
                         position="sticky"
-                        top="0"
+                        top="1rem"
                         display={["none", "none", "none", "block"]}
                     >
-                        <Text
+                        <LetterFlyIn
                             as="span"
-                            fontSize="96px"
+                            fontSize="102px"
                             fontWeight={200}
-                            fontFamily="Bonfire"
                             color="perygonPink"
                         >
                             Support
-                        </Text>
+                        </LetterFlyIn>
                     </Box>
                 </Stack>
             </Container>

@@ -1,64 +1,102 @@
 import React from 'react';
-import {Text, Heading, Button} from "@chakra-ui/react";
+import {
+    Container,
+    Heading,
+    Text,
+    Box,
+    Button,
+    Stack,
+    Link
+} from "@chakra-ui/react";
 import PublicLayout from "@/components/public/PublicLayout";
+import {LetterFlyIn} from "@/components/animations/text/LetterFlyIn";
 
-const Page = () => {
+const DeleteMyDataPage = () => {
     return (
         <PublicLayout>
-            <Text color={'black'} fontSize={'20px'} fontWeight={'600'}>
-                At Perygon, we take your privacy seriously. If you wish to delete your account and all
-                associated
-                data, please follow the steps below:
-            </Text>
-            <Text color={'black'} fontSize={'16px'} mt={4}>
-                <strong>1. Request Deletion:</strong> Click the link below to send an email to our support team
-                requesting the deletion of your account and all personal data.
-            </Text>
-            <Text color={'black'} fontSize={'16px'} mt={2}>
-                <strong>2. Types of Data Deleted:</strong> Upon account deletion, all personal data including
-                your
-                account information, user history, and any other identifiable information will be permanently
-                deleted from our systems that does not affect the analytics of your employer.
-            </Text>
-            <Text color={'black'} fontSize={'16px'} mt={2}>
-                <strong>3. Data Retention Period:</strong> Any data required by law or for operational purposes
-                (e.g., transactions or legal records) will be kept for a limited period and then securely
-                deleted.
-            </Text>
-            <Text color={'black'} fontSize={'16px'} mt={2}>
-                <strong>4. Confirmation:</strong> You will receive a confirmation email once your request is
-                processed. Please allow up to 21 business days for the deletion process to be completed.
-            </Text>
-            <Heading mt={6} color={'black'} fontSize={'24px'} fontWeight={'600'}>What to put in your
-                email?</Heading>
-            <Text>
-                1. In the subject of your email please enter the following: <strong>First
-                Name</strong>, <strong>Last
-                Name</strong>, and the <strong>Company Name</strong> you are associated with.
-            </Text>
-            <Text>
-                2. In the body of your email please explain the reasons for your request.
-            </Text>
-            <a href={"mailto:delete-my-data@perygon.co.uk"}
-               style={{textAlign: "end", maxWidth: "100%", marginTop: 'auto'}}>
-                <Button
-                    color="white"
-                    bg="red"
-                    fontSize={["12px", "18px"]}
-                    mt={6}
-                    _hover={{
-                        bg: "perygonPink",
-                    }}
-                    _active={{
-                        bg: "white",
-                        color: "perygonPink",
-                    }}
-                >
-                    Click here to request to delete your data
-                </Button>
-            </a>
+            <Container maxW="container.lg" py={8}>
+                <Stack direction={['column', 'row']} spacing={8} align="flex-start">
+
+                    {/* Left Section */}
+                    <Box flex="1">
+                        <Heading as="h1" size="2xl" mb={4}>
+                            Request to Delete Your Data
+                        </Heading>
+
+                        <Text fontSize={['md', 'lg']} mb={4}>
+                            At <Text as={'span'} fontSize={['lg', 'xl']} fontFamily={'Bonfire'} fontWeight={'200'}
+                                     color={'perygonPink'}>Perygon</Text>, we respect your privacy and provide full
+                            control over your
+                            data.
+                            If you wish to permanently delete your account and all associated personal data, follow
+                            these steps.
+                        </Text>
+
+                        <Heading as="h2" size={["sm", "md"]} mt={6} mb={2}>How to Request Deletion:</Heading>
+                        <Text size={["sm", "md"]} mb={2}>
+                            <strong>1. Submit a Request:</strong> Click the button below to send an email to our support
+                            team.
+                        </Text>
+                        <Text size={["sm", "md"]} mb={2}>
+                            <strong>2. Data Included in Deletion:</strong> Your personal data, user history, and any
+                            other identifiable information will be permanently removed.
+                            Data required for analytics may be retained but will not be personally identifiable.
+                        </Text>
+                        <Text size={["sm", "md"]} mb={2}>
+                            <strong>3. Data Retention:</strong> Any legally required data (e.g., transactions or
+                            compliance records) will be stored securely and deleted after a set period.
+                        </Text>
+                        <Text size={["sm", "md"]} mb={4}>
+                            <strong>4. Confirmation:</strong> You will receive a confirmation email once your request
+                            has been processed.
+                            Please allow up to <strong>21 business days</strong> for the request to be completed.
+                        </Text>
+
+                        <Heading as="h2" size="md" mt={6} mb={2}>What to Include in Your Email:</Heading>
+                        <Text size={["sm", "md"]} mb={2}>
+                            • Subject: <strong>[Your First Name] [Your Last Name] - [Company Name] - Data Deletion
+                            Request</strong>
+                        </Text>
+                        <Text size={["sm", "md"]} mb={2}>
+                            • Brief reason for your request (optional)
+                        </Text>
+
+                        <Box mt={6}>
+                            <Link href="mailto:delete-my-data@perygon.co.uk">
+                                <Button
+                                    color="white"
+                                    bg="red.500"
+                                    fontSize={["md", "lg"]}
+                                    _hover={{bg: "perygonPink"}}
+                                    _active={{bg: "white", color: "perygonPink"}}
+                                >
+                                    Request Data Deletion
+                                </Button>
+                            </Link>
+                        </Box>
+                    </Box>
+
+                    {/* Right Section: Branding */}
+                    <Box
+                        flex="1"
+                        textAlign="center"
+                        position="sticky"
+                        top="1rem"
+                        display={['none', 'none', 'none', 'block']}
+                    >
+                        <LetterFlyIn
+                            as="span"
+                            fontSize="102px"
+                            fontWeight={200}
+                            color="perygonPink"
+                        >
+                            Your Data
+                        </LetterFlyIn>
+                    </Box>
+                </Stack>
+            </Container>
         </PublicLayout>
     );
 };
 
-export default Page;
+export default DeleteMyDataPage;
