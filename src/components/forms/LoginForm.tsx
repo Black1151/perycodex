@@ -245,7 +245,7 @@ export function LoginForm() {
                 </VStack>
                 <Flex gap={4} w={"100%"} top={6} position="relative" justify={'space-between'} align={'center'}>
                     <Text p="0" pt="10px" fontSize={["10px", "12px"]} color="gray">
-                        Copyright &copy; 2024 Sedulo Limited (v1.1.0)
+                        Copyright &copy; 2024 Sedulo Limited (v1.1.1)
                     </Text>
                     <Link href={'/privacy-policy'}>
                         <Text p="0" pt="10px" fontSize={["10px", "12px"]} color="gray">
