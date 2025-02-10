@@ -17,7 +17,6 @@ import StaffHappinessDetailsRenderer
 import ScoreTooltipRenderer from "@/components/agCharts/ScoreTooltipRenderer";
 import FilterArea from "@/components/DashboardFilterDrawer/FilterArea";
 import AgChartComponent from "@/components/agCharts/AgChartComponent";
-import {endOfWeek, startOfWeek} from "date-fns";
 import {dateRangeOptions} from "@/components/DashboardFilterDrawer/dateRangeUtils";
 
 interface ManagingPartnersResponse {

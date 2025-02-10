@@ -40,7 +40,7 @@ interface TagDetailsBannerProps {
 
 export const TagDetailsBanner: React.FC<TagDetailsBannerProps> = ({tag}) => {
     return (
-        <Flex p={4} color={"white"} overflow={"hidden"} gap={2}>
+        <Flex mb={4} p={[0, 0, 4]} color={"white"} overflow={"hidden"} gap={2}>
             <BackButton/>
             <FormControl
                 w={["50px", "125px"]}
