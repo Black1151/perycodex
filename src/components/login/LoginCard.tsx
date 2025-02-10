@@ -31,7 +31,7 @@ export function LoginCard({
                 position="relative"
                 height={height}
                 justifyContent="flex-end"
-                width={["100%", 480]}
+                width={["100%", null, 480]}
             >
                 <Image
                     src="/perygonSpeechBubble.png"
