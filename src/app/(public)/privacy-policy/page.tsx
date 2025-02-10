@@ -29,7 +29,7 @@ export default function PrivacyPolicyPage() {
                     <Box flex="1" maxW={'100%'} overflowX={'hidden'}>
                         {/* Heading / Dates */}
                         <Heading as="h1" size={["xl", "2xl"]} mb={4}>
-                            Privacy Notice
+                            Privacy Policy
                         </Heading>
 
                         <Text fontWeight="bold">
@@ -66,7 +66,7 @@ export default function PrivacyPolicyPage() {
                         </UnorderedList>
 
                         <Text fontSize={["sm", "md"]} mb={4}>
-                            This Privacy Notice will detail how we comply with the above principles as well as
+                            This Privacy Policy will detail how we comply with the above principles as well as
                             your rights as the data owner.
                         </Text>
 
@@ -75,36 +75,22 @@ export default function PrivacyPolicyPage() {
                             1. WHO ARE WE?
                         </Heading>
                         <Text fontSize={["sm", "md"]} mb={2}>
-                            Sedulo is a Financial Services Company based in the North of England and London. We
+                            Sedulo Accountants Limited is a Financial Services Company based in the North of England and
+                            London. We
                             specialise
-                            in providing Accountancy and Tax Advisory services along with Payroll, Funding and Wealth
-                            Management. Our company names are{" "}
-                            &quot;Sedulo Accountants Ltd&quot;, &quot;Sedulo Funding Solutions Ltd&quot;, &quot;Sedulo
-                            Leeds Ltd&quot;,
-                            &quot;Sedulo Wealth Management Ltd&quot;, &quot;Sedulo Audit Ltd&quot;, &quot;Sedulo
-                            Liverpool Ltd&quot;,
-                            &quot;Sedulo London Ltd&quot;, &quot;Sedulo CF Ltd&quot;, &quot;Sedulo Consultancy
-                            Ltd&quot;,
-                            &quot;Sedulo Investments LLP&quot;, &quot;Sedulo Group Ltd&quot;, &quot;Sedulo IT Ltd&quot;,
-                            &quot;Sedulo Foundation&quot;, &quot;Magna Money Ltd&quot;, &quot;Sedulo Transaction
-                            Services Ltd&quot;,
-                            &quot;Sedulo Birmingham Limited&quot;, &quot;Sedulo Bico Limited&quot;, &quot;Be The
-                            Standard Limited&quot;.
+                            in providing a suite of <strong>Core Services</strong> including but not limited to
+                            Accountancy and Tax Advisory services along with Payroll, Funding and Wealth
+                            Management and Business Growth Consultancy.
                         </Text>
 
                         <Text fontWeight="bold" mb={2}>
-                            Apps:
+                            Our Apps:
                         </Text>
                         <UnorderedList pl={5} mb={4}>
                             <ListItem>
                                 <strong>Perygon</strong> is developed and operated by Sedulo Accountants Limited, part
                                 of the
-                                above group.
-                            </ListItem>
-                            <ListItem>
-                                <strong>Nexus</strong> is developed and operated by Sedulo Accountants Limited, part of
-                                the
-                                above group.
+                                above group, that provides business growth tools.
                             </ListItem>
                         </UnorderedList>
 
@@ -117,9 +103,54 @@ export default function PrivacyPolicyPage() {
                             process personal information that is required for us to carry out our business dealings for
                             the customer.
                         </Text>
+                        <Text mt={6} mb={2} fontWeight="bold">
+                            For Perygon App Users
+                        </Text>
+                        <Text fontSize={["sm", "md"]} mb={2}>
+                            When you use our Apps, we may collect the following types of information:
+                        </Text>
 
+                        <Text fontSize={["sm", "md"]} mb={2} fontWeight="bold">a) Personal Information</Text>
+                        <UnorderedList pl={5} mb={4}>
+                            <ListItem fontSize={["sm", "md"]}>
+                                <strong>SSO Login Data</strong> – If you sign in using Google or Microsoft SSO, we may
+                                receive
+                                your email address, name, and profile picture (subject to provider permissions).
+                            </ListItem>
+                            <ListItem fontSize={["sm", "md"]}><strong>Email and password </strong> login for the
+                                application.</ListItem>
+                            <ListItem fontSize={["sm", "md"]}>
+                                <strong>Account Details</strong> – Information you provide when setting up or managing
+                                your
+                                profile.
+                            </ListItem>
+                            <ListItem fontSize={["sm", "md"]}>
+                                <strong>Contact Information</strong> – If you provide contact details for support or
+                                communication.
+                            </ListItem>
+                            <ListItem fontSize={["sm", "md"]}>
+                                <strong>User-Generated Content</strong> – Any data or content you voluntarily provide in
+                                the App.
+                            </ListItem>
+                        </UnorderedList>
+
+                        <Text fontSize={["sm", "md"]} mb={2} fontWeight="bold">b) Non-Personal Information</Text>
+                        <UnorderedList pl={5} mb={4}>
+                            <ListItem fontSize={["sm", "md"]}>
+                                <strong>Device Information</strong> – Including model, operating system version, and
+                                unique
+                                device identifiers.
+                            </ListItem>
+                            <ListItem fontSize={["sm", "md"]}>
+                                <strong>Usage Data</strong> – Information about how you interact with our App, such as
+                                features used and time spent.
+                            </ListItem>
+                            <ListItem fontSize={["sm", "md"]}>
+                                <strong>Analytics Data</strong> – To improve our services and enhance user experience.
+                            </ListItem>
+                        </UnorderedList>
                         <Text fontSize={["sm", "md"]} mb={2} fontWeight="bold">
-                            For Clients
+                            For Core Service Clients
                         </Text>
                         <Text fontSize={["sm", "md"]} mb={4}>
                             Depending on your relationship with us and the services we are providing, we may collect
@@ -176,86 +207,22 @@ export default function PrivacyPolicyPage() {
                                 </Tr>
                             </Tbody>
                         </Table>
-                        <Text mt={6} mb={2} fontWeight="bold">
-                            For App users
-                        </Text>
-                        <Text fontSize={["sm", "md"]} mb={2}>
-                            When you use our Apps, we may collect the following types of information:
-                        </Text>
 
-                        <Text fontSize={["sm", "md"]} mb={2} fontWeight="bold">a) Personal Information</Text>
-                        <UnorderedList pl={5} mb={4}>
-                            <ListItem fontSize={["sm", "md"]}>
-                                <strong>SSO Login Data</strong> – If you sign in using Google or Microsoft SSO, we may
-                                receive
-                                your email address, name, and profile picture (subject to provider permissions).
-                            </ListItem>
-                            <ListItem fontSize={["sm", "md"]}><strong>Email and password </strong> login for the
-                                application.</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>
-                                <strong>Account Details</strong> – Information you provide when setting up or managing
-                                your
-                                profile.
-                            </ListItem>
-                            <ListItem fontSize={["sm", "md"]}>
-                                <strong>Contact Information</strong> – If you provide contact details for support or
-                                communication.
-                            </ListItem>
-                            <ListItem fontSize={["sm", "md"]}>
-                                <strong>User-Generated Content</strong> – Any data or content you voluntarily provide in
-                                the App.
-                            </ListItem>
-                        </UnorderedList>
 
-                        <Text fontSize={["sm", "md"]} mb={2} fontWeight="bold">b) Non-Personal Information</Text>
-                        <UnorderedList pl={5} mb={4}>
-                            <ListItem fontSize={["sm", "md"]}>
-                                <strong>Device Information</strong> – Including model, operating system version, and
-                                unique
-                                device identifiers.
-                            </ListItem>
-                            <ListItem fontSize={["sm", "md"]}>
-                                <strong>Usage Data</strong> – Information about how you interact with our App, such as
-                                features used and time spent.
-                            </ListItem>
-                            <ListItem fontSize={["sm", "md"]}>
-                                <strong>Analytics Data</strong> – To improve our services and enhance user experience.
-                            </ListItem>
-                        </UnorderedList>
-
-                        <Text fontSize={["sm", "md"]} mb={4}>
+                        <Text fontSize={["sm", "md"]} my={4}>
                             We process relevant and required information regarding you, your company and/or employees to
                             accurately
                             provide services to you. The types of information listed above will only be obtained if it
                             is directly
-                            applicable to your situation and the services requested from us. To enquire about any
+                            applicable to your situation and the services requested from us.
+                        </Text>
+
+                        <Text fontSize={["sm", "md"]} my={4}>
+                            To enquire about any
                             personal
                             information we may retain about you, please email us at{" "}
                             <a href="mailto:gdpr@perygon.co.uk"><Text as={'span'}
                                                                       color={"perygonPink"}>gdpr@perygon.co.uk</Text></a>
-                        </Text>
-
-                        <Text mt={6} mb={2} fontWeight="bold">
-                            For Suppliers
-                        </Text>
-                        <Text fontSize={["sm", "md"]} mb={4}>
-                            To ensure smooth business operations, we hold a small amount of supplier information. This
-                            information
-                            will be held identifying contact individuals within your business, including but not limited
-                            to:
-                        </Text>
-                        <UnorderedList pl={5} mb={4}>
-                            <ListItem fontSize={["sm", "md"]}>Contact name</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>Business address</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>Contact number</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>Email address</ListItem>
-                        </UnorderedList>
-                        <Text fontSize={["sm", "md"]} mb={4}>
-                            We may also hold bank details or other preferred methods of payment to compensate services
-                            rendered for a
-                            reasonable time after the transaction. This may include (but is not limited to) invoices,
-                            contracts, and
-                            emails regarding the details of services used by Sedulo.
                         </Text>
 
                         {/* HOW DO WE COLLECT YOUR DATA */}
@@ -263,14 +230,33 @@ export default function PrivacyPolicyPage() {
                             3. HOW DO WE COLLECT YOUR DATA?
                         </Heading>
                         <Text fontSize={["sm", "md"]} mb={4}>
-                            The data we hold is legitimately gained either through direct contact with the customer (to
+                            The data we hold is legitimately gained either through direct contact with the customer
+                            (to
                             ensure
-                            accurate and relevant information is given with full consent) or through a GDPR-compliant
+                            accurate and relevant information is given with full consent) or through a
+                            GDPR-compliant
                             third party
                             (e.g., lead generation). We will not hold data that has not been scrutinised as
                             GDPR-compliant. Ways we
                             collect data include but are not limited to:
                         </Text>
+
+                        <Text fontWeight="bold">For Perygon App users:</Text>
+                        <UnorderedList pl={5} mb={4}>
+                            <ListItem fontSize={["sm", "md"]}>To authenticate users via SSO login
+                                (Google/Microsoft).</ListItem>
+                            <ListItem fontSize={["sm", "md"]}>To operate and enhance our App’s features.</ListItem>
+                            <ListItem fontSize={["sm", "md"]}>To personalise user experience based on preferences
+                                and
+                                interactions.</ListItem>
+                            <ListItem fontSize={["sm", "md"]}>To provide customer support and respond to
+                                enquiries.</ListItem>
+                            <ListItem fontSize={["sm", "md"]}>To monitor app performance and analyse
+                                trends.</ListItem>
+                            <ListItem fontSize={["sm", "md"]}>To comply with legal and regulatory
+                                obligations.</ListItem>
+                        </UnorderedList>
+
                         <Text fontWeight="bold">For Clients:</Text>
                         <UnorderedList pl={5} mb={4}>
                             <ListItem fontSize={["sm", "md"]}>Receiving calls from you in relation to any services
@@ -286,64 +272,9 @@ export default function PrivacyPolicyPage() {
                                 provider.</ListItem>
                         </UnorderedList>
 
-                        <Text fontWeight="bold">For App users:</Text>
-                        <UnorderedList pl={5} mb={4}>
-                            <ListItem fontSize={["sm", "md"]}>To authenticate users via SSO login
-                                (Google/Microsoft).</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>To operate and enhance our App’s features.</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>To personalise user experience based on preferences and
-                                interactions.</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>To provide customer support and respond to
-                                enquiries.</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>To monitor app performance and analyse trends.</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>To comply with legal and regulatory
-                                obligations.</ListItem>
-                        </UnorderedList>
-
-                        <Text fontWeight="bold">For Suppliers:</Text>
-                        <UnorderedList pl={5} mb={4}>
-                            <ListItem fontSize={["sm", "md"]}>When a purchase has been made.</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>Information provided on your invoice, contract, or
-                                email.</ListItem>
-                        </UnorderedList>
-
-                        {/* WHAT IS OUR LEGAL BASIS FOR PROCESSING YOUR DATA? */}
-                        <Heading as="h2" size={["md", "lg"]} mt={6} mb={2} color={"perygonPink"}>
-                            4. WHAT IS OUR LEGAL BASIS FOR PROCESSING YOUR DATA?
-                        </Heading>
-                        <Text fontSize={["sm", "md"]} mb={2}>
-                            We may rely on the following reasons:
-                        </Text>
-                        <UnorderedList pl={5} mb={4}>
-                            <ListItem fontSize={["sm", "md"]}>
-                                <strong>Contractual:</strong> We may process personal data in order to perform our
-                                contractual
-                                obligations with the relevant individuals or organisations.
-                            </ListItem>
-                            <ListItem fontSize={["sm", "md"]}>
-                                <strong>Consent:</strong> We may hold and process personal data where you have
-                                authorised us to do so.
-                            </ListItem>
-                            <ListItem fontSize={["sm", "md"]}>
-                                <strong>Legitimate Interest:</strong> &quot;processing is necessary for the purpose of
-                                the legitimate
-                                interest pursued by the controller or by the third party except where such interests are
-                                overridden
-                                by the interests or fundamental rights and freedoms of the data subject which require
-                                protection of
-                                personal data.&quot;
-                            </ListItem>
-                            <ListItem fontSize={["sm", "md"]}>
-                                <strong>Legal &amp; Regulatory Compliance:</strong> Certain laws require businesses to
-                                retain user
-                                data for a specific period to comply with regulatory, tax, or law enforcement
-                                requirements.
-                            </ListItem>
-                        </UnorderedList>
-
                         {/* WHY DO WE COLLECT YOUR DATA? */}
                         <Heading as="h2" size={["md", "lg"]} mt={6} mb={2} color={"perygonPink"}>
-                            5. WHY DO WE COLLECT YOUR DATA?
+                            4. WHY DO WE COLLECT YOUR DATA?
                         </Heading>
                         <Text fontSize={["sm", "md"]} mb={4}>
                             Our core business activity is to provide clients with financial advice and accountancy
@@ -357,22 +288,42 @@ export default function PrivacyPolicyPage() {
 
                         {/* HOW DO WE USE YOUR DATA? */}
                         <Heading as="h2" size={["md", "lg"]} mt={6} mb={2} color={"perygonPink"}>
-                            6. HOW DO WE USE YOUR DATA?
+                            5. HOW DO WE USE YOUR DATA?
                         </Heading>
 
-                        <Text fontWeight="bold" mb={2}>For Clients:</Text>
+
+                        <Text fontWeight="bold" mb={2}>For Perygon App users:</Text>
+                        <UnorderedList pl={5} mb={4}>
+                            <ListItem fontSize={["sm", "md"]}>To authenticate users via SSO login
+                                (Google/Microsoft).</ListItem>
+                            <ListItem fontSize={["sm", "md"]}>To authenticate users via email and password for the
+                                application.</ListItem>
+                            <ListItem fontSize={["sm", "md"]}>To operate and enhance our App’s features.</ListItem>
+                            <ListItem fontSize={["sm", "md"]}>To personalise user experience based on preferences
+                                and
+                                interactions.</ListItem>
+                            <ListItem fontSize={["sm", "md"]}>To provide customer support and respond to
+                                inquiries.</ListItem>
+                            <ListItem fontSize={["sm", "md"]}>To monitor app performance and analyse
+                                trends.</ListItem>
+                        </UnorderedList>
+
+                        <Text fontWeight="bold" mb={2}>For Core Service Clients:</Text>
                         <Text fontSize={["sm", "md"]} mb={4}>
-                            In order to provide the best service, your data may be used in one or more of the following
+                            In order to provide the best service, your data may be used in one or more of the
+                            following
                             ways:
                         </Text>
                         <UnorderedList pl={5} mb={4}>
                             <ListItem fontSize={["sm", "md"]}>
-                                Storing and updating your information on our client systems so that we can contact you
+                                Storing and updating your information on our client systems so that we can contact
+                                you
                                 in relation
                                 to business activity.
                             </ListItem>
                             <ListItem fontSize={["sm", "md"]}>
-                                Making contact in relation to business activity, either by portal, email, telephone, or
+                                Making contact in relation to business activity, either by portal, email, telephone,
+                                or
                                 in person.
                             </ListItem>
                             <ListItem fontSize={["sm", "md"]}>
@@ -383,40 +334,32 @@ export default function PrivacyPolicyPage() {
                                 Sending marketing information in relation to the services we can provide.
                             </ListItem>
                             <ListItem fontSize={["sm", "md"]}>
-                                Keeping records of conversations, emails, and meetings to refer to if needed in relation
+                                Keeping records of conversations, emails, and meetings to refer to if needed in
+                                relation
                                 to any dispute.
                             </ListItem>
                         </UnorderedList>
                         <Text fontSize={["sm", "md"]} mb={4}>
-                            For some of the above activities, your consent is required. For more information on how we
+                            For some of the above activities, your consent is required. For more information on how
+                            we
                             get and manage
                             your consent, please refer to the <strong>Consent</strong> section below.
                         </Text>
 
-                        <Text fontWeight="bold" mb={2}>For Apps:</Text>
-                        <UnorderedList pl={5} mb={4}>
-                            <ListItem fontSize={["sm", "md"]}>To authenticate users via SSO login
-                                (Google/Microsoft).</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>To operate and enhance our App’s features.</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>To personalise user experience based on preferences and
-                                interactions.</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>To provide customer support and respond to
-                                inquiries.</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>To monitor app performance and analyse trends.</ListItem>
-                        </UnorderedList>
 
                         <Heading as="h3" size="md" mt={4} mb={2}>
                             Children&apos;s Privacy
                         </Heading>
                         <Text fontSize={["sm", "md"]} mb={4}>
-                            Our Apps are not intended for children under 13 years of age. We do not knowingly collect
+                            Our Apps are not intended for children under 13 years of age. We do not knowingly
+                            collect
                             personal
                             data from minors.
                         </Text>
 
                         {/* WHO DO WE SHARE YOUR DATA WITH? */}
                         <Heading as="h2" size={["md", "lg"]} mt={6} mb={2} color={"perygonPink"}>
-                            7. WHO DO WE SHARE YOUR DATA WITH?
+                            6. WHO DO WE SHARE YOUR DATA WITH?
                         </Heading>
                         <Text fontSize={["sm", "md"]} mb={4}>
                             In some circumstances, we may need to share your details with third parties for us to be
@@ -427,53 +370,51 @@ export default function PrivacyPolicyPage() {
                             <ListItem fontSize={["sm", "md"]}>Sedulo Member firms and associated trading
                                 names.</ListItem>
                             <ListItem fontSize={["sm", "md"]}>
-                                Third-Party Services that support us as we provide our services (e.g., telecommunication
+                                Third-Party Services that support us as we provide our services (e.g.,
+                                telecommunication
                                 systems,
                                 IT support systems, archiving services, document production services, Cloud-based
                                 software systems
                                 and hosts, Google, Microsoft, Apple).
                             </ListItem>
                             <ListItem fontSize={["sm", "md"]}>
-                                Professional advisers, including lawyers, auditors, insurers, and other accountancy
-                                firms.
-                            </ListItem>
-                            <ListItem fontSize={["sm", "md"]}>
-                                A potential buyer, transferee, merger partner, or seller and their advisers in
-                                connection with an
-                                actual or potential transfer or merger of part or all of a business or its assets.
-                            </ListItem>
-                            <ListItem fontSize={["sm", "md"]}>Mortgage providers and lending agencies.</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>
-                                Parties that support us with anti-money laundering, client conflicts, and independence
+                                Parties that support us with anti-money laundering, client conflicts, and
+                                independence
                                 checks.
                             </ListItem>
                             <ListItem fontSize={["sm", "md"]}>
-                                Law enforcement or government bodies (e.g., HMRC) or other third parties as required by
+                                Law enforcement or government bodies (e.g., HMRC) or other third parties as required
+                                by
                                 applicable
                                 law or regulation.
                             </ListItem>
-                            <ListItem fontSize={["sm", "md"]}>Payment, marketing, and recruitment service
-                                providers.</ListItem>
                         </UnorderedList>
                         <Text fontSize={["sm", "md"]} mb={4}>
-                            Sedulo will not transfer the personal information you provide to any third parties for their
+                            Sedulo will not transfer the personal information you provide to any third parties for
+                            their
                             own direct
                             marketing use.
                         </Text>
 
                         {/* HOW DO WE SAFEGUARD YOUR DATA? */}
                         <Heading as="h2" size={["md", "lg"]} mt={6} mb={2} color={"perygonPink"}>
-                            8. HOW DO WE SAFEGUARD YOUR DATA?
+                            7. HOW DO WE SAFEGUARD YOUR DATA?
                         </Heading>
                         <Text fontSize={["sm", "md"]} mb={4}>
-                            Your data is of the utmost importance to us and as such we ensure all relevant security is
+                            Your data is of the utmost importance to us and as such we ensure all relevant security
+                            is
                             in place to
-                            keep your data safe and protected from any potential threats. For more information on how we
+                            keep your data safe and protected from any potential threats. For more information on
+                            how we
                             do this,
-                            please refer to our Data Protection Policy.
+                            email our GDPR team,
+                            <a href="mailto:gdpr@perygon.co.uk">
+                                <Text as={'strong'} color={"perygonPink"}>{" "}gdpr@perygon.co.uk</Text>
+                            </a>
                         </Text>
                         <Text fontSize={["sm", "md"]} mb={4}>
-                            Under our legitimate business interest or for legal obligations, certain information has a
+                            Under our legitimate business interest or for legal obligations, certain information has
+                            a
                             legal
                             requirement to be kept for a predetermined amount of time, regardless of active services
                             retained with us:
@@ -486,7 +427,8 @@ export default function PrivacyPolicyPage() {
                             <ListItem fontSize={["sm", "md"]}>Final salary pension transfer – kept
                                 indefinitely</ListItem>
                             <ListItem fontSize={["sm", "md"]}>
-                                App information will be kept for as long as necessary to provide our services and to
+                                Perygon App information will be kept for as long as necessary to provide our services
+                                and to
                                 meet any
                                 contractual obligations
                             </ListItem>
@@ -494,7 +436,7 @@ export default function PrivacyPolicyPage() {
 
                         {/* YOUR RIGHTS */}
                         <Heading as="h2" size={["md", "lg"]} mt={6} mb={2} color={"perygonPink"}>
-                            9. YOUR RIGHTS
+                            8. YOUR RIGHTS
                         </Heading>
                         <Text fontSize={["sm", "md"]} mb={4}>
                             GDPR provides the following rights:
@@ -505,7 +447,8 @@ export default function PrivacyPolicyPage() {
                             The Right to Be Informed
                         </Heading>
                         <Text fontSize={["sm", "md"]} mb={4}>
-                            You have the right to be informed about the collection and use of your personal data. All
+                            You have the right to be informed about the collection and use of your personal data.
+                            All
                             this
                             information is provided by means of this Privacy Notice.
                         </Text>
@@ -515,9 +458,11 @@ export default function PrivacyPolicyPage() {
                             The Right of Access
                         </Heading>
                         <Text fontSize={["sm", "md"]} mb={4}>
-                            You have the right to access your personal data and any supplementary information. This is
+                            You have the right to access your personal data and any supplementary information. This
+                            is
                             known as a
-                            Data Subject Access Request (DSAR). When received by our designated Data Controller, we are
+                            Data Subject Access Request (DSAR). When received by our designated Data Controller, we
+                            are
                             legally
                             required to provide this information within one month. This information will be provided
                             free of charge
@@ -531,9 +476,11 @@ export default function PrivacyPolicyPage() {
                         <Text fontSize={["sm", "md"]} mb={4}>
                             You have the right to have any inaccurate personal data rectified if incomplete or
                             incorrect. If we feel
-                            the request is manifestly unfounded or excessive, particularly if it is repetitive, we can
+                            the request is manifestly unfounded or excessive, particularly if it is repetitive, we
+                            can
                             charge a fee
-                            or refuse the request. If either of these apply, we will provide you with our reasons for
+                            or refuse the request. If either of these apply, we will provide you with our reasons
+                            for
                             such action.
                         </Text>
 
@@ -550,7 +497,8 @@ export default function PrivacyPolicyPage() {
                                 originally collected or
                                 processed.</ListItem>
                             <ListItem fontSize={["sm", "md"]}>
-                                Your data has been processed for legitimate interest and you object to the processing of
+                                Your data has been processed for legitimate interest and you object to the
+                                processing of
                                 your data,
                                 and we cannot provide an overriding legitimate interest to continue processing.
                             </ListItem>
@@ -567,7 +515,8 @@ export default function PrivacyPolicyPage() {
                             <ListItem fontSize={["sm", "md"]}>To exercise the right of freedom of expression and
                                 information.</ListItem>
                             <ListItem fontSize={["sm", "md"]}>To comply with a legal obligation.</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>For the performance of a task carried out in the public
+                            <ListItem fontSize={["sm", "md"]}>For the performance of a task carried out in the
+                                public
                                 interest.</ListItem>
                             <ListItem fontSize={["sm", "md"]}>For archiving purposes in the public interest or
                                 statistical purposes.</ListItem>
@@ -579,7 +528,8 @@ export default function PrivacyPolicyPage() {
                             The Right to Restrict Processing
                         </Heading>
                         <Text fontSize={["sm", "md"]} mb={4}>
-                            You have the right to restrict the processing of your data in certain circumstances. When
+                            You have the right to restrict the processing of your data in certain circumstances.
+                            When
                             processing is
                             restricted we may store enough information to ensure future restriction is respected. We
                             will stop
@@ -605,7 +555,8 @@ export default function PrivacyPolicyPage() {
                             <ListItem fontSize={["sm", "md"]}>You give your consent to processing.</ListItem>
                             <ListItem fontSize={["sm", "md"]}>It is in defence of a legal claim.</ListItem>
                             <ListItem fontSize={["sm", "md"]}>It is for the protection of another person.</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>It is for reasons of important public interest.</ListItem>
+                            <ListItem fontSize={["sm", "md"]}>It is for reasons of important public
+                                interest.</ListItem>
                         </UnorderedList>
 
                         {/* RIGHT TO DATA PORTABILITY */}
@@ -619,9 +570,11 @@ export default function PrivacyPolicyPage() {
                         <UnorderedList pl={5} mb={4}>
                             <ListItem fontSize={["sm", "md"]}>Data that has been provided to a controller by an
                                 individual.</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>Processing is based on consent or for the performance of a
+                            <ListItem fontSize={["sm", "md"]}>Processing is based on consent or for the performance
+                                of a
                                 contract.</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>Processing is carried out by automated means.</ListItem>
+                            <ListItem fontSize={["sm", "md"]}>Processing is carried out by automated
+                                means.</ListItem>
                         </UnorderedList>
                         <Text fontSize={["sm", "md"]} mb={4}>
                             When we receive a portability request, we must respond within one month of the Data
@@ -641,7 +594,8 @@ export default function PrivacyPolicyPage() {
                         </Text>
                         <UnorderedList pl={5} mb={4}>
                             <ListItem fontSize={["sm", "md"]}>Our legitimate interest.</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>Performance of a task in the public interest/exercise of
+                            <ListItem fontSize={["sm", "md"]}>Performance of a task in the public interest/exercise
+                                of
                                 official
                                 authority.</ListItem>
                             <ListItem fontSize={["sm", "md"]}>Direct marketing.</ListItem>
@@ -649,28 +603,21 @@ export default function PrivacyPolicyPage() {
                                 statistical purposes.</ListItem>
                         </UnorderedList>
                         <Text fontSize={["sm", "md"]} mb={4}>
-                            Within one month of notification of this request, we must stop processing your data unless:
+                            Within one month of notification of this request, we must stop processing your data
+                            unless:
                         </Text>
                         <UnorderedList pl={5} mb={4}>
                             <ListItem fontSize={["sm", "md"]}>We can demonstrate compelling legitimate grounds for
                                 processing which override
                                 your interest.</ListItem>
-                            <ListItem fontSize={["sm", "md"]}>It is being processed for the establishment, exercise, or
+                            <ListItem fontSize={["sm", "md"]}>It is being processed for the establishment, exercise,
+                                or
                                 defence of a legal
                                 claim.</ListItem>
                         </UnorderedList>
                         <Text fontSize={["sm", "md"]} mb={4}>
-                            If your objection relates to direct marketing, we will ensure your details are either
-                            removed or adjusted
-                            as promptly as possible. You can start this process by clicking &quot;unsubscribe&quot; on
-                            the marketing
-                            email or emailing
-                            <a href="mailto:gdpr@perygon.co.uk">
-                                <Text as={'strong'} color={"perygonPink"}>{" "}gdpr@perygon.co.uk</Text>
-                            </a>
-                        </Text>
-                        <Text fontSize={["sm", "md"]} mb={4}>
-                            If your data has been shared with a third party and you request one of your rights listed
+                            If your data has been shared with a third party and you request one of your rights
+                            listed
                             above, we will
                             notify them and act upon the requirements of your request unless this is not possible or
                             involves a
@@ -679,10 +626,11 @@ export default function PrivacyPolicyPage() {
 
                         {/* CONSENT */}
                         <Heading as="h2" size={["md", "lg"]} mt={6} mb={2} color={"perygonPink"}>
-                            10. CONSENT
+                            9. CONSENT
                         </Heading>
                         <Text fontSize={["sm", "md"]} mb={4}>
-                            As a business, and to comply with Article 6 of GDPR, we have agreed that the legal basis for
+                            As a business, and to comply with Article 6 of GDPR, we have agreed that the legal basis
+                            for
                             processing
                             your data will be (depending on your relationship with us) either &quot;Legitimate
                             Interest&quot; or
@@ -691,7 +639,8 @@ export default function PrivacyPolicyPage() {
                             comply with The Privacy and Electronic Communications Regulations (PECR).
                         </Text>
                         <Text fontSize={["sm", "md"]} mb={4}>
-                            However, in certain circumstances, we are required to have your consent to perform certain
+                            However, in certain circumstances, we are required to have your consent to perform
+                            certain
                             activities.
                             This consent can be given in the form of an opt-in or soft opt-in option. We must ensure
                             your consent is
@@ -699,7 +648,8 @@ export default function PrivacyPolicyPage() {
                             opt-in at any time.
                         </Text>
                         <Text fontSize={["sm", "md"]} mb={4}>
-                            You can opt in or out verbally during any client meeting. If you have opted in and wish to
+                            You can opt in or out verbally during any client meeting. If you have opted in and wish
+                            to
                             opt out,
                             you can click the link provided in one of our marketing emails or contact us using the
                             methods listed
@@ -708,7 +658,7 @@ export default function PrivacyPolicyPage() {
 
                         {/* CONTACT DETAILS */}
                         <Heading as="h2" size={["md", "lg"]} mt={6} mb={2} color={"perygonPink"}>
-                            11. CONTACT DETAILS
+                            10. CONTACT DETAILS
                         </Heading>
                         <Text fontSize={["sm", "md"]} mb={4}>
                             If you need to contact us for any reason regarding your data, our details are:
@@ -719,7 +669,8 @@ export default function PrivacyPolicyPage() {
                             <Text fontSize={["sm", "md"]}>62-66 Deansgate</Text>
                             <Text fontSize={["sm", "md"]}>Manchester</Text>
                             <Text fontSize={["sm", "md"]}>M3 2EN</Text>
-                            <Text fontSize={["sm", "md"]} mt={2}><strong>Contact Number:</strong> 0333 222 444 5</Text>
+                            <Text fontSize={["sm", "md"]} mt={2}><strong>Contact Number:</strong> 0333 222 444
+                                5</Text>
                             <Text fontSize={["sm", "md"]} mt={2}>
                                 <strong>Email:</strong>{" "}
                                 <a href="mailto:gdpr@perygon.co.uk"><Text as={'span'}
@@ -727,10 +678,12 @@ export default function PrivacyPolicyPage() {
                             </Text>
                         </Box>
                         <Text fontSize={["sm", "md"]} mb={4}>
-                            Please title any post and/or email “Perygon - In relation to GDPR” to ensure it is passed to
+                            Please title any post and/or email “Perygon - In relation to GDPR” to ensure it is
+                            passed to
                             the
                             correct person.
-                            Emails or calls made to other employees outside of these methods may not promptly reach the
+                            Emails or calls made to other employees outside of these methods may not promptly reach
+                            the
                             Data
                             Controller to issue a response.
                         </Text>

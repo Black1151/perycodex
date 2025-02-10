@@ -8,10 +8,11 @@ const PublicFooter = () => {
                   _hover={{textDecoration: 'underline', cursor: 'pointer'}} isExternal>
                 Sedulo Limited
             </Link>
-            <Link href={'/privacy-policy'}
+            <Link href={'https://sedulo.co.uk/wp-content/uploads/2024/07/Sedulo-Privacy-Notice.pdf'}
                   color="white"
-                  _hover={{textDecoration: 'underline', cursor: 'pointer'}}>
-                Privacy Policy
+                  _hover={{textDecoration: 'underline', cursor: 'pointer'}}
+                  isExternal>
+                Sedulo Privacy Policy
             </Link>
         </Flex>
     );
