@@ -67,9 +67,9 @@ export function PasswordResetForm({ token }: ActivateAccountFormProps) {
     <>
       <form
         onSubmit={handleSubmit(handleFormSubmit)}
-        style={{ width: "100%", maxWidth: "md" }}
+        style={{ width: "100%", maxWidth: "sm"}}
       >
-        <VStack spacing={4} w="100%">
+        <VStack spacing={0} w="100%">
           <VStack spacing={0} w={300}>
             <InputField
               name="password"

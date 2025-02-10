@@ -9,7 +9,7 @@ import { SignUpPageClient } from "./SignUpPageClient";
 export default function SignUpPage() {
   return (
     <PerygonContainer>
-      <Center flex={1}>
+        <Center flex={1} maxW={["100%"]}>
         <LoginCard
           titleComponent={
             <VStack position="absolute" top="60px">

@@ -389,7 +389,7 @@ const RagDashboard: React.FC = () => {
     };
 
     return (
-        <VStack align="stretch" w="full" spacing={8} py={4}>
+        <VStack align="stretch" w="full" spacing={8} py={2}>
             <SurveyModal
                 isOpen={isOpen}
                 onClose={onClose}

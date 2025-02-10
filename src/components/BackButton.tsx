@@ -5,36 +5,35 @@ import {ArrowBack} from "@mui/icons-material";
 import {Flex, useBreakpointValue} from "@chakra-ui/react";
 import {useRouter} from "next/navigation";
 
-const BackButton = () => {
+export default function BackButton({prevRoute}: { prevRoute?: string }) {
     const router = useRouter();
-
-    // Check if the current screen size is mobile
     const isMobile = useBreakpointValue({base: true, md: false});
 
-    // Don't render the button if it's a mobile device
-    // if (isMobile) return null;
+    const handleClickBack = () => {
+        if (prevRoute) {
+            router.push(prevRoute);
+            return;
+        }
+        router.back();
+    };
 
     return (
-        <Flex
-            as="button"
-            onClick={() => router.back()}
-            alignItems="center"
-            justifyContent="center"
-            cursor="pointer"
-            h={"full"}
-            color={"white"}
-            _hover={{
-                color: "gray.300",
-                transform: "translateX(-5px)",
-            }}
-            _active={{
-                color: "gray.500",
-            }}
-            transition="all 0.2s ease-in-out"
-        >
-            <ArrowBack fontSize={isMobile ? "medium" : "large"}/>
-        </Flex>
+            <Flex
+                as="button"
+                onClick={handleClickBack}
+                alignItems="center"
+                justifyContent="center"
+                cursor="pointer"
+                h="full"
+                color="white"
+                _hover={{
+                    color: "gray.300",
+                    transform: "translateX(-5px)",
+                }}
+                _active={{color: "gray.500"}}
+                transition="all 0.2s ease-in-out"
+            >
+                <ArrowBack fontSize={isMobile ? "medium" : "large"}/>
+            </Flex>
     );
-};
-
-export default BackButton;
+}

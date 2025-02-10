@@ -1,449 +1,475 @@
 "use client";
 
-import React, {useEffect, useState} from "react";
-import {
-    Box,
-    Flex,
-    VStack,
-    useTheme,
-} from "@chakra-ui/react";
-import {useUser} from "@/providers/UserProvider";
-import {useFetchClient} from "@/hooks/useFetchClient";
-import {SectionHeader} from "@/components/sectionHeader/SectionHeader";
-import {useWorkflow} from "@/providers/WorkflowProvider";
+import React, { useEffect, useState } from "react";
+import { Box, Flex, VStack, useTheme } from "@chakra-ui/react";
+import { useUser } from "@/providers/UserProvider";
+import { useFetchClient } from "@/hooks/useFetchClient";
+import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
+import { useWorkflow } from "@/providers/WorkflowProvider";
 import HappinessScoreRenderer from "@/components/agGrids/CellRenderers/HappinessScoreRenderer";
 import CommentsCellRenderer from "@/components/agGrids/CellRenderers/CommentsCellRenderer";
-import {AgCartesianChartOptions} from "ag-charts-enterprise";
+import { AgCartesianChartOptions } from "ag-charts-enterprise";
 import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridComponentLight";
 
 import SpeechBubble from "../../SpeechBubble";
-import StaffHappinessDetailsRenderer
-    from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
+import StaffHappinessDetailsRenderer from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
 import ScoreTooltipRenderer from "@/components/agCharts/ScoreTooltipRenderer";
-import FilterArea from "@/app/(site)/(apps)/happiness-score/dashboard/site-department-analysis/FilterArea";
+import FilterArea from "@/components/DashboardFilterDrawer/FilterArea";
 import AgChartComponent from "@/components/agCharts/AgChartComponent";
-import {endOfWeek, startOfWeek} from "date-fns";
-
+import { endOfWeek, startOfWeek } from "date-fns";
+import { dateRangeOptions } from "@/components/DashboardFilterDrawer/dateRangeUtils";
 
 interface ManagingPartnersResponse {
-    resource: {
-        totalAvg: number;
-        gridData: any;
-        weeklyLineChartComparisonData: any[];
-        monthlyLineChartComparisonData: any[];
-        officeLeaderboardData: any[];
-        departmentLeaderboardData: any[];
-    };
+  resource: {
+    totalAvg: number;
+    gridData: any;
+    weeklyLineChartComparisonData: any[];
+    monthlyLineChartComparisonData: any[];
+    officeLeaderboardData: any[];
+    departmentLeaderboardData: any[];
+  };
 }
 
 function generateSiteSeries(siteNames: string[], xKey: string) {
-    return siteNames.map((siteName) => ({
-        type: "line",
-        xKey: xKey,
-        yKey: siteName,
-        yName: siteName,
-        marker: {enabled: true},
-        interpolation: {type: "smooth"},
-        tooltip: {renderer: ScoreTooltipRenderer}
-    }));
+  return siteNames.map((siteName) => ({
+    type: "line",
+    xKey: xKey,
+    yKey: siteName,
+    yName: siteName,
+    marker: { enabled: true },
+    interpolation: { type: "smooth" },
+    tooltip: { renderer: ScoreTooltipRenderer },
+  }));
 }
 
 const SiteDepartmentDashboard: React.FC = () => {
-    const {fetchClient} = useFetchClient();
-    const {user} = useUser();
-    const theme = useTheme();
-    const {toolId, workflowId} = useWorkflow();
+  const { fetchClient } = useFetchClient();
+  const { user } = useUser();
+  const theme = useTheme();
+  const { toolId, workflowId } = useWorkflow();
 
-    const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-    const [filterOptions, setFilterOptions] = useState<Record<string, any>>({});
+  const [filterOptions, setFilterOptions] = useState<Record<string, any>>({});
 
-    const [totalAvg, setTotalAvg] = useState<number>(0);
-    const [gridData, setGridData] = useState<any[]>([]);
-    const [weeklyLineChartComparisonData, setWeeklyLineChartComparisonData] =
-        useState<any[]>([]);
-    const [monthlyLineChartComparisonData, setMonthlyLineChartComparisonData] =
-        useState<any[]>([]);
-    const [officeLeaderboardData, setOfficeLeaderboardData] = useState<any[]>([]);
-    const [departmentLeaderboardData, setDepartmentLeaderboardData] = useState<any[]>([]);
+  const [totalAvg, setTotalAvg] = useState<number>(0);
+  const [gridData, setGridData] = useState<any[]>([]);
+  const [weeklyLineChartComparisonData, setWeeklyLineChartComparisonData] =
+    useState<any[]>([]);
+  const [monthlyLineChartComparisonData, setMonthlyLineChartComparisonData] =
+    useState<any[]>([]);
+  const [officeLeaderboardData, setOfficeLeaderboardData] = useState<any[]>([]);
+  const [departmentLeaderboardData, setDepartmentLeaderboardData] = useState<
+    any[]
+  >([]);
 
-    const columnDefs = [
+  const columnDefs = [
+    {
+      headerName: "Name",
+      field: "fullName",
+      sortable: true,
+      filter: true,
+      resizable: true,
+      cellRenderer: StaffHappinessDetailsRenderer,
+      cellStyle: { color: "black" },
+    },
+    {
+      field: "siteName",
+      headerName: "Site",
+      sortable: true,
+      filter: "agSetColumnFilter",
+    },
+    {
+      field: "deptName",
+      headerName: "Department",
+      sortable: true,
+      filter: "agSetColumnFilter",
+    },
+    {
+      field: "happinessScore",
+      headerName: "Score",
+      sortable: true,
+      cellRenderer: HappinessScoreRenderer,
+      filter: "agNumberColumnFilter",
+      cellDataType: "number",
+    },
+    {
+      field: "comments",
+      headerName: "Comments",
+      cellRenderer: CommentsCellRenderer,
+    },
+  ];
+
+  const defaultColDef = {
+    resizable: true,
+    filter: true,
+  };
+
+  const getData = async (postBody: Record<string, any> = filterOptions) => {
+    setIsLoading(true);
+    try {
+      const response = await fetchClient<ManagingPartnersResponse>(
+        "/api/happiness-graphs/site-department",
         {
-            headerName: "Name",
-            field: "fullName",
-            sortable: true,
-            filter: true,
-            resizable: true,
-            cellRenderer: StaffHappinessDetailsRenderer,
-            cellStyle: {color: "black"},
+          method: "POST",
+          body: {
+            toolId,
+            workflowId,
+            ...postBody,
+          },
+          redirectOnError: false,
         },
-        {
-            field: "siteName",
-            headerName: "Site",
-            sortable: true,
-            filter: "agSetColumnFilter",
-        },
-        {
-            field: "deptName",
-            headerName: "Department",
-            sortable: true,
-            filter: "agSetColumnFilter",
-        },
-        {
-            field: "happinessScore",
-            headerName: "Score",
-            sortable: true,
-            cellRenderer: HappinessScoreRenderer,
-            filter: "agNumberColumnFilter",
-            cellDataType: "number",
-        },
-        {
-            field: "comments",
-            headerName: "Comments",
-            cellRenderer: CommentsCellRenderer,
-        },
-    ];
+      );
 
-    const defaultColDef = {
-        resizable: true,
-        filter: true,
-    };
+      if (response && response.resource) {
+        const {
+          totalAvg: resTotalAvg,
+          gridData: resGridData,
+          weeklyLineChartComparisonData: resWeeklyData,
+          monthlyLineChartComparisonData: resMonthlyData,
+          officeLeaderboardData: resOfficeLeaderboardData,
+          departmentLeaderboardData: resDepartmentLeaderboardData,
+        } = response.resource;
 
-    const getData = async (postBody: Record<string, any> = filterOptions) => {
-        setIsLoading(true);
-        try {
-            const response = await fetchClient<ManagingPartnersResponse>(
-                "/api/happiness-graphs/site-department",
-                {
-                    method: "POST",
-                    body: {
-                        toolId,
-                        workflowId,
-                        ...postBody
-                    },
-                    redirectOnError: false,
-                },
-            );
+        setTotalAvg(resTotalAvg ?? 0);
+        setGridData(resGridData ?? []);
+        setWeeklyLineChartComparisonData(resWeeklyData ?? []);
+        setMonthlyLineChartComparisonData(resMonthlyData ?? []);
+        setOfficeLeaderboardData(resOfficeLeaderboardData ?? []);
+        setDepartmentLeaderboardData(resDepartmentLeaderboardData ?? []);
+      } else {
+        console.error("Invalid response:", response);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-            if (response && response.resource) {
-                const {
-                    totalAvg: resTotalAvg,
-                    gridData: resGridData,
-                    weeklyLineChartComparisonData: resWeeklyData,
-                    monthlyLineChartComparisonData: resMonthlyData,
-                    officeLeaderboardData: resOfficeLeaderboardData,
-                    departmentLeaderboardData: resDepartmentLeaderboardData,
-                } = response.resource;
+  const dateRangeOption = "weekly";
+  const defaultDateFilterOption = "currentWeek";
 
-                setTotalAvg(resTotalAvg ?? 0);
-                setGridData(resGridData ?? []);
-                setWeeklyLineChartComparisonData(resWeeklyData ?? []);
-                setMonthlyLineChartComparisonData(resMonthlyData ?? []);
-                setOfficeLeaderboardData(resOfficeLeaderboardData ?? []);
-                setDepartmentLeaderboardData(resDepartmentLeaderboardData ?? []);
-            } else {
-                console.error("Invalid response:", response);
-            }
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    useEffect(() => {
-
-        if (!user || !workflowId || !toolId) {
-            return;
-        }
-
-        getData({
-            startDate: startOfWeek(new Date(), {weekStartsOn: 1}),
-            endDate: endOfWeek(new Date(), {weekStartsOn: 1})
-        });
-    }, [user, workflowId, toolId]);
-
-    const weeklySiteNames =
-        weeklyLineChartComparisonData.length > 0
-            ? Object.keys(weeklyLineChartComparisonData[0]).filter(
-                (key) => key !== "week",
-            )
-            : [];
-
-    const weeklySeries = generateSiteSeries(weeklySiteNames, "week");
-
-    const weeklyLineChartOptions = {
-        data: weeklyLineChartComparisonData,
-        series: weeklySeries,
-        axes: [
-            {
-                type: "category",
-                position: "bottom",
-                label: {
-                    rotation: 300,
-                    fontSize: 12,
-                    fontFamily: "Metropolis",
-                    color: theme.colors.perygonPink,
-                },
-                title: {
-                    text: "Week",
-                    fontSize: 12,
-                    fontFamily: "Metropolis",
-                    color: "black",
-                },
-            },
-            {
-                type: "number",
-                position: "left",
-                title: {
-                    text: "Happiness Score",
-                    fontSize: 12,
-                    fontFamily: "Metropolis",
-                    color: "black",
-                },
-                label: {
-                    fontSize: 12,
-                    fontFamily: "Metropolis",
-                    color: theme.colors.perygonPink,
-                },
-            },
-        ],
-        zoom: {enabled: false},
-        navigator: {enabled: false},
-        legend: {position: "bottom" as const},
-        padding: {top: 20, left: 20, right: 20, bottom: 50},
-    };
-
-    const monthlySiteNames =
-        monthlyLineChartComparisonData.length > 0
-            ? Object.keys(monthlyLineChartComparisonData[0]).filter(
-                (key) => key !== "month",
-            )
-            : [];
-
-    const monthlySeries = generateSiteSeries(monthlySiteNames, "month");
-
-    const monthlyLineChartOptions = {
-        data: monthlyLineChartComparisonData,
-        series: monthlySeries,
-        axes: [
-            {
-                type: "category",
-                position: "bottom",
-                label: {
-                    rotation: 300,
-                    fontSize: 12,
-                    fontFamily: "Metropolis",
-                    color: theme.colors.perygonPink,
-                },
-                title: {
-                    text: "Month",
-                    fontSize: 12,
-                    fontFamily: "Metropolis",
-                    color: "black",
-                },
-            },
-            {
-                type: "number",
-                position: "left",
-                title: {
-                    text: "Happiness Score",
-                    fontSize: 12,
-                    fontFamily: "Metropolis",
-                    color: "black",
-                },
-                label: {
-                    fontSize: 12,
-                    fontFamily: "Metropolis",
-                    color: theme.colors.perygonPink,
-                },
-            },
-        ],
-        zoom: {enabled: false},
-        navigator: {enabled: false},
-        legend: {position: "bottom" as const},
-        padding: {top: 20, left: 20, right: 20, bottom: 50},
-    };
-
-    const sortedOfficeLeaderboard = [...officeLeaderboardData].sort(
-        (a, b) => b.currentWeekScore - a.currentWeekScore,
-    );
-
-    const officeLeaderboardBarOptions: AgCartesianChartOptions = {
-        data: sortedOfficeLeaderboard,
-        padding: {top: 20, left: 20, right: 20, bottom: 50},
-        series: [
-            {
-                type: "bar",
-                xKey: "siteName",
-                yKey: "currentWeekScore",
-                yName: "Current Week (Avg)",
-                cornerRadius: 10,
-                fill: theme.colors.seduloGreen,
-                tooltip: {renderer: ScoreTooltipRenderer},
-                shadow: {
-                    enabled: true,
-                    color: "#191919",
-                    xOffset: 1,
-                    yOffset: 1,
-                    blur: 4,
-                },
-            },
-            {
-                type: "bar",
-                xKey: "siteName",
-                yKey: "periodScore",
-                yName: "Period (Avg)",
-                cornerRadius: 10,
-                fill: theme.colors.yellow,
-                tooltip: {renderer: ScoreTooltipRenderer},
-                shadow: {
-                    enabled: true,
-                    color: "#191919",
-                    xOffset: 1,
-                    yOffset: 1,
-                    blur: 4,
-                },
-            },
-        ],
-        axes: [
-            {
-                type: "category",
-                position: "bottom",
-                label: {
-                    rotation: 300,
-                    fontSize: 10,
-                    fontFamily: "Metropolis",
-                    color: theme.colors.perygonPink,
-                },
-            },
-            {
-                type: "number",
-                position: "left",
-                label: {
-                    fontSize: 10,
-                    fontFamily: "Metropolis",
-                    color: theme.colors.perygonPink,
-                },
-            },
-        ],
-        legend: {position: "bottom" as const},
-    };
-
-    const sortedDepartmentLeaderboard = [...departmentLeaderboardData].sort(
-        (a, b) => b.currentWeekScore - a.currentWeekScore,
-    );
-
-    const departmentLeaderboardBarOptions: AgCartesianChartOptions = {
-        data: sortedDepartmentLeaderboard,
-        padding: {top: 20, left: 20, right: 20, bottom: 50},
-        series: [
-            {
-                type: "bar",
-                xKey: "name",
-                yKey: "currentWeekScore",
-                yName: "Current Week (Avg)",
-                cornerRadius: 10,
-                fill: theme.colors.seduloGreen,
-                tooltip: {renderer: ScoreTooltipRenderer},
-                shadow: {
-                    enabled: true,
-                    color: "#191919",
-                    xOffset: 1,
-                    yOffset: 1,
-                    blur: 4,
-                },
-            },
-            {
-                type: "bar",
-                xKey: "name",
-                yKey: "periodScore",
-                yName: "Period (Avg)",
-                cornerRadius: 10,
-                fill: theme.colors.yellow,
-                tooltip: {renderer: ScoreTooltipRenderer},
-                shadow: {
-                    enabled: true,
-                    color: "#191919",
-                    xOffset: 1,
-                    yOffset: 1,
-                    blur: 4,
-                },
-            },
-        ],
-        axes: [
-            {
-                type: "category",
-                position: "bottom",
-                label: {
-                    rotation: 300,
-                    fontSize: 10,
-                    fontFamily: "Metropolis",
-                    color: theme.colors.perygonPink,
-                },
-            },
-            {
-                type: "number",
-                position: "left",
-                label: {
-                    fontSize: 10,
-                    fontFamily: "Metropolis",
-                    color: theme.colors.perygonPink,
-                },
-            },
-        ],
-        legend: {position: "bottom" as const},
-    };
-
-    const onFilterChange = (postBody: Record<string, any>) => {
-        setFilterOptions(postBody);
-        getData(postBody);
+  useEffect(() => {
+    if (!user || !workflowId || !toolId) {
+      return;
     }
 
-    return (
-        <VStack align="stretch" spacing={6} w="full" py={4}>
-            <FilterArea onApplyFilters={onFilterChange} defaultDateFilter={'currentWeek'}/>
-            {/* Dashboard Layout */}
-            <Flex w={"100%"} gap={6} flexWrap={"wrap"}>
-                <Box flex={"1 1 250px"} borderRadius="lg">
-                    {/* Average Score */}
-                    <Flex width="100%" justifyContent="center" align="center" mb={4}>
-                        <SectionHeader>Average</SectionHeader>
-                    </Flex>
-                    <Box p={6}>
-                        <SpeechBubble score={totalAvg} change={0}/>
-                    </Box>
-                </Box>
-
-                {/* Scores and Comments */}
-                <DataGridComponentLight
-                    data={gridData}
-                    loading={isLoading}
-                    initialFields={columnDefs}
-                    showTopBar={false}
-                    defaultColDef={defaultColDef}
-                    refreshData={getData}
-                    enableAutoRefresh={true}
-                    title={"Scores and Comments"}
-                    flex={"1 1 50%"}
-                />
-
-                {/* Office Leaderboard */}
-                <AgChartComponent flex={"1 1 50%"} title={"Office Leaderboard"}
-                                  chartOptions={officeLeaderboardBarOptions}/>
-
-                {/* Department Leaderboard */}
-                <AgChartComponent flex={"1 1 50%"} title={"Department Leaderboard"}
-                                  chartOptions={departmentLeaderboardBarOptions}/>
-
-                {/*Weekly Chart*/}
-                <AgChartComponent flex={"1 1 100%"} title={"Weekly Trend"} chartOptions={weeklyLineChartOptions}/>
-
-                {/* Monthly Chart */}
-                <AgChartComponent flex={"1 1 100%"} title={"Monthly Trend"} chartOptions={monthlyLineChartOptions}/>
-            </Flex>
-        </VStack>
+    const weeklyOption = dateRangeOptions[dateRangeOption].find(
+      (opt) => opt.value === defaultDateFilterOption,
     );
+
+    if (weeklyOption) {
+      const [startDate, endDate] = weeklyOption.getRange();
+      getData({ startDate, endDate });
+    } else {
+      getData();
+    }
+  }, [user, workflowId, toolId]);
+
+  const weeklySiteNames =
+    weeklyLineChartComparisonData.length > 0
+      ? Object.keys(weeklyLineChartComparisonData[0]).filter(
+          (key) => key !== "week",
+        )
+      : [];
+
+  const weeklySeries = generateSiteSeries(weeklySiteNames, "week");
+
+  const weeklyLineChartOptions = {
+    data: weeklyLineChartComparisonData,
+    series: weeklySeries,
+    axes: [
+      {
+        type: "category",
+        position: "bottom",
+        label: {
+          rotation: 300,
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: theme.colors.perygonPink,
+        },
+        title: {
+          text: "Week",
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: "black",
+        },
+      },
+      {
+        type: "number",
+        position: "left",
+        title: {
+          text: "Happiness Score",
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: "black",
+        },
+        label: {
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: theme.colors.perygonPink,
+        },
+      },
+    ],
+    zoom: { enabled: false },
+    navigator: { enabled: false },
+    legend: { position: "bottom" as const },
+    padding: { top: 20, left: 20, right: 20, bottom: 50 },
+  };
+
+  const monthlySiteNames =
+    monthlyLineChartComparisonData.length > 0
+      ? Object.keys(monthlyLineChartComparisonData[0]).filter(
+          (key) => key !== "month",
+        )
+      : [];
+
+  const monthlySeries = generateSiteSeries(monthlySiteNames, "month");
+
+  const monthlyLineChartOptions = {
+    data: monthlyLineChartComparisonData,
+    series: monthlySeries,
+    axes: [
+      {
+        type: "category",
+        position: "bottom",
+        label: {
+          rotation: 300,
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: theme.colors.perygonPink,
+        },
+        title: {
+          text: "Month",
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: "black",
+        },
+      },
+      {
+        type: "number",
+        position: "left",
+        title: {
+          text: "Happiness Score",
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: "black",
+        },
+        label: {
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: theme.colors.perygonPink,
+        },
+      },
+    ],
+    zoom: { enabled: false },
+    navigator: { enabled: false },
+    legend: { position: "bottom" as const },
+    padding: { top: 20, left: 20, right: 20, bottom: 50 },
+  };
+
+  const sortedOfficeLeaderboard = [...officeLeaderboardData].sort(
+    (a, b) => b.currentWeekScore - a.currentWeekScore,
+  );
+
+  const officeLeaderboardBarOptions: AgCartesianChartOptions = {
+    data: sortedOfficeLeaderboard,
+    padding: { top: 20, left: 20, right: 20, bottom: 50 },
+    series: [
+      {
+        type: "bar",
+        xKey: "siteName",
+        yKey: "currentWeekScore",
+        yName: "Current Week (Avg)",
+        cornerRadius: 10,
+        fill: theme.colors.seduloGreen,
+        tooltip: { renderer: ScoreTooltipRenderer },
+        shadow: {
+          enabled: true,
+          color: "#191919",
+          xOffset: 1,
+          yOffset: 1,
+          blur: 4,
+        },
+      },
+      {
+        type: "bar",
+        xKey: "siteName",
+        yKey: "periodScore",
+        yName: "Period (Avg)",
+        cornerRadius: 10,
+        fill: theme.colors.yellow,
+        tooltip: { renderer: ScoreTooltipRenderer },
+        shadow: {
+          enabled: true,
+          color: "#191919",
+          xOffset: 1,
+          yOffset: 1,
+          blur: 4,
+        },
+      },
+    ],
+    axes: [
+      {
+        type: "category",
+        position: "bottom",
+        label: {
+          rotation: 300,
+          fontSize: 10,
+          fontFamily: "Metropolis",
+          color: theme.colors.perygonPink,
+        },
+      },
+      {
+        type: "number",
+        position: "left",
+        label: {
+          fontSize: 10,
+          fontFamily: "Metropolis",
+          color: theme.colors.perygonPink,
+        },
+      },
+    ],
+    legend: { position: "bottom" as const },
+  };
+
+  const sortedDepartmentLeaderboard = [...departmentLeaderboardData].sort(
+    (a, b) => b.currentWeekScore - a.currentWeekScore,
+  );
+
+  const departmentLeaderboardBarOptions: AgCartesianChartOptions = {
+    data: sortedDepartmentLeaderboard,
+    padding: { top: 20, left: 20, right: 20, bottom: 50 },
+    series: [
+      {
+        type: "bar",
+        xKey: "name",
+        yKey: "currentWeekScore",
+        yName: "Current Week (Avg)",
+        cornerRadius: 10,
+        fill: theme.colors.seduloGreen,
+        tooltip: { renderer: ScoreTooltipRenderer },
+        shadow: {
+          enabled: true,
+          color: "#191919",
+          xOffset: 1,
+          yOffset: 1,
+          blur: 4,
+        },
+      },
+      {
+        type: "bar",
+        xKey: "name",
+        yKey: "periodScore",
+        yName: "Period (Avg)",
+        cornerRadius: 10,
+        fill: theme.colors.yellow,
+        tooltip: { renderer: ScoreTooltipRenderer },
+        shadow: {
+          enabled: true,
+          color: "#191919",
+          xOffset: 1,
+          yOffset: 1,
+          blur: 4,
+        },
+      },
+    ],
+    axes: [
+      {
+        type: "category",
+        position: "bottom",
+        label: {
+          rotation: 300,
+          fontSize: 10,
+          fontFamily: "Metropolis",
+          color: theme.colors.perygonPink,
+        },
+      },
+      {
+        type: "number",
+        position: "left",
+        label: {
+          fontSize: 10,
+          fontFamily: "Metropolis",
+          color: theme.colors.perygonPink,
+        },
+      },
+    ],
+    legend: { position: "bottom" as const },
+  };
+
+  const onFilterChange = (postBody: Record<string, any>) => {
+    setFilterOptions(postBody);
+    getData(postBody);
+  };
+
+  return (
+    <VStack align="stretch" spacing={6} w="full" py={2}>
+      <FilterArea
+        onApplyFilters={onFilterChange}
+        dateFilterMode={dateRangeOption}
+        defaultDateFilter={defaultDateFilterOption}
+      />
+      {/* Dashboard Layout */}
+      <Flex w={"100%"} gap={6} flexWrap={"wrap"}>
+        <Box flex={"1 1 250px"} borderRadius="lg">
+          {/* Average Score */}
+          <Flex width="100%" justifyContent="center" align="center" mb={4}>
+            <SectionHeader>Average</SectionHeader>
+          </Flex>
+          <Box p={6}>
+            <SpeechBubble score={totalAvg} change={0} />
+          </Box>
+        </Box>
+
+        {/* Scores and Comments */}
+        <DataGridComponentLight
+          data={gridData}
+          loading={isLoading}
+          initialFields={columnDefs}
+          showTopBar={false}
+          defaultColDef={defaultColDef}
+          refreshData={getData}
+          enableAutoRefresh={true}
+          title={"Scores and Comments"}
+          flex={"1 1 50%"}
+        />
+
+        {/* Office Leaderboard */}
+        <AgChartComponent
+          flex={"1 1 50%"}
+          title={"Office Leaderboard"}
+          chartOptions={officeLeaderboardBarOptions}
+          noData={totalAvg === null}
+        />
+
+        {/* Department Leaderboard */}
+        <AgChartComponent
+          flex={"1 1 50%"}
+          title={"Department Leaderboard"}
+          chartOptions={departmentLeaderboardBarOptions}
+          noData={totalAvg === null}
+        />
+
+        {/*Weekly Chart*/}
+        <AgChartComponent
+          flex={"1 1 100%"}
+          title={"Weekly Trend"}
+          chartOptions={weeklyLineChartOptions}
+          noData={totalAvg === null}
+        />
+
+        {/* Monthly Chart */}
+        <AgChartComponent
+          flex={"1 1 100%"}
+          title={"Monthly Trend"}
+          chartOptions={monthlyLineChartOptions}
+          noData={totalAvg === null}
+        />
+      </Flex>
+    </VStack>
+  );
 };
 
 export default SiteDepartmentDashboard;

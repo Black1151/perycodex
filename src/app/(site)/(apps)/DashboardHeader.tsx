@@ -28,7 +28,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             gap={4}
             lineHeight={0}
         >
-            <BackButton/>
+            <BackButton prevRoute={'/'}/>
 
             {/* Heading */}
             <Heading
