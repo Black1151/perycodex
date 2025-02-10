@@ -89,7 +89,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
             {drawerState === "closed" && (
                 <Box
                     position="absolute"
-                    top={[82, null, 84]}
+                    top={["72px", null, 84]}
                     right={[3, 4, 5]}
                     zIndex={1}
                     display={["flex"]}
