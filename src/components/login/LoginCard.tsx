@@ -1,14 +1,14 @@
 "use client";
 
-import {Box, Image, VStack} from "@chakra-ui/react";
+import {Box, Image, ResponsiveValue, VStack} from "@chakra-ui/react";
 import {ReactNode} from "react";
 import {SpringScale} from "../animations/SpringScale";
 
 interface LoginCardProps {
     titleComponent: ReactNode;
     children: ReactNode;
-    height?: number | string;
-    imageOffset?: number;
+    height?: ResponsiveValue<number | string>;
+    imageOffset?: ResponsiveValue<number | string>;
     backgroundOffset?: number;
 }
 
@@ -32,6 +32,7 @@ export function LoginCard({
                 height={height}
                 justifyContent="flex-end"
                 width={["100%", null, 480]}
+                maxW={"100%"}
             >
                 <Image
                     src="/perygonSpeechBubble.png"

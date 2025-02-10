@@ -1,13 +1,13 @@
 import React from 'react';
 import {Button, Flex, Heading, Link, Menu, MenuButton, MenuItem, MenuList} from "@chakra-ui/react";
+import {Menu as MenuIcon} from "@mui/icons-material"
 
 const menuItems = [
-    {title: "Home", link: "/"},
+    {title: "Home", link: "/privacy-policy"},
     {title: "Marketing", link: "/marketing"},
     {title: "Support", link: "/support"},
-    {title: "Privacy Policy", link: "/privacy-policy"},
     {title: "Delete My Data", link: "/delete-my-data"},
-    {title: "Login", link: "/login"},
+    {title: "Perygon Login", link: "/login"},
 ];
 
 const PublicHeader = () => {
@@ -31,7 +31,7 @@ const PublicHeader = () => {
                     _hover={{bg: 'perygonPink'}}
                     _active={{bg: 'white', color: 'perygonPink'}}
                 >
-                    Navigate
+                    <MenuIcon/>
                 </MenuButton>
                 <MenuList>
                     {menuItems.map((item) => (

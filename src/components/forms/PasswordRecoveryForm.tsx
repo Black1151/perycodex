@@ -31,7 +31,7 @@ export function PasswordRecoveryForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      style={{ width: "100%", maxWidth: "md"}}
+      style={{ width: "100%", maxWidth: "sm"}}
     >
       <VStack spacing={0} w="100%">
         <VStack gap="0px" w={300} >
