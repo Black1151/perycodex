@@ -39,10 +39,10 @@ export default function SupportPage() {
                         <Text mb={2} fontSize="lg">
                             Prefer email? Reach out to us at{" "}
                             <Link
-                                href="mailto:supportteam@perygon.co.uk"
+                                href="mailto:support-team@perygon.co.uk"
                                 style={{textDecoration: "underline", color: "blue.500"}}
                             >
-                                supportteam@perygon.co.uk
+                                support-team@perygon.co.uk
                             </Link>
                             .
                         </Text>
@@ -67,7 +67,7 @@ export default function SupportPage() {
                         </Text>
 
                         <Box textAlign={'center'} width="100%" mt={4}>
-                            <Link href="mailto:supportteam@perygon.co.uk">
+                            <Link href="mailto:support-team@perygon.co.uk">
                                 <Button
                                     color="white"
                                     bg="green"
