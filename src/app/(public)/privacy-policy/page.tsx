@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import PublicLayout from "@/components/public/PublicLayout";
 import {LetterFlyIn} from "@/components/animations/text/LetterFlyIn";
+import Link from "next/link"
 
 export default function PrivacyPolicyPage() {
     return (
@@ -84,7 +85,7 @@ export default function PrivacyPolicyPage() {
                         </Text>
 
                         <Text fontWeight="bold" mb={2}>
-                            Our Apps:
+                            Our App:
                         </Text>
                         <UnorderedList pl={5} mb={4}>
                             <ListItem>
@@ -241,10 +242,12 @@ export default function PrivacyPolicyPage() {
                             collect data include but are not limited to:
                         </Text>
 
-                        <Text fontWeight="bold">For Perygon App users:</Text>
+                        <Text><Text as={"strong"}>For Perygon App users</Text> - Via forms on the app we collect
+                            data
+                            for the following reasons:</Text>
                         <UnorderedList pl={5} mb={4}>
                             <ListItem fontSize={["sm", "md"]}>To authenticate users via SSO login
-                                (Google/Microsoft).</ListItem>
+                                (Google/Microsoft) or email and password.</ListItem>
                             <ListItem fontSize={["sm", "md"]}>To operate and enhance our App’s features.</ListItem>
                             <ListItem fontSize={["sm", "md"]}>To personalise user experience based on preferences
                                 and
@@ -257,7 +260,7 @@ export default function PrivacyPolicyPage() {
                                 obligations.</ListItem>
                         </UnorderedList>
 
-                        <Text fontWeight="bold">For Clients:</Text>
+                        <Text fontWeight="bold">For Core Service Clients:</Text>
                         <UnorderedList pl={5} mb={4}>
                             <ListItem fontSize={["sm", "md"]}>Receiving calls from you in relation to any services
                                 within your
@@ -276,6 +279,12 @@ export default function PrivacyPolicyPage() {
                         <Heading as="h2" size={["md", "lg"]} mt={6} mb={2} color={"perygonPink"}>
                             4. WHY DO WE COLLECT YOUR DATA?
                         </Heading>
+                        <Text fontWeight="bold">For Perygon App Users:</Text>
+                        <Text fontSize={["sm", "md"]} mb={4}>
+                            To provide a suite of business maturity tools, that require a certain level of
+                            personalisation and advanced analytics.
+                        </Text>
+                        <Text fontWeight="bold">For Core Service Clients:</Text>
                         <Text fontSize={["sm", "md"]} mb={4}>
                             Our core business activity is to provide clients with financial advice and accountancy
                             services. To
@@ -292,7 +301,7 @@ export default function PrivacyPolicyPage() {
                         </Heading>
 
 
-                        <Text fontWeight="bold" mb={2}>For Perygon App users:</Text>
+                        <Text fontWeight="bold" mb={2}>For Perygon App Users:</Text>
                         <UnorderedList pl={5} mb={4}>
                             <ListItem fontSize={["sm", "md"]}>To authenticate users via SSO login
                                 (Google/Microsoft).</ListItem>
@@ -375,18 +384,7 @@ export default function PrivacyPolicyPage() {
                                 systems,
                                 IT support systems, archiving services, document production services, Cloud-based
                                 software systems
-                                and hosts, Google, Microsoft, Apple).
-                            </ListItem>
-                            <ListItem fontSize={["sm", "md"]}>
-                                Parties that support us with anti-money laundering, client conflicts, and
-                                independence
-                                checks.
-                            </ListItem>
-                            <ListItem fontSize={["sm", "md"]}>
-                                Law enforcement or government bodies (e.g., HMRC) or other third parties as required
-                                by
-                                applicable
-                                law or regulation.
+                                and hosts, and authentication services such as Google, Microsoft, Apple).
                             </ListItem>
                         </UnorderedList>
                         <Text fontSize={["sm", "md"]} mb={4}>
@@ -622,6 +620,15 @@ export default function PrivacyPolicyPage() {
                             notify them and act upon the requirements of your request unless this is not possible or
                             involves a
                             disproportionate effort.
+                        </Text>
+
+                        <Text fontSize={["sm", "md"]} mb={4}>If you would like to delete your account and associated
+                            data please follow the
+                            instructions here: <Link href={'/delete-my-data'}><Text as={'span'} color={"perygonPink"}
+                                                                                    fontWeight={'bold'}
+                                                                                    _hover={{textDecoration: 'underline'}}>Delete
+                                my
+                                data</Text></Link>
                         </Text>
 
                         {/* CONSENT */}

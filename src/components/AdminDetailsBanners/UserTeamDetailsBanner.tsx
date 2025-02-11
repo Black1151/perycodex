@@ -79,7 +79,7 @@ export const UserTeamDetailsBanner: React.FC<UserTeamDetailsBannerProps> = ({
             border={"white 1px solid"}
             bg={team.isActive ? "green.500" : "red.500"}
           />
-          <Heading fontWeight={300} size={["md", "md", "lg"]}>
+          <Heading fontWeight={300} size={["sm", "md", "lg"]}>
             {team.name}
           </Heading>
         </Flex>
@@ -103,18 +103,18 @@ export const UserTeamDetailsBanner: React.FC<UserTeamDetailsBannerProps> = ({
         justifyContent={"flex-start"}
         display={["none", "none", "flex"]}
       >
-        <Heading size={["md", "md", "lg"]} fontWeight={100}>
+        <Heading size={["sm", "md", "lg"]} fontWeight={100}>
           ID: {team.id}
         </Heading>
         <Flex direction={"row"} justify={"center"} align={"center"} gap={2}>
           <CreateIcon />
-          <Text fontSize="sm">
+          <Text fontSize="xs">
             {moment(team.createdAt).format("D/MM/YYYY")}
           </Text>
         </Flex>
         <Flex direction={"row"} justify={"center"} align={"center"} gap={2}>
           <UpdateIcon />
-          <Text fontSize="sm">
+          <Text fontSize="xs">
             {moment(team.updatedAt).format("D/MM/YYYY")}
           </Text>
         </Flex>

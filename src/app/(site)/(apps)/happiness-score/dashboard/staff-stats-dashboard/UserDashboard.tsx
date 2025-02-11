@@ -480,88 +480,94 @@ const UserDashboard: React.FC = () => {
                     </Box>
                 )}
 
-                {/* Line Chart - Comparative Weekly Data */}
-                {comparativeData.length > 0 && (
-                    <>
-                        <Flex width="100%" justifyContent={"center"}>
-                            <SectionHeader>Weekly Trend</SectionHeader>
-                        </Flex>
-                        <Box
-                            borderRadius="2xl"
-                            shadow="xl"
-                            overflow="hidden"
-                            height="500px"
-                        >
-                            <AgCharts
-                                options={weeklyLineChartOptions as any}
-                                style={{width: "100%", height: "100%"}}
-                            />
-                        </Box>
-                    </>
-                )}
+                {(rowData && rowData.length > 0) &&
+                    (
+                        <>
+                            {/* Line Chart - Comparative Weekly Data */}
+                        {comparativeData.length > 0 && (
+                            <>
+                                <Flex width="100%" justifyContent={"center"}>
+                                    <SectionHeader>Weekly Trend</SectionHeader>
+                                </Flex>
+                                <Box
+                                    borderRadius="2xl"
+                                    shadow="xl"
+                                    overflow="hidden"
+                                    height="500px"
+                                >
+                                    <AgCharts
+                                        options={weeklyLineChartOptions as any}
+                                        style={{width: "100%", height: "100%"}}
+                                    />
+                                </Box>
+                            </>
+                        )}
 
-                {/* Line Chart - Comparative Monthly Data */}
-                {monthlyComparativeData.length > 0 && (
-                    <>
-                        <Flex width="100%" justifyContent={"center"}>
-                            <SectionHeader>Monthly Trend</SectionHeader>
-                        </Flex>
-                        <Box
-                            borderRadius="2xl"
-                            shadow="xl"
-                            overflow="hidden"
-                            height="500px"
-                        >
-                            <AgCharts
-                                options={monthlyLineChartOptions as any}
-                                style={{width: "100%", height: "100%"}}
-                            />
-                        </Box>
-                    </>
-                )}
+                        {/* Line Chart - Comparative Monthly Data */}
+                        {monthlyComparativeData.length > 0 && (
+                            <>
+                                <Flex width="100%" justifyContent={"center"}>
+                                    <SectionHeader>Monthly Trend</SectionHeader>
+                                </Flex>
+                                <Box
+                                    borderRadius="2xl"
+                                    shadow="xl"
+                                    overflow="hidden"
+                                    height="500px"
+                                >
+                                    <AgCharts
+                                        options={monthlyLineChartOptions as any}
+                                        style={{width: "100%", height: "100%"}}
+                                    />
+                                </Box>
+                            </>
+                        )}
 
-                {/* Histogram - User Scores */}
-                {userScores.length > 0 && (
-                    <>
-                        <Flex width="100%" justifyContent={"center"}>
-                            <SectionHeader>Frequency of Scores</SectionHeader>
-                        </Flex>
-                        <Box borderRadius="2xl" shadow="xl" overflow="hidden">
-                            <CompanyHistogram scoreDistribution={userScores}/>
-                        </Box>
-                    </>
-                )}
+                        {/* Histogram - User Scores */}
+                        {userScores.length > 0 && (
+                            <>
+                                <Flex width="100%" justifyContent={"center"}>
+                                    <SectionHeader>Frequency of Scores</SectionHeader>
+                                </Flex>
+                                <Box borderRadius="2xl" shadow="xl" overflow="hidden">
+                                    <CompanyHistogram scoreDistribution={userScores}/>
+                                </Box>
+                            </>
+                        )}
 
-                {/* Bubble Chart - User Distribution */}
-                {userDistribution.length > 0 && (
-                    <>
-                        <Flex width="100%" justifyContent={"center"} align="center">
-                            <SectionHeader>Punch Card</SectionHeader>
-                            <Tooltip
-                                label="Click to learn more about the Punch Card visualization"
-                                hasArrow
-                            >
-                                <IconButton
-                                    aria-label="Punch Card Help"
-                                    icon={<Info/>}
-                                    variant="ghost"
-                                    onClick={showPunchCardHelp}
-                                    color={"white"}
-                                    _hover={{color: "perygonPink", background: "white"}}
-                                    ml={2}
-                                />
-                            </Tooltip>
-                        </Flex>
-                        <Box
-                            borderRadius="2xl"
-                            shadow="xl"
-                            overflow="hidden"
-                            height="500px"
-                        >
-                            <CompanyBubble scores={userDistribution}/>
-                        </Box>
-                    </>
-                )}
+                        {/* Bubble Chart - User Distribution */}
+                        {userDistribution.length > 0 && (
+                            <>
+                                <Flex width="100%" justifyContent={"center"} align="center">
+                                    <SectionHeader>Punch Card</SectionHeader>
+                                    <Tooltip
+                                        label="Click to learn more about the Punch Card visualization"
+                                        hasArrow
+                                    >
+                                        <IconButton
+                                            aria-label="Punch Card Help"
+                                            icon={<Info/>}
+                                            variant="ghost"
+                                            onClick={showPunchCardHelp}
+                                            color={"white"}
+                                            _hover={{color: "perygonPink", background: "white"}}
+                                            ml={2}
+                                        />
+                                    </Tooltip>
+                                </Flex>
+                                <Box
+                                    borderRadius="2xl"
+                                    shadow="xl"
+                                    overflow="hidden"
+                                    height="500px"
+                                >
+                                    <CompanyBubble scores={userDistribution}/>
+                                </Box>
+                            </>
+                        )
+                        }
+                        </>
+                    )}
             </VStack>
         </>
     );
