@@ -33,7 +33,7 @@ export function BottomNavigationMenu({menuItems}: BottomNavigationMenuProps) {
             }}
         >
             <HStack
-                justify={["space-around", "space-between"]}
+                justify={["flex-start", "space-between"]}
                 alignItems="flex-start"
                 overflowX="auto"
                 gap="10px"
