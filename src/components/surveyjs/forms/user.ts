@@ -94,6 +94,22 @@ export const userJson = {
                     swapOrder: true,
                 },
                 {
+                    type: "html",
+                    title: "Delete your data?",
+                    html: `
+        <div>
+            <button 
+                style="padding: 10px 20px; background-color: #ff4d4d; color: white; border: none; border-radius: 5px; cursor: pointer;"
+                onclick="window.location.href='/delete-my-data'"
+            >
+                Delete My Data
+            </button>
+        </div>
+    `,
+                    startWithNewLine: false,
+                    visibleIf: "{pgv_currentUser.userId} == {id}"
+                },
+                {
                     type: "dropdown",
                     name: "titleId",
                     title: "Title",

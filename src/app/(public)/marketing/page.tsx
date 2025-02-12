@@ -89,10 +89,7 @@ export default function MarketingPage() {
                         A Look at Perygon in Action
                     </Heading>
 
-                    <SimpleGrid columns={[1, 2, 3, 4]} spacing={4}>
-                        {/* Replace with your actual images */}
-                        <Image borderRadius={"xl"} shadow={'lg'} src="/images/marketing/HappinessMarketing_0.jpg"
-                               alt="Perygon Login Marketing Picture"/>
+                    <SimpleGrid columns={[1, 2, 3]} spacing={4}>
                         <Image borderRadius={"xl"} shadow={'lg'} src="/images/marketing/HappinessMarketing_3.jpg"
                                alt="Perygon Happiness Score Submission Picture"/>
                         <Image borderRadius={"xl"} shadow={'lg'} src="/images/marketing/HappinessMarketing_1.jpg"
