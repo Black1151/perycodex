@@ -152,7 +152,7 @@ const FilterArea: React.FC<FilterAreaProps> = ({
             {!isOpen && (
                 <Box
                     position="absolute"
-                    top={["72px", null, 88]}
+                    top={["72px", null, "78px"]}
                     right={[3, 4, 5]}
                     zIndex={1}
                     display={["flex"]}
