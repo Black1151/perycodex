@@ -55,15 +55,18 @@ export function LoginForm() {
 
 
     const handleButtonClick = (buttonId: ButtonId) => {
+
+        const callbackUrl = secureLink ? `/login?l=${secureLink}` : '/login';
+
         switch (buttonId) {
             case 'email':
                 handleSubmit(handleFormSubmit)();
                 break;
             case 'microsoft':
-                signIn('azure-ad', {callbackUrl: '/'});
+                signIn('azure-ad', {callbackUrl: callbackUrl});
                 break;
             case 'google':
-                signIn('google', {callbackUrl: '/'});
+                signIn('google', {callbackUrl: callbackUrl});
                 break;
             default:
             // Handle default or error case
@@ -123,7 +126,7 @@ export function LoginForm() {
                             });
 
                         if (result) {
-                            router.push('/');
+                            router.push(result.redirectUrl);
                         } else {
                             const res = NextResponse.json({success: false});
                             res.cookies.delete('next-auth.callback-url');
