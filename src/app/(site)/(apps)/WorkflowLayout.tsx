@@ -16,7 +16,7 @@ import {useRouter} from "next/navigation";
 
 interface WorkflowLayoutProps {
     stages: WorkflowStage[];
-    layout: 'default' | 'happiness' | 'enps';
+    layout: 'default' | 'happiness' | 'enps' | 'client-satisfaction';
     workflowInstanceId: string | null;
 }
 
@@ -56,6 +56,7 @@ interface FormDataResponse {
 const REDIRECT_PATHS: Record<string, string> = {
     happiness: "/happiness-score",
     enps: "/enps",
+    'client-satisfaction': "client-satisfaction",
     default: "/"
 }
 

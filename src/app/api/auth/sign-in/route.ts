@@ -2,15 +2,16 @@ import {NextRequest, NextResponse} from "next/server";
 import apiClient from "@/lib/apiClient";
 
 interface apiBodyType {
-  loginType?: string;
-  email?: string;
-  password?: string;
-  accessToken?: string;
-  type?: number;
+    loginType?: string;
+    email?: string;
+    password?: string;
+    secureLinkUniqueId?: string;
+    accessToken?: string;
+    type?: number;
 }
 
 export async function POST(req: NextRequest) {
-    const {loginType, email, password, accessToken, type} = await req.json();
+    const {loginType, email, password, accessToken, type, secureLinkUniqueId} = await req.json();
 
     // Extract searchParams from the incoming request
     const {searchParams} = req.nextUrl;
@@ -37,6 +38,13 @@ export async function POST(req: NextRequest) {
             }
         }
 
+        if (loginType === "guestUser") {
+            apiBody = {
+                loginType: loginType,
+                secureLinkUniqueId: secureLinkUniqueId,
+            }
+        }
+
         const response = await apiClient("/authentication/login", {
             method: "POST",
             body: JSON.stringify(apiBody),
@@ -56,7 +64,7 @@ export async function POST(req: NextRequest) {
 
         let redirectUrl = `${process.env.NEXT_PUBLIC_BASE_URL}`;
 
-        if (!isProfileRegistered) {
+        if (!isProfileRegistered && role !== 'EU') {
             redirectUrl += "/profile-setup";
         } else if (role === "PA") {
             redirectUrl += "/customers";

@@ -183,7 +183,7 @@ export function ProfileCompletionForm({
 
           <InputField
             name="lastName"
-            placeholder="Surnames *"
+            placeholder="Surname *"
             type="text"
             error={formErrors.lastName}
             register={() =>
@@ -196,7 +196,7 @@ export function ProfileCompletionForm({
 
           <InputField
             name="mobile"
-            placeholder="Mobile *"
+            placeholder="Mobile"
             type="text"
             error={formErrors.mobile}
             register={() => register("mobile", phoneNumberValidation)}
