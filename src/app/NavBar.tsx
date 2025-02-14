@@ -177,25 +177,44 @@ export const NavBar: React.FC<NavBarProps> = ({
                 w="150px"
                 display="flex"
             >
-                <Link href={toolPath ? toolPath : "/"}>
-                    {toolLogo && toolLogo !== "" ? (
-                        <Image
-                            src={toolLogo}
-                            alt="logo"
-                            height="50px"
-                            objectFit="contain"
-                        />
-                    ) : (
-                        <Text
-                            fontFamily="bonfire"
-                            fontSize={[30, 40]}
-                            bgClip="text"
-                            color="white"
-                        >
-                            Perygon
-                        </Text>
-                    )}
-                </Link>
+                {userRole === "EU" ? (toolLogo && toolLogo !== "") ? (
+                    <Image
+                        src={toolLogo}
+                        alt="logo"
+                        height="50px"
+                        objectFit="contain"
+                    />
+                ) : (
+                    <Text
+                        fontFamily="bonfire"
+                        fontSize={[30, 40]}
+                        bgClip="text"
+                        color="white"
+                    >
+                        Perygon
+                    </Text>
+                ) : (
+                    <Link href={toolPath ? toolPath : "/"}>
+                        {toolLogo && toolLogo !== "" ? (
+                            <Image
+                                src={toolLogo}
+                                alt="logo"
+                                height="50px"
+                                objectFit="contain"
+                            />
+                        ) : (
+                            <Text
+                                fontFamily="bonfire"
+                                fontSize={[30, 40]}
+                                bgClip="text"
+                                color="white"
+                            >
+                                Perygon
+                            </Text>
+                        )}
+                    </Link>)
+                }
+
             </MotionBox>
             <MotionHStack
                 initial={{x: "5vw", opacity: 0}}
@@ -303,5 +322,6 @@ export const NavBar: React.FC<NavBarProps> = ({
                 handleOnClose={handleOnClose}
             />
         </HStack>
-    );
+    )
+        ;
 };

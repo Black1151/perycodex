@@ -13,6 +13,7 @@ import {
     Text,
 } from "@chakra-ui/react";
 import {useRouter} from "next/navigation";
+import {useUser} from "@/providers/UserProvider";
 
 interface PerygonMainClientProps {
     carouselItems: CarouselItemProps[];
@@ -24,6 +25,17 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
                                                                         showNoToolsModal,
                                                                     }) => {
 
+    const { user } = useUser();
+    const router = useRouter();
+    const [countdown, setCountdown] = useState(5);
+
+    useEffect(() => {
+        if (user?.role === "EU") {
+            logoutUser();
+        }
+    }, [user]);
+
+
     useEffect(() => {
         localStorage.removeItem("toolId");
         localStorage.removeItem("workflowId");
@@ -31,8 +43,6 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
         localStorage.removeItem("currentWorkflowInstanceId");
     }, [])
 
-    const [countdown, setCountdown] = useState(5);
-    const router = useRouter();
 
     useEffect(() => {
         if (showNoToolsModal) {
@@ -45,7 +55,7 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
     }, [showNoToolsModal]);
 
     useEffect(() => {
-        if (countdown === 0) {
+        if (countdown === -5) {
             logoutUser();
         }
     }, [countdown]);
