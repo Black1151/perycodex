@@ -71,7 +71,6 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
     const {user} = useUser();
     const router = useRouter();
 
-    const imageWidth = customer.imageUrl ? ["50px", "175px"] : "50px";
     const {tags, setRecordDetails, setTags} = useTags();
 
     const allowedToUploadPhoto =
@@ -137,21 +136,21 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
                 <BackButton/>
                 {/* Customer Logo Upload */}
                 <FormControl
-                    w={imageWidth}
-                    h={"100px"}
+                    w={["50px", "125px"]}
+                    h={["50px", "125px"]}
                     aspectRatio={1}
                     borderRadius={"full"}
                 >
                     <Box
                         position="relative"
-                        w={imageWidth}
-                        h={"100px"}
+                        w={["50px", "125px"]}
+                        h={["50px", "125px"]}
                         overflow="hidden"
                         _hover={{".overlay": {opacity: allowedToUploadPhoto ? 1 : 0}}} // Only show overlay if upload is allowed
                     >
                         <Image
-                            w={imageWidth}
-                            h={"100px"}
+                            w={["50px", "125px"]}
+                            h={["50px", "125px"]}
                             objectFit={"scale-down"}
                             src={customer.imageUrl}
                             alt={customer.name}
@@ -167,8 +166,8 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
                                 >
                                     <Box
                                         position="relative"
-                                        w={"100px"}
-                                        h={"100px"}
+                                        w={["50px", "125px"]}
+                                        h={["50px", "125px"]}
                                         borderRadius="full"
                                         bg="gray.100"
                                         display="flex"
