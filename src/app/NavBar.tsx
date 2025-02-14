@@ -90,66 +90,76 @@ export const NavBar: React.FC<NavBarProps> = ({
 
     // Compute menu items based on user role
     const getMenuItems = (): MenuItemProps[] => {
-        const commonMenuItems: MenuItemProps[] = [
-            {
-                label: "My Tools",
-                icon: <HomeIcon/>,
-                onClick: () => router.push("/"),
-            },
-            {
-                label: "My Profile",
-                icon: <PersonIcon/>,
-                onClick: () => router.push("/my-profile"),
-            },
-            {
-                label: "My Company",
-                icon: <BusinessIcon/>,
-                onClick: () => router.push("/my-company"),
-            },
-            {
-                label: "Activity",
-                icon: <Timeline/>,
-                onClick: () => router.push("/activity"),
-            },
-            {
-                label: "Recognition Hub",
-                icon: <Celebration/>,
-                onClick: () => router.push("/big-up"),
-            },
-            {
-                label: "Reset Password",
-                icon: <LockIcon/>,
-                onClick: () => setPasswordResetModalOpen(true),
-            },
-            {
-                label: "Logout",
-                icon: <ExitToAppIcon/>,
-                onClick: handleLogout,
-            },
-        ];
 
-        if (userRole === "PA") {
-            return [
+            if (userRole === "EU") {
+                return [{
+                    label: "Logout",
+                    icon: <ExitToAppIcon/>,
+                    onClick: handleLogout,
+                }]
+            }
+
+            const commonMenuItems: MenuItemProps[] = [
                 {
-                    label: "Admin",
-                    icon: <SettingsIcon/>,
-                    onClick: () => router.push("/customers"),
+                    label: "My Tools",
+                    icon: <HomeIcon/>,
+                    onClick: () => router.push("/"),
                 },
-                ...commonMenuItems,
-            ];
-        } else if (userRole === "CA") {
-            return [
                 {
-                    label: "Admin Tools",
-                    icon: <SettingsIcon/>,
-                    onClick: () => router.push("/customers"),
+                    label: "My Profile",
+                    icon: <PersonIcon/>,
+                    onClick: () => router.push("/my-profile"),
                 },
-                ...commonMenuItems,
+                {
+                    label: "My Company",
+                    icon: <BusinessIcon/>,
+                    onClick: () => router.push("/my-company"),
+                },
+                {
+                    label: "Activity",
+                    icon: <Timeline/>,
+                    onClick: () => router.push("/activity"),
+                },
+                {
+                    label: "Recognition Hub",
+                    icon: <Celebration/>,
+                    onClick: () => router.push("/big-up"),
+                },
+                {
+                    label: "Reset Password",
+                    icon: <LockIcon/>,
+                    onClick: () => setPasswordResetModalOpen(true),
+                },
+                {
+                    label: "Logout",
+                    icon: <ExitToAppIcon/>,
+                    onClick: handleLogout,
+                },
             ];
-        } else {
-            return commonMenuItems;
+
+            if (userRole === "PA") {
+                return [
+                    {
+                        label: "Admin",
+                        icon: <SettingsIcon/>,
+                        onClick: () => router.push("/customers"),
+                    },
+                    ...commonMenuItems,
+                ];
+            } else if (userRole === "CA") {
+                return [
+                    {
+                        label: "Admin Tools",
+                        icon: <SettingsIcon/>,
+                        onClick: () => router.push("/customers"),
+                    },
+                    ...commonMenuItems,
+                ];
+            } else {
+                return commonMenuItems;
+            }
         }
-    };
+    ;
 
     const menuItems = getMenuItems();
 
@@ -228,8 +238,33 @@ export const NavBar: React.FC<NavBarProps> = ({
                     {greeting}, {userFirstName}!
                 </Text>
 
-                <Link href={"/my-company"}>
-                    {user?.custImageUrl ? (
+                {userRole === "EU" ? (
+                    user?.parentCustImageUrl ? (
+                        <Image
+                            src={user.parentCustImageUrl}
+                            alt={user.customerName || "User"}
+                            maxHeight="40px"
+                            maxWidth={["80px", "unset"]}
+                            objectFit="cover"
+                            borderRadius={"md"}
+                        />
+                    ) : (
+                        <Flex
+                            bg="white"
+                            border={"1px solid perygonPink"}
+                            align="center"
+                            justify="center"
+                            borderRadius="full"
+                            minH={'40px'}
+                            aspectRatio={1}
+                        >
+                            <Text fontSize="md" fontWeight="bold" color="perygonPink">
+                                {user?.customerName?.charAt(0)?.toUpperCase() || ""}
+                            </Text>
+                        </Flex>
+                    )
+                ) : (
+                    user?.custImageUrl ? (
                         <Image
                             src={user.custImageUrl}
                             alt={user.customerName || "User"}
@@ -252,8 +287,9 @@ export const NavBar: React.FC<NavBarProps> = ({
                                 {user?.customerName?.charAt(0)?.toUpperCase() || ""}
                             </Text>
                         </Flex>
-                    )}
-                </Link>
+                    )
+                )}
+
 
                 <Menu>
                     <MenuButton
