@@ -183,7 +183,7 @@ export function ProfileCompletionForm({
 
                     <InputField
                         name="lastName"
-                        placeholder="Surname"
+                        placeholder="Surname *"
                         type="text"
                         error={formErrors.lastName}
                         register={() =>
