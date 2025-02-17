@@ -20,14 +20,19 @@ interface LeftHandNavigationDrawerProps {
 }
 
 export function LeftHandNavigationDrawer({
-  menuItems,
-  title,
-  defaultDrawerState = "closed",
-}: LeftHandNavigationDrawerProps) {
-  const [drawerState, setDrawerState] = useState<
-    "closed" | "half-open" | "fully-open"
-  >(defaultDrawerState);
-  const theme = useTheme();
+                                             menuItems,
+                                             title,
+                                             defaultDrawerState = "closed",
+                                         }: LeftHandNavigationDrawerProps) {
+    const [drawerState, setDrawerState] = useState<
+        "closed" | "half-open" | "fully-open"
+    >(defaultDrawerState);
+    const [hasMounted, setHasMounted] = useState(false);
+
+    useEffect(() => {
+        setHasMounted(true);
+    }, []);
+    const theme = useTheme();
 
   const MotionBox = motion(Box);
 
@@ -83,70 +88,70 @@ export function LeftHandNavigationDrawer({
         </Box>
       )}
 
-      <AnimatePresence>
-        {drawerState !== "closed" && (
-          <MotionBox
-            display={["none", "none", "block"]}
-            position="fixed"
-            top={0}
-            left={0}
-            bottom={0}
-            width={drawerState === "fully-open" ? 225 : 61}
-            zIndex={5}
-            bg="white"
-            boxShadow="xl"
-            gap={0}
-            initial={{ x: "-100%", opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: "-100%", opacity: 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          >
-            <VStack align="stretch" height="100%" pt={"60px"} gap={0}>
-              <Box
-                display="flex"
-                flexDirection="row"
-                alignItems="center"
-                justifyContent={"flex-end"}
-                gap={2}
-                mr={3}
-                position={"absolute"}
-                right={0}
-                zIndex={2}
-                background={"white"}
-                w={"full"}
-              >
-                {drawerState === "fully-open" && (
-                  <Box
-                    color={theme.colors.perygonPink}
-                    onClick={toggleDrawer}
-                    m={0}
-                    p={0}
-                    zIndex={1}
-                  >
-                    <ChevronLeft
-                      style={{
-                        fontSize: "1.4rem",
-                        cursor: "pointer",
-                      }}
-                    />
-                  </Box>
-                )}
-                {drawerState === "half-open" && (
-                  <Box
-                    color={theme.colors.perygonPink}
-                    onClick={toggleDrawer}
-                    m={0}
-                    p={0}
-                    zIndex={1}
-                  >
-                    <ChevronRight
-                      style={{
-                        fontSize: "1.4rem",
-                        cursor: "pointer",
-                      }}
-                    />
-                  </Box>
-                )}
+            <AnimatePresence>
+                {drawerState !== "closed" && (
+                    <MotionBox
+                        display={["none", "none", "block"]}
+                        position="fixed"
+                        top={0}
+                        left={0}
+                        bottom={0}
+                        width={drawerState === "fully-open" ? 225 : 61}
+                        zIndex={5}
+                        bg="white"
+                        boxShadow="xl"
+                        gap={0}
+                        initial={hasMounted ? false : {x: "-100%", opacity: 0}} // 🔥 Only animate on first mount
+                        animate={{x: 0, opacity: 1}}
+                        exit={{x: "-100%", opacity: 0}}
+                        transition={{type: "spring", stiffness: 300, damping: 30}}
+                    >
+                        <VStack align="stretch" height="100%" pt={"60px"} gap={0}>
+                            <Box
+                                display="flex"
+                                flexDirection="row"
+                                alignItems="center"
+                                justifyContent={"flex-end"}
+                                gap={2}
+                                mr={3}
+                                position={"absolute"}
+                                right={0}
+                                zIndex={2}
+                                background={"white"}
+                                w={"full"}
+                            >
+                                {drawerState === "fully-open" && (
+                                    <Box
+                                        color={theme.colors.perygonPink}
+                                        onClick={toggleDrawer}
+                                        m={0}
+                                        p={0}
+                                        zIndex={1}
+                                    >
+                                        <ChevronLeft
+                                            style={{
+                                                fontSize: "1.4rem",
+                                                cursor: "pointer",
+                                            }}
+                                        />
+                                    </Box>
+                                )}
+                                {drawerState === "half-open" && (
+                                    <Box
+                                        color={theme.colors.perygonPink}
+                                        onClick={toggleDrawer}
+                                        m={0}
+                                        p={0}
+                                        zIndex={1}
+                                    >
+                                        <ChevronRight
+                                            style={{
+                                                fontSize: "1.4rem",
+                                                cursor: "pointer",
+                                            }}
+                                        />
+                                    </Box>
+                                )}
 
                 {drawerState === "fully-open" && (
                   <Box
