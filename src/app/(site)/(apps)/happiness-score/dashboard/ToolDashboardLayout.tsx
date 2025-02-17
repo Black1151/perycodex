@@ -70,7 +70,7 @@ const ToolDashboardLayout: React.FC = () => {
         );
 
         setActiveDashboardName(activeDashboard ? activeDashboard.dashboardName : "Dashboard");
-    }, [pathname])
+    }, [pathname, dashboardList])
 
     const menuItems = dashboardList.map((dashboard) => {
         const iconKey = dashboard.smallIconImageUrl || "default";
