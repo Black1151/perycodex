@@ -68,7 +68,6 @@ const ToolDashboardLayout: React.FC = () => {
         const activeDashboard = dashboardList.find((dashboard) =>
             pathname.includes(dashboard.dashboardUrl)
         );
-
         setActiveDashboardName(activeDashboard ? activeDashboard.dashboardName : "Dashboard");
     }, [pathname, dashboardList])
 
