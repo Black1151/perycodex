@@ -80,7 +80,7 @@ const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButto
                         alt="Google"
                         boxSize={6}
                     />
-                    <Text>Continue with Apple</Text>
+                    {showText && <Text>Continue with Apple</Text>}
                 </Flex>
             </Button>
         </Flex>
