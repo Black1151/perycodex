@@ -41,7 +41,7 @@ const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButto
                     {showText && <Text>Continue with Microsoft</Text>}
                 </Flex>
             </Button>
-            {!isAppleDevice && (
+            {/*{!isAppleDevice && (*/}
                 <Button
                     px={6}
                     height={12}
@@ -62,7 +62,7 @@ const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButto
                         {showText && <Text>Continue with Google</Text>}
                     </Flex>
                 </Button>
-            )}
+            {/*)}*/}
             <Button
                 px={6}
                 height={12}
@@ -75,7 +75,12 @@ const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButto
             >
                 <Flex align="center" justify={showText ? "flex-start" : "center"} gap={showText ? 4 : 0}
                       width="100%">
-                    <Text>Continue with Apple</Text>
+                    <Image
+                        src="https://perygonblob.blob.core.windows.net/public/apple.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D"
+                        alt="Google"
+                        boxSize={6}
+                    />
+                    {showText && <Text>Continue with Apple</Text>}
                 </Flex>
             </Button>
         </Flex>
