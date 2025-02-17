@@ -11,6 +11,7 @@ export interface MenuItem {
     icon: JSX.Element;
     onClick: () => void;
     category?: string;
+    active?: boolean;
 }
 
 interface LeftHandNavigationDrawerProps {
@@ -216,10 +217,14 @@ export function LeftHandNavigationDrawer({
                                                             showIconOnly={drawerState !== "fully-open"}
                                                             iconSize={6}
                                                             isLeft={true}
+                                                            active={item.active}
                                                             hoverStyles={{
-                                                                background: `linear-gradient(45deg, ${theme.colors.perygonPink}, ${theme.colors.seduloRed})`,
-                                                                color: "white",
+                                                                background: !item.active
+                                                                    ? `linear-gradient(45deg, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`
+                                                                    : "transparent",
+                                                                color: !item.active ? "white" : "black",
                                                             }}
+
                                                         />
                                                         {index < itemsInCategory.length - 1 && (
                                                             <Divider
