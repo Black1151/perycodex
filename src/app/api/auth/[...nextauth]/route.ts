@@ -38,6 +38,17 @@ const handler = NextAuth({
             clientSecret: APPLE_CLIENT_SECRET!,
         })
     ],
+    cookies: {
+        pkceCodeVerifier: {
+            name: "next-auth.pkce.code_verifier",
+            options: {
+                httpOnly: true,
+                sameSite: "none",
+                path: "/",
+                secure: true,
+            },
+        },
+    },
     session: {
         strategy: 'jwt',
     },
