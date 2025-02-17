@@ -115,6 +115,14 @@ export function LoginForm() {
                 if (NextAuthSession !== null) {
                     if (NextAuthSession.user?.email != undefined) {
 
+                        const loginType = () => {
+                            switch(NextAuthSession.accountProvider) {
+                                case 'azure-ad': return 1;
+                                case 'google': return 2;
+                                case 'apple': return 3;
+                            }
+                        }
+
                         const result: { redirectUrl: string } | null = await fetchClient(
                             endpoint, {
                                 method: "POST",
@@ -123,7 +131,7 @@ export function LoginForm() {
                                     email: NextAuthSession.user.email,
                                     password: null,
                                     accessToken: NextAuthSession.accessToken,
-                                    type: NextAuthSession.accountProvider == 'google' ? 2 : 1
+                                    type: loginType()
                                 },
                                 suppressError: true
                             });
