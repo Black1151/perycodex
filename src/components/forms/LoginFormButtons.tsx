@@ -41,7 +41,7 @@ const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButto
                     {showText && <Text>Continue with Microsoft</Text>}
                 </Flex>
             </Button>
-            {!isAppleDevice && (
+            {/*{!isAppleDevice && (*/}
                 <Button
                     px={6}
                     height={12}
@@ -62,7 +62,7 @@ const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButto
                         {showText && <Text>Continue with Google</Text>}
                     </Flex>
                 </Button>
-            )}
+            {/*)}*/}
             <Button
                 px={6}
                 height={12}
