@@ -1,12 +1,15 @@
 import NextAuth from 'next-auth';
 import AzureADProvider from 'next-auth/providers/azure-ad';
 import Google from "next-auth/providers/google";
+import Apple from "next-auth/providers/apple";
 
 const AZURE_AD_CLIENT_ID='80b0a206-ea3a-4f28-a8d0-aadbb1655bd5';
 const AZURE_AD_CLIENT_SECRET='0gj8Q~moeoK0GMU1gE2.GemT_Gf~hrbU036cKdkr';
 const AZURE_AD_TENANT_ID='7104784f-19f4-44e4-9fea-2f732f3134e4';
 const GOOGLE_CLIENT_ID='482345564570-3bmg8qh4snqfrlo25dlj8k4kvrh3fn37.apps.googleusercontent.com';
 const GOOGLE_CLIENT_SECRET='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';
+const APPLE_CLIENT_ID = 'uk.co.sedulo.perygon';
+const APPLE_CLIENT_SECRET = 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjYyV1ZYOTZVVVYifQ.eyJhdWQiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiaXNzIjoiUDM0VUpRVEZKVCIsImlhdCI6MTczOTc5MzQ2MSwiZXhwIjoxNzU1MzQ1MTM0LCJzdWIiOiJwZXJ5Z29uLnNlZHVsby5jby51ayJ9.6WTN2JZS0BFLgANuLLG5OFFfnKwIM6GTnzkqtmatmAtCdTPRcSc2U1UyCTwSowb8czPBB-FQKCpoLxGm_xi08g';
 
 const handler = NextAuth({
     debug: true,
@@ -30,6 +33,10 @@ const handler = NextAuth({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,  // Your Google Client Secret
             checks: ['none']
         }),
+        Apple({
+            clientId: APPLE_CLIENT_ID!,
+            clientSecret: APPLE_CLIENT_SECRET!,
+        })
     ],
     session: {
         strategy: 'jwt',

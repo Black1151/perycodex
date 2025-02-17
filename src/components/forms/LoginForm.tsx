@@ -36,7 +36,7 @@ export function LoginForm() {
     const searchParams = useSearchParams();
     const [clickedButton, setClickedButton] = useState<ButtonId | null>(null);
     const secureLink = searchParams.get("l");
-    type ButtonId = 'email' | 'microsoft' | 'google';
+    type ButtonId = 'email' | 'microsoft' | 'google' | 'apple';
     const showText = useBreakpointValue({base: false, md: true});
 
     const {data: session, status} = useSession();
@@ -67,6 +67,9 @@ export function LoginForm() {
                 break;
             case 'google':
                 signIn('google', {callbackUrl: callbackUrl});
+                break;
+            case 'apple':
+                signIn('apple', {callbackUrl: callbackUrl});
                 break;
             default:
             // Handle default or error case

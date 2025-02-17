@@ -5,7 +5,7 @@ import {useEffect, useState} from "react";
 
 interface LoginFormButtonsProps {
     loading: boolean;
-    handleButtonClick: (buttonId: "microsoft" | "google") => void;
+    handleButtonClick: (buttonId: "microsoft" | "google" | "apple") => void;
 }
 
 const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButtonClick}) => {
@@ -63,6 +63,21 @@ const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButto
                     </Flex>
                 </Button>
             )}
+            <Button
+                px={6}
+                height={12}
+                isLoading={loading}
+                color="lightGray"
+                backgroundColor="white"
+                border="1px solid lightGray"
+                _hover={{color: "white", backgroundColor: "lightGray"}}
+                onClick={() => handleButtonClick("apple")}
+            >
+                <Flex align="center" justify={showText ? "flex-start" : "center"} gap={showText ? 4 : 0}
+                      width="100%">
+                    <Text>Continue with Apple</Text>
+                </Flex>
+            </Button>
         </Flex>
     );
 };
