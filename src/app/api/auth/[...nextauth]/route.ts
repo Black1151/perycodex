@@ -11,6 +11,8 @@ const GOOGLE_CLIENT_SECRET='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';
 const APPLE_CLIENT_ID = 'uk.co.perygon';
 const APPLE_CLIENT_SECRET = 'eyJhbGciOiJFUzI1NiIsImtpZCI6Ik5MM1BKVDNZSloifQ.eyJhdWQiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiaXNzIjoiUDM0VUpRVEZKVCIsImlhdCI6MTczOTgwMTQwNSwiZXhwIjoxNzU1MzQ1MTM0LCJzdWIiOiJ1ay5jby5wZXJ5Z29uIn0.ZeHp9PN4se6-9ersWfXT6fOLT8W22kWmG1vB50AQNvBmVfnO2i2KrqZuKBtak9Xe15VgefZwNexNdsBR-q-IGw';
 
+const cookiePrefix = "__Secure-"
+
 const handler = NextAuth({
     debug: true,
     secret: AZURE_AD_CLIENT_SECRET,
@@ -42,17 +44,15 @@ const handler = NextAuth({
         Apple({
             clientId: APPLE_CLIENT_ID!,
             clientSecret: APPLE_CLIENT_SECRET!,
-            wellKnown: "https://appleid.apple.com/.well-known/openid-configuration",
             checks: ["pkce"],
             token: {
                 url: `https://appleid.apple.com/auth/token`,
             },
             authorization: {
-                url: 'https://appleid.apple.com/auth/authorize',
                 params: {
-                    scope: '',
+                    scope: 'openid email',
                     response_type: 'code',
-                    response_mode: 'query',
+                    response_mode: 'form_post',
                     state: crypto.randomUUID()
                 },
             },
@@ -63,12 +63,13 @@ const handler = NextAuth({
     ],
     cookies: {
         pkceCodeVerifier: {
-            name: "next-auth.pkce.code_verifier",
+            name: `${cookiePrefix}authjs.pkce.code_verifier`,
             options: {
                 httpOnly: true,
-                sameSite: "none",
+                sameSite: "lax",
                 path: "/",
                 secure: true,
+                maxAge: 60 * 15, // 15 minutes in seconds
             },
         },
     },
