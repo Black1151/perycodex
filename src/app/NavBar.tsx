@@ -151,7 +151,7 @@ export const NavBar: React.FC<NavBarProps> = ({
                     {
                         label: "Admin Tools",
                         icon: <SettingsIcon/>,
-                        onClick: () => router.push("/customers"),
+                        onClick: () => router.push("/customers?customerType=external"),
                     },
                     ...commonMenuItems,
                 ];

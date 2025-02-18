@@ -45,7 +45,7 @@ export function BottomNavigationMenu({menuItems}: BottomNavigationMenuProps) {
                 }}
             >
                 {menuItems.map((menuItem) => (
-                    <Box key={menuItem.label} minWidth="80px">
+                    <Box key={menuItem.label} minWidth="80px" h={'full'}>
                         {" "}
                         <BottomNavigationMenuItem menuItem={menuItem}/>
                     </Box>
