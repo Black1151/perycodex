@@ -45,7 +45,7 @@ const handler = NextAuth({
             name: "next-auth.pkce.code_verifier",
             options: {
                 httpOnly: true,
-                sameSite: "none",
+                sameSite: "lax",
                 path: "/",
                 secure: true,
             },
@@ -87,6 +87,12 @@ const handler = NextAuth({
 
             // Return the modified session object
             return session;
+        },
+        async signIn({ user, account, profile }: { user: User | AdapterUser, account: Account | null, profile?: Profile }) {
+            if (account.provider === "apple") {
+                sessionStorage.setItem("apple_pkce", account.code_verifier);
+            }
+            return true;
         },
     },
 });
