@@ -44,7 +44,7 @@ const handler = NextAuth({
             name: "next-auth.pkce.code_verifier",
             options: {
                 httpOnly: true,
-                sameSite: "none",
+                sameSite: "Lax",
                 path: "/",
                 secure: true,
             },
