@@ -37,8 +37,7 @@ const handler = NextAuth({
         Apple({
             clientId: APPLE_CLIENT_ID!,
             clientSecret: APPLE_CLIENT_SECRET!,
-            checks: ['none'],
-            authorization: { params: { scope: "openid email" } }
+            authorization: { params: { scope: "openid email profile" } }
         })
     ],
     cookies: {
