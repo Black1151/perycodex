@@ -2,6 +2,7 @@ import NextAuth from 'next-auth';
 import AzureADProvider from 'next-auth/providers/azure-ad';
 import Google from "next-auth/providers/google";
 import Apple from "next-auth/providers/apple";
+import { Account, Profile, User } from "next-auth";
 
 const AZURE_AD_CLIENT_ID='80b0a206-ea3a-4f28-a8d0-aadbb1655bd5';
 const AZURE_AD_CLIENT_SECRET='0gj8Q~moeoK0GMU1gE2.GemT_Gf~hrbU036cKdkr';
@@ -88,9 +89,11 @@ const handler = NextAuth({
             // Return the modified session object
             return session;
         },
-        async signIn({ user, account, profile }: { user: User | AdapterUser, account: Account | null, profile?: Profile }) {
-            if (account.provider === "apple") {
-                sessionStorage.setItem("apple_pkce", account.code_verifier);
+        async signIn({ user, account, profile }: { user: User, account: Account | null, profile?: Profile }) {
+            if (account !== null) {
+                if (typeof account.code_verifier === "string") {
+                    sessionStorage.setItem("apple_pkce", account.code_verifier);
+                }
             }
             return true;
         },
