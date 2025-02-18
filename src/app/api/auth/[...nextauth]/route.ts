@@ -63,13 +63,12 @@ const handler = NextAuth({
     ],
     cookies: {
         pkceCodeVerifier: {
-            name: `${cookiePrefix}authjs.pkce.code_verifier`,
+            name: "next-auth.pkce.code_verifier",
             options: {
                 httpOnly: true,
-                sameSite: "lax",
+                sameSite: "none",
                 path: "/",
                 secure: true,
-                maxAge: 60 * 15, // 15 minutes in seconds
             },
         },
     },
