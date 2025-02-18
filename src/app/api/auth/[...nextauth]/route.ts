@@ -33,10 +33,32 @@ const handler = NextAuth({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,  // Your Google Client Secret
             checks: ['none']
         }),
+        // Apple({
+        //     clientId: APPLE_CLIENT_ID!,
+        //     clientSecret: APPLE_CLIENT_SECRET!,
+        //     authorization: { params: { scope: "openid email" } }
+        // })
+
         Apple({
             clientId: APPLE_CLIENT_ID!,
             clientSecret: APPLE_CLIENT_SECRET!,
-            authorization: { params: { scope: "openid email" } }
+            wellKnown: "https://appleid.apple.com/.well-known/openid-configuration",
+            checks: ["pkce"],
+            token: {
+                url: `https://appleid.apple.com/auth/token`,
+            },
+            authorization: {
+                url: 'https://appleid.apple.com/auth/authorize',
+                params: {
+                    scope: '',
+                    response_type: 'code',
+                    response_mode: 'query',
+                    state: crypto.randomUUID()
+                },
+            },
+            client: {
+                token_endpoint_auth_method: "client_secret_post",
+            },
         })
     ],
     cookies: {
