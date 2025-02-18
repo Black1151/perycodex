@@ -11,8 +11,6 @@ const GOOGLE_CLIENT_SECRET='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';
 const APPLE_CLIENT_ID = 'uk.co.perygon';
 const APPLE_CLIENT_SECRET = 'eyJhbGciOiJFUzI1NiIsImtpZCI6Ik5MM1BKVDNZSloifQ.eyJhdWQiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiaXNzIjoiUDM0VUpRVEZKVCIsImlhdCI6MTczOTgwMTQwNSwiZXhwIjoxNzU1MzQ1MTM0LCJzdWIiOiJ1ay5jby5wZXJ5Z29uIn0.ZeHp9PN4se6-9ersWfXT6fOLT8W22kWmG1vB50AQNvBmVfnO2i2KrqZuKBtak9Xe15VgefZwNexNdsBR-q-IGw';
 
-const cookiePrefix = "__Secure-"
-
 const handler = NextAuth({
     debug: true,
     secret: AZURE_AD_CLIENT_SECRET,
@@ -35,30 +33,10 @@ const handler = NextAuth({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,  // Your Google Client Secret
             checks: ['none']
         }),
-        // Apple({
-        //     clientId: APPLE_CLIENT_ID!,
-        //     clientSecret: APPLE_CLIENT_SECRET!,
-        //     authorization: { params: { scope: "openid email" } }
-        // })
-
         Apple({
             clientId: APPLE_CLIENT_ID!,
             clientSecret: APPLE_CLIENT_SECRET!,
-            checks: ["pkce"],
-            token: {
-                url: `https://appleid.apple.com/auth/token`,
-            },
-            authorization: {
-                params: {
-                    scope: 'openid email',
-                    response_type: 'code',
-                    response_mode: 'form_post',
-                    state: crypto.randomUUID()
-                },
-            },
-            client: {
-                token_endpoint_auth_method: "client_secret_post",
-            },
+            authorization: { params: { scope: "openid email profile" } }
         })
     ],
     cookies: {
