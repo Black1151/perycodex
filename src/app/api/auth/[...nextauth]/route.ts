@@ -50,9 +50,9 @@ const handler = NextAuth({
             },
             authorization: {
                 params: {
-                    scope: 'openid email',
+                    scope: 'openid profile',
                     response_type: 'code',
-                    response_mode: 'query',
+                    response_mode: 'form_post',
                     state: crypto.randomUUID()
                 },
             },
