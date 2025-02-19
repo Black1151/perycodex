@@ -31,6 +31,8 @@ const LinkPage = async ({ searchParams }: { searchParams: SearchParams }) => {
         }),
       });
 
+      console.log(response);
+
       if (!response.ok) {
         const errorData = await response.json();
         error = errorData?.message || "Failed to fetch data.";

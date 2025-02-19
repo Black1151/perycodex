@@ -65,6 +65,11 @@ export default function WorkflowLayout({
                                            layout,
                                            workflowInstanceId,
                                        }: WorkflowLayoutProps) {
+    const {user} = useUser();
+    const router = useRouter();
+    const {fetchClient} = useFetchClient();
+
+
     const {
         toolId,
         setToolId,
@@ -77,9 +82,6 @@ export default function WorkflowLayout({
     const [currentForm, setCurrentForm] = useState<Form | null>(null);
     const [formData, setFormData] = useState<any | null>(null);
     const [isNew, setIsNew] = useState<boolean>(false);
-    const {user} = useUser();
-    const router = useRouter();
-    const {fetchClient} = useFetchClient();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -166,7 +168,9 @@ export default function WorkflowLayout({
                         formDataset.startedBy === user?.userId ||
                         // Anonymous users
                         formDataset.createdBy === 0 ||
-                        formDataset.startedBy === 0;
+                        formDataset.startedBy === 0 ||
+
+                        user?.role === 'CA';
 
                     if (!isAuthorized) {
                         setIsModalOpen(true);

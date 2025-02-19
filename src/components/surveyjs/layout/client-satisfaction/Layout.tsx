@@ -1,6 +1,6 @@
 import React from "react";
 import {Survey} from "survey-react-ui";
-import {Flex, Text, Box} from "@chakra-ui/react";
+import {Flex, Text, Box, Button} from "@chakra-ui/react";
 import useSurveyNavigation from "@/components/surveyjs/useSurveyNavigation";
 import {eNPSLayoutProps} from "@/types/surveyJs";
 import SurveyNavigationGuard from "@/components/surveyjs/SurveyNavigationGuard";
@@ -51,9 +51,21 @@ const ClientSatisfactionLayout: React.FC<eNPSLayoutProps> = ({model, dataset, ca
                         Client Satisfaction
                     </LetterFlyIn>
                 </Text>
-                <Box bg={'white'} borderRadius={'lg'} w={'500px'}>
-                    <Survey model={model}/>
-                </Box>
+                <Flex
+                    direction="row"
+                    justify={"center"}
+                    align={"center"}
+                    height={"full"}
+                    w={'full'}
+                    gap={2}>
+                    <Box>
+                        <Button onClick={prevPage}>Previous</Button>
+                        <Button onClick={nextPage}>Next</Button>
+                    </Box>
+                    <Box bg={'white'} borderRadius={'lg'} w={'full'}>
+                        <Survey model={model}/>
+                    </Box>
+                </Flex>
             </Flex>
         </SurveyNavigationGuard>
     );
