@@ -1,4 +1,5 @@
 import NextAuth from 'next-auth';
+import type {DefaultSession, Session} from 'next-auth';
 import AzureADProvider from 'next-auth/providers/azure-ad';
 import Google from "next-auth/providers/google";
 import Apple from "next-auth/providers/apple";
@@ -12,9 +13,13 @@ const GOOGLE_CLIENT_SECRET='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';
 const APPLE_CLIENT_ID = 'uk.co.perygon';
 const APPLE_CLIENT_SECRET = 'eyJhbGciOiJFUzI1NiIsImtpZCI6Ik5MM1BKVDNZSloifQ.eyJhdWQiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiaXNzIjoiUDM0VUpRVEZKVCIsImlhdCI6MTczOTgwMTQwNSwiZXhwIjoxNzU1MzQ1MTM0LCJzdWIiOiJ1ay5jby5wZXJ5Z29uIn0.ZeHp9PN4se6-9ersWfXT6fOLT8W22kWmG1vB50AQNvBmVfnO2i2KrqZuKBtak9Xe15VgefZwNexNdsBR-q-IGw';
 
+export type { Session } from "next-auth";
+
 declare module "next-auth" {
     interface Session {
-        pkce_code_verifier?: string | null;
+        user: {
+            id: string;
+        } & DefaultSession["user"];
     }
 }
 
@@ -43,26 +48,34 @@ const handler = NextAuth({
         Apple({
             clientId: APPLE_CLIENT_ID!,
             clientSecret: APPLE_CLIENT_SECRET!,
+            wellKnown: "https://appleid.apple.com/.well-known/openid-configuration",
+            checks: ["pkce"],
+            token: {
+                url: `https://appleid.apple.com/auth/token`,
+            },
             authorization: {
+                url: "https://appleid.apple.com/auth/authorize",
                 params: {
-                    scope: "openid email",
-                    prompt: "select_account",
-                }
-            }
-        })
+                    scope: "",
+                    response_type: "code",
+                    response_mode: "query",
+                    state: crypto.randomUUID(),
+                },
+            },
+            client: {
+                token_endpoint_auth_method: "client_secret_post",
+            },
+        }),
     ],
     cookies: {
         pkceCodeVerifier: {
-            name: "next-auth.pkce.code_verifier",
+            name: "authjs.pkce.code_verifier",
             options: {
                 httpOnly: true,
-                sameSite: "None",
-                secure: true,
+                sameSite: "none",
+                path: "/",
             },
         },
-    },
-    session: {
-        strategy: 'jwt',
     },
     jwt: {
         encode: async ({ secret, token }) => {
@@ -94,25 +107,13 @@ const handler = NextAuth({
             }
             return token;
         },
-        async session({ session, token }) {
-
-            if (token && typeof token.accessToken === 'string') {
-                session.accessToken = token.accessToken;
-            }
-            if (token && typeof token.idToken === 'string') {
-                session.idToken = token.idToken;
-            }
-            if (token && typeof token.accountProvider === 'string') {
-                session.accountProvider = token.accountProvider;
-            }
-
-            if (typeof window !== "undefined") {
-                session.pkce_code_verifier = sessionStorage.getItem("pkce_code_verifier");
-            }
-
-            // Return the modified session object
-            return session;
-        },
+        session: ({ session, user }) => ({
+            ...session,
+            user: {
+                ...session.user,
+                id: user.id,
+            },
+        }),
         async signIn({ user, account, profile }: { user: User, account: Account | null, profile?: Profile }) {
             if (account !== null) {
                 if (typeof account.code_verifier === "string") {
