@@ -37,11 +37,11 @@ const handler = NextAuth({
         Apple({
             clientId: APPLE_CLIENT_ID!,
             clientSecret: APPLE_CLIENT_SECRET!,
+            checks: ['none'],
             authorization: {
                 params: {
                     scope: "openid email",
                     prompt: "select_account",
-                    checks: ['none'], // Array causes the issue
                     nonce: crypto.randomBytes(16).toString("hex"),
                 } as unknown as Record<string, any>,
             },
