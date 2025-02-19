@@ -41,7 +41,6 @@
     "survey-react-ui": "^1.12.2"
   },
   "devDependencies": {
-    "@acme/prettier-config": "workspace:^0.1.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
