@@ -1,4 +1,4 @@
-import NextAuth, {SessionStrategy} from 'next-auth';
+import NextAuth, {type NextAuthOptions, SessionStrategy} from 'next-auth';
 import AzureADProvider from 'next-auth/providers/azure-ad';
 import Google from "next-auth/providers/google";
 import Apple from "next-auth/providers/apple";
@@ -38,7 +38,7 @@ declare module "next-auth" {
 
 
 
-export const authOptions = {
+const authOptions: NextAuthOptions = {
     debug: true,
     secret: AZURE_AD_CLIENT_SECRET,
     providers: [
