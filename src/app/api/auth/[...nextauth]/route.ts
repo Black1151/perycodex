@@ -3,6 +3,8 @@ import AzureADProvider from 'next-auth/providers/azure-ad';
 import Google from "next-auth/providers/google";
 import Apple from "next-auth/providers/apple";
 import crypto from "crypto";
+import {randomUUID} from "node:crypto";
+import {NextResponse} from "next/server";
 
 const AZURE_AD_CLIENT_ID='80b0a206-ea3a-4f28-a8d0-aadbb1655bd5';
 const AZURE_AD_CLIENT_SECRET='0gj8Q~moeoK0GMU1gE2.GemT_Gf~hrbU036cKdkr';
@@ -11,6 +13,14 @@ const GOOGLE_CLIENT_ID='482345564570-3bmg8qh4snqfrlo25dlj8k4kvrh3fn37.apps.googl
 const GOOGLE_CLIENT_SECRET='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';
 const APPLE_CLIENT_ID = 'uk.co.perygon';
 const APPLE_CLIENT_SECRET = 'eyJhbGciOiJFUzI1NiIsImtpZCI6Ik5MM1BKVDNZSloifQ.eyJhdWQiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiaXNzIjoiUDM0VUpRVEZKVCIsImlhdCI6MTczOTgwMTQwNSwiZXhwIjoxNzU1MzQ1MTM0LCJzdWIiOiJ1ay5jby5wZXJ5Z29uIn0.ZeHp9PN4se6-9ersWfXT6fOLT8W22kWmG1vB50AQNvBmVfnO2i2KrqZuKBtak9Xe15VgefZwNexNdsBR-q-IGw';
+
+function generateCodeChallenge(codeVerifier: string) {
+    const msg = Buffer.from(codeVerifier, 'utf8');
+    const hash = crypto.createHash('sha256').update(msg).digest();
+    const base64Digest = hash.toString('base64url');
+    return base64Digest;
+}
+
 
 const handler = NextAuth({
     debug: true,
@@ -71,6 +81,9 @@ const handler = NextAuth({
         signOut: 'auth/sign-out'
     },
     callbacks: {
+        async signIn({ user, account, profile, credentials }) {
+            return true; // For other providers
+        },
         async redirect({ url, baseUrl }) {
             return url.startsWith('/') ? new URL(url, baseUrl).toString() : url;
         },
@@ -99,4 +112,31 @@ const handler = NextAuth({
     },
 });
 
-export { handler as GET, handler as POST }
+export async function GET(req: Request) {
+    const url = new URL(req.url)
+    const provider = url.searchParams.get("provider")
+
+    if (provider === 'apple') {
+        const codeVerifier = randomUUID();
+        if (!codeVerifier) {
+            throw new Error("Could not generate code verifier");
+        }
+        const codeChallenge = generateCodeChallenge(codeVerifier);
+
+        const authorizationUrl = `https://appleid.apple.com/auth/authorize?response_type=code&client_id=${process.env.APPLE_CLIENT_ID}&redirect_uri=${process.env.NEXTAUTH_URL}/api/auth/callback/apple&scope=openid%20name%20email&state=some_state&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+
+        const response = new NextResponse(null, {
+            status: 302,
+            headers: {
+                'Set-Cookie': `code_verifier=${codeVerifier}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`,
+                'Location': authorizationUrl,
+            },
+        });
+
+        return response; // Correctly returning NextResponse
+    }
+
+    return handler(req);
+}
+
+export { handler as POST }
