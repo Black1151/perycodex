@@ -1,10 +1,14 @@
-import NextAuth from 'next-auth';
+import NextAuth, {SessionStrategy} from 'next-auth';
 import AzureADProvider from 'next-auth/providers/azure-ad';
 import Google from "next-auth/providers/google";
 import Apple from "next-auth/providers/apple";
 import crypto from "crypto";
 import {randomUUID} from "node:crypto";
 import {NextResponse} from "next/server";
+import { type DefaultJWT } from "next-auth/jwt"; // Import the correct type
+import { type DefaultSession } from "next-auth"; // Import the correct type
+import { AdapterUser } from "next-auth/adapters"; // Import AdapterUser type
+import { Account, Profile, User } from "next-auth";
 
 const AZURE_AD_CLIENT_ID='80b0a206-ea3a-4f28-a8d0-aadbb1655bd5';
 const AZURE_AD_CLIENT_SECRET='0gj8Q~moeoK0GMU1gE2.GemT_Gf~hrbU036cKdkr';
@@ -21,8 +25,20 @@ function generateCodeChallenge(codeVerifier: string) {
     return base64Digest;
 }
 
+declare module "next-auth" {
+    interface Session {
+        user: {
+            id: string; // Add the id property
+        } & DefaultSession["user"]; // Keep existing user properties
+        accessToken?: string;
+        idToken?: string;
+        accountProvider?: string;
+    }
+}
 
-const handler = NextAuth({
+
+
+export const authOptions = {
     debug: true,
     secret: AZURE_AD_CLIENT_SECRET,
     providers: [
@@ -70,7 +86,7 @@ const handler = NextAuth({
         },
     },
     session: {
-        strategy: 'jwt',
+        strategy: 'jwt' as SessionStrategy, // Correct way to set the strategy
     },
     events: {
         async signOut() {
@@ -81,33 +97,36 @@ const handler = NextAuth({
         signOut: 'auth/sign-out'
     },
     callbacks: {
-        async redirect({ url, baseUrl }) {
+        async redirect({ url, baseUrl }: { url: string; baseUrl: string }) { // Explicit types
             return url.startsWith('/') ? new URL(url, baseUrl).toString() : url;
         },
-        async jwt({ token, account }) {
+        async jwt({ token, account }: { token: DefaultJWT; account: Account | null }) { // Explicit types
             if (account) {
                 token.accessToken = account.access_token;
                 token.accountProvider = account.provider;
             }
             return token;
         },
-        async session({ session, token }) {
+        async session({ session, token }: { session: DefaultSession; token: DefaultJWT }) { // Explicit types
+            // if (session?.user) {
+            //     session.user.id = token.sub ?? ""; // Or use a conditional check
+            // }
+            // if (token && typeof token.accessToken === 'string') {
+            //     session.accessToken = token.accessToken;
+            // }
+            // if (token && typeof token.idToken === 'string') {
+            //     session.idToken = token.idToken;
+            // }
+            // if (token && typeof token.accountProvider === 'string') {
+            //     session.accountProvider = token.accountProvider;
+            // }
 
-            if (token && typeof token.accessToken === 'string') {
-                session.accessToken = token.accessToken;
-            }
-            if (token && typeof token.idToken === 'string') {
-                session.idToken = token.idToken;
-            }
-            if (token && typeof token.accountProvider === 'string') {
-                session.accountProvider = token.accountProvider;
-            }
-
-            // Return the modified session object
             return session;
         },
     },
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export async function GET(req: Request) {
     const url = new URL(req.url)
