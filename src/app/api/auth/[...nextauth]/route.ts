@@ -81,9 +81,6 @@ const handler = NextAuth({
         signOut: 'auth/sign-out'
     },
     callbacks: {
-        async signIn({ user, account, profile, credentials }) {
-            return true; // For other providers
-        },
         async redirect({ url, baseUrl }) {
             return url.startsWith('/') ? new URL(url, baseUrl).toString() : url;
         },
@@ -123,20 +120,21 @@ export async function GET(req: Request) {
         }
         const codeChallenge = generateCodeChallenge(codeVerifier);
 
+        // Modify the NEXTAUTH_URL to include the code_challenge
         const authorizationUrl = `https://appleid.apple.com/auth/authorize?response_type=code&client_id=${process.env.APPLE_CLIENT_ID}&redirect_uri=${process.env.NEXTAUTH_URL}/api/auth/callback/apple&scope=openid%20name%20email&state=some_state&code_challenge=${codeChallenge}&code_challenge_method=S256`;
 
         const response = new NextResponse(null, {
             status: 302,
             headers: {
                 'Set-Cookie': `code_verifier=${codeVerifier}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`,
-                'Location': authorizationUrl,
+                'Location': authorizationUrl, // Redirect to Apple with the code_challenge
             },
         });
 
-        return response; // Correctly returning NextResponse
+        return response;
     }
 
-    return handler(req);
+    return handler(req); // Let NextAuth.js handle other requests
 }
 
 export { handler as POST }
