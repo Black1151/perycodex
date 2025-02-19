@@ -91,7 +91,7 @@ const handler = NextAuth({
         async signIn({ user, account, profile }: { user: User, account: Account | null, profile?: Profile }) {
             if (account !== null) {
                 if (typeof account.code_verifier === "string") {
-                    sessionStorage.setItem("apple_pkce", account.code_verifier);
+                    sessionStorage.setItem("pkce_code_verifier", account.code_verifier);
                 }
             }
             return true;
