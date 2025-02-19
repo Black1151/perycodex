@@ -107,7 +107,7 @@ const handler = NextAuth({
             }
 
             if (typeof window !== "undefined") {
-                session.pkce_code_verifier = new URLSearchParams(window.location.search).get("pkce_code_verifier");
+                session.pkce_code_verifier = sessionStorage.getItem("pkce_code_verifier");
             }
 
             // Return the modified session object
