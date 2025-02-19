@@ -26,7 +26,7 @@ function generateCodeChallenge(codeVerifier: string) {
 }
 
 declare module "next-auth" {
-    interface Session {
+    interface session {
         user: {
             id: string; // Add the id property
         } & DefaultSession["user"]; // Keep existing user properties
@@ -107,9 +107,9 @@ export const authOptions = {
             }
             return token;
         },
-        async session({ session, token }: { session: DefaultSession; token: DefaultJWT }) { // Explicit types
+        async session({ session, token }: { session: DefaultSession; token: DefaultJWT }) {
             // if (session?.user) {
-            //     session.user.id = token.sub ?? ""; // Or use a conditional check
+            //     session.user.id = token.sub ?? "";
             // }
             // if (token && typeof token.accessToken === 'string') {
             //     session.accessToken = token.accessToken;
@@ -129,8 +129,8 @@ export const authOptions = {
 const handler = NextAuth(authOptions);
 
 export async function GET(req: Request) {
-    const url = new URL(req.url)
-    const provider = url.searchParams.get("provider")
+    const url = new URL(req.url);
+    const provider = url.searchParams.get("provider");
 
     if (provider === 'apple') {
         const codeVerifier = randomUUID();
@@ -139,21 +139,22 @@ export async function GET(req: Request) {
         }
         const codeChallenge = generateCodeChallenge(codeVerifier);
 
-        // Modify the NEXTAUTH_URL to include the code_challenge
-        const authorizationUrl = `https://appleid.apple.com/auth/authorize?response_type=code&client_id=${process.env.APPLE_CLIENT_ID}&redirect_uri=${process.env.NEXTAUTH_URL}/api/auth/callback/apple&scope=openid%20name%20email&state=some_state&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+        // Generate a state value (important!)
+        const state = randomUUID(); // Or use a more robust method
+
+        const authorizationUrl = `https://appleid.apple.com/auth/authorize?response_type=code&client_id=${process.env.APPLE_CLIENT_ID}&redirect_uri=${process.env.NEXTAUTH_URL}/api/auth/callback/apple&scope=openid%20name%20email&state=${state}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
 
         const response = new NextResponse(null, {
             status: 302,
             headers: {
                 'Set-Cookie': `code_verifier=${codeVerifier}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`,
-                'Location': authorizationUrl, // Redirect to Apple with the code_challenge
+                'Location': authorizationUrl,
             },
         });
-
         return response;
     }
 
-    return handler(req); // Let NextAuth.js handle other requests
+    return handler(req); // Delegate to NextAuth.js for other providers and requests
 }
 
-export { handler as POST }
+export { handler as POST };
