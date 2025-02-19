@@ -1,6 +1,6 @@
 "use client";
 
-import {Button, Flex, Text, Image, useBreakpointValue} from "@chakra-ui/react";
+import {Button, Flex, Text, Image, useBreakpointValue, HStack, Box} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
 
 interface LoginFormButtonsProps {
@@ -24,6 +24,16 @@ const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButto
     }, []);
 
     return (
+        <>
+            {!isAppleDevice && (
+                <HStack>
+                    <Box borderBottom="1px solid lightGray" width="100px"/>
+                    <Text color="lightGray" fontSize="xs">
+                        OR
+                    </Text>
+                    <Box borderBottom="1px solid lightGray" width="100px"/>
+                </HStack>
+            )}
         <Flex justify="space-around" gap={{base: 6, md: 4}} flexDirection={{base: "row", md: "column"}}>
             {!isAppleDevice && (
             <Button
@@ -90,7 +100,8 @@ const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButto
                 </Flex>
             </Button>
             )}
-        </Flex>
+            </Flex>
+        </>
     );
 };
 
