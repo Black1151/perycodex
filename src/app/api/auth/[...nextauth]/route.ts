@@ -1,9 +1,8 @@
 import NextAuth from 'next-auth';
-import type {DefaultSession, Session} from 'next-auth';
 import AzureADProvider from 'next-auth/providers/azure-ad';
 import Google from "next-auth/providers/google";
 import Apple from "next-auth/providers/apple";
-import { Account, Profile, User } from "next-auth";
+import crypto from "crypto";
 
 const AZURE_AD_CLIENT_ID='80b0a206-ea3a-4f28-a8d0-aadbb1655bd5';
 const AZURE_AD_CLIENT_SECRET='0gj8Q~moeoK0GMU1gE2.GemT_Gf~hrbU036cKdkr';
@@ -12,16 +11,6 @@ const GOOGLE_CLIENT_ID='482345564570-3bmg8qh4snqfrlo25dlj8k4kvrh3fn37.apps.googl
 const GOOGLE_CLIENT_SECRET='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';
 const APPLE_CLIENT_ID = 'uk.co.perygon';
 const APPLE_CLIENT_SECRET = 'eyJhbGciOiJFUzI1NiIsImtpZCI6Ik5MM1BKVDNZSloifQ.eyJhdWQiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiaXNzIjoiUDM0VUpRVEZKVCIsImlhdCI6MTczOTgwMTQwNSwiZXhwIjoxNzU1MzQ1MTM0LCJzdWIiOiJ1ay5jby5wZXJ5Z29uIn0.ZeHp9PN4se6-9ersWfXT6fOLT8W22kWmG1vB50AQNvBmVfnO2i2KrqZuKBtak9Xe15VgefZwNexNdsBR-q-IGw';
-
-export type { Session } from "next-auth";
-
-declare module "next-auth" {
-    interface Session {
-        user: {
-            id: string;
-        } & DefaultSession["user"];
-    }
-}
 
 const handler = NextAuth({
     debug: true,
@@ -48,45 +37,30 @@ const handler = NextAuth({
         Apple({
             clientId: APPLE_CLIENT_ID!,
             clientSecret: APPLE_CLIENT_SECRET!,
-            wellKnown: "https://appleid.apple.com/.well-known/openid-configuration",
-            checks: ["pkce"],
-            token: {
-                url: `https://appleid.apple.com/auth/token`,
-            },
             authorization: {
-                url: "https://appleid.apple.com/auth/authorize",
                 params: {
-                    scope: "",
-                    response_type: "code",
-                    response_mode: "query",
-                    state: crypto.randomUUID(),
-                },
-            },
-            client: {
-                token_endpoint_auth_method: "client_secret_post",
+                    scope: "openid email",
+                    prompt: "select_account",
+                    checks: ['none'], // Array causes the issue
+                    nonce: crypto.randomBytes(16).toString("hex"),
+                } as unknown as Record<string, any>,
             },
         }),
+
     ],
     cookies: {
         pkceCodeVerifier: {
-            name: "authjs.pkce.code_verifier",
+            name: "next-auth.pkce.code_verifier",
             options: {
                 httpOnly: true,
                 sameSite: "none",
                 path: "/",
+                secure: true,
             },
         },
     },
-    jwt: {
-        encode: async ({ secret, token }) => {
-            if (token) {
-                return JSON.stringify({ ...token, code_verifier: sessionStorage.getItem("pkce_code_verifier") });
-            }
-            return "";
-        },
-        decode: async ({ secret, token }) => {
-            return JSON.parse(token ?? "{}");
-        }
+    session: {
+        strategy: 'jwt',
     },
     events: {
         async signOut() {
@@ -107,20 +81,20 @@ const handler = NextAuth({
             }
             return token;
         },
-        session: ({ session, user }) => ({
-            ...session,
-            user: {
-                ...session.user,
-                id: user.id,
-            },
-        }),
-        async signIn({ user, account, profile }: { user: User, account: Account | null, profile?: Profile }) {
-            if (account !== null) {
-                if (typeof account.code_verifier === "string") {
-                    sessionStorage.setItem("pkce_code_verifier", account.code_verifier);
-                }
+        async session({ session, token }) {
+
+            if (token && typeof token.accessToken === 'string') {
+                session.accessToken = token.accessToken;
             }
-            return true;
+            if (token && typeof token.idToken === 'string') {
+                session.idToken = token.idToken;
+            }
+            if (token && typeof token.accountProvider === 'string') {
+                session.accountProvider = token.accountProvider;
+            }
+
+            // Return the modified session object
+            return session;
         },
     },
 });
