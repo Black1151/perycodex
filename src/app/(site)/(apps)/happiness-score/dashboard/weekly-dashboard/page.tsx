@@ -1,54 +1,33 @@
-import { redirect } from "next/navigation";
-import { getFilteredDashboards } from "@/lib/dashboardUtils";
+import {redirect} from "next/navigation";
+import {getFilteredDashboards} from "@/lib/dashboardUtils";
 import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
-import ToolDashboardLayout from "@/app/(site)/(apps)/happiness-score/dashboard/ToolDashboardLayout";
+import ToolDashboardLayout from "@/app/(site)/(apps)/ToolDashboardLayout";
 import DashboardHeader from "@/app/(site)/(apps)/DashboardHeader";
-import { verifySession } from "@/lib/dal";
+import {verifySession} from "@/lib/dal";
 import WeeklyDashboard from "@/app/(site)/(apps)/happiness-score/dashboard/weekly-dashboard/WeeklyDashboard";
 
 export default async function Home({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
+                                       searchParams,
+                                   }: {
+    searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const session = await verifySession();
+    const session = await verifySession();
 
-  // If there's no session, redirect to login
-  if (!session) {
-    redirect("/login");
-  }
+    // If there's no session, redirect to login
+    if (!session) {
+        redirect("/login");
+    }
 
-  const toolId = searchParams.toolId as string;
-  const workflowId = searchParams.wfId as string;
+    const toolId = searchParams.toolId as string;
+    const workflowId = searchParams.wfId as string;
 
-  if (!workflowId || !toolId) {
-    return redirect("/");
-  }
+    if (!workflowId || !toolId) {
+        return redirect("/");
+    }
 
-  // Fetch filtered dashboards and tool data
-  const { filteredDashboards, toolData, activeDashboardName, redirectPath } =
-    await getFilteredDashboards(
-      toolId,
-      workflowId,
-      "/happiness-score/dashboard/weekly-dashboard",
+    return (
+        <WorkflowEngine toolId={toolId} workflowId={workflowId}>
+            <WeeklyDashboard/>
+        </WorkflowEngine>
     );
-
-  // Redirect to the first dashboard if the user doesn't have access to the current one
-  if (redirectPath) {
-    return redirect(redirectPath);
-  }
-
-  return (
-    <WorkflowEngine toolId={toolId} workflowId={workflowId}>
-      <ToolDashboardLayout dashboardList={filteredDashboards} />
-      <DashboardHeader
-        headingText={
-          activeDashboardName ? activeDashboardName : "Current Week Happiness"
-        }
-        canStartWorkflow={toolData.startInUi}
-        toolUrl={'/happiness-score'}
-      />
-      <WeeklyDashboard />
-    </WorkflowEngine>
-  );
 }

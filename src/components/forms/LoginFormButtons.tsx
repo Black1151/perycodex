@@ -1,6 +1,6 @@
 "use client";
 
-import {Button, Flex, Text, Image, useBreakpointValue} from "@chakra-ui/react";
+import {Button, Flex, Text, Image, useBreakpointValue, HStack, Box} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
 
 interface LoginFormButtonsProps {
@@ -11,17 +11,31 @@ interface LoginFormButtonsProps {
 const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButtonClick}) => {
     const showText = useBreakpointValue({base: false, md: true});
     const [isAppleDevice, setIsAppleDevice] = useState<boolean>(false);
+    const [isAndroidDevice, setIsAndroidDevice] = useState<boolean>(false);
 
     useEffect(() => {
         const userAgent = navigator.userAgent || navigator.vendor;
         const isIOS = /iPhone|iPad|iPod/i.test(userAgent);
         const isMac = !!(/Mac/i.test(userAgent) && navigator.maxTouchPoints && navigator.maxTouchPoints > 0);
+        const isAndroid = /Android/i.test(userAgent);
 
-        setIsAppleDevice(isIOS || isMac);
+        setIsAndroidDevice(isAndroid)
+        setIsAppleDevice(isIOS);
     }, []);
 
     return (
+        <>
+            {!isAppleDevice && (
+                <HStack>
+                    <Box borderBottom="1px solid lightGray" width="100px"/>
+                    <Text color="lightGray" fontSize="xs">
+                        OR
+                    </Text>
+                    <Box borderBottom="1px solid lightGray" width="100px"/>
+                </HStack>
+            )}
         <Flex justify="space-around" gap={{base: 6, md: 4}} flexDirection={{base: "row", md: "column"}}>
+            {!isAppleDevice && (
             <Button
                 px={6}
                 height={12}
@@ -41,7 +55,8 @@ const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButto
                     {showText && <Text>Continue with Microsoft</Text>}
                 </Flex>
             </Button>
-            {/*{!isAppleDevice && (*/}
+            )}
+            {!isAppleDevice && (
                 <Button
                     px={6}
                     height={12}
@@ -62,7 +77,8 @@ const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButto
                         {showText && <Text>Continue with Google</Text>}
                     </Flex>
                 </Button>
-            {/*)}*/}
+            )}
+            {!isAndroidDevice && !isAppleDevice && (
             <Button
                 px={6}
                 height={12}
@@ -83,7 +99,9 @@ const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButto
                     {showText && <Text>Continue with Apple</Text>}
                 </Flex>
             </Button>
-        </Flex>
+            )}
+            </Flex>
+        </>
     );
 };
 

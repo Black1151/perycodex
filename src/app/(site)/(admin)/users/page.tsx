@@ -15,6 +15,11 @@ export default async function UsersPage({
   searchParams: SearchParams;
 }) {
   const user = await getUser();
+
+  if (user.role === "CA") {
+
+  }
+
   await checkUserRole("/users");
 
   let url = `/getAllView?view=vwUsersList&selectColumns=id,userUniqueId,email,role,fullName,jobTitle,imageUrl,customerId,custName,custUniqueId,custImageUrl,custParentId,siteName,siteUniqueId,isActive`;
