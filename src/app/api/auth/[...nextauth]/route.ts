@@ -46,7 +46,7 @@ const handler = NextAuth({
             authorization: {
                 params: {
                     scope: "openid email",
-                    redirect_uri: `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/apple`,
+                    prompt: "select_account",
                 }
             }
         })
