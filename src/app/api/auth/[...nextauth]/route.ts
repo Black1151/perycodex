@@ -12,6 +12,12 @@ const GOOGLE_CLIENT_SECRET='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';
 const APPLE_CLIENT_ID = 'uk.co.perygon';
 const APPLE_CLIENT_SECRET = 'eyJhbGciOiJFUzI1NiIsImtpZCI6Ik5MM1BKVDNZSloifQ.eyJhdWQiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiaXNzIjoiUDM0VUpRVEZKVCIsImlhdCI6MTczOTgwMTQwNSwiZXhwIjoxNzU1MzQ1MTM0LCJzdWIiOiJ1ay5jby5wZXJ5Z29uIn0.ZeHp9PN4se6-9ersWfXT6fOLT8W22kWmG1vB50AQNvBmVfnO2i2KrqZuKBtak9Xe15VgefZwNexNdsBR-q-IGw';
 
+declare module "next-auth" {
+    interface Session {
+        pkce_code_verifier?: string | null;
+    }
+}
+
 const handler = NextAuth({
     debug: true,
     secret: AZURE_AD_CLIENT_SECRET,
@@ -37,7 +43,12 @@ const handler = NextAuth({
         Apple({
             clientId: APPLE_CLIENT_ID!,
             clientSecret: APPLE_CLIENT_SECRET!,
-            authorization: { params: { scope: "openid email", prompt: "select_account" } }
+            authorization: {
+                params: {
+                    scope: "openid email",
+                    redirect_uri: `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/apple`,
+                }
+            }
         })
     ],
     cookies: {
@@ -53,6 +64,17 @@ const handler = NextAuth({
     },
     session: {
         strategy: 'jwt',
+    },
+    jwt: {
+        encode: async ({ secret, token }) => {
+            if (token) {
+                return JSON.stringify({ ...token, code_verifier: sessionStorage.getItem("pkce_code_verifier") });
+            }
+            return "";
+        },
+        decode: async ({ secret, token }) => {
+            return JSON.parse(token ?? "{}");
+        }
     },
     events: {
         async signOut() {
@@ -83,6 +105,10 @@ const handler = NextAuth({
             }
             if (token && typeof token.accountProvider === 'string') {
                 session.accountProvider = token.accountProvider;
+            }
+
+            if (typeof window !== "undefined") {
+                session.pkce_code_verifier = new URLSearchParams(window.location.search).get("pkce_code_verifier");
             }
 
             // Return the modified session object
