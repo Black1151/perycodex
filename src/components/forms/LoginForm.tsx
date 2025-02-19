@@ -247,13 +247,6 @@ export function LoginForm() {
                             Sign Up
                         </Text>
                     </HStack>
-                    <HStack>
-                        <Box borderBottom="1px solid lightGray" width="100px"/>
-                        <Text color="lightGray" fontSize="xs">
-                            OR
-                        </Text>
-                        <Box borderBottom="1px solid lightGray" width="100px"/>
-                    </HStack>
                     <LoginFormButtons loading={loading} handleButtonClick={handleButtonClick}/>
 
                 </VStack>
