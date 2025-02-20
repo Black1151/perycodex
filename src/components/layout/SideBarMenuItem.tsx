@@ -38,9 +38,7 @@ const SideBarMenuItem: React.FC<SideBarMenuItemProps> = ({
             _hover={{
                 ...hoverStyles,
                 cursor: "pointer",
-                background: active
-                    ? `linear-gradient(45deg, ${theme.colors.perygonPink}, ${theme.colors.seduloRed})`
-                    : hoverStyles?.background || theme.colors.gray[100],
+                border: `1px solid ${theme.colors.perygonPink}`,
                 color: active ? "white" : hoverStyles?.color || theme.colors.perygonPink,
             }}
             onClick={onClick}

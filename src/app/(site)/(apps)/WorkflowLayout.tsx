@@ -13,6 +13,7 @@ import {useWorkflow} from "@/providers/WorkflowProvider";
 import {useUser} from "@/providers/UserProvider";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import {useRouter} from "next/navigation";
+import NavigationSidebar from "@/components/Sidebar/NavigationSidebar";
 
 interface WorkflowLayoutProps {
     stages: WorkflowStage[];
@@ -218,9 +219,9 @@ export default function WorkflowLayout({
             {!isModalOpen && (
                 <>
                     {stages.length > 1 && (
-                        <LeftHandNavigationDrawer
+                        <NavigationSidebar
                             menuItems={menuItems}
-                            defaultDrawerState="half-open"
+                            initialState="half-open"
                         />
                     )}
 

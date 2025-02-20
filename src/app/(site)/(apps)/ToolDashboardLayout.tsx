@@ -13,6 +13,7 @@ import {LeftHandNavigationDrawer} from "@/components/layout/LeftHandNavigationDr
 import BottomNavigationMenu from "@/components/layout/BottomNavigationMenu";
 import DashboardHeader from "@/app/(site)/(apps)/DashboardHeader";
 import {Dashboard} from "@/lib/dashboardUtils";
+import NavigationSidebar from "@/components/Sidebar/NavigationSidebar";
 
 interface DashboardAPIResponse {
     filteredDashboards: Dashboard[];
@@ -91,7 +92,7 @@ const ToolDashboardLayout: React.FC = () => {
 
     return (
         <>
-            <LeftHandNavigationDrawer menuItems={menuItems} defaultDrawerState={"half-open"}/>
+            <NavigationSidebar menuItems={menuItems} initialState={"half-open"} side={'left'} loading={loading}/>
             <BottomNavigationMenu menuItems={menuItems}/>
             <DashboardHeader
                 headingText={activeDashboardName ?? "My Company Happiness Stats"}
