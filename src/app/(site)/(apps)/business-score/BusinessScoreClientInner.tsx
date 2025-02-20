@@ -25,8 +25,8 @@ export default function BusinessScoreClientInner({}: HappinessScoreClientInnerPr
         <BusinessScoreSplashScreen />
       ) : (
         <>
-          <LeftHandNavigationDrawer />
-          <RightHandNavigationDrawer />
+          {/*<LeftHandNavigationDrawer />*/}
+          {/*<RightHandNavigationDrawer />*/}
         </>
       )}
     </>

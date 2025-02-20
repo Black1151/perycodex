@@ -33,6 +33,7 @@ import {RightHandNavigationDrawer} from "@/components/layout/RightHandNavigation
 import {ManageTagsModal} from "@/components/modals/adminModals/ManageTagsModal";
 import {useTags} from "@/providers/TagsProvider";
 import {useBreakpointValue} from "@chakra-ui/react";
+import NavigationSidebar from "@/components/Sidebar/NavigationSidebar";
 
 export default function SideBars() {
     const router = useRouter();
@@ -324,7 +325,7 @@ export default function SideBars() {
             setLeftMenuItems(newItems);
         }
 
-    }, [pathname, searchParams, user?.role]);
+    }, [user?.role]);
 
     /**
      * Determines if we should show right-hand "Add / Remove Tags".
@@ -389,9 +390,11 @@ export default function SideBars() {
         <>
             {
                 !["/my-profile", "/activity"].includes(pathname) && (
-                    <LeftHandNavigationDrawer
+                    <NavigationSidebar
                         menuItems={leftMenuItems}
-                        defaultDrawerState="half-open"
+                        title={"Navigation"}
+                        initialState={"half-open"}
+                        side={"left"}
                     />
                 )
             }
