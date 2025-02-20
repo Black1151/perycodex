@@ -125,6 +125,90 @@ const authOptions: NextAuthOptions = {
     },
 };
 
+export async function GET(req: Request) {
+    const url = new URL(req.url);
+    const provider = url.searchParams.get("provider");
+
+    if (provider === 'apple') {
+        const codeVerifier = randomUUID();
+        const codeChallenge = generateCodeChallenge(codeVerifier);
+        const state = randomUUID();
+
+        const authorizationUrl = `https://appleid.apple.com/auth/authorize?response_type=code&client_id=${APPLE_CLIENT_ID}&redirect_uri=${process.env.NEXTAUTH_URL}/api/auth/callback/apple&scope=openid%20name%20email&state=${state}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+
+        const response = new NextResponse(null, {
+            status: 302,
+            headers: [
+                ['Set-Cookie', `code_verifier=${codeVerifier}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`],
+                ['Set-Cookie', `state=${state}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`],
+                ['Location', authorizationUrl],
+            ],
+        });
+        return response;
+    }
+
+    // Handle Apple callback specifically:
+    if (url.pathname === '/api/auth/callback/apple') {
+        const receivedState = url.searchParams.get('state');
+        const cookieStore = cookies(); // Get the cookie store
+
+        const storedState = cookieStore.get('state')?.value; // Access cookies
+
+        const code = url.searchParams.get('code');
+        const storedCodeVerifier = cookieStore.get('code_verifier')?.value;
+
+
+        if (!receivedState || !storedState || receivedState !== storedState) {
+            return new NextResponse("Invalid state parameter", { status: 400 }); // Or redirect
+        }
+
+        if (!code || !storedCodeVerifier){
+            return new NextResponse("Missing code or code verifier", {status: 400});
+        }
+
+        // Now you have the code and code_verifier, and the state matches!
+        // You can proceed with the token exchange with Apple's API.
+        try {
+            const tokenResponse = await fetch('https://appleid.apple.com/auth/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    grant_type: 'authorization_code',
+                    code: code,
+                    redirect_uri: `${process.env.NEXTAUTH_URL}/api/auth/callback/apple`,
+                    client_id: APPLE_CLIENT_ID,
+                    client_secret: APPLE_CLIENT_SECRET,
+                    code_verifier: storedCodeVerifier, // Use the stored verifier
+                }),
+            });
+
+            if (!tokenResponse.ok) {
+                const errorData = await tokenResponse.json();
+                console.error("Apple token exchange error:", errorData);
+                return new NextResponse("Apple token exchange failed", { status: 500 }); // Or redirect
+            }
+
+            const tokenData = await tokenResponse.json();
+            console.log('token data', tokenData);
+
+            // Now you have the tokenData, you can create a new session or jwt
+            // ... (your logic to sign the user in using the tokenData)
+
+            // Example: redirect to the home page after successful authentication
+            return NextResponse.redirect(new URL('/', req.url));
+
+        } catch (error) {
+            console.error("Error during Apple token exchange:", error);
+            return new NextResponse("An error occurred during authentication", { status: 500 });
+        }
+
+    }
+
+    return handler(req); // Delegate to NextAuth.js for other providers and requests
+}
+
 const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST }
+export { handler as POST }
