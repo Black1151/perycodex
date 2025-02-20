@@ -1,16 +1,7 @@
-import NextAuth, {type NextAuthOptions, SessionStrategy} from 'next-auth';
+import NextAuth from 'next-auth';
 import AzureADProvider from 'next-auth/providers/azure-ad';
 import Google from "next-auth/providers/google";
 import Apple from "next-auth/providers/apple";
-import crypto from "crypto";
-import {randomUUID} from "node:crypto";
-import {NextResponse} from "next/server";
-import { type DefaultJWT } from "next-auth/jwt"; // Import the correct type
-import { type DefaultSession } from "next-auth"; // Import the correct type
-import { Account, Profile, User } from "next-auth";
-import { cookies } from 'next/headers'; // Import the cookies function
-
-//
 
 const AZURE_AD_CLIENT_ID='80b0a206-ea3a-4f28-a8d0-aadbb1655bd5';
 const AZURE_AD_CLIENT_SECRET='0gj8Q~moeoK0GMU1gE2.GemT_Gf~hrbU036cKdkr';
@@ -20,27 +11,7 @@ const GOOGLE_CLIENT_SECRET='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';
 const APPLE_CLIENT_ID = 'uk.co.perygon';
 const APPLE_CLIENT_SECRET = 'eyJhbGciOiJFUzI1NiIsImtpZCI6Ik5MM1BKVDNZSloifQ.eyJhdWQiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiaXNzIjoiUDM0VUpRVEZKVCIsImlhdCI6MTczOTgwMTQwNSwiZXhwIjoxNzU1MzQ1MTM0LCJzdWIiOiJ1ay5jby5wZXJ5Z29uIn0.ZeHp9PN4se6-9ersWfXT6fOLT8W22kWmG1vB50AQNvBmVfnO2i2KrqZuKBtak9Xe15VgefZwNexNdsBR-q-IGw';
 
-function generateCodeChallenge(codeVerifier: string) {
-    const msg = Buffer.from(codeVerifier, 'utf8');
-    const hash = crypto.createHash('sha256').update(msg).digest();
-    const base64Digest = hash.toString('base64url');
-    return base64Digest;
-}
-
-declare module "next-auth" {
-    interface session {
-        user: {
-            id: string; // Add the id property
-        } & DefaultSession["user"]; // Keep existing user properties
-        accessToken?: string;
-        idToken?: string;
-        accountProvider?: string;
-    }
-}
-
-
-
-const authOptions: NextAuthOptions = {
+const handler = NextAuth({
     debug: true,
     secret: AZURE_AD_CLIENT_SECRET,
     providers: [
@@ -65,16 +36,8 @@ const authOptions: NextAuthOptions = {
         Apple({
             clientId: APPLE_CLIENT_ID!,
             clientSecret: APPLE_CLIENT_SECRET!,
-            // checks: ['none'],
-            authorization: {
-                params: {
-                    scope: "openid email",
-                    prompt: "select_account",
-                    // nonce: crypto.randomBytes(16).toString("hex"),
-                } as unknown as Record<string, any>,
-            },
-        }),
-
+            authorization: { params: { scope: "openid email" } }
+        })
     ],
     cookies: {
         pkceCodeVerifier: {
@@ -88,7 +51,7 @@ const authOptions: NextAuthOptions = {
         },
     },
     session: {
-        strategy: 'jwt' as SessionStrategy, // Correct way to set the strategy
+        strategy: 'jwt',
     },
     events: {
         async signOut() {
@@ -99,119 +62,32 @@ const authOptions: NextAuthOptions = {
         signOut: 'auth/sign-out'
     },
     callbacks: {
-        async redirect({ url, baseUrl }: { url: string; baseUrl: string }) { // Explicit types
+        async redirect({ url, baseUrl }) {
             return url.startsWith('/') ? new URL(url, baseUrl).toString() : url;
         },
-        async jwt({ token, account }: { token: DefaultJWT; account: Account | null }) { // Explicit types
+        async jwt({ token, account }) {
             if (account) {
                 token.accessToken = account.access_token;
                 token.accountProvider = account.provider;
             }
             return token;
         },
-        async session({ session, token }: { session: DefaultSession; token: DefaultJWT }) {
-            // if (session?.user) {
-            //     session.user.id = token.sub ?? "";
-            // }
-            // if (token && typeof token.accessToken === 'string') {
-            //     session.accessToken = token.accessToken;
-            // }
-            // if (token && typeof token.idToken === 'string') {
-            //     session.idToken = token.idToken;
-            // }
-            // if (token && typeof token.accountProvider === 'string') {
-            //     session.accountProvider = token.accountProvider;
-            // }
+        async session({ session, token }) {
 
+            if (token && typeof token.accessToken === 'string') {
+                session.accessToken = token.accessToken;
+            }
+            if (token && typeof token.idToken === 'string') {
+                session.idToken = token.idToken;
+            }
+            if (token && typeof token.accountProvider === 'string') {
+                session.accountProvider = token.accountProvider;
+            }
+
+            // Return the modified session object
             return session;
         },
     },
-};
+});
 
-const handler = NextAuth(authOptions);
-
-export async function GET(req: Request) {
-    const url = new URL(req.url);
-    const provider = url.searchParams.get("provider");
-
-    if (provider === 'apple') {
-        const codeVerifier = randomUUID();
-        const codeChallenge = generateCodeChallenge(codeVerifier);
-        const state = randomUUID();
-
-        const authorizationUrl = `https://appleid.apple.com/auth/authorize?response_type=code&client_id=${APPLE_CLIENT_ID}&redirect_uri=${process.env.NEXTAUTH_URL}/api/auth/callback/apple&scope=openid%20name%20email&state=${state}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
-
-        const response = new NextResponse(null, {
-            status: 302,
-            headers: [
-                ['Set-Cookie', `code_verifier=${codeVerifier}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`],
-                ['Set-Cookie', `state=${state}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`],
-                ['Location', authorizationUrl],
-            ],
-        });
-        return response;
-    }
-
-    // Handle Apple callback specifically:
-    if (url.pathname === '/api/auth/callback/apple') {
-        const receivedState = url.searchParams.get('state');
-        const cookieStore = cookies(); // Get the cookie store
-
-        const storedState = cookieStore.get('state')?.value; // Access cookies
-
-        const code = url.searchParams.get('code');
-        const storedCodeVerifier = cookieStore.get('code_verifier')?.value;
-
-
-        if (!receivedState || !storedState || receivedState !== storedState) {
-            return new NextResponse("Invalid state parameter", { status: 400 }); // Or redirect
-        }
-
-        if (!code || !storedCodeVerifier){
-            return new NextResponse("Missing code or code verifier", {status: 400});
-        }
-
-        // Now you have the code and code_verifier, and the state matches!
-        // You can proceed with the token exchange with Apple's API.
-        try {
-            const tokenResponse = await fetch('https://appleid.apple.com/auth/token', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    grant_type: 'authorization_code',
-                    code: code,
-                    redirect_uri: `${process.env.NEXTAUTH_URL}/api/auth/callback/apple`,
-                    client_id: APPLE_CLIENT_ID,
-                    client_secret: APPLE_CLIENT_SECRET,
-                    code_verifier: storedCodeVerifier, // Use the stored verifier
-                }),
-            });
-
-            if (!tokenResponse.ok) {
-                const errorData = await tokenResponse.json();
-                console.error("Apple token exchange error:", errorData);
-                return new NextResponse("Apple token exchange failed", { status: 500 }); // Or redirect
-            }
-
-            const tokenData = await tokenResponse.json();
-            console.log('token data', tokenData);
-
-            // Now you have the tokenData, you can create a new session or jwt
-            // ... (your logic to sign the user in using the tokenData)
-
-            // Example: redirect to the home page after successful authentication
-            return NextResponse.redirect(new URL('/', req.url));
-
-        } catch (error) {
-            console.error("Error during Apple token exchange:", error);
-            return new NextResponse("An error occurred during authentication", { status: 500 });
-        }
-
-    }
-
-    return handler(req); // Delegate to NextAuth.js for other providers and requests
-}
-
-export { handler as POST };
+export { handler as GET, handler as POST }
