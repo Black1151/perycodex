@@ -78,7 +78,7 @@ const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButto
                     </Flex>
                 </Button>
             )}
-            {!isAndroidDevice && !isAppleDevice && (
+            {!isAppleDevice && (
             <Button
                 px={6}
                 height={12}
