@@ -135,7 +135,7 @@ export async function GET(request: NextRequest) {
         const codeChallenge = generateCodeChallenge(codeVerifier);
         const state = randomUUID();
 
-        const authorizationUrl = `https://appleid.apple.com/auth/authorize?response_type=code&response_mode=form_post&client_id=${APPLE_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/apple&scope=openid%20name%20email&state=${state}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+        const authorizationUrl = `https://appleid.apple.com/auth/authorize?response_type=code&response_mode=form_post&client_id=${APPLE_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_BASE_URL}/&scope=openid%20name%20email&state=${state}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
 
         const response = new NextResponse(null, {
             status: 302,
