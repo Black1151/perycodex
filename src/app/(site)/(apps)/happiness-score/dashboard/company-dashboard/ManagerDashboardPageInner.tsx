@@ -103,7 +103,7 @@ export default function ManagerDashboardInner({
     const fetchSiteHistory = useCallback(
         async (siteId: number) => {
             const response = await fetchClient<HappinessResponse>(
-                `/api/happiness-score/dashboards/getHistoricLineGraphData?siteId=${siteId}`,
+                `/api/happiness-score/dashboards/historic-line-graph?siteId=${siteId}`,
                 {
                     method: "GET",
                     // successMessage: "Site data fetched successfully!",
@@ -120,7 +120,7 @@ export default function ManagerDashboardInner({
     const fetchDeptHistory = useCallback(
         async (deptId: number) => {
             const response = await fetchClient<HappinessResponse>(
-                `/api/happiness-score/dashboards/getHistoricLineGraphData?deptId=${deptId}`,
+                `/api/happiness-score/dashboards/historic-line-graph?deptId=${deptId}`,
                 {
                     method: "GET",
                     // successMessage: "Department data fetched successfully!",

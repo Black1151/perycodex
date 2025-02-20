@@ -1,7 +1,7 @@
 import {NextResponse} from "next/server";
 import apiClient from "@/lib/apiClient";
 import {cookies} from "next/headers";
-import {FilterOptionGroup} from "../../happiness-score/dashboards/getCompanyDashboardData/types";
+import {FilterOptionGroup} from "@/app/api/(tools)/happiness-score/dashboards/company-happiness/types";
 import {getUser} from "@/lib/dal";
 
 interface ApiResponse {

@@ -1,6 +1,6 @@
 // helpers/fetchAndMergeNonParticipants.ts
 
-import { Person } from "@/app/api/happiness-score/dashboards/getCompanyDashboardData/types";
+import { Person } from "@/app/api/(tools)/happiness-score/dashboards/company-happiness/types";
 import { getDidNotParticipate } from "../../getDidNotParticipate";
 
 interface FetchAndMergeParams {

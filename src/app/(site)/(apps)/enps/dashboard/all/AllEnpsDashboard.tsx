@@ -273,7 +273,7 @@ const AllEnpsDashboard = () => {
     setIsLoading(true);
     try {
       const response = await fetchClient<enpsMainDashboardResponse>(
-        "/api/enps/getEnpsMainDashboard",
+        "/api/enps/dashboards/company-enps",
         {
           method: "POST",
           body: postBody,

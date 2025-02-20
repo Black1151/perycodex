@@ -1,5 +1,5 @@
 // helpers/groupByWeeks.ts
-import { ApiResponseItem } from "@/app/api/happiness-score/dashboards/getCompanyDashboardData/types";
+import { ApiResponseItem } from "@/app/api/(tools)/happiness-score/dashboards/company-happiness/types";
 import { getWeekNumber } from "../../weekUtils";
 
 export interface WeekGroupEntry {

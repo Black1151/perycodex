@@ -109,7 +109,7 @@ const SiteDepartmentDashboard: React.FC = () => {
         setIsLoading(true);
         try {
             const response = await fetchClient<ManagingPartnersResponse>(
-                "/api/happiness-graphs/site-department",
+                "/api/happiness-score/dashboards/site-department",
                 {
                     method: "POST",
                     body: {

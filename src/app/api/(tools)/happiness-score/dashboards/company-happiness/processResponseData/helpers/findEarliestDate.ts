@@ -1,5 +1,5 @@
 // helpers/findEarliestDate.ts
-import { ApiResponseItem } from "@/app/api/happiness-score/dashboards/getCompanyDashboardData/types";
+import { ApiResponseItem } from "@/app/api/(tools)/happiness-score/dashboards/company-happiness/types";
 
 export function findEarliestDate(apiResponseItems: ApiResponseItem[]): Date {
   if (apiResponseItems.length === 0) {

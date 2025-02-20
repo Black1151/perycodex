@@ -111,7 +111,7 @@ const ScoresCommentsDashboard: React.FC = () => {
     setLoading(true);
     try {
       const response = await fetchClient<ApiResponse>(
-        `/api/happiness-graphs/getAllHappinessData`,
+        `/api/happiness-score/dashboards/all-scores`,
         {
           method: "POST",
           body: {

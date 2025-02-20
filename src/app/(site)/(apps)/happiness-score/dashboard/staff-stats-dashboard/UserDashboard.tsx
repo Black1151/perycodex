@@ -27,6 +27,10 @@ import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import StaffHappinessDetailsRenderer
     from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
 import ScoreTooltipRenderer from "@/components/agCharts/ScoreTooltipRenderer";
+import {useWorkflow} from "@/providers/WorkflowProvider";
+import FilterArea from "@/components/DashboardFilterDrawer/FilterArea";
+import {dateRangeOptions} from "@/components/DashboardFilterDrawer/dateRangeUtils";
+
 
 // Define interfaces for each data type
 interface UserScore {
@@ -95,7 +99,15 @@ function parseData<T>(data: T[] | string): T[] {
 }
 
 const UserDashboard: React.FC = () => {
+    const {fetchClient} = useFetchClient();
+    const {user} = useUser();
+    const theme = useTheme();
+    const {toolId, workflowId} = useWorkflow();
+
     const [isLoading, setIsLoading] = useState(false);
+
+    const [filterOptions, setFilterOptions] = useState<Record<string, any>>({});
+
     const [rowData, setRowData] = useState<UserSubmissions[]>([]);
     const [userScores, setUserScores] = useState<UserScore[]>([]);
     const [userDistribution, setUserDistribution] = useState<
@@ -106,9 +118,6 @@ const UserDashboard: React.FC = () => {
         MonthlyComparativeItem[]
     >([]);
 
-    const {user} = useUser();
-    const {fetchClient} = useFetchClient();
-    const theme = useTheme();
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [modalData, setModalData] = useState<{
         title: string;
@@ -174,11 +183,20 @@ const UserDashboard: React.FC = () => {
         },
     ];
 
-    const getData = async () => {
+    const getData = async (postBody: Record<string, any> = filterOptions) => {
         setIsLoading(true);
         try {
             const response = await fetchClient<ApiResponse>(
-                "/api/happiness-graphs/getUserStatsData"
+                "/api/happiness-score/dashboards/user-stats",
+                {
+                    method: "POST",
+                    body: {
+                        toolId,
+                        workflowId,
+                        ...postBody
+                    },
+                    redirectOnError: false
+                }
             );
 
             if (response && response.resource) {
@@ -207,9 +225,29 @@ const UserDashboard: React.FC = () => {
         }
     };
 
+    const dateRangeOption = "monthly";
+    const defaultDateFilterOption = "last12Months";
+
+
     useEffect(() => {
-        getData();
-    }, [user]);
+        if (!user || !workflowId || !toolId) {
+            return;
+        }
+
+        const monthlyOption = dateRangeOptions[dateRangeOption].find((opt) => opt.value === defaultDateFilterOption)
+
+        if (monthlyOption) {
+            const [startDate, endDate] = monthlyOption.getRange();
+            getData({startDate, endDate})
+        } else {
+            getData();
+        }
+    }, [user, workflowId, toolId]);
+
+    const onFilterChange = (postBody: Record<string, any>) => {
+        setFilterOptions(postBody);
+        getData(postBody);
+    }
 
     const showPunchCardHelp = () => {
         setModalData({
@@ -446,6 +484,17 @@ const UserDashboard: React.FC = () => {
                 bodyContent={modalData.body}
             />
 
+            <FilterArea
+                onApplyFilters={onFilterChange}
+                filterOptions={{
+                    showDateFilter: true,
+                    showSitesFilter: false,
+                    showDepartmentsFilter: false
+                }}
+                dateFilterMode={dateRangeOption}
+                defaultDateFilter={defaultDateFilterOption}
+            />
+
             <VStack align="stretch" w="full" spacing={6} py={2}>
                 {comparativeData.length > 0 && (
                     <Box
@@ -455,7 +504,7 @@ const UserDashboard: React.FC = () => {
                     >
                         <Flex width="100%" justifyContent="center" mb={4}>
                             <SectionHeader>
-                                {user?.fullName} stats for previous 12 months
+                                Stats for {user?.fullName}
                             </SectionHeader>
                         </Flex>
                         <Box
@@ -484,88 +533,88 @@ const UserDashboard: React.FC = () => {
                     (
                         <>
                             {/* Line Chart - Comparative Weekly Data */}
-                        {comparativeData.length > 0 && (
-                            <>
-                                <Flex width="100%" justifyContent={"center"}>
-                                    <SectionHeader>Weekly Trend</SectionHeader>
-                                </Flex>
-                                <Box
-                                    borderRadius="2xl"
-                                    shadow="xl"
-                                    overflow="hidden"
-                                    height="500px"
-                                >
-                                    <AgCharts
-                                        options={weeklyLineChartOptions as any}
-                                        style={{width: "100%", height: "100%"}}
-                                    />
-                                </Box>
-                            </>
-                        )}
-
-                        {/* Line Chart - Comparative Monthly Data */}
-                        {monthlyComparativeData.length > 0 && (
-                            <>
-                                <Flex width="100%" justifyContent={"center"}>
-                                    <SectionHeader>Monthly Trend</SectionHeader>
-                                </Flex>
-                                <Box
-                                    borderRadius="2xl"
-                                    shadow="xl"
-                                    overflow="hidden"
-                                    height="500px"
-                                >
-                                    <AgCharts
-                                        options={monthlyLineChartOptions as any}
-                                        style={{width: "100%", height: "100%"}}
-                                    />
-                                </Box>
-                            </>
-                        )}
-
-                        {/* Histogram - User Scores */}
-                        {userScores.length > 0 && (
-                            <>
-                                <Flex width="100%" justifyContent={"center"}>
-                                    <SectionHeader>Frequency of Scores</SectionHeader>
-                                </Flex>
-                                <Box borderRadius="2xl" shadow="xl" overflow="hidden">
-                                    <CompanyHistogram scoreDistribution={userScores}/>
-                                </Box>
-                            </>
-                        )}
-
-                        {/* Bubble Chart - User Distribution */}
-                        {userDistribution.length > 0 && (
-                            <>
-                                <Flex width="100%" justifyContent={"center"} align="center">
-                                    <SectionHeader>Punch Card</SectionHeader>
-                                    <Tooltip
-                                        label="Click to learn more about the Punch Card visualization"
-                                        hasArrow
+                            {comparativeData.length > 0 && (
+                                <>
+                                    <Flex width="100%" justifyContent={"center"}>
+                                        <SectionHeader>Weekly Trend</SectionHeader>
+                                    </Flex>
+                                    <Box
+                                        borderRadius="2xl"
+                                        shadow="xl"
+                                        overflow="hidden"
+                                        height="500px"
                                     >
-                                        <IconButton
-                                            aria-label="Punch Card Help"
-                                            icon={<Info/>}
-                                            variant="ghost"
-                                            onClick={showPunchCardHelp}
-                                            color={"white"}
-                                            _hover={{color: "perygonPink", background: "white"}}
-                                            ml={2}
+                                        <AgCharts
+                                            options={weeklyLineChartOptions as any}
+                                            style={{width: "100%", height: "100%"}}
                                         />
-                                    </Tooltip>
-                                </Flex>
-                                <Box
-                                    borderRadius="2xl"
-                                    shadow="xl"
-                                    overflow="hidden"
-                                    height="500px"
-                                >
-                                    <CompanyBubble scores={userDistribution}/>
-                                </Box>
-                            </>
-                        )
-                        }
+                                    </Box>
+                                </>
+                            )}
+
+                            {/* Line Chart - Comparative Monthly Data */}
+                            {monthlyComparativeData.length > 0 && (
+                                <>
+                                    <Flex width="100%" justifyContent={"center"}>
+                                        <SectionHeader>Monthly Trend</SectionHeader>
+                                    </Flex>
+                                    <Box
+                                        borderRadius="2xl"
+                                        shadow="xl"
+                                        overflow="hidden"
+                                        height="500px"
+                                    >
+                                        <AgCharts
+                                            options={monthlyLineChartOptions as any}
+                                            style={{width: "100%", height: "100%"}}
+                                        />
+                                    </Box>
+                                </>
+                            )}
+
+                            {/* Histogram - User Scores */}
+                            {userScores.length > 0 && (
+                                <>
+                                    <Flex width="100%" justifyContent={"center"}>
+                                        <SectionHeader>Frequency of Scores</SectionHeader>
+                                    </Flex>
+                                    <Box borderRadius="2xl" shadow="xl" overflow="hidden">
+                                        <CompanyHistogram scoreDistribution={userScores}/>
+                                    </Box>
+                                </>
+                            )}
+
+                            {/* Bubble Chart - User Distribution */}
+                            {userDistribution.length > 0 && (
+                                <>
+                                    <Flex width="100%" justifyContent={"center"} align="center">
+                                        <SectionHeader>Punch Card</SectionHeader>
+                                        <Tooltip
+                                            label="Click to learn more about the Punch Card visualization"
+                                            hasArrow
+                                        >
+                                            <IconButton
+                                                aria-label="Punch Card Help"
+                                                icon={<Info/>}
+                                                variant="ghost"
+                                                onClick={showPunchCardHelp}
+                                                color={"white"}
+                                                _hover={{color: "perygonPink", background: "white"}}
+                                                ml={2}
+                                            />
+                                        </Tooltip>
+                                    </Flex>
+                                    <Box
+                                        borderRadius="2xl"
+                                        shadow="xl"
+                                        overflow="hidden"
+                                        height="500px"
+                                    >
+                                        <CompanyBubble scores={userDistribution}/>
+                                    </Box>
+                                </>
+                            )
+                            }
                         </>
                     )}
             </VStack>

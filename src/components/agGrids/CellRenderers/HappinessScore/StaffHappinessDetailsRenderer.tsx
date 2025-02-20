@@ -28,7 +28,7 @@ const StaffHappinessDetailsRenderer: React.FC<StaffHappinessDetailsProps> = ({da
 
     const fetchHappinessScoreTwoMonthHistory = async (userId: number) => {
         try {
-            const response = await fetch("/api/happiness-graphs/getUserHappinessDetails", {
+            const response = await fetch("/api/happiness-score/dashboards/user-current-happiness", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({toolId: toolId, workflowId: workflowId, businessProcessId: 1, userId}),

@@ -74,7 +74,7 @@ interface RowData {
     currentRagStatus: string;
 }
 
-const RagDashboard: React.FC = () => {
+const CompanyStats: React.FC = () => {
     const [rowData, setRowData] = useState<RowData[]>([]);
     const [companyData, setCompanyData] = useState<CompanyData | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -135,7 +135,7 @@ const RagDashboard: React.FC = () => {
 
         try {
             const response = await fetchClient<ApiResponse>(
-                "/api/happiness-graphs/getRagData",
+                "/api/happiness-score/dashboards/company-stats",
                 {
                     method: "POST",
                     body: {
@@ -486,4 +486,4 @@ const RagDashboard: React.FC = () => {
     );
 };
 
-export default RagDashboard;
+export default CompanyStats;
