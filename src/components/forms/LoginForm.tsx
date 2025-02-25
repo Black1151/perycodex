@@ -151,9 +151,15 @@ export function LoginForm() {
                         }
                     }
 
-
-
-                    if (NextAuthSession.user?.email === undefined) {
+                    let isEmailPrivate = false;
+                    if (NextAuthSession.user?.email !== null && NextAuthSession.user?.email !== undefined) {
+                        console.log(NextAuthSession.user?.email)
+                        if (NextAuthSession.user?.email.indexOf('privaterelay') !== -1) {
+                            isEmailPrivate = true;
+                        }
+                    }
+console.log(isEmailPrivate);
+                    if (isEmailPrivate) {
                         if (NextAuthSession.accountProvider != undefined) {
                             console.log('----NEXT AUTH SESSION----');
                             console.log(NextAuthSession);
@@ -201,7 +207,6 @@ export function LoginForm() {
                                 body: {
                                     loginType: "sso",
                                     email: NextAuthSession.user.email,
-                                    sub: NextAuthSession.user.sub ?? null,
                                     password: null,
                                     accessToken: NextAuthSession.accessToken,
                                     type: loginType()
