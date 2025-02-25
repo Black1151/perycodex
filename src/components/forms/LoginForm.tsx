@@ -160,7 +160,7 @@ export function LoginForm() {
                     }
 console.log(isEmailPrivate);
                     if (isEmailPrivate) {
-                        if (NextAuthSession.accountProvider != undefined) {
+                        if (NextAuthSession.providerAccountId != undefined) {
                             console.log('----NEXT AUTH SESSION----');
                             console.log(NextAuthSession);
                             const result: { redirectUrl: string, resource?: { sub?: string } } | null = await fetchClient(
@@ -168,7 +168,8 @@ console.log(isEmailPrivate);
                                     method: "POST",
                                     body: {
                                         loginType: "sso",
-                                        sub: NextAuthSession.accountProvider,
+                                        email: NextAuthSession.user.email,
+                                        sub: NextAuthSession.providerAccountId,
                                         password: null,
                                         accessToken: NextAuthSession.accessToken,
                                         type: loginType()
