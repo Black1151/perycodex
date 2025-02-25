@@ -3,7 +3,7 @@
 import React, {useState} from "react";
 import {Box, Divider, Text, VStack, useTheme} from "@chakra-ui/react";
 import Sidebar, {SidebarProps} from "../Sidebar";
-import SideBarMenuItem from "@/components/layout/SideBarMenuItem";
+import SideBarMenuItem from "@/components/Sidebars/SideBarMenuItem";
 
 export interface MenuItem {
     label: string;

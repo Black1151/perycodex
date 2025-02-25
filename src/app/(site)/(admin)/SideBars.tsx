@@ -1,7 +1,7 @@
 "use client";
 
 import {useEffect, useMemo, useRef, useState} from "react";
-import {LeftHandNavigationDrawer, MenuItem} from "@/components/layout/LeftHandNavigationDrawer";
+import {MenuItem} from "@/components/Sidebars/NavigationSidebar/NavigationSidebar";
 
 import {
     AccountTree,
@@ -29,7 +29,6 @@ import {
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import {useUser} from "@/providers/UserProvider";
 import BottomNavigationMenu from "@/components/layout/BottomNavigationMenu";
-import {RightHandNavigationDrawer} from "@/components/layout/RightHandNavigationDrawer";
 import {ManageTagsModal} from "@/components/modals/adminModals/ManageTagsModal";
 import {useTags} from "@/providers/TagsProvider";
 import {useBreakpointValue} from "@chakra-ui/react";
@@ -392,7 +391,6 @@ export default function SideBars() {
                 !["/my-profile", "/activity"].includes(pathname) && (
                     <NavigationSidebar
                         menuItems={leftMenuItems}
-                        title={"Navigation"}
                         initialState={"half-open"}
                         side={"left"}
                     />
@@ -401,9 +399,10 @@ export default function SideBars() {
             <BottomNavigationMenu menuItems={leftMenuItems}/>
             {
                 rightMenuItems.length > 0 && (
-                    <RightHandNavigationDrawer
+                    <NavigationSidebar
                         menuItems={rightMenuItems}
-                        defaultDrawerState={rightDrawerDefaultState}
+                        side={'right'}
+                        initialState={rightDrawerDefaultState}
                     />
                 )
             }

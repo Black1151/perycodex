@@ -72,7 +72,11 @@ const Sidebar: React.FC<SidebarProps> = ({
                 top={78}
                 {...floatButtonProps}
                 zIndex={1}
-                display={["none", "none", "flex"]}
+                display={[
+                    side === 'right' ? "flex" : "none",
+                    side === 'right' ? "flex" : "none",
+                    "flex"
+                ]}
                 alignItems="center"
                 justifyContent="center"
                 color={"rgba(248,248,248,0.8)"}
@@ -117,7 +121,11 @@ const Sidebar: React.FC<SidebarProps> = ({
                 }
 
                 <Box
-                    display={["none", "none", "block"]}
+                    display={[
+                        side === 'right' ? "flex" : "none",
+                        side === 'right' ? "flex" : "none",
+                        "block"
+                    ]}
                     position="fixed"
                     top={0}
                     {...(isLeft ? {left: 0} : {right: 0})}
@@ -130,7 +138,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 >
                     <VStack height="100%" pt={"60px"} spacing={0}
                             overflowY={'auto'}
-
+                            w={'full'}
                     >
                         < HStack alignItems="center" justify={'space-between'} background={'white'} py={1} px={2}
                                  zIndex={100} w={'full'}>

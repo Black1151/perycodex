@@ -17,7 +17,7 @@ export function BottomNavigationMenu({menuItems}: BottomNavigationMenuProps) {
             bg="white"
             maxH={'100px'}
             boxShadow="xl"
-            zIndex={999}
+            zIndex={98}
             px={2}
             display={["block", "block", "none"]}
             overflowX="scroll"
@@ -34,7 +34,7 @@ export function BottomNavigationMenu({menuItems}: BottomNavigationMenuProps) {
         >
             <HStack
                 justify={["flex-start", "space-between"]}
-                alignItems="flex-start"
+                alignItems="center"
                 overflowX="auto"
                 gap="10px"
                 css={{

@@ -9,7 +9,6 @@ import {
     Insights,
     Timeline,
 } from "@mui/icons-material";
-import {LeftHandNavigationDrawer} from "@/components/layout/LeftHandNavigationDrawer";
 import BottomNavigationMenu from "@/components/layout/BottomNavigationMenu";
 import DashboardHeader from "@/app/(site)/(apps)/DashboardHeader";
 import {Dashboard} from "@/lib/dashboardUtils";
@@ -95,7 +94,7 @@ const ToolDashboardLayout: React.FC = () => {
             <NavigationSidebar menuItems={menuItems} initialState={"half-open"} side={'left'} loading={loading}/>
             <BottomNavigationMenu menuItems={menuItems}/>
             <DashboardHeader
-                headingText={activeDashboardName ?? "My Company Happiness Stats"}
+                headingText={activeDashboardName ?? ""}
                 canStartWorkflow={toolData?.startInUi ?? false}
                 toolUrl={"/happiness-score"}
             />

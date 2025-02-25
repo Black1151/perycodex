@@ -4,10 +4,7 @@ import React, {useEffect, useState} from "react";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import {WorkflowStage} from "@/app/(site)/(apps)/happiness-score/workflow/[workflowInstanceId]/page";
 import {useFetchClient} from "@/hooks/useFetchClient";
-import {
-    LeftHandNavigationDrawer,
-    MenuItem,
-} from "@/components/layout/LeftHandNavigationDrawer";
+import {MenuItem} from "@/components/layout/LeftHandNavigationDrawer";
 import {Circle as CircleIcon} from "@mui/icons-material";
 import {useWorkflow} from "@/providers/WorkflowProvider";
 import {useUser} from "@/providers/UserProvider";
