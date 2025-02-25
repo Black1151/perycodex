@@ -1,7 +1,7 @@
 import {
   ApiResponseItem,
   Person,
-} from "@/app/api/happiness-score/dashboards/getCompanyDashboardData/types";
+} from "@/app/api/(tools)/happiness-score/dashboards/company-happiness/types";
 
 export interface WeeklyStatsResult {
   avgScore: number;

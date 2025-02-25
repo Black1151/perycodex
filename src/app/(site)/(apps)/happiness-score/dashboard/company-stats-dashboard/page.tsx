@@ -4,7 +4,7 @@ import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
 import ToolDashboardLayout from "@/app/(site)/(apps)/ToolDashboardLayout";
 import DashboardHeader from "@/app/(site)/(apps)/DashboardHeader";
 import {verifySession} from "@/lib/dal";
-import RagDashboard from "@/app/(site)/(apps)/happiness-score/dashboard/company-stats-dashboard/RagDashboard";
+import CompanyStats from "@/app/(site)/(apps)/happiness-score/dashboard/company-stats-dashboard/CompanyStats";
 
 export default async function Home({
                                        searchParams,
@@ -26,7 +26,7 @@ export default async function Home({
 
     return (
         <WorkflowEngine toolId={toolId} workflowId={workflowId}>
-            <RagDashboard/>
+            <CompanyStats/>
         </WorkflowEngine>
     );
 }

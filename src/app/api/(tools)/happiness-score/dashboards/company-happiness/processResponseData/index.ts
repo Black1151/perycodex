@@ -1,7 +1,7 @@
 import {
   ApiResponseItem,
   DataPoint,
-} from "@/app/api/happiness-score/dashboards/getCompanyDashboardData/types";
+} from "@/app/api/(tools)/happiness-score/dashboards/company-happiness/types";
 import { getAllWeekKeysBetween } from "../weekUtils";
 
 import { computeWeeklyStats } from "./helpers/computeWeeklyStats";

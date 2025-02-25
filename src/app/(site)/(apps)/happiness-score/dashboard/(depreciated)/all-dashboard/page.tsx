@@ -1,10 +1,10 @@
+import Dashboard from "@/app/(site)/(apps)/happiness-score/dashboard/(depreciated)/all-dashboard/Dashboard";
 import {redirect} from "next/navigation";
 import {getFilteredDashboards} from "@/lib/dashboardUtils";
 import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
 import ToolDashboardLayout from "@/app/(site)/(apps)/ToolDashboardLayout";
 import DashboardHeader from "@/app/(site)/(apps)/DashboardHeader";
 import {verifySession} from "@/lib/dal";
-import WeeklyDashboard from "@/app/(site)/(apps)/happiness-score/dashboard/weekly-dashboard/WeeklyDashboard";
 
 export default async function Home({
                                        searchParams,
@@ -25,9 +25,10 @@ export default async function Home({
         return redirect("/");
     }
 
+
     return (
         <WorkflowEngine toolId={toolId} workflowId={workflowId}>
-            <WeeklyDashboard/>
+            <Dashboard/>
         </WorkflowEngine>
     );
 }

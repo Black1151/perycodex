@@ -2,7 +2,7 @@
 import {
   DataPoint,
   SpeechBubbleData,
-} from "@/app/api/happiness-score/dashboards/getCompanyDashboardData/types";
+} from "@/app/api/(tools)/happiness-score/dashboards/company-happiness/types";
 
 export function buildSpeechBubbleData(
   dataPointsArray: DataPoint[]

@@ -33,7 +33,7 @@ import {RightHandNavigationDrawer} from "@/components/layout/RightHandNavigation
 import {ManageTagsModal} from "@/components/modals/adminModals/ManageTagsModal";
 import {useTags} from "@/providers/TagsProvider";
 import {useBreakpointValue} from "@chakra-ui/react";
-import NavigationSidebar from "@/components/Sidebar/NavigationSidebar";
+import NavigationSidebar from "@/components/Sidebars/NavigationSidebar/NavigationSidebar";
 
 export default function SideBars() {
     const router = useRouter();
