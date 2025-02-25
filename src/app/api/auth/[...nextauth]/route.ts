@@ -69,6 +69,7 @@ const handler = NextAuth({
             if (account) {
                 token.accessToken = account.access_token;
                 token.accountProvider = account.provider;
+                token.providerAccountId = account.providerAccountId;
             }
             return token;
         },
@@ -82,6 +83,9 @@ const handler = NextAuth({
             }
             if (token && typeof token.accountProvider === 'string') {
                 session.accountProvider = token.accountProvider;
+            }
+            if (token && typeof token.providerAccountId === 'string') {
+                session.providerAccountId = token.providerAccountId;
             }
 
             // Return the modified session object
