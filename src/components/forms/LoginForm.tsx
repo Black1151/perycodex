@@ -137,6 +137,10 @@ export function LoginForm() {
             }
         } else {
             let NextAuthSession = await getSession();
+            console.log('----NEXT AUTH----');
+            console.log(NextAuthSession);
+            console.log('----NEXT AUTH EOF----');
+
             if (NextAuthSession !== undefined) {
                 if (NextAuthSession !== null) {
 
@@ -148,7 +152,7 @@ export function LoginForm() {
                         }
                     }
 
-                    console.log(NextAuthSession);
+
 
                     if (NextAuthSession.user?.email === undefined) {
                         if (NextAuthSession.accountProvider != undefined) {
