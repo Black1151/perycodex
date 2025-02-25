@@ -150,12 +150,14 @@ export function LoginForm() {
 
                     if (NextAuthSession.user?.email === undefined) {
                         if (NextAuthSession.user?.sub != undefined) {
+                            console.log('----NEXT AUTH SESSION----');
+                            console.log(NextAuthSession);
                             const result: { redirectUrl: string, resource?: { sub?: string } } | null = await fetchClient(
                                 endpoint, {
                                     method: "POST",
                                     body: {
                                         loginType: "sso",
-                                        sub: NextAuthSession.user.sub,
+                                        sub: true,
                                         password: null,
                                         accessToken: NextAuthSession.accessToken,
                                         type: loginType()
