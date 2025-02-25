@@ -28,8 +28,8 @@ import StaffHappinessDetailsRenderer
     from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
 import ScoreTooltipRenderer from "@/components/agCharts/ScoreTooltipRenderer";
 import {useWorkflow} from "@/providers/WorkflowProvider";
-import FilterArea from "@/components/DashboardFilterDrawer/FilterArea";
-import {dateRangeOptions} from "@/components/DashboardFilterDrawer/dateRangeUtils";
+import FilterSidebar from "@/components/Sidebars/Dashboards Filter/FilterSidebar";
+import {dateRangeOptions} from "@/components/Sidebars/Dashboards Filter/dateRangeUtils";
 
 
 // Define interfaces for each data type
@@ -484,7 +484,7 @@ const UserDashboard: React.FC = () => {
                 bodyContent={modalData.body}
             />
 
-            <FilterArea
+            <FilterSidebar
                 onApplyFilters={onFilterChange}
                 filterOptions={{
                     showDateFilter: true,

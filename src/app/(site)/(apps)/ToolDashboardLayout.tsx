@@ -13,7 +13,7 @@ import {LeftHandNavigationDrawer} from "@/components/layout/LeftHandNavigationDr
 import BottomNavigationMenu from "@/components/layout/BottomNavigationMenu";
 import DashboardHeader from "@/app/(site)/(apps)/DashboardHeader";
 import {Dashboard} from "@/lib/dashboardUtils";
-import NavigationSidebar from "@/components/Sidebar/NavigationSidebar";
+import NavigationSidebar from "@/components/Sidebars/NavigationSidebar/NavigationSidebar";
 
 interface DashboardAPIResponse {
     filteredDashboards: Dashboard[];

@@ -3,7 +3,7 @@ import {Select} from "@chakra-ui/react";
 import {
     format
 } from "date-fns";
-import {DateRangeMode, dateRangeOptions, ModeValueMap} from "@/components/DashboardFilterDrawer/dateRangeUtils";
+import {DateRangeMode, dateRangeOptions, ModeValueMap} from "@/components/Sidebars/Dashboards Filter/dateRangeUtils";
 
 interface DateFilterProps<T extends DateRangeMode> {
     filterMode: T;

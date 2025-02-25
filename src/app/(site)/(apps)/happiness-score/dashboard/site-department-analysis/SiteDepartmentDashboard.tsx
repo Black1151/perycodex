@@ -15,9 +15,9 @@ import SpeechBubble from "../../SpeechBubble";
 import StaffHappinessDetailsRenderer
     from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
 import ScoreTooltipRenderer from "@/components/agCharts/ScoreTooltipRenderer";
-import FilterArea from "@/components/DashboardFilterDrawer/FilterArea";
+import FilterSidebar from "@/components/Sidebars/Dashboards Filter/FilterSidebar";
 import AgChartComponent from "@/components/agCharts/AgChartComponent";
-import {dateRangeOptions} from "@/components/DashboardFilterDrawer/dateRangeUtils";
+import {dateRangeOptions} from "@/components/Sidebars/Dashboards Filter/dateRangeUtils";
 
 interface ManagingPartnersResponse {
     resource: {
@@ -406,7 +406,7 @@ const SiteDepartmentDashboard: React.FC = () => {
 
     return (
         <VStack align="stretch" spacing={6} w="full" py={2}>
-            <FilterArea
+            <FilterSidebar
                 onApplyFilters={onFilterChange}
                 dateFilterMode={dateRangeOption}
                 defaultDateFilter={defaultDateFilterOption}

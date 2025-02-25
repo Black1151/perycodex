@@ -13,7 +13,7 @@ import {useWorkflow} from "@/providers/WorkflowProvider";
 import {useUser} from "@/providers/UserProvider";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import {useRouter} from "next/navigation";
-import NavigationSidebar from "@/components/Sidebar/NavigationSidebar";
+import NavigationSidebar from "@/components/Sidebars/NavigationSidebar/NavigationSidebar";
 
 interface WorkflowLayoutProps {
     stages: WorkflowStage[];

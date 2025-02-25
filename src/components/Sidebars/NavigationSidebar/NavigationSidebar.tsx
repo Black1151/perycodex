@@ -2,7 +2,7 @@
 
 import React, {useState} from "react";
 import {Box, Divider, Text, VStack, useTheme} from "@chakra-ui/react";
-import Sidebar, {SidebarProps} from "./Sidebar";
+import Sidebar, {SidebarProps} from "../Sidebar";
 import SideBarMenuItem from "@/components/layout/SideBarMenuItem";
 
 export interface MenuItem {
