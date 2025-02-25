@@ -23,6 +23,15 @@ import Link from "next/link";
 
 import {NextResponse} from "next/server";
 import LoginFormButtons from "@/components/forms/LoginFormButtons";
+import {DefaultSession} from "next-auth";
+
+declare module "next-auth" {
+    interface Session {
+        user: {
+            sub?: string;
+        } & DefaultSession["user"];
+    }
+}
 
 export type LoginFormInputs = {
     email: string;
@@ -38,11 +47,12 @@ export function LoginForm() {
     const secureLink = searchParams.get("l");
     type ButtonId = 'email' | 'microsoft' | 'google' | 'apple';
     const showText = useBreakpointValue({base: false, md: true});
-
     const {data: session, status} = useSession();
+    const linkAppleAccountSub = searchParams.get('linkAppleAccountSub') ?? '';
+    const appleAccountLinked = searchParams.get('appleAccountLinked');
 
     useEffect(() => {
-        handleMSOSignin();
+        handleSsoSignIn();
         router.refresh();
     }, []);
 
@@ -52,7 +62,6 @@ export function LoginForm() {
         handleSubmit,
         formState: {errors: formErrors},
     } = useForm<LoginFormInputs>();
-
 
     const handleButtonClick = (buttonId: ButtonId) => {
 
@@ -77,24 +86,41 @@ export function LoginForm() {
     };
 
     const handleFormSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
+        const searchParams = new URLSearchParams(window.location.search);
         const endpoint = secureLink
             ? `/api/auth/sign-in?l=${secureLink}`
             : "/api/auth/sign-in";
 
-        const result: { redirectUrl: string } | null = await fetchClient(endpoint, {
-            method: "POST",
-            body: {...data, loginType: 'email'},
-            successMessage: "Successfully logged in!",
-            errorMessage: "Incorrect user or password",
-            redirectOnError: false,
-        });
-
-        if (result) {
-            router.push(result.redirectUrl);
+        const linkAppleAccountSub = searchParams.get('linkAppleAccountSub');
+        if (linkAppleAccountSub == null) {
+            const result: { redirectUrl: string } | null = await fetchClient(endpoint, {
+                method: "POST",
+                body: {...data, loginType: 'email'},
+                successMessage: "Successfully logged in!",
+                errorMessage: "Incorrect user or password",
+                redirectOnError: false,
+            });
+            if (result) {
+                router.push(result.redirectUrl);
+            }
+        } else {
+            const appleLinkingResult: { redirectUrl: string, resource?: { sub?: string } } | null = await fetchClient(
+                'authentication/linkAppleLogin', {
+                    method: "POST",
+                    body: {
+                        ...data,
+                        loginType: 'email',
+                        sub: linkAppleAccountSub
+                    },
+                    suppressError: true
+                });
+            if (appleLinkingResult) {
+                router.push(`/login?appleAccountLinked=${data.email}`);
+            }
         }
     };
 
-    const handleMSOSignin = async () => {
+    const handleSsoSignIn = async () => {
         const endpoint = secureLink
             ? `/api/auth/sign-in?l=${secureLink}`
             : "/api/auth/sign-in";
@@ -113,22 +139,62 @@ export function LoginForm() {
             let NextAuthSession = await getSession();
             if (NextAuthSession !== undefined) {
                 if (NextAuthSession !== null) {
-                    if (NextAuthSession.user?.email != undefined) {
 
-                        const loginType = () => {
-                            switch(NextAuthSession.accountProvider) {
-                                case 'azure-ad': return 1;
-                                case 'google': return 2;
-                                case 'apple': return 3;
+                    const loginType = () => {
+                        switch(NextAuthSession.accountProvider) {
+                            case 'azure-ad': return 1;
+                            case 'google': return 2;
+                            case 'apple': return 3;
+                        }
+                    }
+
+                    if (NextAuthSession.user?.email === undefined) {
+                        if (NextAuthSession.user?.sub != undefined) {
+                            const result: { redirectUrl: string, resource?: { sub?: string } } | null = await fetchClient(
+                                endpoint, {
+                                    method: "POST",
+                                    body: {
+                                        loginType: "sso",
+                                        sub: NextAuthSession.user.sub,
+                                        password: null,
+                                        accessToken: NextAuthSession.accessToken,
+                                        type: loginType()
+                                    },
+                                    suppressError: true
+                                });
+
+                            if (result) {
+                                if (result.resource) {
+                                    if (result.resource?.sub != undefined) {
+                                        router.push(`/login/?linkAppleAccountSub=${result.resource?.sub}`);
+                                    } else {
+                                        router.push(result.redirectUrl);
+                                    }
+                                }
+                            } else {
+                                const res = NextResponse.json({success: false});
+                                res.cookies.delete('next-auth.callback-url');
+                                res.cookies.delete('next-auth.csrf-token');
+                                res.cookies.delete('next-auth.session-token');
+                                res.cookies.delete('__Host-next-auth.csrf-token');
+                                res.cookies.delete('__Secure-next-auth.callback-url');
+                                res.cookies.delete('__Secure-next-auth.session-token');
+
+                                try {
+                                    await signOut({redirect: false});
+                                } catch (error) {
+                                    // continue;
+                                }
                             }
                         }
-
+                    } else {
                         const result: { redirectUrl: string } | null = await fetchClient(
                             endpoint, {
                                 method: "POST",
                                 body: {
                                     loginType: "sso",
                                     email: NextAuthSession.user.email,
+                                    sub: NextAuthSession.user.sub ?? null,
                                     password: null,
                                     accessToken: NextAuthSession.accessToken,
                                     type: loginType()
@@ -153,7 +219,6 @@ export function LoginForm() {
                                 // continue;
                             }
                         }
-
                     }
                 }
             }
@@ -167,7 +232,37 @@ export function LoginForm() {
             style={{width: "100%", maxWidth: "sm"}}
         >
             <VStack spacing={0} w="100%">
+                {appleAccountLinked != null && (
+                    <VStack spacing={0} w={300} gap={2}>
+                        <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
+                            Your Apple account is now linked to following Perygon user:
+                        </Text>
+                        <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
+                            {appleAccountLinked}
+                        </Text>
+                    </VStack>
+                )}
+                {appleAccountLinked == null && (
                 <VStack spacing={0} w={300} gap={2}>
+
+                    {(linkAppleAccountSub != '' &&
+                        <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
+                            Your Apple account couldn&apos;t be linked to existing Perygon user.
+                        </Text>
+                    )}
+                    {(linkAppleAccountSub != '' &&
+                        <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
+                            Please log in with Perygon username and password below in order to permanently assign this
+                            Apple account with your Perygon account
+                        </Text>
+                    )}
+                    {(linkAppleAccountSub != '' &&
+                        <input
+                            type="hidden"
+                            name="linkAppleAccountSub"
+                            value={linkAppleAccountSub}
+                        />
+                    )}
                     <InputField
                         name="email"
                         placeholder="Email"
@@ -247,9 +342,11 @@ export function LoginForm() {
                             Sign Up
                         </Text>
                     </HStack>
-                    <LoginFormButtons loading={loading} handleButtonClick={handleButtonClick}/>
+                    <LoginFormButtons loading={loading} handleButtonClick={handleButtonClick}
+                                      linkAppleAccountSub={linkAppleAccountSub ?? ''}/>
 
                 </VStack>
+                    )}
                 <Flex gap={4} w={"100%"} top={6} position="relative" justify={'space-between'} align={'center'}>
                     <Text p="0" pt="10px" fontSize={["10px", "12px"]} color="gray">
                         Copyright &copy; 2024 Sedulo Limited (v1.1.3)
