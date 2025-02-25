@@ -121,6 +121,10 @@ export function LoginForm() {
     };
 
     const handleSsoSignIn = async () => {
+        let NextAuthSession = await getSession();
+        console.log('----NEXT AUTH----');
+        console.log(NextAuthSession);
+        console.log('----NEXT AUTH EOF----');
         const endpoint = secureLink
             ? `/api/auth/sign-in?l=${secureLink}`
             : "/api/auth/sign-in";
@@ -136,11 +140,6 @@ export function LoginForm() {
                 }
             }
         } else {
-            let NextAuthSession = await getSession();
-            console.log('----NEXT AUTH----');
-            console.log(NextAuthSession);
-            console.log('----NEXT AUTH EOF----');
-
             if (NextAuthSession !== undefined) {
                 if (NextAuthSession !== null) {
 
