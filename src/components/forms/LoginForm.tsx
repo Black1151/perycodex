@@ -148,6 +148,8 @@ export function LoginForm() {
                         }
                     }
 
+                    console.log(NextAuthSession);
+
                     if (NextAuthSession.user?.email === undefined) {
                         if (NextAuthSession.accountProvider != undefined) {
                             console.log('----NEXT AUTH SESSION----');
