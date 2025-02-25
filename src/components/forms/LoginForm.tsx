@@ -151,10 +151,16 @@ export function LoginForm() {
                         }
                     }
 
-
-
-                    if (NextAuthSession.user?.email === undefined) {
-                        if (NextAuthSession.accountProvider != undefined) {
+                    let isEmailPrivate = false;
+                    if (NextAuthSession.user?.email !== null && NextAuthSession.user?.email !== undefined) {
+                        console.log(NextAuthSession.user?.email)
+                        if (NextAuthSession.user?.email.indexOf('privaterelay') !== -1) {
+                            isEmailPrivate = true;
+                        }
+                    }
+console.log(isEmailPrivate);
+                    if (isEmailPrivate) {
+                        if (NextAuthSession.providerAccountId != undefined) {
                             console.log('----NEXT AUTH SESSION----');
                             console.log(NextAuthSession);
                             const result: { redirectUrl: string, resource?: { sub?: string } } | null = await fetchClient(
@@ -162,7 +168,8 @@ export function LoginForm() {
                                     method: "POST",
                                     body: {
                                         loginType: "sso",
-                                        sub: NextAuthSession.accountProvider,
+                                        email: NextAuthSession.user.email,
+                                        sub: NextAuthSession.providerAccountId,
                                         password: null,
                                         accessToken: NextAuthSession.accessToken,
                                         type: loginType()
@@ -201,7 +208,6 @@ export function LoginForm() {
                                 body: {
                                     loginType: "sso",
                                     email: NextAuthSession.user.email,
-                                    sub: NextAuthSession.user.sub ?? null,
                                     password: null,
                                     accessToken: NextAuthSession.accessToken,
                                     type: loginType()
