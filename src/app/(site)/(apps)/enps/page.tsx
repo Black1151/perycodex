@@ -4,7 +4,8 @@ import { getFilteredDashboards } from "@/lib/dashboardUtils";
 import apiClient from "@/lib/apiClient";
 import { verifySession } from "@/lib/dal";
 import NoDashboardsModal from "@/app/(site)/(apps)/NoDashboardModal";
-import {ToolLandingPage} from "@/app/(site)/(apps)/ToolLandingPageInner";
+import { ToolLandingPage } from "@/app/(site)/(apps)/ToolLandingPageInner";
+import { EnpsSplashScreen } from "./EnpsSplashScreen";
 
 interface WorkflowInstanceResponse {
   resource: {
@@ -64,7 +65,10 @@ export default async function Home({
   return (
     <WorkflowEngine toolId={toolId} workflowId={workflowId}>
       {filteredDashboards.length === 0 && <NoDashboardsModal />}
-      <ToolLandingPage redirectUrl={redirectUrl} />
+      <ToolLandingPage
+        redirectUrl={redirectUrl}
+        splashScreen={<EnpsSplashScreen />}
+      />
     </WorkflowEngine>
   );
 }
