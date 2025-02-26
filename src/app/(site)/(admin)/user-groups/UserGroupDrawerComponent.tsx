@@ -1,7 +1,7 @@
 "use client";
 
 import React, {useMemo, useState} from "react";
-import {ContentCopy} from "@mui/icons-material";
+import {BlurOn, ContentCopy} from "@mui/icons-material";
 import AssignGroupModal from "./AssignGroupModal";
 import {useUser} from "@/providers/UserProvider";
 import NavigationSidebar, {MenuItem} from "@/components/Sidebars/NavigationSidebar/NavigationSidebar";
@@ -37,8 +37,9 @@ const UserGroupDrawerComponent: React.FC = () => {
         <>
             {/* Right-hand navigation drawer */}
             <NavigationSidebar
-                initialState="half-open"
+                initialState="closed"
                 menuItems={menuItems}
+                openButtonIcon={BlurOn}
                 side={'right'}
             />
 

@@ -51,8 +51,8 @@ const Sidebar: React.FC<SidebarProps> = ({
     const OpenIcon = openButtonIcon || Menu;
 
     const floatButtonProps = isLeft
-        ? {left: 5, right: "auto"}
-        : {right: 5, left: "auto"};
+        ? {left: [4, 4, 5], right: "auto"}
+        : {right: [4, 4, 5], left: "auto"};
 
     useEffect(() => {
         if (drawerState === 'fully-open' && fadeOnFull) {
@@ -69,7 +69,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         return (
             <Box
                 position="absolute"
-                top={78}
+                top={["70px", "70px", 78]}
                 {...floatButtonProps}
                 zIndex={1}
                 display={[
@@ -81,9 +81,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                 justifyContent="center"
                 color={"rgba(248,248,248,0.8)"}
                 borderRadius="full"
-                aspectRatio={1}
-                w="36px"
-                h="36px"
+                w={["30px", "30px", "36px"]}
+                h={["30px", "30px", "36px"]}
                 backgroundColor={"rgba(255,255,255,0.2)"}
                 border="1px solid white"
                 p={1}

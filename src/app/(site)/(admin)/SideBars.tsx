@@ -24,6 +24,7 @@ import {
     ShoppingCartCheckout,
     Dashboard,
     DashboardCustomize,
+    BlurOn,
 } from "@mui/icons-material";
 
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
@@ -402,6 +403,7 @@ export default function SideBars() {
                     <NavigationSidebar
                         menuItems={rightMenuItems}
                         side={'right'}
+                        openButtonIcon={BlurOn}
                         initialState={rightDrawerDefaultState}
                     />
                 )
