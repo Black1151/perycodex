@@ -9,10 +9,10 @@ import {
     Insights,
     Timeline,
 } from "@mui/icons-material";
-import BottomNavigationMenu from "@/components/layout/BottomNavigationMenu";
 import DashboardHeader from "@/app/(site)/(apps)/DashboardHeader";
 import {Dashboard} from "@/lib/dashboardUtils";
 import NavigationSidebar from "@/components/Sidebars/NavigationSidebar/NavigationSidebar";
+import NavigationBottombar from "@/components/Bottombar/NavigationBottombar/NavigationBottombar";
 
 interface DashboardAPIResponse {
     filteredDashboards: Dashboard[];
@@ -92,7 +92,7 @@ const ToolDashboardLayout: React.FC = () => {
     return (
         <>
             <NavigationSidebar menuItems={menuItems} initialState={"half-open"} side={'left'} loading={loading}/>
-            <BottomNavigationMenu menuItems={menuItems}/>
+            <NavigationBottombar menuItems={menuItems}/>
             <DashboardHeader
                 headingText={activeDashboardName ?? ""}
                 canStartWorkflow={toolData?.startInUi ?? false}

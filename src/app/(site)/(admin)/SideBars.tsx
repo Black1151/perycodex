@@ -29,11 +29,11 @@ import {
 
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import {useUser} from "@/providers/UserProvider";
-import BottomNavigationMenu from "@/components/layout/BottomNavigationMenu";
 import {ManageTagsModal} from "@/components/modals/adminModals/ManageTagsModal";
 import {useTags} from "@/providers/TagsProvider";
 import {useBreakpointValue} from "@chakra-ui/react";
 import NavigationSidebar from "@/components/Sidebars/NavigationSidebar/NavigationSidebar";
+import NavigationBottombar from "@/components/Bottombar/NavigationBottombar/NavigationBottombar";
 
 export default function SideBars() {
     const router = useRouter();
@@ -397,7 +397,7 @@ export default function SideBars() {
                     />
                 )
             }
-            <BottomNavigationMenu menuItems={leftMenuItems}/>
+            <NavigationBottombar menuItems={leftMenuItems}/>
             {
                 rightMenuItems.length > 0 && (
                     <NavigationSidebar
