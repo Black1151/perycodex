@@ -336,7 +336,7 @@ console.log(isEmailPrivate);
                             </Text>
                         )}
                     </Flex>
-                    {linkAppleAccountSub == null && (
+                    {linkAppleAccountSub !== null && (
                     <Button
                         mt={5}
                         backgroundColor={theme.colors.perygonPink}
