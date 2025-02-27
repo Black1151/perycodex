@@ -41,36 +41,15 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        if (data.resource.sub) {
-            return NextResponse.json({sub: data.resource.sub});
-        } else {
-            const {token, UUID, role, isProfileRegistered} = data.resource;
+        if (response.ok || response.status === 200) {
 
-            let redirectUrl = `${process.env.NEXT_PUBLIC_BASE_URL}`;
+            let redirectUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/login?appleAccountLinked=${email}`;
 
-            if (!isProfileRegistered && role !== 'EU') {
-                redirectUrl += "/profile-setup";
-            } else if (role === "PA") {
-                redirectUrl += "/customers";
-            } else if (secureLink) {
-                redirectUrl += `/link?l=${secureLink}`;
+            if (secureLink) {
+                redirectUrl += `&l=${secureLink}`;
             }
 
-            const res = NextResponse.json({redirectUrl});
-
-            res.cookies.set("auth_token", token, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
-            });
-
-            res.cookies.set("user_uuid", UUID, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
-            });
-
-            return res;
+            return NextResponse.json({redirectUrl});
         }
     } catch (error: any) {
         console.error(error);
