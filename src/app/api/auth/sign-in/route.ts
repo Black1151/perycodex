@@ -8,6 +8,7 @@ interface apiBodyType {
     secureLinkUniqueId?: string;
     accessToken?: string;
     type?: number;
+    sub?: string;
 }
 
 export async function POST(req: NextRequest) {
@@ -61,33 +62,38 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const {token, UUID, role, isProfileRegistered} = data.resource;
+        if (data.resource.sub) {
+            return NextResponse.json({sub: data.resource.sub});
+        } else {
+            const {token, UUID, role, isProfileRegistered} = data.resource;
 
-        let redirectUrl = `${process.env.NEXT_PUBLIC_BASE_URL}`;
 
-        if (!isProfileRegistered && role !== 'EU') {
-            redirectUrl += "/profile-setup";
-        } else if (role === "PA") {
-            redirectUrl += "/customers";
-        } else if (secureLink) {
-            redirectUrl += `/link?l=${secureLink}`;
+            let redirectUrl = `${process.env.NEXT_PUBLIC_BASE_URL}`;
+
+            if (!isProfileRegistered && role !== 'EU') {
+                redirectUrl += "/profile-setup";
+            } else if (role === "PA") {
+                redirectUrl += "/customers";
+            } else if (secureLink) {
+                redirectUrl += `/link?l=${secureLink}`;
+            }
+
+            const res = NextResponse.json({redirectUrl});
+
+            res.cookies.set("auth_token", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+            });
+
+            res.cookies.set("user_uuid", UUID, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "strict",
+            });
+
+            return res;
         }
-
-        const res = NextResponse.json({redirectUrl});
-
-        res.cookies.set("auth_token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
-        });
-
-        res.cookies.set("user_uuid", UUID, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
-        });
-
-        return res;
     } catch (error: any) {
         console.error(error);
         const errorMessage = error.message || "An error occurred during login";
