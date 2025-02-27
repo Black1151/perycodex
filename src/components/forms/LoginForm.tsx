@@ -163,7 +163,7 @@ console.log(isEmailPrivate);
                         if (NextAuthSession.providerAccountId != undefined) {
                             console.log('----NEXT AUTH SESSION----');
                             console.log(NextAuthSession);
-                            const result: { redirectUrl: string, resource?: { sub?: string } } | null = await fetchClient(
+                            const result: { redirectUrl?: string, sub?: string } | null = await fetchClient(
                                 endpoint, {
                                     method: "POST",
                                     body: {
@@ -178,10 +178,10 @@ console.log(isEmailPrivate);
                                 });
 
                             if (result) {
-                                if (result.resource) {
-                                    if (result.resource?.sub != undefined) {
-                                        router.push(`/login/?linkAppleAccountSub=${result.resource?.sub}`);
-                                    } else {
+                                if (result.sub) {
+                                    router.push(`/login/?linkAppleAccountSub=${result.sub}`);
+                                } else {
+                                    if (result.redirectUrl) {
                                         router.push(result.redirectUrl);
                                     }
                                 }
