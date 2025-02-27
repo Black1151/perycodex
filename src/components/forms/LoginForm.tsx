@@ -169,7 +169,7 @@ console.log(isEmailPrivate);
                                     body: {
                                         loginType: "sso",
                                         email: NextAuthSession.user.email,
-                                        sub: NextAuthSession.providerAccountId,
+                                        secureLinkUniqueId: NextAuthSession.providerAccountId,
                                         password: null,
                                         accessToken: NextAuthSession.accessToken,
                                         type: loginType()

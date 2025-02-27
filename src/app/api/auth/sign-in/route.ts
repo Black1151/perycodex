@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
                 loginType: loginType,
                 email: email,
                 accessToken: accessToken,
+                secureLinkUniqueId: secureLinkUniqueId,
                 type: type
             }
         }
