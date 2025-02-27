@@ -11,18 +11,21 @@ export interface UserStatsModalProps {
 export const UserStatsModal: React.FC<UserStatsModalProps> = ({
   isOpen,
   onClose,
+  userStats,
 }) => {
+  console.log(userStats);
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered>
+    <Modal size="2xl" isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent mx={4} borderRadius="lg">
         <BigUpStatsCard
-          name={""}
-          location={""}
-          received={0}
-          given={0}
-          score={0}
-          userImage={""}
+          name={userStats.userName}
+          location={userStats.userLocation}
+          received={userStats.bigUpReceivedPoints}
+          given={userStats.bigUpGivenPoints}
+          score={userStats.bigUpTotal}
+          userImage={userStats.userImage}
+          ranking={userStats.bigUpRanking}
         />
       </ModalContent>
     </Modal>

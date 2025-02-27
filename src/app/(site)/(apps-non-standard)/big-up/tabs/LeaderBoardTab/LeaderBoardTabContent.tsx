@@ -39,10 +39,12 @@ export const getMedalColor = (rank: number): string | undefined => {
 
 interface LeaderBoardTabContentProps {
   items: BigUpLeaderboardEntry[];
+  onClickProfilePic: (uuid: string) => void;
 }
 
 export const LeaderBoardTabContent: React.FC<LeaderBoardTabContentProps> = ({
   items,
+  onClickProfilePic,
 }) => {
   return (
     <Grid templateColumns={["1fr", null, "1fr 1fr", "1fr", "1fr 1fr"]} gap={6}>
@@ -52,6 +54,8 @@ export const LeaderBoardTabContent: React.FC<LeaderBoardTabContentProps> = ({
           return (
             <AnimatedListItem delay={0.5} key={index} index={index}>
               <LeaderboardCard
+                userId={item.userId.toString()}
+                onClickProfilePic={onClickProfilePic}
                 name={item.userName}
                 location={item.officeName}
                 image={item.userImageUrl}

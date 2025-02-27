@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     }
 
     const response = await apiClient(`/dashboards/bigUp/user/${uuid}`, {
-      method: "POST",
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
       },

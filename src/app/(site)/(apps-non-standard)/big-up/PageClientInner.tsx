@@ -30,6 +30,11 @@ interface PageClientInnerProps {
     categories: BigUpCategory[];
   };
   onDataUpdated: () => void;
+  userStatsModalProps: {
+    userStats: BigUpStats;
+    isUserStatsModalOpen: boolean;
+    setIsUserStatsModalOpen: (value: boolean) => void;
+  };
 }
 
 export const PageClientInner: React.FC<PageClientInnerProps> = ({
@@ -37,12 +42,11 @@ export const PageClientInner: React.FC<PageClientInnerProps> = ({
   tabsData,
   modalData,
   onDataUpdated,
+  userStatsModalProps,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isUserStatsModalOpen, setIsUserStatsModalOpen] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
-  const [userStats, setUserStats] = useState<BigUpStats | {}>({});
 
   const router = useRouter();
   const { user } = useUser();
@@ -90,14 +94,6 @@ export const PageClientInner: React.FC<PageClientInnerProps> = ({
     } catch (error) {
       console.error("Error submitting BigUp:", error);
     }
-  };
-
-  const fetchUserStats = async (uuid: string) => {
-    const response = await fetch(
-      `/api/auth/big-up/fetchBigUpUserData?uuid=${uuid}`
-    );
-    const data = await response.json();
-    setUserStats(data);
   };
 
   return (
@@ -157,11 +153,10 @@ export const PageClientInner: React.FC<PageClientInnerProps> = ({
           <ModalBody>Thank you for appreciating your colleagues.</ModalBody>
         </ModalContent>
       </Modal>
-
       <UserStatsModal
-        isOpen={isUserStatsModalOpen}
-        onClose={() => setIsUserStatsModalOpen(false)}
-        userStats={userStats}
+        {...userStatsModalProps}
+        isOpen={userStatsModalProps.isUserStatsModalOpen}
+        onClose={() => userStatsModalProps.setIsUserStatsModalOpen(false)}
       />
     </>
   );

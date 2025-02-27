@@ -36,6 +36,16 @@ export default function BigUpPage() {
   const [teamMembers, setTeamMembers] = useState<BigUpTeamMember[]>([]);
   const [bigUpCategories, setBigUpCategories] = useState<BigUpCategory[]>([]);
   const [loading, setLoading] = useState(true);
+  const [userStats, setUserStats] = useState<BigUpStats>({
+    bigUpGivenPoints: 0,
+    bigUpReceivedPoints: 0,
+    bigUpTotal: 0,
+    bigUpRanking: 0,
+    userName: "",
+    userLocation: "",
+    userImage: "",
+  });
+  const [isUserStatsModalOpen, setIsUserStatsModalOpen] = useState(false);
 
   async function fetchData() {
     try {
@@ -81,17 +91,61 @@ export default function BigUpPage() {
     return <div>Loading...</div>;
   }
 
+  const fetchUserStats = async (uuid: string) => {
+    const response = await fetch(
+      `/api/auth/big-up/fetchBigUpUserData?uuid=${uuid}`
+    );
+    const data = await response.json();
+    setUserStats(data.resource);
+  };
+
+  const handleClickProfilePic = async (uuid: string) => {
+    await fetchUserStats(uuid);
+    setIsUserStatsModalOpen(true);
+  };
+
+  const handleClickLeaderboardProfilePic = async (uuid: string) => {
+    console.log("click leaderboard profile pic");
+  };
+
   const tabsData = [
     {
       header: "Leader Board",
-      content: <LeaderBoardTabContent items={bigUpLeaderboard} />,
+      content: (
+        <LeaderBoardTabContent
+          items={bigUpLeaderboard}
+          onClickProfilePic={handleClickLeaderboardProfilePic}
+        />
+      ),
     },
-    { header: "The Wall", content: <RecognitionList items={bigUpWall} /> },
+    {
+      header: "The Wall",
+      content: (
+        <RecognitionList
+          items={bigUpWall}
+          onClickProfilePic={handleClickProfilePic}
+        />
+      ),
+    },
     {
       header: "To Me",
-      content: <RecognitionList items={bigUpToMe} reverseRecognition={true} />,
+      content: (
+        <RecognitionList
+          items={bigUpToMe}
+          reverseRecognition={true}
+          onClickProfilePic={handleClickProfilePic}
+        />
+      ),
     },
-    { header: "From Me", content: <RecognitionList items={bigUpFromMe} /> },
+    {
+      header: "From Me",
+      content: (
+        <RecognitionList
+          items={bigUpFromMe}
+          onClickProfilePic={handleClickProfilePic}
+        />
+      ),
+    },
   ];
 
   const masonryData = {
@@ -139,6 +193,11 @@ export default function BigUpPage() {
         tabsData={tabsData}
         modalData={modalData}
         onDataUpdated={fetchData}
+        userStatsModalProps={{
+          userStats: userStats,
+          isUserStatsModalOpen: isUserStatsModalOpen,
+          setIsUserStatsModalOpen: setIsUserStatsModalOpen,
+        }}
       />
     </Flex>
   );
