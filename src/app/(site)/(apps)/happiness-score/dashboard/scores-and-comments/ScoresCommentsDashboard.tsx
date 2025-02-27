@@ -575,7 +575,7 @@ const ScoresCommentsDashboard: React.FC = () => {
     }, [toolId, workflowId, user]);
 
     return (
-        <VStack align="stretch" spacing={6} w="full" py={2}>
+        <>
             <FilterSidebar
                 onApplyFilters={onFilterChange}
                 filterOptions={{
@@ -620,99 +620,101 @@ const ScoresCommentsDashboard: React.FC = () => {
                 </ModalContent>
             </Modal>
 
-            <Flex w={"100%"} gap={6} flexWrap={"wrap"} pb={4}>
-                <DataGridComponentLight
-                    data={gridData}
-                    loading={loading}
-                    initialFields={columnDefs}
-                    showTopBar={false}
-                    defaultColDef={defaultColDef}
-                    onGridReady={handleGridReady}
-                    refreshData={getData}
-                    enableAutoRefresh={true}
-                    title={"Score and Comments"}
-                />
+            <VStack align="stretch" spacing={6} w="full" py={2}>
+                <Flex w={"100%"} gap={6} flexWrap={"wrap"} pb={4}>
+                    <DataGridComponentLight
+                        data={gridData}
+                        loading={loading}
+                        initialFields={columnDefs}
+                        showTopBar={false}
+                        defaultColDef={defaultColDef}
+                        onGridReady={handleGridReady}
+                        refreshData={getData}
+                        enableAutoRefresh={true}
+                        title={"Score and Comments"}
+                    />
 
-                {gridData.length > 0 && (
-                    <Flex
-                        width="100%"
-                        flexWrap="wrap"
-                        gap={6}
-                        justify="space-between"
-                        flex={1}
-                    >
-                        <Box
-                            minW={["100%", "100%", "48%"]}
+                    {gridData.length > 0 && (
+                        <Flex
+                            width="100%"
+                            flexWrap="wrap"
+                            gap={6}
+                            justify="space-between"
                             flex={1}
-                            textAlign="center"
-                            borderRadius="lg"
                         >
-                            <Flex width="100%" justifyContent="center" align="center" mb={4}>
-                                <SectionHeader>Happiness by Department</SectionHeader>
-                            </Flex>
                             <Box
-                                id="chart1"
-                                height="400px"
-                                w="full"
-                                borderRadius={"2xl"}
-                                overflow={"hidden"}
-                            ></Box>
-                        </Box>
-                        <Box
-                            minW={["100%", "100%", "48%"]}
-                            flex={1}
-                            textAlign="center"
-                            borderRadius="lg"
-                        >
-                            <Flex width="100%" justifyContent="center" align="center" mb={4}>
-                                <SectionHeader>Happiness by Office</SectionHeader>
-                            </Flex>
+                                minW={["100%", "100%", "48%"]}
+                                flex={1}
+                                textAlign="center"
+                                borderRadius="lg"
+                            >
+                                <Flex width="100%" justifyContent="center" align="center" mb={4}>
+                                    <SectionHeader>Happiness by Department</SectionHeader>
+                                </Flex>
+                                <Box
+                                    id="chart1"
+                                    height="400px"
+                                    w="full"
+                                    borderRadius={"2xl"}
+                                    overflow={"hidden"}
+                                ></Box>
+                            </Box>
                             <Box
-                                id="chart2"
-                                height="400px"
-                                w="full"
-                                borderRadius={"2xl"}
-                                overflow={"hidden"}
-                            ></Box>
-                        </Box>
-                        <Box
-                            minW={["100%", "100%", "100%"]}
-                            flex={1}
-                            textAlign="center"
-                            borderRadius="lg"
-                        >
-                            <Flex width="100%" justifyContent="center" align="center" mb={4}>
-                                <SectionHeader>Historic Weekly Average</SectionHeader>
-                            </Flex>
+                                minW={["100%", "100%", "48%"]}
+                                flex={1}
+                                textAlign="center"
+                                borderRadius="lg"
+                            >
+                                <Flex width="100%" justifyContent="center" align="center" mb={4}>
+                                    <SectionHeader>Happiness by Office</SectionHeader>
+                                </Flex>
+                                <Box
+                                    id="chart2"
+                                    height="400px"
+                                    w="full"
+                                    borderRadius={"2xl"}
+                                    overflow={"hidden"}
+                                ></Box>
+                            </Box>
                             <Box
-                                id="chart3"
-                                height="400px"
-                                w="full"
-                                borderRadius={"2xl"}
-                                overflow={"hidden"}
-                            ></Box>
-                        </Box>
-                        <Box
-                            minW={["100%", "100%", "100%"]}
-                            flex={1}
-                            textAlign="center"
-                            borderRadius="lg"
-                        >
-                            <Flex width="100%" justifyContent="center" align="center" mb={4}>
-                                <SectionHeader>Historic Monthly Average</SectionHeader>
-                            </Flex>
+                                minW={["100%", "100%", "100%"]}
+                                flex={1}
+                                textAlign="center"
+                                borderRadius="lg"
+                            >
+                                <Flex width="100%" justifyContent="center" align="center" mb={4}>
+                                    <SectionHeader>Historic Weekly Average</SectionHeader>
+                                </Flex>
+                                <Box
+                                    id="chart3"
+                                    height="400px"
+                                    w="full"
+                                    borderRadius={"2xl"}
+                                    overflow={"hidden"}
+                                ></Box>
+                            </Box>
                             <Box
-                                id="chart4"
-                                height="400px"
-                                w="full"
-                                borderRadius={"2xl"}
-                                overflow={"hidden"}
-                            ></Box>
-                        </Box>
-                    </Flex>
-                )}
-            </Flex>
-        </VStack>
+                                minW={["100%", "100%", "100%"]}
+                                flex={1}
+                                textAlign="center"
+                                borderRadius="lg"
+                            >
+                                <Flex width="100%" justifyContent="center" align="center" mb={4}>
+                                    <SectionHeader>Historic Monthly Average</SectionHeader>
+                                </Flex>
+                                <Box
+                                    id="chart4"
+                                    height="400px"
+                                    w="full"
+                                    borderRadius={"2xl"}
+                                    overflow={"hidden"}
+                                ></Box>
+                            </Box>
+                        </Flex>
+                    )}
+                </Flex>
+            </VStack>
+        </>
     );
 };
 export default ScoresCommentsDashboard;
