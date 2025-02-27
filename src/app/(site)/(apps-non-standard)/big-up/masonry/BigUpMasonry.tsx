@@ -1,10 +1,11 @@
 "use client";
 import { Grid, GridItem } from "@chakra-ui/react";
 import { ReactNode } from "react";
-import { MyBigUpStats } from "./MyBigUpStats";
+
 import { MasonryCard } from "./MasonryCardItem";
 import { SpringScale } from "@/components/animations/SpringScale";
 import { BigUpStats } from "../types";
+import { BigUpStatsCard } from "./BigUpStatsCard";
 
 export interface BigUpMasonryProps {
   items: { title: string; content: ReactNode }[];
@@ -27,7 +28,7 @@ export const BigUpMasonry: React.FC<BigUpMasonryProps> = ({
           delay={Math.random() * 0.5}
           style={{ flex: 1, height: "100%" }}
         >
-          <MyBigUpStats
+          <BigUpStatsCard
             name={userStats.userName}
             location={userStats.userLocation}
             received={userStats.bigUpReceivedPoints}
