@@ -115,7 +115,7 @@ export function LoginForm() {
                     suppressError: true
                 });
             if (appleLinkingResult) {
-                router.push(`/login?appleAccountLinked=${data.email}`);
+                router.push(appleLinkingResult.redirectUrl);
             }
         }
     };
