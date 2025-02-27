@@ -313,16 +313,30 @@ console.log(isEmailPrivate);
                         focusBorderColor={theme.colors.perygonPink}
                     />
                     <Flex w="100%" justifyContent="flex-end">
-                        <Text
-                            fontSize={["16px", "12px"]}
-                            cursor="pointer"
-                            color={theme.colors.perygonPink}
-                            _hover={{cursor: "pointer"}}
-                            onClick={() => router.push("/password-recovery")}
-                        >
+                        {(linkAppleAccountSub != '' &&
+                            <Text
+                                fontSize={["16px", "12px"]}
+                                cursor="pointer"
+                                color={theme.colors.perygonPink}
+                                _hover={{cursor: "pointer"}}
+                                onClick={() => router.push("/login")}
+                            >
+                                &raquo; Back to login
+                            </Text>
+                        )}
+                        {(linkAppleAccountSub == '' &&
+                            <Text
+                                fontSize={["16px", "12px"]}
+                                cursor="pointer"
+                                color={theme.colors.perygonPink}
+                                _hover={{cursor: "pointer"}}
+                                onClick={() => router.push("/password-recovery")}
+                            >
                             Forgot password?
-                        </Text>
+                            </Text>
+                        )}
                     </Flex>
+                    {linkAppleAccountSub == null && (
                     <Button
                         mt={5}
                         backgroundColor={theme.colors.perygonPink}
@@ -338,8 +352,48 @@ console.log(isEmailPrivate);
                         }}
                         onClick={() => handleButtonClick('email')}
                     >
-                        Login with email
+                        Link this account
                     </Button>
+                    )}
+                    {linkAppleAccountSub == null && (
+                        <Button
+                            mt={5}
+                            backgroundColor={theme.colors.perygonPink}
+                            type="submit"
+                            w="full"
+                            isLoading={loading}
+                            height={12}
+                            color="white"
+                            _hover={{
+                                color: theme.colors.perygonPink,
+                                border: `1px solid ${theme.colors.perygonPink}`,
+                                backgroundColor: "white",
+                            }}
+                            onClick={() => handleButtonClick('email')}
+                        >
+                            Login with email
+                        </Button>
+                    )}
+                    {appleAccountLinked != null && (
+                        <Button
+                            mt={5}
+                            backgroundColor={theme.colors.perygonPink}
+                            type="submit"
+                            w="full"
+                            isLoading={loading}
+                            height={12}
+                            color="white"
+                            _hover={{
+                                color: theme.colors.perygonPink,
+                                border: `1px solid ${theme.colors.perygonPink}`,
+                                backgroundColor: "white",
+                            }}
+                            onClick={() => router.push("/")}
+                        >
+                            Continue
+                        </Button>
+                    )}
+                    {linkAppleAccountSub == null && (
                     <HStack>
                         <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
                             Don&apos;t have an account?
@@ -355,6 +409,7 @@ console.log(isEmailPrivate);
                             Sign Up
                         </Text>
                     </HStack>
+                        )}
                     <LoginFormButtons loading={loading} handleButtonClick={handleButtonClick}
                                       linkAppleAccountSub={linkAppleAccountSub ?? ''}/>
 
