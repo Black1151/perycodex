@@ -3,7 +3,7 @@ import apiClient from "@/lib/apiClient";
 
 interface apiBodyType {
     email?: string;
-    type?: string;
+    loginType?: string;
     password?: string;
     sub?: string;
 }
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
         apiBody = {
             email: email,
-            type: loginType,
+            loginType: loginType,
             password: password,
             sub: sub,
         }
