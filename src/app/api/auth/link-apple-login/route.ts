@@ -3,7 +3,7 @@ import apiClient from "@/lib/apiClient";
 
 interface apiBodyType {
     email?: string;
-    loginType?: string;
+    type?: string;
     password?: string;
     sub?: string;
 }
@@ -21,12 +21,12 @@ export async function POST(req: NextRequest) {
 
         apiBody = {
             email: email,
-            loginType: loginType,
+            type: loginType,
             password: password,
             sub: sub,
         }
 
-        const response = await apiClient("/authentication/login", {
+        const response = await apiClient("/authentication/linkAppleLogin", {
             method: "POST",
             body: JSON.stringify(apiBody),
         });
