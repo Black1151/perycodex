@@ -48,7 +48,7 @@ export function LoginForm() {
     type ButtonId = 'email' | 'microsoft' | 'google' | 'apple';
     const showText = useBreakpointValue({base: false, md: true});
     const {data: session, status} = useSession();
-    const linkAppleAccountSub = searchParams.get('linkAppleAccountSub') ?? '';
+    const linkAppleAccountSub = searchParams.get('link-apple-account-sub') ?? '';
     const appleAccountLinked = searchParams.get('appleAccountLinked');
 
     useEffect(() => {
@@ -91,7 +91,7 @@ export function LoginForm() {
             ? `/api/auth/sign-in?l=${secureLink}`
             : "/api/auth/sign-in";
 
-        const linkAppleAccountSub = searchParams.get('linkAppleAccountSub');
+        const linkAppleAccountSub = searchParams.get('link-apple-account-sub');
         if (linkAppleAccountSub == null) {
             const result: { redirectUrl: string } | null = await fetchClient(endpoint, {
                 method: "POST",
@@ -105,7 +105,7 @@ export function LoginForm() {
             }
         } else {
             const appleLinkingResult: { redirectUrl: string, resource?: { sub?: string } } | null = await fetchClient(
-                'authentication/linkAppleLogin', {
+                'api/auth/link-apple-login?l=${secureLink}', {
                     method: "POST",
                     body: {
                         ...data,
@@ -115,7 +115,7 @@ export function LoginForm() {
                     suppressError: true
                 });
             if (appleLinkingResult) {
-                router.push(`/login?appleAccountLinked=${data.email}`);
+                router.push(appleLinkingResult.redirectUrl);
             }
         }
     };
@@ -163,13 +163,13 @@ console.log(isEmailPrivate);
                         if (NextAuthSession.providerAccountId != undefined) {
                             console.log('----NEXT AUTH SESSION----');
                             console.log(NextAuthSession);
-                            const result: { redirectUrl: string, resource?: { sub?: string } } | null = await fetchClient(
+                            const result: { redirectUrl?: string, sub?: string } | null = await fetchClient(
                                 endpoint, {
                                     method: "POST",
                                     body: {
                                         loginType: "sso",
                                         email: NextAuthSession.user.email,
-                                        sub: NextAuthSession.providerAccountId,
+                                        secureLinkUniqueId: NextAuthSession.providerAccountId,
                                         password: null,
                                         accessToken: NextAuthSession.accessToken,
                                         type: loginType()
@@ -178,12 +178,11 @@ console.log(isEmailPrivate);
                                 });
 
                             if (result) {
-                                if (result.resource) {
-                                    if (result.resource?.sub != undefined) {
-                                        router.push(`/login/?linkAppleAccountSub=${result.resource?.sub}`);
-                                    } else {
-                                        router.push(result.redirectUrl);
-                                    }
+                                if (result.sub && result.sub.length > 0) {
+                                    router.push(`/login/?link-apple-account-sub=${result.sub}`);
+                                }
+                                if (result.redirectUrl) {
+                                    router.push(result.redirectUrl);
                                 }
                             } else {
                                 const res = NextResponse.json({success: false});
@@ -269,13 +268,6 @@ console.log(isEmailPrivate);
                             Apple account with your Perygon account
                         </Text>
                     )}
-                    {(linkAppleAccountSub != '' &&
-                        <input
-                            type="hidden"
-                            name="linkAppleAccountSub"
-                            value={linkAppleAccountSub}
-                        />
-                    )}
                     <InputField
                         name="email"
                         placeholder="Email"
@@ -313,16 +305,30 @@ console.log(isEmailPrivate);
                         focusBorderColor={theme.colors.perygonPink}
                     />
                     <Flex w="100%" justifyContent="flex-end">
-                        <Text
-                            fontSize={["16px", "12px"]}
-                            cursor="pointer"
-                            color={theme.colors.perygonPink}
-                            _hover={{cursor: "pointer"}}
-                            onClick={() => router.push("/password-recovery")}
-                        >
+                        {(linkAppleAccountSub != '' &&
+                            <Text
+                                fontSize={["16px", "12px"]}
+                                cursor="pointer"
+                                color={theme.colors.perygonPink}
+                                _hover={{cursor: "pointer"}}
+                                onClick={() => router.push("/login")}
+                            >
+                                &raquo; Back to login
+                            </Text>
+                        )}
+                        {(linkAppleAccountSub == '' &&
+                            <Text
+                                fontSize={["16px", "12px"]}
+                                cursor="pointer"
+                                color={theme.colors.perygonPink}
+                                _hover={{cursor: "pointer"}}
+                                onClick={() => router.push("/password-recovery")}
+                            >
                             Forgot password?
-                        </Text>
+                            </Text>
+                        )}
                     </Flex>
+                    {linkAppleAccountSub !== '' && (
                     <Button
                         mt={5}
                         backgroundColor={theme.colors.perygonPink}
@@ -338,8 +344,48 @@ console.log(isEmailPrivate);
                         }}
                         onClick={() => handleButtonClick('email')}
                     >
-                        Login with email
+                        Link this account
                     </Button>
+                    )}
+                    {linkAppleAccountSub.length < 1 && (
+                        <Button
+                            mt={5}
+                            backgroundColor={theme.colors.perygonPink}
+                            type="submit"
+                            w="full"
+                            isLoading={loading}
+                            height={12}
+                            color="white"
+                            _hover={{
+                                color: theme.colors.perygonPink,
+                                border: `1px solid ${theme.colors.perygonPink}`,
+                                backgroundColor: "white",
+                            }}
+                            onClick={() => handleButtonClick('email')}
+                        >
+                            Login with email
+                        </Button>
+                    )}
+                    {appleAccountLinked != null && (
+                        <Button
+                            mt={5}
+                            backgroundColor={theme.colors.perygonPink}
+                            type="submit"
+                            w="full"
+                            isLoading={loading}
+                            height={12}
+                            color="white"
+                            _hover={{
+                                color: theme.colors.perygonPink,
+                                border: `1px solid ${theme.colors.perygonPink}`,
+                                backgroundColor: "white",
+                            }}
+                            onClick={() => router.push("/")}
+                        >
+                            Continue
+                        </Button>
+                    )}
+                    {linkAppleAccountSub == null && (
                     <HStack>
                         <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
                             Don&apos;t have an account?
@@ -355,6 +401,7 @@ console.log(isEmailPrivate);
                             Sign Up
                         </Text>
                     </HStack>
+                        )}
                     <LoginFormButtons loading={loading} handleButtonClick={handleButtonClick}
                                       linkAppleAccountSub={linkAppleAccountSub ?? ''}/>
 
