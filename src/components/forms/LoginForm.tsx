@@ -48,7 +48,7 @@ export function LoginForm() {
     type ButtonId = 'email' | 'microsoft' | 'google' | 'apple';
     const showText = useBreakpointValue({base: false, md: true});
     const {data: session, status} = useSession();
-    const linkAppleAccountSub = searchParams.get('linkAppleAccountSub') ?? '';
+    const linkAppleAccountSub = searchParams.get('link-apple-account-sub') ?? '';
     const appleAccountLinked = searchParams.get('appleAccountLinked');
 
     useEffect(() => {
@@ -91,7 +91,7 @@ export function LoginForm() {
             ? `/api/auth/sign-in?l=${secureLink}`
             : "/api/auth/sign-in";
 
-        const linkAppleAccountSub = searchParams.get('linkAppleAccountSub');
+        const linkAppleAccountSub = searchParams.get('link-apple-account-sub');
         if (linkAppleAccountSub == null) {
             const result: { redirectUrl: string } | null = await fetchClient(endpoint, {
                 method: "POST",
@@ -178,12 +178,11 @@ console.log(isEmailPrivate);
                                 });
 
                             if (result) {
-                                if (result.sub) {
-                                    router.push(`/login/?linkAppleAccountSub=${result.sub}`);
-                                } else {
-                                    if (result.redirectUrl) {
-                                        router.push(result.redirectUrl);
-                                    }
+                                if (result.sub && result.sub.length > 0) {
+                                    router.push(`/login/?link-apple-account-sub=${result.sub}`);
+                                }
+                                if (result.redirectUrl) {
+                                    router.push(result.redirectUrl);
                                 }
                             } else {
                                 const res = NextResponse.json({success: false});
@@ -269,13 +268,6 @@ console.log(isEmailPrivate);
                             Apple account with your Perygon account
                         </Text>
                     )}
-                    {(linkAppleAccountSub != '' &&
-                        <input
-                            type="hidden"
-                            name="linkAppleAccountSub"
-                            value={linkAppleAccountSub}
-                        />
-                    )}
                     <InputField
                         name="email"
                         placeholder="Email"
@@ -336,7 +328,7 @@ console.log(isEmailPrivate);
                             </Text>
                         )}
                     </Flex>
-                    {linkAppleAccountSub !== null && (
+                    {linkAppleAccountSub !== '' && (
                     <Button
                         mt={5}
                         backgroundColor={theme.colors.perygonPink}
@@ -355,7 +347,7 @@ console.log(isEmailPrivate);
                         Link this account
                     </Button>
                     )}
-                    {linkAppleAccountSub == null && (
+                    {linkAppleAccountSub.length < 1 && (
                         <Button
                             mt={5}
                             backgroundColor={theme.colors.perygonPink}
