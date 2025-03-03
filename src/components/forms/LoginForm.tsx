@@ -169,10 +169,10 @@ console.log(isEmailPrivate);
                                     body: {
                                         loginType: "sso",
                                         email: NextAuthSession.user.email,
-                                        secureLinkUniqueId: NextAuthSession.providerAccountId,
                                         password: null,
                                         accessToken: NextAuthSession.accessToken,
-                                        type: loginType()
+                                        type: loginType(),
+                                        secureLinkUniqueId: NextAuthSession.providerAccountId
                                     },
                                     suppressError: true
                                 });
@@ -210,6 +210,7 @@ console.log(isEmailPrivate);
                                     password: null,
                                     accessToken: NextAuthSession.accessToken,
                                     type: loginType(),
+                                    secureLinkUniqueId: NextAuthSession.providerAccountId,
                                     sub: (NextAuthSession.providerAccountId?.length !== undefined)
                                         ? NextAuthSession.providerAccountId
                                         : null
