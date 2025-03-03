@@ -42,7 +42,15 @@ export const PageClientInner: React.FC<PageClientInnerProps> = ({
   const [isUserStatsModalOpen, setIsUserStatsModalOpen] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
-  const [userStats, setUserStats] = useState<BigUpStats | {}>({});
+  const [userStats, setUserStats] = useState<BigUpStats>({
+    bigUpGivenPoints: 0,
+    bigUpReceivedPoints: 0,
+    bigUpTotal: 0,
+    bigUpRanking: 0,
+    userName: '',
+    userLocation: '',
+    userImage: ''
+  });
 
   const router = useRouter();
   const { user } = useUser();
