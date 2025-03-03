@@ -62,9 +62,9 @@ const handler = NextAuth({
         signOut: 'auth/sign-out'
     },
     callbacks: {
-        async redirect({ url, baseUrl }) {
-            return url.startsWith('/') ? new URL(url, baseUrl).toString() : url;
-        },
+        // async redirect({ url, baseUrl }) {
+        //     return url.startsWith('/') ? new URL(url, baseUrl).toString() : url;
+        // },
         async jwt({ token, account , profile}) {
             if (account) {
                 token.accessToken = account.access_token;
