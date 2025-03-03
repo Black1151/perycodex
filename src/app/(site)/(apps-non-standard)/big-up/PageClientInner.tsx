@@ -21,6 +21,7 @@ import Confetti from "@/components/animations/confetti/Confetti";
 import RecognitionHeader from "./RecognitionHeader";
 import { useRouter } from "next/navigation";
 import { UserStatsModal } from "./UserStatsModal";
+import { NewRecognitionModal } from "./NewRecognitionModal";
 
 interface PageClientInnerProps {
   masonryData: BigUpMasonryProps;
@@ -45,6 +46,8 @@ export const PageClientInner: React.FC<PageClientInnerProps> = ({
   userStatsModalProps,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNewRecognitionModalOpen, setIsNewRecognitionModalOpen] =
+    useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
@@ -158,6 +161,11 @@ export const PageClientInner: React.FC<PageClientInnerProps> = ({
         isOpen={userStatsModalProps.isUserStatsModalOpen}
         onClose={() => userStatsModalProps.setIsUserStatsModalOpen(false)}
       />
+      {/* <NewRecognitionModal
+        isOpen={isNewRecognitionModalOpen}
+        onClose={() => setIsNewRecognitionModalOpen(false)}
+        newRecognitionData={newRecognitionData}
+      /> */}
     </>
   );
 };

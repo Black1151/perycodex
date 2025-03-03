@@ -14,6 +14,7 @@ import {
 } from "./types";
 
 export default function BigUpPage() {
+  const [newRecognitionData, setNewRecognitionData] = useState(null);
   const [bigUpLeaderboard, setBigUpLeaderboard] = useState<
     BigUpLeaderboardEntry[]
   >([]);
@@ -62,6 +63,8 @@ export default function BigUpPage() {
 
       const result = await response.json();
 
+      console.log(result);
+
       if (response.ok) {
         setBigUpLeaderboard(result.resource.bigUpLeaderboard || []);
         setBigUpWall(result.resource.bigUpWall || []);
@@ -73,7 +76,9 @@ export default function BigUpPage() {
         setYourBigUpStats(result.resource.yourBigUpStats || null);
         setTeamMembers(result.resource.users || []);
         setBigUpCategories(result.resource.bigUpTypes || []);
-      } else {
+
+        /// need logic to filter the result for unread recognition entries
+
         console.error("Error from server response:", result);
       }
     } catch (error) {
