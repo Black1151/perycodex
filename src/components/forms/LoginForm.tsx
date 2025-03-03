@@ -366,6 +366,23 @@ console.log(isEmailPrivate);
                             Login with email
                         </Button>
                     )}
+                    {linkAppleAccountSub.length < 1 && (
+                        <HStack>
+                            <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
+                                Don&apos;t have an account?
+                            </Text>
+                            <Text
+                                pt="10px"
+                                fontSize={["16px", "12px"]}
+                                cursor="pointer"
+                                color={theme.colors.perygonPink}
+                                _hover={{cursor: "pointer"}}
+                                onClick={() => router.push("sign-up")}
+                            >
+                                Sign Up
+                            </Text>
+                        </HStack>
+                    )}
                     {appleAccountLinked != null && (
                         <Button
                             mt={5}
@@ -385,23 +402,6 @@ console.log(isEmailPrivate);
                             Continue
                         </Button>
                     )}
-                    {linkAppleAccountSub == null && (
-                    <HStack>
-                        <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
-                            Don&apos;t have an account?
-                        </Text>
-                        <Text
-                            pt="10px"
-                            fontSize={["16px", "12px"]}
-                            cursor="pointer"
-                            color={theme.colors.perygonPink}
-                            _hover={{cursor: "pointer"}}
-                            onClick={() => router.push("sign-up")}
-                        >
-                            Sign Up
-                        </Text>
-                    </HStack>
-                        )}
                     <LoginFormButtons loading={loading} handleButtonClick={handleButtonClick}
                                       linkAppleAccountSub={linkAppleAccountSub ?? ''}/>
 
