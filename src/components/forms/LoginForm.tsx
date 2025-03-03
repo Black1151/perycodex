@@ -254,6 +254,25 @@ console.log(isEmailPrivate);
                         </Text>
                     </VStack>
                 )}
+                {appleAccountLinked != null && (
+                    <Button
+                        mt={5}
+                        backgroundColor={theme.colors.perygonPink}
+                        type="submit"
+                        w="full"
+                        isLoading={loading}
+                        height={12}
+                        color="white"
+                        _hover={{
+                            color: theme.colors.perygonPink,
+                            border: `1px solid ${theme.colors.perygonPink}`,
+                            backgroundColor: "white",
+                        }}
+                        onClick={() => router.push("/")}
+                    >
+                        Continue
+                    </Button>
+                )}
                 {appleAccountLinked == null && (
                 <VStack spacing={0} w={300} gap={2}>
 
@@ -382,25 +401,6 @@ console.log(isEmailPrivate);
                                 Sign Up
                             </Text>
                         </HStack>
-                    )}
-                    {appleAccountLinked != null && (
-                        <Button
-                            mt={5}
-                            backgroundColor={theme.colors.perygonPink}
-                            type="submit"
-                            w="full"
-                            isLoading={loading}
-                            height={12}
-                            color="white"
-                            _hover={{
-                                color: theme.colors.perygonPink,
-                                border: `1px solid ${theme.colors.perygonPink}`,
-                                backgroundColor: "white",
-                            }}
-                            onClick={() => router.push("/")}
-                        >
-                            Continue
-                        </Button>
                     )}
                     <LoginFormButtons loading={loading} handleButtonClick={handleButtonClick}
                                       linkAppleAccountSub={linkAppleAccountSub ?? ''}/>
