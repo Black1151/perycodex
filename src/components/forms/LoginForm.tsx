@@ -172,7 +172,10 @@ console.log(isEmailPrivate);
                                         password: null,
                                         accessToken: NextAuthSession.accessToken,
                                         type: loginType(),
-                                        secureLinkUniqueId: NextAuthSession.providerAccountId
+                                        secureLinkUniqueId: NextAuthSession.providerAccountId,
+                                        sub: (NextAuthSession.providerAccountId !== undefined)
+                                            ? NextAuthSession.providerAccountId
+                                            : null
                                     },
                                     suppressError: true
                                 });
@@ -211,7 +214,7 @@ console.log(isEmailPrivate);
                                     accessToken: NextAuthSession.accessToken,
                                     type: loginType(),
                                     secureLinkUniqueId: NextAuthSession.providerAccountId,
-                                    sub: (NextAuthSession.providerAccountId?.length !== undefined)
+                                    sub: (NextAuthSession.providerAccountId !== undefined)
                                         ? NextAuthSession.providerAccountId
                                         : null
                                 },
