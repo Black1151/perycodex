@@ -209,7 +209,10 @@ console.log(isEmailPrivate);
                                     email: NextAuthSession.user.email,
                                     password: null,
                                     accessToken: NextAuthSession.accessToken,
-                                    type: loginType()
+                                    type: loginType(),
+                                    sub: (NextAuthSession.providerAccountId?.length !== undefined)
+                                        ? NextAuthSession.providerAccountId
+                                        : null
                                 },
                                 suppressError: true
                             });
