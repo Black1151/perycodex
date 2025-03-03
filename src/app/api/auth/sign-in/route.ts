@@ -76,7 +76,9 @@ export async function POST(req: NextRequest) {
             } else if (role === "PA") {
                 redirectUrl += "/customers";
             } else if (secureLink) {
-                redirectUrl += `/link?l=${secureLink}`;
+                if (secureLink != '${secureLink}' && secureLink.length > 0) {
+                    redirectUrl += `/link?l=${secureLink}`;
+                }
             }
 
             const res = NextResponse.json({redirectUrl});
