@@ -122,9 +122,6 @@ export function LoginForm() {
 
     const handleSsoSignIn = async () => {
         let NextAuthSession = await getSession();
-        console.log('----NEXT AUTH----');
-        console.log(NextAuthSession);
-        console.log('----NEXT AUTH EOF----');
         const endpoint = secureLink
             ? `/api/auth/sign-in?l=${secureLink}`
             : "/api/auth/sign-in";
@@ -153,16 +150,12 @@ export function LoginForm() {
 
                     let isEmailPrivate = false;
                     if (NextAuthSession.user?.email !== null && NextAuthSession.user?.email !== undefined) {
-                        console.log(NextAuthSession.user?.email)
                         if (NextAuthSession.user?.email.indexOf('privaterelay') !== -1) {
                             isEmailPrivate = true;
                         }
                     }
-console.log(isEmailPrivate);
                     if (isEmailPrivate) {
                         if (NextAuthSession.providerAccountId != undefined) {
-                            console.log('----NEXT AUTH SESSION----');
-                            console.log(NextAuthSession);
                             const result: { redirectUrl?: string, sub?: string } | null = await fetchClient(
                                 endpoint, {
                                     method: "POST",
@@ -182,7 +175,10 @@ console.log(isEmailPrivate);
 
                             if (result) {
                                 if (result.sub && result.sub.length > 0) {
-                                    router.push(`/login/?link-apple-account-sub=${result.sub}`);
+                                    const appleAccountSubRedirectUrl = secureLink
+                                        ? `/login/?link-apple-account-sub=${result.sub}`
+                                        : `/login/?link-apple-account-sub=${result.sub}&l=${secureLink}`
+                                    router.push(appleAccountSubRedirectUrl);
                                 }
                                 if (result.redirectUrl) {
                                     router.push(result.redirectUrl);
@@ -275,7 +271,7 @@ console.log(isEmailPrivate);
                             border: `1px solid ${theme.colors.perygonPink}`,
                             backgroundColor: "white",
                         }}
-                        onClick={() => router.push("/login")}
+                        onClick={() => router.push((secureLink) ? `/login/${secureLink}` : "/login")}
                     >
                         Continue
                     </Button>
