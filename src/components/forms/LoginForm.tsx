@@ -275,7 +275,7 @@ console.log(isEmailPrivate);
                             border: `1px solid ${theme.colors.perygonPink}`,
                             backgroundColor: "white",
                         }}
-                        onClick={() => router.push("/")}
+                        onClick={() => router.push("/login")}
                     >
                         Continue
                     </Button>
