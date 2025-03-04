@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SpringScale } from "@/components/animations/SpringScale";
 import {
   Grid,
@@ -14,14 +14,14 @@ import {
 } from "@chakra-ui/react";
 import { BigUpMasonry, BigUpMasonryProps } from "./masonry/BigUpMasonry";
 import { PerygonTabs } from "./tabs/PerygonTabs";
-import SubmitScoreModal from "./SubmitScoreModal";
+import SubmitScoreModal from "./modal/SubmitScoreModal";
 import { BigUpCategory, BigUpStats, BigUpTeamMember } from "./types";
 import { useUser } from "@/providers/UserProvider";
 import Confetti from "@/components/animations/confetti/Confetti";
-import RecognitionHeader from "./RecognitionHeader";
+import RecognitionHeader from "./components/RecognitionHeader";
 import { useRouter } from "next/navigation";
 import { UserStatsModal } from "./UserStatsModal";
-import { NewRecognitionModal } from "./NewRecognitionModal";
+import { NewRecognitionModal } from "./modal/NewRecognitionModal";
 
 interface PageClientInnerProps {
   masonryData: BigUpMasonryProps;
@@ -36,6 +36,8 @@ interface PageClientInnerProps {
     isUserStatsModalOpen: boolean;
     setIsUserStatsModalOpen: (value: boolean) => void;
   };
+  unreadRecognitionModalData: JSX.Element;
+  markAsRead: () => void;
 }
 
 export const PageClientInner: React.FC<PageClientInnerProps> = ({
@@ -44,6 +46,8 @@ export const PageClientInner: React.FC<PageClientInnerProps> = ({
   modalData,
   onDataUpdated,
   userStatsModalProps,
+  unreadRecognitionModalData,
+  markAsRead,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNewRecognitionModalOpen, setIsNewRecognitionModalOpen] =
@@ -60,6 +64,11 @@ export const PageClientInner: React.FC<PageClientInnerProps> = ({
 
   const handleModalClose = () => {
     setIsModalOpen(false);
+  };
+
+  const handleCloseNewRecognitionModal = () => {
+    setIsNewRecognitionModalOpen(false);
+    markAsRead();
   };
 
   const handleModalSubmit = async (formData: {
@@ -98,6 +107,16 @@ export const PageClientInner: React.FC<PageClientInnerProps> = ({
       console.error("Error submitting BigUp:", error);
     }
   };
+
+  useEffect(() => {
+    if (unreadRecognitionModalData) {
+      setIsNewRecognitionModalOpen(true);
+    }
+    setShowConfetti(true);
+    setTimeout(() => {
+      setShowConfetti(false);
+    }, 5000);
+  }, [unreadRecognitionModalData]);
 
   return (
     <>
@@ -161,11 +180,11 @@ export const PageClientInner: React.FC<PageClientInnerProps> = ({
         isOpen={userStatsModalProps.isUserStatsModalOpen}
         onClose={() => userStatsModalProps.setIsUserStatsModalOpen(false)}
       />
-      {/* <NewRecognitionModal
+      <NewRecognitionModal
         isOpen={isNewRecognitionModalOpen}
-        onClose={() => setIsNewRecognitionModalOpen(false)}
-        newRecognitionData={newRecognitionData}
-      /> */}
+        onClose={handleCloseNewRecognitionModal}
+        unreadRecognitionModalData={unreadRecognitionModalData}
+      />
     </>
   );
 };

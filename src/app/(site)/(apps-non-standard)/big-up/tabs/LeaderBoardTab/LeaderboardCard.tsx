@@ -1,6 +1,6 @@
 import React from "react";
 import { Flex, Avatar, Text, Divider, BoxProps } from "@chakra-ui/react";
-import Card from "../../Card";
+import Card from "../../components/Card";
 import { EmojiEvents } from "@mui/icons-material";
 
 export interface LeaderboardCardProps extends BoxProps {

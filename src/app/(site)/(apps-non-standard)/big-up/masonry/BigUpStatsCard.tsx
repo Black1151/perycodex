@@ -1,6 +1,6 @@
 import React from "react";
 import { Flex, Avatar, Text, Divider } from "@chakra-ui/react";
-import Card from "../Card";
+import Card from "../components/Card";
 import {
   getMedalColor,
   getOrdinalSuffix,

@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import debounce from "lodash/debounce";
 import { Input, Box, Text, Avatar, HStack } from "@chakra-ui/react";
-import { BigUpTeamMember } from "./types";
+import { BigUpTeamMember } from "../types";
 import {
   AnimatedList,
   AnimatedListItem,

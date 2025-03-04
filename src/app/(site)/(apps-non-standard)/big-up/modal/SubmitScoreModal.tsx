@@ -15,8 +15,9 @@ import {
   Textarea,
   Text,
 } from "@chakra-ui/react";
-import { BigUpTeamMember } from "./types";
-import TeamMemberAutocomplete from "./TeamMemberAutocomplete";
+import { BigUpTeamMember } from "../types";
+import TeamMemberAutocomplete from "../components/TeamMemberAutocomplete";
+import { BigUpModalContent } from "./components/BigUpModalContent";
 
 interface SubmitScoreModalProps {
   isOpen: boolean;
@@ -57,11 +58,7 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={handleClose} isCentered>
       <ModalOverlay />
-      <ModalContent
-        bg="perygonBlueTransparent"
-        boxShadow="0 0 10px 2px rgba(255, 20, 147, 0.8)"
-        mx={4}
-      >
+      <BigUpModalContent>
         <ModalHeader color="perygonPink" fontSize="2xl">
           Give Recognition
         </ModalHeader>
@@ -167,7 +164,7 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
             </Button>
           </ModalFooter>
         </form>
-      </ModalContent>
+      </BigUpModalContent>
     </Modal>
   );
 };

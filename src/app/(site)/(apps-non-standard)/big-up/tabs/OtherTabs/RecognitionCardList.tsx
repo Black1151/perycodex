@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Box, Grid, Avatar, Text, Flex } from "@chakra-ui/react";
+import { Box, Grid, Avatar, Text, Flex, GridProps } from "@chakra-ui/react";
 import {
   AnimatedList,
   AnimatedListItem,
 } from "@/components/animations/AnimatedList";
 import { BigUpWallEntry } from "../../types";
 
-interface RecognitionListProps {
+interface RecognitionListProps extends GridProps {
   items: BigUpWallEntry[];
   reverseRecognition?: boolean;
   onClickProfilePic: (uuid: string) => void;
@@ -37,6 +37,7 @@ export const RecognitionList: React.FC<RecognitionListProps> = ({
   items,
   reverseRecognition = false,
   onClickProfilePic,
+  ...props
 }) => {
   const [itemsList, setItemsList] = useState<BigUpWallEntry[]>([]);
 
@@ -48,6 +49,7 @@ export const RecognitionList: React.FC<RecognitionListProps> = ({
     <Grid
       templateColumns={["1fr", null, "1fr 1fr", null, null, "1fr 1fr"]}
       gap={6}
+      {...props}
     >
       <AnimatedList>
         {itemsList &&
