@@ -105,7 +105,7 @@ export function LoginForm() {
             }
         } else {
             const appleLinkingResult: { redirectUrl: string, resource?: { sub?: string } } | null = await fetchClient(
-                'api/auth/link-apple-login?l=${secureLink}', {
+                `api/auth/link-apple-login?l=${secureLink}`, {
                     method: "POST",
                     body: {
                         ...data,
