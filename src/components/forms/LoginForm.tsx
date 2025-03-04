@@ -91,7 +91,7 @@ export function LoginForm() {
             ? `/api/auth/sign-in?l=${secureLink}`
             : "/api/auth/sign-in";
 
-        const linkAppleAccountSub = searchParams.get('link-apple-account-sub');
+        const linkAppleAccountSub = searchParams.get('linkAppleAccountSub');
         if (linkAppleAccountSub == null) {
             const result: { redirectUrl: string } | null = await fetchClient(endpoint, {
                 method: "POST",
