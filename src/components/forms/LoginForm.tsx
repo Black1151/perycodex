@@ -185,6 +185,7 @@ export function LoginForm() {
                                         method: "POST",
                                         body: { linkAppleAccountSub: result.sub},
                                         redirectOnError: false,
+                                        headers: { "Content-Type": "application/json" }
                                     });
                                     if (appleAccountLinkResult) {
                                         router.push(appleAccountLinkResult.redirectUrl);
