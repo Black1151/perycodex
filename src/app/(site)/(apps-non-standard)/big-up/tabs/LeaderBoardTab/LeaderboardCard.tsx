@@ -52,7 +52,13 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
           </Text>
         </Flex>
       </Flex>
-      <Flex alignItems="center" mb={2} width="100%" justifyContent="flex-end">
+      <Flex
+        alignItems="center"
+        mb={2}
+        width="100%"
+        justifyContent="flex-end"
+        minHeight="40px"
+      >
         {medalColor && (
           <EmojiEvents
             style={{ color: medalColor, marginRight: "0.5rem" }}
