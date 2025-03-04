@@ -91,7 +91,7 @@ export function LoginForm() {
             ? `/api/auth/sign-in?l=${secureLink}`
             : "/api/auth/sign-in";
 
-        const linkAppleAccountSubValue = searchParams.get('linkAppleAccountSub');
+        const linkAppleAccountSub = searchParams.get('link-apple-account-sub');
         if (linkAppleAccountSub == null) {
             const result: { redirectUrl: string } | null = await fetchClient(endpoint, {
                 method: "POST",
@@ -110,7 +110,7 @@ export function LoginForm() {
                     body: {
                         ...data,
                         loginType: 'email',
-                        sub: linkAppleAccountSubValue
+                        sub: linkAppleAccountSub
                     },
                     suppressError: true
                 });
@@ -175,27 +175,7 @@ export function LoginForm() {
                                 });
 
                             if (result) {
-                                if (result.sub && result.sub.length > 0 && linkAppleAccountSub == null) {
-                                    const appleAccountSubRedirectUrl = secureLink
-                                        ? `/login/?link-apple-account-sub=true&l=${secureLink}`
-                                        : `/login/?link-apple-account-sub=true`
-                                    const form = document.createElement('form');
-                                    form.method = 'POST';
-                                    form.action = appleAccountSubRedirectUrl;
-                                    form.style.display = 'none'; // Hide the form
-
-                                    const subInput = document.createElement('input');
-                                    subInput.type = 'hidden';
-                                    subInput.name = 'linkAppleAccountSub';
-                                    subInput.value = result.sub;
-                                    form.appendChild(subInput);
-
-                                    document.body.appendChild(form);
-                                    form.submit();
-                                }
-                                if (result.redirectUrl) {
-                                    router.push(result.redirectUrl);
-                                }
+                                handleSubmit(handleFormSubmit)();
                             } else {
                                 const res = NextResponse.json({success: false});
                                 res.cookies.delete('next-auth.callback-url');
