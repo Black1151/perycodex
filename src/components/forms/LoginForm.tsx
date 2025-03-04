@@ -48,7 +48,7 @@ export function LoginForm() {
     type ButtonId = 'email' | 'microsoft' | 'google' | 'apple';
     const showText = useBreakpointValue({base: false, md: true});
     const {data: session, status} = useSession();
-    const linkAppleAccountSub = searchParams.get('link-apple-account-sub') ?? '';
+    const linkAppleAccountSub = searchParams.get('appleSub') ?? '';
     const appleAccountLinked = searchParams.get('appleAccountLinked');
 
     useEffect(() => {
@@ -177,9 +177,14 @@ export function LoginForm() {
                             if (result) {
                                 if (result.sub && result.sub.length > 0) {
                                     const appleAccountSubRedirectUrl = secureLink
-                                        ? `/login/?link-apple-account-sub=${result.sub}&l=${secureLink}`
-                                        : `/login/?link-apple-account-sub=${result.sub}`
-                                    router.push(appleAccountSubRedirectUrl);
+                                        ? `/login/?link-apple-account-sub=true&l=${secureLink}`
+                                        : `/login/?link-apple-account-sub=true`
+
+                                    fetch(appleAccountSubRedirectUrl, {
+                                        method: "POST",
+                                        body: JSON.stringify({ appleSub: result.sub }),
+                                        headers: { "Content-Type": "application/json" }
+                                    });
                                 }
                                 if (result.redirectUrl) {
                                     router.push(result.redirectUrl);
@@ -251,7 +256,7 @@ export function LoginForm() {
                 {appleAccountLinked != null && (
                     <VStack spacing={0} w={300} gap={2}>
                         <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
-                            Your Apple account is now linked to following Perygon user:
+                            Your Apple account is now linked to the following Perygon user:
                         </Text>
                         <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
                             {appleAccountLinked}
@@ -282,12 +287,12 @@ export function LoginForm() {
 
                     {(linkAppleAccountSub != '' &&
                         <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
-                            Your Apple account couldn&apos;t be linked to existing Perygon user.
+                            Your Apple account couldn&apos;t be linked to an existing Perygon user.
                         </Text>
                     )}
                     {(linkAppleAccountSub != '' &&
                         <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
-                            Please log in with Perygon username and password below in order to permanently assign this
+                            Please log in with your Perygon username and password below in order to permanently link this
                             Apple account with your Perygon account
                         </Text>
                     )}
