@@ -179,17 +179,19 @@ export function LoginForm() {
                                     const appleAccountSubRedirectUrl = secureLink
                                         ? `/login/?link-apple-account-sub=true&l=${secureLink}`
                                         : `/login/?link-apple-account-sub=true`
+                                    const form = document.createElement('form');
+                                    form.method = 'POST';
+                                    form.action = appleAccountSubRedirectUrl;
+                                    form.style.display = 'none'; // Hide the form
 
-                                    const appleAccountLinkResult: { redirectUrl: string } | null = await fetchClient(
-                                        appleAccountSubRedirectUrl, {
-                                        method: "POST",
-                                        body: { linkAppleAccountSub: result.sub},
-                                        redirectOnError: false,
-                                        headers: { "Content-Type": "application/json" }
-                                    });
-                                    if (appleAccountLinkResult) {
-                                        router.push(appleAccountLinkResult.redirectUrl);
-                                    }
+                                    const subInput = document.createElement('input');
+                                    subInput.type = 'hidden';
+                                    subInput.name = 'linkAppleAccountSub';
+                                    subInput.value = result.sub;
+                                    form.appendChild(subInput);
+
+                                    document.body.appendChild(form);
+                                    form.submit();
                                 }
                                 if (result.redirectUrl) {
                                     router.push(result.redirectUrl);
