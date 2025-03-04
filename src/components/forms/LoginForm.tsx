@@ -179,8 +179,6 @@ export function LoginForm() {
                                     const appleAccountSubRedirectUrl = secureLink
                                         ? `/login/?link-apple-account-sub=${result.sub}&l=${secureLink}`
                                         : `/login/?link-apple-account-sub=${result.sub}`
-                                    router.push(appleAccountSubRedirectUrl);
-
 
                                     const appleAccountLinkResult: { redirectUrl: string } | null = await fetchClient(
                                         appleAccountSubRedirectUrl, {
