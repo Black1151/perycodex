@@ -49,6 +49,15 @@ const handler = NextAuth({
                 secure: true,
             },
         },
+        callbackUrl: {
+            name: `__Secure-next-auth.callback-url`,
+            options: {
+                httpOnly: false,
+                sameSite: "none",
+                path: "/",
+                secure: true,
+            },
+        },
     },
     session: {
         strategy: 'jwt',
