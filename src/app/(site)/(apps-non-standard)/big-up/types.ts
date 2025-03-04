@@ -11,6 +11,7 @@ export interface BigUpStats {
   userName: string;
   userLocation: string;
   userImage: string;
+  userUniqueId: string;
 }
 
 export interface BigUpLeaderboardEntry {

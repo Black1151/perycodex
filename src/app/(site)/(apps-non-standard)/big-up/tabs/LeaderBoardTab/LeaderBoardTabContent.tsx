@@ -51,10 +51,13 @@ export const LeaderBoardTabContent: React.FC<LeaderBoardTabContentProps> = ({
       <AnimatedList>
         {items?.map((item, index) => {
           const rank = index + 1;
+
+          console.log(item);
+
           return (
             <AnimatedListItem delay={0.5} key={index} index={index}>
               <LeaderboardCard
-                userId={item.userId.toString()}
+                UUID={item.userUniqueId.toString()}
                 onClickProfilePic={onClickProfilePic}
                 name={item.userName}
                 location={item.officeName}

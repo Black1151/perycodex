@@ -16,6 +16,8 @@ export interface BigUpStatsCardProps {
   score: number;
   userImage: string;
   ranking?: number;
+  handleProfilePicClick: (uuid: string) => void;
+  UUID: string;
 }
 
 export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
@@ -26,6 +28,8 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
   score,
   userImage,
   ranking,
+  handleProfilePicClick,
+  UUID,
 }) => {
   const medalColor = ranking ? getMedalColor(ranking) : "white";
 
@@ -40,9 +44,13 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
     >
       <Flex flexDirection="column" justifyContent="space-between" height="100%">
         <Flex align="center" mb={3} gap={5}>
-          <Link href={"/my-profile"}>
-            <Avatar size="xl" name={name} src={userImage} />
-          </Link>
+          <Avatar
+            size="xl"
+            name={name}
+            src={userImage}
+            onClick={() => handleProfilePicClick(UUID)}
+            _hover={{ cursor: "pointer" }}
+          />
           <Flex
             direction="column"
             ml={2}

@@ -5,6 +5,7 @@ import { ReactNode } from "react";
 import { MasonryCard } from "./MasonryCardItem";
 import { SpringScale } from "@/components/animations/SpringScale";
 import { BigUpStats } from "../types";
+import { useRouter } from "next/navigation";
 import { BigUpStatsCard } from "./BigUpStatsCard";
 
 export interface BigUpMasonryProps {
@@ -16,6 +17,7 @@ export const BigUpMasonry: React.FC<BigUpMasonryProps> = ({
   items,
   userStats,
 }) => {
+  const router = useRouter();
   return (
     <Grid
       w="100%"
@@ -36,6 +38,10 @@ export const BigUpMasonry: React.FC<BigUpMasonryProps> = ({
             score={userStats.bigUpTotal}
             userImage={userStats.userImage}
             ranking={userStats.bigUpRanking}
+            handleProfilePicClick={() => {
+              router.push(`/my-profile?userUniqueId=${userStats.userUniqueId}`);
+            }}
+            UUID={userStats.userUniqueId}
           />
         </SpringScale>
       </GridItem>

@@ -13,12 +13,12 @@ export interface LeaderboardCardProps extends BoxProps {
   rank: string;
   medalColor?: string;
   onClickProfilePic: (UUID: string) => void;
-  userId: string;
+  UUID: string;
 }
 
 export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
   name,
-  userId,
+  UUID,
   location,
   received,
   given,
@@ -41,7 +41,7 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
           size="lg"
           name={name}
           src={image}
-          onClick={() => onClickProfilePic(userId)}
+          onClick={() => onClickProfilePic(UUID)}
         />
         <Flex direction="column" ml={4} flex="1">
           <Text fontWeight="bold" fontSize="xl" color="perygonPink">

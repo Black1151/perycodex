@@ -37,6 +37,7 @@ const initialDashboardData: DashboardData = {
     userName: "",
     userLocation: "",
     userImage: "",
+    userUniqueId: "",
   },
   teamMembers: [],
   bigUpCategories: [],

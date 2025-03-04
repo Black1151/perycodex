@@ -6,12 +6,14 @@ export interface UserStatsModalProps {
   isOpen: boolean;
   onClose: () => void;
   userStats: BigUpStats;
+  handleProfilePicClick: (uuid: string) => void;
 }
 
 export const UserStatsModal: React.FC<UserStatsModalProps> = ({
   isOpen,
   onClose,
   userStats,
+  handleProfilePicClick,
 }) => {
   console.log(userStats);
   return (
@@ -26,6 +28,8 @@ export const UserStatsModal: React.FC<UserStatsModalProps> = ({
           score={userStats.bigUpTotal}
           userImage={userStats.userImage}
           ranking={userStats.bigUpRanking}
+          handleProfilePicClick={handleProfilePicClick}
+          UUID={userStats.userUniqueId}
         />
       </ModalContent>
     </Modal>

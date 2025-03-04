@@ -58,7 +58,7 @@ export default function BigUpPage() {
   };
 
   const handleLeaderboardProfilePicClick = async (uuid: string) => {
-    console.log("click leaderboard profile pic", uuid);
+    router.push(`/users/${uuid}`);
   };
 
   const tabsData = createTabsData({
@@ -179,6 +179,7 @@ export default function BigUpPage() {
         isOpen={isUserStatsModalOpen}
         userStats={userStats}
         onClose={() => setIsUserStatsModalOpen(false)}
+        handleProfilePicClick={handleLeaderboardProfilePicClick}
       />
 
       <NewRecognitionModal
