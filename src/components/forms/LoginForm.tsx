@@ -176,8 +176,8 @@ export function LoginForm() {
                             if (result) {
                                 if (result.sub && result.sub.length > 0) {
                                     const appleAccountSubRedirectUrl = secureLink
-                                        ? `/login/?link-apple-account-sub=${result.sub}`
-                                        : `/login/?link-apple-account-sub=${result.sub}&l=${secureLink}`
+                                        ? `/login/?link-apple-account-sub=${result.sub}&l=${secureLink}`
+                                        : `/login/?link-apple-account-sub=${result.sub}`
                                     router.push(appleAccountSubRedirectUrl);
                                 }
                                 if (result.redirectUrl) {
