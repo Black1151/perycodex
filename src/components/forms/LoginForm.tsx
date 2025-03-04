@@ -48,7 +48,7 @@ export function LoginForm() {
     type ButtonId = 'email' | 'microsoft' | 'google' | 'apple';
     const showText = useBreakpointValue({base: false, md: true});
     const {data: session, status} = useSession();
-    const linkAppleAccountSub = searchParams.get('linkAppleAccountSub') ?? '';
+    const linkAppleAccountSub = searchParams.get('link-apple-account-sub') ?? '';
     const appleAccountLinked = searchParams.get('appleAccountLinked');
 
     useEffect(() => {
@@ -91,7 +91,7 @@ export function LoginForm() {
             ? `/api/auth/sign-in?l=${secureLink}`
             : "/api/auth/sign-in";
 
-        const linkAppleAccountSub = searchParams.get('linkAppleAccountSub');
+        const linkAppleAccountSubValue = searchParams.get('linkAppleAccountSub');
         if (linkAppleAccountSub == null) {
             const result: { redirectUrl: string } | null = await fetchClient(endpoint, {
                 method: "POST",
@@ -110,7 +110,7 @@ export function LoginForm() {
                     body: {
                         ...data,
                         loginType: 'email',
-                        sub: linkAppleAccountSub
+                        sub: linkAppleAccountSubValue
                     },
                     suppressError: true
                 });
@@ -175,7 +175,7 @@ export function LoginForm() {
                                 });
 
                             if (result) {
-                                if (result.sub && result.sub.length > 0) {
+                                if (result.sub && result.sub.length > 0 && linkAppleAccountSub == null) {
                                     const appleAccountSubRedirectUrl = secureLink
                                         ? `/login/?link-apple-account-sub=true&l=${secureLink}`
                                         : `/login/?link-apple-account-sub=true`
