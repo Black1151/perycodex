@@ -168,7 +168,8 @@ export function LoginForm() {
                                         secureLinkUniqueId: NextAuthSession.providerAccountId,
                                         sub: (NextAuthSession.providerAccountId !== undefined)
                                             ? NextAuthSession.providerAccountId
-                                            : null
+                                            : null,
+                                        secureLink: secureLink
                                     },
                                     suppressError: true
                                 });

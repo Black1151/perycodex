@@ -9,13 +9,8 @@ interface apiBodyType {
 }
 
 export async function POST(req: NextRequest) {
-    const {email, loginType, password, sub} = await req.json();
-
-    const {searchParams} = req.nextUrl;
-
-    // Extract `searchParams` from the request URL
-    const secureLink = req.nextUrl.searchParams.get("l");
-
+    const {email, loginType, password, sub, secureLink} = await req.json();
+    
     try {
         let apiBody: apiBodyType = {};
 
