@@ -272,7 +272,7 @@ export function LoginForm() {
                             border: `1px solid ${theme.colors.perygonPink}`,
                             backgroundColor: "white",
                         }}
-                        onClick={() => router.push((secureLink) ? `/login/${secureLink}` : "/login")}
+                        onClick={() => router.push((secureLink) ? `/login/l=${secureLink}` : "/login")}
                     >
                         Continue
                     </Button>
