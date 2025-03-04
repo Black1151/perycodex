@@ -9,8 +9,8 @@ interface apiBodyType {
 }
 
 export async function POST(req: NextRequest) {
-    const {email, loginType, password, sub, secureLink} = await req.json();
-    
+    const {loginType, email, password, accessToken, type, secureLinkUniqueId, sub, secureLink} = await req.json();
+
     try {
         let apiBody: apiBodyType = {};
 
