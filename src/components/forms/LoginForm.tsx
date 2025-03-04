@@ -48,7 +48,7 @@ export function LoginForm() {
     type ButtonId = 'email' | 'microsoft' | 'google' | 'apple';
     const showText = useBreakpointValue({base: false, md: true});
     const {data: session, status} = useSession();
-    const linkAppleAccountSub = searchParams.get('appleSub') ?? '';
+    const linkAppleAccountSub = searchParams.get('linkAppleAccountSub') ?? '';
     const appleAccountLinked = searchParams.get('appleAccountLinked');
 
     useEffect(() => {
@@ -180,11 +180,15 @@ export function LoginForm() {
                                         ? `/login/?link-apple-account-sub=true&l=${secureLink}`
                                         : `/login/?link-apple-account-sub=true`
 
-                                    fetch(appleAccountSubRedirectUrl, {
+                                    const appleAccountLinkResult: { redirectUrl: string } | null = await fetchClient(
+                                        appleAccountSubRedirectUrl, {
                                         method: "POST",
-                                        body: JSON.stringify({ appleSub: result.sub }),
-                                        headers: { "Content-Type": "application/json" }
+                                        body: { linkAppleAccountSub: result.sub},
+                                        redirectOnError: false,
                                     });
+                                    if (appleAccountLinkResult) {
+                                        router.push(appleAccountLinkResult.redirectUrl);
+                                    }
                                 }
                                 if (result.redirectUrl) {
                                     router.push(result.redirectUrl);
