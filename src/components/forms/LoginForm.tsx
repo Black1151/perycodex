@@ -135,8 +135,10 @@ export function LoginForm() {
                     },
                     suppressError: true
                 });
-            if (appleLinkingResult.redirectUrl) {
-                router.push(appleLinkingResult.redirectUrl);
+            if (appleLinkingResult !== null) {
+                if (appleLinkingResult.redirectUrl) {
+                    router.push(appleLinkingResult.redirectUrl);
+                }
             }
         }
     };
