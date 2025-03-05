@@ -87,7 +87,9 @@ export function LoginForm() {
 
     const decryptData = async (encryptedData: string) => {
         const secretKey = process.env.ENCRYPTION_SECRET;
-        const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
+        if (secretKey != undefined) {
+            const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
+        }
         return bytes.toString(CryptoJS.enc.Utf8);
     };
 
