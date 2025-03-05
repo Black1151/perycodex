@@ -93,6 +93,8 @@ export function LoginForm() {
             const secretKey = NextAuthSession.accessToken;
             if (secretKey != undefined) {
                 const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
+                console.log(bytes);
+                console.log(bytes.toString(CryptoJS.enc.Utf8))
                 return bytes.toString(CryptoJS.enc.Utf8);
             }
         }
@@ -117,6 +119,9 @@ export function LoginForm() {
                 router.push(result.redirectUrl);
             }
         } else {
+            console.log(linkAppleAccountSub);
+            console.log(decodeURIComponent(linkAppleAccountSub));
+            console.log(decryptData(decodeURIComponent(linkAppleAccountSub)));
             const appleLinkingResult: { redirectUrl: string, resource?: { sub?: string } } | null = await fetchClient(
                 (secureLink) ? `api/auth/link-apple-login?l=${secureLink}` : 'api/auth/link-apple-login', {
                     method: "POST",
