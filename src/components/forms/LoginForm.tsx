@@ -122,8 +122,9 @@ export function LoginForm() {
             console.log(linkAppleAccountSub);
             console.log(decodeURIComponent(linkAppleAccountSub));
             console.log(decryptData(decodeURIComponent(linkAppleAccountSub)));
-            const appleSub = decryptData(decodeURIComponent(linkAppleAccountSub))
-            console.log(appleSub);
+            const appleSub = String(await decryptData(decodeURIComponent(linkAppleAccountSub)));
+            console.log("AppleSub (Stringified):", appleSub, typeof appleSub);
+
             const appleLinkingResult: { redirectUrl: string, resource?: { sub?: string } } | null = await fetchClient(
                 (secureLink) ? `api/auth/link-apple-login?l=${secureLink}` : 'api/auth/link-apple-login', {
                     method: "POST",
