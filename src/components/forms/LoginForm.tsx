@@ -23,6 +23,7 @@ import Link from "next/link";
 import {NextResponse} from "next/server";
 import LoginFormButtons from "@/components/forms/LoginFormButtons";
 import {DefaultSession} from "next-auth";
+import CryptoJS from 'crypto-js';
 
 declare module "next-auth" {
     interface Session {
@@ -85,25 +86,9 @@ export function LoginForm() {
     };
 
     const decryptData = async (encryptedData: string) => {
-        const response = await fetch('/api/crypto/decrypt', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ encryptedData })
-        });
-
-        const result = await response.json();
-        return result.decrypted;
-    };
-
-    const encryptData = async (encryptedData: string) => {
-        const response = await fetch('/api/crypto/encrypt', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ encryptedData })
-        });
-
-        const result = await response.json();
-        return result.decrypted;
+        const secretKey = process.env.ENCRYPTION_SECRET;
+        const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
+        return bytes.toString(CryptoJS.enc.Utf8);
     };
 
     const handleFormSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
@@ -197,11 +182,16 @@ export function LoginForm() {
 
                             if (result) {
                                 if (result.sub && result.sub.length > 0) {
-                                    const encryptedToken = await encryptData(result.sub);
-                                    const appleAccountSubRedirectUrl = secureLink
-                                        ? `/login/?link-apple-account-sub=${encodeURIComponent(encryptedToken)}&l=${secureLink}`
-                                        : `/login/?link-apple-account-sub=${encodeURIComponent(encryptedToken)}`
-                                    router.push(appleAccountSubRedirectUrl);
+                                    const secretKey = process.env.ENCRYPTION_SECRET;
+                                    if (secretKey !== undefined) {
+                                        const encryptedToken = CryptoJS.AES.encrypt(result.sub, secretKey).toString();
+                                        const appleAccountSubRedirectUrl = secureLink
+                                            ? `/login/?link-apple-account-sub=${encodeURIComponent(encryptedToken)}&l=${secureLink}`
+                                            : `/login/?link-apple-account-sub=${encodeURIComponent(encryptedToken)}`
+                                        router.push(appleAccountSubRedirectUrl);
+                                    } else {
+                                        throw new Error('Encryption key not set')
+                                    }
                                 }
                                 if (result.redirectUrl) {
                                     router.push(result.redirectUrl);
