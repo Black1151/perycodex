@@ -1,19 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import apiClient from "@/lib/apiClient";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(req.url);
-    const uuid = searchParams.get("uuid");
-
-    if (!uuid) {
-      return NextResponse.json(
-        { error: "Missing required parameter: uuid" },
-        { status: 400 }
-      );
-    }
-
-    const response = await apiClient(`/dashboards/bigUp/user/${uuid}`, {
+    const response = await apiClient(`/dashboards/bigUp/updateRead`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
