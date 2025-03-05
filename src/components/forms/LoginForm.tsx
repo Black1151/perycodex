@@ -87,6 +87,8 @@ export function LoginForm() {
 
     const decryptData = async (encryptedData: string) => {
         let NextAuthSession = await getSession();
+        console.log('AUTH SESSION:');
+        console.log(NextAuthSession);
         if (NextAuthSession !== null) {
             const secretKey = NextAuthSession.accessToken;
             if (secretKey != undefined) {
@@ -188,6 +190,7 @@ export function LoginForm() {
                             if (result) {
                                 if (result.sub && result.sub.length > 0) {
                                     const secretKey = NextAuthSession.accessToken;
+                                    console.log(NextAuthSession);
                                     if (secretKey !== undefined) {
                                         const encryptedToken = CryptoJS.AES.encrypt(result.sub, secretKey).toString();
                                         const appleAccountSubRedirectUrl = secureLink
