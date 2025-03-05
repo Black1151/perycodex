@@ -1,21 +1,19 @@
-import CryptoJS from "crypto-js";
+import { NextResponse } from 'next/server';
+import CryptoJS from 'crypto-js';
 
-export default function handler(req: { method: string; body: { data: any; }; }, res: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { error?: string; encrypted?: string; }): void; new(): any; }; }; }) {
-    if (req.method !== "POST") {
-        return res.status(405).json({ error: "Method not allowed" });
-    }
-
-    const { data } = req.body;
-    const secretKey = process.env.ENCRYPTION_SECRET;
-
-    if (!secretKey) {
-        return res.status(500).json({ error: "Encryption key not set" });
-    }
-
+export async function POST(req: Request) {
     try {
+        const { data } = await req.json();
+        const secretKey = process.env.ENCRYPTION_SECRET;
+
+        if (!secretKey) {
+            return NextResponse.json({ error: 'Encryption key not set' }, { status: 500 });
+        }
+
         const encrypted = CryptoJS.AES.encrypt(data, secretKey).toString();
-        res.status(200).json({ encrypted });
-    } catch (err) {
-        res.status(500).json({ error: "Encryption failed" });
+
+        return NextResponse.json({ encrypted });
+    } catch (error) {
+        return NextResponse.json({ error: 'Encryption failed' }, { status: 500 });
     }
 }
