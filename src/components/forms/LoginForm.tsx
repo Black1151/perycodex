@@ -127,11 +127,11 @@ export function LoginForm() {
             const appleLinkingResult: { redirectUrl: string, resource?: { sub?: string } } | null = await fetchClient(
                 (secureLink) ? `api/auth/link-apple-login?l=${secureLink}` : 'api/auth/link-apple-login', {
                     method: "POST",
-                    body: {
+                    body: JSON.stringify({  // Explicitly stringify the request body
                         ...data,
                         loginType: 'email',
                         sub: appleSub
-                    },
+                    }),
                     suppressError: true
                 });
             if (appleLinkingResult) {
