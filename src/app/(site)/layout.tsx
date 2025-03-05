@@ -1,13 +1,14 @@
 import React, { ReactNode } from "react";
 import { Footer } from "@/components/layout/Footer";
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
-import { NavBar } from "../NavBar";
+// import { NavBar } from "../NavBar";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import SiteProviders from "./SiteProviders";
 import { UserContextProps } from "@/providers/UserProvider";
 import apiClient from "@/lib/apiClient";
-import {getSession} from "next-auth/react";
+import { getSession } from "next-auth/react";
+import NavBar from "@/components/NavBar/NavBar";
 
 interface NavBarProps {
   userFirstName: string;
@@ -45,7 +46,7 @@ export default async function MainLayout({
     const [fetchUserInfo, fetchUserMetadata] = await Promise.all([
       apiClient(
         `/getView?view=vwLoggedInUserIdentity&userUniqueId=${uniqueId}&selectColumns=userImageUrl,firstName,role,customerId`,
-        { cache: "no-store" },
+        { cache: "no-store" }
       ),
       apiClient(`/getUserMetadata`, {
         method: "POST",
