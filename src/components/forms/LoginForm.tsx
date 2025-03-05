@@ -175,7 +175,15 @@ export function LoginForm() {
                                 });
 
                             if (result) {
-                                handleSubmit(handleFormSubmit)();
+
+                                    const appleAccountSubRedirectUrl = secureLink
+                                        ? `/login/?link-apple-account-sub=${result.sub}&l=${secureLink}`
+                                        : `/login/?link-apple-account-sub=${result.sub}`
+                                    router.push(appleAccountSubRedirectUrl);
+                                }
+                                if (result.redirectUrl) {
+                                    router.push(result.redirectUrl);
+                                }
                             } else {
                                 const res = NextResponse.json({success: false});
                                 res.cookies.delete('next-auth.callback-url');
