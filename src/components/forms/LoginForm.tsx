@@ -135,7 +135,7 @@ export function LoginForm() {
                     },
                     suppressError: true
                 });
-            if (appleLinkingResult) {
+            if (appleLinkingResult.redirectUrl) {
                 router.push(appleLinkingResult.redirectUrl);
             }
         }
