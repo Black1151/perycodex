@@ -86,11 +86,12 @@ export function LoginForm() {
     };
 
     const decryptData = async (encryptedData: string) => {
-        const secretKey = process.env.ENCRYPTION_SECRET;
+        const secretKey = process.env.NEXT_PUBLIC_BASE_URL;
         if (secretKey != undefined) {
             const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
+            return bytes.toString(CryptoJS.enc.Utf8);
         }
-        return bytes.toString(CryptoJS.enc.Utf8);
+
     };
 
     const handleFormSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
@@ -184,7 +185,7 @@ export function LoginForm() {
 
                             if (result) {
                                 if (result.sub && result.sub.length > 0) {
-                                    const secretKey = process.env.ENCRYPTION_SECRET;
+                                    const secretKey = process.env.NEXT_PUBLIC_BASE_URL;
                                     if (secretKey !== undefined) {
                                         const encryptedToken = CryptoJS.AES.encrypt(result.sub, secretKey).toString();
                                         const appleAccountSubRedirectUrl = secureLink
