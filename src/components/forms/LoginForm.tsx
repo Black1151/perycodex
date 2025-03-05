@@ -20,7 +20,6 @@ import {useEffect, useState} from "react";
 import {useSession, signIn, signOut} from 'next-auth/react';
 import {getSession} from 'next-auth/react';
 import Link from "next/link";
-
 import {NextResponse} from "next/server";
 import LoginFormButtons from "@/components/forms/LoginFormButtons";
 import {DefaultSession} from "next-auth";
@@ -85,6 +84,28 @@ export function LoginForm() {
         }
     };
 
+    const decryptData = async (encryptedData: string) => {
+        const response = await fetch('/api/crypto/decrypt', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ encryptedData })
+        });
+
+        const result = await response.json();
+        return result.decrypted;
+    };
+
+    const encryptData = async (encryptedData: string) => {
+        const response = await fetch('/api/crypto/encrypt', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ encryptedData })
+        });
+
+        const result = await response.json();
+        return result.decrypted;
+    };
+
     const handleFormSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
         const searchParams = new URLSearchParams(window.location.search);
         const endpoint = secureLink
@@ -110,7 +131,7 @@ export function LoginForm() {
                     body: {
                         ...data,
                         loginType: 'email',
-                        sub: linkAppleAccountSub
+                        sub: decryptData(decodeURIComponent(linkAppleAccountSub))
                     },
                     suppressError: true
                 });
@@ -176,9 +197,10 @@ export function LoginForm() {
 
                             if (result) {
                                 if (result.sub && result.sub.length > 0) {
+                                    const encryptedToken = await encryptData(result.sub);
                                     const appleAccountSubRedirectUrl = secureLink
-                                        ? `/login/?link-apple-account-sub=${result.sub}&l=${secureLink}`
-                                        : `/login/?link-apple-account-sub=${result.sub}`
+                                        ? `/login/?link-apple-account-sub=${encodeURIComponent(encryptedToken)}&l=${secureLink}`
+                                        : `/login/?link-apple-account-sub=${encodeURIComponent(encryptedToken)}`
                                     router.push(appleAccountSubRedirectUrl);
                                 }
                                 if (result.redirectUrl) {
