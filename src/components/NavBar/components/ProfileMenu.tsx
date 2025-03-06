@@ -31,7 +31,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
 }) => {
   const theme = useTheme();
 
-  const pulsatingIconSize = useBreakpointValue({ base: 25, md: 20 });
+  const pulsatingIconSize = useBreakpointValue({ base: 20, md: 25 });
 
   return (
     <Menu>
