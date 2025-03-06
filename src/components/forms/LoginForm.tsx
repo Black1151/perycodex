@@ -286,11 +286,11 @@ export function LoginForm() {
                         isLoading={loading}
                         height={12}
                         color="white"
+                        mb={"200px"}
                         _hover={{
                             color: theme.colors.perygonPink,
                             border: `1px solid ${theme.colors.perygonPink}`,
                             backgroundColor: "white",
-                            mb: "200px"
                         }}
                         onClick={() => router.push((secureLink) ? `/login/?l=${secureLink}` : "/login")}
                     >
