@@ -5,7 +5,7 @@ import {
     Box,
     Button,
     Flex,
-    HStack,
+    HStack, Image,
     Text, useBreakpointValue,
     useTheme,
     VStack,
@@ -119,11 +119,7 @@ export function LoginForm() {
                 router.push(result.redirectUrl);
             }
         } else {
-            console.log(linkAppleAccountSub);
-            console.log(decodeURIComponent(linkAppleAccountSub));
-            console.log(decryptData(decodeURIComponent(linkAppleAccountSub)));
             const appleSub = String(await decryptData(decodeURIComponent(linkAppleAccountSub)));
-            console.log("AppleSub (Stringified):", appleSub, typeof appleSub);
 
             const appleLinkingResult: { redirectUrl: string, resource?: { sub?: string } } | null = await fetchClient(
                 (secureLink) ? `api/auth/link-apple-login?l=${secureLink}` : 'api/auth/link-apple-login', {
@@ -310,6 +306,16 @@ export function LoginForm() {
                 {appleAccountLinked == null && (
                 <VStack spacing={0} w={300} gap={2}>
 
+                    {(linkAppleAccountSub != '' &&
+                        <Image
+                            src="https://perygonblob.blob.core.windows.net/public/AppleToPerygon.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D"
+                            alt="AppleToPerygon"
+                            position="absolute"
+                            boxSize="100%"
+                            objectFit="cover"
+                            objectPosition="bottom"
+                        />
+                    )}
                     {(linkAppleAccountSub != '' &&
                         <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
                             Your Apple account couldn&apos;t be linked to an existing Perygon user.
