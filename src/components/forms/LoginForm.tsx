@@ -311,9 +311,10 @@ export function LoginForm() {
                             src="https://perygonblob.blob.core.windows.net/public/AppleToPerygon.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D"
                             alt="AppleToPerygon"
                             position="absolute"
-                            boxSize="100%"
                             objectFit="cover"
                             objectPosition="bottom"
+                            top={"300px"}
+                            opacity={"0.75"}
                         />
                     )}
                     {(linkAppleAccountSub != '' &&
