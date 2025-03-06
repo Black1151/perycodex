@@ -43,10 +43,8 @@ export function LoginForm() {
     const theme = useTheme();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const [clickedButton, setClickedButton] = useState<ButtonId | null>(null);
     const secureLink = searchParams.get("l");
     type ButtonId = 'email' | 'microsoft' | 'google' | 'apple';
-    const showText = useBreakpointValue({base: false, md: true});
     const {data: session, status} = useSession();
     const linkAppleAccountSub = searchParams.get('link-apple-account-sub') ?? '';
     const appleAccountLinked = searchParams.get('appleAccountLinked');
@@ -87,14 +85,10 @@ export function LoginForm() {
 
     const decryptData = async (encryptedData: string) => {
         let NextAuthSession = await getSession();
-        console.log('AUTH SESSION:');
-        console.log(NextAuthSession);
         if (NextAuthSession !== null) {
             const secretKey = NextAuthSession.accessToken;
             if (secretKey != undefined) {
                 const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
-                console.log(bytes);
-                console.log(bytes.toString(CryptoJS.enc.Utf8))
                 return bytes.toString(CryptoJS.enc.Utf8);
             }
         }
@@ -196,7 +190,6 @@ export function LoginForm() {
                             if (result) {
                                 if (result.sub && result.sub.length > 0) {
                                     const secretKey = NextAuthSession.accessToken;
-                                    console.log(NextAuthSession);
                                     if (secretKey !== undefined) {
                                         const encryptedToken = CryptoJS.AES.encrypt(result.sub, secretKey).toString();
                                         const appleAccountSubRedirectUrl = secureLink
@@ -313,6 +306,8 @@ export function LoginForm() {
                             position="absolute"
                             objectFit="cover"
                             objectPosition="bottom"
+                            width={"123px"}
+                            height={"21px"}
                             top={"300px"}
                             opacity={"0.75"}
                         />
