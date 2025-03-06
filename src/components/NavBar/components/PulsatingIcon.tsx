@@ -9,7 +9,7 @@ export interface PulsatingIconProps {
   icon: React.ReactNode;
   bgColor?: string;
   borderColor?: string;
-  size?: number;
+  size?: number | number[];
 }
 
 const PulsatingIcon: React.FC<PulsatingIconProps> = ({

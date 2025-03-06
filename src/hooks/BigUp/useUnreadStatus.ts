@@ -8,8 +8,12 @@ const useUnreadStatus = () => {
     const checkUnread = async () => {
       const response = await fetch("/api/auth/big-up/checkUnread");
       const data = await response.json();
-      // For demo purposes, we set unread to true
-      setUnread(true);
+      console.log(data);
+      if (data.amount > 0) {
+        setUnread(true);
+      } else {
+        setUnread(false);
+      }
     };
     checkUnread();
   }, []);
