@@ -86,7 +86,7 @@ export function LoginForm() {
     const decryptData = async (encryptedData: string) => {
         let NextAuthSession = await getSession();
         if (NextAuthSession !== null) {
-            const secretKey = process.env.ENCRYPTION_SECRET!;
+            const secretKey = NextAuthSession.accessToken;
             if (secretKey != undefined) {
                 const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
                 return bytes.toString(CryptoJS.enc.Utf8);
@@ -189,7 +189,7 @@ export function LoginForm() {
 
                             if (result) {
                                 if (result.sub && result.sub.length > 0) {
-                                    const secretKey = process.env.ENCRYPTION_SECRET;
+                                    const secretKey = NextAuthSession.accessToken;
                                     if (secretKey !== undefined) {
                                         const encryptedToken = CryptoJS.AES.encrypt(result.sub, secretKey).toString();
                                         const appleAccountSubRedirectUrl = secureLink
