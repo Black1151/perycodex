@@ -16,6 +16,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import { MenuItemProps } from "./types";
 import { Celebration } from "@mui/icons-material";
 import PulsatingIcon from "./PulsatingIcon";
+import { useBreakpointValue } from "@chakra-ui/react";
 
 interface ProfileMenuProps {
   userImageUrl: string;
@@ -29,6 +30,9 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
   unread,
 }) => {
   const theme = useTheme();
+
+  const pulsatingIconSize = useBreakpointValue({ base: 25, md: 20 });
+
   return (
     <Menu>
       <Box position="relative">
@@ -78,6 +82,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
                 }}
               />
             }
+            size={pulsatingIconSize}
           />
         )}
       </Box>
