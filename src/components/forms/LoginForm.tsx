@@ -272,7 +272,7 @@ export function LoginForm() {
                         <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
                             Your Apple account is now linked to the following Perygon user:
                         </Text>
-                        <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
+                        <Text pt="10px" fontWeight="bold" fontSize={["16px", "12px"]} color={theme.colors.perygonPink}>
                             {appleAccountLinked}
                         </Text>
                     </VStack>
@@ -290,6 +290,7 @@ export function LoginForm() {
                             color: theme.colors.perygonPink,
                             border: `1px solid ${theme.colors.perygonPink}`,
                             backgroundColor: "white",
+                            mb: "200px"
                         }}
                         onClick={() => router.push((secureLink) ? `/login/?l=${secureLink}` : "/login")}
                     >
