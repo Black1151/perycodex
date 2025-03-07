@@ -3,13 +3,14 @@ import { BigUpStats } from "../types";
 
 export default function useBigUpUserStats() {
   const [userStats, setUserStats] = useState<BigUpStats>({
+    userUniqueId: "",
     bigUpGivenPoints: 0,
     bigUpReceivedPoints: 0,
     bigUpTotal: 0,
     bigUpRanking: 0,
     userName: "",
     userLocation: "",
-    userImage: "",
+    userImage: ""
   });
 
   const fetchUserStats = async (uuid: string) => {

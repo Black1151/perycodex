@@ -12,7 +12,7 @@ interface apiBodyType {
 }
 
 export async function POST(req: NextRequest) {
-    const {loginType, email, password, accessToken, type, secureLinkUniqueId} = await req.json();
+    const {loginType, email, password, accessToken, type, secureLinkUniqueId, sub} = await req.json();
 
     // Extract searchParams from the incoming request
     const {searchParams} = req.nextUrl;
@@ -29,7 +29,8 @@ export async function POST(req: NextRequest) {
                 email: email,
                 accessToken: accessToken,
                 secureLinkUniqueId: secureLinkUniqueId,
-                type: type
+                type: type,
+                sub: sub
             }
         }
 
@@ -75,7 +76,9 @@ export async function POST(req: NextRequest) {
             } else if (role === "PA") {
                 redirectUrl += "/customers";
             } else if (secureLink) {
-                redirectUrl += `/link?l=${secureLink}`;
+                if (secureLink != '${secureLink}' && secureLink.length > 0) {
+                    redirectUrl += `/link?l=${secureLink}`;
+                }
             }
 
             const res = NextResponse.json({redirectUrl});

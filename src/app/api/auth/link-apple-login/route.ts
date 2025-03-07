@@ -43,11 +43,9 @@ export async function POST(req: NextRequest) {
 
         if (response.ok || response.status === 200) {
 
-            let redirectUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/login?appleAccountLinked=${email}`;
-
-            if (secureLink) {
-                redirectUrl += `&l=${secureLink}`;
-            }
+            let redirectUrl = (secureLink)
+                ? `${process.env.NEXT_PUBLIC_BASE_URL}/login?appleAccountLinked=${email}&l=${secureLink}`
+                : `${process.env.NEXT_PUBLIC_BASE_URL}/login?appleAccountLinked=${email}`;
 
             return NextResponse.json({redirectUrl});
         }
