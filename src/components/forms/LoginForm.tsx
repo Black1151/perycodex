@@ -265,6 +265,7 @@ export function LoginForm() {
         <form
             onSubmit={handleSubmit(handleFormSubmit)}
             style={{width: "100%", maxWidth: "sm"}}
+            autoComplete={(linkAppleAccountSub != '') ? "off" : "on"}
         >
             <VStack spacing={0} w="100%">
                 {appleAccountLinked != null && (
