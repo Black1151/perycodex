@@ -5,17 +5,17 @@ import {LetterFlyIn} from "@/components/animations/text/LetterFlyIn";
 import {LoginCard} from "@/components/login/LoginCard";
 import {cookies} from "next/headers";
 import apiClient from "@/lib/apiClient";
-import {redirect} from "next/navigation";
+import {redirect, useSearchParams} from "next/navigation";
 
 interface SearchParams {
     l?: string;
 }
 
-export default async function LoginPage({
-                                            searchParams,
-                                        }: {
-    searchParams: SearchParams;
-}) {
+export default async function LoginPage(
+    { searchParams }: {searchParams: SearchParams;}) {
+
+    const urlParams = useSearchParams();
+    const linkAppleAccountSub = urlParams.get('link-apple-account-sub') ?? '';
 
     // Check if user is already authenticated and if so redirect based on if l is present
     // Extract query parameter `l`
@@ -64,8 +64,8 @@ export default async function LoginPage({
         <PerygonContainer>
             <Center flex={1} maxW={["100%"]}>
                 <LoginCard
-                    height={[700, 800]}
-                    imageOffset={[-445, -545]}
+                    height={[linkAppleAccountSub != '' ? 875 : 700, 800]}
+                    imageOffset={[-445, linkAppleAccountSub != '' ? -625 : -545]}
                     backgroundOffset={-605}
                     titleComponent={
                         <VStack position="absolute" top="75px">
