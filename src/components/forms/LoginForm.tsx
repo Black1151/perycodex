@@ -307,8 +307,8 @@ export function LoginForm() {
                             position="absolute"
                             objectFit="cover"
                             objectPosition="bottom"
-                            width={"123px"}
-                            height={"21px"}
+                            width={"297px"}
+                            height={"47px"}
                             top={"300px"}
                             opacity={"0.75"}
                         />
