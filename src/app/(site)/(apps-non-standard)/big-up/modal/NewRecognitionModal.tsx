@@ -1,12 +1,4 @@
-import {
-  Modal,
-  ModalOverlay,
-  ModalHeader,
-  Box,
-  Text,
-  Button,
-} from "@chakra-ui/react";
-
+import { Modal, ModalOverlay, Box, Text, Button } from "@chakra-ui/react";
 import { BigUpModalContent } from "./components/BigUpModalContent";
 
 export interface UserStatsModalProps {
