@@ -53,6 +53,7 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
   const handleFormSubmit = (data: any) => {
     onSubmit(data);
     reset();
+    onClose();
   };
 
   return (
@@ -82,7 +83,6 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                 )}
               />
             </FormControl>
-
             <FormControl mb={4} isRequired>
               <FormLabel color="white">Category</FormLabel>
               <Controller
@@ -117,7 +117,6 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                 )}
               />
             </FormControl>
-
             <FormControl mb={4} isRequired>
               <FormLabel color="white">Message</FormLabel>
               <Controller
@@ -143,7 +142,6 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
               />
             </FormControl>
           </ModalBody>
-
           <ModalFooter>
             <Button
               bg="perygonPink"
@@ -155,8 +153,9 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
               Submit
             </Button>
             <Button
-              variant="ghost"
               onClick={handleClose}
+              variant="outline"
+              borderColor="perygonPink"
               color="perygonPink"
               _hover={{ bg: "rgba(255, 20, 147, 0.1)" }}
             >

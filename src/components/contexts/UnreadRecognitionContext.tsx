@@ -27,7 +27,7 @@ export const UnreadProvider = ({ children }: { children: React.ReactNode }) => {
 
   const markAsRead = async () => {
     try {
-      await fetch("/api/auth/big-up/markAsRead", { method: "POST" });
+      await fetch("/api/auth/big-up/markAsRead", { method: "GET" });
       setUnread(false);
     } catch (error) {
       console.error("Error marking as read:", error);

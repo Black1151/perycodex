@@ -33,7 +33,7 @@ export default function BigUpPage() {
     handleSubmitRecognition,
   } = useRecognitionActions(fetchDashboardData);
 
-  const { markAsRead } = useUnread();
+  const { markAsRead, unread } = useUnread();
 
   const [isUserStatsModalOpen, setIsUserStatsModalOpen] = useState(false);
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
@@ -99,13 +99,18 @@ export default function BigUpPage() {
     userStats: yourBigUpStats,
   };
 
+  const handleCloseNewRecognitionModal = async () => {
+    await markAsRead();
+    setIsNewRecognitionModalOpen(false);
+  };
+
   const modalData = {
     teamMembers,
     categories: bigUpCategories,
   };
 
   useEffect(() => {
-    if (bigUpUnread && bigUpUnread.length > 0) {
+    if (unread && bigUpUnread.length > 0) {
       setIsNewRecognitionModalOpen(true);
       setShowConfetti(true);
     }
@@ -174,7 +179,10 @@ export default function BigUpPage() {
 
       <RecognitionSuccessModal
         isOpen={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
+        onClose={() => {
+          setShowSuccessModal(false);
+          setIsSubmitModalOpen(false);
+        }}
       />
 
       <UserStatsModal
@@ -186,10 +194,7 @@ export default function BigUpPage() {
 
       <NewRecognitionModal
         isOpen={isNewRecognitionModalOpen}
-        onClose={async () => {
-          setIsNewRecognitionModalOpen(false);
-          await markAsRead();
-        }}
+        onClose={handleCloseNewRecognitionModal}
         unreadRecognitionModalData={unreadRecognitionModalData}
       />
     </Flex>
