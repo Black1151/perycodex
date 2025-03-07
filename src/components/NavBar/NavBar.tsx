@@ -15,8 +15,8 @@ import UserAvatar from "./components/UserAvatar";
 
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import { useUser } from "@/providers/UserProvider";
-import useUnreadStatus from "@/hooks/BigUp/useUnreadStatus";
 import useNavMenuItems from "./hooks/useNavMenuItems";
+import { useUnread } from "../contexts/UnreadRecognitionContext";
 
 // For animations
 const MotionBox = motion(Box);
@@ -38,10 +38,7 @@ const NavBar: React.FC<NavBarProps> = ({
   const theme = useTheme();
 
   const { toolLogo, toolPath } = useWorkflow();
-
-  //   const finalLogo = toolLogo;
-
-  const unread = useUnreadStatus();
+  const { unread } = useUnread();
   const [passwordResetModalOpen, setPasswordResetModalOpen] = useState(false);
 
   const openResetModal = () => setPasswordResetModalOpen(true);

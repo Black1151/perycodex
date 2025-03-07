@@ -17,6 +17,7 @@ import { NewRecognitionModal } from "./modal/NewRecognitionModal";
 import { RecognitionSuccessModal } from "./modal/RecognitionSuccessModal";
 import SubmitScoreModal from "./modal/SubmitScoreModal";
 import { RecognitionList } from "./tabs/OtherTabs/RecognitionCardList";
+import { useUnread } from "@/components/contexts/UnreadRecognitionContext";
 
 export default function BigUpPage() {
   const router = useRouter();
@@ -29,9 +30,10 @@ export default function BigUpPage() {
     setShowSuccessModal,
     showConfetti,
     setShowConfetti,
-    markAsRead,
     handleSubmitRecognition,
   } = useRecognitionActions(fetchDashboardData);
+
+  const { markAsRead } = useUnread();
 
   const [isUserStatsModalOpen, setIsUserStatsModalOpen] = useState(false);
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
