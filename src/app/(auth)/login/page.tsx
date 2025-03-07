@@ -9,13 +9,13 @@ import {redirect} from "next/navigation";
 
 interface SearchParams {
     l?: string;
+    'link-apple-account-sub'?: string
 }
 
-export default async function LoginPage({
-                                            searchParams,
-                                        }: {
-    searchParams: SearchParams;
-}) {
+export default async function LoginPage(
+    { searchParams }: {searchParams: SearchParams;}) {
+
+    const linkAppleAccountSub = searchParams['link-apple-account-sub'] ?? '';
 
     // Check if user is already authenticated and if so redirect based on if l is present
     // Extract query parameter `l`
@@ -64,8 +64,8 @@ export default async function LoginPage({
         <PerygonContainer>
             <Center flex={1} maxW={["100%"]}>
                 <LoginCard
-                    height={[700, 800]}
-                    imageOffset={[-445, -545]}
+                    height={[linkAppleAccountSub != '' ? 875 : 700, 800]}
+                    imageOffset={[linkAppleAccountSub != '' ? -625 : -445, -545]}
                     backgroundOffset={-605}
                     titleComponent={
                         <VStack position="absolute" top="75px">
