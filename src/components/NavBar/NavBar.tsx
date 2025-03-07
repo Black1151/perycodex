@@ -1,7 +1,6 @@
 "use client";
 
-// components/NavBar/NavBar.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { HStack, Box, useTheme } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -38,8 +37,13 @@ const NavBar: React.FC<NavBarProps> = ({
   const theme = useTheme();
 
   const { toolLogo, toolPath } = useWorkflow();
-  const { unread } = useUnread();
+  const { unread, checkUnread } = useUnread();
   const [passwordResetModalOpen, setPasswordResetModalOpen] = useState(false);
+
+  // Call checkUnread on mount so unread updates on load
+  useEffect(() => {
+    checkUnread();
+  }, [checkUnread]);
 
   const openResetModal = () => setPasswordResetModalOpen(true);
   const handleOnClose = () => setPasswordResetModalOpen(false);
@@ -51,6 +55,8 @@ const NavBar: React.FC<NavBarProps> = ({
   };
 
   const menuItems = useNavMenuItems(userRole, handleLogout, openResetModal);
+
+  console.log("Unread status:", unread);
 
   return (
     <>
