@@ -5,17 +5,17 @@ import {LetterFlyIn} from "@/components/animations/text/LetterFlyIn";
 import {LoginCard} from "@/components/login/LoginCard";
 import {cookies} from "next/headers";
 import apiClient from "@/lib/apiClient";
-import {redirect, useSearchParams} from "next/navigation";
+import {redirect} from "next/navigation";
 
 interface SearchParams {
     l?: string;
+    'link-apple-account-sub'?: string
 }
 
 export default async function LoginPage(
     { searchParams }: {searchParams: SearchParams;}) {
 
-    const urlParams = useSearchParams();
-    const linkAppleAccountSub = urlParams.get('link-apple-account-sub') ?? '';
+    const linkAppleAccountSub = searchParams['link-apple-account-sub'] ?? '';
 
     // Check if user is already authenticated and if so redirect based on if l is present
     // Extract query parameter `l`
