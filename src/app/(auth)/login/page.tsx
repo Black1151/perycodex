@@ -65,7 +65,7 @@ export default async function LoginPage(
             <Center flex={1} maxW={["100%"]}>
                 <LoginCard
                     height={[linkAppleAccountSub != '' ? 875 : 700, 800]}
-                    imageOffset={[-445, linkAppleAccountSub != '' ? -625 : -545]}
+                    imageOffset={[linkAppleAccountSub != '' ? -625 : -445, -545]}
                     backgroundOffset={-605}
                     titleComponent={
                         <VStack position="absolute" top="75px">
