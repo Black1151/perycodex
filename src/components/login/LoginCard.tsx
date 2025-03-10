@@ -3,7 +3,6 @@
 import {Box, Image, ResponsiveValue, VStack} from "@chakra-ui/react";
 import {ReactNode} from "react";
 import {SpringScale} from "../animations/SpringScale";
-import {useSearchParams} from "next/navigation";
 
 interface LoginCardProps {
     titleComponent: ReactNode;
@@ -11,6 +10,7 @@ interface LoginCardProps {
     height?: ResponsiveValue<number | string>;
     imageOffset?: ResponsiveValue<number | string>;
     backgroundOffset?: number;
+    speechBubbleHeight?: string
 }
 
 export function LoginCard({
@@ -18,9 +18,8 @@ export function LoginCard({
                               children,
                               height = 700,
                               imageOffset = -350,
+                              speechBubbleHeight = "100%"
                           }: LoginCardProps) {
-    const searchParams = useSearchParams();
-    const appleAccountLinked = searchParams.get("appleAccountLinked");
     return (
         <SpringScale style={{width: '100%'}}>
             <VStack
@@ -34,7 +33,7 @@ export function LoginCard({
                 position="relative"
                 height={height}
                 justifyContent="flex-end"
-                width={["100%", null, appleAccountLinked != '' ? 393 : 480]}
+                width={["100%", null, 480]}
                 maxW={"100%"}
             >
                 <Image
@@ -45,6 +44,7 @@ export function LoginCard({
                     objectFit="cover"
                     top={imageOffset}
                     objectPosition="bottom"
+                    height={speechBubbleHeight}
                 />
                 {titleComponent}
                 <Box width="100%">{children}</Box>

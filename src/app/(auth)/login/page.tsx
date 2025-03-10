@@ -77,7 +77,7 @@ export default async function LoginPage(
             case linkAppleAccountSub !== '':
                 return [-625, -545];
             case appleAccountLinked !== '':
-                return [-325, -375]; // Adjust the height as needed
+                return [-480, -480]; // Adjust the height as needed
             default:
                 return [-445, -545];
         }
@@ -90,6 +90,7 @@ export default async function LoginPage(
                     height={getHeight()}
                     imageOffset={getOffset()}
                     backgroundOffset={-605}
+                    speechBubbleHeight={appleAccountLinked !== '' ? "125%" : "100%"}
                     titleComponent={
                         <VStack position="absolute" top="75px">
                             <LetterFlyIn>Perygon</LetterFlyIn>
