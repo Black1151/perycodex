@@ -66,7 +66,7 @@ export default async function LoginPage(
             case linkAppleAccountSub !== '':
                 return [875, 800];
             case appleAccountLinked !== '':
-                return [575, 800]; // Adjust the height as needed
+                return [800, 575]; // Adjust the height as needed
             default:
                 return [700, 800];
         }
@@ -77,7 +77,7 @@ export default async function LoginPage(
             case linkAppleAccountSub !== '':
                 return [-625, -545];
             case appleAccountLinked !== '':
-                return [-375, -330]; // Adjust the height as needed
+                return [-325, -375]; // Adjust the height as needed
             default:
                 return [-445, -545];
         }
@@ -87,8 +87,8 @@ export default async function LoginPage(
         <PerygonContainer>
             <Center flex={1} maxW={["100%"]}>
                 <LoginCard
-                    height={[linkAppleAccountSub != '' ? 875 : 700, 800]}
-                    imageOffset={[linkAppleAccountSub != '' ? -625 : -445, -545]}
+                    height={getHeight()}
+                    imageOffset={getOffset()}
                     backgroundOffset={-605}
                     titleComponent={
                         <VStack position="absolute" top="75px">
