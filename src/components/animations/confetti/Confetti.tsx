@@ -2,7 +2,12 @@
 
 import React, { useEffect, useRef } from "react";
 
-const Confetti: React.FC<{ show: boolean }> = ({ show }) => {
+interface ConfettiProps {
+  show: boolean;
+  duration?: number;
+}
+
+const Confetti: React.FC<ConfettiProps> = ({ show, duration = 3000 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const confettiParticles: any[] = [];
 
@@ -73,9 +78,9 @@ const Confetti: React.FC<{ show: boolean }> = ({ show }) => {
       setTimeout(() => {
         confettiParticles.length = 0;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-      }, 3000);
+      }, duration);
     }
-  }, [show]);
+  }, [show, duration]);
 
   return (
     <canvas

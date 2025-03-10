@@ -176,7 +176,7 @@ export default function BigUpPage() {
         />
       </Grid>
 
-      <ConfettiWrapper show={showConfetti} />
+      <ConfettiWrapper show={showConfetti} duration={6000} />
 
       <RecognitionSuccessModal
         isOpen={showSuccessModal}
