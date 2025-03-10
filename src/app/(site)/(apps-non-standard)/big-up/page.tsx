@@ -77,6 +77,7 @@ export default function BigUpPage() {
       gridTemplateColumns="1fr"
       items={bigUpUnread}
       onClickProfilePic={handleProfilePicClick}
+      reverseRecognition={true}
     />
   );
 

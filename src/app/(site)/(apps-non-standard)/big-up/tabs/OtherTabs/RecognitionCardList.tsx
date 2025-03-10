@@ -97,6 +97,7 @@ export const RecognitionList: React.FC<RecognitionListProps> = ({
                             : item.userIdUrlTo.toString()
                         );
                       }}
+                      _hover={{ cursor: "pointer" }}
                     />
                   </Flex>
                   <Box mt={4} minHeight={30}>

@@ -57,7 +57,12 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} isCentered>
+    <Modal
+      isOpen={isOpen}
+      onClose={handleClose}
+      isCentered
+      returnFocusOnClose={false}
+    >
       <ModalOverlay />
       <BigUpModalContent>
         <ModalHeader color="perygonPink" fontSize="2xl">

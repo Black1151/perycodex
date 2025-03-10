@@ -21,7 +21,12 @@ export function RecognitionSuccessModal({
   onClose,
 }: RecognitionSuccessModalProps) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      isCentered
+      returnFocusOnClose={false}
+    >
       <ModalOverlay />
       <ModalContent
         bg="pink.500"

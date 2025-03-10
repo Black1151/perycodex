@@ -13,7 +13,13 @@ export const NewRecognitionModal: React.FC<UserStatsModalProps> = ({
   unreadRecognitionModalData,
 }) => {
   return (
-    <Modal size="2xl" isOpen={isOpen} onClose={onClose} isCentered>
+    <Modal
+      size="2xl"
+      isOpen={isOpen}
+      onClose={onClose}
+      isCentered
+      returnFocusOnClose={false}
+    >
       <ModalOverlay />
       <BigUpModalContent mx={4} borderRadius="lg">
         <Box p={4}>
