@@ -318,7 +318,6 @@ export function LoginForm() {
             mt={5}
             backgroundColor={theme.colors.perygonPink}
             type="submit"
-            w="full"
             isLoading={loading}
             height={12}
             color="white"
