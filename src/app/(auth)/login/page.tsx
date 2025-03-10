@@ -16,6 +16,7 @@ export default async function LoginPage(
     { searchParams }: {searchParams: SearchParams;}) {
 
     const linkAppleAccountSub = searchParams['link-apple-account-sub'] ?? '';
+    const appleAccountLinked = searchParams['appleAccountLinked'] ?? '';
 
     // Check if user is already authenticated and if so redirect based on if l is present
     // Extract query parameter `l`
@@ -59,6 +60,27 @@ export default async function LoginPage(
         }
     }
 
+    const getHeight = () => {
+        switch (true) {
+            case linkAppleAccountSub !== '':
+                return [875, 800];
+            case appleAccountLinked:
+                return [575, 800]; // Adjust the height as needed
+            default:
+                return [700, 800];
+        }
+    };
+
+    const getOffset = () => {
+        switch (true) {
+            case linkAppleAccountSub !== '':
+                return [-625, -545];
+            case appleAccountLinked:
+                return [-375, -330]; // Adjust the height as needed
+            default:
+                return [-445, -545];
+        }
+    };
     return (
 
         <PerygonContainer>
