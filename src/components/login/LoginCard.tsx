@@ -3,6 +3,7 @@
 import {Box, Image, ResponsiveValue, VStack} from "@chakra-ui/react";
 import {ReactNode} from "react";
 import {SpringScale} from "../animations/SpringScale";
+import {useSearchParams} from "next/navigation";
 
 interface LoginCardProps {
     titleComponent: ReactNode;
@@ -18,6 +19,8 @@ export function LoginCard({
                               height = 700,
                               imageOffset = -350,
                           }: LoginCardProps) {
+    const searchParams = useSearchParams();
+    const appleAccountLinked = searchParams.get("appleAccountLinked");
     return (
         <SpringScale style={{width: '100%'}}>
             <VStack
@@ -31,7 +34,7 @@ export function LoginCard({
                 position="relative"
                 height={height}
                 justifyContent="flex-end"
-                width={["100%", null, 480]}
+                width={["100%", null, appleAccountLinked != '' ? 393 : 480]}
                 maxW={"100%"}
             >
                 <Image
