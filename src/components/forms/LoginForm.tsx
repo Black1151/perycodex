@@ -289,10 +289,22 @@ export function LoginForm() {
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
       style={{ width: "100%", maxWidth: "sm" }}
+      autoComplete={(linkAppleAccountSub != '') ? "off" : "on"}
     >
       <VStack spacing={0} w="100%">
         {appleAccountLinked != null && (
           <VStack spacing={0} w={300} gap={2}>
+            <Image
+                src="https://perygonblob.blob.core.windows.net/public/AppleToPerygon.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D"
+                alt="AppleToPerygon"
+                position="absolute"
+                objectFit="cover"
+                objectPosition="bottom"
+                width={"297px"}
+                height={"47px"}
+                top={"275px"}
+                opacity={"0.75"}
+            />
             <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
               Your Apple account is now linked to the following Perygon user:
             </Text>
@@ -483,7 +495,7 @@ export function LoginForm() {
           <Text p="0" pt="10px" fontSize={["10px", "12px"]} color="gray">
             Copyright &copy; 2024 Sedulo Limited (v1.1.4)
           </Text>
-          <Link href={"/privacy-policy"}>
+          <Link href={'/privacy-policy'}>
             <Text p="0" pt="10px" fontSize={["10px", "12px"]} color="gray">
               Privacy Policy
             </Text>
