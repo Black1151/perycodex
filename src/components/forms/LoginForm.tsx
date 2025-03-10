@@ -293,7 +293,7 @@ export function LoginForm() {
     >
       <VStack spacing={0} w="100%">
         {appleAccountLinked != null && (
-          <VStack spacing={0} w={300} gap={2}>
+          <VStack spacing={0} w="393px" gap={2}>
             <Image
                 src="https://perygonblob.blob.core.windows.net/public/AppleToPerygon.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D"
                 alt="AppleToPerygon"
@@ -318,6 +318,7 @@ export function LoginForm() {
             mt={5}
             backgroundColor={theme.colors.perygonPink}
             type="submit"
+            w="300px"
             isLoading={loading}
             height={12}
             color="white"
