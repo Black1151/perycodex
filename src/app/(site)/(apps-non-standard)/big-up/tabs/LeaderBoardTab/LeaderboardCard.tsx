@@ -42,6 +42,7 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
           name={name}
           src={image}
           onClick={() => onClickProfilePic(UUID)}
+          _hover={{ cursor: "pointer" }}
         />
         <Flex direction="column" ml={4} flex="1">
           <Text fontWeight="bold" fontSize="xl" color="perygonPink">
