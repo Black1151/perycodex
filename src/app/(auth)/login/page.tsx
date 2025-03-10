@@ -87,8 +87,8 @@ export default async function LoginPage(
         <PerygonContainer>
             <Center flex={1} maxW={["100%"]}>
                 <LoginCard
-                    height={[linkAppleAccountSub != '' ? 875 : 700, 800]}
-                    imageOffset={[linkAppleAccountSub != '' ? -625 : -445, -545]}
+                    height={getHeight()}
+                    imageOffset={getOffset()}
                     backgroundOffset={-605}
                     titleComponent={
                         <VStack position="absolute" top="75px">
