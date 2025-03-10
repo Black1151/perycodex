@@ -308,7 +308,7 @@ export function LoginForm() {
             <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
               Your Apple account is now linked to the following Perygon user:
             </Text>
-            <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
+            <Text pt="10px" fontWeight="bold" fontSize={["16px", "12px"]} color={theme.colors.perygonPink}>
               {appleAccountLinked}
             </Text>
           </VStack>
@@ -356,7 +356,7 @@ export function LoginForm() {
               </Text>
             )}
             {linkAppleAccountSub != "" && (
-              <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
+              <Text pt="10px" pb="15px" fontSize={["16px", "12px"]} color="gray">
                 Please log in with your Perygon username and password below in
                 order to permanently link this Apple account with your Perygon
                 account
