@@ -17,6 +17,7 @@ import { NewRecognitionModal } from "./modal/NewRecognitionModal";
 import { RecognitionSuccessModal } from "./modal/RecognitionSuccessModal";
 import SubmitScoreModal from "./modal/SubmitScoreModal";
 import { RecognitionList } from "./tabs/OtherTabs/RecognitionCardList";
+import { useUnread } from "@/components/contexts/UnreadRecognitionContext";
 
 export default function BigUpPage() {
   const router = useRouter();
@@ -29,9 +30,10 @@ export default function BigUpPage() {
     setShowSuccessModal,
     showConfetti,
     setShowConfetti,
-    markAsRead,
     handleSubmitRecognition,
   } = useRecognitionActions(fetchDashboardData);
+
+  const { markAsRead, unread } = useUnread();
 
   const [isUserStatsModalOpen, setIsUserStatsModalOpen] = useState(false);
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
@@ -97,13 +99,18 @@ export default function BigUpPage() {
     userStats: yourBigUpStats,
   };
 
+  const handleCloseNewRecognitionModal = async () => {
+    await markAsRead();
+    setIsNewRecognitionModalOpen(false);
+  };
+
   const modalData = {
     teamMembers,
     categories: bigUpCategories,
   };
 
   useEffect(() => {
-    if (bigUpUnread && bigUpUnread.length > 0) {
+    if (unread && bigUpUnread.length > 0) {
       setIsNewRecognitionModalOpen(true);
       setShowConfetti(true);
     }
@@ -172,7 +179,10 @@ export default function BigUpPage() {
 
       <RecognitionSuccessModal
         isOpen={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
+        onClose={() => {
+          setShowSuccessModal(false);
+          setIsSubmitModalOpen(false);
+        }}
       />
 
       <UserStatsModal
@@ -184,10 +194,7 @@ export default function BigUpPage() {
 
       <NewRecognitionModal
         isOpen={isNewRecognitionModalOpen}
-        onClose={async () => {
-          setIsNewRecognitionModalOpen(false);
-          await markAsRead();
-        }}
+        onClose={handleCloseNewRecognitionModal}
         unreadRecognitionModalData={unreadRecognitionModalData}
       />
     </Flex>
