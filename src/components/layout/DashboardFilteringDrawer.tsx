@@ -180,12 +180,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
           )}
 
           {drawerState === "fully-open" && (
-            <Box
-              height="100vh"
-              overflowY="auto"
-              overscrollBehavior="contain"
-              css={{ WebkitOverflowScrolling: "touch" }}
-            >
+            <>
               <Box px={4} mt={4}>
                 <Select
                   placeholder="Select Week"
@@ -315,7 +310,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                   <Spinner size="lg" />
                 </Box>
               )}
-            </Box>
+            </>
           )}
         </VStack>
       </MotionBox>
