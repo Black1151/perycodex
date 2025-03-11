@@ -64,7 +64,7 @@ export default async function LoginPage(
     const getHeight = () => {
         switch (true) {
             case linkAppleAccountSub !== '':
-                return [875, 800];
+                return [700, 800];
             case appleAccountLinked !== '':
                 return [860, 700];
             default:
@@ -75,7 +75,7 @@ export default async function LoginPage(
     const getOffset = () => {
         switch (true) {
             case linkAppleAccountSub !== '':
-                return [-625, -545];
+                return [-500, -545];
             case appleAccountLinked !== '':
                 return [-800, -640];
             default:
