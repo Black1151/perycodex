@@ -298,9 +298,11 @@ export function LoginForm() {
           <VStack spacing={0} w={300} gap={2}>
             <LinkOnIcon
                 style={{
-                  width: "20px",
-                  color: "lightGray",
-                  position: "absolute"
+                  width: "48px",
+                  color: "black",
+                  position: "absolute",
+                  top: "290px",
+                  opacity: "0.7"
                 }}
             />
             <Image
@@ -348,9 +350,12 @@ export function LoginForm() {
             {linkAppleAccountSub != "" && (
                 <LinkOffIcon
                     style={{
-                      width: "20px",
-                      color: "lightGray",
-                      position: "absolute"
+                      width: "48px",
+                      color: "black",
+                      position: "absolute",
+                      height: "auto",
+                      opacity: "0.7",
+                      top: "270px"
                     }}
                 />
             )}
