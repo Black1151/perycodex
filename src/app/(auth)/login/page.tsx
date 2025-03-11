@@ -66,7 +66,7 @@ export default async function LoginPage(
             case linkAppleAccountSub !== '':
                 return [700, 800];
             case appleAccountLinked !== '':
-                return [860, 700];
+                return [700, 700];
             default:
                 return [700, 800];
         }
@@ -77,7 +77,7 @@ export default async function LoginPage(
             case linkAppleAccountSub !== '':
                 return [-500, -545];
             case appleAccountLinked !== '':
-                return [-800, -640];
+                return [-640, -640];
             default:
                 return [-445, -545];
         }
