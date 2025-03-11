@@ -9,7 +9,8 @@ import { UserContextProps } from "@/providers/UserProvider";
 import apiClient from "@/lib/apiClient";
 import { getSession } from "next-auth/react";
 import NavBar from "@/components/NavBar/NavBar";
-
+import { Box, Flex } from "@chakra-ui/react";
+import { hideScrollbar } from "@/utils/style/style-utils";
 interface NavBarProps {
   userFirstName: string;
   userImageUrl: string;

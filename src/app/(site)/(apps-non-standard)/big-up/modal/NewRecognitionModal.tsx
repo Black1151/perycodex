@@ -1,5 +1,6 @@
 import { Modal, ModalOverlay, Box, Text, Button } from "@chakra-ui/react";
 import { BigUpModalContent } from "./components/BigUpModalContent";
+import { hideScrollbar } from "@/utils/style/style-utils";
 
 export interface UserStatsModalProps {
   isOpen: boolean;
@@ -26,7 +27,16 @@ export const NewRecognitionModal: React.FC<UserStatsModalProps> = ({
           <Text color="perygonPink" fontSize="3xl" pb={4} fontWeight="bold">
             Your colleagues appreciate you!
           </Text>
-          <Box maxH={[400, 610]} overflowY="auto" p={4}>
+          <Box
+            maxH={[400, 610]}
+            overflowY="auto"
+            p={4}
+            sx={{
+              "@media (max-width: 400px)": {
+                ...hideScrollbar,
+              },
+            }}
+          >
             {unreadRecognitionModalData}
           </Box>
         </Box>

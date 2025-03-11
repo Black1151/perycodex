@@ -117,6 +117,10 @@ export default function BigUpPage() {
       setIsNewRecognitionModalOpen(true);
       setShowConfetti(true);
     }
+
+    setTimeout(() => {
+      setShowConfetti(false);
+    }, 8000);
   }, [bigUpUnread, setShowConfetti]);
 
   if (loading) {
@@ -138,6 +142,11 @@ export default function BigUpPage() {
       pt={[74, null, null, null]}
       pb={[4, 51, null, null, null]}
       px={[2, null, null, 5]}
+      sx={{
+        "@media (max-width: 400px)": {
+          ...hideScrollbar,
+        },
+      }}
     >
       <Flex
         bg="perygonBlueTransparent"

@@ -4,7 +4,6 @@ import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/providers/UserProvider";
 
-/** The data structure for a new recognition form submission */
 interface RecognitionFormData {
   teamMember: string;
   category: string;
@@ -12,16 +11,12 @@ interface RecognitionFormData {
 }
 
 export function useRecognitionActions(fetchDashboardData: () => void) {
-  // Local state for the success modal & confetti
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
   const router = useRouter();
   const { user } = useUser();
 
-  /**
-   * Mark unread recognitions as read
-   */
   const markAsRead = useCallback(async () => {
     try {
       await fetch(`/api/auth/big-up/markAsRead`, {
@@ -33,9 +28,6 @@ export function useRecognitionActions(fetchDashboardData: () => void) {
     }
   }, []);
 
-  /**
-   * Submit a new recognition to the server
-   */
   const handleSubmitRecognition = useCallback(
     async (formData: RecognitionFormData) => {
       try {
@@ -52,10 +44,8 @@ export function useRecognitionActions(fetchDashboardData: () => void) {
         });
 
         fetchDashboardData();
-
         setShowSuccessModal(true);
         setShowConfetti(true);
-
         setTimeout(() => {
           setShowSuccessModal(false);
           setShowConfetti(false);
