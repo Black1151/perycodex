@@ -299,10 +299,11 @@ export function LoginForm() {
             <LinkOnIcon
                 style={{
                   width: "48px",
-                  color: "black",
+                  color: theme.colors.seduloGreen,
                   position: "absolute",
                   top: "290px",
-                  opacity: "0.7"
+                  opacity: "0.7",
+                  height: "auto"
                 }}
             />
             <Image
@@ -351,11 +352,11 @@ export function LoginForm() {
                 <LinkOffIcon
                     style={{
                       width: "48px",
-                      color: "black",
+                      color: theme.colors.perygonPink,
                       position: "absolute",
                       height: "auto",
                       opacity: "0.7",
-                      top: "270px"
+                      top: [202,270]
                     }}
                 />
             )}
