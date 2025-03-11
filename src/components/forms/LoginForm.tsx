@@ -356,7 +356,7 @@ export function LoginForm() {
                       position: "absolute",
                       height: "auto",
                       opacity: "0.7",
-                      top: "270px"
+                      top: "-70px"
                     }}
                 />
             )}
@@ -369,7 +369,7 @@ export function LoginForm() {
                 objectPosition="bottom"
                 width={"297px"}
                 height={"47px"}
-                top="270px"
+                top="-70px"
                 opacity={"0.75"}
               />
             )}
