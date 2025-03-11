@@ -26,6 +26,8 @@ import { NextResponse } from "next/server";
 import LoginFormButtons from "@/components/forms/LoginFormButtons";
 import { DefaultSession } from "next-auth";
 import CryptoJS from "crypto-js";
+import LinkOffIcon from "@mui/icons-material/LinkOff";
+import LinkOnIcon from "@mui/icons-material/Link";
 
 declare module "next-auth" {
   interface Session {
@@ -294,6 +296,13 @@ export function LoginForm() {
       <VStack spacing={0} w="100%">
         {appleAccountLinked != null && (
           <VStack spacing={0} w={300} gap={2}>
+            <LinkOnIcon
+                style={{
+                  width: "20px",
+                  color: "lightGray",
+                  position: "absolute"
+                }}
+            />
             <Image
                 src="https://perygonblob.blob.core.windows.net/public/AppleToPerygon.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D"
                 alt="AppleToPerygon"
@@ -336,6 +345,15 @@ export function LoginForm() {
         )}
         {appleAccountLinked == null && (
           <VStack spacing={0} w={300} gap={2}>
+            {linkAppleAccountSub != "" && (
+                <LinkOffIcon
+                    style={{
+                      width: "20px",
+                      color: "lightGray",
+                      position: "absolute"
+                    }}
+                />
+            )}
             {linkAppleAccountSub != "" && (
               <Image
                 src="https://perygonblob.blob.core.windows.net/public/AppleToPerygon.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D"
