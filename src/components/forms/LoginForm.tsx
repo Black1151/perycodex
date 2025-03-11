@@ -28,7 +28,6 @@ import { DefaultSession } from "next-auth";
 import CryptoJS from "crypto-js";
 import LinkOffIcon from "@mui/icons-material/LinkOff";
 import LinkOnIcon from "@mui/icons-material/Link";
-import useMediaQuery from "@mui/material/useMediaQuery";
 
 declare module "next-auth" {
   interface Session {
