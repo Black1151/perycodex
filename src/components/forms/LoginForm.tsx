@@ -302,13 +302,13 @@ export function LoginForm() {
                 objectPosition="bottom"
                 width={"297px"}
                 height={"47px"}
-                top={"275px"}
+                top={"290px"}
                 opacity={"0.75"}
             />
             <Text pt="10px" fontSize={["12px", "12px"]} color="gray">
               Your Apple account is now linked to the following Perygon user:
             </Text>
-            <Text pt="10px" mb={[100,200]} fontWeight="bold" fontSize={["16px", "12px"]} color={theme.colors.perygonPink}>
+            <Text pt="10px" mb={[150,85]} fontWeight="bold" fontSize={["16px", "12px"]} color={theme.colors.perygonPink}>
               {appleAccountLinked}
             </Text>
           </VStack>
@@ -345,7 +345,7 @@ export function LoginForm() {
                 objectPosition="bottom"
                 width={"297px"}
                 height={"47px"}
-                top={"290px"}
+                top={["280px", "270px"]}
                 opacity={"0.75"}
               />
             )}
