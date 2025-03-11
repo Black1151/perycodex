@@ -350,13 +350,13 @@ export function LoginForm() {
           <VStack spacing={0} w={300} gap={2}>
             {linkAppleAccountSub != "" && (
                 <LinkOffIcon
-                    style={{
+                    sx={{
                       width: "48px",
                       color: theme.colors.perygonPink,
                       position: "absolute",
                       height: "auto",
                       opacity: "0.7",
-                      top: [202,270]
+                      top: { xs: "202px", md: "270px" }
                     }}
                 />
             )}
