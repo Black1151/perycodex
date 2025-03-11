@@ -305,7 +305,7 @@ export function LoginForm() {
                 top={"275px"}
                 opacity={"0.75"}
             />
-            <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
+            <Text pt="10px" fontSize={["12px", "12px"]} color="gray">
               Your Apple account is now linked to the following Perygon user:
             </Text>
             <Text pt="10px" mb={[100,200]} fontWeight="bold" fontSize={["16px", "12px"]} color={theme.colors.perygonPink}>
@@ -345,18 +345,18 @@ export function LoginForm() {
                 objectPosition="bottom"
                 width={"297px"}
                 height={"47px"}
-                top={"275px"}
+                top={"290px"}
                 opacity={"0.75"}
               />
             )}
             {linkAppleAccountSub != "" && (
-              <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
+              <Text pt="10px" pb={["30px", "0px"]} fontSize={["12px", "12px"]} color="gray">
                 Your Apple account couldn&apos;t be linked to an existing
                 Perygon user.
               </Text>
             )}
             {linkAppleAccountSub != "" && (
-              <Text pt="10px" pb="15px" fontSize={["16px", "12px"]} color="gray">
+              <Text pt="10px" pb={["30px", "15px"]} fontSize={["12px", "12px"]} color="gray">
                 Please log in with your Perygon username and password below in
                 order to permanently link this Apple account with your Perygon
                 account
