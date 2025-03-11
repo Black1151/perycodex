@@ -51,6 +51,7 @@ export function LoginForm() {
   const { data: session, status } = useSession();
   const linkAppleAccountSub = searchParams.get("link-apple-account-sub") ?? "";
   const appleAccountLinked = searchParams.get("appleAccountLinked");
+  const perygonPink = theme.colors.perygonPink;
 
   useEffect(() => {
     handleSsoSignIn();
@@ -350,14 +351,14 @@ export function LoginForm() {
           <VStack spacing={0} w={300} gap={2}>
             {linkAppleAccountSub != "" && (
                 <LinkOffIcon
-                    sx={{
+                    sx={(theme) => ({
                       width: "48px",
-                      color: theme.colors.perygonPink,
+                      color: perygonPink,
                       position: "absolute",
                       height: "auto",
                       opacity: "0.7",
                       top: ["202px", "270px"]
-                    }}
+                    })}
                 />
             )}
             {linkAppleAccountSub != "" && (
