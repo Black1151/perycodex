@@ -356,7 +356,7 @@ export function LoginForm() {
                       position: "absolute",
                       height: "auto",
                       opacity: "0.7",
-                      top: { xs: "202px", md: "270px" }
+                      top: ["202px", "270px"]
                     }}
                 />
             )}
