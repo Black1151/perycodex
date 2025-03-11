@@ -347,7 +347,7 @@ export function LoginForm() {
           </Button>
         )}
         {appleAccountLinked == null && (
-          <VStack spacing={0} w={300} gap={2}>
+          <VStack spacing={0} w={300} gap={2} position={linkAppleAccountSub != "" ? "relative" : "inherit"}>
             {linkAppleAccountSub != "" && (
                 <LinkOffIcon
                     style={{
@@ -369,7 +369,7 @@ export function LoginForm() {
                 objectPosition="bottom"
                 width={"297px"}
                 height={"47px"}
-                top={["200px", "270px"]}
+                top="270px"
                 opacity={"0.75"}
               />
             )}
