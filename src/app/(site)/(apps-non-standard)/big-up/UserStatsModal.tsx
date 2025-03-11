@@ -17,7 +17,13 @@ export const UserStatsModal: React.FC<UserStatsModalProps> = ({
 }) => {
   console.log(userStats);
   return (
-    <Modal size="2xl" isOpen={isOpen} onClose={onClose} isCentered>
+    <Modal
+      size="2xl"
+      isOpen={isOpen}
+      onClose={onClose}
+      isCentered
+      returnFocusOnClose={false}
+    >
       <ModalOverlay />
       <ModalContent mx={4} borderRadius="lg">
         <BigUpStatsCard
