@@ -28,6 +28,7 @@ import { DefaultSession } from "next-auth";
 import CryptoJS from "crypto-js";
 import LinkOffIcon from "@mui/icons-material/LinkOff";
 import LinkOnIcon from "@mui/icons-material/Link";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 declare module "next-auth" {
   interface Session {
@@ -52,6 +53,7 @@ export function LoginForm() {
   const linkAppleAccountSub = searchParams.get("link-apple-account-sub") ?? "";
   const appleAccountLinked = searchParams.get("appleAccountLinked");
   const perygonPink = theme.colors.perygonPink;
+  const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
   useEffect(() => {
     handleSsoSignIn();
@@ -351,14 +353,14 @@ export function LoginForm() {
           <VStack spacing={0} w={300} gap={2}>
             {linkAppleAccountSub != "" && (
                 <LinkOffIcon
-                    sx={(theme) => ({
+                    style={{
                       width: "48px",
                       color: perygonPink,
                       position: "absolute",
                       height: "auto",
                       opacity: "0.7",
-                      top: ["202px", "270px"]
-                    })}
+                      top: isDesktop ? "270px" : "202px",
+                    }}
                 />
             )}
             {linkAppleAccountSub != "" && (
