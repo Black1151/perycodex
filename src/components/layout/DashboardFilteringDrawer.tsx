@@ -25,7 +25,7 @@ interface RightHandNavigationDrawerProps {
   handleCheckboxChange: (
     groupIndex: number,
     optionIndex: number,
-    isChecked: boolean
+    isChecked: boolean,
   ) => void;
   filterOptions: FilterOptionGroup[];
   clearAllFilters: () => void;
@@ -138,7 +138,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
         right={0}
         bottom={0}
         width={225}
-        zIndex={99}
+        zIndex={98}
         bg="white"
         boxShadow="xl"
         transform={
@@ -281,7 +281,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                                   handleCheckboxChange(
                                     groupIndex,
                                     optionIndex,
-                                    e.target.checked
+                                    e.target.checked,
                                   )
                                 }
                               >
