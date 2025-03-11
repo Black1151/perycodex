@@ -12,6 +12,8 @@ import {
   useTheme,
   VStack,
   Fade,
+  TabPanel,
+  Flex,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { Clear, Close, FilterAlt, Refresh } from "@mui/icons-material";
@@ -178,14 +180,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
           )}
 
           {drawerState === "fully-open" && (
-            <Box
-              overflowY="auto"
-              css={{
-                touchAction: "pan-y",
-                WebkitOverflowScrolling: "touch",
-                overscrollBehavior: "none",
-              }}
-            >
+            <Box overscrollBehavior="contain">
               <Box px={4} mt={4}>
                 <Select
                   placeholder="Select Week"
