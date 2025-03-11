@@ -103,6 +103,7 @@ export default function BigUpPage() {
   const handleCloseNewRecognitionModal = async () => {
     await markAsRead();
     setIsNewRecognitionModalOpen(false);
+    setShowConfetti(false);
   };
 
   const modalData = {
@@ -115,9 +116,6 @@ export default function BigUpPage() {
       setIsNewRecognitionModalOpen(true);
       setShowConfetti(true);
     }
-
-    const timer = setTimeout(() => setShowConfetti(false), 5000);
-    return () => clearTimeout(timer);
   }, [bigUpUnread, setShowConfetti]);
 
   if (loading) {
@@ -176,13 +174,14 @@ export default function BigUpPage() {
         />
       </Grid>
 
-      <ConfettiWrapper show={showConfetti} duration={6000} />
+      <ConfettiWrapper show={showConfetti} />
 
       <RecognitionSuccessModal
         isOpen={showSuccessModal}
         onClose={() => {
           setShowSuccessModal(false);
           setIsSubmitModalOpen(false);
+          setShowConfetti(false);
         }}
       />
 

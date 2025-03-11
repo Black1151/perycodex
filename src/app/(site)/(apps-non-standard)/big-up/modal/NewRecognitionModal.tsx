@@ -26,7 +26,7 @@ export const NewRecognitionModal: React.FC<UserStatsModalProps> = ({
           <Text color="perygonPink" fontSize="3xl" pb={4} fontWeight="bold">
             Your colleagues appreciate you!
           </Text>
-          <Box maxH={580} overflowY="auto" p={4}>
+          <Box maxH={[400, 610]} overflowY="auto" p={4}>
             {unreadRecognitionModalData}
           </Box>
         </Box>

@@ -60,7 +60,7 @@ export function useRecognitionActions(fetchDashboardData: () => void) {
           setShowSuccessModal(false);
           setShowConfetti(false);
           router.refresh();
-        }, 3000);
+        }, 8000);
       } catch (error) {
         console.error("Error submitting BigUp:", error);
       }

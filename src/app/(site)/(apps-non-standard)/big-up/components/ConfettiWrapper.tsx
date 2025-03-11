@@ -5,13 +5,9 @@ import Confetti from "@/components/animations/confetti/Confetti";
 
 interface ConfettiWrapperProps {
   show: boolean;
-  duration?: number;
 }
 
-export const ConfettiWrapper: FC<ConfettiWrapperProps> = ({
-  show,
-  duration,
-}) => {
+export const ConfettiWrapper: FC<ConfettiWrapperProps> = ({ show }) => {
   if (!show) return null;
-  return <Confetti show={show} duration={duration} />;
+  return <Confetti show={show} />;
 };

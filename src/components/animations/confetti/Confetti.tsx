@@ -4,12 +4,12 @@ import React, { useEffect, useRef } from "react";
 
 interface ConfettiProps {
   show: boolean;
-  duration?: number;
 }
 
-const Confetti: React.FC<ConfettiProps> = ({ show, duration = 3000 }) => {
+const Confetti: React.FC<ConfettiProps> = ({ show }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const confettiParticles: any[] = [];
+  const animationFrameIdRef = useRef<number | null>(null);
+  const confettiParticles = useRef<any[]>([]).current; // store particles in a ref to persist between renders
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -17,6 +17,7 @@ const Confetti: React.FC<ConfettiProps> = ({ show, duration = 3000 }) => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // Resize the canvas to fill the window
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
@@ -50,37 +51,49 @@ const Confetti: React.FC<ConfettiProps> = ({ show, duration = 3000 }) => {
         }
       }
 
-      draw(ctx: CanvasRenderingContext2D) {
-        ctx.globalAlpha = this.opacity;
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
+      draw(context: CanvasRenderingContext2D) {
+        context.globalAlpha = this.opacity;
+        context.fillStyle = this.color;
+        context.beginPath();
+        context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        context.fill();
       }
     }
 
+    const animateConfetti = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confettiParticles.forEach((particle) => {
+        particle.update();
+        particle.draw(ctx);
+      });
+      animationFrameIdRef.current = requestAnimationFrame(animateConfetti);
+    };
+
+    // Start/stop confetti based on `show`
     if (show) {
-      for (let i = 0; i < 200; i++) {
-        confettiParticles.push(new ConfettiParticle());
+      // Populate confetti if it's empty
+      if (confettiParticles.length === 0) {
+        for (let i = 0; i < 200; i++) {
+          confettiParticles.push(new ConfettiParticle());
+        }
       }
-
-      const animateConfetti = () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        confettiParticles.forEach((particle) => {
-          particle.update();
-          particle.draw(ctx);
-        });
-        requestAnimationFrame(animateConfetti);
-      };
-
       animateConfetti();
-
-      setTimeout(() => {
-        confettiParticles.length = 0;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-      }, duration);
+    } else {
+      // Clear out particles and stop animation
+      confettiParticles.length = 0;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (animationFrameIdRef.current) {
+        cancelAnimationFrame(animationFrameIdRef.current);
+      }
     }
-  }, [show, duration]);
+
+    // Cleanup on unmount or when `show` toggles
+    return () => {
+      if (animationFrameIdRef.current) {
+        cancelAnimationFrame(animationFrameIdRef.current);
+      }
+    };
+  }, [show, confettiParticles]);
 
   return (
     <canvas
