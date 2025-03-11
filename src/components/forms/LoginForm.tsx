@@ -307,7 +307,7 @@ export function LoginForm() {
                 }}
             />
             <Image
-                src="https://perygonblob.blob.core.windows.net/public/AppleToPerygon.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D"
+                src="https://perygonblob.blob.core.windows.net/public/AppleToPerygonIcon.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D"
                 alt="AppleToPerygon"
                 position="absolute"
                 objectFit="cover"
@@ -320,7 +320,7 @@ export function LoginForm() {
             <Text pt="10px" fontSize={["12px", "12px"]} color="gray">
               Your Apple account is now linked to the following Perygon user:
             </Text>
-            <Text pt="10px" mb={["80px","85"]} fontWeight="bold" fontSize={["16px", "12px"]} color={theme.colors.perygonPink}>
+            <Text pt="10px" mb={["80px","125px"]} fontWeight="bold" fontSize={["16px", "12px"]} color={theme.colors.perygonPink}>
               {appleAccountLinked}
             </Text>
           </VStack>
@@ -362,7 +362,7 @@ export function LoginForm() {
             )}
             {linkAppleAccountSub != "" && (
               <Image
-                src="https://perygonblob.blob.core.windows.net/public/AppleToPerygon.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D"
+                src="https://perygonblob.blob.core.windows.net/public/AppleToPerygonIcon.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D"
                 alt="AppleToPerygon"
                 position="absolute"
                 objectFit="cover"
