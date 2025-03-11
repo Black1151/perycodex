@@ -308,7 +308,7 @@ export function LoginForm() {
             <Text pt="10px" fontSize={["16px", "12px"]} color="gray">
               Your Apple account is now linked to the following Perygon user:
             </Text>
-            <Text pt="10px" fontWeight="bold" fontSize={["16px", "12px"]} color={theme.colors.perygonPink}>
+            <Text pt="10px" mb={[100,200]} fontWeight="bold" fontSize={["16px", "12px"]} color={theme.colors.perygonPink}>
               {appleAccountLinked}
             </Text>
           </VStack>

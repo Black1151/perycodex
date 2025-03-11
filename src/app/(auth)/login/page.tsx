@@ -66,7 +66,7 @@ export default async function LoginPage(
             case linkAppleAccountSub !== '':
                 return [875, 800];
             case appleAccountLinked !== '':
-                return [575, 575]; // Adjust the height as needed
+                return [700, 800];
             default:
                 return [700, 800];
         }
@@ -77,7 +77,7 @@ export default async function LoginPage(
             case linkAppleAccountSub !== '':
                 return [-625, -545];
             case appleAccountLinked !== '':
-                return [-480, -480]; // Adjust the height as needed
+                return [-475, -640];
             default:
                 return [-445, -545];
         }
