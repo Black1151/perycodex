@@ -180,7 +180,12 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
           )}
 
           {drawerState === "fully-open" && (
-            <Box overscrollBehavior="contain">
+            <Box
+              height="100vh"
+              overflowY="auto"
+              overscrollBehavior="contain"
+              css={{ WebkitOverflowScrolling: "touch" }}
+            >
               <Box px={4} mt={4}>
                 <Select
                   placeholder="Select Week"

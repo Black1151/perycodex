@@ -302,7 +302,6 @@ export function LoginForm() {
                   color: theme.colors.seduloGreen,
                   position: "absolute",
                   top: "290px",
-                  opacity: "0.7",
                   height: "auto"
                 }}
             />
@@ -315,7 +314,6 @@ export function LoginForm() {
                 width={"297px"}
                 height={"47px"}
                 top={"290px"}
-                opacity={"0.75"}
             />
             <Text pt="10px" fontSize={["12px", "12px"]} color="gray">
               Your Apple account is now linked to the following Perygon user:
@@ -355,7 +353,6 @@ export function LoginForm() {
                       color: theme.colors.perygonPink,
                       position: "absolute",
                       height: "auto",
-                      opacity: "0.7",
                       top: "-70px"
                     }}
                 />
@@ -370,7 +367,6 @@ export function LoginForm() {
                 width={"297px"}
                 height={"47px"}
                 top="-70px"
-                opacity={"0.75"}
               />
             )}
             {linkAppleAccountSub != "" && (
