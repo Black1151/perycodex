@@ -18,6 +18,7 @@ import { RecognitionSuccessModal } from "./modal/RecognitionSuccessModal";
 import SubmitScoreModal from "./modal/SubmitScoreModal";
 import { RecognitionList } from "./tabs/OtherTabs/RecognitionCardList";
 import { useUnread } from "@/components/contexts/UnreadRecognitionContext";
+import { hideScrollbar } from "@/utils/style/style-utils";
 
 export default function BigUpPage() {
   const router = useRouter();

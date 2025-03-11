@@ -1,3 +1,4 @@
+import { hideScrollbar } from "@/utils/style/style-utils";
 import {
   Tab,
   TabList,
@@ -5,7 +6,6 @@ import {
   TabPanel,
   Tabs,
   Text,
-  Box,
 } from "@chakra-ui/react";
 
 export interface PerygonTabsProps {
@@ -28,7 +28,7 @@ export const PerygonTabs: React.FC<PerygonTabsProps> = ({ tabs }) => {
             key={index}
             flex="1"
             textAlign="center"
-            color={"white"}
+            color="white"
             _selected={{
               color: "perygonBlue",
               bg: "silver",
@@ -40,7 +40,15 @@ export const PerygonTabs: React.FC<PerygonTabsProps> = ({ tabs }) => {
         ))}
       </TabList>
 
-      <TabPanels flex="1" overflowY="auto">
+      <TabPanels
+        flex="1"
+        overflowY="auto"
+        sx={{
+          "@media (max-width: 400px)": {
+            ...hideScrollbar,
+          },
+        }}
+      >
         {tabs.map((tab, index) => (
           <TabPanel key={index} bg="rgba(0, 0, 0, 0)">
             {tab.content}

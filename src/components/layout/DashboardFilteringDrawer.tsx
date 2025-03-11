@@ -16,6 +16,7 @@ import {
 import { motion } from "framer-motion";
 import { Clear, Close, FilterAlt, Refresh } from "@mui/icons-material";
 import { FilterOptionGroup } from "@/app/(site)/(apps)/happiness-score/dashboard/company-dashboard/types";
+import { hideScrollbar } from "@/utils/style/style-utils";
 
 interface RightHandNavigationDrawerProps {
   title?: string;
@@ -204,13 +205,9 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                 px={4}
                 p={3}
                 overflowY="auto"
-                css={{
-                  "@media (max-width: 768px)": {
-                    scrollbarWidth: "none",
-                    "-ms-overflow-style": "none",
-                    "&::-webkit-scrollbar": {
-                      display: "none",
-                    },
+                sx={{
+                  "@media (max-width: 400px)": {
+                    ...hideScrollbar,
                   },
                 }}
                 onScroll={saveScrollPosition}
