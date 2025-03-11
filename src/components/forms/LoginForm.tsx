@@ -345,21 +345,21 @@ export function LoginForm() {
                 objectPosition="bottom"
                 width={"297px"}
                 height={"47px"}
-                top={["280px", "270px"]}
+                top={["200px", "270px"]}
                 opacity={"0.75"}
               />
             )}
             {linkAppleAccountSub != "" && (
-              <Text pt="10px" pb={["30px", "0px"]} fontSize={["12px", "12px"]} color="gray">
+              <Text pt={["0px","10px"]} pb={["0px", "0px"]} fontSize={["12px", "12px"]} color="gray">
                 Your Apple account couldn&apos;t be linked to an existing
-                Perygon user.
+                Perygon user
               </Text>
             )}
             {linkAppleAccountSub != "" && (
-              <Text pt="10px" pb={["30px", "15px"]} fontSize={["12px", "12px"]} color="gray">
+              <Text pt={["0px","10px"]} pb={["0px", "15px"]} fontSize={["12px", "12px"]} color="gray">
                 Please log in with your Perygon username and password below in
                 order to permanently link this Apple account with your Perygon
-                account
+                account.
               </Text>
             )}
             <InputField
