@@ -18,6 +18,7 @@ import { Clear, FilterAlt } from "@mui/icons-material";
 import DateFilter from "@/components/Sidebars/Dashboards Filter/DateFilterComponent";
 import { format, parseISO } from "date-fns";
 import { values } from "lodash";
+import { DrawerStateOptions } from "@/components/Sidebars/useDrawerState";
 
 interface FilterSidebarProps {
   onApplyFilters: (postBody: Record<string, any>) => void;
@@ -60,6 +61,23 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
 }) => {
   const theme = useTheme();
   const { fetchClient } = useFetchClient();
+
+  const [drawerState, setDrawerState] = useState<DrawerStateOptions>("closed");
+  const canHalf = false;
+  const canFull = true;
+
+  const onOpen = () => {
+    if (canHalf) setDrawerState("half-open");
+    else setDrawerState("fully-open");
+  };
+  const onToggle = () => {
+    setDrawerState((curr) =>
+      curr === "half-open" ? "fully-open" : "half-open",
+    );
+  };
+  const onClose = () => {
+    setDrawerState("closed");
+  };
 
   const [sites, setSites] = useState<Site[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
@@ -125,7 +143,6 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
     setDateRange(null);
     setSelectedSites([]);
     setSelectedDepartments([]);
-
     setClearsignal((prev) => prev + 1);
   };
 
@@ -142,6 +159,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
       postBody.departmentIds = selectedDepartments;
 
     onApplyFilters(postBody);
+    onClose();
   };
 
   const fullBarMenu = (
@@ -297,6 +315,12 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
   return (
     <Sidebar
+      drawerState={drawerState}
+      canHalf={canHalf}
+      canFull={canFull}
+      onOpen={onOpen}
+      onToggle={onToggle}
+      onClose={onClose}
       side={"right"}
       openButtonIcon={FilterAlt}
       title={"Filter Options"}
