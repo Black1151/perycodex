@@ -36,7 +36,7 @@ const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButto
                 </HStack>
             )}
         <Flex justify="space-around" gap={{base: 6, md: 4}} flexDirection={{base: "row", md: "column"}}>
-            {!isAppleDevice && linkAppleAccountSub == '' && (
+            {linkAppleAccountSub == '' && (
             <Button
                 px={6}
                 height={12}
@@ -57,7 +57,7 @@ const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButto
                 </Flex>
             </Button>
             )}
-            {!isAppleDevice && linkAppleAccountSub == '' && (
+            {linkAppleAccountSub == '' && (
                 <Button
                     px={6}
                     height={12}
