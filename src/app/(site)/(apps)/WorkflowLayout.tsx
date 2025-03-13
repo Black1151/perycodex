@@ -1,16 +1,15 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import { WorkflowStage } from "@/app/(site)/(apps)/happiness-score/workflow/[workflowInstanceId]/page";
 import { useFetchClient } from "@/hooks/useFetchClient";
-import { MenuItem } from "@/components/Sidebars/NavigationSidebar/NavigationSidebar";
-import { Circle as CircleIcon } from "@mui/icons-material";
+import { ViewTimeline as ViewTimelineIcon } from "@mui/icons-material";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import { useUser } from "@/providers/UserProvider";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import { useRouter } from "next/navigation";
-import NavigationSidebar from "@/components/Sidebars/NavigationSidebar/NavigationSidebar";
+import WorkflowSidebar from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
 
 interface WorkflowLayoutProps {
   stages: WorkflowStage[];
@@ -54,7 +53,7 @@ interface FormDataResponse {
 const REDIRECT_PATHS: Record<string, string> = {
   happiness: "/happiness-score",
   enps: "/enps",
-  "client-satisfaction": "client-satisfaction",
+  "client-satisfaction": "/client-satisfaction",
   default: "/",
 };
 
@@ -64,9 +63,6 @@ export default function WorkflowLayout({
   workflowInstanceId,
 }: WorkflowLayoutProps) {
   const { user } = useUser();
-  const router = useRouter();
-  const { fetchClient } = useFetchClient();
-
   const {
     toolId,
     setToolId,
@@ -75,29 +71,26 @@ export default function WorkflowLayout({
     setCurrentWorkflowInstanceId,
     setCurrentBusinessProcessInstanceId,
   } = useWorkflow();
+
+  const router = useRouter();
+  const { fetchClient } = useFetchClient();
+
   const [currentStage, setCurrentStage] = useState<WorkflowStage | null>(null);
   const [currentForm, setCurrentForm] = useState<Form | null>(null);
   const [formData, setFormData] = useState<any | null>(null);
   const [isNew, setIsNew] = useState<boolean>(false);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleNavigateAway = () => {
-    router.push("/");
-  };
-
-  // Prepare menu items based on stages
-  const menuItems: MenuItem[] = stages.map((stage) => ({
-    label: stage.bpName,
-    icon: <CircleIcon />,
-    onClick: () => setCurrentStage(stage),
-    category: "Stages",
-  }));
+  const handleStageChange = useCallback(
+    async (newStage: WorkflowStage) => {
+      setCurrentStage(newStage);
+    },
+    [fetchClient],
+  );
 
   useEffect(() => {
     setCurrentWorkflowInstanceId(workflowInstanceId);
 
-    // Cleanup function to reset IDs on unmount
     return () => {
       setCurrentWorkflowInstanceId(null);
       setCurrentBusinessProcessInstanceId(null);
@@ -105,7 +98,6 @@ export default function WorkflowLayout({
   }, []);
 
   useEffect(() => {
-    // Set the initial current stage
     if (stages.length === 1) {
       setCurrentStage(stages[0]);
     } else if (stages.length > 1) {
@@ -125,7 +117,6 @@ export default function WorkflowLayout({
       setWorkflowId(String(currentStage.wfId));
 
       try {
-        // Prepare API requests
         const formDataRequest = currentStage.formId
           ? fetchClient<Form>(`/api/workflows/getForm`, {
               method: "POST",
@@ -142,16 +133,13 @@ export default function WorkflowLayout({
             })
           : Promise.resolve(null);
 
-        // Execute requests concurrently
         const [formDataResource, formDataset] = await Promise.all([
           formDataRequest,
           formDatasetRequest,
         ]);
 
-        // Update form state
         setCurrentForm(formDataResource || null);
 
-        // Parse and update form data
         if (formDataset) {
           const parsedResponse =
             typeof formDataset.jsonResponse === "string"
@@ -160,10 +148,9 @@ export default function WorkflowLayout({
           setFormData(parsedResponse);
 
           const isAuthorized =
-            // Yours form
             formDataset.createdBy === user?.userId ||
             formDataset.startedBy === user?.userId ||
-            // Anonymous users
+            formDataset.startedBy === user?.userId ||
             formDataset.createdBy === 0 ||
             formDataset.startedBy === 0 ||
             user?.role === "CA";
@@ -183,7 +170,6 @@ export default function WorkflowLayout({
           }
         }
       } finally {
-        // Additional cleanup logic if needed
       }
     };
 
@@ -198,8 +184,8 @@ export default function WorkflowLayout({
       {/* Modal to block access */}
       <SurveyModal
         isOpen={isModalOpen}
-        onConfirm={handleNavigateAway}
-        onClose={handleNavigateAway}
+        onConfirm={() => router.push("/")}
+        onClose={() => router.push("/")}
         showButtons={{
           close: false,
           confirm: true,
@@ -213,9 +199,14 @@ export default function WorkflowLayout({
       {/* Render main content only if modal is not open */}
       {!isModalOpen && (
         <>
-          {stages.length > 1 && (
-            <NavigationSidebar menuItems={menuItems} drawerState="half-open" />
-          )}
+          <WorkflowSidebar
+            workflowStages={stages}
+            title={"Stages"}
+            drawerState={"fully-open"}
+            side={"left"}
+            openButtonIcon={ViewTimelineIcon}
+            onStageChange={handleStageChange}
+          />
 
           {currentStage && currentForm && (
             <SurveyComponent
