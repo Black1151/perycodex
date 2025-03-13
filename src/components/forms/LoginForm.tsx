@@ -112,14 +112,14 @@ export function LoginForm() {
           successMessage: "Successfully logged in!",
           errorMessage: "Incorrect user or password",
           redirectOnError: false,
-        }
+        },
       );
       if (result) {
         router.push(result.redirectUrl);
       }
     } else {
       const appleSub = String(
-        await decryptData(decodeURIComponent(linkAppleAccountSub))
+        await decryptData(decodeURIComponent(linkAppleAccountSub)),
       );
 
       const appleLinkingResult: {
@@ -138,7 +138,7 @@ export function LoginForm() {
             sub: appleSub,
           },
           suppressError: true,
-        }
+        },
       );
       if (appleLinkingResult !== null) {
         if (appleLinkingResult.redirectUrl) {
@@ -214,7 +214,7 @@ export function LoginForm() {
                   if (secretKey !== undefined) {
                     const encryptedToken = CryptoJS.AES.encrypt(
                       result.sub,
-                      secretKey
+                      secretKey,
                     ).toString();
                     const appleAccountSubRedirectUrl = secureLink
                       ? `/login/?link-apple-account-sub=${encodeURIComponent(encryptedToken)}&l=${secureLink}`
@@ -261,7 +261,7 @@ export function LoginForm() {
                       : null,
                 },
                 suppressError: true,
-              }
+              },
             );
 
             if (result) {
@@ -291,34 +291,40 @@ export function LoginForm() {
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
       style={{ width: "100%", maxWidth: "sm" }}
-      autoComplete={(linkAppleAccountSub != '') ? "off" : "on"}
+      autoComplete={linkAppleAccountSub != "" ? "off" : "on"}
     >
       <VStack spacing={0} w="100%">
         {appleAccountLinked != null && (
           <VStack spacing={0} w={300} gap={2}>
             <LinkOnIcon
-                style={{
-                  width: "48px",
-                  color: theme.colors.seduloGreen,
-                  position: "absolute",
-                  top: "290px",
-                  height: "auto"
-                }}
+              style={{
+                width: "48px",
+                color: theme.colors.seduloGreen,
+                position: "absolute",
+                top: "290px",
+                height: "auto",
+              }}
             />
             <Image
-                src="https://perygonblob.blob.core.windows.net/public/AppleToPerygonIcon.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D"
-                alt="AppleToPerygon"
-                position="absolute"
-                objectFit="cover"
-                objectPosition="bottom"
-                width={"297px"}
-                height={"47px"}
-                top={"290px"}
+              src="https://perygonblob.blob.core.windows.net/public/AppleToPerygonIcon.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D"
+              alt="AppleToPerygon"
+              position="absolute"
+              objectFit="cover"
+              objectPosition="bottom"
+              width={"297px"}
+              height={"47px"}
+              top={"290px"}
             />
             <Text pt="10px" fontSize={["12px", "12px"]} color="gray">
               Your Apple account is now linked to the following Perygon user:
             </Text>
-            <Text pt="10px" mb={["80px","125px"]} fontWeight="bold" fontSize={["16px", "12px"]} color={theme.colors.perygonPink}>
+            <Text
+              pt="10px"
+              mb={["80px", "125px"]}
+              fontWeight="bold"
+              fontSize={["16px", "12px"]}
+              color={theme.colors.perygonPink}
+            >
               {appleAccountLinked}
             </Text>
           </VStack>
@@ -345,17 +351,22 @@ export function LoginForm() {
           </Button>
         )}
         {appleAccountLinked == null && (
-          <VStack spacing={0} w={300} gap={2} position={linkAppleAccountSub != "" ? "relative" : "inherit"}>
+          <VStack
+            spacing={0}
+            w={300}
+            gap={2}
+            position={linkAppleAccountSub != "" ? "relative" : "inherit"}
+          >
             {linkAppleAccountSub != "" && (
-                <LinkOffIcon
-                    style={{
-                      width: "48px",
-                      color: theme.colors.perygonPink,
-                      position: "absolute",
-                      height: "auto",
-                      top: "-70px"
-                    }}
-                />
+              <LinkOffIcon
+                style={{
+                  width: "48px",
+                  color: theme.colors.perygonPink,
+                  position: "absolute",
+                  height: "auto",
+                  top: "-70px",
+                }}
+              />
             )}
             {linkAppleAccountSub != "" && (
               <Image
@@ -370,13 +381,23 @@ export function LoginForm() {
               />
             )}
             {linkAppleAccountSub != "" && (
-              <Text pt={["0px","10px"]} pb={["0px", "0px"]} fontSize={["12px", "12px"]} color="gray">
+              <Text
+                pt={["0px", "10px"]}
+                pb={["0px", "0px"]}
+                fontSize={["12px", "12px"]}
+                color="gray"
+              >
                 Your Apple account couldn&apos;t be linked to an existing
                 Perygon user
               </Text>
             )}
             {linkAppleAccountSub != "" && (
-              <Text pt={["0px","10px"]} pb={["0px", "15px"]} fontSize={["12px", "12px"]} color="gray">
+              <Text
+                pt={["0px", "10px"]}
+                pb={["0px", "15px"]}
+                fontSize={["12px", "12px"]}
+                color="gray"
+              >
                 Please log in with your Perygon username and password below in
                 order to permanently link this Apple account with your Perygon
                 account.
@@ -513,9 +534,9 @@ export function LoginForm() {
           align={"center"}
         >
           <Text p="0" pt="10px" fontSize={["10px", "12px"]} color="gray">
-            Copyright &copy; 2024 Sedulo Limited (v1.1.4)
+            Copyright &copy; 2024 Sedulo Limited (v1.1.5)
           </Text>
-          <Link href={'/privacy-policy'}>
+          <Link href={"/privacy-policy"}>
             <Text p="0" pt="10px" fontSize={["10px", "12px"]} color="gray">
               Privacy Policy
             </Text>
