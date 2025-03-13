@@ -6,9 +6,10 @@ import {useEffect, useState} from "react";
 interface LoginFormButtonsProps {
     loading: boolean;
     handleButtonClick: (buttonId: "microsoft" | "google" | "apple") => void;
+    linkAppleAccountSub: string;
 }
 
-const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButtonClick}) => {
+const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButtonClick, linkAppleAccountSub}) => {
     const showText = useBreakpointValue({base: false, md: true});
     const [isAppleDevice, setIsAppleDevice] = useState<boolean>(false);
     const [isAndroidDevice, setIsAndroidDevice] = useState<boolean>(false);
@@ -25,6 +26,7 @@ const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButto
 
     return (
         <>
+            {linkAppleAccountSub == '' && (
                 <HStack>
                     <Box borderBottom="1px solid lightGray" width="100px"/>
                     <Text color="lightGray" fontSize="xs">
@@ -32,8 +34,9 @@ const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButto
                     </Text>
                     <Box borderBottom="1px solid lightGray" width="100px"/>
                 </HStack>
+            )}
         <Flex justify="space-around" gap={{base: 6, md: 4}} flexDirection={{base: "row", md: "column"}}>
-            {!isAppleDevice && (
+            {!isAppleDevice && linkAppleAccountSub == '' && (
             <Button
                 px={6}
                 height={12}
@@ -54,7 +57,7 @@ const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButto
                 </Flex>
             </Button>
             )}
-            {!isAppleDevice && (
+            {!isAppleDevice && linkAppleAccountSub == '' && (
                 <Button
                     px={6}
                     height={12}
@@ -76,6 +79,7 @@ const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButto
                     </Flex>
                 </Button>
             )}
+            {linkAppleAccountSub == '' && (
             <Button
                 px={6}
                 height={12}
@@ -96,6 +100,7 @@ const LoginFormButtons: React.FC<LoginFormButtonsProps> = ({loading, handleButto
                     {showText && <Text>Continue with Apple</Text>}
                 </Flex>
             </Button>
+            )}
             </Flex>
         </>
     );

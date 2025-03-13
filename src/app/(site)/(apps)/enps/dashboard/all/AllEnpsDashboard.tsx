@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import AgChartComponent from "@/components/agCharts/AgChartComponent";
 import { Flex, VStack, useTheme } from "@chakra-ui/react";
-import FilterArea from "@/components/DashboardFilterDrawer/FilterArea";
+import FilterSidebar from "@/components/Sidebars/Dashboards Filter/FilterSidebar";
 import {
   AgChartOptions,
   AgRadialGaugeOptions,
@@ -16,7 +16,7 @@ import SubmissionsTooltipRenderer from "@/components/agCharts/SubmissionsTooltip
 import ScoreTooltipRenderer from "@/components/agCharts/ScoreTooltipRenderer";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import useColor from "@/hooks/useColor";
-import { dateRangeOptions } from "@/components/DashboardFilterDrawer/dateRangeUtils";
+import { dateRangeOptions } from "@/components/Sidebars/Dashboards Filter/dateRangeUtils";
 import NoDataOverlay from "@/components/agGrids/NoDataOverlay";
 
 interface enpsMainDashboardResponse {
@@ -273,7 +273,7 @@ const AllEnpsDashboard = () => {
     setIsLoading(true);
     try {
       const response = await fetchClient<enpsMainDashboardResponse>(
-        "/api/enps/getEnpsMainDashboard",
+        "/api/enps/dashboards/company-enps",
         {
           method: "POST",
           body: postBody,
@@ -318,8 +318,8 @@ const AllEnpsDashboard = () => {
   }, []);
 
   return (
-    <VStack align="stretch" spacing={6} w="full" py={4}>
-      <FilterArea
+    <>
+      <FilterSidebar
         onApplyFilters={onFilterChange}
         filterOptions={{
           showDepartmentsFilter: false,
@@ -329,40 +329,42 @@ const AllEnpsDashboard = () => {
         dateFilterMode={dateRangeOption}
         defaultDateFilter={defaultDateFilterOption}
       />
-      <Flex w={"100%"} gap={6} flexWrap={"wrap"}>
-        {/* Gauge */}
-        <AgGaugeComponent
-          flex={"1 1 45%"}
-          title={"eNPS Score"}
-          chartOptions={gaugeOptions}
-          noData={gaugeData.count === 0 || !gaugeData.count}
-        />
+      <VStack align="stretch" spacing={6} w="full" py={4}>
+        <Flex w={"100%"} gap={6} flexWrap={"wrap"}>
+          {/* Gauge */}
+          <AgGaugeComponent
+            flex={"1 1 45%"}
+            title={"eNPS Score"}
+            chartOptions={gaugeOptions}
+            noData={gaugeData.count === 0 || !gaugeData.count}
+          />
 
-        {/* Pie Chart */}
-        <AgChartComponent
-          flex={"1 1 45%"}
-          title={"Category Breakdown"}
-          chartOptions={pieChartOptions}
-          noData={pieChartData?.length === 0}
-        />
+          {/* Pie Chart */}
+          <AgChartComponent
+            flex={"1 1 45%"}
+            title={"Category Breakdown"}
+            chartOptions={pieChartOptions}
+            noData={pieChartData?.length === 0}
+          />
 
-        {/* Histogram */}
-        <AgChartComponent
-          flex={"1 1 45%"}
-          title={"Score Spread"}
-          chartOptions={histogramOptions}
-          noData={histogramData.length === 0}
-        />
+          {/* Histogram */}
+          <AgChartComponent
+            flex={"1 1 45%"}
+            title={"Score Spread"}
+            chartOptions={histogramOptions}
+            noData={histogramData.length === 0}
+          />
 
-        {/* Line Chart */}
-        <AgChartComponent
-          flex={"1 1 45%"}
-          title={"eNPS Trend"}
-          chartOptions={lineChartOptions}
-          noData={lineChartData.length === 0}
-        />
-      </Flex>
-    </VStack>
+          {/* Line Chart */}
+          <AgChartComponent
+            flex={"1 1 45%"}
+            title={"eNPS Trend"}
+            chartOptions={lineChartOptions}
+            noData={lineChartData.length === 0}
+          />
+        </Flex>
+      </VStack>
+    </>
   );
 };
 export default AllEnpsDashboard;

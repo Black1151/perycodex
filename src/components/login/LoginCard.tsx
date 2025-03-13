@@ -10,6 +10,7 @@ interface LoginCardProps {
     height?: ResponsiveValue<number | string>;
     imageOffset?: ResponsiveValue<number | string>;
     backgroundOffset?: number;
+    speechBubbleHeight?: string
 }
 
 export function LoginCard({
@@ -17,6 +18,7 @@ export function LoginCard({
                               children,
                               height = 700,
                               imageOffset = -350,
+                              speechBubbleHeight = "100%"
                           }: LoginCardProps) {
     return (
         <SpringScale style={{width: '100%'}}>
@@ -42,6 +44,7 @@ export function LoginCard({
                     objectFit="cover"
                     top={imageOffset}
                     objectPosition="bottom"
+                    height={speechBubbleHeight}
                 />
                 {titleComponent}
                 <Box width="100%">{children}</Box>

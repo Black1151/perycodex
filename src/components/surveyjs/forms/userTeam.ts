@@ -40,7 +40,7 @@ export const userTeamJson = {
           name: "parentTeamId",
           title: "Parent Department",
           titleLocation: "top",
-          startswithNewLine: true,
+          startWithNewLine: true,
           isRequired: true,
           visibleIf: "{isDepartment} != true",
           enableIf: "{customerId} notempty",

@@ -15,9 +15,9 @@ import SpeechBubble from "../../SpeechBubble";
 import StaffHappinessDetailsRenderer
     from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
 import ScoreTooltipRenderer from "@/components/agCharts/ScoreTooltipRenderer";
-import FilterArea from "@/components/DashboardFilterDrawer/FilterArea";
+import FilterSidebar from "@/components/Sidebars/Dashboards Filter/FilterSidebar";
 import AgChartComponent from "@/components/agCharts/AgChartComponent";
-import {dateRangeOptions} from "@/components/DashboardFilterDrawer/dateRangeUtils";
+import {dateRangeOptions} from "@/components/Sidebars/Dashboards Filter/dateRangeUtils";
 
 interface ManagingPartnersResponse {
     resource: {
@@ -109,7 +109,7 @@ const SiteDepartmentDashboard: React.FC = () => {
         setIsLoading(true);
         try {
             const response = await fetchClient<ManagingPartnersResponse>(
-                "/api/happiness-graphs/site-department",
+                "/api/happiness-score/dashboards/site-department",
                 {
                     method: "POST",
                     body: {
@@ -405,74 +405,76 @@ const SiteDepartmentDashboard: React.FC = () => {
     };
 
     return (
-        <VStack align="stretch" spacing={6} w="full" py={2}>
-            <FilterArea
+        <>
+            <FilterSidebar
                 onApplyFilters={onFilterChange}
                 dateFilterMode={dateRangeOption}
                 defaultDateFilter={defaultDateFilterOption}
             />
-            {/* Dashboard Layout */}
-            <Flex w={"100%"} gap={6} flexWrap={"wrap"}>
-                <Box flex={"1 1 250px"} borderRadius="lg">
-                    {/* Average Score */}
-                    <Flex width="100%" justifyContent="center" align="center" mb={4}>
-                        <SectionHeader>Average</SectionHeader>
-                    </Flex>
-                    <Box p={6}>
-                        <SpeechBubble score={totalAvg} change={0}/>
+            <VStack align="stretch" spacing={6} w="full" py={2}>
+                {/* Dashboard Layout */}
+                <Flex w={"100%"} gap={6} flexWrap={"wrap"}>
+                    <Box flex={"1 1 250px"} borderRadius="lg">
+                        {/* Average Score */}
+                        <Flex width="100%" justifyContent="center" align="center" mb={4}>
+                            <SectionHeader>Average</SectionHeader>
+                        </Flex>
+                        <Box p={6}>
+                            <SpeechBubble score={totalAvg} change={0}/>
+                        </Box>
                     </Box>
-                </Box>
 
-                {/* Scores and Comments */}
-                <DataGridComponentLight
-                    data={gridData}
-                    loading={isLoading}
-                    initialFields={columnDefs}
-                    showTopBar={false}
-                    defaultColDef={defaultColDef}
-                    refreshData={getData}
-                    enableAutoRefresh={true}
-                    title={"Scores and Comments"}
-                    flex={"1 1 50%"}
-                />
+                    {/* Scores and Comments */}
+                    <DataGridComponentLight
+                        data={gridData}
+                        loading={isLoading}
+                        initialFields={columnDefs}
+                        showTopBar={false}
+                        defaultColDef={defaultColDef}
+                        refreshData={getData}
+                        enableAutoRefresh={true}
+                        title={"Scores and Comments"}
+                        flex={"1 1 50%"}
+                    />
 
-                {(gridData && gridData.length > 0) &&
-                    <>
-                        {/* Office Leaderboard */}
-                        <AgChartComponent
-                            flex={"1 1 50%"}
-                            title={"Office Leaderboard"}
-                            chartOptions={officeLeaderboardBarOptions}
-                            noData={officeLeaderboardData.length === 0}
-                        />
+                    {(gridData && gridData.length > 0) &&
+                        <>
+                            {/* Office Leaderboard */}
+                            <AgChartComponent
+                                flex={"1 1 50%"}
+                                title={"Office Leaderboard"}
+                                chartOptions={officeLeaderboardBarOptions}
+                                noData={officeLeaderboardData.length === 0}
+                            />
 
-                        {/* Department Leaderboard */}
-                        <AgChartComponent
-                            flex={"1 1 50%"}
-                            title={"Department Leaderboard"}
-                            chartOptions={departmentLeaderboardBarOptions}
-                            noData={departmentLeaderboardData.length === 0}
-                        />
+                            {/* Department Leaderboard */}
+                            <AgChartComponent
+                                flex={"1 1 50%"}
+                                title={"Department Leaderboard"}
+                                chartOptions={departmentLeaderboardBarOptions}
+                                noData={departmentLeaderboardData.length === 0}
+                            />
 
-                        {/*Weekly Chart*/}
-                        <AgChartComponent
-                            flex={"1 1 100%"}
-                            title={"Weekly Trend"}
-                            chartOptions={weeklyLineChartOptions}
-                            noData={weeklyLineChartComparisonData.length === 0}
-                        />
+                            {/*Weekly Chart*/}
+                            <AgChartComponent
+                                flex={"1 1 100%"}
+                                title={"Weekly Trend"}
+                                chartOptions={weeklyLineChartOptions}
+                                noData={weeklyLineChartComparisonData.length === 0}
+                            />
 
-                        {/* Monthly Chart */}
-                        <AgChartComponent
-                            flex={"1 1 100%"}
-                            title={"Monthly Trend"}
-                            chartOptions={monthlyLineChartOptions}
-                            noData={monthlyLineChartComparisonData.length === 0}
-                        />
-                    </>
-                }
-            </Flex>
-        </VStack>
+                            {/* Monthly Chart */}
+                            <AgChartComponent
+                                flex={"1 1 100%"}
+                                title={"Monthly Trend"}
+                                chartOptions={monthlyLineChartOptions}
+                                noData={monthlyLineChartComparisonData.length === 0}
+                            />
+                        </>
+                    }
+                </Flex>
+            </VStack>
+        </>
     );
 };
 

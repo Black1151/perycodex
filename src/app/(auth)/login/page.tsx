@@ -9,13 +9,15 @@ import {redirect} from "next/navigation";
 
 interface SearchParams {
     l?: string;
+    'link-apple-account-sub'?: string;
+    'appleAccountLinked'?: string;
 }
 
-export default async function LoginPage({
-                                            searchParams,
-                                        }: {
-    searchParams: SearchParams;
-}) {
+export default async function LoginPage(
+    { searchParams }: {searchParams: SearchParams;}) {
+
+    const linkAppleAccountSub = searchParams['link-apple-account-sub'] ?? '';
+    const appleAccountLinked = searchParams['appleAccountLinked'] ?? '';
 
     // Check if user is already authenticated and if so redirect based on if l is present
     // Extract query parameter `l`
@@ -59,14 +61,36 @@ export default async function LoginPage({
         }
     }
 
+    const getHeight = () => {
+        switch (true) {
+            case linkAppleAccountSub !== '':
+                return [700, 800];
+            case appleAccountLinked !== '':
+                return [700, 800];
+            default:
+                return [700, 800];
+        }
+    };
+
+    const getOffset = () => {
+        switch (true) {
+            case linkAppleAccountSub !== '':
+                return [-500, -545];
+            case appleAccountLinked !== '':
+                return [-640, -740];
+            default:
+                return [-445, -545];
+        }
+    };
     return (
 
         <PerygonContainer>
             <Center flex={1} maxW={["100%"]}>
                 <LoginCard
-                    height={[700, 800]}
-                    imageOffset={[-445, -545]}
+                    height={getHeight()}
+                    imageOffset={getOffset()}
                     backgroundOffset={-605}
+                    speechBubbleHeight={appleAccountLinked !== '' ? "125%" : "100%"}
                     titleComponent={
                         <VStack position="absolute" top="75px">
                             <LetterFlyIn>Perygon</LetterFlyIn>

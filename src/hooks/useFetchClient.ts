@@ -83,6 +83,7 @@ export const useFetchClient = () => {
 
       return data;
     } catch (error: any) {
+      console.log(error);
       if (suppressError) {
         toast.closeAll();
       }
