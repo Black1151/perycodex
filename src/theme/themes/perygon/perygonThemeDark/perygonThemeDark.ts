@@ -1,18 +1,24 @@
-import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
-import { agGridStyles } from "./agGridStyles";
+import { color, extendTheme, type ThemeConfig } from "@chakra-ui/react";
+import { agGridStyles } from "../../../agGridStyles";
 import { scrollBarThemes } from "@/theme/scrollBarThemes";
 import { agChartStyles } from "@/theme/agChartStyles";
+import { colorPalette } from "./colorPalette";
 
 const config: ThemeConfig = {
   initialColorMode: "light",
   useSystemColorMode: false,
 };
 
-export const perygonTheme = extendTheme({
+export const perygonThemeDark = extendTheme({
   config,
   colors: {
-    perygonPink: "#ff0070",
-    perygonBlue: "#0D003D",
+    primary: colorPalette.perygonDark,
+    secondary: colorPalette.perygonPurple,
+
+    // buttons
+    primaryButton: colorPalette.perygonPurple,
+
+    //legacy colors to be removed during refactor
     perygonBlueTransparent: "rgba(13, 0, 61, 0.85)",
     seduloRed: "#B4213D",
     yellow: "#EFC718",
@@ -37,10 +43,8 @@ export const perygonTheme = extendTheme({
     metropolis: "Metropolis, sans-serif",
     bonfire: "Bonfire, sans-serif",
   },
-  // Using a function for global styles so we can access the colorMode if needed
   styles: {
     global: (props: { colorMode: "light" | "dark" }) => {
-      // For both light and dark modes, we return the same colors
       return {
         ...agGridStyles,
         ...scrollBarThemes,
@@ -49,8 +53,6 @@ export const perygonTheme = extendTheme({
           backgroundColor: "#ffffff",
           color: "#000000",
         },
-        // If you need to define any other elements, do so here
-        // ensuring that both light and dark paths return identical values.
       };
     },
   },
@@ -59,14 +61,16 @@ export const perygonTheme = extendTheme({
       variants: {
         primary: {
           mt: 5,
-          backgroundColor: "perygonPink",
+          backgroundColor: colorPalette.perygonPurple,
           w: "full",
           height: 12,
           color: "white",
+          border: "1px solid",
+          borderColor: "white",
           _hover: {
-            color: "perygonPink",
+            color: colorPalette.perygonPurple,
             border: "1px solid",
-            borderColor: "perygonPink",
+            // borderColor: colorPalette.perygonPurple,
             backgroundColor: "white",
             _disabled: {
               color: "white",
@@ -172,6 +176,8 @@ export const perygonTheme = extendTheme({
     },
   },
   gradients: {
-    perygonBackground: "linear(to-br, seduloRed 60%, perygonPink 100%)",
+    primaryGradient: "linear(to-br,rgb(20, 26, 85) 60%,primary 100%)",
+    secondaryGradient: `linear-gradient(to bottom right, rgb(0, 6, 125), rgb(60, 51, 232))`,
+    secondaryGradientTransparent: `linear-gradient(to bottom right, rgba(0, 6, 125, 0.8), rgba(60, 51, 232,0.8))`,
   },
 });

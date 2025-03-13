@@ -56,8 +56,6 @@ const NavBar: React.FC<NavBarProps> = ({
 
   const menuItems = useNavMenuItems(userRole, handleLogout, openResetModal);
 
-  console.log("Unread status:", unread);
-
   return (
     <>
       <HStack
@@ -73,7 +71,7 @@ const NavBar: React.FC<NavBarProps> = ({
         left={0}
         right={0}
         zIndex={100}
-        bgGradient={theme.gradients.perygonBackground}
+        bgGradient={theme.gradients.primaryGradient}
         borderBottom="white 1px solid"
       >
         <MotionBox

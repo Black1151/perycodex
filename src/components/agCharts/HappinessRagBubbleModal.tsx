@@ -13,7 +13,7 @@ import {
   useBreakpointValue,
   useTheme,
 } from "@chakra-ui/react";
-import { perygonTheme } from "@/theme/theme";
+import { perygonTheme } from "@/theme/themes/perygon/perygonTheme/perygonTheme";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import { AgCharts } from "ag-charts-react";
 import { useRouter } from "next/navigation";
@@ -114,19 +114,19 @@ const HappinessRagHistogramModal: React.FC<HappinessRagBubbleModal> = ({
   ];
 
   const globalMaxCount = Math.max(
-    ...validScoresArray.map((d: UserScores) => d.countOfScore),
+    ...validScoresArray.map((d: UserScores) => d.countOfScore)
   );
 
   const series: AgCartesianSeriesOptions[] = days.map((day) => {
     // Filter the scores for the current day
     const dayData = validScoresArray.filter(
-      (d: UserScores) => d.dayOfSubmission === day,
+      (d: UserScores) => d.dayOfSubmission === day
     );
 
     // Find the maximum countOfScore for the current day's data
     const localMaxCount = Math.max(
       ...dayData.map((d: UserScores) => d.countOfScore),
-      0,
+      0
     ); // Default to 0 if dayData is empty
 
     // Calculate the maxSize for this day based on the global maximum
@@ -206,10 +206,7 @@ const HappinessRagHistogramModal: React.FC<HappinessRagBubbleModal> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="6xl">
       <ModalOverlay />
-      <ModalContent
-        bgGradient={perygonTheme.gradients.perygonBackground}
-        pb={3}
-      >
+      <ModalContent bgGradient={perygonTheme.gradients.primaryGradient} pb={3}>
         <ModalHeader color="white" fontWeight="bold">
           Happiness Punch Card
         </ModalHeader>

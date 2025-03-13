@@ -62,7 +62,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
             >
               <PersonIcon
                 sx={{
-                  color: "var(--chakra-colors-perygonPink)",
+                  color: theme.colors.primary,
                   width: "100%",
                   height: "100%",
                 }}
@@ -87,7 +87,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
         )}
       </Box>
 
-      <MenuList bg="white" color={theme.colors.perygonPink} px={2}>
+      <MenuList bg="white" color={theme.colors.primary} px={2}>
         {menuItems.map((item) => (
           <MenuItem
             key={item.label}

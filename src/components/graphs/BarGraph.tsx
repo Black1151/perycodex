@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import useColor from "@/hooks/useColor";
-import { perygonTheme } from "@/theme/theme";
+import { perygonTheme } from "@/theme/themes/perygon/perygonTheme/perygonTheme";
 
 interface DataPoint {
   value: number;
