@@ -1,42 +1,87 @@
 "use client";
 
 import LoadingBar from "@/components/LoadingBar/LoadingBar";
-import {Box, Center, keyframes, VStack} from "@chakra-ui/react";
+import { Box, Center, Flex, Image, keyframes, VStack } from "@chakra-ui/react";
+import { motion } from "framer-motion";
 
-import {motion} from "framer-motion";
-
-const fadeIn = keyframes`
-    0% {
-        opacity: 0;
-        transform: rotate(0deg);
-    }
-    100% {
-        opacity: 1;
-        transform: rotate(360deg);
-    }
+const swirlIn = keyframes`
+  0% {
+    transform: translateX(110px) scale(0) rotate(0deg);
+  }
+  40% {
+    transform: translateX(110px) scale(1.5) rotate(360deg);  
+  }
+  60% {
+    transform: translateX(110px) scale(1.5) rotate(360deg);
+  }
+  75% {
+    transform: translateX(300px);
+  }
+  90% {
+    transform: translateX(0);
+  }
+  95% {
+    transform: scale(1.5) translateX(0) rotate(-10deg);
+  }
+  100% {
+    transform: scale(1) translateX(0);
+  }
 `;
 
+const backgroundWipe = keyframes`
+  0% {
+    clip-path: inset(0 0 0 100%);
+
+  }
+  70%{
+    clip-path: inset(0 0 0 100%);
+
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+  }
+`;
+
+const fadeScaleOut = {
+  opacity: 0,
+  scale: 0.75,
+};
+
 export const ClientSatisfactionSplashScreen = () => {
-    const MotionVStack = motion(VStack);
-    return (
-        <Center flex={1}>
-            <MotionVStack
-                initial={{opacity: 1, rotate: 0}}
-                animate={{opacity: 0, rotate: -1080}}
-                transition={{delay: 3.5, duration: 1, ease: "easeInOut"}}
-            >
-                <Box
-                    bgImage="url('/assets/splash-screens/enps-score/enpsLogo.png')"
-                    bgSize="contain"
-                    bgRepeat="no-repeat"
-                    bgPosition="center"
-                    w="300px"
-                    h="100px"
-                    animation={`${fadeIn} 1s ease-in-out`}
-                >
-                </Box>
-                <LoadingBar/>
-            </MotionVStack>
-        </Center>
-    );
+  const MotionVStack = motion(VStack);
+
+  return (
+    <Center flex={1}>
+      <MotionVStack
+        initial={{ opacity: 1, scale: 1 }}
+        animate={fadeScaleOut}
+        transition={{ delay: 3.5, duration: 1, ease: "easeInOut" }}
+      >
+        <Box w="300px" h="100px" position="relative">
+          <Box
+            bgImage="url('/assets/splash-screens/client-satisfaction/client-satisfaction-logo-bg.png')"
+            bgSize="contain"
+            bgRepeat="no-repeat"
+            bgPosition="center"
+            w="300px"
+            h="100px"
+            animation={`${backgroundWipe} 2.5s ease-in-out forwards`}
+          />
+
+          <Box
+            animation={`${swirlIn} ease-in-out 2.5s`}
+            position="absolute"
+            w="72px"
+            top={2}
+          >
+            <Image
+              src="/assets/splash-screens/client-satisfaction/client-satisfaction-logo.png"
+              w="100px"
+            />
+          </Box>
+        </Box>
+        <LoadingBar />
+      </MotionVStack>
+    </Center>
+  );
 };
