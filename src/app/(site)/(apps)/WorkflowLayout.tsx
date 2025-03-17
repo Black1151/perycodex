@@ -150,13 +150,18 @@ export default function WorkflowLayout({
               : formDataset.jsonResponse;
           setFormData(parsedResponse);
 
-          const isUserAuthorised =
+          const isUserAuthorised: boolean = !!(
             formDataset.createdBy === user?.userId ||
-            formDataset.startedBy === user?.userId ||
             formDataset.startedBy === user?.userId ||
             formDataset.createdBy === 0 ||
             formDataset.startedBy === 0 ||
-            user?.role === "CA";
+            user?.role === "CA" ||
+            (user?.groupNames &&
+              currentStage.userAccessGroupNames?.some(
+                (name) =>
+                  currentStage.userAccessGroupNames?.includes(name) ?? false,
+              ))
+          );
 
           setIsAuthorised(isUserAuthorised);
 
@@ -177,7 +182,6 @@ export default function WorkflowLayout({
       } finally {
       }
     };
-
     fetchStageData();
   }, [currentStage]);
 
