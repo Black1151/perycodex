@@ -14,8 +14,6 @@ type FetchOptions = {
   suppressError?: boolean;
 };
 
-
-
 export const useFetchClient = () => {
   const toast = useToast();
   const [loading, setLoading] = useState(false);
@@ -83,18 +81,17 @@ export const useFetchClient = () => {
 
       return data;
     } catch (error: any) {
-      console.log(error);
       if (suppressError) {
         toast.closeAll();
       }
-        toast({
-          title: "Error",
-          description: error.message || errorMessage,
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-          position: toastPosition,
-        });
+      toast({
+        title: "Error",
+        description: error.message || errorMessage,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: toastPosition,
+      });
 
       if (redirectOnError && !suppressError) {
         router.push("/error");

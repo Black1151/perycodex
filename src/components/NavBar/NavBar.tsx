@@ -56,8 +56,6 @@ const NavBar: React.FC<NavBarProps> = ({
 
   const menuItems = useNavMenuItems(userRole, handleLogout, openResetModal);
 
-  console.log("Unread status:", unread);
-
   return (
     <>
       <HStack
