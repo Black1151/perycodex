@@ -6,19 +6,19 @@ import { motion } from "framer-motion";
 
 const swirlIn = keyframes`
   0% {
-    transform: translateX(110px) scale(0) rotate(0deg);
+    transform: translateX(100px) scale(0) rotate(0deg);
   }
   40% {
-    transform: translateX(110px) scale(1.5) rotate(360deg);  
+    transform: translateX(100px) scale(1.5) rotate(360deg);  
   }
   60% {
-    transform: translateX(110px) scale(1.5) rotate(360deg);
+    transform: translateX(100px) scale(1.5) rotate(360deg);
   }
   75% {
-    transform: translateX(300px);
+    transform: translateX(200px);
   }
   90% {
-    transform: translateX(0);
+    transform: translateX(0px);
   }
   95% {
     transform: scale(1.5) translateX(0) rotate(-10deg);
@@ -57,13 +57,13 @@ export const ClientSatisfactionSplashScreen = () => {
         animate={fadeScaleOut}
         transition={{ delay: 3.5, duration: 1, ease: "easeInOut" }}
       >
-        <Box w="300px" h="100px" position="relative">
+        <Box w="250px" h="100px" position="relative">
           <Box
             bgImage="url('/assets/splash-screens/client-satisfaction/client-satisfaction-logo-bg.png')"
             bgSize="contain"
             bgRepeat="no-repeat"
             bgPosition="center"
-            w="300px"
+            w="250px"
             h="100px"
             animation={`${backgroundWipe} 2.5s ease-in-out forwards`}
           />
@@ -73,6 +73,7 @@ export const ClientSatisfactionSplashScreen = () => {
             position="absolute"
             w="72px"
             top={2}
+            left={-3}
           >
             <Image
               src="/assets/splash-screens/client-satisfaction/client-satisfaction-logo.png"
