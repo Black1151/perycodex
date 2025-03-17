@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
-import { WorkflowStage } from "@/app/(site)/(apps)/happiness-score/workflow/[workflowInstanceId]/page";
+import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { ViewTimeline as ViewTimelineIcon } from "@mui/icons-material";
 import { useWorkflow } from "@/providers/WorkflowProvider";
@@ -10,10 +10,11 @@ import { useUser } from "@/providers/UserProvider";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import { useRouter } from "next/navigation";
 import WorkflowSidebar from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
+import { SurveyLayoutType } from "@/types/surveyJs";
 
 interface WorkflowLayoutProps {
   stages: WorkflowStage[];
-  layout: "default" | "happiness" | "enps" | "client-satisfaction";
+  layout: SurveyLayoutType;
   workflowInstanceId: string | null;
 }
 
@@ -76,6 +77,7 @@ export default function WorkflowLayout({
   const { fetchClient } = useFetchClient();
 
   const [currentStage, setCurrentStage] = useState<WorkflowStage | null>(null);
+  const [isAuthorised, setIsAuthorised] = useState<boolean>(false);
   const [currentForm, setCurrentForm] = useState<Form | null>(null);
   const [formData, setFormData] = useState<any | null>(null);
   const [isNew, setIsNew] = useState<boolean>(false);
@@ -84,6 +86,7 @@ export default function WorkflowLayout({
   const handleStageChange = useCallback(
     async (newStage: WorkflowStage) => {
       setCurrentStage(newStage);
+      setIsAuthorised(true);
     },
     [fetchClient],
   );
@@ -147,7 +150,7 @@ export default function WorkflowLayout({
               : formDataset.jsonResponse;
           setFormData(parsedResponse);
 
-          const isAuthorized =
+          const isUserAuthorised =
             formDataset.createdBy === user?.userId ||
             formDataset.startedBy === user?.userId ||
             formDataset.startedBy === user?.userId ||
@@ -155,14 +158,16 @@ export default function WorkflowLayout({
             formDataset.startedBy === 0 ||
             user?.role === "CA";
 
-          if (!isAuthorized) {
+          setIsAuthorised(isUserAuthorised);
+
+          if (!isUserAuthorised) {
             setIsModalOpen(true);
             return;
           }
 
           if (
             (formDataset.statusId === 1 || formDataset.statusId === 2) &&
-            isAuthorized
+            isUserAuthorised
           ) {
             setIsNew(true);
           } else if (formDataset.statusId === 3) {
@@ -184,50 +189,45 @@ export default function WorkflowLayout({
       {/* Modal to block access */}
       <SurveyModal
         isOpen={isModalOpen}
-        onConfirm={() => router.push("/")}
+        onConfirm={() => setIsModalOpen(false)}
         onClose={() => router.push("/")}
         showButtons={{
           close: false,
           confirm: true,
         }}
         title="Unauthorised Access"
-        bodyContent="You are not authorized to view this workflow."
+        bodyContent="You are not authorized to view this stage. Please select one in the sidebar to the left"
         confirmLabel="OK"
         cancelLabel="Cancel"
       />
 
-      {/* Render main content only if modal is not open */}
-      {!isModalOpen && (
-        <>
-          <WorkflowSidebar
-            workflowStages={stages}
-            title={"Stages"}
-            drawerState={"fully-open"}
-            side={"left"}
-            openButtonIcon={ViewTimelineIcon}
-            onStageChange={handleStageChange}
-          />
+      <WorkflowSidebar
+        workflowStages={stages}
+        title={"Stages"}
+        drawerState={"fully-open"}
+        side={"left"}
+        openButtonIcon={ViewTimelineIcon}
+        onStageChange={handleStageChange}
+      />
 
-          {currentStage && currentForm && (
-            <SurveyComponent
-              surveyJson={
-                typeof currentForm.jsonFile === "string"
-                  ? JSON.parse(currentForm.jsonFile)
-                  : currentForm.jsonFile
-              }
-              endpoint={`/api/workflows/saveWorkflow/${currentStage.bpInstId}`}
-              isNew={isNew}
-              dataset={formData}
-              formSubmission="workflow"
-              layout={layout}
-              redirectUrl={redirectUrl}
-              jsPath={currentStage.jsAdditionalFileUrl}
-              cssPath={currentStage.cssThemeFileUrl}
-              sjsPath={currentStage.sjsThemeFileUrl}
-              layoutOptions={{ showTitle: true }}
-            />
-          )}
-        </>
+      {!isModalOpen && isAuthorised && currentStage && currentForm && (
+        <SurveyComponent
+          surveyJson={
+            typeof currentForm.jsonFile === "string"
+              ? JSON.parse(currentForm.jsonFile)
+              : currentForm.jsonFile
+          }
+          endpoint={`/api/workflows/saveWorkflow/${currentStage.bpInstId}`}
+          isNew={isNew}
+          dataset={formData}
+          formSubmission="workflow"
+          layout={currentStage.layout ?? layout}
+          redirectUrl={redirectUrl}
+          jsPath={currentStage.jsAdditionalFileUrl}
+          cssPath={currentStage.cssThemeFileUrl}
+          sjsPath={currentStage.sjsThemeFileUrl}
+          layoutOptions={{ showTitle: true }}
+        />
       )}
     </>
   );

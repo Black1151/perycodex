@@ -55,6 +55,7 @@ export interface UserContextProps {
   customerUniqueId?: string;
   teamManagerCount?: number;
   parentCustImageUrl?: string;
+  groupNames?: string[];
 }
 
 interface UserProviderProps {

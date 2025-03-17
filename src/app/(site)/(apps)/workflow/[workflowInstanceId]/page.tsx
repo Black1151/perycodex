@@ -1,6 +1,6 @@
 import React from "react";
 import apiClient from "@/lib/apiClient";
-import WorkflowLayout from "../../../WorkflowLayout";
+import WorkflowLayout from "@/app/(site)/(apps)/WorkflowLayout";
 import { verifySession } from "@/lib/dal";
 import { redirect } from "next/navigation";
 import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
@@ -35,7 +35,7 @@ export default async function HappinessScoreWorkflowPage({
   return (
     <WorkflowLayout
       stages={stages}
-      layout={"happiness"}
+      layout={"default"}
       workflowInstanceId={workflowInstanceId}
     />
   );

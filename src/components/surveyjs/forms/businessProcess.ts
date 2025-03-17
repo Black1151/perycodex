@@ -22,6 +22,15 @@ export const businessProcessJson = {
           startWithNewLine: false,
         },
         {
+          type: "boolean",
+          name: "isExternalBusinessProcess",
+          title: "Is this for EU roles to complete?",
+          labelTrue: "Yes",
+          labelFalse: "No",
+          defaultValue: false,
+          startWithNewLine: false,
+        },
+        {
           type: "comment",
           name: "description",
           title: "Description",

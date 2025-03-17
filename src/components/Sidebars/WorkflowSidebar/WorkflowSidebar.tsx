@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import Sidebar, { SidebarProps } from "@/components/Sidebars/Sidebar";
 import { Box, VStack, HStack, Text, useTheme, Icon } from "@chakra-ui/react";
 import AdsClickIcon from "@mui/icons-material/AdsClick";
@@ -8,6 +8,8 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useUser } from "@/providers/UserProvider";
+import { DrawerStateOptions } from "@/components/Sidebars/useDrawerState";
+import { SurveyLayoutType } from "@/types/surveyJs";
 
 interface WorkflowSidebarProps extends SidebarProps {
   workflowStages: WorkflowStage[];
@@ -31,10 +33,14 @@ export interface WorkflowStage {
   sjsThemeFileUrl: string;
   largeIconImageUrl: string | null;
   smallIconImageUrl: string | null;
-  userAccessGroupNames: string | null;
+  userAccessGroupNames: string[] | null;
   startByDefault: boolean;
   minRequired: number;
   maxRequired: number;
+  anonSubmission: boolean;
+  headerLogo?: string;
+  headerText?: string;
+  layout: SurveyLayoutType | null;
   bpInstId: number;
   bpInstBpId: number;
   bpInstCustomer: number;
@@ -44,6 +50,7 @@ export interface WorkflowStage {
   stageStatus: string;
   userGroupRestriction: boolean;
   wouldHaveBeenNextIfNotLocked: boolean;
+  isExternalBusinessProcess: boolean;
 }
 
 interface EnhancedWorkflowStage extends WorkflowStage {
@@ -59,12 +66,49 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
   const theme = useTheme();
   const { user } = useUser();
 
+  // Handle Sidebar state
+  const [drawerState, setDrawerState] = useState<DrawerStateOptions>(
+    sidebarProps.drawerState,
+  );
+  const canHalf = false;
+  const canFull = true;
+
+  const onOpen = () => {
+    if (canHalf) setDrawerState("half-open");
+    else setDrawerState("fully-open");
+  };
+
+  const onToggle = () => {
+    setDrawerState((curr) =>
+      curr === "half-open" ? "fully-open" : "half-open",
+    );
+  };
+
+  const onClose = () => {
+    setDrawerState("closed");
+  };
+
   // Dictates if the user is allowed to click on the stage
   const canClickStage = (stage: WorkflowStage): boolean => {
     let canClick: boolean = false;
+
+    if (user && user.role === "EU" && stage.isExternalBusinessProcess) {
+      return true;
+    }
+
     // User Roles
     if (user && user.role === "CA") {
       return true;
+    }
+
+    if (user && user.groupNames) {
+      user.groupNames.forEach((name) => {
+        if (stage.userAccessGroupNames != null) {
+          if (stage?.userAccessGroupNames.includes(name)) {
+            canClick = true;
+          }
+        }
+      });
     }
 
     return canClick;
@@ -72,7 +116,12 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
 
   // Should the stage be visible to the user?
   const canSeeStage = (stage: WorkflowStage): boolean => {
-    // User Roles
+    // User Roles for EU
+    if (user && user.role === "EU" && stage.isExternalBusinessProcess) {
+      return true;
+    }
+
+    // User Roles for CA
     if (user && user.role === "CA") {
       return true;
     }
@@ -164,7 +213,18 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
     </VStack>
   );
 
-  return <Sidebar {...sidebarProps} fullyOpenContent={fullBarMenu} />;
+  return (
+    <Sidebar
+      {...sidebarProps}
+      drawerState={drawerState}
+      canHalf={canHalf}
+      canFull={canFull}
+      onOpen={onOpen}
+      onToggle={onToggle}
+      onClose={onClose}
+      fullyOpenContent={fullBarMenu}
+    />
+  );
 };
 
 export default WorkflowSidebar;
