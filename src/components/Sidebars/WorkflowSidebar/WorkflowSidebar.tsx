@@ -120,6 +120,8 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
 
   // Should the stage be visible to the user?
   const canSeeStage = (stage: WorkflowStage): boolean => {
+    let canSee: boolean = false;
+
     if (stage.stageStatus === "Pending") {
       return false;
     }
@@ -134,7 +136,18 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
       return true;
     }
 
-    return false;
+    // User Access Group
+    if (user && user.groupNames) {
+      user.groupNames.forEach((name) => {
+        if (stage.userAccessGroupNames != null) {
+          if (stage?.userAccessGroupNames.includes(name)) {
+            canSee = true;
+          }
+        }
+      });
+    }
+
+    return canSee;
   };
 
   // Build the stages for the sidebar
