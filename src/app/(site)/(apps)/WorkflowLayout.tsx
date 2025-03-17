@@ -77,6 +77,7 @@ export default function WorkflowLayout({
   const { fetchClient } = useFetchClient();
 
   const [currentStage, setCurrentStage] = useState<WorkflowStage | null>(null);
+  const [activeStageId, setActiveStageId] = useState<number | null>(null);
   const [isAuthorised, setIsAuthorised] = useState<boolean>(false);
   const [currentForm, setCurrentForm] = useState<Form | null>(null);
   const [formData, setFormData] = useState<any | null>(null);
@@ -143,6 +144,7 @@ export default function WorkflowLayout({
         ]);
 
         setCurrentForm(formDataResource || null);
+        setActiveStageId(currentStage.bpInstBpId);
 
         if (formDataset) {
           const parsedResponse =
@@ -216,6 +218,7 @@ export default function WorkflowLayout({
 
       <WorkflowSidebar
         workflowStages={stages}
+        currentStageId={activeStageId}
         title={"Stages"}
         drawerState={"fully-open"}
         side={"left"}

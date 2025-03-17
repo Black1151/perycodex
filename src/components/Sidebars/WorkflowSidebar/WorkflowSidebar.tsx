@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Sidebar, { SidebarProps } from "@/components/Sidebars/Sidebar";
 import { Box, VStack, HStack, Text, useTheme, Icon } from "@chakra-ui/react";
 import AdsClickIcon from "@mui/icons-material/AdsClick";
@@ -13,6 +13,7 @@ import { SurveyLayoutType } from "@/types/surveyJs";
 
 interface WorkflowSidebarProps extends SidebarProps {
   workflowStages: WorkflowStage[];
+  currentStageId: number | null;
   onStageChange: (stage: WorkflowStage) => void;
 }
 
@@ -56,10 +57,12 @@ export interface WorkflowStage {
 interface EnhancedWorkflowStage extends WorkflowStage {
   canClick: boolean;
   canSee: boolean;
+  active: boolean;
 }
 
 const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
   workflowStages,
+  currentStageId,
   onStageChange,
   ...sidebarProps
 }) => {
@@ -150,16 +153,31 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
     return canSee;
   };
 
-  // Build the stages for the sidebar
-  const enhancedStages: EnhancedWorkflowStage[] = useMemo(() => {
-    return workflowStages.map((stage) => {
-      return {
+  useEffect(() => {
+    if (currentStageId) {
+      console.log(currentStageId);
+    }
+  }, [currentStageId]);
+
+  const [enhancedStages, setEnhancedStages] = useState<EnhancedWorkflowStage[]>(
+    workflowStages.map((stage) => ({
+      ...stage,
+      canClick: canClickStage(stage),
+      canSee: canSeeStage(stage),
+      active: stage.bpInstBpId === currentStageId,
+    })),
+  );
+
+  useEffect(() => {
+    setEnhancedStages(
+      workflowStages.map((stage) => ({
         ...stage,
         canClick: canClickStage(stage),
         canSee: canSeeStage(stage),
-      };
-    });
-  }, [workflowStages]);
+        active: stage.bpInstBpId === currentStageId,
+      })),
+    );
+  }, [workflowStages, currentStageId]);
 
   const handleClick = (stage: EnhancedWorkflowStage) => {
     if (stage.canClick) {
@@ -177,12 +195,15 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
             p={3}
             border="1px solid"
             borderColor={
-              !stage.canSee
-                ? "gray.300"
-                : stage.canClick
-                  ? theme.colors.perygonPink
-                  : theme.colors.green
+              stage.active
+                ? theme.colors.blue
+                : !stage.canSee
+                  ? "gray.300"
+                  : stage.canClick
+                    ? theme.colors.perygonPink
+                    : theme.colors.green
             }
+            backgroundColor={stage.active ? "blue.100" : "transparent"}
             borderRadius="md"
             cursor={stage.canClick ? "pointer" : "not-allowed"}
             _hover={{
