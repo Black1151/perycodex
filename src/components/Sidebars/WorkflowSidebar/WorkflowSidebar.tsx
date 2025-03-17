@@ -92,6 +92,10 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
   const canClickStage = (stage: WorkflowStage): boolean => {
     let canClick: boolean = false;
 
+    if (stage.stageStatus === "Pending") {
+      return false;
+    }
+
     if (user && user.role === "EU" && stage.isExternalBusinessProcess) {
       return true;
     }
@@ -116,6 +120,10 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
 
   // Should the stage be visible to the user?
   const canSeeStage = (stage: WorkflowStage): boolean => {
+    if (stage.stageStatus === "Pending") {
+      return false;
+    }
+
     // User Roles for EU
     if (user && user.role === "EU" && stage.isExternalBusinessProcess) {
       return true;

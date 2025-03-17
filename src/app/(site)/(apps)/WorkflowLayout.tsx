@@ -184,6 +184,14 @@ export default function WorkflowLayout({
   const redirectPath = REDIRECT_PATHS[layout] || REDIRECT_PATHS.default;
   const redirectUrl = `${redirectPath}?wfId=${workflowId}&toolId=${toolId}`;
 
+  const onSuccess = () => {
+    if (stages.length === 1) {
+      router.refresh();
+    } else {
+      router.push(redirectUrl);
+    }
+  };
+
   return (
     <>
       {/* Modal to block access */}
@@ -221,8 +229,8 @@ export default function WorkflowLayout({
           isNew={isNew}
           dataset={formData}
           formSubmission="workflow"
+          onSurveySuccess={onSuccess}
           layout={currentStage.layout ?? layout}
-          redirectUrl={redirectUrl}
           jsPath={currentStage.jsAdditionalFileUrl}
           cssPath={currentStage.cssThemeFileUrl}
           sjsPath={currentStage.sjsThemeFileUrl}
