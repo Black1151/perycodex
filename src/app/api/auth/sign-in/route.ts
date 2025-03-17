@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (data.resource.sub) {
+    if (data.resource.sub && data.resource.type != 1) {
       return NextResponse.json({ sub: data.resource.sub });
     } else {
       const { token, UUID, role, isProfileRegistered } = data.resource;
