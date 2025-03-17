@@ -87,7 +87,6 @@ export default function WorkflowLayout({
   const handleStageChange = useCallback(
     async (newStage: WorkflowStage) => {
       setCurrentStage(newStage);
-      setIsAuthorised(true);
     },
     [fetchClient],
   );
@@ -153,18 +152,53 @@ export default function WorkflowLayout({
               : formDataset.jsonResponse;
           setFormData(parsedResponse);
 
-          const isUserAuthorised: boolean = !!(
-            formDataset.createdBy === user?.userId ||
-            formDataset.startedBy === user?.userId ||
-            formDataset.createdBy === 0 ||
-            formDataset.startedBy === 0 ||
-            user?.role === "CA" ||
-            (user?.groupNames &&
-              currentStage.userAccessGroupNames?.some(
-                (name) =>
-                  currentStage.userAccessGroupNames?.includes(name) ?? false,
-              ))
-          );
+          const isUserAuthorised = (() => {
+            // If the stage is pending, the user should not be authorized
+            if (currentStage.stageStatus === "Pending") {
+              return false;
+            }
+
+            // A CA role should always be authorized
+            if (user?.role === "CA") {
+              return true;
+            }
+
+            // An EU role should be blocked unless it is an external business process
+            if (user?.role === "EU") {
+              return currentStage.isExternalBusinessProcess;
+            }
+
+            // Check if the user is the creator or started the process
+            if (
+              formDataset.createdBy === user?.userId ||
+              formDataset.startedBy === user?.userId ||
+              formDataset.createdBy === 0 || // 0 may indicate public access
+              formDataset.startedBy === 0
+            ) {
+              return true;
+            }
+
+            // If a user access group exists, the user must be in one of those groups
+            if (
+              Array.isArray(currentStage.userAccessGroupNames) &&
+              currentStage.userAccessGroupNames.length > 0
+            ) {
+              if (
+                !Array.isArray(user?.groupNames) ||
+                user.groupNames.length === 0
+              ) {
+                return false; // User has no groups, so they are not authorized
+              }
+
+              // Check if the user is part of an allowed group
+              return currentStage.userAccessGroupNames.some(
+                (groupName) => user?.groupNames?.includes(groupName) ?? false,
+              );
+            }
+
+            // If no restrictions apply, authorize by default
+            return true;
+          })();
 
           setIsAuthorised(isUserAuthorised);
 
@@ -192,7 +226,7 @@ export default function WorkflowLayout({
   const redirectUrl = `${redirectPath}?wfId=${workflowId}&toolId=${toolId}`;
 
   const onSuccess = () => {
-    if (stages.length === 1) {
+    if (stages.length > 1) {
       router.refresh();
     } else {
       router.push(redirectUrl);

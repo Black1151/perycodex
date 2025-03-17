@@ -4,7 +4,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import Sidebar, { SidebarProps } from "@/components/Sidebars/Sidebar";
 import { Box, VStack, HStack, Text, useTheme, Icon } from "@chakra-ui/react";
 import AdsClickIcon from "@mui/icons-material/AdsClick";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useUser } from "@/providers/UserProvider";
@@ -56,7 +55,6 @@ export interface WorkflowStage {
 
 interface EnhancedWorkflowStage extends WorkflowStage {
   canClick: boolean;
-  canSee: boolean;
   active: boolean;
 }
 
@@ -93,77 +91,52 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
 
   // Dictates if the user is allowed to click on the stage
   const canClickStage = (stage: WorkflowStage): boolean => {
-    let canClick: boolean = false;
+    let canClick: boolean = true;
 
+    // You should never be able to click a stage if it is pending
     if (stage.stageStatus === "Pending") {
       return false;
     }
 
-    if (user && user.role === "EU" && stage.isExternalBusinessProcess) {
-      return true;
-    }
-
-    // User Roles
+    // a CA should be able to click into everything regardless if it has been completed or next
     if (user && user.role === "CA") {
       return true;
     }
 
-    if (user && user.groupNames) {
-      user.groupNames.forEach((name) => {
-        if (stage.userAccessGroupNames != null) {
-          if (stage?.userAccessGroupNames.includes(name)) {
-            canClick = true;
-          }
-        }
-      });
+    // an EU should be blocked if they are not external business processes
+    if (user && user.role === "EU") {
+      if (stage.isExternalBusinessProcess) {
+        return true;
+      } else {
+        return false;
+      }
     }
 
+    // If there is a UAG a user should be part of that group to be able to access it
+    if (stage.userAccessGroupNames && stage.userAccessGroupNames.length > 0) {
+      if (!user) {
+        return false; // No user block access
+      }
+
+      if (!user?.groupNames?.length) {
+        return false; // If user has no group names or is null, block access
+      }
+
+      const hasAccess = stage.userAccessGroupNames.some(
+        (groupName) => user?.groupNames?.includes(groupName) ?? false,
+      );
+
+      if (!hasAccess) {
+        return false;
+      }
+    }
     return canClick;
   };
-
-  // Should the stage be visible to the user?
-  const canSeeStage = (stage: WorkflowStage): boolean => {
-    let canSee: boolean = false;
-
-    if (stage.stageStatus === "Pending") {
-      return false;
-    }
-
-    // User Roles for EU
-    if (user && user.role === "EU" && stage.isExternalBusinessProcess) {
-      return true;
-    }
-
-    // User Roles for CA
-    if (user && user.role === "CA") {
-      return true;
-    }
-
-    // User Access Group
-    if (user && user.groupNames) {
-      user.groupNames.forEach((name) => {
-        if (stage.userAccessGroupNames != null) {
-          if (stage?.userAccessGroupNames.includes(name)) {
-            canSee = true;
-          }
-        }
-      });
-    }
-
-    return canSee;
-  };
-
-  useEffect(() => {
-    if (currentStageId) {
-      console.log(currentStageId);
-    }
-  }, [currentStageId]);
 
   const [enhancedStages, setEnhancedStages] = useState<EnhancedWorkflowStage[]>(
     workflowStages.map((stage) => ({
       ...stage,
       canClick: canClickStage(stage),
-      canSee: canSeeStage(stage),
       active: stage.bpInstBpId === currentStageId,
     })),
   );
@@ -173,7 +146,6 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
       workflowStages.map((stage) => ({
         ...stage,
         canClick: canClickStage(stage),
-        canSee: canSeeStage(stage),
         active: stage.bpInstBpId === currentStageId,
       })),
     );
@@ -197,11 +169,9 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
             borderColor={
               stage.active
                 ? theme.colors.blue
-                : !stage.canSee
-                  ? "gray.300"
-                  : stage.canClick
-                    ? theme.colors.perygonPink
-                    : theme.colors.green
+                : stage.canClick
+                  ? theme.colors.perygonPink
+                  : theme.colors.green
             }
             backgroundColor={stage.active ? "blue.100" : "transparent"}
             borderRadius="md"
@@ -214,13 +184,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
             <Text fontWeight="bold">{stage.bpName}</Text>
             <Text
               fontSize="sm"
-              color={
-                stage.canSee
-                  ? stage.canClick
-                    ? "green.500"
-                    : "blue.500"
-                  : "gray.500"
-              }
+              color={stage.canClick ? "green.500" : "blue.500"}
             >
               {stage.stageStatus}
             </Text>
@@ -228,18 +192,6 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
               <HStack spacing={1}>
                 <AdsClickIcon fontSize="small" />
                 {stage.canClick ? (
-                  <Icon color={"green"}>
-                    <CheckCircleIcon color="success" fontSize="small" />
-                  </Icon>
-                ) : (
-                  <Icon color={"red"}>
-                    <CancelIcon color="error" fontSize="small" />
-                  </Icon>
-                )}
-              </HStack>
-              <HStack spacing={1}>
-                <VisibilityIcon fontSize="small" />
-                {stage.canSee ? (
                   <Icon color={"green"}>
                     <CheckCircleIcon color="success" fontSize="small" />
                   </Icon>
