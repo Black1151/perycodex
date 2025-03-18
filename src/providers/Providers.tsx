@@ -1,11 +1,8 @@
 "use client";
-
-import { perygonTheme } from "@/theme/themes/perygon/perygonTheme/perygonTheme";
-import { ChakraProvider } from "@chakra-ui/react";
 import { useEffect } from "react";
 import NextAuthProvider from "@/providers/NextAuthProvider";
 import { UnreadProvider } from "@/components/contexts/UnreadRecognitionContext";
-import { perygonThemeDark } from "@/theme/themes/perygon/perygonThemeDark/perygonThemeDark";
+import { ChakraThemeProvider } from "./ChakraThemeProvider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -14,9 +11,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <NextAuthProvider>
-      <ChakraProvider theme={perygonThemeDark}>
+      <ChakraThemeProvider>
         <UnreadProvider>{children}</UnreadProvider>
-      </ChakraProvider>
+      </ChakraThemeProvider>
     </NextAuthProvider>
   );
 }

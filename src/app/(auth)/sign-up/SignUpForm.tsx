@@ -37,7 +37,7 @@ export const SignUpForm = ({
           type="email"
           error={errors.email}
           register={() => register("email", { required: "Email is required" })}
-          focusBorderColor={theme.colors.perygonPink}
+          focusBorderColor={theme.colors.primary}
         />
 
         <InputField
@@ -48,7 +48,7 @@ export const SignUpForm = ({
           register={() =>
             register("password", { required: "Password is required" })
           }
-          focusBorderColor={theme.colors.perygonPink}
+          focusBorderColor={theme.colors.primary}
         />
 
         <InputField
@@ -61,7 +61,7 @@ export const SignUpForm = ({
               required: "Please confirm your password",
             })
           }
-          focusBorderColor={theme.colors.perygonPink}
+          focusBorderColor={theme.colors.primary}
         />
 
         <Button isLoading={isSubmitting} width="full" colorScheme="pink">

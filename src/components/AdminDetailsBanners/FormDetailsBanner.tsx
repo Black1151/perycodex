@@ -56,7 +56,7 @@ export const FormDetailsBanner: React.FC<FormDetailsBannerProps> = ({
         >
           <FormatAlignCenter
             fontSize="large"
-            sx={{ color: "var(--chakra-colors-perygonPink)" }}
+            sx={{ color: "var(--chakra-colors-primary)" }}
           />
         </Box>
       </FormControl>

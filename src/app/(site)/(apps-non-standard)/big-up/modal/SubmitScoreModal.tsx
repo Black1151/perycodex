@@ -65,7 +65,7 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
     >
       <ModalOverlay />
       <BigUpModalContent>
-        <ModalHeader color="perygonPink" fontSize="2xl">
+        <ModalHeader color="primary" fontSize="2xl">
           Give Recognition
         </ModalHeader>
         <ModalCloseButton color="white" />
@@ -99,17 +99,17 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                     placeholder="Choose a category..."
                     {...field}
                     bg="perygonBlueTransparent"
-                    color="perygonPink"
-                    borderColor="perygonPink"
-                    _hover={{ borderColor: "perygonPink" }}
+                    color="primary"
+                    borderColor="primary"
+                    _hover={{ borderColor: "primary" }}
                     _focus={{
                       bg: "perygonBlueTransparent",
-                      color: "perygonPink",
+                      color: "primary",
                     }}
                     sx={{
                       option: {
                         backgroundColor: "perygonBlueTransparent",
-                        color: "perygonPink",
+                        color: "primary",
                       },
                     }}
                   >
@@ -136,10 +136,10 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                       {...field}
                       bg="perygonBlueTransparent"
                       color="white"
-                      borderColor="perygonPink"
-                      _hover={{ borderColor: "perygonPink" }}
+                      borderColor="primary"
+                      _hover={{ borderColor: "primary" }}
                     />
-                    <Text fontSize="sm" color="perygonPink">
+                    <Text fontSize="sm" color="primary">
                       {message.length}/{maxLength} characters
                     </Text>
                   </>
@@ -149,19 +149,19 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
           </ModalBody>
           <ModalFooter>
             <Button
-              bg="perygonPink"
+              bg="primary"
               color="white"
               mr={3}
               type="submit"
-              _hover={{ bg: "white", color: "perygonPink" }}
+              _hover={{ bg: "white", color: "primary" }}
             >
               Submit
             </Button>
             <Button
               onClick={handleClose}
               variant="outline"
-              borderColor="perygonPink"
-              color="perygonPink"
+              borderColor="primary"
+              color="primary"
               _hover={{ bg: "rgba(255, 20, 147, 0.1)" }}
             >
               Cancel

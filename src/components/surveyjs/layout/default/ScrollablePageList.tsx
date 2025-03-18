@@ -100,7 +100,7 @@ const ScrollablePageList: React.FC<ScrollablePageListProps> = ({
         aria-label="Scroll Left"
         icon={<ChevronLeft sx={{ fontSize: chevronSize }} />}
         position={"sticky"}
-        color={canScrollLeft ? "perygonPink" : "transparent"}
+        color={canScrollLeft ? "primary" : "transparent"}
         left="0"
         zIndex="1"
         bg="transparent"
@@ -192,7 +192,7 @@ const ScrollablePageList: React.FC<ScrollablePageListProps> = ({
               {/* Text Below Progress Bar */}
               <Text
                 color={
-                  currentPage === pageOption.index ? "perygonPink" : "gray.500"
+                  currentPage === pageOption.index ? "primary" : "gray.500"
                 }
                 fontWeight={
                   currentPage === pageOption.index ? "bold" : "normal"
@@ -212,7 +212,7 @@ const ScrollablePageList: React.FC<ScrollablePageListProps> = ({
         aria-label="Scroll Right"
         icon={<ChevronRight sx={{ fontSize: chevronSize }} />}
         position="sticky"
-        color={canScrollRight ? "perygonPink" : "transparent"}
+        color={canScrollRight ? "primary" : "transparent"}
         right="0"
         zIndex="1"
         bg="transparent"

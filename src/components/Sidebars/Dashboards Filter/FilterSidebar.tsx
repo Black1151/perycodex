@@ -72,7 +72,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   };
   const onToggle = () => {
     setDrawerState((curr) =>
-      curr === "half-open" ? "fully-open" : "half-open",
+      curr === "half-open" ? "fully-open" : "half-open"
     );
   };
   const onClose = () => {
@@ -99,7 +99,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
       try {
         const response = await fetchClient<SiteResponse>(
           "/api/site/allBy?selectColumns=id,siteName",
-          { method: "GET", redirectOnError: false },
+          { method: "GET", redirectOnError: false }
         );
         if (response && response.resource) setSites(response.resource);
       } catch (error) {
@@ -114,7 +114,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
       try {
         const response = await fetchClient<DepartmentResponse>(
           "/api/userTeam/allBy?selectColumns=id,name&parentTeamId=null",
-          { method: "GET", redirectOnError: false },
+          { method: "GET", redirectOnError: false }
         );
         if (response && response.resource) setDepartments(response.resource);
       } catch (error) {
@@ -127,7 +127,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
     setSelectedSites((prev) =>
       prev.includes(siteId)
         ? prev.filter((id) => id !== siteId)
-        : [...prev, siteId],
+        : [...prev, siteId]
     );
   };
 
@@ -135,7 +135,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
     setSelectedDepartments((prev) =>
       prev.includes(deptId)
         ? prev.filter((id) => id !== deptId)
-        : [...prev, deptId],
+        : [...prev, deptId]
     );
   };
 
@@ -228,7 +228,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         minH={"40px"}
         variant="green"
         onClick={handleApplyFilters}
-        _hover={{ bg: theme.colors.perygonPinkDark }}
+        _hover={{ bg: theme.colors.primaryDark }}
       >
         Apply Filters
       </Button>
@@ -237,7 +237,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
       {filterOptions.showSitesFilter && (
         <Box
           border="1px solid"
-          borderColor={theme.colors.perygonPink}
+          borderColor={theme.colors.primary}
           borderRadius="md"
           p={2}
           fontSize={["14px", "16px"]}
@@ -247,7 +247,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <Text
               fontWeight="bold"
               mb={2}
-              bg={theme.colors.perygonPink}
+              bg={theme.colors.primary}
               color="white"
               width="100%"
               p={2}
@@ -276,7 +276,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
       {filterOptions.showDepartmentsFilter && (
         <Box
           border="1px solid"
-          borderColor={theme.colors.perygonPink}
+          borderColor={theme.colors.primary}
           borderRadius="md"
           p={2}
           fontSize={["14px", "16px"]}
@@ -286,7 +286,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <Text
               fontWeight="bold"
               mb={2}
-              bg={theme.colors.perygonPink}
+              bg={theme.colors.primary}
               color="white"
               width="100%"
               p={2}

@@ -75,7 +75,7 @@ export const perygonThemeDark = extendTheme({
             _disabled: {
               color: "white",
               border: "none",
-              backgroundColor: "perygonPink",
+              backgroundColor: "primary",
             },
           },
         },
@@ -84,7 +84,7 @@ export const perygonThemeDark = extendTheme({
           color: "white",
           border: "1px solid rgba(255, 255, 255, 0.2)",
           _hover: {
-            color: "perygonPink",
+            color: "primary",
             bg: "white",
             boxShadow: "md",
             _disabled: {
@@ -99,11 +99,11 @@ export const perygonThemeDark = extendTheme({
         },
         agPrimaryLight: {
           bg: "transparent",
-          color: "perygonPink",
-          border: "1px solid var(--chakra-colors-perygonPink)",
+          color: "primary",
+          border: "1px solid var(--chakra-colors-primary)",
           _hover: {
             color: "white",
-            bg: "perygonPink",
+            bg: "primary",
             boxShadow: "md",
             _disabled: {
               color: "white",
@@ -144,16 +144,16 @@ export const perygonThemeDark = extendTheme({
           },
         },
         red: {
-          bgColor: "seduloRed",
+          bgColor: "secondary",
           border: "1px solid",
-          borderColor: "seduloRed",
+          borderColor: "secondary",
           color: "white",
           _hover: {
-            color: "seduloRed",
+            color: "secondary",
             backgroundColor: "white",
             _disabled: {
               color: "white",
-              backgroundColor: "seduloRed",
+              backgroundColor: "secondary",
             },
           },
         },

@@ -107,7 +107,7 @@ const LineGraph: React.FC<LineGraphProps> = memo(
           boxShadow="lg"
         >
           <Text
-            color={perygonTheme.colors.perygonPink}
+            color={perygonTheme.colors.primary}
             fontSize="xl"
             textAlign="center"
           >
@@ -190,7 +190,7 @@ const LineGraph: React.FC<LineGraphProps> = memo(
             <Text
               key={index}
               fontSize={fontSize}
-              color={perygonTheme.colors.perygonPink}
+              color={perygonTheme.colors.primary}
               position="absolute"
               left={`${mapIndexToX(index)}px`}
               bottom={`${bottomPadding - 50}px`}
@@ -283,7 +283,7 @@ const LineGraph: React.FC<LineGraphProps> = memo(
                   key={index}
                   label={`Score: ${point.value.toFixed(2)} on: ${point.title}`}
                   placement="top"
-                  bg={perygonTheme.colors.perygonPink}
+                  bg={perygonTheme.colors.primary}
                   color="white"
                   borderRadius="md"
                 >

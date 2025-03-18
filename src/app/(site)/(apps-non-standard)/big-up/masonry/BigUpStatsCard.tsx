@@ -62,7 +62,7 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
             <Text
               fontWeight="bold"
               fontSize={["sm", "md", "xl"]}
-              color="perygonPink"
+              color="primary"
             >
               {name}
             </Text>
@@ -79,21 +79,13 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
                     fontSize="large"
                   />
                 )}
-                <Text
-                  fontWeight="bold"
-                  color="perygonPink"
-                  fontSize={["sm", "lg"]}
-                >
+                <Text fontWeight="bold" color="primary" fontSize={["sm", "lg"]}>
                   {!medalColor && "Rank: "}
                   {rankOrdinal}
                 </Text>
               </>
             ) : (
-              <Text
-                fontWeight="bold"
-                color="perygonPink"
-                fontSize={["sm", "lg"]}
-              >
+              <Text fontWeight="bold" color="primary" fontSize={["sm", "lg"]}>
                 No Ranking
               </Text>
             )}
@@ -106,7 +98,7 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
           <Text
             ml="auto"
             fontWeight="bold"
-            color="perygonPink"
+            color="primary"
             fontSize={["xl", null, null, "2xl", null, "4xl"]}
           >
             {score.toLocaleString()}
@@ -117,7 +109,7 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
           <Text fontSize="sm" fontWeight="bold" color="white">
             Received:
           </Text>
-          <Text fontWeight="bold" fontSize="lg" color="perygonPink">
+          <Text fontWeight="bold" fontSize="lg" color="primary">
             {received.toLocaleString()}
           </Text>
         </Flex>
@@ -125,7 +117,7 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
           <Text fontSize="sm" fontWeight="bold" color="white">
             Given:
           </Text>
-          <Text fontWeight="bold" fontSize="lg" color="perygonPink">
+          <Text fontWeight="bold" fontSize="lg" color="primary">
             {given.toLocaleString()}
           </Text>
         </Flex>

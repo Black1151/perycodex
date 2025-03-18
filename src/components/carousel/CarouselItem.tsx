@@ -47,7 +47,7 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
             >
               <Construction
                 sx={{
-                  color: "var(--chakra-colors-perygonPink)",
+                  color: "var(--chakra-colors-primary)",
                   fontSize: "2rem",
                 }}
               />
@@ -77,7 +77,7 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
       >
         <Text
           fontWeight="bold"
-          color={isSelected ? "white" : "perygonPink"}
+          color={isSelected ? "white" : "primary"}
           fontSize={[10, null, 14]}
           whiteSpace="pre-wrap"
           transition="color 0.5s ease-in-out"

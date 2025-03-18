@@ -50,7 +50,7 @@ const FormRenderer: React.FC<FormRendererProps> = ({
         bg={"gray.100"}
         justifyContent="center"
       >
-        <FormatAlignCenter sx={{ color: "var(--chakra-colors-perygonPink)" }} />
+        <FormatAlignCenter sx={{ color: "var(--chakra-colors-primary)" }} />
       </Box>
       <Text
         fontSize={"13px"}

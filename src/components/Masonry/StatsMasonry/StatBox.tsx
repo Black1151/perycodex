@@ -38,7 +38,7 @@ export const StatBox: React.FC<StatBoxProps> = ({
       <Flex flex={1} justifyContent="center" alignItems="center" p={6} pb={2}>
         <Counter
           value={parseInt(data)}
-          color={counterColor ?? theme.colors.perygonPink}
+          color={counterColor ?? theme.colors.primary}
           fontSize={[40, 50]}
           fontWeight="bold"
           p={8}

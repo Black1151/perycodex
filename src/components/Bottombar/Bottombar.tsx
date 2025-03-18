@@ -25,7 +25,7 @@ const Bottombar: React.FC<BottombarProps> = ({ loading = false, content }) => {
       display={["block", "block", "none"]}
       overflowX="scroll"
       overflowY={"hidden"}
-      borderBottom={`1px solid ${theme.colors.perygonPink}`}
+      borderBottom={`1px solid ${theme.colors.primary}`}
       css={{
         WebkitOverflowScrolling: "touch",
         scrollbarHeight: "none",

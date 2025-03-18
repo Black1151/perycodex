@@ -38,7 +38,7 @@ const SpeechBubble: React.FC<SpeechBubbleProps> = ({
   textColor,
 }) => {
   const theme = useTheme();
-  const defaultTextColor = theme.colors.perygonPink;
+  const defaultTextColor = theme.colors.primary;
   const finalTextColor = textColor || defaultTextColor;
 
   const containerRef = useRef<HTMLDivElement>(null);

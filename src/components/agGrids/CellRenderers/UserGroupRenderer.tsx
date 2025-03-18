@@ -50,7 +50,7 @@ const UserGroupRenderer: React.FC<UserGroupRendererProps> = ({
         bg={"gray.100"}
         justifyContent="center"
       >
-        <Groups sx={{ color: "var(--chakra-colors-perygonPink)" }} />
+        <Groups sx={{ color: "var(--chakra-colors-primary)" }} />
       </Box>
       <Text
         fontSize={"13px"}

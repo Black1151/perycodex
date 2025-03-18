@@ -19,7 +19,7 @@ export const MasonryCard: React.FC<MasonryCardProps> = ({ title, content }) => {
         </Text>
         <Center flex={1} py={4}>
           <Text
-            color="perygonPink"
+            color="primary"
             fontSize={["2xl", null, null, "2xl", null, null, "4xl"]}
           >
             {content}

@@ -279,10 +279,10 @@ const UserDashboard: React.FC = () => {
                 xKey: "weekEnd",
                 yKey: "user",
                 yName: "User",
-                stroke: theme.colors.perygonPink,
+                stroke: theme.colors.primary,
                 marker: {
                     enabled: true,
-                    fill: theme.colors.perygonPink,
+                    fill: theme.colors.primary,
                 },
                 tooltip: {renderer: ScoreTooltipRenderer},
                 interpolation: {
@@ -331,7 +331,7 @@ const UserDashboard: React.FC = () => {
                     rotation: 300,
                     fontSize: 12,
                     fontFamily: "Metropolis",
-                    color: theme.colors.perygonPink,
+                    color: theme.colors.primary,
                 },
                 title: {
                     text: "Week End",
@@ -352,7 +352,7 @@ const UserDashboard: React.FC = () => {
                 label: {
                     fontSize: 12,
                     fontFamily: "Metropolis",
-                    color: theme.colors.perygonPink,
+                    color: theme.colors.primary,
                 },
             },
         ],
@@ -376,8 +376,8 @@ const UserDashboard: React.FC = () => {
                 xKey: "monthEnd",
                 yKey: "user",
                 yName: "User",
-                stroke: theme.colors.perygonPink,
-                marker: {enabled: true, fill: theme.colors.perygonPink},
+                stroke: theme.colors.primary,
+                marker: {enabled: true, fill: theme.colors.primary},
                 tooltip: {renderer: ScoreTooltipRenderer},
                 interpolation: {
                     type: "smooth",
@@ -425,7 +425,7 @@ const UserDashboard: React.FC = () => {
                     rotation: 300,
                     fontSize: 12,
                     fontFamily: "Metropolis",
-                    color: theme.colors.perygonPink,
+                    color: theme.colors.primary,
                 },
                 title: {
                     text: "Month End",
@@ -446,7 +446,7 @@ const UserDashboard: React.FC = () => {
                 label: {
                     fontSize: 12,
                     fontFamily: "Metropolis",
-                    color: theme.colors.perygonPink,
+                    color: theme.colors.primary,
                 },
             },
         ],
@@ -479,7 +479,7 @@ const UserDashboard: React.FC = () => {
                     fontFamily: "Bonfire",
                     fontSize: "2xl",
                     fontWeight: "bold",
-                    color: "perygonPink",
+                    color: "primary",
                 }}
                 bodyContent={modalData.body}
             />
@@ -599,7 +599,7 @@ const UserDashboard: React.FC = () => {
                                                 variant="ghost"
                                                 onClick={showPunchCardHelp}
                                                 color={"white"}
-                                                _hover={{color: "perygonPink", background: "white"}}
+                                                _hover={{color: "primary", background: "white"}}
                                                 ml={2}
                                             />
                                         </Tooltip>

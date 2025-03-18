@@ -174,7 +174,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                   rotation: 340,
                   fontSize: 10,
                   fontFamily: "Metropolis",
-                  color: theme.colors.perygonPink,
+                  color: theme.colors.primary,
                 },
                 gridLine: {
                   width: 0,
@@ -284,7 +284,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                   rotation: 300,
                   fontSize: 10,
                   fontFamily: "Metropolis",
-                  color: theme.colors.perygonPink,
+                  color: theme.colors.primary,
                 },
                 gridLine: {
                   width: 0,
@@ -394,7 +394,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                   rotation: 300,
                   fontSize: 10,
                   fontFamily: "Metropolis",
-                  color: theme.colors.perygonPink,
+                  color: theme.colors.primary,
                 },
                 gridLine: {
                   width: 0,
@@ -430,7 +430,7 @@ const ScoresCommentsDashboard: React.FC = () => {
           },
           line: {
             series: {
-              stroke: theme.colors.perygonPink,
+              stroke: theme.colors.primary,
               interpolation: {
                 type: "smooth",
               },
@@ -475,7 +475,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                   rotation: 300,
                   fontSize: 10,
                   fontFamily: "Metropolis",
-                  color: theme.colors.perygonPink,
+                  color: theme.colors.primary,
                 },
                 gridLine: {
                   width: 0,
@@ -511,7 +511,7 @@ const ScoresCommentsDashboard: React.FC = () => {
           },
           line: {
             series: {
-              stroke: theme.colors.perygonPink,
+              stroke: theme.colors.primary,
               interpolation: {
                 type: "smooth",
               },

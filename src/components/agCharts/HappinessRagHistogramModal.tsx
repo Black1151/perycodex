@@ -140,7 +140,7 @@ const HappinessRagHistogramModal: React.FC<HappinessRagHistogramModalProps> = ({
         label: {
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
         gridLine: {
           width: 0,
@@ -158,7 +158,7 @@ const HappinessRagHistogramModal: React.FC<HappinessRagHistogramModalProps> = ({
         label: {
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
       },
     ],

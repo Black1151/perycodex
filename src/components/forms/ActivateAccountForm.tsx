@@ -33,7 +33,7 @@ export function ActivateAccountForm({ token }: ActivateAccountFormProps) {
   } = useForm<ActivateAccountFormInputs>();
 
   const handleFormSubmit: SubmitHandler<ActivateAccountFormInputs> = async (
-    data,
+    data
   ) => {
     const result = await fetchClient("/api/auth/activate-account", {
       method: "PUT",
@@ -73,7 +73,7 @@ export function ActivateAccountForm({ token }: ActivateAccountFormProps) {
               />
             }
             register={() => register("password", passwordValidation)}
-            focusBorderColor={theme.colors.perygonPink}
+            focusBorderColor={theme.colors.primary}
           />
           <InputField
             name="repeatPassword"
@@ -95,19 +95,19 @@ export function ActivateAccountForm({ token }: ActivateAccountFormProps) {
                   value === watch("password") || "Passwords do not match",
               })
             }
-            focusBorderColor={theme.colors.perygonPink}
+            focusBorderColor={theme.colors.primary}
           />
           <Button
             mt="60px"
-            backgroundColor={theme.colors.perygonPink}
+            backgroundColor={theme.colors.primary}
             type="submit"
             w="full"
             isLoading={loading}
             height={12}
             color="white"
             _hover={{
-              color: theme.colors.perygonPink,
-              border: `1px solid ${theme.colors.perygonPink}`,
+              color: theme.colors.primary,
+              border: `1px solid ${theme.colors.primary}`,
               backgroundColor: "white",
             }}
           >

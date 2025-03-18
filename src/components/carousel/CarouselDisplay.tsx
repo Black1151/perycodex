@@ -118,7 +118,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
               >
                 <Construction
                   sx={{
-                    color: "var(--chakra-colors-perygonPink)",
+                    color: "var(--chakra-colors-primary)",
                     fontSize: "2rem",
                   }}
                 />

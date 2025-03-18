@@ -169,7 +169,7 @@ const HappinessRagHistogramModal: React.FC<HappinessRagBubbleModal> = ({
           fontSize: 12,
           fontFamily: "Metropolis",
           fontWeight: "bold",
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
         title: {
           text: "Score",
@@ -185,7 +185,7 @@ const HappinessRagHistogramModal: React.FC<HappinessRagBubbleModal> = ({
           fontSize: 10,
           fontFamily: "Metropolis",
           padding: 0,
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
       },
     ],

@@ -60,7 +60,7 @@ export const EmailTemplateDetailsBanner: React.FC<
         >
           <Email
             fontSize="large"
-            sx={{ color: "var(--chakra-colors-perygonPink)" }}
+            sx={{ color: "var(--chakra-colors-primary)" }}
           />
         </Box>
       </FormControl>

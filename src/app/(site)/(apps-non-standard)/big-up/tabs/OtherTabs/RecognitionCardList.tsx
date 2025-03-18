@@ -66,7 +66,7 @@ export const RecognitionList: React.FC<RecognitionListProps> = ({
                 >
                   <Flex alignItems="center" justify="space-between">
                     <Flex flexDirection="column" flex="1">
-                      <Text fontSize="xl" color="perygonPink" fontWeight="bold">
+                      <Text fontSize="xl" color="primary" fontWeight="bold">
                         {personDetails.fullName}
                       </Text>
                       <Text fontSize="xs" color="white">
@@ -80,7 +80,7 @@ export const RecognitionList: React.FC<RecognitionListProps> = ({
                       <Text
                         mt={1}
                         fontSize="lg"
-                        color="perygonPink"
+                        color="primary"
                         fontWeight="bold"
                       >
                         {item.bigUpCategory}

@@ -323,7 +323,7 @@ export default function ManagerDashboardInner({
     <>
       {loading ? (
         <Flex justifyContent="center" alignItems="center">
-          <Spinner size="xl" color="perygonPink" />
+          <Spinner size="xl" color="primary" />
         </Flex>
       ) : (
         <Box pb={[8, 0]}>

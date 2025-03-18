@@ -142,7 +142,7 @@ const AllEnpsDashboard = () => {
         position: "bottom",
         label: {
           fontSize: 12,
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
         gridLine: {
           width: 0,
@@ -153,7 +153,7 @@ const AllEnpsDashboard = () => {
         position: "left",
         label: {
           fontSize: 12,
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
       },
     ],
@@ -168,7 +168,7 @@ const AllEnpsDashboard = () => {
         yKey: "value",
 
         xKey: "monthYear",
-        stroke: theme.colors.perygonPink,
+        stroke: theme.colors.primary,
         interpolation: {
           type: "smooth",
         },
@@ -197,7 +197,7 @@ const AllEnpsDashboard = () => {
         label: {
           rotation: 300,
           fontSize: 12,
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
         gridLine: {
           width: 0,
@@ -211,11 +211,11 @@ const AllEnpsDashboard = () => {
         title: {
           text: "eNPS Score",
           fontSize: 12,
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
         label: {
           fontSize: 12,
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
       },
     ],
@@ -230,7 +230,7 @@ const AllEnpsDashboard = () => {
     angleKey: "value",
     calloutLabelKey: "category",
     calloutLabel: {
-      color: theme.colors.perygonPink,
+      color: theme.colors.primary,
       fontSize: 12,
     },
     sectorLabelKey: "value",
@@ -278,7 +278,7 @@ const AllEnpsDashboard = () => {
           method: "POST",
           body: postBody,
           redirectOnError: false,
-        },
+        }
       );
 
       if (response && response.resource) {
@@ -306,7 +306,7 @@ const AllEnpsDashboard = () => {
 
   useEffect(() => {
     const monthlyOption = dateRangeOptions[dateRangeOption].find(
-      (opt) => opt.value === defaultDateFilterOption,
+      (opt) => opt.value === defaultDateFilterOption
     );
 
     if (monthlyOption) {

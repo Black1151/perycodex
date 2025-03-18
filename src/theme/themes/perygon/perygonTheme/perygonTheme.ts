@@ -20,6 +20,11 @@ export const perygonTheme = extendTheme({
     primaryButton: colorPalette.seduloRed,
 
     //legacy colors to be removed during refactor
+    perygonBlueTransparent: "rgba(13, 0, 61, 0.85)",
+    seduloRed: "#B4213D",
+    yellow: "#EFC718",
+    lightGreen: "#92C01F",
+    seduloGreen: "#008000",
     happinessScale: {
       1: "#b22200",
       2: "#e92300",
@@ -174,7 +179,7 @@ export const perygonTheme = extendTheme({
     },
   },
   gradients: {
-    primaryGradient: "linear(to-br, seduloRed 60%, perygonPink 100%)",
+    primaryGradient: "linear(to-br, secondary 60%, primary 100%)",
     secondaryGradient: `linear-gradient(to bottom right, rgba(255, 0, 0, 0.6), rgba(255, 192, 203, 0.6))`,
     secondaryGradientTransparent: `linear-gradient(to bottom right, rgba(255, 0, 0, 0.3), rgba(255, 192, 203, 0.3))`,
   },

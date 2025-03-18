@@ -319,7 +319,7 @@ const WeeklyDashboard: React.FC = () => {
                   rotation: 340,
                   fontSize: 10,
                   fontFamily: "Metropolis",
-                  color: theme.colors.perygonPink,
+                  color: theme.colors.primary,
                 },
                 gridLine: {
                   width: 0,
@@ -420,7 +420,7 @@ const WeeklyDashboard: React.FC = () => {
                   rotation: 300,
                   fontSize: 10,
                   fontFamily: "Metropolis",
-                  color: theme.colors.perygonPink,
+                  color: theme.colors.primary,
                 },
                 gridLine: {
                   width: 0,
@@ -515,7 +515,7 @@ const WeeklyDashboard: React.FC = () => {
           fontFamily: "Bonfire",
           fontSize: "2xl",
           fontWeight: "bold",
-          color: "perygonPink",
+          color: "primary",
         }}
         bodyContent={
           <>
@@ -573,7 +573,7 @@ const WeeklyDashboard: React.FC = () => {
               variant="ghost"
               onClick={onOpen}
               color={"white"}
-              _hover={{ color: "perygonPink", background: "white" }}
+              _hover={{ color: "primary", background: "white" }}
               ml={2}
             />
           </Tooltip>

@@ -10,7 +10,7 @@ export const BigUpModalContent: React.FC<BigUpModalContentProps> = ({
   return (
     <ModalContent
       bg="perygonBlueTransparent"
-      boxShadow="0 0 10px 2px rgba(255, 20, 147, 0.8)"
+      boxShadow="0 0 10px 2px var(--chakra-colors-primary)"
       mx={4}
     >
       {children}

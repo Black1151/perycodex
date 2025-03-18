@@ -111,7 +111,7 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
           label: {
             fontSize: 12,
             rotation: -65,
-            color: theme.colors.perygonPink,
+            color: theme.colors.primary,
             formatter: ({ value }: { value: string }) => value,
           },
         },
@@ -136,7 +136,7 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
         enabled: !isMobile,
       },
     }),
-    [validData, getColor, onBarClick, theme.colors.perygonPink, isMobile]
+    [validData, getColor, onBarClick, theme.colors.primary, isMobile]
   );
 
   if (loading) {

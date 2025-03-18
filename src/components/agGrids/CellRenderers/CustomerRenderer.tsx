@@ -81,7 +81,7 @@ const CustomerRenderer: React.FC<CustomerRendererProps> = ({
             justifyContent="center"
           >
             <BusinessOutlinedIcon
-              sx={{ color: "var(--chakra-colors-perygonPink)" }}
+              sx={{ color: "var(--chakra-colors-primary)" }}
             />
           </Box>
         </Flex>
