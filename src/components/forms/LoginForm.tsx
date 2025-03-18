@@ -534,7 +534,7 @@ export function LoginForm() {
           align={"center"}
         >
           <Text p="0" pt="10px" fontSize={["10px", "12px"]} color="gray">
-            Copyright &copy; 2024 Sedulo Limited (v1.1.5)
+            Copyright &copy; 2024 Sedulo Limited (v1.1.6)
           </Text>
           <Link href={"/privacy-policy"}>
             <Text p="0" pt="10px" fontSize={["10px", "12px"]} color="gray">
