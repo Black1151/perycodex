@@ -132,7 +132,6 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
           {allThemes.map((tName) => (
             <MenuItem
               key={tName}
-              // onClick={() => console.log("clicked")}
               onClick={() => setThemeName(tName)}
               fontSize={[14, 16, 18]}
               _hover={{
