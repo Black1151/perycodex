@@ -22,7 +22,7 @@ const AgChartComponent = ({
   noData: boolean;
 }) => {
   return (
-    <Box flex={flex}>
+    <Box flex={flex} minWidth="300px">
       <Flex width="100%" justifyContent="center" align="center" mb={4}>
         <SectionHeader>{title}</SectionHeader>
       </Flex>

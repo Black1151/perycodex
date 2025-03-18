@@ -27,9 +27,11 @@ const LinkPage = async ({ searchParams }: { searchParams: SearchParams }) => {
       const response = await apiClient(`/emailSecureLinkRedirect`, {
         method: "POST",
         body: JSON.stringify({
-          secureLink: searchParams.l, // Pass the secure link from searchParams
+          secureLink: searchParams.l,
         }),
       });
+
+      console.log(response);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -48,7 +50,6 @@ const LinkPage = async ({ searchParams }: { searchParams: SearchParams }) => {
     redirect(responseData);
   }
 
-  // Render the result on the page
   return (
     <Box mt="65px">
       <Text fontSize="xl">This is a link page</Text>

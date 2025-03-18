@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import {
-  MenuItem,
-  RightHandNavigationDrawer,
-} from "@/components/layout/RightHandNavigationDrawer";
-import { ContentCopy } from "@mui/icons-material";
+import { BlurOn, ContentCopy } from "@mui/icons-material";
 import AssignGroupModal from "./AssignGroupModal";
 import { useUser } from "@/providers/UserProvider";
+import NavigationSidebar, {
+  MenuItem,
+} from "@/components/Sidebars/NavigationSidebar/NavigationSidebar";
 
 const UserGroupDrawerComponent: React.FC = () => {
   const { user } = useUser();
@@ -39,9 +38,11 @@ const UserGroupDrawerComponent: React.FC = () => {
   return (
     <>
       {/* Right-hand navigation drawer */}
-      <RightHandNavigationDrawer
-        defaultDrawerState="half-open"
+      <NavigationSidebar
+        drawerState="closed"
         menuItems={menuItems}
+        openButtonIcon={BlurOn}
+        side={"right"}
       />
 
       {/* Modal for assigning user groups */}

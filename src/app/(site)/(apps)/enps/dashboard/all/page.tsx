@@ -1,7 +1,7 @@
 import {redirect} from "next/navigation";
 import {getFilteredDashboards} from "@/lib/dashboardUtils";
 import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
-import ToolDashboardLayout from "@/app/(site)/(apps)/happiness-score/dashboard/ToolDashboardLayout";
+import ToolDashboardLayout from "@/app/(site)/(apps)/ToolDashboardLayout";
 import DashboardHeader from "@/app/(site)/(apps)/DashboardHeader";
 import {verifySession} from "@/lib/dal";
 import AllEnpsDashboard from "@/app/(site)/(apps)/enps/dashboard/all/AllEnpsDashboard";
@@ -25,31 +25,8 @@ export default async function Home({
         return redirect("/");
     }
 
-    // Fetch filtered dashboards and tool data
-    const {filteredDashboards, toolData, activeDashboardName, redirectPath} =
-        await getFilteredDashboards(
-            toolId,
-            workflowId,
-            "/enps/dashboard/all",
-        );
-
-    // Redirect to the first dashboard if the user doesn't have access to the current one
-    if (redirectPath) {
-        return redirect(redirectPath);
-    }
-
     return (
         <WorkflowEngine toolId={toolId} workflowId={workflowId}>
-            <ToolDashboardLayout dashboardList={filteredDashboards}/>
-            <DashboardHeader
-                headingText={
-                    activeDashboardName
-                        ? activeDashboardName
-                        : "All"
-                }
-                canStartWorkflow={toolData.startInUi}
-                toolUrl={'/enps'}
-            />
             <AllEnpsDashboard/>
         </WorkflowEngine>
     );

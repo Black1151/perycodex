@@ -3,9 +3,10 @@ import {redirect} from "next/navigation";
 import {getFilteredDashboards} from "@/lib/dashboardUtils";
 import NoDashboardsModal from "../NoDashboardModal";
 import apiClient from "@/lib/apiClient";
-import {verifySession} from "@/lib/dal";
+import {getUser, verifySession} from "@/lib/dal";
 import {ToolLandingPage} from "@/app/(site)/(apps)/ToolLandingPageInner";
 import {HappinessScoreSplashScreen} from "@/app/(site)/(apps)/happiness-score/HappinessScoreSplashScreen";
+import {ClientSatisfactionSplashScreen} from "@/app/(site)/(apps)/client-satisfaction/ClientSatisfactionSplashScreen";
 
 interface WorkflowInstanceResponse {
     resource: {
@@ -18,11 +19,7 @@ export default async function Home({
                                    }: {
     searchParams: { [key: string]: string | string[] | undefined };
 }) {
-    const session = await verifySession();
-
-    if (!session) {
-        redirect("/login");
-    }
+    const user = await getUser();
 
     const toolId = searchParams.toolId as string;
     const workflowId = searchParams.wfId as string;
@@ -64,8 +61,10 @@ export default async function Home({
 
     return (
         <WorkflowEngine toolId={toolId} workflowId={workflowId}>
-            {filteredDashboards.length === 0 && <NoDashboardsModal/>}
-            <ToolLandingPage redirectUrl={redirectUrl} splashScreen={<HappinessScoreSplashScreen/>}/>
+            {user.role === "EU" || filteredDashboards.length > 0 ?
+                <ToolLandingPage redirectUrl={redirectUrl} splashScreen={<HappinessScoreSplashScreen/>}/> :
+                <NoDashboardsModal/>
+            }
         </WorkflowEngine>
     );
 }

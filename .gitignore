@@ -44,3 +44,6 @@ next-env.d.ts
 .husky
 
 .env
+.env.local.example
+.env.docker
+.env.local

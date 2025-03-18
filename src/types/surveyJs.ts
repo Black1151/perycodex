@@ -1,7 +1,7 @@
 import {ITheme, SurveyModel} from "survey-core";
 import {Role} from "@/types/user"
 
-export type SurveyLayoutType = 'default' | 'happiness' | 'enps';
+export type SurveyLayoutType = 'default' | 'happiness' | 'enps' | 'client-satisfaction';
 export type SurveySubmissionType = 'admin' | 'workflow';
 
 

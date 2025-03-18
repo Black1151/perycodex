@@ -52,6 +52,9 @@ export interface UserContextProps {
   customerIsActive?: boolean;
   userImageUrl?: string;
   custImageUrl?: string;
+  customerUniqueId?: string;
+  teamManagerCount?: number;
+  parentCustImageUrl?: string;
 }
 
 interface UserProviderProps {

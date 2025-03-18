@@ -27,7 +27,7 @@ export default function StaffDashboardPage() {
         };
 
         const response = await fetch(
-            "/api/happiness-graphs/getStaffDashboardData",
+            "/api/happiness-score/dashboards/user-happiness",
             {
                 method: "POST",
                 headers: {

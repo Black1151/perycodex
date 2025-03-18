@@ -1,6 +1,6 @@
 import React from "react";
 import { Flex, Avatar, Text, Divider, BoxProps } from "@chakra-ui/react";
-import Card from "../../Card";
+import Card from "../../components/Card";
 import { EmojiEvents } from "@mui/icons-material";
 
 export interface LeaderboardCardProps extends BoxProps {
@@ -12,10 +12,13 @@ export interface LeaderboardCardProps extends BoxProps {
   image: string;
   rank: string;
   medalColor?: string;
+  onClickProfilePic: (UUID: string) => void;
+  UUID: string;
 }
 
 export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
   name,
+  UUID,
   location,
   received,
   given,
@@ -23,6 +26,7 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
   image,
   rank,
   medalColor,
+  onClickProfilePic,
   ...props
 }) => {
   return (
@@ -33,7 +37,13 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
       {...props}
     >
       <Flex align="center" mb={3}>
-        <Avatar size="lg" name={name} src={image} />
+        <Avatar
+          size="lg"
+          name={name}
+          src={image}
+          onClick={() => onClickProfilePic(UUID)}
+          _hover={{ cursor: "pointer" }}
+        />
         <Flex direction="column" ml={4} flex="1">
           <Text fontWeight="bold" fontSize="xl" color="perygonPink">
             {name}
@@ -43,7 +53,13 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
           </Text>
         </Flex>
       </Flex>
-      <Flex alignItems="center" mb={2} width="100%" justifyContent="flex-end">
+      <Flex
+        alignItems="center"
+        mb={2}
+        width="100%"
+        justifyContent="flex-end"
+        minHeight="40px"
+      >
         {medalColor && (
           <EmojiEvents
             style={{ color: medalColor, marginRight: "0.5rem" }}
