@@ -60,7 +60,6 @@ export function SignUpForm({ onSubmit, isSubmitting }: SignUpFormProps) {
               fontSize={["16px", "12px"]}
               cursor="pointer"
               color={theme.colors.primary}
-              primary
               _hover={{ cursor: "pointer" }}
               onClick={() => router.push("/login")}
             >
