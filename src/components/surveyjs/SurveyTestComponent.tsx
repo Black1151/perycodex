@@ -157,7 +157,6 @@ const SurveyTestComponent: React.FC<SurveyTestComponentProps> = ({
                 resize="vertical"
                 variant="filled"
                 _focus={{ borderColor: theme.colors.primary }}
-                primary
               />
               {datasetError && (
                 <FormErrorMessage>Invalid JSON format</FormErrorMessage>
