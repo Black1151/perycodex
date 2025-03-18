@@ -10,14 +10,29 @@ const handler = NextAuth({
     AzureADProvider({
       clientId: process.env.AZURE_AD_CLIENT_ID!,
       clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
-      tenantId: process.env.AZURE_AD_TENANT_ID!,
       authorization: {
         params: {
-          authorizationUrl: `https://login.microsoftonline.com/${process.env.AZURE_AD_TENANT_ID}/oauth2/v2.0/authorize`,
-          tokenUrl: `https://login.microsoftonline.com/${process.env.AZURE_AD_TENANT_ID}/oauth2/v2.0/token`,
+          authorizationUrl: `https://login.microsoftonline.com/common/oauth2/v2.0/authorize`,
+          tokenUrl: `https://login.microsoftonline.com/common/oauth2/v2.0/token`,
           scope: "openid profile email User.Read",
           redirect_uri: `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/callback/azure-ad`,
         },
+      },
+      issuer: `https://login.microsoftonline.com/${process.env.AZURE_AD_TENANT_ID}/v2.0`,
+
+      async profile(profile, tokens) {
+
+        const decodedToken = tokens.id_token
+            ? JSON.parse(Buffer.from(tokens.id_token.split(".")[1], "base64").toString())
+            : null;
+
+        return {
+          id: profile.sub,
+          name: profile.name || decodedToken?.name || null,
+          email: profile.email || decodedToken?.email || decodedToken?.preferred_username || decodedToken?.upn || null,
+          image: profile.picture || null,
+          tenantId: decodedToken?.tid || null,
+        };
       },
     }),
     Google({
