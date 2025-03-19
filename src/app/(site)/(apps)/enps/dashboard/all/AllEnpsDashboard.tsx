@@ -264,7 +264,6 @@ const AllEnpsDashboard = () => {
     try {
       return JSON.parse(str);
     } catch (err) {
-      console.error("Could not parse JSON:", err);
       return null; // or some default fallback
     }
   }
@@ -287,10 +286,8 @@ const AllEnpsDashboard = () => {
         setLineChartData(safeJsonParse(response.resource.monthlyLineChart));
         setPieChartData(safeJsonParse(response.resource.pieChart));
       } else {
-        console.error("Invalid response:", response);
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
     } finally {
       setIsLoading(false);
     }

@@ -102,6 +102,7 @@ const useSurvey = ({
       });
 
       // Set Common Variables that will be needed within the survey
+      // TODO: https://surveyjs.io/form-library/documentation/design-survey/conditional-logic - Explains that setVariable and calculatedValues aren't included in the survey results
       surveyModel.setVariable("pgv_currentUser", user);
 
       // Set survey to read-only mode depending on state of isEditing
@@ -110,14 +111,11 @@ const useSurvey = ({
       // Allow form to know if formMode is in edit or display mode
       surveyModel.setVariable("pgv_formMode", isNew ? "new" : "edit");
 
-      // Dynamically go through the list of objects and set the entire nested object as a variable
       if (includeVariables && Array.isArray(includeVariables)) {
         includeVariables.forEach((variableObject) => {
-          // Extract the top-level key (e.g., userDetails, companyInfo)
           Object.keys(variableObject).forEach((key) => {
-            // Set the entire nested object as a variable with the "pgv_" prefix
             const value = variableObject[key];
-            surveyModel.setVariable(`wfv_${key}`, value);
+            surveyModel.setVariable(`wgv_${key}`, value);
           });
         });
       }

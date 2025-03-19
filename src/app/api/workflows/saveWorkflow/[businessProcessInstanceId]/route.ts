@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import apiClient from "@/lib/apiClient";
 
-// The POST function for handling /api/surveyjs/saveWorkflow/[businessProcessInstanceId] endpoint
 export async function POST(
   req: NextRequest,
   { params }: { params: { businessProcessInstanceId: string } },
