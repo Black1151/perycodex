@@ -1,20 +1,20 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
-import { WorkflowStage } from "@/app/(site)/(apps)/happiness-score/workflow/[workflowInstanceId]/page";
+import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
 import { useFetchClient } from "@/hooks/useFetchClient";
-import { MenuItem } from "@/components/Sidebars/NavigationSidebar/NavigationSidebar";
-import { Circle as CircleIcon } from "@mui/icons-material";
+import { ViewTimeline as ViewTimelineIcon } from "@mui/icons-material";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import { useUser } from "@/providers/UserProvider";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import { useRouter } from "next/navigation";
-import NavigationSidebar from "@/components/Sidebars/NavigationSidebar/NavigationSidebar";
+import WorkflowSidebar from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
+import { SurveyLayoutType } from "@/types/surveyJs";
 
 interface WorkflowLayoutProps {
   stages: WorkflowStage[];
-  layout: "default" | "happiness" | "enps" | "client-satisfaction";
+  layout: SurveyLayoutType;
   workflowInstanceId: string | null;
 }
 
@@ -51,10 +51,19 @@ interface FormDataResponse {
   statusName: string;
 }
 
+interface Variables {
+  workflowInstanceId: number;
+  businessProcessInstanceId: number;
+  fieldName: string;
+  fieldValue: string;
+  dataType: string;
+  createdAt: string;
+}
+
 const REDIRECT_PATHS: Record<string, string> = {
   happiness: "/happiness-score",
   enps: "/enps",
-  "client-satisfaction": "client-satisfaction",
+  "client-satisfaction": "/client-satisfaction",
   default: "/",
 };
 
@@ -64,9 +73,6 @@ export default function WorkflowLayout({
   workflowInstanceId,
 }: WorkflowLayoutProps) {
   const { user } = useUser();
-  const router = useRouter();
-  const { fetchClient } = useFetchClient();
-
   const {
     toolId,
     setToolId,
@@ -75,29 +81,34 @@ export default function WorkflowLayout({
     setCurrentWorkflowInstanceId,
     setCurrentBusinessProcessInstanceId,
   } = useWorkflow();
+
+  const router = useRouter();
+  const { fetchClient } = useFetchClient();
+
   const [currentStage, setCurrentStage] = useState<WorkflowStage | null>(null);
+  const [activeStageId, setActiveStageId] = useState<number | null>(null);
+  const [isAuthorised, setIsAuthorised] = useState<boolean>(false);
   const [currentForm, setCurrentForm] = useState<Form | null>(null);
   const [formData, setFormData] = useState<any | null>(null);
   const [isNew, setIsNew] = useState<boolean>(false);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [workflowVariables, setWorkflowVariables] = useState<
+    | Array<{
+        [key: string]: { [nestedKey: string]: any };
+      }>
+    | undefined
+  >(undefined);
 
-  const handleNavigateAway = () => {
-    router.push("/");
-  };
-
-  // Prepare menu items based on stages
-  const menuItems: MenuItem[] = stages.map((stage) => ({
-    label: stage.bpName,
-    icon: <CircleIcon />,
-    onClick: () => setCurrentStage(stage),
-    category: "Stages",
-  }));
+  const handleStageChange = useCallback(
+    async (newStage: WorkflowStage) => {
+      setCurrentStage(newStage);
+    },
+    [fetchClient],
+  );
 
   useEffect(() => {
     setCurrentWorkflowInstanceId(workflowInstanceId);
 
-    // Cleanup function to reset IDs on unmount
     return () => {
       setCurrentWorkflowInstanceId(null);
       setCurrentBusinessProcessInstanceId(null);
@@ -105,13 +116,13 @@ export default function WorkflowLayout({
   }, []);
 
   useEffect(() => {
-    // Set the initial current stage
     if (stages.length === 1) {
       setCurrentStage(stages[0]);
     } else if (stages.length > 1) {
       const orderedStages = stages.sort((a, b) => a.bpOrder - b.bpOrder);
       setCurrentStage(
-        orderedStages.find((stage) => stage.stageStatus === "Next") || null,
+        orderedStages.find((stage) => stage.stageStatus === "Next") ||
+          orderedStages[0],
       );
     }
   }, [stages]);
@@ -125,7 +136,6 @@ export default function WorkflowLayout({
       setWorkflowId(String(currentStage.wfId));
 
       try {
-        // Prepare API requests
         const formDataRequest = currentStage.formId
           ? fetchClient<Form>(`/api/workflows/getForm`, {
               method: "POST",
@@ -142,16 +152,80 @@ export default function WorkflowLayout({
             })
           : Promise.resolve(null);
 
-        // Execute requests concurrently
-        const [formDataResource, formDataset] = await Promise.all([
-          formDataRequest,
-          formDatasetRequest,
-        ]);
+        const variablesRequest = workflowInstanceId
+          ? fetchClient<Variables[]>("/api/workflows/getVariables", {
+              method: "POST",
+              body: {
+                workflowInstanceId: workflowInstanceId,
+              },
+              redirectOnError: false,
+            })
+          : Promise.resolve(null);
 
-        // Update form state
+        const [formDataResource, formDataset, variablesResponse] =
+          await Promise.all([
+            formDataRequest,
+            formDatasetRequest,
+            variablesRequest,
+          ]);
+
         setCurrentForm(formDataResource || null);
+        setActiveStageId(currentStage.bpInstBpId);
 
-        // Parse and update form data
+        if (variablesResponse) {
+          const processedVariables: Array<{ [key: string]: any }> = [];
+
+          variablesResponse.forEach((variable) => {
+            let parsedValue: any = variable.fieldValue;
+
+            try {
+              switch (variable.dataType.toLowerCase()) {
+                case "number":
+                  parsedValue = parseFloat(variable.fieldValue);
+                  if (isNaN(parsedValue)) {
+                    parsedValue = variable.fieldValue;
+                  }
+                  break;
+                case "boolean":
+                  parsedValue =
+                    variable.fieldValue.toLowerCase() === "true"
+                      ? true
+                      : variable.fieldValue.toLowerCase() === "false"
+                        ? false
+                        : variable.fieldValue;
+                  break;
+                case "json":
+                  parsedValue = JSON.parse(variable.fieldValue);
+                  break;
+                case "date":
+                  parsedValue = new Date(variable.fieldValue);
+                  if (isNaN(parsedValue.getTime())) {
+                    parsedValue = variable.fieldValue;
+                  }
+                  break;
+                default:
+                  break;
+              }
+            } catch (error) {
+              console.error(
+                `Error parsing value for ${variable.fieldName}:`,
+                error,
+              );
+              parsedValue = variable.fieldValue;
+            }
+
+            if (typeof parsedValue === "object" && parsedValue !== null) {
+              processedVariables.push({ [variable.fieldName]: parsedValue });
+            } else {
+              processedVariables.push({ [variable.fieldName]: parsedValue });
+            }
+          });
+
+          setWorkflowVariables(processedVariables);
+        } else {
+          setWorkflowVariables(undefined);
+        }
+
         if (formDataset) {
           const parsedResponse =
             typeof formDataset.jsonResponse === "string"
@@ -159,23 +233,71 @@ export default function WorkflowLayout({
               : formDataset.jsonResponse;
           setFormData(parsedResponse);
 
-          const isAuthorized =
-            // Yours form
-            formDataset.createdBy === user?.userId ||
-            formDataset.startedBy === user?.userId ||
-            // Anonymous users
-            formDataset.createdBy === 0 ||
-            formDataset.startedBy === 0 ||
-            user?.role === "CA";
+          const isUserAuthorised = (() => {
+            // If the stage is pending, the user should not be authorized
+            if (currentStage.stageStatus === "Pending") {
+              return false;
+            }
 
-          if (!isAuthorized) {
+            if (
+              currentStage.isGlobalVariableBlocking &&
+              currentStage.wouldHaveBeenNextIfNotLocked === false
+            ) {
+              return false;
+            }
+
+            // A CA role should always be authorized
+            if (user?.role === "CA") {
+              return true;
+            }
+
+            // An EU role should be blocked unless it is an external business process
+            if (user?.role === "EU") {
+              return currentStage.isExternalBusinessProcess;
+            }
+
+            // Check if the user is the creator or started the process
+            if (
+              formDataset.createdBy === user?.userId ||
+              formDataset.startedBy === user?.userId ||
+              formDataset.createdBy === 0 || // 0 may indicate public access
+              formDataset.startedBy === 0
+            ) {
+              return true;
+            }
+
+            // If a user access group exists, the user must be in one of those groups
+            if (
+              Array.isArray(currentStage.userAccessGroupNames) &&
+              currentStage.userAccessGroupNames.length > 0
+            ) {
+              if (
+                !Array.isArray(user?.groupNames) ||
+                user.groupNames.length === 0
+              ) {
+                return false; // User has no groups, so they are not authorized
+              }
+
+              // Check if the user is part of an allowed group
+              return currentStage.userAccessGroupNames.some(
+                (groupName) => user?.groupNames?.includes(groupName) ?? false,
+              );
+            }
+
+            // If no restrictions apply, authorize by default
+            return true;
+          })();
+
+          setIsAuthorised(isUserAuthorised);
+
+          if (!isUserAuthorised) {
             setIsModalOpen(true);
             return;
           }
 
           if (
             (formDataset.statusId === 1 || formDataset.statusId === 2) &&
-            isAuthorized
+            isUserAuthorised
           ) {
             setIsNew(true);
           } else if (formDataset.statusId === 3) {
@@ -183,60 +305,68 @@ export default function WorkflowLayout({
           }
         }
       } finally {
-        // Additional cleanup logic if needed
       }
     };
-
     fetchStageData();
   }, [currentStage]);
 
   const redirectPath = REDIRECT_PATHS[layout] || REDIRECT_PATHS.default;
   const redirectUrl = `${redirectPath}?wfId=${workflowId}&toolId=${toolId}`;
 
+  const onSuccess = () => {
+    if (stages.length > 1) {
+      router.refresh();
+    } else {
+      router.push(redirectUrl);
+    }
+  };
+
   return (
     <>
       {/* Modal to block access */}
       <SurveyModal
         isOpen={isModalOpen}
-        onConfirm={handleNavigateAway}
-        onClose={handleNavigateAway}
+        onConfirm={() => setIsModalOpen(false)}
+        onClose={() => router.push("/")}
         showButtons={{
           close: false,
           confirm: true,
         }}
         title="Unauthorised Access"
-        bodyContent="You are not authorized to view this workflow."
+        bodyContent="You are not authorized to view this stage. Please select one in the sidebar to the left"
         confirmLabel="OK"
         cancelLabel="Cancel"
       />
 
-      {/* Render main content only if modal is not open */}
-      {!isModalOpen && (
-        <>
-          {stages.length > 1 && (
-            <NavigationSidebar menuItems={menuItems} drawerState="half-open" />
-          )}
+      <WorkflowSidebar
+        workflowStages={stages}
+        currentStageId={activeStageId}
+        title={"Stages"}
+        drawerState={"fully-open"}
+        side={"left"}
+        openButtonIcon={ViewTimelineIcon}
+        onStageChange={handleStageChange}
+      />
 
-          {currentStage && currentForm && (
-            <SurveyComponent
-              surveyJson={
-                typeof currentForm.jsonFile === "string"
-                  ? JSON.parse(currentForm.jsonFile)
-                  : currentForm.jsonFile
-              }
-              endpoint={`/api/workflows/saveWorkflow/${currentStage.bpInstId}`}
-              isNew={isNew}
-              dataset={formData}
-              formSubmission="workflow"
-              layout={layout}
-              redirectUrl={redirectUrl}
-              jsPath={currentStage.jsAdditionalFileUrl}
-              cssPath={currentStage.cssThemeFileUrl}
-              sjsPath={currentStage.sjsThemeFileUrl}
-              layoutOptions={{ showTitle: true }}
-            />
-          )}
-        </>
+      {!isModalOpen && isAuthorised && currentStage && currentForm && (
+        <SurveyComponent
+          surveyJson={
+            typeof currentForm.jsonFile === "string"
+              ? JSON.parse(currentForm.jsonFile)
+              : currentForm.jsonFile
+          }
+          endpoint={`/api/workflows/saveWorkflow/${currentStage.bpInstId}`}
+          isNew={isNew}
+          dataset={formData}
+          formSubmission="workflow"
+          onSurveySuccess={onSuccess}
+          layout={currentStage.layout ?? layout}
+          jsPath={currentStage.jsAdditionalFileUrl}
+          cssPath={currentStage.cssThemeFileUrl}
+          sjsPath={currentStage.sjsThemeFileUrl}
+          layoutOptions={{ showTitle: true }}
+          includeVariables={workflowVariables}
+        />
       )}
     </>
   );

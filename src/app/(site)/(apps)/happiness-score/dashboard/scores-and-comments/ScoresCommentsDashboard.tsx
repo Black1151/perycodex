@@ -104,7 +104,6 @@ const ScoresCommentsDashboard: React.FC = () => {
 
   const getData = async (postBody: Record<string, any> = filterOptions) => {
     if (!toolId || !workflowId || !user?.customerId) {
-      console.warn("Skipping getData call: Required data is missing.");
       return;
     }
 
@@ -138,11 +137,9 @@ const ScoresCommentsDashboard: React.FC = () => {
 
         setGridData(processedData);
       } else {
-        console.error("Invalid response:", response);
         setGridData([]);
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
       setGridData([]);
     } finally {
       setLoading(false);

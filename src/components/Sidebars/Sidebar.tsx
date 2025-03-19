@@ -239,7 +239,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               css={{
                 "@media (max-width: 768px)": {
                   scrollbarWidth: "none",
-                  "-ms-overflow-style": "none",
+                  msOverflowStyle: "none",
                   "&::-webkit-scrollbar": {
                     display: "none",
                   },

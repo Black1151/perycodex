@@ -32,7 +32,7 @@ const GuestLoginClient: React.FC<GuestLoginProps> = ({ secureLink }) => {
             password: null,
           },
           suppressError: true,
-        }
+        },
       );
 
       if (result) {
@@ -42,7 +42,7 @@ const GuestLoginClient: React.FC<GuestLoginProps> = ({ secureLink }) => {
       }
     } catch (err) {
       setError(
-        (err as Error).message || "Something went wrong. Please try again."
+        (err as Error).message || "Something went wrong. Please try again.",
       );
     } finally {
       setLoading(false);

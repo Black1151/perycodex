@@ -29,7 +29,7 @@ const Bottombar: React.FC<BottombarProps> = ({ loading = false, content }) => {
       css={{
         WebkitOverflowScrolling: "touch",
         scrollbarHeight: "none",
-        "-ms-overflow-style": "none",
+        msOverflowStyle: "none",
         "&::-webkit-scrollbar": {
           display: "none",
         },

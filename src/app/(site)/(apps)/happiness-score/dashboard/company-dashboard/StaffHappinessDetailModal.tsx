@@ -51,7 +51,6 @@ const StaffHappinessDetailModal: React.FC<StaffHappinessDetailModalProps> = ({
       title: record.title,
     }));
   } catch (error) {
-    console.error("Error parsing historic records:", error);
     return null;
   }
 

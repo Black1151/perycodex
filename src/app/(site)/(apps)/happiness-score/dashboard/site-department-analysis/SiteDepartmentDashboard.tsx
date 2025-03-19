@@ -137,10 +137,8 @@ const SiteDepartmentDashboard: React.FC = () => {
         setOfficeLeaderboardData(resOfficeLeaderboardData ?? []);
         setDepartmentLeaderboardData(resDepartmentLeaderboardData ?? []);
       } else {
-        console.error("Invalid response:", response);
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
     } finally {
       setIsLoading(false);
     }
