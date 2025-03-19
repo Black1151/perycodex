@@ -47,19 +47,19 @@ export const CompanyBubble: React.FC<CompanyBubble> = ({ scores }) => {
   ];
 
   const globalMaxCount = Math.max(
-    ...validScoresArray.map((d: UserScores) => d.countOfScore),
+    ...validScoresArray.map((d: UserScores) => d.countOfScore)
   );
 
   const series: AgCartesianSeriesOptions[] = days.map((day) => {
     // Filter the scores for the current day
     const dayData = validScoresArray.filter(
-      (d: UserScores) => d.dayOfSubmission === day,
+      (d: UserScores) => d.dayOfSubmission === day
     );
 
     // Find the maximum countOfScore for the current day's data
     const localMaxCount = Math.max(
       ...dayData.map((d: UserScores) => d.countOfScore),
-      0,
+      0
     ); // Default to 0 if dayData is empty
 
     // Calculate the maxSize for this day based on the global maximum
@@ -77,7 +77,7 @@ export const CompanyBubble: React.FC<CompanyBubble> = ({ scores }) => {
       size: 0,
       maxSize: maxSize,
       tooltip: {
-        renderer: BubbleScoresTooltipRenderer
+        renderer: BubbleScoresTooltipRenderer,
       },
       itemStyler: (params: BubbleSeriesItemStylerParams<any>) => {
         const { datum, xKey } = params;
@@ -104,7 +104,7 @@ export const CompanyBubble: React.FC<CompanyBubble> = ({ scores }) => {
           fontSize: 12,
           fontFamily: "Metropolis",
           fontWeight: "bold",
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
         title: {
           text: "Score",
@@ -120,7 +120,7 @@ export const CompanyBubble: React.FC<CompanyBubble> = ({ scores }) => {
           fontSize: 10,
           fontFamily: "Metropolis",
           padding: 0,
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
       },
     ],

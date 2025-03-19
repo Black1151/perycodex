@@ -34,7 +34,7 @@ export const useFetchClient = () => {
       toastPosition = "bottom",
       onUnauthorised,
       suppressError = false,
-    }: FetchOptions = {},
+    }: FetchOptions = {}
   ): Promise<T | null> => {
     setLoading(true);
 

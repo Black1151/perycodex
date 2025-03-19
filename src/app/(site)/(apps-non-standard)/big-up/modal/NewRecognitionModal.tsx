@@ -24,7 +24,7 @@ export const NewRecognitionModal: React.FC<UserStatsModalProps> = ({
       <ModalOverlay />
       <BigUpModalContent mx={4} borderRadius="lg">
         <Box p={4}>
-          <Text color="perygonPink" fontSize="3xl" pb={4} fontWeight="bold">
+          <Text color="primary" fontSize="3xl" pb={4} fontWeight="bold">
             Your colleagues appreciate you!
           </Text>
           <Box

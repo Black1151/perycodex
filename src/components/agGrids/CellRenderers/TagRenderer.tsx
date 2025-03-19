@@ -50,7 +50,7 @@ const TagRenderer: React.FC<TagRendererProps> = ({
         bg={"gray.100"}
         justifyContent="center"
       >
-        <Sell sx={{ color: "var(--chakra-colors-perygonPink)" }} />
+        <Sell sx={{ color: "var(--chakra-colors-primary)" }} />
       </Box>
       <Text
         fontSize={"13px"}

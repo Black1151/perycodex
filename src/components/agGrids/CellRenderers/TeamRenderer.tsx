@@ -50,7 +50,7 @@ const TeamRenderer: React.FC<TeamRendererProps> = ({
         bg={"gray.100"}
         justifyContent="center"
       >
-        <People sx={{ color: "var(--chakra-colors-perygonPink)" }} />
+        <People sx={{ color: "var(--chakra-colors-primary)" }} />
       </Box>
       <Text
         fontSize={"13px"}

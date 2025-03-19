@@ -112,14 +112,14 @@ export function LoginForm() {
           successMessage: "Successfully logged in!",
           errorMessage: "Incorrect user or password",
           redirectOnError: false,
-        },
+        }
       );
       if (result) {
         router.push(result.redirectUrl);
       }
     } else {
       const appleSub = String(
-        await decryptData(decodeURIComponent(linkAppleAccountSub)),
+        await decryptData(decodeURIComponent(linkAppleAccountSub))
       );
 
       const appleLinkingResult: {
@@ -138,7 +138,7 @@ export function LoginForm() {
             sub: appleSub,
           },
           suppressError: true,
-        },
+        }
       );
       if (appleLinkingResult !== null) {
         if (appleLinkingResult.redirectUrl) {
@@ -214,7 +214,7 @@ export function LoginForm() {
                   if (secretKey !== undefined) {
                     const encryptedToken = CryptoJS.AES.encrypt(
                       result.sub,
-                      secretKey,
+                      secretKey
                     ).toString();
                     const appleAccountSubRedirectUrl = secureLink
                       ? `/login/?link-apple-account-sub=${encodeURIComponent(encryptedToken)}&l=${secureLink}`
@@ -261,7 +261,7 @@ export function LoginForm() {
                       : null,
                 },
                 suppressError: true,
-              },
+              }
             );
 
             if (result) {
@@ -323,7 +323,7 @@ export function LoginForm() {
               mb={["80px", "125px"]}
               fontWeight="bold"
               fontSize={["16px", "12px"]}
-              color={theme.colors.perygonPink}
+              color={theme.colors.primary}
             >
               {appleAccountLinked}
             </Text>
@@ -332,15 +332,15 @@ export function LoginForm() {
         {appleAccountLinked != null && (
           <Button
             mt={5}
-            backgroundColor={theme.colors.perygonPink}
+            backgroundColor={theme.colors.primary}
             type="submit"
             w="300px"
             isLoading={loading}
             height={12}
             color="white"
             _hover={{
-              color: theme.colors.perygonPink,
-              border: `1px solid ${theme.colors.perygonPink}`,
+              color: theme.colors.primary,
+              border: `1px solid ${theme.colors.primary}`,
               backgroundColor: "white",
             }}
             onClick={() =>
@@ -361,7 +361,7 @@ export function LoginForm() {
               <LinkOffIcon
                 style={{
                   width: "48px",
-                  color: theme.colors.perygonPink,
+                  color: theme.colors.primary,
                   position: "absolute",
                   height: "auto",
                   top: "-70px",
@@ -417,7 +417,7 @@ export function LoginForm() {
                 />
               }
               register={() => register("email", emailValidation)}
-              focusBorderColor={theme.colors.perygonPink}
+              focusBorderColor={theme.colors.primary}
             />
             <InputField
               name="password"
@@ -437,14 +437,14 @@ export function LoginForm() {
                   required: "Password is required",
                 })
               }
-              focusBorderColor={theme.colors.perygonPink}
+              focusBorderColor={theme.colors.primary}
             />
             <Flex w="100%" justifyContent="flex-end">
               {linkAppleAccountSub != "" && (
                 <Text
                   fontSize={["16px", "12px"]}
                   cursor="pointer"
-                  color={theme.colors.perygonPink}
+                  color={theme.colors.primary}
                   _hover={{ cursor: "pointer" }}
                   onClick={() => router.push("/login")}
                 >
@@ -455,7 +455,7 @@ export function LoginForm() {
                 <Text
                   fontSize={["16px", "12px"]}
                   cursor="pointer"
-                  color={theme.colors.perygonPink}
+                  color={theme.colors.primary}
                   _hover={{ cursor: "pointer" }}
                   onClick={() => router.push("/password-recovery")}
                 >
@@ -466,15 +466,15 @@ export function LoginForm() {
             {linkAppleAccountSub !== "" && (
               <Button
                 mt={5}
-                backgroundColor={theme.colors.perygonPink}
+                backgroundColor={theme.colors.primary}
                 type="submit"
                 w="full"
                 isLoading={loading}
                 height={12}
                 color="white"
                 _hover={{
-                  color: theme.colors.perygonPink,
-                  border: `1px solid ${theme.colors.perygonPink}`,
+                  color: theme.colors.primary,
+                  border: `1px solid ${theme.colors.primary}`,
                   backgroundColor: "white",
                 }}
                 onClick={() => handleButtonClick("email")}
@@ -485,15 +485,15 @@ export function LoginForm() {
             {linkAppleAccountSub.length < 1 && (
               <Button
                 mt={5}
-                backgroundColor={theme.colors.perygonPink}
+                backgroundColor={theme.colors.primary}
                 type="submit"
                 w="full"
                 isLoading={loading}
                 height={12}
                 color="white"
                 _hover={{
-                  color: theme.colors.perygonPink,
-                  border: `1px solid ${theme.colors.perygonPink}`,
+                  color: theme.colors.primary,
+                  border: `1px solid ${theme.colors.primary}`,
                   backgroundColor: "white",
                 }}
                 onClick={() => handleButtonClick("email")}
@@ -510,7 +510,7 @@ export function LoginForm() {
                   pt="10px"
                   fontSize={["16px", "12px"]}
                   cursor="pointer"
-                  color={theme.colors.perygonPink}
+                  color={theme.colors.primary}
                   _hover={{ cursor: "pointer" }}
                   onClick={() => router.push("sign-up")}
                 >

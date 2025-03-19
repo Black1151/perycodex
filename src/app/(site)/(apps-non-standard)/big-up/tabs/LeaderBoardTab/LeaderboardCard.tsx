@@ -45,7 +45,7 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
           _hover={{ cursor: "pointer" }}
         />
         <Flex direction="column" ml={4} flex="1">
-          <Text fontWeight="bold" fontSize="xl" color="perygonPink">
+          <Text fontWeight="bold" fontSize="xl" color="primary">
             {name}
           </Text>
           <Text fontSize="sm" color="white">
@@ -66,12 +66,12 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
             fontSize="large"
           />
         )}
-        <Text fontWeight="bold" color="perygonPink" fontSize="lg" mr={2}>
+        <Text fontWeight="bold" color="primary" fontSize="lg" mr={2}>
           {rank}
         </Text>
         <Text
           fontWeight="bold"
-          color="perygonPink"
+          color="primary"
           fontSize="lg"
           whiteSpace="nowrap"
         >
@@ -84,7 +84,7 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
         <Text fontSize="sm" fontWeight="bold" color="white">
           Received:
         </Text>
-        <Text fontWeight="bold" fontSize="lg" color="perygonPink">
+        <Text fontWeight="bold" fontSize="lg" color="primary">
           {received.toLocaleString()}
         </Text>
       </Flex>
@@ -92,7 +92,7 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
         <Text fontSize="sm" fontWeight="bold" color="white">
           Given:
         </Text>
-        <Text fontWeight="bold" fontSize="lg" color="perygonPink">
+        <Text fontWeight="bold" fontSize="lg" color="primary">
           {given.toLocaleString()}
         </Text>
       </Flex>

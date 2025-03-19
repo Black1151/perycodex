@@ -78,7 +78,7 @@ const ToolConfigRenderer: React.FC<ToolConfigRendererProps> = ({
             bg={"gray.100"}
             justifyContent="center"
           >
-            <Construction sx={{ color: "var(--chakra-colors-perygonPink)" }} />
+            <Construction sx={{ color: "var(--chakra-colors-primary)" }} />
           </Box>
         </Flex>
       )}

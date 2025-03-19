@@ -10,13 +10,17 @@ import {
   Flex,
   Text,
   useTheme,
+  MenuDivider,
+  MenuGroup,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import PersonIcon from "@mui/icons-material/Person";
-
-import { MenuItemProps } from "./types";
 import { Celebration } from "@mui/icons-material";
+
 import PulsatingIcon from "./PulsatingIcon";
-import { useBreakpointValue } from "@chakra-ui/react";
+import { MenuItemProps } from "./types";
+import { useThemeContext } from "@/providers/ChakraThemeProvider";
+import { ThemeName, themeRegistry } from "@/theme/themes/themeRegistry";
 
 interface ProfileMenuProps {
   userImageUrl: string;
@@ -29,7 +33,14 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
   menuItems,
   unread,
 }) => {
+  // Current active theme from Chakra (useTheme) - primarily used for any styling references
   const theme = useTheme();
+
+  // Access the theme-switching logic from your Theme Context
+  const { setThemeName } = useThemeContext();
+
+  // List of all possible theme options
+  const allThemes = Object.keys(themeRegistry) as ThemeName[];
 
   const pulsatingIconSize = useBreakpointValue({ base: 20, md: 25 });
 
@@ -62,7 +73,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
             >
               <PersonIcon
                 sx={{
-                  color: "var(--chakra-colors-perygonPink)",
+                  color: theme.colors.primary,
                   width: "100%",
                   height: "100%",
                 }}
@@ -87,7 +98,9 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
         )}
       </Box>
 
-      <MenuList bg="white" color={theme.colors.perygonPink} px={2}>
+      {/* The main menu content */}
+      <MenuList bg="white" color={theme.colors.primary} px={2}>
+        {/* Render your existing menu items */}
         {menuItems.map((item) => (
           <MenuItem
             key={item.label}
@@ -99,7 +112,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
             bg="white"
             borderRadius="md"
             _hover={{
-              backgroundColor: theme.colors.perygonPink,
+              backgroundColor: theme.colors.primary,
               color: "white",
             }}
             onClick={item.onClick}
@@ -110,6 +123,29 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
             </Text>
           </MenuItem>
         ))}
+
+        {/* Add a horizontal divider before the theme switching group */}
+        <MenuDivider />
+
+        {/* Group for theme switching */}
+        <MenuGroup title="Switch Theme">
+          {allThemes.map((tName) => (
+            <MenuItem
+              key={tName}
+              onClick={() => setThemeName(tName)}
+              fontSize={[14, 16, 18]}
+              _hover={{
+                backgroundColor: theme.colors.primary,
+                color: "white",
+              }}
+              // You can highlight the current theme if you like:
+              // bg={themeName === tName ? theme.colors.primary : "white"}
+              // color={themeName === tName ? "white" : theme.colors.primary}
+            >
+              {tName}
+            </MenuItem>
+          ))}
+        </MenuGroup>
       </MenuList>
     </Menu>
   );

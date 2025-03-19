@@ -67,7 +67,7 @@ export default function NotFoundPage() {
           >
             {/* 404 Error text with animated effect */}
             <Box position="relative" textAlign="center">
-              <LetterFlyIn color="perygonPink">Help me...</LetterFlyIn>
+              <LetterFlyIn color="primary">Help me...</LetterFlyIn>
               <Text
                 fontSize={{ base: "xl", md: "2xl" }}
                 fontWeight="bold"
@@ -90,7 +90,7 @@ export default function NotFoundPage() {
             <Button
               variant="solid"
               size="lg"
-              bg="perygonPink"
+              bg="primary"
               color="white"
               _hover={{ bg: "pink.500", transform: "scale(1.05)" }}
               _active={{ bg: "pink.600" }}

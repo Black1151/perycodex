@@ -33,7 +33,7 @@ const LoadingOverlay: React.FC = () => {
         <Text
           fontSize="6xl" // Size of the "P"
           fontFamily="bonfire" // Using the Bonfire font
-          color="perygonPink" // Use the theme color for the letter
+          color="primary" // Use the theme color for the letter
           animation={`${pulse} 1.5s infinite`} // Apply the pulsing animation
         >
           P
@@ -41,14 +41,14 @@ const LoadingOverlay: React.FC = () => {
         <Text
           fontSize="2xl"
           fontWeight="bold"
-          color="perygonPink"
+          color="primary"
           fontFamily="heading"
         >
           Loading...
         </Text>
         <Text
           fontSize="lg"
-          color="perygonPink"
+          color="primary"
           textAlign="center"
           fontFamily="body"
         >

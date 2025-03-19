@@ -52,7 +52,7 @@ export default function Home() {
       width="100%"
       overflowX="hidden"
       flex={1}
-      bgGradient={`linear(to-br, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`}
+      bgGradient={`linear(to-br, ${theme.colors.secondary}, ${theme.colors.primary})`}
     >
       {isLoading ? (
         // <SplashScreen />

@@ -117,7 +117,7 @@ const SiteDepartmentDashboard: React.FC = () => {
             ...postBody,
           },
           redirectOnError: false,
-        },
+        }
       );
 
       if (response && response.resource) {
@@ -153,7 +153,7 @@ const SiteDepartmentDashboard: React.FC = () => {
     }
 
     const weeklyOption = dateRangeOptions[dateRangeOption].find(
-      (opt) => opt.value === defaultDateFilterOption,
+      (opt) => opt.value === defaultDateFilterOption
     );
 
     if (weeklyOption) {
@@ -167,7 +167,7 @@ const SiteDepartmentDashboard: React.FC = () => {
   const weeklySiteNames =
     weeklyLineChartComparisonData.length > 0
       ? Object.keys(weeklyLineChartComparisonData[0]).filter(
-          (key) => key !== "week",
+          (key) => key !== "week"
         )
       : [];
 
@@ -184,7 +184,7 @@ const SiteDepartmentDashboard: React.FC = () => {
           rotation: 300,
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
         title: {
           text: "Week",
@@ -205,7 +205,7 @@ const SiteDepartmentDashboard: React.FC = () => {
         label: {
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
       },
     ],
@@ -218,7 +218,7 @@ const SiteDepartmentDashboard: React.FC = () => {
   const monthlySiteNames =
     monthlyLineChartComparisonData.length > 0
       ? Object.keys(monthlyLineChartComparisonData[0]).filter(
-          (key) => key !== "month",
+          (key) => key !== "month"
         )
       : [];
 
@@ -235,7 +235,7 @@ const SiteDepartmentDashboard: React.FC = () => {
           rotation: 300,
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
         title: {
           text: "Month",
@@ -256,7 +256,7 @@ const SiteDepartmentDashboard: React.FC = () => {
         label: {
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
       },
     ],
@@ -267,7 +267,7 @@ const SiteDepartmentDashboard: React.FC = () => {
   };
 
   const sortedOfficeLeaderboard = [...officeLeaderboardData].sort(
-    (a, b) => b.currentWeekScore - a.currentWeekScore,
+    (a, b) => b.currentWeekScore - a.currentWeekScore
   );
 
   const officeLeaderboardBarOptions: AgCartesianChartOptions = {
@@ -315,7 +315,7 @@ const SiteDepartmentDashboard: React.FC = () => {
           rotation: 300,
           fontSize: 10,
           fontFamily: "Metropolis",
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
       },
       {
@@ -324,7 +324,7 @@ const SiteDepartmentDashboard: React.FC = () => {
         label: {
           fontSize: 10,
           fontFamily: "Metropolis",
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
       },
     ],
@@ -332,7 +332,7 @@ const SiteDepartmentDashboard: React.FC = () => {
   };
 
   const sortedDepartmentLeaderboard = [...departmentLeaderboardData].sort(
-    (a, b) => b.currentWeekScore - a.currentWeekScore,
+    (a, b) => b.currentWeekScore - a.currentWeekScore
   );
 
   const departmentLeaderboardBarOptions: AgCartesianChartOptions = {
@@ -380,7 +380,7 @@ const SiteDepartmentDashboard: React.FC = () => {
           rotation: 300,
           fontSize: 10,
           fontFamily: "Metropolis",
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
       },
       {
@@ -389,7 +389,7 @@ const SiteDepartmentDashboard: React.FC = () => {
         label: {
           fontSize: 10,
           fontFamily: "Metropolis",
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
       },
     ],

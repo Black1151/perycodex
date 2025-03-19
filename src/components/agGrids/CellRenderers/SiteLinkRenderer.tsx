@@ -50,7 +50,7 @@ const SiteLinkRenderer: React.FC<SiteLinkRendererProps> = ({
         bg={"gray.100"}
         justifyContent="center"
       >
-        <LocationOn sx={{ color: "var(--chakra-colors-perygonPink)" }} />
+        <LocationOn sx={{ color: "var(--chakra-colors-primary)" }} />
       </Box>
       <Text
         fontSize={"13px"}

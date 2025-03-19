@@ -119,7 +119,7 @@ const ScoresCommentsDashboard: React.FC = () => {
             ...postBody,
           },
           redirectOnError: false,
-        },
+        }
       );
 
       if (response && typeof response === "object" && "data" in response) {
@@ -171,7 +171,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                   rotation: 340,
                   fontSize: 10,
                   fontFamily: "Metropolis",
-                  color: theme.colors.perygonPink,
+                  color: theme.colors.primary,
                 },
                 gridLine: {
                   width: 0,
@@ -281,7 +281,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                   rotation: 300,
                   fontSize: 10,
                   fontFamily: "Metropolis",
-                  color: theme.colors.perygonPink,
+                  color: theme.colors.primary,
                 },
                 gridLine: {
                   width: 0,
@@ -391,7 +391,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                   rotation: 300,
                   fontSize: 10,
                   fontFamily: "Metropolis",
-                  color: theme.colors.perygonPink,
+                  color: theme.colors.primary,
                 },
                 gridLine: {
                   width: 0,
@@ -427,7 +427,7 @@ const ScoresCommentsDashboard: React.FC = () => {
           },
           line: {
             series: {
-              stroke: theme.colors.perygonPink,
+              stroke: theme.colors.primary,
               interpolation: {
                 type: "smooth",
               },
@@ -472,7 +472,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                   rotation: 300,
                   fontSize: 10,
                   fontFamily: "Metropolis",
-                  color: theme.colors.perygonPink,
+                  color: theme.colors.primary,
                 },
                 gridLine: {
                   width: 0,
@@ -508,7 +508,7 @@ const ScoresCommentsDashboard: React.FC = () => {
           },
           line: {
             series: {
-              stroke: theme.colors.perygonPink,
+              stroke: theme.colors.primary,
               interpolation: {
                 type: "smooth",
               },
@@ -560,7 +560,7 @@ const ScoresCommentsDashboard: React.FC = () => {
     }
 
     const weeklyOption = dateRangeOptions[dateRangeOption].find(
-      (opt) => opt.value === defaultDateFilterOption,
+      (opt) => opt.value === defaultDateFilterOption
     );
 
     if (weeklyOption) {
@@ -590,7 +590,7 @@ const ScoresCommentsDashboard: React.FC = () => {
         size="5xl"
       >
         <ModalOverlay />
-        <ModalContent bgGradient={theme.gradients.perygonBackground}>
+        <ModalContent bgGradient={theme.gradients.primaryGradient}>
           <ModalHeader color="white">{barModalTitle}</ModalHeader>
           <ModalCloseButton color="white" />
           <ModalBody pb={10}>

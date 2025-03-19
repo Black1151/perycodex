@@ -71,7 +71,7 @@ const NavBar: React.FC<NavBarProps> = ({
         left={0}
         right={0}
         zIndex={100}
-        bgGradient={theme.gradients.perygonBackground}
+        bgGradient={theme.gradients.primaryGradient}
         borderBottom="white 1px solid"
       >
         <MotionBox

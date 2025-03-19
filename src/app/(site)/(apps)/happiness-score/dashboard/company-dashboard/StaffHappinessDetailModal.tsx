@@ -16,7 +16,7 @@ import {
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
-import { perygonTheme } from "@/theme/theme";
+import { perygonTheme } from "@/theme/themes/perygon/perygonTheme/perygonTheme";
 import Link from "next/link";
 
 interface StaffHappinessDetailModalProps {
@@ -65,7 +65,7 @@ const StaffHappinessDetailModal: React.FC<StaffHappinessDetailModalProps> = ({
       <ModalContent
         mx={0}
         px={0}
-        bgGradient={perygonTheme.gradients.perygonBackground}
+        bgGradient={perygonTheme.gradients.primaryGradient}
       >
         <ModalHeader color="white">{`${firstname}'s Happiness`}</ModalHeader>
         <ModalCloseButton color="white" />

@@ -40,7 +40,7 @@ export const EmailScheduleDetailsBanner: React.FC<
   EmailScheduleDetailsBannerProps
 > = ({ emailSchedule }) => {
   return (
-      <Flex mb={4} p={[0, 0, 4]} color={"white"} overflow={"hidden"} gap={2}>
+    <Flex mb={4} p={[0, 0, 4]} color={"white"} overflow={"hidden"} gap={2}>
       <BackButton />
       {/* Form Status */}
       <FormControl
@@ -61,7 +61,7 @@ export const EmailScheduleDetailsBanner: React.FC<
         >
           <ScheduleSend
             fontSize="large"
-            sx={{ color: "var(--chakra-colors-perygonPink)" }}
+            sx={{ color: "var(--chakra-colors-primary)" }}
           />
         </Box>
       </FormControl>

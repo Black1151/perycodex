@@ -64,7 +64,7 @@ export const UserTeamDetailsBanner: React.FC<UserTeamDetailsBannerProps> = ({
         >
           <People
             fontSize="large"
-            sx={{ color: "var(--chakra-colors-perygonPink)" }}
+            sx={{ color: "var(--chakra-colors-primary)" }}
           />
         </Box>
       </FormControl>
