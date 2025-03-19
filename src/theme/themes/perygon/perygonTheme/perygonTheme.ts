@@ -1,7 +1,8 @@
 import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
-import { agGridStyles } from "./agGridStyles";
+import { agGridStyles } from "../../../agGridStyles";
 import { scrollBarThemes } from "@/theme/scrollBarThemes";
 import { agChartStyles } from "@/theme/agChartStyles";
+import { colorPalette } from "./colorPalette";
 
 const config: ThemeConfig = {
   initialColorMode: "light",
@@ -10,9 +11,15 @@ const config: ThemeConfig = {
 
 export const perygonTheme = extendTheme({
   config,
+
   colors: {
-    perygonPink: "#ff0070",
-    perygonBlue: "#0D003D",
+    primary: colorPalette.perygonPink,
+    secondary: colorPalette.seduloRed,
+
+    //buttons
+    primaryButton: colorPalette.seduloRed,
+
+    //legacy colors to be removed during refactor
     perygonBlueTransparent: "rgba(13, 0, 61, 0.85)",
     seduloRed: "#B4213D",
     yellow: "#EFC718",
@@ -172,6 +179,8 @@ export const perygonTheme = extendTheme({
     },
   },
   gradients: {
-    perygonBackground: "linear(to-br, seduloRed 60%, perygonPink 100%)",
+    primaryGradient: "linear(to-br, secondary 60%, primary 100%)",
+    secondaryGradient: `linear-gradient(to bottom right, rgba(255, 0, 0, 0.6), rgba(255, 192, 203, 0.6))`,
+    secondaryGradientTransparent: `linear-gradient(to bottom right, rgba(255, 0, 0, 0.3), rgba(255, 192, 203, 0.3))`,
   },
 });

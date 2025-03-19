@@ -25,7 +25,7 @@ interface RightHandNavigationDrawerProps {
   handleCheckboxChange: (
     groupIndex: number,
     optionIndex: number,
-    isChecked: boolean,
+    isChecked: boolean
   ) => void;
   filterOptions: FilterOptionGroup[];
   clearAllFilters: () => void;
@@ -160,7 +160,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
             background={"white"}
             w={"full"}
             pl={5}
-            color={theme.colors.perygonPink}
+            color={theme.colors.primary}
             fontWeight={"bold"}
             fontSize={"1.2rem"}
           >
@@ -175,7 +175,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
           </Box>
           {drawerState === "fully-open" && title && (
             <Box px={4}>
-              <Text style={{ color: theme.colors.perygonPink }}>{title}</Text>
+              <Text style={{ color: theme.colors.primary }}>{title}</Text>
             </Box>
           )}
 
@@ -243,7 +243,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                         <Box
                           key={group.label}
                           border="1px solid"
-                          borderColor={theme.colors.perygonPink}
+                          borderColor={theme.colors.primary}
                           borderRadius="md"
                           p={2}
                           fontSize={["14px", "16px"]}
@@ -257,7 +257,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                             <Text
                               fontWeight="bold"
                               mb={2}
-                              bg={theme.colors.perygonPink}
+                              bg={theme.colors.primary}
                               color="white"
                               width="100%"
                               p={2}
@@ -281,7 +281,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                                   handleCheckboxChange(
                                     groupIndex,
                                     optionIndex,
-                                    e.target.checked,
+                                    e.target.checked
                                   )
                                 }
                               >

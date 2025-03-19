@@ -13,7 +13,7 @@ const Dot: React.FC<DotProps> = ({ isActive, onClick }) => {
       w={[2, 4]}
       h={[2, 4]}
       borderRadius="full"
-      bg={isActive ? theme.colors.perygonPink : "white"}
+      bg={isActive ? theme.colors.primary : "white"}
       cursor="pointer"
       onClick={onClick}
       transition="background-color 0.3s ease"

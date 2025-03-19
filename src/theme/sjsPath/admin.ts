@@ -101,7 +101,7 @@ export const themeJson = {
     "--sjs-general-dim-forecolor-light": "#000000",
 
     // Primary Backcolour
-    "--sjs-primary-backcolor": "var(--chakra-colors-perygonPink)", // Main Accent Colour of things
+    "--sjs-primary-backcolor": "var(--chakra-colors-primary)", // Main Accent Colour of things
     "--sjs-primary-backcolor-light": "#3182CE1A",
     "--sjs-primary-backcolor-dark": "#3182CE1A",
     "--sjs-primary-forecolor": "#E5E5E5",
@@ -131,7 +131,7 @@ export const themeJson = {
     "--sjs-question-background": "#a2ffc6", // Unsure what this one does
 
     // Page Title
-    "--sjs-font-pagetitle-color": "var(--chakra-colors-perygonPink)",
+    "--sjs-font-pagetitle-color": "var(--chakra-colors-primary)",
 
     // Panels
     "--sjs-questionpanel-backcolor": "#FFFFFF",
@@ -141,7 +141,7 @@ export const themeJson = {
     "--sjs-font-questiontitle-color": "rgba(0, 0, 0, 1)",
 
     // Question Description
-    "--sjs-font-questiondescription-color": "var(--chakra-colors-perygonPink)",
+    "--sjs-font-questiondescription-color": "var(--chakra-colors-primary)",
 
     // Header Title
     "--sjs-font-headertitle-color": "rgba(255, 255, 255, 1)",

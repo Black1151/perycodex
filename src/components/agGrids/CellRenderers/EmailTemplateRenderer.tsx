@@ -50,7 +50,7 @@ const EmailTemplateRenderer: React.FC<EmailTemplateRendererProps> = ({
         bg={"gray.100"}
         justifyContent="center"
       >
-        <Email sx={{ color: "var(--chakra-colors-perygonPink)" }} />
+        <Email sx={{ color: "var(--chakra-colors-primary)" }} />
       </Box>
       <Text
         fontSize={"13px"}

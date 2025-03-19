@@ -16,9 +16,9 @@ export const scrollBarThemes = {
   "::-webkit-scrollbar-thumb": {
     borderRadius: "10px",
     WebkitBoxShadow: "inset 0 0 6px rgba(0, 0, 0, 0.3)",
-    backgroundColor: "var(--chakra-colors-perygonPink)",
+    backgroundColor: "var(--chakra-colors-primary)",
   },
   "::-webkit-scrollbar-thumb:hover": {
-    backgroundColor: "var(--chakra-colors-seduloRed)",
+    backgroundColor: "var(--chakra-colors-secondary)",
   },
 };

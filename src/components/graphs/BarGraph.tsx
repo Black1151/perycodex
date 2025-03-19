@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import useColor from "@/hooks/useColor";
-import { perygonTheme } from "@/theme/theme";
+import { perygonTheme } from "@/theme/themes/perygon/perygonTheme/perygonTheme";
 
 interface DataPoint {
   value: number;
@@ -202,7 +202,7 @@ const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({
                     </Text>
                   </VStack>
                 }
-                bgColor={perygonTheme.colors.perygonPink}
+                bgColor={perygonTheme.colors.primary}
                 color="white"
                 placement="top"
                 isOpen={isTouchDevice ? activeTooltip === index : undefined}
@@ -235,7 +235,7 @@ const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({
                       textAlign="center"
                       transform="rotate(-45deg)"
                       whiteSpace="nowrap"
-                      color="perygonPink"
+                      color="primary"
                     >
                       {dataPoint.title.length > 10
                         ? dataPoint.title.slice(0, 10) + "..."

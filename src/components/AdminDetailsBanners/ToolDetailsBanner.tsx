@@ -58,7 +58,7 @@ export const ToolDetailsBanner: React.FC<ToolDetailsBannerProps> = ({
         >
           <Construction
             fontSize="large"
-            sx={{ color: "var(--chakra-colors-perygonPink)" }}
+            sx={{ color: "var(--chakra-colors-primary)" }}
           />
         </Box>
       </FormControl>
