@@ -51,6 +51,7 @@ export interface WorkflowStage {
   userGroupRestriction: boolean;
   wouldHaveBeenNextIfNotLocked: boolean;
   isExternalBusinessProcess: boolean;
+  isGlobalVariableBlocking: boolean | null;
 }
 
 interface EnhancedWorkflowStage extends WorkflowStage {
@@ -91,19 +92,36 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
 
   // Dictates if the user is allowed to click on the stage
   const canClickStage = (stage: WorkflowStage): boolean => {
-    let canClick: boolean = true;
+    const canClick: boolean = true;
 
     // You should never be able to click a stage if it is pending
     if (stage.stageStatus === "Pending") {
       return false;
     }
 
-    // a CA should be able to click into everything regardless if it has been completed or next
+    // Checking the logic around the Global Variables
+    if (
+      // If stage is locked (bound by the GV as not startByDefault) and there is no isGlobalVariableBlocking
+      stage.stageStatus === "Locked" &&
+      stage.isGlobalVariableBlocking
+    ) {
+      return false;
+    }
+
+    if (
+      stage.stageStatus === "Locked" &&
+      stage.isGlobalVariableBlocking === false &&
+      stage.wouldHaveBeenNextIfNotLocked === false
+    ) {
+      return false;
+    }
+
+    // A CA should be able to click into everything regardless if it has been completed or next
     if (user && user.role === "CA") {
       return true;
     }
 
-    // an EU should be blocked if they are not external business processes
+    // An EU should be blocked if they are not external business processes
     if (user && user.role === "EU") {
       if (stage.isExternalBusinessProcess) {
         return true;
@@ -115,11 +133,11 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
     // If there is a UAG a user should be part of that group to be able to access it
     if (stage.userAccessGroupNames && stage.userAccessGroupNames.length > 0) {
       if (!user) {
-        return false; // No user block access
+        return false;
       }
 
       if (!user?.groupNames?.length) {
-        return false; // If user has no group names or is null, block access
+        return false;
       }
 
       const hasAccess = stage.userAccessGroupNames.some(
@@ -130,6 +148,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
         return false;
       }
     }
+
     return canClick;
   };
 

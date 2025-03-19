@@ -51,6 +51,15 @@ interface FormDataResponse {
   statusName: string;
 }
 
+interface Variables {
+  workflowInstanceId: number;
+  businessProcessInstanceId: number;
+  fieldName: string;
+  fieldValue: string;
+  dataType: string;
+  createdAt: string;
+}
+
 const REDIRECT_PATHS: Record<string, string> = {
   happiness: "/happiness-score",
   enps: "/enps",
@@ -83,6 +92,12 @@ export default function WorkflowLayout({
   const [formData, setFormData] = useState<any | null>(null);
   const [isNew, setIsNew] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [workflowVariables, setWorkflowVariables] = useState<
+    | Array<{
+        [key: string]: { [nestedKey: string]: any };
+      }>
+    | undefined
+  >(undefined);
 
   const handleStageChange = useCallback(
     async (newStage: WorkflowStage) => {
@@ -137,13 +152,79 @@ export default function WorkflowLayout({
             })
           : Promise.resolve(null);
 
-        const [formDataResource, formDataset] = await Promise.all([
-          formDataRequest,
-          formDatasetRequest,
-        ]);
+        const variablesRequest = workflowInstanceId
+          ? fetchClient<Variables[]>("/api/workflows/getVariables", {
+              method: "POST",
+              body: {
+                workflowInstanceId: workflowInstanceId,
+              },
+              redirectOnError: false,
+            })
+          : Promise.resolve(null);
+
+        const [formDataResource, formDataset, variablesResponse] =
+          await Promise.all([
+            formDataRequest,
+            formDatasetRequest,
+            variablesRequest,
+          ]);
 
         setCurrentForm(formDataResource || null);
         setActiveStageId(currentStage.bpInstBpId);
+
+        if (variablesResponse) {
+          const processedVariables: Array<{ [key: string]: any }> = [];
+
+          variablesResponse.forEach((variable) => {
+            let parsedValue: any = variable.fieldValue;
+
+            try {
+              switch (variable.dataType.toLowerCase()) {
+                case "number":
+                  parsedValue = parseFloat(variable.fieldValue);
+                  if (isNaN(parsedValue)) {
+                    parsedValue = variable.fieldValue;
+                  }
+                  break;
+                case "boolean":
+                  parsedValue =
+                    variable.fieldValue.toLowerCase() === "true"
+                      ? true
+                      : variable.fieldValue.toLowerCase() === "false"
+                        ? false
+                        : variable.fieldValue;
+                  break;
+                case "json":
+                  parsedValue = JSON.parse(variable.fieldValue);
+                  break;
+                case "date":
+                  parsedValue = new Date(variable.fieldValue);
+                  if (isNaN(parsedValue.getTime())) {
+                    parsedValue = variable.fieldValue;
+                  }
+                  break;
+                default:
+                  break;
+              }
+            } catch (error) {
+              console.error(
+                `Error parsing value for ${variable.fieldName}:`,
+                error,
+              );
+              parsedValue = variable.fieldValue;
+            }
+
+            if (typeof parsedValue === "object" && parsedValue !== null) {
+              processedVariables.push({ [variable.fieldName]: parsedValue });
+            } else {
+              processedVariables.push({ [variable.fieldName]: parsedValue });
+            }
+          });
+
+          setWorkflowVariables(processedVariables);
+        } else {
+          setWorkflowVariables(undefined);
+        }
 
         if (formDataset) {
           const parsedResponse =
@@ -155,6 +236,13 @@ export default function WorkflowLayout({
           const isUserAuthorised = (() => {
             // If the stage is pending, the user should not be authorized
             if (currentStage.stageStatus === "Pending") {
+              return false;
+            }
+
+            if (
+              currentStage.isGlobalVariableBlocking &&
+              currentStage.wouldHaveBeenNextIfNotLocked === false
+            ) {
               return false;
             }
 
@@ -277,6 +365,7 @@ export default function WorkflowLayout({
           cssPath={currentStage.cssThemeFileUrl}
           sjsPath={currentStage.sjsThemeFileUrl}
           layoutOptions={{ showTitle: true }}
+          includeVariables={workflowVariables}
         />
       )}
     </>
