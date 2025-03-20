@@ -1,8 +1,9 @@
 import React from "react";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Spinner } from "@chakra-ui/react";
 import apiClient from "@/lib/apiClient";
 import { redirect } from "next/navigation";
 import { verifySession } from "@/lib/dal";
+import ErrorBox from "@/components/layout/ErrorBox";
 
 interface SearchParams {
   l?: string;
@@ -33,7 +34,7 @@ const LinkPage = async ({ searchParams }: { searchParams: SearchParams }) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        error = errorData?.message || "Failed to fetch data.";
+        error = errorData?.message || "Your link may have expired.";
       } else {
         const data = await response.json();
         responseData = data.resource || "No redirect URL returned.";
@@ -45,21 +46,44 @@ const LinkPage = async ({ searchParams }: { searchParams: SearchParams }) => {
   }
 
   if (responseData) {
+    try {
+      const url = new URL(responseData, process.env.NEXTAUTH_URL);
+      const params = url.searchParams;
+
+      if (params.get("a") === "3") {
+        params.delete("a");
+        responseData = url.pathname + url.search;
+      }
+    } catch (parseError) {
+      error = "Error processing the redirect URL.";
+    }
     redirect(responseData);
   }
 
   return (
-    <Box mt="65px">
-      <Text fontSize="xl">This is a link page</Text>
-      <Text color="white">
-        {error
-          ? `Error: ${error}`
-          : responseData
-            ? `Redirect URL: ${responseData}`
-            : "No data available."}
-      </Text>
-    </Box>
+    <>
+      <Box
+        pt="65px"
+        pb="65px"
+        height="100svh"
+        width="100svw"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        color="white"
+      >
+        {error && (
+          <ErrorBox
+            supportingText={
+              error ?? "An unexpected error occurred. Please try again later."
+            }
+            buttonText={"Go Home"}
+            buttonLink={"/"}
+          />
+        )}
+        {!error && <Spinner color="white" />}
+      </Box>
+    </>
   );
 };
-
 export default LinkPage;
