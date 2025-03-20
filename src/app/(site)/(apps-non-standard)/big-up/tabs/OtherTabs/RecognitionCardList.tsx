@@ -16,7 +16,7 @@ interface RecognitionListProps extends GridProps {
 
 const getPersonDetails = (
   item: BigUpWallEntry,
-  reverseRecognition: boolean
+  reverseRecognition: boolean,
 ) => {
   if (reverseRecognition) {
     return {
@@ -74,7 +74,7 @@ export const RecognitionList: React.FC<RecognitionListProps> = ({
                           ? "recognised me"
                           : `recognised by ${personDetails.recognizedBy}`}
                       </Text>
-                      <Text fontSize="xs" color="pink.300" pt={1}>
+                      <Text fontSize="xs" color="primary" pt={1}>
                         {item.createdAt.split(" ")[0]}
                       </Text>
                       <Text
@@ -94,7 +94,7 @@ export const RecognitionList: React.FC<RecognitionListProps> = ({
                         onClickProfilePic(
                           reverseRecognition
                             ? item.userIdUrlFrom.toString()
-                            : item.userIdUrlTo.toString()
+                            : item.userIdUrlTo.toString(),
                         );
                       }}
                       _hover={{ cursor: "pointer" }}
