@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getFilteredDashboards } from "@/lib/dashboardUtils";
 import NoDashboardsModal from "../NoDashboardModal";
 import apiClient from "@/lib/apiClient";
-import { getUser, verifySession } from "@/lib/dal";
+import { getUser } from "@/lib/dal";
 import { ToolLandingPage } from "@/app/(site)/(apps)/ToolLandingPageInner";
 import { HappinessScoreSplashScreen } from "@/app/(site)/(apps)/happiness-score/HappinessScoreSplashScreen";
 
