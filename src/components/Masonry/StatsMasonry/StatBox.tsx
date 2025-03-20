@@ -28,7 +28,7 @@ export const StatBox: React.FC<StatBoxProps> = ({
 
   return (
     <VStack
-      bg="white"
+      bg="elementBG"
       justifyContent="center"
       alignItems="center"
       direction="column"

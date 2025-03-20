@@ -11,6 +11,8 @@ import {
 import { motion } from "framer-motion";
 import { perygonTheme } from "@/theme/themes/perygon/perygonTheme/perygonTheme";
 
+import { useTheme } from "@chakra-ui/react";
+
 interface DataPoint {
   value: number;
   title: string;
@@ -130,7 +132,7 @@ const LineGraph: React.FC<LineGraphProps> = memo(
           width="100%"
           height={`${totalHeight}px`}
           position="relative"
-          bg="white"
+          bg="elementBG"
           borderRadius={{ base: "8px", md: "16px" }}
           overflow="hidden"
           boxShadow="lg"

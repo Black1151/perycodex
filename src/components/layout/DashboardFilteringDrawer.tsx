@@ -139,7 +139,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
         bottom={0}
         width={225}
         zIndex={98}
-        bg="white"
+        bg="elementBG"
         boxShadow="xl"
         transform={
           drawerState === "fully-open" ? "translateX(0)" : "translateX(100%)"
@@ -157,7 +157,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
             position={"absolute"}
             right={0}
             zIndex={2}
-            background={"white"}
+            background={"elementBG"}
             w={"full"}
             pl={5}
             color={theme.colors.primary}

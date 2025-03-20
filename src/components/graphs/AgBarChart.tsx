@@ -60,6 +60,9 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
   const chartOptions: AgCartesianChartOptions = useMemo(
     () => ({
       data: validData,
+      background: {
+        fill: theme.colors.elementBG,
+      },
       padding: {
         top: 40,
         left: 10,
@@ -155,7 +158,7 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
         overflow="hidden"
         width="100%"
         height="100%"
-        bg="white"
+        bg="elementBG"
       >
         <NoDataOverlayPink />
       </Flex>
@@ -183,7 +186,7 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
         }
         .ag-chart-tooltip-content {
           padding: 4px 8px;
-          background: #fff;
+          background: var(--chakra-colors-elementBG);
           color: #000;
         }
       `}</style>

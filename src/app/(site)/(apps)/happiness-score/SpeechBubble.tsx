@@ -34,7 +34,7 @@ const SpeechBubble: React.FC<SpeechBubbleProps> = ({
   score,
   positiveChange,
   change,
-  fill = "#fff",
+  fill,
   textColor,
 }) => {
   const theme = useTheme();
@@ -82,7 +82,7 @@ const SpeechBubble: React.FC<SpeechBubbleProps> = ({
 
   return (
     <Box position="relative" width="100%" height="100%" maxHeight={600}>
-      <SpeechBubbleSVG fill={fill} />
+      <SpeechBubbleSVG fill={fill ? fill : theme.colors.elementBG} />
       <Box
         ref={containerRef}
         position="absolute"

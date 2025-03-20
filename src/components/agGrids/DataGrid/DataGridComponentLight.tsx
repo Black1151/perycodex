@@ -250,7 +250,7 @@ function DataGridComponentLight<T>({
         pb="7px"
         borderRadius="xl"
         boxShadow="md"
-        bgColor="white"
+        bgColor="elementBG"
       >
         <Box w="full" p={2} pb={0}>
           {showTopBar && (
@@ -261,7 +261,7 @@ function DataGridComponentLight<T>({
                 placeholder="Search..."
                 onInput={onFilterTextBoxChanged}
                 w={256}
-                bg="white"
+                bg="elementBG"
                 borderColor="gray.300"
                 _hover={{ borderColor: "gray.400" }}
                 _focus={{
@@ -342,18 +342,19 @@ function DataGridComponentLight<T>({
               .ag-theme-alpine .ag-root-wrapper,
               .ag-theme-alpine .ag-body-viewport {
                 border: none !important;
+                background-color: var(--chakra-colors-elementBG) !important;
               }
 
               .ag-theme-alpine .ag-header {
-                background-color: transparent !important;
+                background-color: var(--chakra-colors-elementBG) !important;
               }
 
               .ag-theme-alpine .ag-row:nth-child(odd) {
-                background-color: #ffffff !important;
+                background-color: var(--chakra-colors-elementBG) !important;
               }
 
               .ag-theme-alpine .ag-row:nth-child(even) {
-                background-color: #eef2f7 !important;
+                background-color: var(--chakra-colors-elementBG) !important;
               }
             `}</style>
             <AgGridReact
