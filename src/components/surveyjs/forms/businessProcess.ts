@@ -115,32 +115,12 @@ export const businessProcessJson = {
           title: "BP Start Trigger Operator",
           placeholder: "Enter trigger operator",
           startWithNewLine: false,
-          choices: [
-            {
-              title: "=",
-              value: "=",
-            },
-            {
-              title: ">=",
-              value: ">=",
-            },
-            {
-              title: "<=",
-              value: "<=",
-            },
-            {
-              title: "!=",
-              value: "!=",
-            },
-            {
-              title: ">",
-              value: ">",
-            },
-            {
-              title: "<",
-              value: "<",
-            },
-          ],
+          choicesByUrl: {
+            url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=operators`,
+            path: "operators",
+            valueName: "name",
+            titleName: "label",
+          },
         },
         {
           type: "text",
