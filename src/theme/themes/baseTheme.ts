@@ -17,7 +17,8 @@ export const baseTheme = extendTheme({
 
   colors: {
     primary: "blue",          
-    secondary: "#fff",        
+    secondary: "#fff",      
+    elementBG: "green",  
 
     primaryButton: "#fff",    
     perygonBlueTransparent: "rgba(13, 0, 61, 0.85)",
