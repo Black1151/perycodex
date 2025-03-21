@@ -92,12 +92,30 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
 
   // Dictates if the user is allowed to click on the stage
   const canClickStage = (stage: WorkflowStage): boolean => {
-    const canClick: boolean = true;
+    // Definitive order of events
 
     // You should never be able to click a stage if it is pending
     if (stage.stageStatus === "Pending") {
       return false;
     }
+
+    // A CA should be able to click into everything regardless if it has been completed or next
+    if (
+      user &&
+      user.role === "CA" &&
+      (stage.stageStatus === "Next" || stage.stageStatus === "Complete")
+    ) {
+      return true;
+    }
+
+    // An EU should only be allowed if the stage isExternalBusinessProcess = true
+    if (user && user.role === "EU") {
+      return stage.isExternalBusinessProcess;
+    }
+
+    // Optional order of events
+
+    const canClick: boolean = true;
 
     // Checking the logic around the Global Variables
     if (
@@ -114,20 +132,6 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
       stage.wouldHaveBeenNextIfNotLocked === false
     ) {
       return false;
-    }
-
-    // A CA should be able to click into everything regardless if it has been completed or next
-    if (user && user.role === "CA") {
-      return true;
-    }
-
-    // An EU should be blocked if they are not external business processes
-    if (user && user.role === "EU") {
-      if (stage.isExternalBusinessProcess) {
-        return true;
-      } else {
-        return false;
-      }
     }
 
     // If there is a UAG a user should be part of that group to be able to access it

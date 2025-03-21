@@ -235,27 +235,30 @@ export default function WorkflowLayout({
           setFormData(parsedResponse);
 
           const isUserAuthorised = (() => {
-            // If the stage is pending, the user should not be authorized
+            // Definitive order of events
+
+            // You should never be able to click a stage if it is pending
             if (currentStage.stageStatus === "Pending") {
               return false;
             }
 
+            // A CA should be able to click into everything regardless if it has been completed or next
             if (
-              currentStage.isGlobalVariableBlocking &&
-              currentStage.wouldHaveBeenNextIfNotLocked === false
+              user &&
+              user.role === "CA" &&
+              (currentStage.stageStatus === "Next" ||
+                currentStage.stageStatus === "Complete")
             ) {
-              return false;
-            }
-
-            // A CA role should always be authorized
-            if (user?.role === "CA") {
               return true;
             }
 
-            // An EU role should be blocked unless it is an external business process
-            if (user?.role === "EU") {
+            // An EU should only be allowed if the stage isExternalBusinessProcess = true
+            if (user && user.role === "EU") {
               return currentStage.isExternalBusinessProcess;
             }
+
+            // Optional order of events
+            const internalIsUserAuthorised = true;
 
             // Check if the user is the creator or started the process
             if (
@@ -267,26 +270,47 @@ export default function WorkflowLayout({
               return true;
             }
 
-            // If a user access group exists, the user must be in one of those groups
+            // Checking the logic around the Global Variables
             if (
-              Array.isArray(currentStage.userAccessGroupNames) &&
+              // If stage is locked (bound by the GV as not startByDefault) and there is no isGlobalVariableBlocking
+              currentStage.stageStatus === "Locked" &&
+              currentStage.isGlobalVariableBlocking
+            ) {
+              return false;
+            }
+
+            if (
+              currentStage.stageStatus === "Locked" &&
+              currentStage.isGlobalVariableBlocking === false &&
+              currentStage.wouldHaveBeenNextIfNotLocked === false
+            ) {
+              return false;
+            }
+
+            // If there is a UAG a user should be part of that group to be able to access it
+            if (
+              currentStage.userAccessGroupNames &&
               currentStage.userAccessGroupNames.length > 0
             ) {
-              if (
-                !Array.isArray(user?.groupNames) ||
-                user.groupNames.length === 0
-              ) {
-                return false; // User has no groups, so they are not authorized
+              if (!user) {
+                return false;
               }
 
-              // Check if the user is part of an allowed group
-              return currentStage.userAccessGroupNames.some(
+              if (!user?.groupNames?.length) {
+                return false;
+              }
+
+              const hasAccess = currentStage.userAccessGroupNames.some(
                 (groupName) => user?.groupNames?.includes(groupName) ?? false,
               );
+
+              if (!hasAccess) {
+                return false;
+              }
             }
 
             // If no restrictions apply, authorize by default
-            return true;
+            return internalIsUserAuthorised;
           })();
 
           setIsAuthorised(isUserAuthorised);
