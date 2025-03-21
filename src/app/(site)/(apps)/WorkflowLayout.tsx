@@ -11,6 +11,7 @@ import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import { useRouter } from "next/navigation";
 import WorkflowSidebar from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
 import { SurveyLayoutType } from "@/types/surveyJs";
+import { signOut } from "next-auth/react";
 
 interface WorkflowLayoutProps {
   stages: WorkflowStage[];
@@ -313,6 +314,18 @@ export default function WorkflowLayout({
   const redirectPath = REDIRECT_PATHS[layout] || REDIRECT_PATHS.default;
   const redirectUrl = `${redirectPath}?wfId=${workflowId}&toolId=${toolId}`;
 
+  const allExternalStagesComplete =
+    user?.role === "EU" &&
+    stages
+      .filter((stage) => stage.isExternalBusinessProcess)
+      .every((stage) => stage.stageStatus === "Complete");
+
+  const handleLogout = async () => {
+    await fetch("/api/auth/sign-out", { method: "POST" });
+    await signOut({ redirect: false });
+    router.push("/login");
+  };
+
   const onSuccess = () => {
     if (stages.length > 1) {
       router.refresh();
@@ -326,15 +339,33 @@ export default function WorkflowLayout({
       {/* Modal to block access */}
       <SurveyModal
         isOpen={isModalOpen}
-        onConfirm={() => setIsModalOpen(false)}
-        onClose={() => router.push("/")}
+        onConfirm={
+          allExternalStagesComplete && user?.role === "EU"
+            ? handleLogout
+            : () => setIsModalOpen(false)
+        }
+        onClose={() =>
+          allExternalStagesComplete && user?.role === "EU"
+            ? handleLogout()
+            : router.push("/")
+        }
         showButtons={{
           close: false,
           confirm: true,
         }}
-        title="Unauthorised Access"
-        bodyContent="You are not authorized to view this stage. Please select one in the sidebar to the left"
-        confirmLabel="OK"
+        title={
+          allExternalStagesComplete && user?.role === "EU"
+            ? "Thank you for completing everything"
+            : "Unauthorised Access"
+        }
+        bodyContent={
+          allExternalStagesComplete && user?.role === "EU"
+            ? "You’ve completed all required steps. You will now be logged out."
+            : "You are not authorized to view this stage. Please select one in the sidebar to the left"
+        }
+        confirmLabel={
+          allExternalStagesComplete && user?.role === "EU" ? "Logout" : "OK"
+        }
         cancelLabel="Cancel"
       />
 
