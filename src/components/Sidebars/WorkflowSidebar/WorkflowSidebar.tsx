@@ -5,6 +5,7 @@ import Sidebar, { SidebarProps } from "@/components/Sidebars/Sidebar";
 import { Box, VStack, HStack, Text, useTheme, Icon } from "@chakra-ui/react";
 import AdsClickIcon from "@mui/icons-material/AdsClick";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import LockIcon from "@mui/icons-material/Lock";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useUser } from "@/providers/UserProvider";
 import { DrawerStateOptions } from "@/components/Sidebars/useDrawerState";
@@ -114,22 +115,12 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
     }
 
     // Optional order of events
-
-    const canClick: boolean = true;
+    let canClick: boolean = true;
 
     // Checking the logic around the Global Variables
     if (
       // If stage is locked (bound by the GV as not startByDefault) and there is no isGlobalVariableBlocking
-      stage.stageStatus === "Locked" &&
-      stage.isGlobalVariableBlocking
-    ) {
-      return false;
-    }
-
-    if (
-      stage.stageStatus === "Locked" &&
-      stage.isGlobalVariableBlocking === false &&
-      stage.wouldHaveBeenNextIfNotLocked === false
+      stage.stageStatus === "Locked"
     ) {
       return false;
     }
@@ -220,7 +211,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
                   </Icon>
                 ) : (
                   <Icon color={"red"}>
-                    <CancelIcon color="error" fontSize="small" />
+                    <LockIcon color="error" fontSize="small" />
                   </Icon>
                 )}
               </HStack>
