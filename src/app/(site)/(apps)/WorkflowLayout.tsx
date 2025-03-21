@@ -2,9 +2,13 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+import { Flex, Icon, Text } from "@chakra-ui/react";
 import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
 import { useFetchClient } from "@/hooks/useFetchClient";
-import { ViewTimeline as ViewTimelineIcon } from "@mui/icons-material";
+import {
+  ViewTimeline as ViewTimelineIcon,
+  CheckCircleOutline,
+} from "@mui/icons-material";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import { useUser } from "@/providers/UserProvider";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
@@ -359,9 +363,16 @@ export default function WorkflowLayout({
             : "Unauthorised Access"
         }
         bodyContent={
-          allExternalStagesComplete && user?.role === "EU"
-            ? "You’ve completed all required steps. You will now be logged out."
-            : "You are not authorized to view this stage. Please select one in the sidebar to the left"
+          allExternalStagesComplete && user?.role === "EU" ? (
+            <Flex align="center" gap={3}>
+              <Icon as={CheckCircleOutline} boxSize={8} color="green.400" />
+              <Text>
+                You’ve completed all required steps. You will now be logged out.
+              </Text>
+            </Flex>
+          ) : (
+            "You are not authorized to view this stage. Please select one in the sidebar to the left"
+          )
         }
         confirmLabel={
           allExternalStagesComplete && user?.role === "EU" ? "Logout" : "OK"
