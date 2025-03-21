@@ -449,7 +449,7 @@ export const customerJson = {
               cellType: "text",
               isRequired: true,
               maxLength: 80,
-              placeholder: "Enter domain",
+              placeholder: "Enter domain...",
             },
           ],
           rowCount: 0,
