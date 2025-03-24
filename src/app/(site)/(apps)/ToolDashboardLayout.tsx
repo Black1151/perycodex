@@ -27,7 +27,13 @@ const iconMapper: Record<string, React.ReactElement> = {
   default: <BarChart sx={{ height: "100%", width: "100%" }} />,
 };
 
-const ToolDashboardLayout: React.FC = () => {
+interface ToolDashboardLayoutProps {
+  toolUrl: string;
+}
+
+const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
+  toolUrl,
+}) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -107,7 +113,7 @@ const ToolDashboardLayout: React.FC = () => {
       <DashboardHeader
         headingText={activeDashboardName ?? ""}
         canStartWorkflow={toolData?.startInUi ?? false}
-        toolUrl={"/happiness-score"}
+        toolUrl={toolUrl}
       />
     </>
   );
