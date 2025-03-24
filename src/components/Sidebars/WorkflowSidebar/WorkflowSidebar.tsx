@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import Sidebar, { SidebarProps } from "@/components/Sidebars/Sidebar";
-import { Box, VStack, HStack, Text, useTheme, Icon } from "@chakra-ui/react";
-import AdsClickIcon from "@mui/icons-material/AdsClick";
+import { Box, VStack, Text, useTheme, Icon, Flex } from "@chakra-ui/react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import LockIcon from "@mui/icons-material/Lock";
-import CancelIcon from "@mui/icons-material/Cancel";
+import WidgetsIcon from "@mui/icons-material/Widgets";
 import { useUser } from "@/providers/UserProvider";
 import { DrawerStateOptions } from "@/components/Sidebars/useDrawerState";
 import { SurveyLayoutType } from "@/types/surveyJs";
@@ -16,6 +18,8 @@ interface WorkflowSidebarProps extends SidebarProps {
   currentStageId: number | null;
   onStageChange: (stage: WorkflowStage) => void;
 }
+
+type StageStatus = "Next" | "Pending" | "Complete" | "Locked";
 
 export interface WorkflowStage {
   wfInstId: number;
@@ -73,7 +77,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
   const [drawerState, setDrawerState] = useState<DrawerStateOptions>(
     sidebarProps.drawerState,
   );
-  const canHalf = false;
+  const canHalf = true;
   const canFull = true;
 
   const onOpen = () => {
@@ -147,6 +151,21 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
     return canClick;
   };
 
+  const userHasAccessGroupAccess = (stage: WorkflowStage) => {
+    if (stage.userAccessGroupNames && stage.userAccessGroupNames.length > 0) {
+      if (!user || !user.groupNames?.length) {
+        return false;
+      }
+
+      return stage.userAccessGroupNames.some((groupName) =>
+        user?.groupNames?.includes(groupName),
+      );
+    }
+
+    // If no access groups are defined, it's accessible to all
+    return true;
+  };
+
   const [enhancedStages, setEnhancedStages] = useState<EnhancedWorkflowStage[]>(
     workflowStages.map((stage) => ({
       ...stage,
@@ -171,23 +190,83 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
     }
   };
 
+  const isStageStatus = (value: string): value is StageStatus => {
+    return ["Next", "Complete", "Locked", "Pending"].includes(value);
+  };
+
+  const getIconForStage = (stage: EnhancedWorkflowStage, full: boolean) => {
+    const boxSize = stage.active && full ? 6 : 4;
+
+    if (stage.stageStatus === "Pending") {
+      return !userHasAccessGroupAccess(stage) ? (
+        <Icon as={LockIcon} boxSize={boxSize} color={"red.500"} />
+      ) : (
+        <Icon
+          as={CheckCircleOutlineIcon}
+          boxSize={boxSize}
+          color={"blue.500"}
+        />
+      );
+    }
+
+    if (stage.stageStatus === "Next") {
+      return !userHasAccessGroupAccess(stage) ? (
+        <Icon as={LockIcon} boxSize={boxSize} color={"red.500"} />
+      ) : (
+        <Icon
+          as={ArrowCircleRightOutlinedIcon}
+          boxSize={boxSize}
+          color={"green.500"}
+        />
+      );
+    }
+
+    const iconsByStatus: Record<StageStatus, ReactElement> = {
+      Next: (
+        <Icon
+          as={ArrowCircleRightOutlinedIcon}
+          boxSize={boxSize}
+          color={"green.500"}
+        />
+      ),
+      Complete: (
+        <Icon as={CheckCircleIcon} boxSize={boxSize} color={"green.500"} />
+      ),
+      Locked: <Icon as={LockIcon} boxSize={boxSize} color={"red.500"} />,
+      Pending: (
+        <Icon
+          as={CheckCircleOutlineIcon}
+          boxSize={boxSize}
+          color={"blue.500"}
+        />
+      ),
+    };
+
+    if (isStageStatus(stage.stageStatus)) {
+      return iconsByStatus[stage.stageStatus];
+    }
+
+    return <Icon as={HelpOutlineIcon} boxSize={boxSize} color={"gray.500"} />;
+  };
+
   const fullBarMenu = (
     <VStack align="stretch" spacing={2} p={2}>
       {enhancedStages
         .sort((a, b) => a.bpOrder - b.bpOrder)
         .map((stage) => (
-          <Box
+          <Flex
             key={stage.bpInstId}
+            fontSize={16}
             p={3}
-            border="1px solid"
-            borderColor={
-              stage.active
-                ? theme.colors.blue
-                : stage.canClick
-                  ? theme.colors.perygonPink
-                  : theme.colors.green
-            }
-            backgroundColor={stage.active ? "blue.100" : "transparent"}
+            gap={2}
+            border={stage.active ? "3px solid" : "1px solid"}
+            borderColor={stage.active ? "green.500" : "black"}
+            bg={"transparent"}
+            color={"black"}
+            alignItems="center"
+            flexDirection={"column"}
+            position="relative"
+            overflow="hidden"
             borderRadius="md"
             cursor={stage.canClick ? "pointer" : "not-allowed"}
             _hover={{
@@ -195,27 +274,82 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
             }}
             onClick={() => handleClick(stage)}
           >
-            <Text fontWeight="bold">{stage.bpName}</Text>
-            <Text
-              fontSize="sm"
-              color={stage.canClick ? "green.500" : "blue.500"}
+            <Box
+              boxSize={"18px"}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
             >
-              {stage.stageStatus}
+              <WidgetsIcon />
+            </Box>
+            <Text flex={1} zIndex={2} textAlign={"center"}>
+              {stage.bpName}
             </Text>
-            <HStack spacing={2} mt={2}>
-              <HStack spacing={1}>
-                <AdsClickIcon fontSize="small" />
-                {stage.canClick ? (
-                  <Icon color={"green"}>
-                    <CheckCircleIcon color="success" fontSize="small" />
-                  </Icon>
-                ) : (
-                  <Icon color={"red"}>
-                    <LockIcon color="error" fontSize="small" />
-                  </Icon>
-                )}
-              </HStack>
-            </HStack>
+            <Flex gap={2} justify={"space-between"} align={"center"} w={"full"}>
+              <Text
+                fontWeight={stage.active ? "bold" : undefined}
+                fontSize={"sm"}
+                color={
+                  stage.stageStatus === "Complete" ||
+                  stage.stageStatus === "Next"
+                    ? "green.500"
+                    : "blue.500"
+                }
+              >
+                {stage.stageStatus}
+              </Text>
+              {getIconForStage(stage, true)}
+            </Flex>
+          </Flex>
+        ))}
+    </VStack>
+  );
+
+  const halfBarMenu = (
+    <VStack align="stretch" spacing={4} mt={2}>
+      {enhancedStages
+        .sort((a, b) => a.bpOrder - b.bpOrder)
+        .map((stage) => (
+          <Box
+            key={stage.bpInstId}
+            fontSize={16}
+            p={2}
+            gap={2}
+            border={stage.active ? "3px solid" : "1px solid"}
+            borderColor={stage.active ? "green.500" : "black"}
+            bg={"transparent"}
+            color={"black"}
+            borderRadius="md"
+            cursor={stage.canClick ? "pointer" : "not-allowed"}
+            _hover={{
+              bg: stage.canClick ? "gray.100" : "transparent",
+            }}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            onClick={() => handleClick(stage)}
+            position={"relative"}
+            boxSizing={"border-box"}
+          >
+            {" "}
+            <WidgetsIcon />
+            <Box
+              position="absolute"
+              top={0}
+              right={0}
+              transform="translate(30%,-30%)"
+              bg="white"
+              borderRadius="full"
+              border={"0.5px solid black"}
+              boxSize="24px"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              boxShadow="sm"
+              zIndex={1}
+            >
+              {getIconForStage(stage, false)}
+            </Box>
           </Box>
         ))}
     </VStack>
@@ -231,6 +365,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
       onToggle={onToggle}
       onClose={onClose}
       fullyOpenContent={fullBarMenu}
+      halfOpenContent={halfBarMenu}
     />
   );
 };

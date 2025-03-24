@@ -236,6 +236,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               flex={1}
               w={"full"}
               overflowY={"auto"}
+              overflowX={"hidden"}
               css={{
                 "@media (max-width: 768px)": {
                   scrollbarWidth: "none",
