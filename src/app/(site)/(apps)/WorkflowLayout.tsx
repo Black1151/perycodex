@@ -70,6 +70,7 @@ const REDIRECT_PATHS: Record<string, string> = {
   enps: "/enps",
   "client-satisfaction": "/client-satisfaction",
   default: "/",
+  tester: "/tester",
 };
 
 export default function WorkflowLayout({
