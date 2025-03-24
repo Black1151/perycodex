@@ -98,7 +98,13 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
   });
 
   if (menuItems.length === 1) {
-    return null;
+    return (
+      <DashboardHeader
+        headingText={activeDashboardName ?? ""}
+        canStartWorkflow={toolData?.startInUi ?? false}
+        toolUrl={toolUrl}
+      />
+    );
   }
 
   return (
