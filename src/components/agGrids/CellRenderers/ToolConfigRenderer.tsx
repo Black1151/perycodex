@@ -5,7 +5,6 @@ import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { CustomCellRendererProps } from "ag-grid-react";
 import { Construction } from "@mui/icons-material"; // Define the interface for the component's props
-import { usePathname } from 'next/navigation';
 
 // Define the interface for the component's props
 interface ToolConfigRendererProps extends CustomCellRendererProps {
@@ -20,7 +19,6 @@ const ToolConfigRenderer: React.FC<ToolConfigRendererProps> = ({
   imageUrlField,
   nameField,
 }) => {
-  const pathname = usePathname()
   if (!node.data) {
     return null;
   }
@@ -30,13 +28,8 @@ const ToolConfigRenderer: React.FC<ToolConfigRendererProps> = ({
   const imageUrl = node.data[imageUrlField];
   const fullName = node.data[nameField] ?? "No Name";
 
-  const pathName = (pathname === '/tool-subscriptions')
-    ? 'tool-subscriptions'
-    : 'tools';
-
   // Conditionally create a link only if uniqueId exists
-  const link = uniqueId ? `/${pathName}/${uniqueId}` : null;
-
+  const link = uniqueId ? `/tools/${uniqueId}` : null;
 
   // Common content to display user information
   const content = (
