@@ -277,25 +277,6 @@ export default function WorkflowLayout({
               return true;
             }
 
-            /*
-                                                                                                Older logic for GV by itself
-                                                                                                 */
-            // if (
-            //   // If stage is locked (bound by the GV as not startByDefault) and there is no isGlobalVariableBlocking
-            //   currentStage.stageStatus === "Locked" &&
-            //   currentStage.isGlobalVariableBlocking
-            // ) {
-            //   return false;
-            // }
-            //
-            // if (
-            //   currentStage.stageStatus === "Locked" &&
-            //   currentStage.isGlobalVariableBlocking === false &&
-            //   currentStage.wouldHaveBeenNextIfNotLocked === false
-            // ) {
-            //   return false;
-            // }
-
             // Checking the logic around the Global Variables
             if (
               // If stage is locked (bound by the GV as not startByDefault) and there is no isGlobalVariableBlocking
