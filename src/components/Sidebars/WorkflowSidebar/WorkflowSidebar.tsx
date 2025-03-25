@@ -71,6 +71,7 @@ export interface WorkflowStage {
 
 interface EnhancedWorkflowStage extends WorkflowStage {
   canClick: boolean;
+  canShow: boolean;
   active: boolean;
 }
 
@@ -160,6 +161,22 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
 
     return canClick;
   };
+  // Dictates if the user is allowed to click on the stage
+  const canShowStage = (stage: WorkflowStage): boolean => {
+    // An EU should only be allowed if the stage isExternalBusinessProcess = true
+    if (user && user.role === "EU") {
+      return stage.isExternalBusinessProcess;
+    }
+
+    if (
+      // If stage is locked (bound by the GV as not startByDefault) and there is no isGlobalVariableBlocking
+      stage.stageStatus === "Locked"
+    ) {
+      return false;
+    }
+
+    return true;
+  };
 
   const userHasAccessGroupAccess = (stage: WorkflowStage) => {
     if (stage.userAccessGroupNames && stage.userAccessGroupNames.length > 0) {
@@ -180,6 +197,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
     workflowStages.map((stage) => ({
       ...stage,
       canClick: canClickStage(stage),
+      canShow: canShowStage(stage),
       active: stage.bpInstBpId === currentStageId,
     })),
   );
@@ -189,6 +207,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
       workflowStages.map((stage) => ({
         ...stage,
         canClick: canClickStage(stage),
+        canShow: canShowStage(stage),
         active: stage.bpInstBpId === currentStageId,
       })),
     );
@@ -282,6 +301,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
     <VStack align="stretch" spacing={2} p={2}>
       {enhancedStages
         .sort((a, b) => a.bpOrder - b.bpOrder)
+        .filter((stage) => stage.canShow)
         .map((stage) => (
           <Flex
             key={stage.bpInstId}
@@ -338,6 +358,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
     <VStack align="stretch" spacing={4} mt={2}>
       {enhancedStages
         .sort((a, b) => a.bpOrder - b.bpOrder)
+        .filter((stage) => stage.canShow)
         .map((stage) => (
           <Tooltip
             key={stage.bpInstId}
@@ -406,6 +427,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
     >
       {enhancedStages
         .sort((a, b) => a.bpOrder - b.bpOrder)
+        .filter((stage) => stage.canShow)
         .map((stage) => (
           <Box
             key={stage.bpInstId}
