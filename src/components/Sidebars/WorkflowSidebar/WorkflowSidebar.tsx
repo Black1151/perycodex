@@ -1,20 +1,35 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import Sidebar, { SidebarProps } from "@/components/Sidebars/Sidebar";
-import { Box, VStack, HStack, Text, useTheme, Icon } from "@chakra-ui/react";
-import AdsClickIcon from "@mui/icons-material/AdsClick";
+import {
+  Box,
+  VStack,
+  Text,
+  useTheme,
+  Icon,
+  Flex,
+  Tooltip,
+  HStack,
+} from "@chakra-ui/react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import LockIcon from "@mui/icons-material/Lock";
+import WidgetsIcon from "@mui/icons-material/Widgets";
 import { useUser } from "@/providers/UserProvider";
 import { DrawerStateOptions } from "@/components/Sidebars/useDrawerState";
 import { SurveyLayoutType } from "@/types/surveyJs";
+import Bottombar from "@/components/Bottombar/Bottombar";
 
 interface WorkflowSidebarProps extends SidebarProps {
   workflowStages: WorkflowStage[];
   currentStageId: number | null;
   onStageChange: (stage: WorkflowStage) => void;
 }
+
+type StageStatus = "Next" | "Pending" | "Complete" | "Locked";
 
 export interface WorkflowStage {
   wfInstId: number;
@@ -56,6 +71,7 @@ export interface WorkflowStage {
 
 interface EnhancedWorkflowStage extends WorkflowStage {
   canClick: boolean;
+  canShow: boolean;
   active: boolean;
 }
 
@@ -72,7 +88,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
   const [drawerState, setDrawerState] = useState<DrawerStateOptions>(
     sidebarProps.drawerState,
   );
-  const canHalf = false;
+  const canHalf = true;
   const canFull = true;
 
   const onOpen = () => {
@@ -92,42 +108,36 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
 
   // Dictates if the user is allowed to click on the stage
   const canClickStage = (stage: WorkflowStage): boolean => {
-    const canClick: boolean = true;
+    // Definitive order of events
 
     // You should never be able to click a stage if it is pending
     if (stage.stageStatus === "Pending") {
       return false;
     }
 
-    // Checking the logic around the Global Variables
-    if (
-      // If stage is locked (bound by the GV as not startByDefault) and there is no isGlobalVariableBlocking
-      stage.stageStatus === "Locked" &&
-      stage.isGlobalVariableBlocking
-    ) {
-      return false;
-    }
-
-    if (
-      stage.stageStatus === "Locked" &&
-      stage.isGlobalVariableBlocking === false &&
-      stage.wouldHaveBeenNextIfNotLocked === false
-    ) {
-      return false;
-    }
-
     // A CA should be able to click into everything regardless if it has been completed or next
-    if (user && user.role === "CA") {
+    if (
+      user &&
+      user.role === "CA" &&
+      (stage.stageStatus === "Next" || stage.stageStatus === "Complete")
+    ) {
       return true;
     }
 
-    // An EU should be blocked if they are not external business processes
+    // An EU should only be allowed if the stage isExternalBusinessProcess = true
     if (user && user.role === "EU") {
-      if (stage.isExternalBusinessProcess) {
-        return true;
-      } else {
-        return false;
-      }
+      return stage.isExternalBusinessProcess;
+    }
+
+    // Optional order of events
+    let canClick: boolean = true;
+
+    // Checking the logic around the Global Variables
+    if (
+      // If stage is locked (bound by the GV as not startByDefault) and there is no isGlobalVariableBlocking
+      stage.stageStatus === "Locked"
+    ) {
+      return false;
     }
 
     // If there is a UAG a user should be part of that group to be able to access it
@@ -151,11 +161,43 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
 
     return canClick;
   };
+  // Dictates if the user is allowed to click on the stage
+  const canShowStage = (stage: WorkflowStage): boolean => {
+    // An EU should only be allowed if the stage isExternalBusinessProcess = true
+    if (user && user.role === "EU") {
+      return stage.isExternalBusinessProcess;
+    }
+
+    if (
+      // If stage is locked (bound by the GV as not startByDefault) and there is no isGlobalVariableBlocking
+      stage.stageStatus === "Locked"
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const userHasAccessGroupAccess = (stage: WorkflowStage) => {
+    if (stage.userAccessGroupNames && stage.userAccessGroupNames.length > 0) {
+      if (!user || !user.groupNames?.length) {
+        return false;
+      }
+
+      return stage.userAccessGroupNames.some((groupName) =>
+        user?.groupNames?.includes(groupName),
+      );
+    }
+
+    // If no access groups are defined, it's accessible to all
+    return true;
+  };
 
   const [enhancedStages, setEnhancedStages] = useState<EnhancedWorkflowStage[]>(
     workflowStages.map((stage) => ({
       ...stage,
       canClick: canClickStage(stage),
+      canShow: canShowStage(stage),
       active: stage.bpInstBpId === currentStageId,
     })),
   );
@@ -165,6 +207,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
       workflowStages.map((stage) => ({
         ...stage,
         canClick: canClickStage(stage),
+        canShow: canShowStage(stage),
         active: stage.bpInstBpId === currentStageId,
       })),
     );
@@ -176,23 +219,103 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
     }
   };
 
+  const isStageStatus = (value: string): value is StageStatus => {
+    return ["Next", "Complete", "Locked", "Pending"].includes(value);
+  };
+
+  const getIconForStage = (stage: EnhancedWorkflowStage, full: boolean) => {
+    const boxSize = stage.active && full ? 6 : 4;
+
+    if (stage.stageStatus === "Pending") {
+      if (user?.role === "EU" && stage.isExternalBusinessProcess) {
+        return (
+          <Icon
+            as={CheckCircleOutlineIcon}
+            boxSize={boxSize}
+            color={"blue.500"}
+          />
+        );
+      }
+      return !userHasAccessGroupAccess(stage) ? (
+        <Icon as={LockIcon} boxSize={boxSize} color={"red.500"} />
+      ) : (
+        <Icon
+          as={CheckCircleOutlineIcon}
+          boxSize={boxSize}
+          color={"blue.500"}
+        />
+      );
+    }
+
+    if (stage.stageStatus === "Next") {
+      if (user?.role === "EU" && stage.isExternalBusinessProcess) {
+        return (
+          <Icon
+            as={ArrowCircleRightOutlinedIcon}
+            boxSize={boxSize}
+            color={"green.500"}
+          />
+        );
+      }
+
+      return !userHasAccessGroupAccess(stage) ? (
+        <Icon as={LockIcon} boxSize={boxSize} color={"red.500"} />
+      ) : (
+        <Icon
+          as={ArrowCircleRightOutlinedIcon}
+          boxSize={boxSize}
+          color={"green.500"}
+        />
+      );
+    }
+
+    const iconsByStatus: Record<StageStatus, ReactElement> = {
+      Next: (
+        <Icon
+          as={ArrowCircleRightOutlinedIcon}
+          boxSize={boxSize}
+          color={"green.500"}
+        />
+      ),
+      Complete: (
+        <Icon as={CheckCircleIcon} boxSize={boxSize} color={"green.500"} />
+      ),
+      Locked: <Icon as={LockIcon} boxSize={boxSize} color={"red.500"} />,
+      Pending: (
+        <Icon
+          as={CheckCircleOutlineIcon}
+          boxSize={boxSize}
+          color={"blue.500"}
+        />
+      ),
+    };
+
+    if (isStageStatus(stage.stageStatus)) {
+      return iconsByStatus[stage.stageStatus];
+    }
+
+    return <Icon as={HelpOutlineIcon} boxSize={boxSize} color={"gray.500"} />;
+  };
+
   const fullBarMenu = (
     <VStack align="stretch" spacing={2} p={2}>
       {enhancedStages
         .sort((a, b) => a.bpOrder - b.bpOrder)
+        .filter((stage) => stage.canShow)
         .map((stage) => (
-          <Box
+          <Flex
             key={stage.bpInstId}
+            fontSize={16}
             p={3}
-            border="1px solid"
-            borderColor={
-              stage.active
-                ? theme.colors.blue
-                : stage.canClick
-                  ? theme.colors.perygonPink
-                  : theme.colors.green
-            }
-            backgroundColor={stage.active ? "blue.100" : "transparent"}
+            gap={2}
+            border={stage.active ? "3px solid" : "1px solid"}
+            borderColor={stage.active ? "green.500" : "black"}
+            bg={"transparent"}
+            color={"black"}
+            alignItems="center"
+            flexDirection={"column"}
+            position="relative"
+            overflow="hidden"
             borderRadius="md"
             cursor={stage.canClick ? "pointer" : "not-allowed"}
             _hover={{
@@ -200,43 +323,184 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
             }}
             onClick={() => handleClick(stage)}
           >
-            <Text fontWeight="bold">{stage.bpName}</Text>
-            <Text
-              fontSize="sm"
-              color={stage.canClick ? "green.500" : "blue.500"}
+            <Box
+              boxSize={"18px"}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
             >
-              {stage.stageStatus}
+              <WidgetsIcon />
+            </Box>
+            <Text flex={1} zIndex={2} textAlign={"center"}>
+              {stage.bpName}
             </Text>
-            <HStack spacing={2} mt={2}>
-              <HStack spacing={1}>
-                <AdsClickIcon fontSize="small" />
-                {stage.canClick ? (
-                  <Icon color={"green"}>
-                    <CheckCircleIcon color="success" fontSize="small" />
-                  </Icon>
-                ) : (
-                  <Icon color={"red"}>
-                    <CancelIcon color="error" fontSize="small" />
-                  </Icon>
-                )}
-              </HStack>
-            </HStack>
-          </Box>
+            <Flex gap={2} justify={"space-between"} align={"center"} w={"full"}>
+              <Text
+                fontWeight={stage.active ? "bold" : undefined}
+                fontSize={"sm"}
+                color={
+                  stage.stageStatus === "Complete" ||
+                  stage.stageStatus === "Next"
+                    ? "green.500"
+                    : "blue.500"
+                }
+              >
+                {stage.stageStatus}
+              </Text>
+              {getIconForStage(stage, true)}
+            </Flex>
+          </Flex>
         ))}
     </VStack>
   );
 
+  const halfBarMenu = (
+    <VStack align="stretch" spacing={4} mt={2}>
+      {enhancedStages
+        .sort((a, b) => a.bpOrder - b.bpOrder)
+        .filter((stage) => stage.canShow)
+        .map((stage) => (
+          <Tooltip
+            key={stage.bpInstId}
+            hasArrow
+            label={stage.bpName}
+            placement={"right"}
+          >
+            <Box
+              fontSize={16}
+              p={2}
+              gap={2}
+              border={stage.active ? "3px solid" : "1px solid"}
+              borderColor={stage.active ? "green.500" : "black"}
+              bg={"transparent"}
+              color={"black"}
+              borderRadius="md"
+              cursor={stage.canClick ? "pointer" : "not-allowed"}
+              _hover={{
+                bg: stage.canClick ? "gray.100" : "transparent",
+              }}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              onClick={() => handleClick(stage)}
+              position={"relative"}
+              boxSizing={"border-box"}
+            >
+              {" "}
+              <WidgetsIcon />
+              <Box
+                position="absolute"
+                top={0}
+                right={0}
+                transform="translate(30%,-30%)"
+                bg="white"
+                borderRadius="full"
+                border={"0.5px solid black"}
+                boxSize="24px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                boxShadow="sm"
+                zIndex={1}
+              >
+                {getIconForStage(stage, false)}
+              </Box>
+            </Box>
+          </Tooltip>
+        ))}
+    </VStack>
+  );
+
+  const bottomBarMenu = (
+    <HStack
+      justify={["flex-start", "space-between"]}
+      alignItems="center"
+      overflowX="auto"
+      gap={6}
+      py={1}
+      css={{
+        "&::-webkit-scrollbar": { display: "none" },
+        msOverflowStyle: "none",
+        scrollbarWidth: "none",
+        minWidth: "100%",
+      }}
+    >
+      {enhancedStages
+        .sort((a, b) => a.bpOrder - b.bpOrder)
+        .filter((stage) => stage.canShow)
+        .map((stage) => (
+          <Box
+            key={stage.bpInstId}
+            fontSize={16}
+            p={2}
+            gap={2}
+            maxW={"200px"}
+            border={"1px solid"}
+            borderColor={stage.active ? "green.500" : "gray"}
+            bg={stage.active ? "green.500" : "transparent"}
+            color={stage.active ? "white" : "black"}
+            borderRadius="md"
+            cursor={stage.canClick ? "pointer" : "not-allowed"}
+            _hover={{
+              bg: stage.canClick ? "gray.100" : "transparent",
+            }}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            position={"relative"}
+            boxSizing={"border-box"}
+            onClick={() => handleClick(stage)}
+          >
+            <VStack spacing={1} w={"full"} maxW={"full"}>
+              {" "}
+              <WidgetsIcon />
+              <Text
+                fontSize={10}
+                textAlign="center"
+                whiteSpace="nowrap"
+                overflow="hidden"
+                maxW="100%"
+              >
+                {stage.bpName}
+              </Text>
+              <Box
+                position="absolute"
+                top={2}
+                right={0}
+                transform="translate(30%,-30%)"
+                bg="white"
+                borderRadius="full"
+                border={"0.5px solid black"}
+                boxSize="24px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                boxShadow="sm"
+                zIndex={1}
+              >
+                {getIconForStage(stage, false)}
+              </Box>
+            </VStack>
+          </Box>
+        ))}
+    </HStack>
+  );
+
   return (
-    <Sidebar
-      {...sidebarProps}
-      drawerState={drawerState}
-      canHalf={canHalf}
-      canFull={canFull}
-      onOpen={onOpen}
-      onToggle={onToggle}
-      onClose={onClose}
-      fullyOpenContent={fullBarMenu}
-    />
+    <>
+      <Sidebar
+        {...sidebarProps}
+        drawerState={drawerState}
+        canHalf={canHalf}
+        canFull={canFull}
+        onOpen={onOpen}
+        onToggle={onToggle}
+        onClose={onClose}
+        fullyOpenContent={fullBarMenu}
+        halfOpenContent={halfBarMenu}
+      />
+      <Bottombar content={bottomBarMenu} />
+    </>
   );
 };
 

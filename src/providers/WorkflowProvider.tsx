@@ -47,7 +47,8 @@ const pathsToResetToolLogo = [
   "/client-satisfaction",
   "/business-score",
   "/risk-management",
-  "/big-up", // Added the new app path
+  "/big-up",
+  "/tester", // Added the new app path
 ];
 
 export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
@@ -71,7 +72,7 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
   // Reset tool logo and path when navigating to specific paths
   useEffect(() => {
     const shouldReset = pathsToResetToolLogo.some((path) =>
-      pathname.startsWith(path)
+      pathname.startsWith(path),
     );
     if (!shouldReset) {
       setToolId(null);
@@ -87,10 +88,10 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
       const savedToolId = localStorage.getItem("toolId");
       const savedWorkflowId = localStorage.getItem("workflowId");
       const savedWorkflowInstanceId = localStorage.getItem(
-        "currentWorkflowInstanceId"
+        "currentWorkflowInstanceId",
       );
       const savedBusinessProcessInstanceId = localStorage.getItem(
-        "currentBusinessProcessInstanceId"
+        "currentBusinessProcessInstanceId",
       );
 
       if (savedToolId) setToolId(savedToolId);
@@ -111,11 +112,11 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
 
       try {
         const res: ToolConfigResponse | null = await fetchClient(
-          `/api/toolConfig/findBy?id=${toolId}`
+          `/api/toolConfig/findBy?id=${toolId}`,
         );
         if (res?.resource) {
           setToolPath(
-            `${res.resource.appUrl}?toolId=${toolId}&wfId=${workflowId}`
+            `${res.resource.appUrl}?toolId=${toolId}&wfId=${workflowId}`,
           );
           setToolLogo(res.resource.logoImageUrl || null);
         } else {
@@ -145,7 +146,7 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
     if (currentWorkflowInstanceId) {
       localStorage.setItem(
         "currentWorkflowInstanceId",
-        currentWorkflowInstanceId
+        currentWorkflowInstanceId,
       );
     }
     if (!currentWorkflowInstanceId) {
@@ -157,7 +158,7 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
     if (currentBusinessProcessInstanceId) {
       localStorage.setItem(
         "currentBusinessProcessInstanceId",
-        currentBusinessProcessInstanceId
+        currentBusinessProcessInstanceId,
       );
     } else {
       localStorage.setItem("currentBusinessProcessInstanceId", "");

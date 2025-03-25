@@ -2,15 +2,22 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+import { Flex, Icon, Text } from "@chakra-ui/react";
 import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
 import { useFetchClient } from "@/hooks/useFetchClient";
-import { ViewTimeline as ViewTimelineIcon } from "@mui/icons-material";
+import {
+  ViewTimeline as ViewTimelineIcon,
+  Lock,
+  CheckCircle,
+} from "@mui/icons-material";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import { useUser } from "@/providers/UserProvider";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import { useRouter } from "next/navigation";
 import WorkflowSidebar from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
 import { SurveyLayoutType } from "@/types/surveyJs";
+import { signOut } from "next-auth/react";
+import LockIcon from "@mui/icons-material/Lock";
 
 interface WorkflowLayoutProps {
   stages: WorkflowStage[];
@@ -65,6 +72,7 @@ const REDIRECT_PATHS: Record<string, string> = {
   enps: "/enps",
   "client-satisfaction": "/client-satisfaction",
   default: "/",
+  tester: "/tester",
 };
 
 export default function WorkflowLayout({
@@ -234,27 +242,30 @@ export default function WorkflowLayout({
           setFormData(parsedResponse);
 
           const isUserAuthorised = (() => {
-            // If the stage is pending, the user should not be authorized
+            // Definitive order of events
+
+            // You should never be able to click a stage if it is pending
             if (currentStage.stageStatus === "Pending") {
               return false;
             }
 
+            // A CA should be able to click into everything regardless if it has been completed or next
             if (
-              currentStage.isGlobalVariableBlocking &&
-              currentStage.wouldHaveBeenNextIfNotLocked === false
+              user &&
+              user.role === "CA" &&
+              (currentStage.stageStatus === "Next" ||
+                currentStage.stageStatus === "Complete")
             ) {
-              return false;
-            }
-
-            // A CA role should always be authorized
-            if (user?.role === "CA") {
               return true;
             }
 
-            // An EU role should be blocked unless it is an external business process
-            if (user?.role === "EU") {
+            // An EU should only be allowed if the stage isExternalBusinessProcess = true
+            if (user && user.role === "EU") {
               return currentStage.isExternalBusinessProcess;
             }
+
+            // Optional order of events
+            const internalIsUserAuthorised = true;
 
             // Check if the user is the creator or started the process
             if (
@@ -266,26 +277,38 @@ export default function WorkflowLayout({
               return true;
             }
 
-            // If a user access group exists, the user must be in one of those groups
+            // Checking the logic around the Global Variables
             if (
-              Array.isArray(currentStage.userAccessGroupNames) &&
+              // If stage is locked (bound by the GV as not startByDefault) and there is no isGlobalVariableBlocking
+              currentStage.stageStatus === "Locked"
+            ) {
+              return false;
+            }
+
+            // If there is a UAG a user should be part of that group to be able to access it
+            if (
+              currentStage.userAccessGroupNames &&
               currentStage.userAccessGroupNames.length > 0
             ) {
-              if (
-                !Array.isArray(user?.groupNames) ||
-                user.groupNames.length === 0
-              ) {
-                return false; // User has no groups, so they are not authorized
+              if (!user) {
+                return false;
               }
 
-              // Check if the user is part of an allowed group
-              return currentStage.userAccessGroupNames.some(
+              if (!user?.groupNames?.length) {
+                return false;
+              }
+
+              const hasAccess = currentStage.userAccessGroupNames.some(
                 (groupName) => user?.groupNames?.includes(groupName) ?? false,
               );
+
+              if (!hasAccess) {
+                return false;
+              }
             }
 
             // If no restrictions apply, authorize by default
-            return true;
+            return internalIsUserAuthorised;
           })();
 
           setIsAuthorised(isUserAuthorised);
@@ -313,6 +336,18 @@ export default function WorkflowLayout({
   const redirectPath = REDIRECT_PATHS[layout] || REDIRECT_PATHS.default;
   const redirectUrl = `${redirectPath}?wfId=${workflowId}&toolId=${toolId}`;
 
+  const allExternalStagesComplete =
+    user?.role === "EU" &&
+    stages
+      .filter((stage) => stage.isExternalBusinessProcess)
+      .every((stage) => stage.stageStatus === "Complete");
+
+  const handleLogout = async () => {
+    await fetch("/api/auth/sign-out", { method: "POST" });
+    await signOut({ redirect: false });
+    router.push("/login");
+  };
+
   const onSuccess = () => {
     if (stages.length > 1) {
       router.refresh();
@@ -323,18 +358,51 @@ export default function WorkflowLayout({
 
   return (
     <>
-      {/* Modal to block access */}
       <SurveyModal
         isOpen={isModalOpen}
-        onConfirm={() => setIsModalOpen(false)}
-        onClose={() => router.push("/")}
+        onConfirm={
+          allExternalStagesComplete && user?.role === "EU"
+            ? handleLogout
+            : () => setIsModalOpen(false)
+        }
+        onClose={() =>
+          allExternalStagesComplete && user?.role === "EU"
+            ? handleLogout()
+            : router.push("/")
+        }
         showButtons={{
           close: false,
           confirm: true,
         }}
-        title="Unauthorised Access"
-        bodyContent="You are not authorized to view this stage. Please select one in the sidebar to the left"
-        confirmLabel="OK"
+        title={
+          allExternalStagesComplete && user?.role === "EU" ? (
+            <Flex justify={"space-between"} align={"center"} gap={2}>
+              <Text>Thank you for completing everything </Text>
+              <Icon as={CheckCircle} boxSize={8} color={"green.500"} />
+            </Flex>
+          ) : (
+            <Flex justify={"space-between"} align={"center"} gap={2}>
+              <Text>Unauthorised Access</Text>
+              <Icon as={LockIcon} boxSize={8} color={"red.500"} />
+            </Flex>
+          )
+        }
+        bodyContent={
+          allExternalStagesComplete && user?.role === "EU" ? (
+            <Flex align="center" flexDirection={"column"} gap={3}>
+              <Text>You’ve completed all required steps.</Text>
+              <Text>You will now be logged out.</Text>
+            </Flex>
+          ) : (
+            <Flex align="center" flexDirection={"column"} gap={3}>
+              <Text>You are not authorized to view this stage.</Text>
+              <Text>Please select one in the sidebar to the left</Text>
+            </Flex>
+          )
+        }
+        confirmLabel={
+          allExternalStagesComplete && user?.role === "EU" ? "Logout" : "OK"
+        }
         cancelLabel="Cancel"
       />
 

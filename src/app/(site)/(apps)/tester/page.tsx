@@ -1,13 +1,10 @@
 import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
 import { redirect } from "next/navigation";
 import { getFilteredDashboards } from "@/lib/dashboardUtils";
-import { redirect } from "next/navigation";
-import { getFilteredDashboards } from "@/lib/dashboardUtils";
-import NoDashboardsModal from "../NoDashboardModal";
 import apiClient from "@/lib/apiClient";
 import { getUser } from "@/lib/dal";
+import NoDashboardsModal from "@/app/(site)/(apps)/NoDashboardModal";
 import { ToolLandingPage } from "@/app/(site)/(apps)/ToolLandingPageInner";
-import { HappinessScoreSplashScreen } from "@/app/(site)/(apps)/happiness-score/HappinessScoreSplashScreen";
 
 interface WorkflowInstanceResponse {
   resource: {
@@ -44,15 +41,15 @@ export default async function Home({
     if (response.ok) {
       const responseData: WorkflowInstanceResponse = await response.json();
       if (responseData?.resource.new_wfinstid) {
-        redirectUrl = `/happiness-score/workflow/${responseData.resource.new_wfinstid}`;
+        redirectUrl = `/tester/workflow/${responseData.resource.new_wfinstid}`;
       }
     }
   }
 
-  const { filteredDashboards, toolData } = await getFilteredDashboards(
+  const { filteredDashboards } = await getFilteredDashboards(
     toolId,
     workflowId,
-    "/happiness-score"
+    "/tester",
   );
 
   if (!redirectUrl && filteredDashboards.length > 0) {
@@ -63,10 +60,7 @@ export default async function Home({
   return (
     <WorkflowEngine toolId={toolId} workflowId={workflowId}>
       {user.role === "EU" || filteredDashboards.length > 0 ? (
-        <ToolLandingPage
-          redirectUrl={redirectUrl}
-          splashScreen={<HappinessScoreSplashScreen />}
-        />
+        <ToolLandingPage redirectUrl={redirectUrl} />
       ) : (
         <NoDashboardsModal />
       )}

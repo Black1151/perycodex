@@ -36,6 +36,17 @@ export const userTeamJson = {
           labelFalse: "Team",
         },
         {
+          type: "boolean",
+          name: "isService",
+          title: "Is it a service?",
+          titleLocation: "top",
+          defaultValue: true,
+          swapOrder: true,
+          isRequired: true,
+          labelTrue: "Yes",
+          labelFalse: "No",
+        },
+        {
           type: "dropdown",
           name: "parentTeamId",
           title: "Parent Department",

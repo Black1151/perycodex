@@ -21,7 +21,7 @@ interface ModalProps {
     close: boolean;
     confirm: boolean;
   };
-  title?: string;
+  title?: string | React.ReactNode;
   titleProps?: ModalHeaderProps;
   bodyContent?: string | React.ReactNode;
   confirmLabel?: string;
