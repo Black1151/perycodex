@@ -132,6 +132,7 @@ export default function WorkflowLayout({
       const orderedStages = stages.sort((a, b) => a.bpOrder - b.bpOrder);
       setCurrentStage(
         orderedStages.find((stage) => stage.stageStatus === "Next") ||
+          orderedStages.find((stage) => stage.stageStatus === "In Progress") ||
           orderedStages[0],
       );
     }

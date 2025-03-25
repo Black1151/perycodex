@@ -16,6 +16,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import LockIcon from "@mui/icons-material/Lock";
+import OutlinedFlagOutlinedIcon from "@mui/icons-material/OutlinedFlagOutlined";
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import { useUser } from "@/providers/UserProvider";
 import { DrawerStateOptions } from "@/components/Sidebars/useDrawerState";
@@ -28,7 +29,7 @@ interface WorkflowSidebarProps extends SidebarProps {
   onStageChange: (stage: WorkflowStage) => void;
 }
 
-type StageStatus = "Next" | "Pending" | "Complete" | "Locked";
+type StageStatus = "Next" | "Pending" | "Complete" | "Locked" | "In Progress";
 
 export interface WorkflowStage {
   wfInstId: number;
@@ -218,7 +219,9 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
   };
 
   const isStageStatus = (value: string): value is StageStatus => {
-    return ["Next", "Complete", "Locked", "Pending"].includes(value);
+    return ["Next", "Complete", "Locked", "Pending", "In Progress"].includes(
+      value,
+    );
   };
 
   const getIconForStage = (stage: EnhancedWorkflowStage, full: boolean) => {
@@ -286,6 +289,13 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
           color={"blue.500"}
         />
       ),
+      "In Progress": (
+        <Icon
+          as={OutlinedFlagOutlinedIcon}
+          boxSize={boxSize}
+          color={"green.500"}
+        />
+      ),
     };
 
     if (isStageStatus(stage.stageStatus)) {
@@ -338,7 +348,8 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
                 fontSize={"sm"}
                 color={
                   stage.stageStatus === "Complete" ||
-                  stage.stageStatus === "Next"
+                  stage.stageStatus === "Next" ||
+                  stage.stageStatus === "In Progress"
                     ? "green.500"
                     : "blue.500"
                 }
