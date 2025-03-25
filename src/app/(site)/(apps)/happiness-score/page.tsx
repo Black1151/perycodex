@@ -1,8 +1,6 @@
 import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
 import { redirect } from "next/navigation";
 import { getFilteredDashboards } from "@/lib/dashboardUtils";
-import { redirect } from "next/navigation";
-import { getFilteredDashboards } from "@/lib/dashboardUtils";
 import NoDashboardsModal from "../NoDashboardModal";
 import apiClient from "@/lib/apiClient";
 import { getUser } from "@/lib/dal";
@@ -52,7 +50,7 @@ export default async function Home({
   const { filteredDashboards, toolData } = await getFilteredDashboards(
     toolId,
     workflowId,
-    "/happiness-score"
+    "/happiness-score",
   );
 
   if (!redirectUrl && filteredDashboards.length > 0) {
