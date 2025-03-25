@@ -303,6 +303,7 @@ export const caEmailScheduleJson = {
             titleName: "name",
           },
         },
+
       ],
     },
   ],

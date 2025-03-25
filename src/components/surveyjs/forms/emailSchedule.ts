@@ -351,7 +351,7 @@ export const emailScheduleJson = {
                     type: "dropdown",
                     name: "dataSourceId",
                     title: "Data Source",
-                    isRequired: true,
+                    isRequired: false,
                     choicesByUrl: {
                         url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/datasource/allBy`,
                         path: "resource",
@@ -363,8 +363,9 @@ export const emailScheduleJson = {
                     type: "text",
                     name: "dataSourceParams",
                     title: "Data Source Params",
+                    visibleIf: "{dataSourceId} notempty",
                     titleLocation: "top",
-                    isRequired: true,
+                    isRequired: false,
                     placeholder: "Enter name params needed for the datasource",
                 },
                 {
@@ -413,6 +414,43 @@ export const emailScheduleJson = {
                     titleLocation: "top",
                     defaultValue: false,
                     isRequired: true,
+                    labelTrue: "Yes",
+                    labelFalse: "No",
+                    swapOrder: true,
+                }
+            ]
+        }, {
+            name: "user-options",
+            title: "User Options",
+            elements: [
+                {
+                    type: "radiogroup",
+                    name: "secureLoginType",
+                    title: "Secure Login Type",
+                    isRequired: false,
+                    choices: [
+                        {
+                            text: "Standard User Login",
+                            value: 1,
+                        },
+                        {
+                            text: "Guest User",
+                            value: 2,
+                        },
+                        {
+                            text: "Anonymous",
+                            value: 3,
+                        },
+                    ],
+                },
+                {
+                    type: "boolean",
+                    name: "secureOneTimeLink",
+                    minWidth: "256px",
+                    title: "One Time Link?",
+                    titleLocation: "top",
+                    defaultValue: false,
+                    isRequired: false,
                     labelTrue: "Yes",
                     labelFalse: "No",
                     swapOrder: true,
