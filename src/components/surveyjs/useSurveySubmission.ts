@@ -26,7 +26,11 @@ const useSurveySubmission = ({
   useEffect(() => {
     if (!model) return;
     const handleSurveySubmission = async (sender: SurveyModel) => {
-      const requestType = isNew ? "POST" : "PUT";
+      let requestType = isNew ? "POST" : "PUT";
+
+      if (formSubmission === "workflow") {
+        requestType = "POST";
+      }
 
       const allQuestions: Question[] = model.getAllQuestions();
 
@@ -79,10 +83,20 @@ const useSurveySubmission = ({
       } else if (formSubmission === "workflow") {
         apiUrl = endpoint;
 
+        const isSaveMode = (model as any)?.seduloState?.isSave === true;
+
         payload = {
           jsonResponse: filteredSurveyData,
-          isComplete: true,
+          isComplete: !isSaveMode,
         };
+
+        console.log("-------------------------------------------");
+        console.log(model);
+        console.log("-------------------------------------------");
+
+        if (model.seduloState) {
+          model.seduloState.isSave = false;
+        }
       }
 
       try {

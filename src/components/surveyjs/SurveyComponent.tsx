@@ -139,7 +139,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
     happiness: HappinessLayout,
     enps: eNPSLayout,
     "client-satisfaction": ClientSatisfactionLayout,
-    tester: DefaultLayout,
+    tester: ClientSatisfactionLayout,
   };
 
   const SurveyLayout = layoutMap[layout];

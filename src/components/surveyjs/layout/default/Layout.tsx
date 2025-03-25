@@ -24,6 +24,7 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({
     prevPage,
     jumpToPage,
     submitSurvey,
+    saveSurvey,
     cancelSurvey,
     switchToDisplayMode,
     switchToEditMode,
