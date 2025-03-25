@@ -10,6 +10,7 @@ import {
   Icon,
   Flex,
   Tooltip,
+  HStack,
 } from "@chakra-ui/react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
@@ -20,6 +21,7 @@ import WidgetsIcon from "@mui/icons-material/Widgets";
 import { useUser } from "@/providers/UserProvider";
 import { DrawerStateOptions } from "@/components/Sidebars/useDrawerState";
 import { SurveyLayoutType } from "@/types/surveyJs";
+import Bottombar from "@/components/Bottombar/Bottombar";
 
 interface WorkflowSidebarProps extends SidebarProps {
   workflowStages: WorkflowStage[];
@@ -388,18 +390,95 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
     </VStack>
   );
 
+  const bottomBarMenu = (
+    <HStack
+      justify={["flex-start", "space-between"]}
+      alignItems="center"
+      overflowX="auto"
+      gap={6}
+      py={1}
+      css={{
+        "&::-webkit-scrollbar": { display: "none" },
+        msOverflowStyle: "none",
+        scrollbarWidth: "none",
+        minWidth: "100%",
+      }}
+    >
+      {enhancedStages
+        .sort((a, b) => a.bpOrder - b.bpOrder)
+        .map((stage) => (
+          <Box
+            key={stage.bpInstId}
+            fontSize={16}
+            p={2}
+            gap={2}
+            maxW={"200px"}
+            border={"1px solid"}
+            borderColor={stage.active ? "green.500" : "gray"}
+            bg={stage.active ? "green.500" : "transparent"}
+            color={stage.active ? "white" : "black"}
+            borderRadius="md"
+            cursor={stage.canClick ? "pointer" : "not-allowed"}
+            _hover={{
+              bg: stage.canClick ? "gray.100" : "transparent",
+            }}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            position={"relative"}
+            boxSizing={"border-box"}
+            onClick={() => handleClick(stage)}
+          >
+            <VStack spacing={1} w={"full"} maxW={"full"}>
+              {" "}
+              <WidgetsIcon />
+              <Text
+                fontSize={10}
+                textAlign="center"
+                whiteSpace="nowrap"
+                overflow="hidden"
+                maxW="100%"
+              >
+                {stage.bpName}
+              </Text>
+              <Box
+                position="absolute"
+                top={2}
+                right={0}
+                transform="translate(30%,-30%)"
+                bg="white"
+                borderRadius="full"
+                border={"0.5px solid black"}
+                boxSize="24px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                boxShadow="sm"
+                zIndex={1}
+              >
+                {getIconForStage(stage, false)}
+              </Box>
+            </VStack>
+          </Box>
+        ))}
+    </HStack>
+  );
+
   return (
-    <Sidebar
-      {...sidebarProps}
-      drawerState={drawerState}
-      canHalf={canHalf}
-      canFull={canFull}
-      onOpen={onOpen}
-      onToggle={onToggle}
-      onClose={onClose}
-      fullyOpenContent={fullBarMenu}
-      halfOpenContent={halfBarMenu}
-    />
+    <>
+      <Sidebar
+        {...sidebarProps}
+        drawerState={drawerState}
+        canHalf={canHalf}
+        canFull={canFull}
+        onOpen={onOpen}
+        onToggle={onToggle}
+        onClose={onClose}
+        fullyOpenContent={fullBarMenu}
+        halfOpenContent={halfBarMenu}
+      />
+      <Bottombar content={bottomBarMenu} />
+    </>
   );
 };
 

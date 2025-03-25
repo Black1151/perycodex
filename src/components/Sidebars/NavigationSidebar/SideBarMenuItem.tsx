@@ -50,7 +50,7 @@ const SideBarMenuItem: React.FC<SideBarMenuItemProps> = ({
       py={2}
     >
       {showIconOnly ? (
-        <Tooltip label={label}>
+        <Tooltip label={label} hasArrow placement={"right"}>
           <Box
             boxSize={iconSize}
             display="flex"
