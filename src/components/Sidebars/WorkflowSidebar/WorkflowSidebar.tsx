@@ -2,7 +2,16 @@
 
 import React, { ReactElement, useEffect, useState } from "react";
 import Sidebar, { SidebarProps } from "@/components/Sidebars/Sidebar";
-import { Box, VStack, Text, useTheme, Icon, Flex } from "@chakra-ui/react";
+import {
+  Box,
+  VStack,
+  Text,
+  useTheme,
+  Icon,
+  Flex,
+  Tooltip,
+  HStack,
+} from "@chakra-ui/react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
@@ -12,6 +21,7 @@ import WidgetsIcon from "@mui/icons-material/Widgets";
 import { useUser } from "@/providers/UserProvider";
 import { DrawerStateOptions } from "@/components/Sidebars/useDrawerState";
 import { SurveyLayoutType } from "@/types/surveyJs";
+import Bottombar from "@/components/Bottombar/Bottombar";
 
 interface WorkflowSidebarProps extends SidebarProps {
   workflowStages: WorkflowStage[];
@@ -198,6 +208,15 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
     const boxSize = stage.active && full ? 6 : 4;
 
     if (stage.stageStatus === "Pending") {
+      if (user?.role === "EU" && stage.isExternalBusinessProcess) {
+        return (
+          <Icon
+            as={CheckCircleOutlineIcon}
+            boxSize={boxSize}
+            color={"blue.500"}
+          />
+        );
+      }
       return !userHasAccessGroupAccess(stage) ? (
         <Icon as={LockIcon} boxSize={boxSize} color={"red.500"} />
       ) : (
@@ -210,6 +229,16 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
     }
 
     if (stage.stageStatus === "Next") {
+      if (user?.role === "EU" && stage.isExternalBusinessProcess) {
+        return (
+          <Icon
+            as={ArrowCircleRightOutlinedIcon}
+            boxSize={boxSize}
+            color={"green.500"}
+          />
+        );
+      }
+
       return !userHasAccessGroupAccess(stage) ? (
         <Icon as={LockIcon} boxSize={boxSize} color={"red.500"} />
       ) : (
@@ -310,15 +339,84 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
       {enhancedStages
         .sort((a, b) => a.bpOrder - b.bpOrder)
         .map((stage) => (
+          <Tooltip
+            key={stage.bpInstId}
+            hasArrow
+            label={stage.bpName}
+            placement={"right"}
+          >
+            <Box
+              fontSize={16}
+              p={2}
+              gap={2}
+              border={stage.active ? "3px solid" : "1px solid"}
+              borderColor={stage.active ? "green.500" : "black"}
+              bg={"transparent"}
+              color={"black"}
+              borderRadius="md"
+              cursor={stage.canClick ? "pointer" : "not-allowed"}
+              _hover={{
+                bg: stage.canClick ? "gray.100" : "transparent",
+              }}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              onClick={() => handleClick(stage)}
+              position={"relative"}
+              boxSizing={"border-box"}
+            >
+              {" "}
+              <WidgetsIcon />
+              <Box
+                position="absolute"
+                top={0}
+                right={0}
+                transform="translate(30%,-30%)"
+                bg="white"
+                borderRadius="full"
+                border={"0.5px solid black"}
+                boxSize="24px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                boxShadow="sm"
+                zIndex={1}
+              >
+                {getIconForStage(stage, false)}
+              </Box>
+            </Box>
+          </Tooltip>
+        ))}
+    </VStack>
+  );
+
+  const bottomBarMenu = (
+    <HStack
+      justify={["flex-start", "space-between"]}
+      alignItems="center"
+      overflowX="auto"
+      gap={6}
+      py={1}
+      css={{
+        "&::-webkit-scrollbar": { display: "none" },
+        msOverflowStyle: "none",
+        scrollbarWidth: "none",
+        minWidth: "100%",
+      }}
+    >
+      {enhancedStages
+        .sort((a, b) => a.bpOrder - b.bpOrder)
+        .map((stage) => (
           <Box
             key={stage.bpInstId}
             fontSize={16}
             p={2}
             gap={2}
-            border={stage.active ? "3px solid" : "1px solid"}
-            borderColor={stage.active ? "green.500" : "black"}
-            bg={"transparent"}
-            color={"black"}
+            maxW={"200px"}
+            border={"1px solid"}
+            borderColor={stage.active ? "green.500" : "gray"}
+            bg={stage.active ? "green.500" : "transparent"}
+            color={stage.active ? "white" : "black"}
             borderRadius="md"
             cursor={stage.canClick ? "pointer" : "not-allowed"}
             _hover={{
@@ -327,46 +425,60 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
             display="flex"
             alignItems="center"
             justifyContent="center"
-            onClick={() => handleClick(stage)}
             position={"relative"}
             boxSizing={"border-box"}
+            onClick={() => handleClick(stage)}
           >
-            {" "}
-            <WidgetsIcon />
-            <Box
-              position="absolute"
-              top={0}
-              right={0}
-              transform="translate(30%,-30%)"
-              bg="white"
-              borderRadius="full"
-              border={"0.5px solid black"}
-              boxSize="24px"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              boxShadow="sm"
-              zIndex={1}
-            >
-              {getIconForStage(stage, false)}
-            </Box>
+            <VStack spacing={1} w={"full"} maxW={"full"}>
+              {" "}
+              <WidgetsIcon />
+              <Text
+                fontSize={10}
+                textAlign="center"
+                whiteSpace="nowrap"
+                overflow="hidden"
+                maxW="100%"
+              >
+                {stage.bpName}
+              </Text>
+              <Box
+                position="absolute"
+                top={2}
+                right={0}
+                transform="translate(30%,-30%)"
+                bg="white"
+                borderRadius="full"
+                border={"0.5px solid black"}
+                boxSize="24px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                boxShadow="sm"
+                zIndex={1}
+              >
+                {getIconForStage(stage, false)}
+              </Box>
+            </VStack>
           </Box>
         ))}
-    </VStack>
+    </HStack>
   );
 
   return (
-    <Sidebar
-      {...sidebarProps}
-      drawerState={drawerState}
-      canHalf={canHalf}
-      canFull={canFull}
-      onOpen={onOpen}
-      onToggle={onToggle}
-      onClose={onClose}
-      fullyOpenContent={fullBarMenu}
-      halfOpenContent={halfBarMenu}
-    />
+    <>
+      <Sidebar
+        {...sidebarProps}
+        drawerState={drawerState}
+        canHalf={canHalf}
+        canFull={canFull}
+        onOpen={onOpen}
+        onToggle={onToggle}
+        onClose={onClose}
+        fullyOpenContent={fullBarMenu}
+        halfOpenContent={halfBarMenu}
+      />
+      <Bottombar content={bottomBarMenu} />
+    </>
   );
 };
 
