@@ -2,7 +2,15 @@
 
 import React, { ReactElement, useEffect, useState } from "react";
 import Sidebar, { SidebarProps } from "@/components/Sidebars/Sidebar";
-import { Box, VStack, Text, useTheme, Icon, Flex } from "@chakra-ui/react";
+import {
+  Box,
+  VStack,
+  Text,
+  useTheme,
+  Icon,
+  Flex,
+  Tooltip,
+} from "@chakra-ui/react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
@@ -198,6 +206,15 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
     const boxSize = stage.active && full ? 6 : 4;
 
     if (stage.stageStatus === "Pending") {
+      if (user?.role === "EU" && stage.isExternalBusinessProcess) {
+        return (
+          <Icon
+            as={CheckCircleOutlineIcon}
+            boxSize={boxSize}
+            color={"blue.500"}
+          />
+        );
+      }
       return !userHasAccessGroupAccess(stage) ? (
         <Icon as={LockIcon} boxSize={boxSize} color={"red.500"} />
       ) : (
@@ -210,6 +227,16 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
     }
 
     if (stage.stageStatus === "Next") {
+      if (user?.role === "EU" && stage.isExternalBusinessProcess) {
+        return (
+          <Icon
+            as={ArrowCircleRightOutlinedIcon}
+            boxSize={boxSize}
+            color={"green.500"}
+          />
+        );
+      }
+
       return !userHasAccessGroupAccess(stage) ? (
         <Icon as={LockIcon} boxSize={boxSize} color={"red.500"} />
       ) : (
@@ -310,47 +337,53 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
       {enhancedStages
         .sort((a, b) => a.bpOrder - b.bpOrder)
         .map((stage) => (
-          <Box
+          <Tooltip
             key={stage.bpInstId}
-            fontSize={16}
-            p={2}
-            gap={2}
-            border={stage.active ? "3px solid" : "1px solid"}
-            borderColor={stage.active ? "green.500" : "black"}
-            bg={"transparent"}
-            color={"black"}
-            borderRadius="md"
-            cursor={stage.canClick ? "pointer" : "not-allowed"}
-            _hover={{
-              bg: stage.canClick ? "gray.100" : "transparent",
-            }}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            onClick={() => handleClick(stage)}
-            position={"relative"}
-            boxSizing={"border-box"}
+            hasArrow
+            label={stage.bpName}
+            placement={"right"}
           >
-            {" "}
-            <WidgetsIcon />
             <Box
-              position="absolute"
-              top={0}
-              right={0}
-              transform="translate(30%,-30%)"
-              bg="white"
-              borderRadius="full"
-              border={"0.5px solid black"}
-              boxSize="24px"
+              fontSize={16}
+              p={2}
+              gap={2}
+              border={stage.active ? "3px solid" : "1px solid"}
+              borderColor={stage.active ? "green.500" : "black"}
+              bg={"transparent"}
+              color={"black"}
+              borderRadius="md"
+              cursor={stage.canClick ? "pointer" : "not-allowed"}
+              _hover={{
+                bg: stage.canClick ? "gray.100" : "transparent",
+              }}
               display="flex"
               alignItems="center"
               justifyContent="center"
-              boxShadow="sm"
-              zIndex={1}
+              onClick={() => handleClick(stage)}
+              position={"relative"}
+              boxSizing={"border-box"}
             >
-              {getIconForStage(stage, false)}
+              {" "}
+              <WidgetsIcon />
+              <Box
+                position="absolute"
+                top={0}
+                right={0}
+                transform="translate(30%,-30%)"
+                bg="white"
+                borderRadius="full"
+                border={"0.5px solid black"}
+                boxSize="24px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                boxShadow="sm"
+                zIndex={1}
+              >
+                {getIconForStage(stage, false)}
+              </Box>
             </Box>
-          </Box>
+          </Tooltip>
         ))}
     </VStack>
   );
