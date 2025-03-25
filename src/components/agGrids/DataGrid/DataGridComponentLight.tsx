@@ -30,6 +30,7 @@ import { ColDef, FirstDataRenderedEvent } from "ag-grid-community";
 import CustomGridBottomPaginationLight from "./CustomGridBottomPaginationLight";
 import LoadingOverlayPink from "../LoadingOverlayPink";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
+import PerygonCard from "@/components/layout/PerygonCard";
 
 interface DataGridComponentProps<T> {
   data: T[] | null;
@@ -135,7 +136,6 @@ function DataGridComponentLight<T>({
         fontSize: "13px",
         display: "flex",
         alignItems: "center",
-        // justifyContent: "center",
       },
       fontFamily: "Metropolis",
       ...customDefaultColDef,
@@ -197,15 +197,13 @@ function DataGridComponentLight<T>({
   });
 
   const onFilterTextBoxChanged = useCallback(() => {
-    // @ts-ignore
-    gridRef.current?.api.setGridOption(
-      "quickFilterText",
-      (
-        document.getElementById(
-          `filter-text-box-${uniqueQuickFilterId}`
-        ) as HTMLInputElement
-      )?.value
-    );
+    const input = document.getElementById(
+      `filter-text-box-${uniqueQuickFilterId}`
+    ) as HTMLInputElement;
+    if (input) {
+      // @ts-ignore
+      gridRef.current?.api.setQuickFilter(input.value);
+    }
   }, [uniqueQuickFilterId]);
 
   const resetFilter = useCallback(() => {
@@ -232,9 +230,8 @@ function DataGridComponentLight<T>({
 
   const handleFilterChanged = () => {
     const currentFilterModel = gridRef.current?.api.getFilterModel();
+    // do something if needed
   };
-
-  const updatePaginationSize = () => {};
 
   return (
     <Box flex={flex} borderRadius={"lg"}>
@@ -243,15 +240,8 @@ function DataGridComponentLight<T>({
           <SectionHeader>Scores and Comments</SectionHeader>
         </Flex>
       )}
-      <Box
-        className="ag-theme-alpine"
-        w="100%"
-        p={1}
-        pb="7px"
-        borderRadius="xl"
-        boxShadow="md"
-        bgColor="elementBG"
-      >
+
+      <PerygonCard className="ag-theme-alpine" w="100%" p={1} pb="7px">
         <Box w="full" p={2} pb={0}>
           {showTopBar && (
             <Flex w="full" justify="flex-start" align="center" my={0} gap={2}>
@@ -269,7 +259,6 @@ function DataGridComponentLight<T>({
                   boxShadow: "0 0 0 1px #ff0070",
                 }}
               />
-              primary
               <Flex
                 flex={1}
                 justify="flex-end"
@@ -335,6 +324,7 @@ function DataGridComponentLight<T>({
           )}
 
           <Flex direction="column" height={height}>
+            {/* Global style overrides for AG Grid */}
             <style jsx global>{`
               .ag-theme-alpine .ag-header,
               .ag-theme-alpine .ag-row,
@@ -356,7 +346,25 @@ function DataGridComponentLight<T>({
               .ag-theme-alpine .ag-row:nth-child(even) {
                 background-color: var(--chakra-colors-elementBG) !important;
               }
+
+              .ag-theme-alpine .ag-header,
+              .ag-theme-alpine .ag-header-cell,
+              .ag-theme-alpine .ag-row,
+              .ag-theme-alpine .ag-cell {
+                color: var(--chakra-colors-primaryTextColor) !important;
+              }
+
+              .ag-theme-alpine .ag-header-icon .ag-icon {
+                color: var(--chakra-colors-primaryTextColor) !important;
+                fill: var(--chakra-colors-primaryTextColor) !important;
+              }
+
+              .ag-theme-alpine .ag-header-icon:hover .ag-icon {
+                color: var(--chakra-colors-themeTextColor) !important;
+                fill: var(--chakra-colors-themeTextColor) !important;
+              }
             `}</style>
+
             <AgGridReact
               ref={gridRef}
               loading={loading}
@@ -383,7 +391,6 @@ function DataGridComponentLight<T>({
                   ? (params) => handleRowClick(params.data as T)
                   : undefined
               }
-              // Add the rowHeight prop here:
               rowHeight={50}
               getChartToolbarItems={() => []}
             />
@@ -402,7 +409,7 @@ function DataGridComponentLight<T>({
             <ModalComponent isOpen={isOpen} onClose={onClose} />
           )}
         </Box>
-      </Box>
+      </PerygonCard>
     </Box>
   );
 }

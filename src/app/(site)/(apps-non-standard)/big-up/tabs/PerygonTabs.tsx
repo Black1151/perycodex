@@ -19,7 +19,7 @@ export const PerygonTabs: React.FC<PerygonTabsProps> = ({ tabs }) => {
       flexDirection="column"
       width="100%"
       height="100vh"
-      bg="perygonBlueTransparent"
+      bg="elementBG"
       borderRadius="lg"
     >
       <TabList justifyContent="space-between">
@@ -28,10 +28,10 @@ export const PerygonTabs: React.FC<PerygonTabsProps> = ({ tabs }) => {
             key={index}
             flex="1"
             textAlign="center"
-            color="white"
+            color="primaryTextColor"
             _selected={{
-              color: "perygonBlue",
-              bg: "silver",
+              color: "white",
+              bg: "primary",
               borderTopRadius: "lg",
             }}
           >
@@ -50,9 +50,7 @@ export const PerygonTabs: React.FC<PerygonTabsProps> = ({ tabs }) => {
         }}
       >
         {tabs.map((tab, index) => (
-          <TabPanel key={index} bg="rgba(0, 0, 0, 0)">
-            {tab.content}
-          </TabPanel>
+          <TabPanel key={index}>{tab.content}</TabPanel>
         ))}
       </TabPanels>
     </Tabs>

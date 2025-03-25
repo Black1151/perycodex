@@ -15,6 +15,7 @@ import {
 } from "@/components/surveyjs/globalJsFunctions";
 import eNPSLayout from "@/components/surveyjs/layout/enps/Layout";
 import ClientSatisfactionLayout from "@/components/surveyjs/layout/client-satisfaction/Layout";
+import PerygonCard from "../layout/PerygonCard";
 
 type LayoutMap = {
   [key: string]: React.FC<LayoutProps>;

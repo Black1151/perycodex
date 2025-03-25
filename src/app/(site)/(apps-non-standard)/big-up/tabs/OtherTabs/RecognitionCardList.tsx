@@ -7,6 +7,7 @@ import {
   AnimatedListItem,
 } from "@/components/animations/AnimatedList";
 import { BigUpWallEntry } from "../../types";
+import PerygonCard from "@/components/layout/PerygonCard";
 
 interface RecognitionListProps extends GridProps {
   items: BigUpWallEntry[];
@@ -58,23 +59,18 @@ export const RecognitionList: React.FC<RecognitionListProps> = ({
 
             return (
               <AnimatedListItem key={index} index={index}>
-                <Box
-                  bg="perygonBlueTransparent"
-                  boxShadow="0 0 10px 2px rgba(192, 192, 192, 0.8)"
-                  p={4}
-                  rounded="md"
-                >
+                <PerygonCard p={4}>
                   <Flex alignItems="center" justify="space-between">
                     <Flex flexDirection="column" flex="1">
                       <Text fontSize="xl" color="primary" fontWeight="bold">
                         {personDetails.fullName}
                       </Text>
-                      <Text fontSize="xs" color="white">
+                      <Text fontSize="xs" color="primaryTextColor">
                         {reverseRecognition
                           ? "recognised me"
                           : `recognised by ${personDetails.recognizedBy}`}
                       </Text>
-                      <Text fontSize="xs" color="pink.300" pt={1}>
+                      <Text fontSize="xs" color="secondaryTextColor" pt={1}>
                         {item.createdAt.split(" ")[0]}
                       </Text>
                       <Text
@@ -101,11 +97,11 @@ export const RecognitionList: React.FC<RecognitionListProps> = ({
                     />
                   </Flex>
                   <Box mt={4} minHeight={30}>
-                    <Text fontSize="sm" color="white">
+                    <Text fontSize="sm" color="primaryTextColor">
                       {item.bigUpMessage}
                     </Text>
                   </Box>
-                </Box>
+                </PerygonCard>
               </AnimatedListItem>
             );
           })}

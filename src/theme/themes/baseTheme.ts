@@ -5,28 +5,26 @@ import { scrollBarThemes } from "@/theme/scrollBarThemes";
 import { agChartStyles } from "@/theme/agChartStyles";
 import { agGridStyles } from "../agGridStyles";
 
-
 const config: ThemeConfig = {
   initialColorMode: "light",
   useSystemColorMode: false,
 };
 
-
 export const baseTheme = extendTheme({
   config,
 
   colors: {
-    primary: "blue",          
-    secondary: "#fff",      
-    elementBG: "green",  
+    primary: "blue",
+    secondary: "#fff",
+    elementBG: "white",
 
-    primaryButton: "#fff",    
-    perygonBlueTransparent: "rgba(13, 0, 61, 0.85)",
+    primaryButton: "#fff",
+    // perygonBlueTransparent: "rgba(13, 0, 61, 0.85)",
     seduloRed: "#B4213D",
     yellow: "#EFC718",
     lightGreen: "#92C01F",
     seduloGreen: "#008000",
-    darkGray: "#4A4A4A",      
+    darkGray: "#4A4A4A",
 
     happinessScale: {
       1: "#b22200",
@@ -42,7 +40,6 @@ export const baseTheme = extendTheme({
     },
   },
 
-
   fonts: {
     heading: "Metropolis, sans-serif",
     body: "Metropolis, sans-serif",
@@ -50,7 +47,7 @@ export const baseTheme = extendTheme({
     bonfire: "Bonfire, sans-serif",
   },
 
-styles: {
+  styles: {
     global: (_props: { colorMode: "light" | "dark" }) => ({
       ...agGridStyles,
       ...scrollBarThemes,
@@ -186,9 +183,13 @@ styles: {
     },
   },
 
-    gradients: {
+  gradients: {
     primaryGradient: "linear(to-br, secondary 60%, primary 100%)",
     secondaryGradient: `linear-gradient(to bottom right, rgba(255, 0, 0, 0.6), rgba(255, 192, 203, 0.6))`,
     secondaryGradientTransparent: `linear-gradient(to bottom right, rgba(255, 0, 0, 0.3), rgba(255, 192, 203, 0.3))`,
   },
+
+  // shadows: {
+  //   primaryShadow: "0 0 10px 2px var(--chakra-colors-primary)",
+  // },
 });

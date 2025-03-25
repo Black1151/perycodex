@@ -68,6 +68,9 @@ const AllEnpsDashboard = () => {
   const [pieChartData, setPieChartData] = useState<PieChartDataRecord[]>();
 
   const gaugeOptions: AgRadialGaugeOptions = {
+    background: {
+      fill: theme.colors.elementBG,
+    },
     type: "radial-gauge",
     value: gaugeData.value,
     scale: {
@@ -99,6 +102,9 @@ const AllEnpsDashboard = () => {
   };
 
   const histogramOptions: AgChartOptions = {
+    background: {
+      fill: theme.colors.elementBG,
+    },
     series: [
       {
         type: "bar",
@@ -161,6 +167,9 @@ const AllEnpsDashboard = () => {
   };
 
   const lineChartOptions: AgChartOptions = {
+    background: {
+      fill: theme.colors.elementBG,
+    },
     data: lineChartData,
     series: [
       {
@@ -256,6 +265,9 @@ const AllEnpsDashboard = () => {
   };
 
   const pieChartOptions: AgPolarChartOptions = {
+    background: {
+      fill: theme.colors.elementBG,
+    },
     data: pieChartData,
     series: [pieChartSeries],
   };

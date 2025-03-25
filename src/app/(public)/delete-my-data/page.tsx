@@ -7,11 +7,13 @@ import {
   Button,
   Stack,
   Link,
+  useTheme,
 } from "@chakra-ui/react";
 import PublicLayout from "@/components/public/PublicLayout";
 import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
 
 const DeleteMyDataPage = () => {
+  const theme = useTheme();
   return (
     <PublicLayout>
       <Container maxW="container.lg" py={8}>
@@ -29,7 +31,7 @@ const DeleteMyDataPage = () => {
                 fontSize={["lg", "xl"]}
                 fontFamily={"Bonfire"}
                 fontWeight={"200"}
-                color={"primary"}
+                color={theme.colors.primaryText}
               >
                 Perygon
               </Text>

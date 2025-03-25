@@ -14,6 +14,7 @@ import {
   Select,
   Textarea,
   Text,
+  useTheme,
 } from "@chakra-ui/react";
 import { BigUpTeamMember } from "../types";
 import TeamMemberAutocomplete from "../components/TeamMemberAutocomplete";
@@ -56,6 +57,8 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
     onClose();
   };
 
+  const theme = useTheme();
+
   return (
     <Modal
       isOpen={isOpen}
@@ -72,7 +75,7 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
         <form onSubmit={handleSubmit(handleFormSubmit)}>
           <ModalBody>
             <FormControl mb={4} isRequired>
-              <FormLabel color="white">Team Member</FormLabel>
+              <FormLabel color="primaryTextColor">Team Member</FormLabel>
               <Controller
                 name="teamMember"
                 control={control}
@@ -89,7 +92,7 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
               />
             </FormControl>
             <FormControl mb={4} isRequired>
-              <FormLabel color="white">Category</FormLabel>
+              <FormLabel color="primaryTextColor">Category</FormLabel>
               <Controller
                 name="category"
                 control={control}
@@ -98,17 +101,17 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                   <Select
                     placeholder="Choose a category..."
                     {...field}
-                    bg="perygonBlueTransparent"
+                    bg="elementBG"
                     color="primary"
                     borderColor="primary"
                     _hover={{ borderColor: "primary" }}
                     _focus={{
-                      bg: "perygonBlueTransparent",
+                      bg: "elementBG",
                       color: "primary",
                     }}
                     sx={{
                       option: {
-                        backgroundColor: "perygonBlueTransparent",
+                        backgroundColor: "elementBG",
                         color: "primary",
                       },
                     }}
@@ -123,7 +126,7 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
               />
             </FormControl>
             <FormControl mb={4} isRequired>
-              <FormLabel color="white">Message</FormLabel>
+              <FormLabel color="primaryTextColor">Message</FormLabel>
               <Controller
                 name="message"
                 control={control}
@@ -134,8 +137,8 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                       placeholder="Enter your message here..."
                       maxLength={maxLength}
                       {...field}
-                      bg="perygonBlueTransparent"
-                      color="white"
+                      bg="elementBG"
+                      color={theme.colors.primaryTextColor}
                       borderColor="primary"
                       _hover={{ borderColor: "primary" }}
                     />

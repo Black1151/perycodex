@@ -90,6 +90,10 @@ export default function ManagerDashboardInner({
     DataPoint[]
   >([]);
 
+  useEffect(() => {
+    console.log("barModalLineGraphData", barModalLineGraphData);
+  }, [barModalLineGraphData]);
+
   const [barModalData, setBarModalData] = useState<Person[]>([]);
   const [isBarModalOpen, setIsBarModalOpen] = useState(false);
   const [barModalTitle, setBarModalTitle] = useState("");

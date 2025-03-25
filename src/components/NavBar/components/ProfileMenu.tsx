@@ -99,7 +99,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
       </Box>
 
       {/* The main menu content */}
-      <MenuList bg="white" color={theme.colors.primary} px={2}>
+      <MenuList bg="elementBG" color={theme.colors.primary} px={2}>
         {/* Render your existing menu items */}
         {menuItems.map((item) => (
           <MenuItem
@@ -109,7 +109,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
             alignItems="center"
             position="relative"
             overflow="hidden"
-            bg="white"
+            bg="elementBG"
             borderRadius="md"
             _hover={{
               backgroundColor: theme.colors.primary,

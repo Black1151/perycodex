@@ -12,6 +12,7 @@ import {
 } from "ag-charts-enterprise";
 import { NoDataOverlayPink } from "../agGrids/DataGrid/DataGridComponentLight";
 import LoadingOverlayPink from "../agGrids/LoadingOverlayPink";
+import PerygonCard from "../layout/PerygonCard";
 
 interface DataPoint {
   title: string;
@@ -144,7 +145,12 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
 
   if (loading) {
     return (
-      <Flex justifyContent="center" alignItems="center" height="100%">
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        height="100%"
+        dropShadow="primaryShadow"
+      >
         <LoadingOverlayPink />
       </Flex>
     );
@@ -152,28 +158,14 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
 
   if (!data || data.length === 0) {
     return (
-      <Flex
-        borderRadius="2xl"
-        shadow="xl"
-        overflow="hidden"
-        width="100%"
-        height="100%"
-        bg="elementBG"
-      >
+      <PerygonCard display="flex" width="100%" height="100%">
         <NoDataOverlayPink />
-      </Flex>
+      </PerygonCard>
     );
   }
 
   return (
-    <Flex
-      borderRadius="2xl"
-      shadow="xl"
-      overflow="hidden"
-      width="100%"
-      height="100%"
-      flex={1}
-    >
+    <PerygonCard display="flex" width="100%" height="100%">
       <style jsx global>{`
         .ag-charts-container rect:hover {
           transition: filter 0.3s ease-in-out;
@@ -194,6 +186,6 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
         options={chartOptions as any}
         style={{ width: "100%", height: "600px" }}
       />
-    </Flex>
+    </PerygonCard>
   );
 };

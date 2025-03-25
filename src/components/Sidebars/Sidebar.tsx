@@ -149,7 +149,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           bottom={0}
           width={drawerState === "fully-open" ? 225 : 61}
           zIndex={98}
-          bg="white"
+          bg="elementBG"
           boxShadow="xl"
           gap={0}
         >
@@ -163,7 +163,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             <HStack
               alignItems="center"
               justify={"space-between"}
-              background={"white"}
+              background={"elementBG"}
               py={1}
               px={2}
               zIndex={100}
@@ -173,7 +173,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 <Heading
                   as={"h2"}
                   fontSize={"16px"}
-                  style={{ color: theme.colors.primary }}
+                  style={{ color: theme.colors.primaryTextColor }}
                 >
                   {title}
                 </Heading>

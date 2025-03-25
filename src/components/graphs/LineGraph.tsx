@@ -6,12 +6,12 @@ import {
   Text,
   Tooltip,
   useBreakpointValue,
+  useTheme,
   VStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { perygonTheme } from "@/theme/themes/perygon/perygonTheme/perygonTheme";
-
-import { useTheme } from "@chakra-ui/react";
+import PerygonCard from "../layout/PerygonCard";
 
 interface DataPoint {
   value: number;
@@ -28,6 +28,8 @@ const LineGraph: React.FC<LineGraphProps> = memo(
     const containerRef = useRef<HTMLDivElement>(null);
     const [containerWidth, setContainerWidth] = useState(0);
     const [animationKey, setAnimationKey] = useState(0);
+
+    const theme = useTheme();
 
     useEffect(() => {
       if (containerRef.current) {
@@ -106,7 +108,7 @@ const LineGraph: React.FC<LineGraphProps> = memo(
           alignItems="center"
           bg="white"
           borderRadius={{ base: "8px", md: "16px" }}
-          boxShadow="lg"
+          // boxShadow="lg"
         >
           <Text
             color={perygonTheme.colors.primary}
@@ -120,194 +122,193 @@ const LineGraph: React.FC<LineGraphProps> = memo(
     }
 
     return (
-      <Flex
-        height={`${totalHeight}px`}
-        position="relative"
-        width="100%"
-        flex={1}
-      >
-        <Box
-          ref={containerRef}
-          key={animationKey}
-          width="100%"
+      <PerygonCard>
+        <Flex
           height={`${totalHeight}px`}
           position="relative"
-          bg="elementBG"
-          borderRadius={{ base: "8px", md: "16px" }}
-          overflow="hidden"
-          boxShadow="lg"
-          pt={10}
+          width="100%"
+          flex={1}
         >
-          {/* Y-axis */}
-          <VStack
-            as={motion.div}
-            initial="hidden"
-            animate="visible"
+          <Box
+            ref={containerRef}
+            key={animationKey}
+            width="100%"
             height={`${totalHeight}px`}
-            justifyContent="space-between"
-            width="100%"
-            position="absolute"
-            left="0"
-            top="0"
+            position="relative"
+            overflow="hidden"
+            pt={10}
           >
-            {yAxisTicks.map((tick, index) => (
-              <motion.div
-                key={tick}
-                custom={index}
-                style={{ width: "100%" }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <HStack
-                  width="100%"
-                  position="absolute"
-                  style={{ top: `${mapValueToY(tick)}px` }}
-                >
-                  <Text
-                    fontSize={fontSize}
-                    color="gray.500"
-                    position="absolute"
-                    top="50%"
-                    transform="translateY(-50%)"
-                    width={`${leftPadding}px`}
-                    textAlign="center"
-                  >
-                    {tick}
-                  </Text>
-                  <Box
-                    position="absolute"
-                    left={`${leftPadding}px`}
-                    right={`${rightPadding}px`}
-                    height="1px"
-                    bg="gray.300"
-                  />
-                </HStack>
-              </motion.div>
-            ))}
-          </VStack>
-
-          {/* X-axis labels */}
-          {DataPoints.map((point, index) => (
-            <Text
-              key={index}
-              fontSize={fontSize}
-              color={perygonTheme.colors.primary}
+            {/* Y-axis */}
+            <VStack
+              as={motion.div}
+              initial="hidden"
+              animate="visible"
+              height={`${totalHeight}px`}
+              justifyContent="space-between"
+              width="100%"
               position="absolute"
-              left={`${mapIndexToX(index)}px`}
-              bottom={`${bottomPadding - 50}px`}
-              transform="translateX(-90%) rotate(-45deg)"
-              whiteSpace="nowrap"
+              left="0"
+              top="0"
             >
-              {point.title}
-            </Text>
-          ))}
+              {yAxisTicks.map((tick, index) => (
+                <motion.div
+                  key={tick}
+                  custom={index}
+                  style={{ width: "100%" }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <HStack
+                    width="100%"
+                    position="absolute"
+                    style={{ top: `${mapValueToY(tick)}px` }}
+                  >
+                    <Text
+                      fontSize={fontSize}
+                      color="gray.500"
+                      position="absolute"
+                      top="50%"
+                      transform="translateY(-50%)"
+                      width={`${leftPadding}px`}
+                      textAlign="center"
+                    >
+                      {tick}
+                    </Text>
+                    <Box
+                      position="absolute"
+                      left={`${leftPadding}px`}
+                      right={`${rightPadding}px`}
+                      height="1px"
+                      bg="gray.300"
+                    />
+                  </HStack>
+                </motion.div>
+              ))}
+            </VStack>
 
-          {/* Line with gradient */}
-          <svg
-            width="100%"
-            height="100%"
-            viewBox={`0 0 ${containerWidth} ${totalHeight}`}
-            preserveAspectRatio="none"
-            style={{ position: "absolute", top: 0, left: 0 }}
-          >
-            <defs>
+            {/* X-axis labels */}
+            {DataPoints.map((point, index) => (
+              <Text
+                key={index}
+                fontSize={fontSize}
+                color={theme.colors.primaryTextColor}
+                position="absolute"
+                left={`${mapIndexToX(index)}px`}
+                bottom={`${bottomPadding - 50}px`}
+                transform="translateX(-90%) rotate(-45deg)"
+                whiteSpace="nowrap"
+              >
+                {point.title}
+              </Text>
+            ))}
+
+            {/* Line with gradient */}
+            <svg
+              width="100%"
+              height="100%"
+              viewBox={`0 0 ${containerWidth} ${totalHeight}`}
+              preserveAspectRatio="none"
+              style={{ position: "absolute", top: 0, left: 0 }}
+            >
+              <defs>
+                {DataPoints.slice(0, -1).map((point, index) => {
+                  const nextPoint = DataPoints[index + 1];
+                  if (point.value === 0 && nextPoint.value === 0) {
+                    return null;
+                  }
+
+                  const color1 = getHappinessColor(point.value);
+                  const color2 = getHappinessColor(nextPoint.value);
+
+                  if (color1 === color2) {
+                    return null;
+                  }
+
+                  return (
+                    <linearGradient
+                      key={index}
+                      id={`gradient-${index}`}
+                      x1="0%"
+                      y1="0%"
+                      x2="100%"
+                      y2="0%"
+                    >
+                      <stop offset="0%" stopColor={color1} />
+                      <stop offset="100%" stopColor={color2} />
+                    </linearGradient>
+                  );
+                })}
+              </defs>
               {DataPoints.slice(0, -1).map((point, index) => {
                 const nextPoint = DataPoints[index + 1];
                 if (point.value === 0 && nextPoint.value === 0) {
                   return null;
                 }
+                const x1 = mapIndexToX(index);
+                const y1 = mapValueToY(point.value);
+                const x2 = mapIndexToX(index + 1);
+                const y2 = mapValueToY(nextPoint.value);
 
                 const color1 = getHappinessColor(point.value);
                 const color2 = getHappinessColor(nextPoint.value);
 
-                if (color1 === color2) {
-                  return null;
-                }
+                const gradientId = `gradient-${index}`;
+
+                const strokeColor =
+                  color1 === color2 ? color1 : `url(#${gradientId})`;
 
                 return (
-                  <linearGradient
+                  <motion.path
                     key={index}
-                    id={`gradient-${index}`}
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="0%"
-                  >
-                    <stop offset="0%" stopColor={color1} />
-                    <stop offset="100%" stopColor={color2} />
-                  </linearGradient>
+                    d={`M ${x1} ${y1} L ${x2} ${y2}`}
+                    stroke={strokeColor}
+                    strokeWidth={strokeWidth}
+                    fill="none"
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{
+                      duration: 0.5,
+                      ease: "easeInOut",
+                      delay: index * 0.2,
+                    }}
+                  />
                 );
               })}
-            </defs>
-            {DataPoints.slice(0, -1).map((point, index) => {
-              const nextPoint = DataPoints[index + 1];
-              if (point.value === 0 && nextPoint.value === 0) {
-                return null;
-              }
-              const x1 = mapIndexToX(index);
-              const y1 = mapValueToY(point.value);
-              const x2 = mapIndexToX(index + 1);
-              const y2 = mapValueToY(nextPoint.value);
+            </svg>
 
-              const color1 = getHappinessColor(point.value);
-              const color2 = getHappinessColor(nextPoint.value);
-
-              const gradientId = `gradient-${index}`;
-
-              const strokeColor =
-                color1 === color2 ? color1 : `url(#${gradientId})`;
-
-              return (
-                <motion.path
-                  key={index}
-                  d={`M ${x1} ${y1} L ${x2} ${y2}`}
-                  stroke={strokeColor}
-                  strokeWidth={strokeWidth}
-                  fill="none"
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{
-                    duration: 0.5,
-                    ease: "easeInOut",
-                    delay: index * 0.2,
-                  }}
-                />
-              );
-            })}
-          </svg>
-
-          {/* Data point images */}
-          {DataPoints.map(
-            (point, index) =>
-              point.value !== 0 && (
-                <Tooltip
-                  key={index}
-                  label={`Score: ${point.value.toFixed(2)} on: ${point.title}`}
-                  placement="top"
-                  bg={perygonTheme.colors.primary}
-                  color="white"
-                  borderRadius="md"
-                >
-                  <motion.img
-                    src={getFaceImage(point.value)}
-                    alt={`Face for score ${Math.round(point.value)}`}
-                    style={{
-                      position: "absolute",
-                      left: `${mapIndexToX(index) - imageSize / 2}px`,
-                      top: `${mapValueToY(point.value) - imageSize / 2}px`,
-                      width: imageSize,
-                      height: imageSize,
-                    }}
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: index * 0.2, duration: 0.3 }}
-                  />
-                </Tooltip>
-              )
-          )}
-        </Box>
-      </Flex>
+            {/* Data point images */}
+            {DataPoints.map(
+              (point, index) =>
+                point.value !== 0 && (
+                  <Tooltip
+                    key={index}
+                    label={`Score: ${point.value.toFixed(2)} on: ${point.title}`}
+                    placement="top"
+                    bg={perygonTheme.colors.primary}
+                    color="white"
+                    borderRadius="md"
+                  >
+                    <motion.img
+                      src={getFaceImage(point.value)}
+                      alt={`Face for score ${Math.round(point.value)}`}
+                      style={{
+                        position: "absolute",
+                        left: `${mapIndexToX(index) - imageSize / 2}px`,
+                        top: `${mapValueToY(point.value) - imageSize / 2}px`,
+                        width: imageSize,
+                        height: imageSize,
+                      }}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: index * 0.2, duration: 0.3 }}
+                    />
+                  </Tooltip>
+                )
+            )}
+          </Box>
+        </Flex>
+      </PerygonCard>
     );
   }
 );

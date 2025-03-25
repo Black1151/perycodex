@@ -1,5 +1,13 @@
 "use client";
-import { Box, Button, Center, keyframes, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  keyframes,
+  Text,
+  useTheme,
+  VStack,
+} from "@chakra-ui/react";
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
 import { SpringScale } from "@/components/animations/SpringScale";
 import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
@@ -37,6 +45,8 @@ export default function NotFoundPage() {
     }
   };
 
+  const theme = useTheme();
+
   return (
     <PerygonContainer>
       {/* Animated background gradient */}
@@ -72,7 +82,7 @@ export default function NotFoundPage() {
                 fontSize={{ base: "xl", md: "2xl" }}
                 fontWeight="bold"
                 mt={-2}
-                color="gray.700"
+                color={theme.colors.secondaryText}
                 textShadow="1px 1px 2px rgba(0,0,0,0.2)"
               >
                 Oops! An error has occurred.
@@ -80,7 +90,12 @@ export default function NotFoundPage() {
             </Box>
 
             {/* Supporting text */}
-            <Text fontSize="lg" textAlign="center" color="gray.500" maxW="md">
+            <Text
+              fontSize="lg"
+              textAlign="center"
+              color={theme.colors.secondaryText}
+              maxW="md"
+            >
               It looks like your session may have expired or the page you are
               looking for doesn&apos;t exist anymore. Login to get yourself back
               on track.

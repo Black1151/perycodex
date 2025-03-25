@@ -71,6 +71,7 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({
         py={4}
         position="relative"
         direction="column"
+        bgColor="transparent"
       >
         {/* Navigation Component */}
         {showTopNavigation && (
@@ -92,7 +93,7 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({
             isSubmitting={isSubmitting}
           />
         )}
-        <Box w="100%" overflow="hidden" bg={"white"}>
+        <Box w="100%" overflow="hidden" bg={"elementBG"}>
           {/* Motion-animated Survey component with slide transition */}
           <MotionBox
             key={currentPage} // Ensure re-rendering when page changes
@@ -109,8 +110,9 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({
               opacity: 0,
             }}
             transition={{ duration: 0.5 }} // Duration for slide and fade-in/out
+            bgColor="elementBG"
           >
-            <Box>
+            <Box bgColor="elementBG">
               <Survey model={model} />
             </Box>
           </MotionBox>
