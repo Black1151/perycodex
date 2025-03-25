@@ -155,13 +155,25 @@ export const emailSecureLinkJson = {
           swapOrder: true,
         },
         {
-          type: "text",
+          type: "dropdown",
           name: "loginLink",
           title: "Login Link",
+          titleLocation: "top",
           isRequired: false,
-          description:
-              "Accepts only following values: no|user|anonymous",
-          descriptionLocation: "underInput",
+          choices: [
+            {
+              value: "no",
+              text: "No",
+            },
+            {
+              value: "user",
+              text: "User",
+            },
+            {
+              value: "anonymous",
+              text: "Anonymous",
+            }
+          ],
         },
       ],
     },
