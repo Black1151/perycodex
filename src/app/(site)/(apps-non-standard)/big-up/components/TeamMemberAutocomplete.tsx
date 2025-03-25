@@ -72,11 +72,11 @@ const TeamMemberAutocomplete: FC<TeamMemberAutocompleteProps> = ({
         onChange={handleInputChange}
         onBlur={onBlur}
         onFocus={() => setShowDropdown(true)}
-        bg="perygonBlueTransparent"
+        bg="elementBG"
         color="primary"
         borderColor="primary"
         _hover={{ borderColor: "primary" }}
-        _focus={{ bg: "black", color: "primary" }}
+        _focus={{ color: "primary" }}
       />
 
       {showDropdown && filteredMembers.length > 0 && (
@@ -85,7 +85,7 @@ const TeamMemberAutocomplete: FC<TeamMemberAutocompleteProps> = ({
           top="100%"
           left={0}
           right={0}
-          bg="perygonBlueTransparent"
+          bg="elementBG"
           border="1px solid"
           borderColor="primary"
           borderTop="none"

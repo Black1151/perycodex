@@ -1,9 +1,9 @@
 "use client";
 
 import LoadingBar from "@/components/LoadingBar/LoadingBar";
-import {Box, Center, Flex, Image, keyframes, VStack} from "@chakra-ui/react";
+import { Box, Center, Flex, Image, keyframes, VStack } from "@chakra-ui/react";
 
-import {motion} from "framer-motion";
+import { motion } from "framer-motion";
 
 const fadeIn = keyframes`
     0% {
@@ -52,41 +52,41 @@ const pulsate = keyframes`
 `;
 
 export const HappinessScoreSplashScreen = () => {
-    const MotionVStack = motion(VStack);
-    return (
-        <Center flex={1}>
-            <MotionVStack
-                initial={{opacity: 1, rotate: 0}}
-                animate={{opacity: 0, rotate: -1080}}
-                transition={{delay: 3.5, duration: 1, ease: "easeInOut"}}
-            >
-                <Box
-                    bgImage="url('/assets/splash-screens/happiness-score/logoBG.png')"
-                    bgSize="contain"
-                    bgRepeat="no-repeat"
-                    bgPosition="center"
-                    w="300px"
-                    h="100px"
-                    animation={`${fadeIn} 1s ease-in-out`}
-                >
-                    <Flex
-                        position="relative"
-                        left="36px"
-                        top="10px"
-                        animation={`${enlargeRotate} 1.2s ease-in-out`}
-                        transformOrigin="center"
-                        w={'48px'}
-                    >
-                        <Box animation={`${pulsate} 2s ease-in-out 1.2s`}>
-                            <Image
-                                src="/assets/splash-screens/happiness-score/logoFace.png"
-                                w="48px"
-                            />
-                        </Box>
-                    </Flex>
-                </Box>
-                <LoadingBar/>
-            </MotionVStack>
-        </Center>
-    );
+  const MotionVStack = motion(VStack);
+  return (
+    <Center flex={1}>
+      <MotionVStack
+        initial={{ opacity: 1, rotate: 0 }}
+        animate={{ opacity: 0, rotate: -1080 }}
+        transition={{ delay: 3.5, duration: 1, ease: "easeInOut" }}
+      >
+        <Box
+          bgImage="url('/assets/splash-screens/happiness-score/logoBG.png')"
+          bgSize="contain"
+          bgRepeat="no-repeat"
+          bgPosition="center"
+          w="300px"
+          h="100px"
+          animation={`${fadeIn} 1s ease-in-out`}
+        >
+          <Flex
+            position="relative"
+            left="36px"
+            top="10px"
+            animation={`${enlargeRotate} 1.2s ease-in-out`}
+            transformOrigin="center"
+            w={"48px"}
+          >
+            <Box animation={`${pulsate} 2s ease-in-out 1.2s`}>
+              <Image
+                src="/assets/splash-screens/happiness-score/logoFace.png"
+                w="48px"
+              />
+            </Box>
+          </Flex>
+        </Box>
+        <LoadingBar />
+      </MotionVStack>
+    </Center>
+  );
 };

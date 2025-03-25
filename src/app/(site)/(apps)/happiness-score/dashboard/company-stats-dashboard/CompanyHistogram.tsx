@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { Box, useTheme } from "@chakra-ui/react";
+import React from "react";
+import { useTheme } from "@chakra-ui/react";
 import { AgCharts } from "ag-charts-react";
 import useColor from "@/hooks/useColor";
 
@@ -9,7 +9,6 @@ import {
   AgBarSeriesItemStylerParams,
   AgCartesianChartOptions,
 } from "ag-charts-enterprise";
-import BubbleScoresTooltipRenderer from "@/components/agCharts/BubbleScoresTooltipRenderer";
 import SubmissionsTooltipRenderer from "@/components/agCharts/SubmissionsTooltipRenderer";
 
 interface ScoreDistribution {
@@ -18,7 +17,7 @@ interface ScoreDistribution {
 }
 
 interface CompanyHistogramProps {
-  scoreDistribution?: ScoreDistribution[];
+  scoreDistribution?: ScoreDistribution[] | string;
 }
 
 export const CompanyHistogram: React.FC<CompanyHistogramProps> = ({
@@ -27,7 +26,7 @@ export const CompanyHistogram: React.FC<CompanyHistogramProps> = ({
   const theme = useTheme();
   const { getColor } = useColor();
 
-  // Parse the scores array safely and add `yKey` with a default value of 5
+  // Prepare the score data in a sorted array
   const validScoresArray = (() => {
     try {
       const parsedData = Array.isArray(scoreDistribution)
@@ -41,13 +40,17 @@ export const CompanyHistogram: React.FC<CompanyHistogramProps> = ({
     }
   })();
 
-  const [options, setOptions] = useState<AgCartesianChartOptions>({
+  // Define chart options directly (no state)
+  const options: AgCartesianChartOptions = {
     data: validScoresArray,
     padding: {
       top: 20,
       left: 20,
       right: 20,
       bottom: 20,
+    },
+    background: {
+      fill: theme.colors.elementBG,
     },
     series: [
       {
@@ -69,8 +72,8 @@ export const CompanyHistogram: React.FC<CompanyHistogramProps> = ({
         },
         itemStyler: (params: AgBarSeriesItemStylerParams<any>) => {
           const { datum, xKey } = params;
-          const score = parseInt(datum[xKey], 10); // Retrieve the score value
-          return { fill: getColor(score) }; // Color based on score
+          const score = parseInt(datum[xKey], 10);
+          return { fill: getColor(score) };
         },
       },
     ],
@@ -82,12 +85,12 @@ export const CompanyHistogram: React.FC<CompanyHistogramProps> = ({
           text: "Score",
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: "black",
+          color: theme.colors.primaryTextColor,
         },
         label: {
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: theme.colors.primary,
+          color: theme.colors.primaryTextColor,
         },
         gridLine: {
           width: 0,
@@ -100,12 +103,12 @@ export const CompanyHistogram: React.FC<CompanyHistogramProps> = ({
           text: "Number of times",
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: "black",
+          color: theme.colors.primaryTextColor,
         },
         label: {
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: theme.colors.primary,
+          color: theme.colors.primaryTextColor,
         },
       },
     ],
@@ -118,11 +121,7 @@ export const CompanyHistogram: React.FC<CompanyHistogramProps> = ({
     navigator: {
       enabled: false,
     },
-  });
+  };
 
-  return (
-    <Box borderRadius={"2xl"} shadow={"xl"} overflow={"hidden"}>
-      <AgCharts options={options as any} />
-    </Box>
-  );
+  return <AgCharts options={options} />;
 };

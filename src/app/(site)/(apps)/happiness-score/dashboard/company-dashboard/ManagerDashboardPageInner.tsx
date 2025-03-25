@@ -90,6 +90,10 @@ export default function ManagerDashboardInner({
     DataPoint[]
   >([]);
 
+  useEffect(() => {
+    console.log("barModalLineGraphData", barModalLineGraphData);
+  }, [barModalLineGraphData]);
+
   const [barModalData, setBarModalData] = useState<Person[]>([]);
   const [isBarModalOpen, setIsBarModalOpen] = useState(false);
   const [barModalTitle, setBarModalTitle] = useState("");
@@ -445,11 +449,8 @@ export default function ManagerDashboardInner({
                 <Box
                   className="ag-theme-alpine"
                   w="100%"
-                  p={1}
-                  pb="7px"
+                  pb={1}
                   borderRadius="xl"
-                  boxShadow="md"
-                  bgColor="white"
                 >
                   <DataGridComponentLight
                     data={submittedPeopleListData}

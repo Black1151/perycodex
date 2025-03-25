@@ -1,25 +1,25 @@
 // perygonLightTheme.ts
 import { extendTheme } from "@chakra-ui/react";
 
-import { colorPalette } from "./colorPalette";
 import { baseTheme } from "../../baseTheme";
+import { colorPalette } from "./colorPalette";
 
-export const perygonTheme = extendTheme(baseTheme, {
+export const MinimalDark = extendTheme(baseTheme, {
   colors: {
     ...baseTheme.colors,
-    primary: colorPalette.perygonPink,
-    secondary: colorPalette.seduloRed,
+    primary: colorPalette.silver,
+    secondary: "black",
     primaryButton: colorPalette.seduloRed,
-    elementBG: "white",
+    elementBG: "rgb(48, 48, 48)",
     shadowColor: "red",
-    primaryTextColor: "rgb(0, 0, 0)",
-    secondaryTextColor: "rgb(83, 83, 83)",
-    themeTextColor: colorPalette.perygonPink,
+    primaryTextColor: "rgb(255, 255, 255)",
+    secondaryTextColor: "rgb(255, 255, 255)",
+    themeTextColor: "rgb(255, 255, 255)",
   },
 
   gradients: {
     ...baseTheme.gradients,
-    primaryGradient: "linear(to-br, secondary 60%, primary 100%)",
+    primaryGradient: "linear(to-br, secondary 20%, secondary 100%)",
     secondaryGradient: `linear-gradient(to bottom right, rgba(255, 0, 0, 0.6), rgba(255, 192, 203, 0.6))`,
     secondaryGradientTransparent: `linear-gradient(to bottom right, rgba(255, 0, 0, 0.3), rgba(255, 192, 203, 0.3))`,
   },
@@ -28,11 +28,11 @@ export const perygonTheme = extendTheme(baseTheme, {
     ...baseTheme.components,
   },
 
+  // shadows: {
+  //   primaryShadow: "3px 3px 5px 3px rgb(128, 128, 128, 0.5)",
+  // },
+
   borders: {
     primaryBorder: "1px solid var(--chakra-colors-primary)",
-  },
-
-  shadows: {
-    primaryShadow: "1px 2px 5px 1px rgba(68, 68, 68, 0.5)",
   },
 });

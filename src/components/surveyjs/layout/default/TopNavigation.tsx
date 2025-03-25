@@ -63,7 +63,7 @@ const TopNavigation: React.FC<NavigationProps> = ({
         zIndex={1}
       >
         <Box
-          bg="white"
+          bg="elementBG"
           py={2}
           px={4}
           borderBottomLeftRadius={"none"}
@@ -82,7 +82,7 @@ const TopNavigation: React.FC<NavigationProps> = ({
         </Box>
       </Box>
       <Box
-        bg="white"
+        bg="elementBG"
         py={4}
         px={2}
         borderBottomLeftRadius={"none"}

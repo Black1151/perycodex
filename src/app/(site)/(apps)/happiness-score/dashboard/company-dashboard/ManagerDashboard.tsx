@@ -27,7 +27,7 @@ export default function ManagerDashboardPage({
   preFilter,
 }: ManagerDashboardPageProps) {
   const [drawerState, setDrawerState] = useState<"closed" | "fully-open">(
-    "closed",
+    "closed"
   );
   const [isUpdating, setIsUpdating] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -67,7 +67,7 @@ export default function ManagerDashboardPage({
       "Site Tags": "siteTagId",
       "Customer Tags": "customerTagId",
     }),
-    [],
+    []
   );
 
   const constructQueryParams = useCallback(
@@ -76,7 +76,7 @@ export default function ManagerDashboardPage({
 
       filters.forEach((group) => {
         const selectedOptions = group.options.filter(
-          (option) => option.isSelected,
+          (option) => option.isSelected
         );
         if (selectedOptions.length > 0) {
           const paramName = labelToParamName[group.label];
@@ -95,7 +95,7 @@ export default function ManagerDashboardPage({
 
       return params.toString();
     },
-    [labelToParamName, preFilter],
+    [labelToParamName, preFilter]
   );
 
   const saveScrollPosition = useCallback(() => {
@@ -111,7 +111,7 @@ export default function ManagerDashboardPage({
         if (newGroup) {
           const updatedOptions = group.options.map((option) => {
             const newOption = newGroup.options.find(
-              (o) => o.value === option.value,
+              (o) => o.value === option.value
             );
             return {
               ...option,
@@ -136,7 +136,7 @@ export default function ManagerDashboardPage({
 
       setFilterOptions(updatedFilters);
     },
-    [],
+    []
   );
 
   const fetchFilteredData = useCallback(
@@ -144,7 +144,7 @@ export default function ManagerDashboardPage({
       const queryParams = constructQueryParams(currentFilters);
 
       const response = await fetch(
-        `/api/happiness-score/dashboards/company-happiness?${queryParams}`,
+        `/api/happiness-score/dashboards/company-happiness?${queryParams}`
       );
 
       if (!response.ok) {
@@ -168,7 +168,7 @@ export default function ManagerDashboardPage({
         setSelectedWeek(null);
       }
     },
-    [constructQueryParams, updateFilterOptions, selectedWeek],
+    [constructQueryParams, updateFilterOptions, selectedWeek]
   );
 
   const clearAllFilters = useCallback(async () => {
@@ -220,7 +220,7 @@ export default function ManagerDashboardPage({
         setIsUpdating(false);
       }
     },
-    [filterOptions, fetchFilteredData, saveScrollPosition],
+    [filterOptions, fetchFilteredData, saveScrollPosition]
   );
 
   const handleWeekChange = useCallback(
@@ -228,7 +228,7 @@ export default function ManagerDashboardPage({
       saveScrollPosition();
       setSelectedWeek(week);
     },
-    [saveScrollPosition],
+    [saveScrollPosition]
   );
 
   const fetchHappinessScoreTwoMonthHistory = useCallback(
@@ -248,7 +248,7 @@ export default function ManagerDashboardPage({
             "Content-Type": "application/json",
           },
           body: JSON.stringify(payload),
-        },
+        }
       );
 
       if (!response.ok) {
@@ -259,7 +259,7 @@ export default function ManagerDashboardPage({
       setStaffHappinessDetailsModalData(data.resource);
       setIsModalOpen(true);
     },
-    [],
+    []
   );
 
   useEffect(() => {
@@ -267,7 +267,7 @@ export default function ManagerDashboardPage({
       try {
         const queryParams = constructQueryParams([]);
         const response = await fetch(
-          `/api/happiness-score/dashboards/company-happiness?${queryParams}`,
+          `/api/happiness-score/dashboards/company-happiness?${queryParams}`
         );
 
         if (!response.ok) {
@@ -277,7 +277,7 @@ export default function ManagerDashboardPage({
         const data = await response.json();
 
         const initializeFilterOptions = (
-          filters: FilterOptionGroup[],
+          filters: FilterOptionGroup[]
         ): FilterOptionGroup[] => {
           return filters.map((group) => ({
             ...group,
@@ -319,7 +319,7 @@ export default function ManagerDashboardPage({
   useEffect(() => {
     if (selectedWeek && weeksData.length > 0) {
       const weekDataIndex = weeksData.findIndex(
-        (wd) => wd.weekKey === selectedWeek,
+        (wd) => wd.weekKey === selectedWeek
       );
       if (weekDataIndex !== -1) {
         const weekData = weeksData[weekDataIndex];
@@ -379,7 +379,7 @@ export default function ManagerDashboardPage({
       clearAllFilters,
       scrollRef,
       saveScrollPosition,
-    ],
+    ]
   );
 
   const managerDashboardPageInnerProps = useMemo(
@@ -412,7 +412,7 @@ export default function ManagerDashboardPage({
       staffHappinessDetailsModalData,
       drawerState,
       AgGridTableData,
-    ],
+    ]
   );
 
   return (

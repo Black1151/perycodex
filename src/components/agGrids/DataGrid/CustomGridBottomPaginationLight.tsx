@@ -76,26 +76,29 @@ const CustomGridBottomPaginationLight: React.FC<
     <Box w="full" px={1} color="black" mt={2}>
       <Grid templateColumns="1fr 1fr" alignItems="center">
         <HStack>
-          <Text display={["none", null, null, null, "block"]} mr={2}>
+          <Text
+            display={["none", null, null, null, "block"]}
+            mr={2}
+            color="primaryTextColor"
+          >
             Showing:
           </Text>
           <Select
             size="sm"
             width="auto"
             value={paginationInfo.pageSize}
+            color="primaryTextColor"
             onChange={(e) => {
               const newPageSize = Number(e.target.value);
               if (gridRef.current?.api) {
-                // Correct method to set the page size
                 gridRef.current.api.setGridOption(
                   "paginationPageSize",
                   newPageSize
                 );
-                // Update the pagination info state
                 setPaginationInfo((prev) => ({
                   ...prev,
                   pageSize: newPageSize,
-                  totalPages: Math.ceil(prev.totalRows / newPageSize), // Use prev to access the current totalRows
+                  totalPages: Math.ceil(prev.totalRows / newPageSize),
                 }));
               }
             }}
@@ -107,10 +110,15 @@ const CustomGridBottomPaginationLight: React.FC<
             ))}
           </Select>
 
-          <Text>of {paginationInfo.totalRows}</Text>
+          <Text color="primaryTextColor">of {paginationInfo.totalRows}</Text>
         </HStack>
         <HStack justifyContent="flex-end">
-          <Text mx={1} minWidth={["60px", null, "120px"]} textAlign="center">
+          <Text
+            mx={1}
+            minWidth={["60px", null, "120px"]}
+            textAlign="center"
+            color="primaryTextColor"
+          >
             {paginationText}
           </Text>
           <IconButton
@@ -120,7 +128,7 @@ const CustomGridBottomPaginationLight: React.FC<
             onClick={goToPreviousPage}
             disabled={paginationInfo.currentPage <= 1}
             variant="agPrimary"
-            color="black"
+            color="primaryTextColor"
             _hover={{
               backgroundColor: "primary",
               color: "white",
@@ -133,7 +141,7 @@ const CustomGridBottomPaginationLight: React.FC<
             onClick={goToNextPage}
             disabled={paginationInfo.currentPage >= paginationInfo.totalPages}
             variant="agPrimary"
-            color="black"
+            color="primaryTextColor"
             _hover={{
               backgroundColor: "primary",
               color: "white",

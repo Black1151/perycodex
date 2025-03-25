@@ -163,7 +163,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   };
 
   const fullBarMenu = (
-    <Flex flexDirection="column" pb={[24, 6]} gap={3}>
+    <Flex flexDirection="column" pb={[24, 6]} gap={3} bg="elementBG">
       {/* Date Filter (only if enabled) */}
       {filterOptions.showDateFilter && (
         <Box px={2}>
@@ -191,21 +191,23 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
       )}
 
       <Box px={2} fontSize={"sm"} w={"full"}>
-        <Text fontWeight="bold">Selected Date Range:</Text>
+        <Text color={theme.colors.primaryTextColor} fontWeight="bold">
+          Selected Date Range:
+        </Text>
         <Flex justify={"space-between"} w={"full"}>
-          <Text>
-            <strong>Start</strong>:
+          <Text color={theme.colors.primaryTextColor} fontWeight="bold">
+            Start:
           </Text>
-          <Text>
+          <Text color={theme.colors.primaryTextColor}>
             {dateRange &&
               format(parseISO(dateRange.startDate), "EE, dd-MM-yyyy")}
           </Text>
         </Flex>
         <Flex justify={"space-between"} w={"full"}>
-          <Text>
-            <strong>End</strong>:
+          <Text color={theme.colors.primaryTextColor} fontWeight="bold">
+            End
           </Text>
-          <Text>
+          <Text color={theme.colors.primaryTextColor}>
             {dateRange && format(parseISO(dateRange.endDate), "EE, dd-MM-yyyy")}
           </Text>
         </Flex>
@@ -228,7 +230,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         minH={"40px"}
         variant="green"
         onClick={handleApplyFilters}
-        _hover={{ bg: theme.colors.primaryDark }}
+        _hover={{ bg: theme.colors.primary }}
       >
         Apply Filters
       </Button>

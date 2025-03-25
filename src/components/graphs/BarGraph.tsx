@@ -163,10 +163,10 @@ const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({
   };
 
   return (
-    <Flex flex={1} width="100%" pb={50} bg="white" borderRadius="2xl">
+    <Flex flex={1} width="100%" pb={50} bg="elementBG" borderRadius="2xl">
       <VStack
         key={animationKey}
-        bg="white"
+        bg="elementBG"
         width="100%"
         flex={1}
         borderRadius="2xl"

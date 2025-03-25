@@ -19,6 +19,7 @@ import SubmitScoreModal from "./modal/SubmitScoreModal";
 import { RecognitionList } from "./tabs/OtherTabs/RecognitionCardList";
 import { useUnread } from "@/components/contexts/UnreadRecognitionContext";
 import { hideScrollbar } from "@/utils/style/style-utils";
+import PerygonCard from "@/components/layout/PerygonCard";
 
 export default function BigUpPage() {
   const router = useRouter();
@@ -148,19 +149,12 @@ export default function BigUpPage() {
         },
       }}
     >
-      <Flex
-        bg="perygonBlueTransparent"
-        w="full"
-        alignItems="center"
-        borderRadius="lg"
-        p={2}
-        pr={6}
-      >
+      <PerygonCard display="flex" width="100%" p={2} pr={6} alignItems="center">
         <RecognitionHeader
           headingText="Recognition Hub"
           onAddButtonClick={() => setIsSubmitModalOpen(true)}
         />
-      </Flex>
+      </PerygonCard>
 
       <Grid
         width={["100%"]}

@@ -29,7 +29,7 @@ const RecognitionHeader: React.FC<RecognitionHeaderProps> = ({
       <Heading
         as="h1"
         fontWeight={100}
-        color="white"
+        color="themeTextColor"
         fontSize={{ base: "2xl", md: "4xl" }}
         fontFamily="Bonfire"
         textAlign="center"

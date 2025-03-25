@@ -1,7 +1,8 @@
 export const colorPalette = {
-  perygonDark: "rgb(13, 68, 234)",
-  perygonDarker: "rgb(0, 10, 187)",
+  perygonBlue: "rgb(13, 68, 234)",
+  perygonDarkerBlue: "rgb(0, 10, 187)",
   perygonPurple: "rgb(60, 51, 232)",
+
   yellow: "#EFC718",
   lightGreen: "#92C01F",
   happinessScale: {

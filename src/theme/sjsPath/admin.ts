@@ -90,7 +90,7 @@ export const themeJson = {
     // Background of SurveyJS colors
     "--sjs-general-backcolor": "#E5E5E500", // Unsure what this one is doing
     "--sjs-general-backcolor-dark": "#FFFFFF00", // Unsure what this one is doing
-    "--sjs-general-backcolor-dim": "#FFFFFF", // Background of SurveyJS if no image / Also used for background of the dropdown selections
+    "--sjs-general-backcolor-dim": "var(--chakra-colors-elementBG)", // Background of SurveyJS if no image / Also used for background of the dropdown selections
     "--sjs-general-backcolor-dim-light": "#FFFFFF00", // Unsure what this one is doing
     "--sjs-general-backcolor-dim-dark": "#FFFFFF00", // Unsure what this one is doing
 
@@ -137,9 +137,6 @@ export const themeJson = {
     "--sjs-questionpanel-backcolor": "#FFFFFF",
     "--sjs-questionpanel-hovercolor": "rgba(235, 235, 235, 0.50)",
 
-    // Question Titles
-    "--sjs-font-questiontitle-color": "rgba(0, 0, 0, 1)",
-
     // Question Description
     "--sjs-font-questiondescription-color": "var(--chakra-colors-primary)",
 
@@ -155,7 +152,8 @@ export const themeJson = {
     "--sjs-editorpanel-hovercolor": "#E5E5E5", // Hover over boolean switch
 
     // Font Editor
-    "--sjs-font-editorfont-color": "#191919",
+    "--sjs-font-editorfont-color": "var(--chakra-colors-primaryTextColor)",
+    "--sjs-font-questiontitle-color": "var(--chakra-colors-primaryTextColor)",
     "--sjs-font-editorfont-placeholdercolor": "#191919cc",
 
     // Special colours

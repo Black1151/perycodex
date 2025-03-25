@@ -6,7 +6,7 @@ import {
   getOrdinalSuffix,
 } from "@/app/(site)/(apps-non-standard)/big-up/tabs/LeaderBoardTab/LeaderBoardTabContent";
 import { EmojiEvents } from "@mui/icons-material";
-import Link from "next/link";
+import PerygonCard from "@/components/layout/PerygonCard";
 
 export interface BigUpStatsCardProps {
   name: string;
@@ -36,12 +36,7 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
   const rankOrdinal = ranking && getOrdinalSuffix(ranking);
 
   return (
-    <Card
-      width="100%"
-      height="100%"
-      bg="perygonBlueTransparent"
-      justifyContent="space-between"
-    >
+    <PerygonCard width="100%" height="100%" justifyContent="space-between">
       <Flex flexDirection="column" justifyContent="space-between" height="100%">
         <Flex align="center" mb={3} gap={5}>
           <Avatar
@@ -66,7 +61,11 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
             >
               {name}
             </Text>
-            <Text fontSize={["sm", "md", "xl"]} color="white" fontWeight="bold">
+            <Text
+              fontSize={["sm", "md", "xl"]}
+              color="primaryTextColor"
+              fontWeight="bold"
+            >
               {location}
             </Text>
           </Flex>
@@ -91,8 +90,8 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
             )}
           </Flex>
         </Flex>
-        <Flex>
-          <Text color="white" fontWeight="bold">
+        <Flex align="center">
+          <Text color="primaryTextColor" fontWeight="bold">
             Your score is:
           </Text>
           <Text
@@ -106,22 +105,22 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
         </Flex>
         <Divider mb={3} />
         <Flex justify="space-between">
-          <Text fontSize="sm" fontWeight="bold" color="white">
+          <Text color="primaryTextColor" fontSize="sm" fontWeight="bold">
             Received:
           </Text>
-          <Text fontWeight="bold" fontSize="lg" color="primary">
+          <Text color="primaryTextColor" fontWeight="bold" fontSize="lg">
             {received.toLocaleString()}
           </Text>
         </Flex>
         <Flex justify="space-between" mt={1}>
-          <Text fontSize="sm" fontWeight="bold" color="white">
+          <Text color="primaryTextColor" fontSize="sm" fontWeight="bold">
             Given:
           </Text>
-          <Text fontWeight="bold" fontSize="lg" color="primary">
+          <Text color="primaryTextColor" fontWeight="bold" fontSize="lg">
             {given.toLocaleString()}
           </Text>
         </Flex>
       </Flex>
-    </Card>
+    </PerygonCard>
   );
 };

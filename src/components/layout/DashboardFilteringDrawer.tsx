@@ -139,7 +139,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
         bottom={0}
         width={225}
         zIndex={98}
-        bg="white"
+        bg="elementBG"
         boxShadow="xl"
         transform={
           drawerState === "fully-open" ? "translateX(0)" : "translateX(100%)"
@@ -157,10 +157,10 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
             position={"absolute"}
             right={0}
             zIndex={2}
-            background={"white"}
+            background={"elementBG"}
             w={"full"}
             pl={5}
-            color={theme.colors.primary}
+            color={theme.colors.primaryTextColor}
             fontWeight={"bold"}
             fontSize={"1.2rem"}
           >
@@ -175,7 +175,9 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
           </Box>
           {drawerState === "fully-open" && title && (
             <Box px={4}>
-              <Text style={{ color: theme.colors.primary }}>{title}</Text>
+              <Text style={{ color: theme.colors.primaryTextColor }}>
+                {title}
+              </Text>
             </Box>
           )}
 
@@ -187,12 +189,14 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                   value={selectedWeek || ""}
                   onChange={(e) => onWeekChange(e.target.value)}
                   isDisabled={isUpdating}
+                  color={theme.colors.primaryTextColor}
                 >
                   {weekOptions.map((week) => (
                     <option
                       key={week}
                       value={week}
                       style={{ paddingLeft: "10px" }}
+                      color={theme.colors.themeTextColor}
                     >
                       {week}
                     </option>
@@ -285,7 +289,9 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                                   )
                                 }
                               >
-                                {option.label}
+                                <Text color={theme.colors.primaryTextColor}>
+                                  {option.label}
+                                </Text>
                               </Checkbox>
                             ))}
                           </VStack>

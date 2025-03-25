@@ -29,6 +29,7 @@ import { CompanyHistogram } from "@/app/(site)/(apps)/happiness-score/dashboard/
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import { useUser } from "@/providers/UserProvider";
 import StaffHappinessDetailsRenderer from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
+import PerygonCard from "@/components/layout/PerygonCard";
 
 interface ApiResponse {
   userResource: RowData[];
@@ -422,25 +423,15 @@ const CompanyStats: React.FC = () => {
             />
           </Tooltip>
         </Flex>
-        <Box
-          className="ag-theme-alpine"
-          w="100%"
-          p={1}
-          pb="7px"
-          borderRadius="xl"
-          boxShadow="md"
-          bgColor="white"
-        >
-          <DataGridComponentLight
-            data={rowData}
-            loading={isLoading}
-            initialFields={columnDefs}
-            showTopBar={true}
-            defaultColDef={defaultColDef}
-            refreshData={getData}
-            enableAutoRefresh={true}
-          />
-        </Box>
+        <DataGridComponentLight
+          data={rowData}
+          loading={isLoading}
+          initialFields={columnDefs}
+          showTopBar={true}
+          defaultColDef={defaultColDef}
+          refreshData={getData}
+          enableAutoRefresh={true}
+        />
       </Box>
       {rowData.length > 0 && (
         <>
@@ -449,9 +440,11 @@ const CompanyStats: React.FC = () => {
               <Flex width="100%" justifyContent="center">
                 <SectionHeader>Frequency of Scores</SectionHeader>
               </Flex>
-              <CompanyHistogram
-                scoreDistribution={companyData.scoreDistribution}
-              />
+              <PerygonCard>
+                <CompanyHistogram
+                  scoreDistribution={companyData.scoreDistribution}
+                />
+              </PerygonCard>
             </>
           )}
           {companyData && companyData.companyScores && (
@@ -473,7 +466,9 @@ const CompanyStats: React.FC = () => {
                   />
                 </Tooltip>
               </Flex>
-              <CompanyBubble scores={companyData.companyScores} />
+              <PerygonCard>
+                <CompanyBubble scores={companyData.companyScores} />
+              </PerygonCard>
             </>
           )}
         </>

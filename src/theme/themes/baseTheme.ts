@@ -1,29 +1,31 @@
-import { color, extendTheme, type ThemeConfig } from "@chakra-ui/react";
-import { agGridStyles } from "../../../agGridStyles";
+// baseTheme.ts
+import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
+
 import { scrollBarThemes } from "@/theme/scrollBarThemes";
 import { agChartStyles } from "@/theme/agChartStyles";
-import { colorPalette } from "./colorPalette";
+import { agGridStyles } from "../agGridStyles";
 
 const config: ThemeConfig = {
   initialColorMode: "light",
   useSystemColorMode: false,
 };
 
-export const perygonThemeDark = extendTheme({
+export const baseTheme = extendTheme({
   config,
+
   colors: {
-    primary: colorPalette.perygonDark,
-    secondary: colorPalette.perygonPurple,
+    primary: "blue",
+    secondary: "#fff",
+    elementBG: "white",
 
-    // buttons
-    primaryButton: colorPalette.perygonPurple,
-
-    //legacy colors to be removed during refactor
-    perygonBlueTransparent: "rgba(13, 0, 61, 0.85)",
+    primaryButton: "#fff",
+    // perygonBlueTransparent: "rgba(13, 0, 61, 0.85)",
     seduloRed: "#B4213D",
     yellow: "#EFC718",
     lightGreen: "#92C01F",
     seduloGreen: "#008000",
+    darkGray: "#4A4A4A",
+
     happinessScale: {
       1: "#b22200",
       2: "#e92300",
@@ -37,40 +39,39 @@ export const perygonThemeDark = extendTheme({
       10: "#00bf00",
     },
   },
+
   fonts: {
     heading: "Metropolis, sans-serif",
     body: "Metropolis, sans-serif",
     metropolis: "Metropolis, sans-serif",
     bonfire: "Bonfire, sans-serif",
   },
+
   styles: {
-    global: (props: { colorMode: "light" | "dark" }) => {
-      return {
-        ...agGridStyles,
-        ...scrollBarThemes,
-        ...agChartStyles,
-        "html, body": {
-          backgroundColor: "#ffffff",
-          color: "#000000",
-        },
-      };
-    },
+    global: (_props: { colorMode: "light" | "dark" }) => ({
+      ...agGridStyles,
+      ...scrollBarThemes,
+      ...agChartStyles,
+      "html, body": {
+        backgroundColor: "#ffffff",
+        color: "#000000",
+      },
+    }),
   },
+
   components: {
     Button: {
       variants: {
         primary: {
           mt: 5,
-          backgroundColor: colorPalette.perygonPurple,
           w: "full",
           height: 12,
+          backgroundColor: "primary",
           color: "white",
-          border: "1px solid",
-          borderColor: "white",
           _hover: {
-            color: colorPalette.perygonPurple,
+            color: "primary",
             border: "1px solid",
-            // borderColor: colorPalette.perygonPurple,
+            borderColor: "primary",
             backgroundColor: "white",
             _disabled: {
               color: "white",
@@ -79,6 +80,7 @@ export const perygonThemeDark = extendTheme({
             },
           },
         },
+
         agPrimary: {
           bg: "transparent",
           color: "white",
@@ -97,6 +99,7 @@ export const perygonThemeDark = extendTheme({
             boxShadow: "outline",
           },
         },
+
         agPrimaryLight: {
           bg: "transparent",
           color: "primary",
@@ -115,6 +118,7 @@ export const perygonThemeDark = extendTheme({
             boxShadow: "outline",
           },
         },
+
         darkGray: {
           bgColor: "darkGray",
           border: "1px solid",
@@ -129,6 +133,7 @@ export const perygonThemeDark = extendTheme({
             },
           },
         },
+
         green: {
           bgColor: "seduloGreen",
           border: "1px solid",
@@ -143,22 +148,24 @@ export const perygonThemeDark = extendTheme({
             },
           },
         },
+
         red: {
-          bgColor: "secondary",
+          bgColor: "seduloRed",
           border: "1px solid",
-          borderColor: "secondary",
+          borderColor: "seduloRed",
           color: "white",
           _hover: {
-            color: "secondary",
+            color: "seduloRed",
             backgroundColor: "white",
             _disabled: {
               color: "white",
-              backgroundColor: "secondary",
+              backgroundColor: "seduloRed",
             },
           },
         },
       },
     },
+
     Switch: {
       variants: {
         primary: {
@@ -175,9 +182,14 @@ export const perygonThemeDark = extendTheme({
       },
     },
   },
+
   gradients: {
-    primaryGradient: "linear(to-br,rgb(20, 26, 85) 60%,primary 100%)",
-    secondaryGradient: `linear-gradient(to bottom right, rgb(0, 6, 125), rgb(60, 51, 232))`,
-    secondaryGradientTransparent: `linear-gradient(to bottom right, rgba(0, 6, 125, 0.8), rgba(60, 51, 232,0.8))`,
+    primaryGradient: "linear(to-br, secondary 60%, primary 100%)",
+    secondaryGradient: `linear-gradient(to bottom right, rgba(255, 0, 0, 0.6), rgba(255, 192, 203, 0.6))`,
+    secondaryGradientTransparent: `linear-gradient(to bottom right, rgba(255, 0, 0, 0.3), rgba(255, 192, 203, 0.3))`,
   },
+
+  // shadows: {
+  //   primaryShadow: "0 0 10px 2px var(--chakra-colors-primary)",
+  // },
 });

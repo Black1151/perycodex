@@ -29,6 +29,7 @@ import ScoreTooltipRenderer from "@/components/agCharts/ScoreTooltipRenderer";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import FilterSidebar from "@/components/Sidebars/Dashboards Filter/FilterSidebar";
 import { dateRangeOptions } from "@/components/Sidebars/Dashboards Filter/dateRangeUtils";
+import PerygonCard from "@/components/layout/PerygonCard";
 
 // Define interfaces for each data type
 interface UserScore {
@@ -193,7 +194,7 @@ const UserDashboard: React.FC = () => {
             ...postBody,
           },
           redirectOnError: false,
-        },
+        }
       );
 
       if (response && response.resource) {
@@ -210,11 +211,13 @@ const UserDashboard: React.FC = () => {
         setUserDistribution(parseData<UserDistributionItem>(userDistribution));
         setComparativeData(parseData<ComparativeItem>(comparativeData));
         setMonthlyComparativeData(
-          parseData<MonthlyComparativeItem>(monthlyComparativeData || []),
+          parseData<MonthlyComparativeItem>(monthlyComparativeData || [])
         );
       } else {
+        // Handle empty or error response if needed
       }
     } catch (error) {
+      // Handle error if needed
     } finally {
       setIsLoading(false);
     }
@@ -229,7 +232,7 @@ const UserDashboard: React.FC = () => {
     }
 
     const monthlyOption = dateRangeOptions[dateRangeOption].find(
-      (opt) => opt.value === defaultDateFilterOption,
+      (opt) => opt.value === defaultDateFilterOption
     );
 
     if (monthlyOption) {
@@ -269,16 +272,19 @@ const UserDashboard: React.FC = () => {
   // Weekly line chart configuration
   const weeklyLineChartOptions = {
     data: comparativeData,
+    background: {
+      fill: theme.colors.elementBG,
+    },
     series: [
       {
         type: "line",
         xKey: "weekEnd",
         yKey: "user",
         yName: "User",
-                stroke: theme.colors.primary,
+        stroke: theme.colors.primary,
         marker: {
           enabled: true,
-                    fill: theme.colors.primary,
+          fill: theme.colors.primary,
         },
         tooltip: { renderer: ScoreTooltipRenderer },
         interpolation: {
@@ -327,7 +333,7 @@ const UserDashboard: React.FC = () => {
           rotation: 300,
           fontSize: 12,
           fontFamily: "Metropolis",
-                    color: theme.colors.primary,
+          color: theme.colors.primary,
         },
         title: {
           text: "Week End",
@@ -348,7 +354,7 @@ const UserDashboard: React.FC = () => {
         label: {
           fontSize: 12,
           fontFamily: "Metropolis",
-                    color: theme.colors.primary,
+          color: theme.colors.primary,
         },
       },
     ],
@@ -366,14 +372,17 @@ const UserDashboard: React.FC = () => {
   // Monthly line chart configuration
   const monthlyLineChartOptions = {
     data: monthlyComparativeData,
+    background: {
+      fill: theme.colors.elementBG,
+    },
     series: [
       {
         type: "line",
         xKey: "monthEnd",
         yKey: "user",
         yName: "User",
-                stroke: theme.colors.primary,
-                marker: {enabled: true, fill: theme.colors.primary},
+        stroke: theme.colors.primary,
+        marker: { enabled: true, fill: theme.colors.primary },
         tooltip: { renderer: ScoreTooltipRenderer },
         interpolation: {
           type: "smooth",
@@ -421,7 +430,7 @@ const UserDashboard: React.FC = () => {
           rotation: 300,
           fontSize: 12,
           fontFamily: "Metropolis",
-                    color: theme.colors.primary,
+          color: theme.colors.primary,
         },
         title: {
           text: "Month End",
@@ -442,7 +451,7 @@ const UserDashboard: React.FC = () => {
         label: {
           fontSize: 12,
           fontFamily: "Metropolis",
-                    color: theme.colors.primary,
+          color: theme.colors.primary,
         },
       },
     ],
@@ -475,7 +484,7 @@ const UserDashboard: React.FC = () => {
           fontFamily: "Bonfire",
           fontSize: "2xl",
           fontWeight: "bold",
-                    color: "primary",
+          color: "primary",
         }}
         bodyContent={modalData.body}
       />
@@ -497,25 +506,15 @@ const UserDashboard: React.FC = () => {
             <Flex width="100%" justifyContent="center" mb={4}>
               <SectionHeader>Stats for {user?.fullName}</SectionHeader>
             </Flex>
-            <Box
-              className="ag-theme-alpine"
-              w="100%"
-              p={1}
-              pb="7px"
-              borderRadius="xl"
-              boxShadow="md"
-              bgColor="white"
-            >
-              <DataGridComponentLight
-                data={rowData}
-                loading={isLoading}
-                initialFields={columnDefs}
-                showTopBar={true}
-                defaultColDef={defaultColDef}
-                refreshData={getData}
-                enableAutoRefresh={true}
-              />
-            </Box>
+            <DataGridComponentLight
+              data={rowData}
+              loading={isLoading}
+              initialFields={columnDefs}
+              showTopBar={true}
+              defaultColDef={defaultColDef}
+              refreshData={getData}
+              enableAutoRefresh={true}
+            />
           </Box>
         )}
 
@@ -527,17 +526,12 @@ const UserDashboard: React.FC = () => {
                 <Flex width="100%" justifyContent={"center"}>
                   <SectionHeader>Weekly Trend</SectionHeader>
                 </Flex>
-                <Box
-                  borderRadius="2xl"
-                  shadow="xl"
-                  overflow="hidden"
-                  height="500px"
-                >
+                <PerygonCard height="500px">
                   <AgCharts
                     options={weeklyLineChartOptions as any}
                     style={{ width: "100%", height: "100%" }}
                   />
-                </Box>
+                </PerygonCard>
               </>
             )}
 
@@ -547,17 +541,12 @@ const UserDashboard: React.FC = () => {
                 <Flex width="100%" justifyContent={"center"}>
                   <SectionHeader>Monthly Trend</SectionHeader>
                 </Flex>
-                <Box
-                  borderRadius="2xl"
-                  shadow="xl"
-                  overflow="hidden"
-                  height="500px"
-                >
+                <PerygonCard height="500px">
                   <AgCharts
                     options={monthlyLineChartOptions as any}
                     style={{ width: "100%", height: "100%" }}
                   />
-                </Box>
+                </PerygonCard>
               </>
             )}
 
@@ -567,9 +556,9 @@ const UserDashboard: React.FC = () => {
                 <Flex width="100%" justifyContent={"center"}>
                   <SectionHeader>Frequency of Scores</SectionHeader>
                 </Flex>
-                <Box borderRadius="2xl" shadow="xl" overflow="hidden">
+                <PerygonCard>
                   <CompanyHistogram scoreDistribution={userScores} />
-                </Box>
+                </PerygonCard>
               </>
             )}
 
@@ -588,19 +577,14 @@ const UserDashboard: React.FC = () => {
                       variant="ghost"
                       onClick={showPunchCardHelp}
                       color={"white"}
-                                                _hover={{color: "primary", background: "white"}}
+                      _hover={{ color: "primary", background: "white" }}
                       ml={2}
                     />
                   </Tooltip>
                 </Flex>
-                <Box
-                  borderRadius="2xl"
-                  shadow="xl"
-                  overflow="hidden"
-                  height="500px"
-                >
+                <PerygonCard height="500px">
                   <CompanyBubble scores={userDistribution} />
-                </Box>
+                </PerygonCard>
               </>
             )}
           </>

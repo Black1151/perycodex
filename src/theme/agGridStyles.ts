@@ -2,6 +2,9 @@ export const agGridStyles = {
   ".ag-theme-alpine .ag-theme-perygon": {
     "--ag-font-size": "13px !important",
   },
+  ".ag-header-cell": {
+    backgroundColor: "var(--chakra-colors-elementBG) !important",
+  },
 
   ".ag-theme-perygon .cell-class": {
     color: "white !important",
@@ -65,6 +68,16 @@ export const agGridStyles = {
       color: "white !important",
       fontSize: "18px",
     },
+
+  ".ag-theme-perygon .ag-header-icon .ag-icon": {
+    color: "var(--chakra-colors-primaryTextColor) !important",
+    fill: "var(--chakra-colors-primaryTextColor) !important",
+  },
+
+  ".ag-theme-perygon .ag-header-icon:hover .ag-icon": {
+    color: "var(--chakra-colors-themeTextColor) !important",
+    fill: "var(--chakra-colors-themeTextColor) !important",
+  },
 
   // ".ag-theme-perygon": {
   //     // "--ag-icon-font-display": "none !important",
