@@ -38,11 +38,11 @@ export const userTeamJson = {
         {
           type: "boolean",
           name: "isService",
-          title: "Is it a service?",
+          title: "Is it a Service?",
           titleLocation: "top",
           defaultValue: true,
           swapOrder: true,
-          isRequired: true,
+          isRequired: false,
           labelTrue: "Yes",
           labelFalse: "No",
         },
