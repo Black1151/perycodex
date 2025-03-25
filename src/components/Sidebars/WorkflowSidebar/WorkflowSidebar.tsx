@@ -6,7 +6,6 @@ import {
   Box,
   VStack,
   Text,
-  useTheme,
   Icon,
   Flex,
   Tooltip,
@@ -81,7 +80,6 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
   onStageChange,
   ...sidebarProps
 }) => {
-  const theme = useTheme();
   const { user } = useUser();
 
   // Handle Sidebar state
@@ -485,6 +483,10 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
         ))}
     </HStack>
   );
+
+  if (enhancedStages.filter((stage) => stage.canShow).length <= 1) {
+    return <></>;
+  }
 
   return (
     <>
