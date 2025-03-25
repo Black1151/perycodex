@@ -30,6 +30,7 @@ interface Team {
   updatedBy: number;
   uniqueId: string;
   isDepartment: boolean;
+  isService: boolean;
 }
 
 interface UserTeamDetailsBannerProps {
