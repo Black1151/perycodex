@@ -42,6 +42,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
   cssPath,
   sjsPath,
   jsPath,
+  onSubmissionResponse,
 }) => {
   const { user } = useUser();
 
@@ -96,6 +97,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
     surveySuccessMessage: surveySuccessMessage,
     onSurveyFailure: onSurveyFailure,
     reloadPageOnSuccess: reloadPageOnSuccess,
+    onSubmissionResponse: onSubmissionResponse,
   });
 
   useEffect(() => {
@@ -137,6 +139,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
     happiness: HappinessLayout,
     enps: eNPSLayout,
     "client-satisfaction": ClientSatisfactionLayout,
+    tester: DefaultLayout,
   };
 
   const SurveyLayout = layoutMap[layout];

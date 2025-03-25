@@ -5,7 +5,8 @@ export type SurveyLayoutType =
   | "default"
   | "happiness"
   | "enps"
-  | "client-satisfaction";
+  | "client-satisfaction"
+  | "tester";
 export type SurveySubmissionType = "admin" | "workflow";
 
 export interface SurveyComponentProps {
@@ -27,6 +28,7 @@ export interface SurveyComponentProps {
   cssPath?: string;
   sjsPath?: string;
   jsPath?: string;
+  onSubmissionResponse?: (response: SubmissionResponse) => void;
 }
 
 export interface LayoutProps {
@@ -67,6 +69,7 @@ export interface UseSurveySubmissionProps {
   redirectUrl?: string;
   reloadPageOnSuccess?: boolean;
   isAnonymousSubmission?: boolean;
+  onSubmissionResponse?: (response: SubmissionResponse) => void;
 }
 
 export interface NavigationProps {
@@ -95,3 +98,9 @@ export interface JsModule {
   applyJsWithoutSurvey?: () => void;
   applyJsWithSurvey?: (survey: SurveyModel) => void;
 }
+
+export type SubmissionResponse = {
+  success: boolean;
+  message?: string;
+  data?: Record<string, any>;
+};

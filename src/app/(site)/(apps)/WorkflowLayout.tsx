@@ -7,7 +7,6 @@ import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSid
 import { useFetchClient } from "@/hooks/useFetchClient";
 import {
   ViewTimeline as ViewTimelineIcon,
-  Lock,
   CheckCircle,
 } from "@mui/icons-material";
 import { useWorkflow } from "@/providers/WorkflowProvider";
@@ -15,7 +14,7 @@ import { useUser } from "@/providers/UserProvider";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import { useRouter } from "next/navigation";
 import WorkflowSidebar from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
-import { SurveyLayoutType } from "@/types/surveyJs";
+import { SubmissionResponse, SurveyLayoutType } from "@/types/surveyJs";
 import { signOut } from "next-auth/react";
 import LockIcon from "@mui/icons-material/Lock";
 
@@ -94,12 +93,15 @@ export default function WorkflowLayout({
   const { fetchClient } = useFetchClient();
 
   const [currentStage, setCurrentStage] = useState<WorkflowStage | null>(null);
+  const [lastSubmissionResponse, setLastSubmissionResponse] =
+    useState<SubmissionResponse | null>(null);
   const [activeStageId, setActiveStageId] = useState<number | null>(null);
   const [isAuthorised, setIsAuthorised] = useState<boolean>(false);
   const [currentForm, setCurrentForm] = useState<Form | null>(null);
   const [formData, setFormData] = useState<any | null>(null);
   const [isNew, setIsNew] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
   const [workflowVariables, setWorkflowVariables] = useState<
     | Array<{
         [key: string]: { [nestedKey: string]: any };
@@ -134,6 +136,30 @@ export default function WorkflowLayout({
       );
     }
   }, [stages]);
+
+  useEffect(() => {
+    const code = lastSubmissionResponse?.data?.code;
+
+    // BP and whole workflow is now complete
+    if (code === 4 && stages.length > 1) {
+      setIsCompleteModalOpen(true);
+    }
+
+    // BP Instance is now complete
+    if (code === 3) {
+      // do nothing really... already affected by it going to the next stage
+    }
+
+    // BP is already complete and can't be completed again
+    if (code === 2) {
+      // maybe: show a toast saying "Already completed"
+    }
+
+    // User not found or BP Instance doesn't exist
+    if (code === -1 || code === 1) {
+      // maybe: show an error or warning
+    }
+  }, [lastSubmissionResponse]);
 
   useEffect(() => {
     const fetchStageData = async () => {
@@ -376,14 +402,24 @@ export default function WorkflowLayout({
         }}
         title={
           allExternalStagesComplete && user?.role === "EU" ? (
-            <Flex justify={"space-between"} align={"center"} gap={2}>
-              <Text>Thank you for completing everything </Text>
+            <Flex
+              justify={"space-between"}
+              align={"center"}
+              flexDirection={"column"}
+              gap={2}
+            >
               <Icon as={CheckCircle} boxSize={8} color={"green.500"} />
+              <Text>Thank you for completing everything </Text>
             </Flex>
           ) : (
-            <Flex justify={"space-between"} align={"center"} gap={2}>
-              <Text>Unauthorised Access</Text>
+            <Flex
+              justify={"space-between"}
+              align={"center"}
+              flexDirection={"column"}
+              gap={2}
+            >
               <Icon as={LockIcon} boxSize={8} color={"red.500"} />
+              <Text>Unauthorised Access</Text>
             </Flex>
           )
         }
@@ -403,6 +439,35 @@ export default function WorkflowLayout({
         confirmLabel={
           allExternalStagesComplete && user?.role === "EU" ? "Logout" : "OK"
         }
+        cancelLabel="Cancel"
+      />
+
+      <SurveyModal
+        isOpen={isCompleteModalOpen}
+        onConfirm={() => router.push(redirectUrl)}
+        onClose={() => setIsCompleteModalOpen(false)}
+        showButtons={{
+          close: true,
+          confirm: true,
+        }}
+        title={
+          <Flex
+            justify={"space-between"}
+            align={"center"}
+            flexDirection={"column"}
+            gap={2}
+          >
+            <Icon as={CheckCircle} boxSize={8} color={"green.500"} />
+            <Text>All Done!</Text>
+          </Flex>
+        }
+        bodyContent={
+          <Flex align="center" flexDirection={"column"} gap={3}>
+            <Text>You’ve completed all required steps.</Text>
+            <Text>Finish will return you to your dashboards</Text>
+          </Flex>
+        }
+        confirmLabel="Finish"
         cancelLabel="Cancel"
       />
 
@@ -434,6 +499,7 @@ export default function WorkflowLayout({
           sjsPath={currentStage.sjsThemeFileUrl}
           layoutOptions={{ showTitle: true }}
           includeVariables={workflowVariables}
+          onSubmissionResponse={setLastSubmissionResponse}
         />
       )}
     </>
