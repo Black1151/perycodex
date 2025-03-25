@@ -7,7 +7,8 @@ import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSid
 import { useFetchClient } from "@/hooks/useFetchClient";
 import {
   ViewTimeline as ViewTimelineIcon,
-  CheckCircleOutline,
+  Lock,
+  CheckCircle,
 } from "@mui/icons-material";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import { useUser } from "@/providers/UserProvider";
@@ -16,6 +17,7 @@ import { useRouter } from "next/navigation";
 import WorkflowSidebar from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
 import { SurveyLayoutType } from "@/types/surveyJs";
 import { signOut } from "next-auth/react";
+import LockIcon from "@mui/icons-material/Lock";
 
 interface WorkflowLayoutProps {
   stages: WorkflowStage[];
@@ -276,8 +278,8 @@ export default function WorkflowLayout({
             }
 
             /*
-            Older logic for GV by itself
-             */
+                                                                                                Older logic for GV by itself
+                                                                                                 */
             // if (
             //   // If stage is locked (bound by the GV as not startByDefault) and there is no isGlobalVariableBlocking
             //   currentStage.stageStatus === "Locked" &&
@@ -375,7 +377,6 @@ export default function WorkflowLayout({
 
   return (
     <>
-      {/* Modal to block access */}
       <SurveyModal
         isOpen={isModalOpen}
         onConfirm={
@@ -393,20 +394,29 @@ export default function WorkflowLayout({
           confirm: true,
         }}
         title={
-          allExternalStagesComplete && user?.role === "EU"
-            ? "Thank you for completing everything"
-            : "Unauthorised Access"
+          allExternalStagesComplete && user?.role === "EU" ? (
+            <Flex justify={"space-between"} align={"center"} gap={2}>
+              <Text>Thank you for completing everything </Text>
+              <Icon as={CheckCircle} boxSize={8} color={"green.500"} />
+            </Flex>
+          ) : (
+            <Flex justify={"space-between"} align={"center"} gap={2}>
+              <Text>Unauthorised Access</Text>
+              <Icon as={LockIcon} boxSize={8} color={"red.500"} />
+            </Flex>
+          )
         }
         bodyContent={
           allExternalStagesComplete && user?.role === "EU" ? (
-            <Flex align="center" gap={3}>
-              <Icon as={CheckCircleOutline} boxSize={8} color="green.400" />
-              <Text>
-                You’ve completed all required steps. You will now be logged out.
-              </Text>
+            <Flex align="center" flexDirection={"column"} gap={3}>
+              <Text>You’ve completed all required steps.</Text>
+              <Text>You will now be logged out.</Text>
             </Flex>
           ) : (
-            "You are not authorized to view this stage. Please select one in the sidebar to the left"
+            <Flex align="center" flexDirection={"column"} gap={3}>
+              <Text>You are not authorized to view this stage.</Text>
+              <Text>Please select one in the sidebar to the left</Text>
+            </Flex>
           )
         }
         confirmLabel={
