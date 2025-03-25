@@ -31,8 +31,8 @@ const ToolConfigRenderer: React.FC<ToolConfigRendererProps> = ({
   const fullName = node.data[nameField] ?? "No Name";
 
   const pathName = (pathname === '/tool-subscriptions')
-    ? 'tools'
-    : 'tool-subscriptions';
+    ? 'tool-subscriptions'
+    : 'tools';
 
   // Conditionally create a link only if uniqueId exists
   const link = uniqueId ? `/${pathName}/${uniqueId}` : null;
