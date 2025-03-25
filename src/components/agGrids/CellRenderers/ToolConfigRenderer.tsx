@@ -5,7 +5,7 @@ import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import { CustomCellRendererProps } from "ag-grid-react";
 import { Construction } from "@mui/icons-material"; // Define the interface for the component's props
-import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 // Define the interface for the component's props
 interface ToolConfigRendererProps extends CustomCellRendererProps {
@@ -20,7 +20,7 @@ const ToolConfigRenderer: React.FC<ToolConfigRendererProps> = ({
   imageUrlField,
   nameField,
 }) => {
-  const router = useRouter();
+  const pathname = usePathname()
   if (!node.data) {
     return null;
   }
@@ -30,7 +30,7 @@ const ToolConfigRenderer: React.FC<ToolConfigRendererProps> = ({
   const imageUrl = node.data[imageUrlField];
   const fullName = node.data[nameField] ?? "No Name";
 
-  const pathName = (router.pathname === '/tool-subscriptions')
+  const pathName = (pathname === '/tool-subscriptions')
     ? 'tools'
     : 'tool-subscriptions';
 
