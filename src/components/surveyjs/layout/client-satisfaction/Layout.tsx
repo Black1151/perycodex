@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Survey } from "survey-react-ui";
 import { Flex, Text, Box, Button } from "@chakra-ui/react";
 import useSurveyNavigation from "@/components/surveyjs/useSurveyNavigation";

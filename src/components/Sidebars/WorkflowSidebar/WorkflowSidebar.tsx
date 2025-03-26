@@ -23,6 +23,7 @@ import { DrawerStateOptions } from "@/components/Sidebars/useDrawerState";
 import { SurveyLayoutType } from "@/types/surveyJs";
 import Bottombar from "@/components/Bottombar/Bottombar";
 import { useWorkflow } from "@/providers/WorkflowProvider";
+import WorkflowCompletionBar from "@/components/Sidebars/WorkflowSidebar/WorkflowCompletionBar";
 
 interface WorkflowSidebarProps extends SidebarProps {
   workflowStages: WorkflowStage[];
@@ -71,7 +72,7 @@ export interface WorkflowStage {
   saveAllowed: boolean;
 }
 
-interface EnhancedWorkflowStage extends WorkflowStage {
+export interface EnhancedWorkflowStage extends WorkflowStage {
   canClick: boolean;
   canShow: boolean;
   active: boolean;
@@ -313,6 +314,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
 
   const fullBarMenu = (
     <VStack align="stretch" spacing={2} p={2}>
+      <WorkflowCompletionBar stages={enhancedStages} />
       {enhancedStages
         .sort((a, b) => a.bpOrder - b.bpOrder)
         .filter((stage) => stage.canShow)

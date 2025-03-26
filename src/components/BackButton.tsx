@@ -1,39 +1,49 @@
 "use client";
 
 import React from "react";
-import {ArrowBack} from "@mui/icons-material";
-import {Flex, useBreakpointValue} from "@chakra-ui/react";
-import {useRouter} from "next/navigation";
+import { ArrowBack } from "@mui/icons-material";
+import { Flex, useBreakpointValue, FlexProps } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 
-export default function BackButton({prevRoute}: { prevRoute?: string }) {
-    const router = useRouter();
-    const isMobile = useBreakpointValue({base: true, md: false});
+interface BackButtonProps extends FlexProps {
+  prevRoute?: string;
+  iconSize?: "inherit" | "small" | "medium" | "large";
+}
 
-    const handleClickBack = () => {
-        if (prevRoute) {
-            router.push(prevRoute);
-            return;
-        }
-        router.back();
-    };
+export default function BackButton({
+  prevRoute,
+  iconSize,
+  ...chakraStyles
+}: BackButtonProps) {
+  const router = useRouter();
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
-    return (
-            <Flex
-                as="button"
-                onClick={handleClickBack}
-                alignItems="center"
-                justifyContent="center"
-                cursor="pointer"
-                h="full"
-                color="white"
-                _hover={{
-                    color: "gray.300",
-                    transform: "translateX(-5px)",
-                }}
-                _active={{color: "gray.500"}}
-                transition="all 0.2s ease-in-out"
-            >
-                <ArrowBack fontSize={isMobile ? "medium" : "large"}/>
-            </Flex>
-    );
+  const handleClickBack = () => {
+    if (prevRoute) {
+      router.push(prevRoute);
+    } else {
+      router.back();
+    }
+  };
+
+  return (
+    <Flex
+      as="button"
+      onClick={handleClickBack}
+      alignItems="center"
+      justifyContent="center"
+      cursor="pointer"
+      h="full"
+      color="white"
+      _hover={{
+        color: "gray.300",
+        transform: "translateX(-5px)",
+      }}
+      _active={{ color: "gray.500" }}
+      transition="all 0.2s ease-in-out"
+      {...chakraStyles}
+    >
+      <ArrowBack fontSize={iconSize ?? (isMobile ? "medium" : "large")} />
+    </Flex>
+  );
 }

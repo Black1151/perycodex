@@ -5,10 +5,7 @@ import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import { Flex, Icon, Spinner, Text } from "@chakra-ui/react";
 import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
 import { useFetchClient } from "@/hooks/useFetchClient";
-import {
-  ViewTimeline as ViewTimelineIcon,
-  CheckCircle,
-} from "@mui/icons-material";
+import { ViewTimeline as ViewTimelineIcon, Check } from "@mui/icons-material";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import { useUser } from "@/providers/UserProvider";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
@@ -412,7 +409,7 @@ export default function WorkflowLayout({
               flexDirection={"column"}
               gap={2}
             >
-              <Icon as={CheckCircle} boxSize={8} color={"green.500"} />
+              <Icon as={Check} boxSize={8} color={"green.500"} />
               <Text>Thank you for completing everything </Text>
             </Flex>
           ) : (
@@ -461,7 +458,7 @@ export default function WorkflowLayout({
             flexDirection={"column"}
             gap={2}
           >
-            <Icon as={CheckCircle} boxSize={8} color={"green.500"} />
+            <Icon as={Check} boxSize={8} color={"green.500"} />
             <Text>All Done!</Text>
           </Flex>
         }
