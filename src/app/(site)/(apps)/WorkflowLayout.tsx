@@ -96,7 +96,6 @@ export default function WorkflowLayout({
 
   const [lastSubmissionResponse, setLastSubmissionResponse] =
     useState<SubmissionResponse | null>(null);
-  const [activeStageId, setActiveStageId] = useState<number | null>(null);
   const [isAuthorised, setIsAuthorised] = useState<boolean>(false);
   const [currentForm, setCurrentForm] = useState<Form | null>(null);
   const [formData, setFormData] = useState<any | null>(null);
@@ -207,7 +206,6 @@ export default function WorkflowLayout({
           ]);
 
         setCurrentForm(formDataResource || null);
-        setActiveStageId(currentStage.bpInstBpId);
 
         if (variablesResponse) {
           const processedVariables: Array<{ [key: string]: any }> = [];
