@@ -102,6 +102,7 @@ export default function WorkflowLayout({
   const [formData, setFormData] = useState<any | null>(null);
   const [isNew, setIsNew] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isReady, setIsReady] = useState<boolean>(false);
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
   const [workflowVariables, setWorkflowVariables] = useState<
     | Array<{
@@ -166,7 +167,7 @@ export default function WorkflowLayout({
   useEffect(() => {
     const fetchStageData = async () => {
       if (!currentStage) return;
-
+      setIsReady(false);
       setCurrentBusinessProcessInstanceId(String(currentStage.bpInstId));
       setToolId(String(currentStage.wfInstTool));
       setWorkflowId(String(currentStage.wfId));
@@ -358,6 +359,7 @@ export default function WorkflowLayout({
           }
         }
       } finally {
+        setIsReady(true);
       }
     };
     fetchStageData();
@@ -477,7 +479,6 @@ export default function WorkflowLayout({
 
       <WorkflowSidebar
         workflowStages={stages}
-        currentStageId={activeStageId}
         title={"Stages"}
         drawerState={"fully-open"}
         side={"left"}
@@ -485,31 +486,35 @@ export default function WorkflowLayout({
         onStageChange={handleStageChange}
       />
 
-      {!isModalOpen && isAuthorised && currentStage && currentForm && (
-        <SurveyComponent
-          surveyJson={
-            typeof currentForm.jsonFile === "string"
-              ? JSON.parse(currentForm.jsonFile)
-              : currentForm.jsonFile
-          }
-          endpoint={`/api/workflows/saveWorkflow/${currentStage.bpInstId}`}
-          isNew={isNew}
-          dataset={formData}
-          formSubmission="workflow"
-          onSurveySuccess={onSuccess}
-          layout={currentStage.layout ?? layout}
-          jsPath={currentStage.jsAdditionalFileUrl}
-          cssPath={currentStage.cssThemeFileUrl}
-          sjsPath={currentStage.sjsThemeFileUrl}
-          layoutOptions={{
-            showTitle: true,
-            saveAllowed: currentStage.saveAllowed,
-            allowAlwaysEdit: currentStage.allowAlwaysEdit,
-          }}
-          includeVariables={workflowVariables}
-          onSubmissionResponse={setLastSubmissionResponse}
-        />
-      )}
+      {isReady &&
+        !isModalOpen &&
+        isAuthorised &&
+        currentStage &&
+        currentForm && (
+          <SurveyComponent
+            surveyJson={
+              typeof currentForm.jsonFile === "string"
+                ? JSON.parse(currentForm.jsonFile)
+                : currentForm.jsonFile
+            }
+            endpoint={`/api/workflows/saveWorkflow/${currentStage.bpInstId}`}
+            isNew={isNew}
+            dataset={formData}
+            formSubmission="workflow"
+            onSurveySuccess={onSuccess}
+            layout={currentStage.layout ?? layout}
+            jsPath={currentStage.jsAdditionalFileUrl}
+            cssPath={currentStage.cssThemeFileUrl}
+            sjsPath={currentStage.sjsThemeFileUrl}
+            layoutOptions={{
+              showTitle: true,
+              saveAllowed: currentStage.saveAllowed,
+              allowAlwaysEdit: currentStage.allowAlwaysEdit,
+            }}
+            includeVariables={workflowVariables}
+            onSubmissionResponse={setLastSubmissionResponse}
+          />
+        )}
     </>
   );
 }

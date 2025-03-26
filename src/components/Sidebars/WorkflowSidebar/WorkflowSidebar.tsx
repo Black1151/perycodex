@@ -22,10 +22,10 @@ import { useUser } from "@/providers/UserProvider";
 import { DrawerStateOptions } from "@/components/Sidebars/useDrawerState";
 import { SurveyLayoutType } from "@/types/surveyJs";
 import Bottombar from "@/components/Bottombar/Bottombar";
+import { useWorkflow } from "@/providers/WorkflowProvider";
 
 interface WorkflowSidebarProps extends SidebarProps {
   workflowStages: WorkflowStage[];
-  currentStageId: number | null;
   onStageChange: (stage: WorkflowStage) => void;
 }
 
@@ -79,11 +79,11 @@ interface EnhancedWorkflowStage extends WorkflowStage {
 
 const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
   workflowStages,
-  currentStageId,
   onStageChange,
   ...sidebarProps
 }) => {
   const { user } = useUser();
+  const { currentStage } = useWorkflow();
 
   // Handle Sidebar state
   const [drawerState, setDrawerState] = useState<DrawerStateOptions>(
@@ -110,6 +110,12 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
   // Dictates if the user is allowed to click on the stage
   const canClickStage = (stage: WorkflowStage): boolean => {
     // Definitive order of events
+
+    if (currentStage?.bpInstId === stage.bpInstId) {
+      console.log(currentStage?.bpInstId, stage.bpInstId);
+
+      return false;
+    }
 
     // You should never be able to click a stage if it is pending
     if (stage.stageStatus === "Pending") {
@@ -199,7 +205,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
       ...stage,
       canClick: canClickStage(stage),
       canShow: canShowStage(stage),
-      active: stage.bpInstBpId === currentStageId,
+      active: stage.bpInstId === currentStage?.bpInstId,
     })),
   );
 
@@ -209,10 +215,10 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
         ...stage,
         canClick: canClickStage(stage),
         canShow: canShowStage(stage),
-        active: stage.bpInstBpId === currentStageId,
+        active: stage.bpInstId === currentStage?.bpInstId,
       })),
     );
-  }, [workflowStages, currentStageId]);
+  }, [workflowStages, currentStage?.bpInstId]);
 
   const handleClick = (stage: EnhancedWorkflowStage) => {
     if (stage.canClick) {
@@ -452,9 +458,6 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
             color={stage.active ? "white" : "black"}
             borderRadius="md"
             cursor={stage.canClick ? "pointer" : "not-allowed"}
-            _hover={{
-              bg: stage.canClick ? "gray.100" : "transparent",
-            }}
             display="flex"
             alignItems="center"
             justifyContent="center"
