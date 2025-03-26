@@ -14,13 +14,16 @@ interface WorkflowCompletionBarProps {
 const WorkflowCompletionBar: React.FC<WorkflowCompletionBarProps> = ({
   stages,
 }) => {
-  const totalStages = stages.length;
-  const completedStages = stages.filter(
+  const validStages = stages.filter((stage) => stage.stageStatus !== "Locked");
+
+  const totalStages = validStages.length;
+  const completedStages = validStages.filter(
     (stage) => stage.bpInstStatus === 3,
   ).length;
   const completionPercent =
     totalStages === 0 ? 0 : (completedStages / totalStages) * 100;
   const isComplete = completedStages === totalStages;
+
   const { toolPath } = useWorkflow();
 
   return (
