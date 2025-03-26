@@ -90,10 +90,6 @@ const useSurveySubmission = ({
           isComplete: !isSaveMode,
         };
 
-        console.log("-------------------------------------------");
-        console.log(model);
-        console.log("-------------------------------------------");
-
         if (model.seduloState) {
           model.seduloState.isSave = false;
         }

@@ -110,10 +110,38 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
     });
   };
 
+  /*
+  If a survey is saved - it means someone wants to continue editing the form
+   */
   const saveSurvey = () => {
     if (model) {
       model.seduloState.isSave = true;
-      submitSurvey();
+
+      setIsSubmitting(true);
+
+      // Validate the entire survey before submitting
+      if (!model.validate(true, true)) {
+        model.focusOnFirstError;
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (!model.isCurrentPageHasErrors) {
+        if (!model.completeLastPage()) {
+          model.focusOnFirstError;
+          setIsSubmitting(false);
+          return;
+        }
+
+        // Assuming the form is complete and valid
+        model.clear(false, false);
+        model.render();
+      } else {
+        // If there are errors, focus on the first page with an error
+        model.focusOnFirstError;
+      }
+
+      setIsSubmitting(false);
     }
   };
 
