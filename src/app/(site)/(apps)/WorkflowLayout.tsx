@@ -498,7 +498,11 @@ export default function WorkflowLayout({
           jsPath={currentStage.jsAdditionalFileUrl}
           cssPath={currentStage.cssThemeFileUrl}
           sjsPath={currentStage.sjsThemeFileUrl}
-          layoutOptions={{ showTitle: true }}
+          layoutOptions={{
+            showTitle: true,
+            saveAllowed: currentStage.saveAllowed,
+            allowAlwaysEdit: currentStage.allowAlwaysEdit,
+          }}
           includeVariables={workflowVariables}
           onSubmissionResponse={setLastSubmissionResponse}
         />

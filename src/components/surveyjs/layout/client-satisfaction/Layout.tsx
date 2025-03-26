@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Survey } from "survey-react-ui";
 import { Flex, Text, Box, Button } from "@chakra-ui/react";
 import useSurveyNavigation from "@/components/surveyjs/useSurveyNavigation";
-import { eNPSLayoutProps } from "@/types/surveyJs";
+import { ClientSatisfactionLayoutProps } from "@/types/surveyJs";
 import SurveyNavigationGuard from "@/components/surveyjs/SurveyNavigationGuard";
 import { useUser } from "@/providers/UserProvider";
 import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
 
-const ClientSatisfactionLayout: React.FC<eNPSLayoutProps> = ({
+const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
   model,
   dataset,
   canEdit,
+  saveAllowed,
+  allowAlwaysEdit,
 }) => {
   const {
     currentPage,
@@ -29,6 +31,10 @@ const ClientSatisfactionLayout: React.FC<eNPSLayoutProps> = ({
   } = useSurveyNavigation(model, dataset);
 
   const { user } = useUser();
+
+  useEffect(() => {
+    console.log({ saveAllowed, allowAlwaysEdit });
+  }, [model]);
 
   return (
     <SurveyNavigationGuard
@@ -65,7 +71,9 @@ const ClientSatisfactionLayout: React.FC<eNPSLayoutProps> = ({
           <Box>
             <Button onClick={prevPage}>Previous</Button>
             <Button onClick={nextPage}>Next</Button>
-            <Button onClick={saveSurvey}>Save</Button>
+            {(allowAlwaysEdit || (saveAllowed && user?.role === "CA")) && (
+              <Button onClick={saveSurvey}>Save</Button>
+            )}
             <Button onClick={submitSurvey}>Submit</Button>
           </Box>
           <Box bg={"white"} borderRadius={"lg"} w={"full"}>

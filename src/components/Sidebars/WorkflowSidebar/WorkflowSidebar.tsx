@@ -67,6 +67,8 @@ export interface WorkflowStage {
   wouldHaveBeenNextIfNotLocked: boolean;
   isExternalBusinessProcess: boolean;
   isGlobalVariableBlocking: boolean | null;
+  allowAlwaysEdit: boolean;
+  saveAllowed: boolean;
 }
 
 interface EnhancedWorkflowStage extends WorkflowStage {
