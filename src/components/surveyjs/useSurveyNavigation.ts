@@ -11,6 +11,10 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
   >([]);
 
   useEffect(() => {
+    setIsEditing(model?.mode === "edit");
+  }, [model]);
+
+  useEffect(() => {
     // Initialize the current page when model is available
     if (model) {
       setCurrentPage(model.currentPageNo);
@@ -111,10 +115,10 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
   };
 
   /*
-  If a survey is saved - it means someone wants to continue editing the form
-   */
+      If a survey is saved - it means someone wants to continue editing the form
+       */
   const saveSurvey = () => {
-    if (model) {
+    if (model && isEditing) {
       model.seduloState.isSave = true;
 
       setIsSubmitting(true);
