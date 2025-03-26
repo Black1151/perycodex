@@ -40,7 +40,6 @@ export const CompanyHistogram: React.FC<CompanyHistogramProps> = ({
     }
   })();
 
-  // Define chart options directly (no state)
   const options: AgCartesianChartOptions = {
     data: validScoresArray,
     padding: {

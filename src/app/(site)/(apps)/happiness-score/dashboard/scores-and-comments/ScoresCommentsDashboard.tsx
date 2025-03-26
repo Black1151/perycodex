@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Flex,
@@ -10,7 +10,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Text,
   useBreakpointValue,
   useTheme,
   VStack,
@@ -22,7 +21,10 @@ import {
   ColDef,
   CreateCrossFilterChartParams,
   FirstDataRenderedEvent,
+  GridApi,
+  ChartRef, // <-- Needed for typed chart references
 } from "ag-grid-community";
+
 import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridComponentLight";
 import FilterSidebar from "@/components/Sidebars/Dashboards Filter/FilterSidebar";
 import { useWorkflow } from "@/providers/WorkflowProvider";
@@ -36,6 +38,8 @@ import { modalColDef } from "@/app/(site)/(apps)/happiness-score/dashboard/score
 import { AgNodeClickEvent } from "ag-charts-types";
 import SubmissionsTooltipRenderer from "@/components/agCharts/SubmissionsTooltipRenderer";
 import { dateRangeOptions } from "@/components/Sidebars/Dashboards Filter/dateRangeUtils";
+import { useThemeContext } from "@/providers/ChakraThemeProvider";
+import PerygonCard from "@/components/layout/PerygonCard";
 
 interface ApiResponse {
   data: RowData[];
@@ -83,25 +87,36 @@ const ScoresCommentsDashboard: React.FC = () => {
   const { fetchClient } = useFetchClient();
   const { user } = useUser();
   const { getColor } = useColor();
+  // If you’re switching themes at runtime, you might watch a `themeName` here
+  const { themeName } = useThemeContext(); // optional if you have dynamic themes
 
-  // Details Modal for Clicking
+  // Grid API reference
+  const [gridApi, setGridApi] = useState<GridApi | null>(null);
+
+  // Keep track of active AG Grid ChartRefs so we can destroy them later
+  const chartRefs = useRef<ChartRef[]>([]);
+
+  // Modal state
   const [isBarModalOpen, setIsBarModalOpen] = useState(false);
   const [barModalTitle, setBarModalTitle] = useState("");
   const [filterModel, setFilterModel] = useState({});
 
+  // Column definitions
   const defaultColDef: ColDef = {
     resizable: true,
     filter: false,
     sortable: false,
     flex: isMobile ? 0 : 1,
   };
-
   const modalDefaultColDef: ColDef = {
     resizable: true,
     sortable: true,
     flex: isMobile ? 0 : 1,
   };
 
+  /**
+   * Fetch data from your API
+   */
   const getData = async (postBody: Record<string, any> = filterOptions) => {
     if (!toolId || !workflowId || !user?.customerId) {
       return;
@@ -123,18 +138,17 @@ const ScoresCommentsDashboard: React.FC = () => {
       );
 
       if (response && typeof response === "object" && "data" in response) {
-        // Preprocess data to include the EOW date
+        // Preprocess data: add 'eowDate' and 'monthYear'
         const processedData = response.data.map((item: RowData) => {
           const createdAtDate = parseISO(item.createdAt);
           const dayOfWeek = createdAtDate.getDay(); // 0 = Sunday, 1 = Monday, ...
-          const eowDate = addDays(createdAtDate, 7 - dayOfWeek); // Move to next Sunday
+          const eowDate = addDays(createdAtDate, 7 - dayOfWeek); // Next Sunday
           return {
             ...item,
-            eowDate: format(eowDate, "yyyy-MM-dd"), // Format as "YYYY-MM-DD"
-            monthYear: format(createdAtDate, "MM-yyyy"), // Format as "MM-YYYY"
+            eowDate: format(eowDate, "yyyy-MM-dd"),
+            monthYear: format(createdAtDate, "MM-yyyy"),
           };
         });
-
         setGridData(processedData);
       } else {
         setGridData([]);
@@ -146,9 +160,20 @@ const ScoresCommentsDashboard: React.FC = () => {
     }
   };
 
-  const handleGridReady = (params: FirstDataRenderedEvent) => {
-    const gridApi = params.api;
+  /**
+   * Create (or recreate) charts whenever grid data / theme changes
+   */
+  useEffect(() => {
+    // Only proceed if we have a valid gridApi and data to chart
+    if (!gridApi || gridData.length === 0) return;
 
+    // 1) Destroy any existing chart references
+    chartRefs.current.forEach((chartRef) => {
+      chartRef.destroyChart();
+    });
+    chartRefs.current = [];
+
+    // 2) Build your chart configs
     const chartConfigs: SeduloCrossFilterChartParams[] = [
       {
         id: "chart1",
@@ -159,12 +184,10 @@ const ScoresCommentsDashboard: React.FC = () => {
         aggFunc: "avg",
         chartThemeOverrides: {
           common: {
-            padding: {
-              top: 20,
-              left: 20,
-              right: 20,
-              bottom: 20,
+            background: {
+              fill: theme.colors.elementBG, // Pull from your active Chakra theme
             },
+            padding: { top: 20, left: 20, right: 20, bottom: 20 },
             axes: {
               category: {
                 label: {
@@ -173,36 +196,22 @@ const ScoresCommentsDashboard: React.FC = () => {
                   fontFamily: "Metropolis",
                   color: theme.colors.primary,
                 },
-                gridLine: {
-                  width: 0,
-                },
+                gridLine: { width: 0 },
               },
               number: {
                 position: "right",
                 crosshair: {
                   enabled: true,
-                  label: {
-                    enabled: true,
-                  },
+                  label: { enabled: true },
                 },
               },
             },
-            legend: {
-              enabled: false,
-            },
-            zoom: {
-              enabled: false,
-            },
-            navigator: {
-              enabled: false,
-            },
+            legend: { enabled: false },
+            zoom: { enabled: false },
+            navigator: { enabled: false },
             overlays: {
-              noData: {
-                text: "NO DATA",
-              },
-              loading: {
-                text: "Loading...",
-              },
+              noData: { text: "NO DATA" },
+              loading: { text: "Loading..." },
             },
           },
           bar: {
@@ -220,19 +229,13 @@ const ScoresCommentsDashboard: React.FC = () => {
               },
               itemStyler: (params) => {
                 const { datum, yKey } = params;
-                const score = datum[yKey]; // Retrieve the score value
-                const fillColor = getColor(score); // Determine color based on range
-
-                return {
-                  fill: fillColor,
-                };
+                const score = datum[yKey];
+                return { fill: getColor(score) };
               },
               listeners: {
                 nodeClick: (params: AgNodeClickEvent<any, any>) => {
                   const { xKey, datum } = params;
-
                   if (datum && xKey) {
-                    // Ensure `datum[xKey]` is processed correctly
                     const value =
                       typeof datum[xKey] === "object"
                         ? datum[xKey]?.value
@@ -244,7 +247,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                         filterModels: [
                           null,
                           {
-                            values: value ? [value] : [], // Extract the value or use an empty array
+                            values: value ? [value] : [],
                             filterType: "set",
                           },
                         ],
@@ -269,12 +272,10 @@ const ScoresCommentsDashboard: React.FC = () => {
         aggFunc: "avg",
         chartThemeOverrides: {
           common: {
-            padding: {
-              top: 20,
-              left: 20,
-              right: 20,
-              bottom: 20,
+            background: {
+              fill: theme.colors.elementBG,
             },
+            padding: { top: 20, left: 20, right: 20, bottom: 20 },
             axes: {
               category: {
                 label: {
@@ -283,36 +284,22 @@ const ScoresCommentsDashboard: React.FC = () => {
                   fontFamily: "Metropolis",
                   color: theme.colors.primary,
                 },
-                gridLine: {
-                  width: 0,
-                },
+                gridLine: { width: 0 },
               },
               number: {
                 position: "left",
                 crosshair: {
                   enabled: true,
-                  label: {
-                    enabled: true,
-                  },
+                  label: { enabled: true },
                 },
               },
             },
-            legend: {
-              enabled: false,
-            },
-            zoom: {
-              enabled: false,
-            },
-            navigator: {
-              enabled: false,
-            },
+            legend: { enabled: false },
+            zoom: { enabled: false },
+            navigator: { enabled: false },
             overlays: {
-              noData: {
-                text: "NO DATA",
-              },
-              loading: {
-                text: "Loading...",
-              },
+              noData: { text: "NO DATA" },
+              loading: { text: "Loading..." },
             },
           },
           bar: {
@@ -330,17 +317,11 @@ const ScoresCommentsDashboard: React.FC = () => {
               },
               itemStyler: (params) => {
                 const { datum, yKey } = params;
-                const score = datum[yKey];
-                const fillColor = getColor(score);
-
-                return {
-                  fill: fillColor,
-                };
+                return { fill: getColor(datum[yKey]) };
               },
               listeners: {
                 nodeClick: (params: AgNodeClickEvent<any, any>) => {
                   const { xKey, datum } = params;
-
                   if (datum && xKey) {
                     const value =
                       typeof datum[xKey] === "object"
@@ -353,7 +334,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                         filterModels: [
                           null,
                           {
-                            values: value ? [value] : [], // Extract the value or use an empty array
+                            values: value ? [value] : [],
                             filterType: "set",
                           },
                         ],
@@ -378,13 +359,10 @@ const ScoresCommentsDashboard: React.FC = () => {
         aggFunc: "avg",
         chartThemeOverrides: {
           common: {
-            padding: {
-              top: 20,
-              left: 20,
-              right: 20,
-              bottom: 20,
+            background: {
+              fill: theme.colors.elementBG,
             },
-
+            padding: { top: 20, left: 20, right: 20, bottom: 20 },
             axes: {
               category: {
                 label: {
@@ -393,53 +371,34 @@ const ScoresCommentsDashboard: React.FC = () => {
                   fontFamily: "Metropolis",
                   color: theme.colors.primary,
                 },
-                gridLine: {
-                  width: 0,
-                },
+                gridLine: { width: 0 },
               },
               number: {
                 position: "left",
                 crosshair: {
                   enabled: true,
-                  label: {
-                    enabled: true,
-                  },
+                  label: { enabled: true },
                 },
               },
             },
-            legend: {
-              enabled: false,
-            },
-            zoom: {
-              enabled: false,
-            },
-            navigator: {
-              enabled: false,
-            },
+            legend: { enabled: false },
+            zoom: { enabled: false },
+            navigator: { enabled: false },
             overlays: {
-              noData: {
-                text: "NO DATA",
-              },
-              loading: {
-                text: "Loading...",
-              },
+              noData: { text: "NO DATA" },
+              loading: { text: "Loading..." },
             },
           },
           line: {
             series: {
               stroke: theme.colors.primary,
-              interpolation: {
-                type: "smooth",
-              },
+              interpolation: { type: "smooth" },
               marker: {
                 enabled: true,
                 itemStyler: (params) => {
                   const { datum, yKey } = params;
-                  const score = datum[yKey]; // Retrieve the score value
-                  const fillColor = getColor(score); // Determine color based on range
-
                   return {
-                    fill: fillColor,
+                    fill: getColor(datum[yKey]),
                     size: 10,
                   };
                 },
@@ -460,12 +419,10 @@ const ScoresCommentsDashboard: React.FC = () => {
         aggFunc: "avg",
         chartThemeOverrides: {
           common: {
-            padding: {
-              top: 20,
-              left: 20,
-              right: 20,
-              bottom: 20,
+            background: {
+              fill: theme.colors.elementBG,
             },
+            padding: { top: 20, left: 20, right: 20, bottom: 20 },
             axes: {
               category: {
                 label: {
@@ -474,53 +431,34 @@ const ScoresCommentsDashboard: React.FC = () => {
                   fontFamily: "Metropolis",
                   color: theme.colors.primary,
                 },
-                gridLine: {
-                  width: 0,
-                },
+                gridLine: { width: 0 },
               },
               number: {
                 position: "left",
                 crosshair: {
                   enabled: true,
-                  label: {
-                    enabled: true,
-                  },
+                  label: { enabled: true },
                 },
               },
             },
-            legend: {
-              enabled: false,
-            },
-            zoom: {
-              enabled: false,
-            },
-            navigator: {
-              enabled: false,
-            },
+            legend: { enabled: false },
+            zoom: { enabled: false },
+            navigator: { enabled: false },
             overlays: {
-              noData: {
-                text: "NO DATA",
-              },
-              loading: {
-                text: "Loading...",
-              },
+              noData: { text: "NO DATA" },
+              loading: { text: "Loading..." },
             },
           },
           line: {
             series: {
               stroke: theme.colors.primary,
-              interpolation: {
-                type: "smooth",
-              },
+              interpolation: { type: "smooth" },
               marker: {
                 enabled: true,
                 itemStyler: (params) => {
                   const { datum, yKey } = params;
-                  const score = datum[yKey]; // Retrieve the score value
-                  const fillColor = getColor(score); // Determine color based on range
-
                   return {
-                    fill: fillColor,
+                    fill: getColor(datum[yKey]),
                     size: 10,
                   };
                 },
@@ -534,31 +472,50 @@ const ScoresCommentsDashboard: React.FC = () => {
       },
     ];
 
+    // 3) Create the charts, store their references
     chartConfigs.forEach((config) => {
       const container = document.getElementById(config.id) as HTMLElement;
       if (container) {
-        gridApi.createRangeChart({
+        const chartRef = gridApi.createRangeChart({
           ...config,
           chartContainer: container,
           suppressChartRanges: true,
         });
+        // Save the reference so we can destroy it on re-render or theme change
+        chartRefs.current.push(chartRef as ChartRef);
       }
     });
+  }, [
+    gridApi,
+    gridData,
+    theme, // Re-run if Chakra theme changes
+    themeName, // If you switch your custom theme at runtime
+    getColor,
+  ]);
+
+  /**
+   * Remember the Grid API from the onGridReady
+   */
+  const handleGridReady = (params: FirstDataRenderedEvent) => {
+    setGridApi(params.api);
   };
 
+  /**
+   * Sidebar filter changes
+   */
   const onFilterChange = (postBody: Record<string, any>) => {
     setFilterOptions(postBody);
     getData(postBody);
   };
 
-  const dateRangeOption = "weekly";
-  const defaultDateFilterOption = "currentWeek";
-
+  /**
+   * Initial load
+   */
   useEffect(() => {
-    if (!toolId || !workflowId || !user?.customerId) {
-      return; // Do nothing if the necessary data is not yet available
-    }
+    if (!toolId || !workflowId || !user?.customerId) return;
 
+    const dateRangeOption = "weekly";
+    const defaultDateFilterOption = "currentWeek";
     const weeklyOption = dateRangeOptions[dateRangeOption].find(
       (opt) => opt.value === defaultDateFilterOption
     );
@@ -571,6 +528,9 @@ const ScoresCommentsDashboard: React.FC = () => {
     }
   }, [toolId, workflowId, user]);
 
+  /**
+   * Render
+   */
   return (
     <>
       <FilterSidebar
@@ -580,8 +540,8 @@ const ScoresCommentsDashboard: React.FC = () => {
           showSitesFilter: false,
           showDepartmentsFilter: false,
         }}
-        dateFilterMode={dateRangeOption}
-        defaultDateFilter={defaultDateFilterOption}
+        dateFilterMode="weekly"
+        defaultDateFilter="currentWeek"
       />
 
       <Modal
@@ -618,7 +578,7 @@ const ScoresCommentsDashboard: React.FC = () => {
       </Modal>
 
       <VStack align="stretch" spacing={6} w="full" py={2}>
-        <Flex w={"100%"} gap={6} flexWrap={"wrap"} pb={4}>
+        <Flex w="100%" gap={6} flexWrap="wrap" pb={4}>
           <DataGridComponentLight
             data={gridData}
             loading={loading}
@@ -628,7 +588,7 @@ const ScoresCommentsDashboard: React.FC = () => {
             onGridReady={handleGridReady}
             refreshData={getData}
             enableAutoRefresh={true}
-            title={"Score and Comments"}
+            title="Score and Comments"
           />
 
           {gridData.length > 0 && (
@@ -653,14 +613,18 @@ const ScoresCommentsDashboard: React.FC = () => {
                 >
                   <SectionHeader>Happiness by Department</SectionHeader>
                 </Flex>
-                <Box
+
+                <PerygonCard
                   id="chart1"
                   height="400px"
                   w="full"
-                  borderRadius={"2xl"}
-                  overflow={"hidden"}
-                ></Box>
+                  borderRadius="2xl"
+                  overflow="hidden"
+                >
+                  Automagical chart
+                </PerygonCard>
               </Box>
+
               <Box
                 minW={["100%", "100%", "48%"]}
                 flex={1}
@@ -675,14 +639,17 @@ const ScoresCommentsDashboard: React.FC = () => {
                 >
                   <SectionHeader>Happiness by Office</SectionHeader>
                 </Flex>
-                <Box
+                <PerygonCard
                   id="chart2"
                   height="400px"
                   w="full"
-                  borderRadius={"2xl"}
-                  overflow={"hidden"}
-                ></Box>
+                  borderRadius="2xl"
+                  overflow="hidden"
+                >
+                  {" "}
+                </PerygonCard>
               </Box>
+
               <Box
                 minW={["100%", "100%", "100%"]}
                 flex={1}
@@ -697,14 +664,17 @@ const ScoresCommentsDashboard: React.FC = () => {
                 >
                   <SectionHeader>Historic Weekly Average</SectionHeader>
                 </Flex>
-                <Box
+                <PerygonCard
                   id="chart3"
                   height="400px"
                   w="full"
-                  borderRadius={"2xl"}
-                  overflow={"hidden"}
-                ></Box>
+                  borderRadius="2xl"
+                  overflow="hidden"
+                >
+                  {" "}
+                </PerygonCard>
               </Box>
+
               <Box
                 minW={["100%", "100%", "100%"]}
                 flex={1}
@@ -719,13 +689,15 @@ const ScoresCommentsDashboard: React.FC = () => {
                 >
                   <SectionHeader>Historic Monthly Average</SectionHeader>
                 </Flex>
-                <Box
+                <PerygonCard
                   id="chart4"
                   height="400px"
                   w="full"
-                  borderRadius={"2xl"}
-                  overflow={"hidden"}
-                ></Box>
+                  borderRadius="2xl"
+                  overflow="hidden"
+                >
+                  {" "}
+                </PerygonCard>
               </Box>
             </Flex>
           )}
@@ -734,4 +706,5 @@ const ScoresCommentsDashboard: React.FC = () => {
     </>
   );
 };
+
 export default ScoresCommentsDashboard;
