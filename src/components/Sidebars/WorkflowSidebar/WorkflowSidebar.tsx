@@ -112,8 +112,6 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
     // Definitive order of events
 
     if (currentStage?.bpInstId === stage.bpInstId) {
-      console.log(currentStage?.bpInstId, stage.bpInstId);
-
       return false;
     }
 
