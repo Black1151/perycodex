@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
-import { Flex, Icon, Text } from "@chakra-ui/react";
+import { Flex, Icon, Spinner, Text, Spinner } from "@chakra-ui/react";
 import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import {
@@ -485,6 +485,12 @@ export default function WorkflowLayout({
         openButtonIcon={ViewTimelineIcon}
         onStageChange={handleStageChange}
       />
+
+      {!isReady && (
+        <Flex align="center" justify="center" height="100%">
+          <Spinner size="xl" color="primary" />
+        </Flex>
+      )}
 
       {isReady &&
         !isModalOpen &&
