@@ -87,12 +87,13 @@ export default function WorkflowLayout({
     setWorkflowId,
     setCurrentWorkflowInstanceId,
     setCurrentBusinessProcessInstanceId,
+    currentStage,
+    setCurrentStage,
   } = useWorkflow();
 
   const router = useRouter();
   const { fetchClient } = useFetchClient();
 
-  const [currentStage, setCurrentStage] = useState<WorkflowStage | null>(null);
   const [lastSubmissionResponse, setLastSubmissionResponse] =
     useState<SubmissionResponse | null>(null);
   const [activeStageId, setActiveStageId] = useState<number | null>(null);
@@ -345,7 +346,9 @@ export default function WorkflowLayout({
             return;
           }
 
-          if (
+          if (currentStage.allowAlwaysEdit && isUserAuthorised) {
+            setIsNew(true);
+          } else if (
             (formDataset.statusId === 1 || formDataset.statusId === 2) &&
             isUserAuthorised
           ) {

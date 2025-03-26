@@ -48,10 +48,7 @@ export interface HappinessLayoutProps extends LayoutProps {
 
 export interface eNPSLayoutProps extends LayoutProps {}
 
-export interface ClientSatisfactionLayoutProps extends LayoutProps {
-  saveAllowed?: boolean;
-  allowAlwaysEdit?: boolean;
-}
+export interface ClientSatisfactionLayoutProps extends LayoutProps {}
 
 export interface UseSurveyProps {
   surveyJson: any;

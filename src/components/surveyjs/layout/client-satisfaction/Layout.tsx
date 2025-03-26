@@ -6,13 +6,12 @@ import { ClientSatisfactionLayoutProps } from "@/types/surveyJs";
 import SurveyNavigationGuard from "@/components/surveyjs/SurveyNavigationGuard";
 import { useUser } from "@/providers/UserProvider";
 import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
+import { useWorkflow } from "@/providers/WorkflowProvider";
 
 const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
   model,
   dataset,
   canEdit,
-  saveAllowed,
-  allowAlwaysEdit,
 }) => {
   const {
     currentPage,
@@ -31,10 +30,7 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
   } = useSurveyNavigation(model, dataset);
 
   const { user } = useUser();
-
-  useEffect(() => {
-    console.log({ saveAllowed, allowAlwaysEdit });
-  }, [model]);
+  const { currentStage } = useWorkflow();
 
   return (
     <SurveyNavigationGuard
@@ -71,7 +67,9 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
           <Box>
             <Button onClick={prevPage}>Previous</Button>
             <Button onClick={nextPage}>Next</Button>
-            {(allowAlwaysEdit || (saveAllowed && user?.role === "CA")) && (
+            {(currentStage?.allowAlwaysEdit ||
+              (currentStage?.saveAllowed &&
+                currentStage?.stageStatus !== "Complete")) && (
               <Button onClick={saveSurvey}>Save</Button>
             )}
             <Button onClick={submitSurvey}>Submit</Button>
