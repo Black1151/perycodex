@@ -51,7 +51,7 @@ const pathsToResetToolLogo = [
   "/business-score",
   "/risk-management",
   "/big-up",
-  "/tester", // Added the new app path
+  "/tester",
 ];
 
 export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({

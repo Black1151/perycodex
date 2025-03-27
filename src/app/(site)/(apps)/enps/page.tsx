@@ -7,6 +7,8 @@ import NoDashboardsModal from "@/app/(site)/(apps)/NoDashboardModal";
 import { ToolLandingPage } from "@/app/(site)/(apps)/ToolLandingPageInner";
 import { EnpsSplashScreen } from "./EnpsSplashScreen";
 import { ClientSatisfactionSplashScreen } from "@/app/(site)/(apps)/client-satisfaction/ClientSatisfactionSplashScreen";
+import { checkToolAccess } from "@/lib/tool";
+import AccessDenied from "@/components/AccessDenied";
 
 interface WorkflowInstanceResponse {
   resource: {
@@ -28,6 +30,9 @@ export default async function Home({
   if (!workflowId || !toolId) {
     return redirect("/");
   }
+
+  const hasAccess = await checkToolAccess(toolId);
+  if (!hasAccess) return <AccessDenied />;
 
   let redirectUrl: string | null = null;
 
@@ -51,7 +56,7 @@ export default async function Home({
   const { filteredDashboards } = await getFilteredDashboards(
     toolId,
     workflowId,
-    "/enps"
+    "/enps",
   );
 
   if (!redirectUrl && filteredDashboards.length > 0) {

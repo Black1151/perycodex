@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
 import { verifySession } from "@/lib/dal";
 import TestDashboard from "@/app/(site)/(apps)/tester/dashboard/primary/TestDashboard";
+import { checkToolAccess } from "@/lib/tool";
+import AccessDenied from "@/components/AccessDenied";
 
 export default async function Home({
   searchParams,
@@ -20,6 +22,9 @@ export default async function Home({
   if (!workflowId || !toolId) {
     return redirect("/");
   }
+
+  const hasAccess = await checkToolAccess(toolId);
+  if (!hasAccess) return <AccessDenied />;
 
   return (
     <WorkflowEngine toolId={toolId} workflowId={workflowId}>
