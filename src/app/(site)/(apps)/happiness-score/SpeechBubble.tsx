@@ -120,7 +120,7 @@ const SpeechBubble: React.FC<SpeechBubbleProps> = ({
               <Text
                 fontSize={`${fontSize}px`}
                 fontWeight="bold"
-                color={theme.colors.primaryTextColor}
+                color={theme.colors.themeTextColor}
                 lineHeight="1"
               >
                 {wholePart}
@@ -138,7 +138,7 @@ const SpeechBubble: React.FC<SpeechBubbleProps> = ({
               <Text
                 fontSize={`${fontSize * 0.4}px`}
                 fontWeight="bold"
-                color={theme.colors.primaryTextColor}
+                color={theme.colors.themeTextColor}
                 lineHeight="1"
                 ml={1}
               >
