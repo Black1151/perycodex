@@ -277,16 +277,27 @@ export const caEmailScheduleJson = {
         },
         {
           type: "text",
-          name: "nextSendTime",
-          title: "Next Send Time",
-          readOnly: true,
+          name: "lastSentTime",
+          title: "Date and time of the last run",
+          defaultValue: 'N/A',
+          isRequired: false,
+          readOnly: true
         },
         {
           type: "text",
-          name: "lastSentTime",
-          title: "Last Send Time",
+          name: "nextSendTime",
+          title: "Date and time of the next run",
+          defaultValue: 'N/A',
+          isRequired: false,
           startWithNewLine: false,
-          readOnly: true,
+          readOnly: true
+        },
+        {
+          type: "text",
+          name: "emailSendCount",
+          title: "Amount of emails sent during the last run",
+          isRequired: false,
+          readOnly: true
         },
         {
           type: "tagbox",
