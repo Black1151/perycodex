@@ -11,6 +11,7 @@ export const NeonSedulo = extendTheme(baseTheme, {
     secondary: colorPalette.perygonBlack,
     primaryButton: colorPalette.seduloRed,
     elementBG: "rgb(46, 46, 46)",
+    elementBG2: "rgb(90, 11, 11)",
     shadowColor: "red",
     primaryTextColor: "rgb(165, 165, 165)",
     secondaryTextColor: "rgb(145, 145, 145)",
@@ -26,13 +27,6 @@ export const NeonSedulo = extendTheme(baseTheme, {
 
   components: {
     ...baseTheme.components,
-    // Text: {
-    //   // `baseStyle` applies a default color to Text components.
-    //   // If `color` is specified inline at usage, it will override this.
-    //   baseStyle: {
-    //     color: "green", // Or any color you prefer
-    //   },
-    // },
   },
 
   borders: {

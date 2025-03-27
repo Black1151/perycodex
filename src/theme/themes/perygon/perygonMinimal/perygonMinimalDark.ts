@@ -11,6 +11,7 @@ export const MinimalDark = extendTheme(baseTheme, {
     secondary: "black",
     primaryButton: colorPalette.seduloRed,
     elementBG: "rgb(48, 48, 48)",
+    elementBG2: "rgb(78, 78, 78)",
     shadowColor: "red",
     primaryTextColor: "rgb(255, 255, 255)",
     secondaryTextColor: "rgb(255, 255, 255)",
@@ -27,10 +28,6 @@ export const MinimalDark = extendTheme(baseTheme, {
   components: {
     ...baseTheme.components,
   },
-
-  // shadows: {
-  //   primaryShadow: "3px 3px 5px 3px rgb(128, 128, 128, 0.5)",
-  // },
 
   borders: {
     primaryBorder: "1px solid var(--chakra-colors-primary)",

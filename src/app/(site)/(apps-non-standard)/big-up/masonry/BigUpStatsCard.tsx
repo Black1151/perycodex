@@ -57,7 +57,7 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
             <Text
               fontWeight="bold"
               fontSize={["sm", "md", "xl"]}
-              color="primary"
+              color="themeTextColor"
             >
               {name}
             </Text>
@@ -78,13 +78,21 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
                     fontSize="large"
                   />
                 )}
-                <Text fontWeight="bold" color="primary" fontSize={["sm", "lg"]}>
+                <Text
+                  fontWeight="bold"
+                  color="themeTextColor"
+                  fontSize={["sm", "lg"]}
+                >
                   {!medalColor && "Rank: "}
                   {rankOrdinal}
                 </Text>
               </>
             ) : (
-              <Text fontWeight="bold" color="primary" fontSize={["sm", "lg"]}>
+              <Text
+                fontWeight="bold"
+                color="themeTextColor"
+                fontSize={["sm", "lg"]}
+              >
                 No Ranking
               </Text>
             )}
@@ -97,7 +105,7 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
           <Text
             ml="auto"
             fontWeight="bold"
-            color="primary"
+            color="themeTextColor"
             fontSize={["xl", null, null, "2xl", null, "4xl"]}
           >
             {score.toLocaleString()}

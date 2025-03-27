@@ -11,6 +11,8 @@ export const perygonTheme = extendTheme(baseTheme, {
     secondary: colorPalette.seduloRed,
     primaryButton: colorPalette.seduloRed,
     elementBG: "white",
+    elementBG2: "rgb(255, 223, 251)",
+    elementBGTransparent: "rgb(255, 223, 251, 0.3)",
     shadowColor: "red",
     primaryTextColor: "rgb(0, 0, 0)",
     secondaryTextColor: "rgb(83, 83, 83)",

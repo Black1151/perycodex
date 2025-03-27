@@ -237,7 +237,7 @@ function DataGridComponentLight<T>({
     <Box flex={flex} borderRadius={"lg"}>
       {title && (
         <Flex width="100%" justifyContent="center" align="center" mb={4}>
-          <SectionHeader>Scores and Comments</SectionHeader>
+          <SectionHeader>{title}</SectionHeader>
         </Flex>
       )}
 
@@ -332,11 +332,11 @@ function DataGridComponentLight<T>({
               .ag-theme-alpine .ag-root-wrapper,
               .ag-theme-alpine .ag-body-viewport {
                 border: none !important;
-                background-color: var(--chakra-colors-elementBG) !important;
+                background-color: transparent !important;
               }
 
               .ag-theme-alpine .ag-header {
-                background-color: var(--chakra-colors-elementBG) !important;
+                background-color: var(--chakra-colors-primary) !important;
               }
 
               .ag-theme-alpine .ag-row:nth-child(odd) {
@@ -344,7 +344,7 @@ function DataGridComponentLight<T>({
               }
 
               .ag-theme-alpine .ag-row:nth-child(even) {
-                background-color: var(--chakra-colors-elementBG) !important;
+                background-color: var(--chakra-colors-elementBG2) !important;
               }
 
               .ag-theme-alpine .ag-header,
@@ -364,6 +364,47 @@ function DataGridComponentLight<T>({
                 fill: var(--chakra-colors-themeTextColor) !important;
               }
             `}</style>
+            {/* <style jsx global>{`
+              .ag-theme-alpine .ag-header,
+              .ag-theme-alpine .ag-row,
+              .ag-theme-alpine .ag-cell,
+              .ag-theme-alpine .ag-root-wrapper,
+              .ag-theme-alpine .ag-body-viewport {
+                border: none !important;
+                background-color: var(--chakra-colors-elementBG) !important;
+              }
+
+              .ag-theme-alpine .ag-header {
+                background-color: var(--chakra-colors-elementBG) !important;
+              }
+
+              .ag-theme-alpine .ag-row:nth-child(odd) {
+                background-color: var(--chakra-colors-elementBG2) !important;
+              }
+
+              .ag-theme-alpine .ag-row:nth-child(even) {
+                background-color: var(
+                  --chakra-colors-secondaryTextColor
+                ) !important;
+              }
+
+              .ag-theme-alpine .ag-header,
+              .ag-theme-alpine .ag-header-cell,
+              .ag-theme-alpine .ag-row,
+              .ag-theme-alpine .ag-cell {
+                color: var(--chakra-colors-primaryTextColor) !important;
+              }
+
+              .ag-theme-alpine .ag-header-icon .ag-icon {
+                color: var(--chakra-colors-primaryTextColor) !important;
+                fill: var(--chakra-colors-primaryTextColor) !important;
+              }
+
+              .ag-theme-alpine .ag-header-icon:hover .ag-icon {
+                color: var(--chakra-colors-themeTextColor) !important;
+                fill: var(--chakra-colors-themeTextColor) !important;
+              }
+            `}</style> */}
 
             <AgGridReact
               ref={gridRef}

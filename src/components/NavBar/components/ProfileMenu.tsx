@@ -99,7 +99,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
       </Box>
 
       {/* The main menu content */}
-      <MenuList bg="elementBG" color={theme.colors.primary} px={2}>
+      <MenuList bg="elementBG" color={theme.colors.themeTextColor} px={2}>
         {/* Render your existing menu items */}
         {menuItems.map((item) => (
           <MenuItem
@@ -124,10 +124,8 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
           </MenuItem>
         ))}
 
-        {/* Add a horizontal divider before the theme switching group */}
         <MenuDivider />
 
-        {/* Group for theme switching */}
         <MenuGroup title="Switch Theme">
           {allThemes.map((tName) => (
             <MenuItem
@@ -138,9 +136,6 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
                 backgroundColor: theme.colors.primary,
                 color: "white",
               }}
-              // You can highlight the current theme if you like:
-              // bg={themeName === tName ? theme.colors.primary : "white"}
-              // color={themeName === tName ? "white" : theme.colors.primary}
             >
               {tName}
             </MenuItem>

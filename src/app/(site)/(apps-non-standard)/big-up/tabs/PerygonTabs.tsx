@@ -6,20 +6,25 @@ import {
   TabPanel,
   Tabs,
   Text,
+  useTheme,
 } from "@chakra-ui/react";
+import { transparentize } from "polished";
 
 export interface PerygonTabsProps {
   tabs: { header: string; content: JSX.Element }[];
 }
 
 export const PerygonTabs: React.FC<PerygonTabsProps> = ({ tabs }) => {
+  const theme = useTheme();
+
   return (
     <Tabs
       display="flex"
       flexDirection="column"
       width="100%"
-      height="100vh"
-      bg="elementBG"
+      height="80vh"
+      bg={transparentize(0.3, theme.colors.elementBG2)}
+      border="primaryBorder"
       borderRadius="lg"
     >
       <TabList justifyContent="space-between">
@@ -28,7 +33,9 @@ export const PerygonTabs: React.FC<PerygonTabsProps> = ({ tabs }) => {
             key={index}
             flex="1"
             textAlign="center"
-            color="primaryTextColor"
+            color={theme.colors.primaryTextColor}
+            bg="elementBG"
+            borderTopRadius="lg"
             _selected={{
               color: "white",
               bg: "primary",

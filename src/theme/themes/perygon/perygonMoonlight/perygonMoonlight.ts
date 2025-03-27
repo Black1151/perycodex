@@ -11,10 +11,11 @@ export const Moonlight = extendTheme(baseTheme, {
     secondary: colorPalette.darkSilver,
     primaryButton: colorPalette.seduloRed,
     elementBG: "rgb(48, 48, 48)",
+    elementBG2: "rgb(78, 78, 78)",
     shadowColor: "red",
-    primaryTextColor: "rgb(161, 161, 161)",
-    secondaryTextColor: "rgb(165, 165, 165)",
-    themeTextColor: colorPalette.silver,
+    primaryTextColor: "rgb(212, 212, 212)",
+    secondaryTextColor: "rgb(230, 230, 230)",
+    themeTextColor: "rgb(155, 155, 155)",
   },
 
   gradients: {

@@ -282,7 +282,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                   rotation: 300,
                   fontSize: 10,
                   fontFamily: "Metropolis",
-                  color: theme.colors.primary,
+                  color: theme.colors.primaryText,
                 },
                 gridLine: { width: 0 },
               },
@@ -621,7 +621,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                   borderRadius="2xl"
                   overflow="hidden"
                 >
-                  Automagical chart
+                  {" "}
                 </PerygonCard>
               </Box>
 

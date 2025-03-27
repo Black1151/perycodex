@@ -10,6 +10,7 @@ export const perygonThemeBlue = extendTheme(baseTheme, {
     secondary: colorPalette.perygonPurple,
     primaryButton: colorPalette.perygonPurple,
     elementBG: "rgb(255, 255, 255)",
+    elementBG2: "rgb(191, 211, 255)",
     primaryTextColor: "rgb(0, 0, 0)",
     secondaryTextColor: "rgb(83, 83, 83)",
     themeTextColor: colorPalette.perygonBlue,

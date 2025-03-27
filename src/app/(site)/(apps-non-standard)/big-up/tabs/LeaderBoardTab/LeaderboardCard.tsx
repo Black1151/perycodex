@@ -62,12 +62,12 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
             fontSize="large"
           />
         )}
-        <Text fontWeight="bold" color="primary" fontSize="lg" mr={2}>
+        <Text fontWeight="bold" color="themeTextColor" fontSize="lg" mr={2}>
           {rank}
         </Text>
         <Text
           fontWeight="bold"
-          color="primary"
+          color="themeTextColor"
           fontSize="lg"
           whiteSpace="nowrap"
         >
