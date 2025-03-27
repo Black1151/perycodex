@@ -57,7 +57,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
               return { ...layer, opacity: 1 };
             }
             return { ...layer, opacity: 0 };
-          })
+          }),
         );
       }, 10);
 
@@ -132,20 +132,22 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
           <Text fontSize="3xl">{carouselItems[currentIndex].name}</Text>
         </HStack>
         <Text fontSize="md">{carouselItems[currentIndex].description}</Text>
-        <Flex>
-          <Button
-            variant="primary"
-            onClick={() => {
-              setToolId(carouselItems[currentIndex].toolId);
-              setWorkflowId(carouselItems[currentIndex].toolWfId);
-              router.push(
-                `${carouselItems[currentIndex].appUrl}?toolId=${carouselItems[currentIndex].toolId}&wfId=${carouselItems[currentIndex].toolWfId}`
-              );
-            }}
-          >
-            Open {carouselItems[currentIndex].name}
-          </Button>
-        </Flex>
+        {!carouselItems[currentIndex].isUAGLocked && (
+          <Flex>
+            <Button
+              variant="primary"
+              onClick={() => {
+                setToolId(carouselItems[currentIndex].toolId);
+                setWorkflowId(carouselItems[currentIndex].toolWfId);
+                router.push(
+                  `${carouselItems[currentIndex].appUrl}?toolId=${carouselItems[currentIndex].toolId}&wfId=${carouselItems[currentIndex].toolWfId}`,
+                );
+              }}
+            >
+              Open {carouselItems[currentIndex].name}
+            </Button>
+          </Flex>
+        )}
       </Flex>
       <Carousel carouselItems={carouselItems} setParentIndex={setIndex} />
     </VStack>

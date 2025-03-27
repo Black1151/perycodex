@@ -19,6 +19,7 @@ const HappinessLayout: React.FC<HappinessLayoutProps> = ({
     prevPage,
     jumpToPage,
     submitSurvey,
+    saveSurvey,
     switchToDisplayMode,
     switchToEditMode,
     pageListOptions,

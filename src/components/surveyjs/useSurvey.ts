@@ -128,6 +128,11 @@ const useSurvey = ({
       // Survey dataset to include fields that are hidden (not default)
       surveyModel.clearInvisibleValues = false;
 
+      // THIS MIGHT NEED TO CHANGE TO A SET VARIABLE
+      surveyModel.seduloState = {
+        isSave: false,
+      };
+
       setModel(surveyModel); // Set the model after everything is initialized
       setIsLoading(false); // Set loading state to false
     };

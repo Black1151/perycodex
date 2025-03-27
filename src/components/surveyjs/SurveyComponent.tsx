@@ -15,7 +15,6 @@ import {
 } from "@/components/surveyjs/globalJsFunctions";
 import eNPSLayout from "@/components/surveyjs/layout/enps/Layout";
 import ClientSatisfactionLayout from "@/components/surveyjs/layout/client-satisfaction/Layout";
-import PerygonCard from "../layout/PerygonCard";
 
 type LayoutMap = {
   [key: string]: React.FC<LayoutProps>;
@@ -42,6 +41,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
   cssPath,
   sjsPath,
   jsPath,
+  onSubmissionResponse,
 }) => {
   const { user } = useUser();
 
@@ -96,6 +96,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
     surveySuccessMessage: surveySuccessMessage,
     onSurveyFailure: onSurveyFailure,
     reloadPageOnSuccess: reloadPageOnSuccess,
+    onSubmissionResponse: onSubmissionResponse,
   });
 
   useEffect(() => {
@@ -137,6 +138,7 @@ const SurveyComponent: React.FC<SurveyComponentProps> = ({
     happiness: HappinessLayout,
     enps: eNPSLayout,
     "client-satisfaction": ClientSatisfactionLayout,
+    tester: ClientSatisfactionLayout,
   };
 
   const SurveyLayout = layoutMap[layout];

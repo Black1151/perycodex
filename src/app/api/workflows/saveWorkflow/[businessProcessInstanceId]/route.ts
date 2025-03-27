@@ -38,10 +38,8 @@ export async function POST(
       );
     }
 
-    const resource = responseData.resource;
-
     // Respond with the success message or the resource data
-    return NextResponse.json(resource);
+    return NextResponse.json(responseData);
   } catch (error: any) {
     console.error("Error:", error);
 

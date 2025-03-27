@@ -37,9 +37,7 @@ const ErrorBox = ({
         left="0"
         w="100%"
         h="100%"
-        bgGradient="linear(to-br, primary, purple.200)"
         zIndex={-1}
-        opacity={0.3}
         animation={`${floatingAnimation} 6s ease-in-out infinite`}
       />
 

@@ -1,182 +1,204 @@
 "use client";
 
-import {useEffect} from "react";
-import {Question, QuestionHtmlModel, SurveyModel} from "survey-core";
-import {useToast} from "@chakra-ui/react"; // Assuming Chakra UI's toast is used for notifications
-import {useRouter} from "next/navigation";
-import {UseSurveySubmissionProps} from "@/types/surveyJs"; // For redirection after submission (if needed)
+import { useEffect } from "react";
+import { Question, QuestionHtmlModel, SurveyModel } from "survey-core";
+import { useToast } from "@chakra-ui/react"; // Assuming Chakra UI's toast is used for notifications
+import { useRouter } from "next/navigation";
+import { UseSurveySubmissionProps } from "@/types/surveyJs"; // For redirection after submission (if needed)
 
 const useSurveySubmission = ({
-                                 model,
-                                 isNew,
-                                 formSubmission,
-                                 endpoint,
-                                 excludeKeys = [],
-                                 onSurveySuccess,
-                                 surveySuccessMessage,
-                                 onSurveyFailure,
-                                 redirectUrl,
-                                 reloadPageOnSuccess = false,
-                                 isAnonymousSubmission = false,
-                             }: UseSurveySubmissionProps) => {
-    const toast = useToast();
-    const router = useRouter();
+  model,
+  isNew,
+  formSubmission,
+  endpoint,
+  excludeKeys = [],
+  onSurveySuccess,
+  surveySuccessMessage,
+  onSurveyFailure,
+  redirectUrl,
+  reloadPageOnSuccess = false,
+  isAnonymousSubmission = false,
+  onSubmissionResponse,
+}: UseSurveySubmissionProps) => {
+  const toast = useToast();
+  const router = useRouter();
 
-    useEffect(() => {
-        if (!model) return;
-        const handleSurveySubmission = async (sender: SurveyModel) => {
-            const requestType = isNew ? "POST" : "PUT";
+  useEffect(() => {
+    if (!model) return;
+    const handleSurveySubmission = async (sender: SurveyModel) => {
+      let requestType = isNew ? "POST" : "PUT";
 
-            const allQuestions: Question[] = model.getAllQuestions();
+      if (formSubmission === "workflow") {
+        requestType = "POST";
+      }
 
-            const surveyData: { [key: string]: any } = sender.data;
+      const allQuestions: Question[] = model.getAllQuestions();
 
-            // Iterate through all questions, checking for missing data and setting it to `null`
-            allQuestions.forEach((question: Question) => {
-                const questionName = question.name;
+      const surveyData: { [key: string]: any } = sender.data;
 
-                // Check if the question type is 'QuestionHtmlModel' and skip it if true
-                if (question instanceof QuestionHtmlModel) {
-                    return; // Skip this iteration
-                }
+      // Iterate through all questions, checking for missing data and setting it to `null`
+      allQuestions.forEach((question: Question) => {
+        const questionName = question.name;
 
-                // If the question doesn't exist in the data, set it to null
-                if (!(questionName in surveyData)) {
-                    surveyData[questionName] = null;
-                }
-            });
+        // Check if the question type is 'QuestionHtmlModel' and skip it if true
+        if (question instanceof QuestionHtmlModel) {
+          return; // Skip this iteration
+        }
 
-            let filteredSurveyData = {...surveyData};
+        // If the question doesn't exist in the data, set it to null
+        if (!(questionName in surveyData)) {
+          surveyData[questionName] = null;
+        }
+      });
 
-            // Exclude specific keys from survey data
-            filteredSurveyData = Object.keys(filteredSurveyData)
-                .filter((key) => !excludeKeys.includes(key))
-                .reduce(
-                    (acc, key) => {
-                        acc[key] = filteredSurveyData[key];
-                        return acc;
-                    },
-                    {} as Record<string, any>,
-                );
+      let filteredSurveyData = { ...surveyData };
 
-            let apiUrl = "";
-            let payload;
+      // Exclude specific keys from survey data
+      filteredSurveyData = Object.keys(filteredSurveyData)
+        .filter((key) => !excludeKeys.includes(key))
+        .reduce(
+          (acc, key) => {
+            acc[key] = filteredSurveyData[key];
+            return acc;
+          },
+          {} as Record<string, any>,
+        );
 
-            if (formSubmission === "admin") {
-                apiUrl =
-                    requestType === "POST"
-                        ? `/api/surveyjs${endpoint}`
-                        : `/api/surveyjs/${endpoint.split("/")[1]}`;
+      let apiUrl = "";
+      let payload;
 
-                payload =
-                    requestType === "PUT"
-                        ? {
-                            uniqueId: endpoint.split("/")[2],
-                            data: filteredSurveyData,
-                        }
-                        : filteredSurveyData;
-            } else if (formSubmission === "workflow") {
-                apiUrl = endpoint;
+      if (formSubmission === "admin") {
+        apiUrl =
+          requestType === "POST"
+            ? `/api/surveyjs${endpoint}`
+            : `/api/surveyjs/${endpoint.split("/")[1]}`;
 
-                payload = {
-                    jsonResponse: filteredSurveyData,
-                    isComplete: true,
-                };
-            }
+        payload =
+          requestType === "PUT"
+            ? {
+                uniqueId: endpoint.split("/")[2],
+                data: filteredSurveyData,
+              }
+            : filteredSurveyData;
+      } else if (formSubmission === "workflow") {
+        apiUrl = endpoint;
 
-            try {
-                const response = await fetch(apiUrl, {
-                    method: requestType,
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify(payload),
-                });
+        const isSaveMode = (model as any)?.seduloState?.isSave === true;
 
-                if (response.status === 401) {
-                    toast({
-                        title: "Unauthorised",
-                        description:
-                            "Your session has timed out, you need to log in again.",
-                        status: "error",
-                        duration: 5000,
-                        isClosable: true,
-                        position: "bottom-right",
-                    });
-                    router.push("/login");
-
-                    return null;
-                }
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error || "Failed to submit data");
-                }
-
-                const result = await response.json();
-
-                // Show success notification
-                toast({
-                    title: "Submitted successfully.",
-                    description: surveySuccessMessage,
-                    status: "success",
-                    duration: 5000,
-                    isClosable: true,
-                    position: "bottom-right",
-                });
-
-                onSurveySuccess?.(); // Call if provided
-
-                // Update the model data with the newly submitted data
-                model.data = result.data || filteredSurveyData;
-
-                // Rerender the survey with the updated data
-                if (!isNew) {
-                    model.clear(false, false);
-                    model.render();
-                }
-
-                if (reloadPageOnSuccess) {
-                    router.refresh();
-                }
-
-                // Handle redirection if a URL is provided
-                if (redirectUrl) {
-                    setTimeout(() => router.push(redirectUrl), 1000);
-                }
-
-                return result;
-            } catch (error) {
-                model.mode = "edit"; // Revert to edit mode on error
-                toast({
-                    title: "Submission failed.",
-                    description:
-                        error instanceof Error ? error.message : "An error occurred.",
-                    status: "error",
-                    duration: 5000,
-                    isClosable: true,
-                    position: "bottom-right",
-                });
-                onSurveyFailure?.();
-            }
+        payload = {
+          jsonResponse: filteredSurveyData,
+          isComplete: !isSaveMode,
         };
 
-        // Attach the `handleSurveySubmission` function to the survey's onComplete event
-        model.onComplete.add(handleSurveySubmission);
+        if (model.seduloState) {
+          model.seduloState.isSave = false;
+        }
+      }
 
-        // Cleanup event listener on unmount
-        return () => {
-            model.onComplete.remove(handleSurveySubmission);
-        };
-    }, [
-        model,
-        isNew,
-        endpoint,
-        excludeKeys,
-        onSurveySuccess,
-        redirectUrl,
-        toast,
-        router,
-    ]);
+      try {
+        const response = await fetch(apiUrl, {
+          method: requestType,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
 
-    return {};
+        if (response.status === 401) {
+          toast({
+            title: "Unauthorised",
+            description:
+              "Your session has timed out, you need to log in again.",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+            position: "bottom-right",
+          });
+          router.push("/login");
+
+          return null;
+        }
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to submit data");
+        }
+
+        const result = await response.json();
+
+        if (onSubmissionResponse && formSubmission === "workflow") {
+          onSubmissionResponse({
+            success: result.success,
+            message: result.message,
+            data: {
+              code: result.code, // 3 or 4, etc.
+              ...result.data, // in case you need other info too
+            },
+          });
+        }
+
+        // Show success notification
+        toast({
+          title: "Submitted successfully.",
+          description: surveySuccessMessage,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom-right",
+        });
+
+        onSurveySuccess?.(); // Call if provided
+
+        // Update the model data with the newly submitted data
+        model.data = result.data || filteredSurveyData;
+
+        // Rerender the survey with the updated data
+        if (!isNew) {
+          model.clear(false, false);
+          model.render();
+        }
+
+        if (reloadPageOnSuccess) {
+          router.refresh();
+        }
+
+        // Handle redirection if a URL is provided
+        if (redirectUrl) {
+          setTimeout(() => router.push(redirectUrl), 1000);
+        }
+
+        return result;
+      } catch (error) {
+        model.mode = "edit"; // Revert to edit mode on error
+        toast({
+          title: "Submission failed.",
+          description:
+            error instanceof Error ? error.message : "An error occurred.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "bottom-right",
+        });
+        onSurveyFailure?.();
+      }
+    };
+
+    // Attach the `handleSurveySubmission` function to the survey's onComplete event
+    model.onComplete.add(handleSurveySubmission);
+
+    // Cleanup event listener on unmount
+    return () => {
+      model.onComplete.remove(handleSurveySubmission);
+    };
+  }, [
+    model,
+    isNew,
+    endpoint,
+    excludeKeys,
+    onSurveySuccess,
+    redirectUrl,
+    toast,
+    router,
+  ]);
+
+  return {};
 };
 export default useSurveySubmission;

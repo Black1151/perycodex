@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { usePathname } from "next/navigation";
+import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
 
 interface ToolConfigResponse {
   resource: {
@@ -29,6 +30,8 @@ interface WorkflowContextType {
   setCurrentWorkflowInstanceId: (id: string | null) => void;
   currentBusinessProcessInstanceId: string | null;
   setCurrentBusinessProcessInstanceId: (id: string | null) => void;
+  currentStage: WorkflowStage | null;
+  setCurrentStage: (stage: WorkflowStage | null) => void;
 }
 
 const WorkflowContext = createContext<WorkflowContextType | null>(null);
@@ -48,7 +51,7 @@ const pathsToResetToolLogo = [
   "/business-score",
   "/risk-management",
   "/big-up",
-  "/tester", // Added the new app path
+  "/tester",
 ];
 
 export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
@@ -65,6 +68,7 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
   ] = useState<string | null>(null);
   const [toolLogo, setToolLogo] = useState<string | null>(null);
   const [toolPath, setToolPath] = useState<string | null>(null);
+  const [currentStage, setCurrentStage] = useState<WorkflowStage | null>(null);
 
   const { fetchClient } = useFetchClient();
   const pathname = usePathname();
@@ -178,6 +182,8 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
         setCurrentWorkflowInstanceId,
         currentBusinessProcessInstanceId,
         setCurrentBusinessProcessInstanceId,
+        currentStage,
+        setCurrentStage,
       }}
     >
       {children}

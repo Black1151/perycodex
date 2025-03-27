@@ -73,11 +73,12 @@ export const baseTheme = extendTheme({
             border: "1px solid",
             borderColor: "primary",
             backgroundColor: "white",
-            _disabled: {
-              color: "white",
-              border: "none",
-              backgroundColor: "primary",
-            },
+          },
+          _disabled: {
+            backgroundColor: "white",
+            color: "primary",
+            cursor: "not-allowed",
+            opacity: 0.6,
           },
         },
 

@@ -33,7 +33,7 @@ export default async function ClientSatisfactionWorkflowPage({
   return (
     <WorkflowLayout
       stages={stages}
-      layout={"default"}
+      layout={"tester"}
       workflowInstanceId={workflowInstanceId}
     />
   );

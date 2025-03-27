@@ -2,20 +2,16 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import SurveyComponent from "@/components/surveyjs/SurveyComponent";
-import { Flex, Icon, Text } from "@chakra-ui/react";
+import { Flex, Icon, Spinner, Text } from "@chakra-ui/react";
 import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
 import { useFetchClient } from "@/hooks/useFetchClient";
-import {
-  ViewTimeline as ViewTimelineIcon,
-  Lock,
-  CheckCircle,
-} from "@mui/icons-material";
+import { ViewTimeline as ViewTimelineIcon, Check } from "@mui/icons-material";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import { useUser } from "@/providers/UserProvider";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import { useRouter } from "next/navigation";
 import WorkflowSidebar from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
-import { SurveyLayoutType } from "@/types/surveyJs";
+import { SubmissionResponse, SurveyLayoutType } from "@/types/surveyJs";
 import { signOut } from "next-auth/react";
 import LockIcon from "@mui/icons-material/Lock";
 
@@ -88,18 +84,22 @@ export default function WorkflowLayout({
     setWorkflowId,
     setCurrentWorkflowInstanceId,
     setCurrentBusinessProcessInstanceId,
+    currentStage,
+    setCurrentStage,
   } = useWorkflow();
 
   const router = useRouter();
   const { fetchClient } = useFetchClient();
 
-  const [currentStage, setCurrentStage] = useState<WorkflowStage | null>(null);
-  const [activeStageId, setActiveStageId] = useState<number | null>(null);
+  const [lastSubmissionResponse, setLastSubmissionResponse] =
+    useState<SubmissionResponse | null>(null);
   const [isAuthorised, setIsAuthorised] = useState<boolean>(false);
   const [currentForm, setCurrentForm] = useState<Form | null>(null);
   const [formData, setFormData] = useState<any | null>(null);
   const [isNew, setIsNew] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isReady, setIsReady] = useState<boolean>(false);
+  const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
   const [workflowVariables, setWorkflowVariables] = useState<
     | Array<{
         [key: string]: { [nestedKey: string]: any };
@@ -130,15 +130,40 @@ export default function WorkflowLayout({
       const orderedStages = stages.sort((a, b) => a.bpOrder - b.bpOrder);
       setCurrentStage(
         orderedStages.find((stage) => stage.stageStatus === "Next") ||
+          orderedStages.find((stage) => stage.stageStatus === "In Progress") ||
           orderedStages[0],
       );
     }
   }, [stages]);
 
   useEffect(() => {
+    const code = lastSubmissionResponse?.data?.code;
+
+    // BP and whole workflow is now complete
+    if (code === 4 && stages.length > 1) {
+      setIsCompleteModalOpen(true);
+    }
+
+    // BP Instance is now complete
+    if (code === 3) {
+      // do nothing really... already affected by it going to the next stage
+    }
+
+    // BP is already complete and can't be completed again
+    if (code === 2) {
+      // maybe: show a toast saying "Already completed"
+    }
+
+    // User not found or BP Instance doesn't exist
+    if (code === -1 || code === 1) {
+      // maybe: show an error or warning
+    }
+  }, [lastSubmissionResponse]);
+
+  useEffect(() => {
     const fetchStageData = async () => {
       if (!currentStage) return;
-
+      setIsReady(false);
       setCurrentBusinessProcessInstanceId(String(currentStage.bpInstId));
       setToolId(String(currentStage.wfInstTool));
       setWorkflowId(String(currentStage.wfId));
@@ -178,7 +203,6 @@ export default function WorkflowLayout({
           ]);
 
         setCurrentForm(formDataResource || null);
-        setActiveStageId(currentStage.bpInstBpId);
 
         if (variablesResponse) {
           const processedVariables: Array<{ [key: string]: any }> = [];
@@ -318,7 +342,9 @@ export default function WorkflowLayout({
             return;
           }
 
-          if (
+          if (currentStage.allowAlwaysEdit && isUserAuthorised) {
+            setIsNew(true);
+          } else if (
             (formDataset.statusId === 1 || formDataset.statusId === 2) &&
             isUserAuthorised
           ) {
@@ -328,6 +354,7 @@ export default function WorkflowLayout({
           }
         }
       } finally {
+        setIsReady(true);
       }
     };
     fetchStageData();
@@ -376,14 +403,24 @@ export default function WorkflowLayout({
         }}
         title={
           allExternalStagesComplete && user?.role === "EU" ? (
-            <Flex justify={"space-between"} align={"center"} gap={2}>
+            <Flex
+              justify={"space-between"}
+              align={"center"}
+              flexDirection={"column"}
+              gap={2}
+            >
+              <Icon as={Check} boxSize={8} color={"green.500"} />
               <Text>Thank you for completing everything </Text>
-              <Icon as={CheckCircle} boxSize={8} color={"green.500"} />
             </Flex>
           ) : (
-            <Flex justify={"space-between"} align={"center"} gap={2}>
-              <Text>Unauthorised Access</Text>
+            <Flex
+              justify={"space-between"}
+              align={"center"}
+              flexDirection={"column"}
+              gap={2}
+            >
               <Icon as={LockIcon} boxSize={8} color={"red.500"} />
+              <Text>Unauthorised Access</Text>
             </Flex>
           )
         }
@@ -406,9 +443,37 @@ export default function WorkflowLayout({
         cancelLabel="Cancel"
       />
 
+      <SurveyModal
+        isOpen={isCompleteModalOpen}
+        onConfirm={() => router.push(redirectUrl)}
+        onClose={() => setIsCompleteModalOpen(false)}
+        showButtons={{
+          close: true,
+          confirm: true,
+        }}
+        title={
+          <Flex
+            justify={"space-between"}
+            align={"center"}
+            flexDirection={"column"}
+            gap={2}
+          >
+            <Icon as={Check} boxSize={8} color={"green.500"} />
+            <Text>All Done!</Text>
+          </Flex>
+        }
+        bodyContent={
+          <Flex align="center" flexDirection={"column"} gap={3}>
+            <Text>You’ve completed all required steps.</Text>
+            <Text>Finish will return you to your dashboards</Text>
+          </Flex>
+        }
+        confirmLabel="Finish"
+        cancelLabel="Cancel"
+      />
+
       <WorkflowSidebar
         workflowStages={stages}
-        currentStageId={activeStageId}
         title={"Stages"}
         drawerState={"fully-open"}
         side={"left"}
@@ -416,26 +481,41 @@ export default function WorkflowLayout({
         onStageChange={handleStageChange}
       />
 
-      {!isModalOpen && isAuthorised && currentStage && currentForm && (
-        <SurveyComponent
-          surveyJson={
-            typeof currentForm.jsonFile === "string"
-              ? JSON.parse(currentForm.jsonFile)
-              : currentForm.jsonFile
-          }
-          endpoint={`/api/workflows/saveWorkflow/${currentStage.bpInstId}`}
-          isNew={isNew}
-          dataset={formData}
-          formSubmission="workflow"
-          onSurveySuccess={onSuccess}
-          layout={currentStage.layout ?? layout}
-          jsPath={currentStage.jsAdditionalFileUrl}
-          cssPath={currentStage.cssThemeFileUrl}
-          sjsPath={currentStage.sjsThemeFileUrl}
-          layoutOptions={{ showTitle: true }}
-          includeVariables={workflowVariables}
-        />
+      {!isReady && (
+        <Flex align="center" justify="center" height="100%">
+          <Spinner size="xl" color="primary" />
+        </Flex>
       )}
+
+      {isReady &&
+        !isModalOpen &&
+        isAuthorised &&
+        currentStage &&
+        currentForm && (
+          <SurveyComponent
+            surveyJson={
+              typeof currentForm.jsonFile === "string"
+                ? JSON.parse(currentForm.jsonFile)
+                : currentForm.jsonFile
+            }
+            endpoint={`/api/workflows/saveWorkflow/${currentStage.bpInstId}`}
+            isNew={isNew}
+            dataset={formData}
+            formSubmission="workflow"
+            onSurveySuccess={onSuccess}
+            layout={currentStage.layout ?? layout}
+            jsPath={currentStage.jsAdditionalFileUrl}
+            cssPath={currentStage.cssThemeFileUrl}
+            sjsPath={currentStage.sjsThemeFileUrl}
+            layoutOptions={{
+              showTitle: true,
+              saveAllowed: currentStage.saveAllowed,
+              allowAlwaysEdit: currentStage.allowAlwaysEdit,
+            }}
+            includeVariables={workflowVariables}
+            onSubmissionResponse={setLastSubmissionResponse}
+          />
+        )}
     </>
   );
 }
