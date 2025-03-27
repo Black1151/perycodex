@@ -5,8 +5,6 @@ import apiClient from "@/lib/apiClient";
 import { getUser } from "@/lib/dal";
 import NoDashboardsModal from "@/app/(site)/(apps)/NoDashboardModal";
 import { ToolLandingPage } from "@/app/(site)/(apps)/ToolLandingPageInner";
-import { checkToolAccess } from "@/lib/tool";
-import AccessDenied from "@/components/AccessDenied";
 
 interface WorkflowInstanceResponse {
   resource: {

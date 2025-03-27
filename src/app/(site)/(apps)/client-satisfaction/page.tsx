@@ -2,12 +2,10 @@ import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
 import { redirect } from "next/navigation";
 import { getFilteredDashboards } from "@/lib/dashboardUtils";
 import apiClient from "@/lib/apiClient";
-import { getUser, verifySession } from "@/lib/dal";
+import { getUser } from "@/lib/dal";
 import NoDashboardsModal from "@/app/(site)/(apps)/NoDashboardModal";
 import { ToolLandingPage } from "@/app/(site)/(apps)/ToolLandingPageInner";
 import { ClientSatisfactionSplashScreen } from "./ClientSatisfactionSplashScreen";
-import { checkToolAccess } from "@/lib/tool";
-import AccessDenied from "@/components/AccessDenied";
 
 interface WorkflowInstanceResponse {
   resource: {

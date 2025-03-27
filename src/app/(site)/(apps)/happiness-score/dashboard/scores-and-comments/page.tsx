@@ -1,12 +1,7 @@
 import { redirect } from "next/navigation";
-import { getFilteredDashboards } from "@/lib/dashboardUtils";
 import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
-import ToolDashboardLayout from "@/app/(site)/(apps)/ToolDashboardLayout";
-import DashboardHeader from "@/app/(site)/(apps)/DashboardHeader";
 import { verifySession } from "@/lib/dal";
 import ScoresCommentsDashboard from "@/app/(site)/(apps)/happiness-score/dashboard/scores-and-comments/ScoresCommentsDashboard";
-import { checkToolAccess } from "@/lib/tool";
-import AccessDenied from "@/components/AccessDenied";
 
 export default async function Home({
   searchParams,
