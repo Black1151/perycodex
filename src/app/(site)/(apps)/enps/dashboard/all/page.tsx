@@ -27,9 +27,6 @@ export default async function Home({
     return redirect("/");
   }
 
-  const hasAccess = await checkToolAccess(toolId);
-  if (!hasAccess) return <AccessDenied />;
-
   return (
     <WorkflowEngine toolId={toolId} workflowId={workflowId}>
       <AllEnpsDashboard />

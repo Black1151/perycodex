@@ -31,9 +31,6 @@ export default async function Home({
     return redirect("/");
   }
 
-  const hasAccess = await checkToolAccess(toolId);
-  if (!hasAccess) return <AccessDenied />;
-
   let redirectUrl: string | null = null;
 
   if (action && parseInt(action) === 1) {

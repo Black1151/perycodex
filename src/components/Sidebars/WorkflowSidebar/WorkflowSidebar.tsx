@@ -24,6 +24,7 @@ import { SurveyLayoutType } from "@/types/surveyJs";
 import Bottombar from "@/components/Bottombar/Bottombar";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import WorkflowCompletionBar from "@/components/Sidebars/WorkflowSidebar/WorkflowCompletionBar";
+import { getMuiIconByName } from "@/utils/muiIconMapper";
 
 interface WorkflowSidebarProps extends SidebarProps {
   workflowStages: WorkflowStage[];
@@ -345,7 +346,11 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
               alignItems="center"
               justifyContent="center"
             >
-              <WidgetsIcon />
+              <Icon
+                as={
+                  getMuiIconByName(stage.smallIconImageUrl || "") ?? WidgetsIcon
+                }
+              />
             </Box>
             <Text flex={1} zIndex={2} textAlign={"center"}>
               {stage.bpName}
@@ -404,7 +409,11 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
               boxSizing={"border-box"}
             >
               {" "}
-              <WidgetsIcon />
+              <Icon
+                as={
+                  getMuiIconByName(stage.smallIconImageUrl || "") ?? WidgetsIcon
+                }
+              />
               <Box
                 position="absolute"
                 top={0}
@@ -467,7 +476,11 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
           >
             <VStack spacing={1} w={"full"} maxW={"full"}>
               {" "}
-              <WidgetsIcon />
+              <Icon
+                as={
+                  getMuiIconByName(stage.smallIconImageUrl || "") ?? WidgetsIcon
+                }
+              />
               <Text
                 fontSize={10}
                 textAlign="center"
