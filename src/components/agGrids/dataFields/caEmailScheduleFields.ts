@@ -65,11 +65,11 @@ export const caEmailScheduleFields: ColDef[] | any = [
   },
   {
     field: "isActive",
-    headerName: "",
+    headerName: "Actions",
     cellRenderer: ActionButtonRenderer,
     cellRendererParams: {
       redirectUrl: "/email-schedule",
-      updateUrl: "/api/emailSchedule/",
+      updateUrl: "/api/emailScheduleCustomerOpt/",
       idField: "id",
     },
   },
