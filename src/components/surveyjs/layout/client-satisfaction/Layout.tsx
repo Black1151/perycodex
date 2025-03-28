@@ -40,37 +40,49 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
       setToDisplayMode={switchToDisplayMode}
       setToEditMode={switchToEditMode}
     >
-      <Box flex={1} textAlign={"center"} mt={4}>
-        <LetterFlyIn>Client Satisfaction</LetterFlyIn>
-      </Box>
-      <TopNavigation
-        pages={pageListOptions}
-        currentPage={currentPage}
-        isFirstPage={isFirstPage}
-        isLastPage={isLastPage}
-        jumpToPage={jumpToPage}
-        prevPage={prevPage}
-        nextPage={nextPage}
-      />
-      <Box
-        flex={1}
-        bg={theme.colors.elementBG}
-        borderRadius="md"
-        px={[2, 4]}
-        py={[2, 3]}
-        boxShadow="md"
-        mt={4}
-      >
-        <Survey model={model} />
-        <Flex justify={"space-between"}>
-          <Flex gap={2}>
-            <Button onClick={prevPage}>Prev</Button>
-            <Button onClick={nextPage}>Next</Button>
-          </Flex>
-          <Flex gap={2}>
-            <Button onClick={saveSurvey}>Save</Button>
-            <Button onClick={submitSurvey}>Submit</Button>
-          </Flex>
+      <Box h={"500px"} pb={"30px"}>
+        <TopNavigation
+          pages={pageListOptions}
+          currentPage={currentPage}
+          isFirstPage={isFirstPage}
+          isLastPage={isLastPage}
+          jumpToPage={jumpToPage}
+          prevPage={prevPage}
+          nextPage={nextPage}
+        />
+        <Flex
+          direction="row"
+          justify={"flex-start"}
+          align={"flex-start"}
+          flexWrap={"wrap"}
+          w={"full"}
+          gap={2}
+          mt={2}
+        >
+          <Box flex={1} mt={2} position={"sticky"} top={"100px"}>
+            <LetterFlyIn>Client Satisfaction</LetterFlyIn>
+          </Box>
+          <Box
+            flex={1}
+            bg={theme.colors.elementBG}
+            borderRadius="md"
+            px={[2, 4]}
+            py={[2, 3]}
+            boxShadow="md"
+            minWidth={["full", "45%"]}
+          >
+            <Survey model={model} />
+            <Flex justify={"space-between"}>
+              <Flex gap={2}>
+                <Button onClick={prevPage}>Prev</Button>
+                <Button onClick={nextPage}>Next</Button>
+              </Flex>
+              <Flex gap={2}>
+                <Button onClick={saveSurvey}>Save</Button>
+                <Button onClick={submitSurvey}>Submit</Button>
+              </Flex>
+            </Flex>
+          </Box>
         </Flex>
       </Box>
     </SurveyNavigationGuard>

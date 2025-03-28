@@ -141,7 +141,11 @@ export default function WorkflowLayout({
 
     // BP and whole workflow is now complete
     if (code === 4 && stages.length > 1) {
-      setIsCompleteModalOpen(true);
+      if (user?.role === "EU") {
+        setIsModalOpen(true);
+      } else {
+        setIsCompleteModalOpen(true);
+      }
     }
 
     // BP Instance is now complete
