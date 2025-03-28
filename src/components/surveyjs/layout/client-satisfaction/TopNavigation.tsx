@@ -125,7 +125,6 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
           icon={<FirstPage />}
           onClick={handleFirst}
           isDisabled={isFirstPage}
-          variant="ghost"
           size={["xs", "sm"]}
         />
         <IconButton
@@ -133,7 +132,6 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
           icon={<ArrowLeft />}
           onClick={prevPage}
           isDisabled={isFirstPage}
-          variant="ghost"
           size={["xs", "sm"]}
         />
 
@@ -157,16 +155,24 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
               let circleContent: React.ReactNode = index + 1; // default label
 
               if (isCompleted) {
-                circleBg = "green.500";
+                circleBg = theme.colors.seduloGreen;
                 circleColor = "white";
                 circleContent = <Check fontSize="small" />;
               } else if (isCurrent) {
-                circleBg = "yellow.400";
-                circleColor = "white";
+                circleBg = theme.colors.elementBg;
+                circleColor = theme.colors.primaryTextColor;
                 // could show numeric label or something like a spinner icon, etc.
               } else if (isNotStarted) {
                 circleBg = "gray.200";
                 circleColor = "gray.600";
+              }
+
+              const distanceFromCurrent = Math.abs(index - currentPage);
+              let scaleValue = 0.85;
+              if (distanceFromCurrent === 1) {
+                scaleValue = 0.75;
+              } else if (distanceFromCurrent > 1) {
+                scaleValue = 0.65;
               }
 
               return (
@@ -177,30 +183,30 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
                   justify="flex-start"
                   flexShrink={0}
                   w={`${itemSize}px`}
+                  transform={`scale(${scaleValue})`}
+                  transition={"transform 0.5s ease-out"}
                 >
-                  <Tooltip label={title} hasArrow>
-                    <Circle
-                      size={"28px"}
-                      bg={circleBg}
-                      color={circleColor}
-                      fontWeight="bold"
-                      cursor="pointer"
-                      onClick={() => jumpToPage(page)}
-                      border={
-                        isCurrent
-                          ? "2px solid white"
-                          : isCompleted
-                            ? "2px solid transparent"
-                            : "none"
-                      }
-                      boxShadow={
-                        isCurrent ? "0 0 0 2px rgba(0,0,0,0.2)" : "none"
-                      }
-                      transition="background-color 0.2s"
-                    >
-                      {circleContent}
-                    </Circle>
-                  </Tooltip>
+                  <Circle
+                    size={"28px"}
+                    bg={circleBg}
+                    color={circleColor}
+                    fontWeight="bold"
+                    cursor="pointer"
+                    onClick={() => jumpToPage(page)}
+                    border={
+                      isCurrent
+                        ? `2px solid ${theme.colors.secondaryTextColor}`
+                        : isCompleted
+                          ? "2px solid transparent"
+                          : "none"
+                    }
+                    boxShadow={
+                      isCurrent ? `0 0 0 2px ${theme.colors.primary}` : "none"
+                    }
+                    transition="background-color 0.2s"
+                  >
+                    {circleContent}
+                  </Circle>
                   <Box
                     fontSize={"xs"}
                     mt={1}
@@ -209,17 +215,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
                     wordBreak="normal"
                     lineHeight="short"
                   >
-                    <Text
-                      color={
-                        isCompleted
-                          ? "green.700"
-                          : isCurrent
-                            ? "yellow.800"
-                            : "gray.600"
-                      }
-                    >
-                      {title}
-                    </Text>
+                    <Text color={theme.colors.primaryTextColor}>{title}</Text>
                   </Box>
                 </Flex>
               );
@@ -231,7 +227,6 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
           icon={<ArrowRight />}
           onClick={nextPage}
           isDisabled={isLastPage}
-          variant="ghost"
           size={["xs", "sm"]}
         />
         <IconButton
@@ -239,9 +234,54 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
           icon={<LastPage />}
           onClick={handleLast}
           isDisabled={isLastPage}
-          variant="ghost"
           size={["xs", "sm"]}
         />
+
+        <Flex
+          // Position absolutely at the bottom center of this container
+          position="absolute"
+          bottom="4px"
+          left="50%"
+          transform="translateX(-50%)"
+          align="center"
+          gap="4px" // space between small circles
+        >
+          {pages.map((_, i) => {
+            const isCompleted = i < maxPage;
+            const isCurrent = i === currentPage;
+            const isNotStarted = i > maxPage;
+
+            let miniCircleBg = "gray.400";
+
+            if (isCompleted) {
+              miniCircleBg = theme.colors.seduloGreen;
+            } else if (isNotStarted) {
+              miniCircleBg = "gray.300";
+            }
+
+            // If it's current, let's make it more obvious
+            let miniCircleSize = "6px";
+            let miniCircleBorder = "none";
+
+            if (isCurrent) {
+              miniCircleBg = theme.colors.primary; // or any highlight color
+              miniCircleSize = "10px"; // bigger circle
+              miniCircleBorder = `2px solid ${theme.colors.seduloGreen}`;
+            }
+
+            return (
+              <Box
+                key={i}
+                as="span"
+                w={miniCircleSize}
+                h={miniCircleSize}
+                borderRadius="50%"
+                bg={miniCircleBg}
+                border={miniCircleBorder}
+              />
+            );
+          })}
+        </Flex>
       </Flex>
     </Box>
   );
