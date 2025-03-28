@@ -1,12 +1,12 @@
 import React from "react";
 import { Survey } from "survey-react-ui";
-import { Flex, Text, Box, Button } from "@chakra-ui/react";
+import { Flex, Box, Button } from "@chakra-ui/react";
 import useSurveyNavigation from "@/components/surveyjs/useSurveyNavigation";
 import { ClientSatisfactionLayoutProps } from "@/types/surveyJs";
 import SurveyNavigationGuard from "@/components/surveyjs/SurveyNavigationGuard";
 import { useUser } from "@/providers/UserProvider";
-import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
 import { useWorkflow } from "@/providers/WorkflowProvider";
+import TopNavigation from "@/components/surveyjs/layout/client-satisfaction/TopNavigation";
 
 const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
   model,
@@ -38,46 +38,24 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
       setToDisplayMode={switchToDisplayMode}
       setToEditMode={switchToEditMode}
     >
+      <TopNavigation
+        pages={pageListOptions}
+        currentPage={currentPage}
+        isFirstPage={isFirstPage}
+        isLastPage={isLastPage}
+        jumpToPage={jumpToPage}
+        prevPage={prevPage}
+        nextPage={nextPage}
+      />
       <Flex
         direction="column"
-        justify={"center"}
+        justify={"flex-start"}
         align={"center"}
         height={"full"}
+        w={"full"}
         gap={2}
       >
-        <Text
-          color={"white"}
-          fontFamily={"Bonfire"}
-          fontSize={"2xl"}
-          mt={4}
-          fontWeight={100}
-          textAlign={"center"}
-          mb={6}
-        >
-          <LetterFlyIn>Client Satisfaction</LetterFlyIn>
-        </Text>
-        <Flex
-          direction="column"
-          justify={"center"}
-          align={"center"}
-          height={"full"}
-          w={"full"}
-          gap={2}
-        >
-          <Box>
-            <Button onClick={prevPage}>Previous</Button>
-            <Button onClick={nextPage}>Next</Button>
-            {(currentStage?.allowAlwaysEdit ||
-              (currentStage?.saveAllowed &&
-                currentStage?.stageStatus !== "Complete")) && (
-              <Button onClick={saveSurvey}>Save</Button>
-            )}
-            <Button onClick={submitSurvey}>Submit</Button>
-          </Box>
-          <Box bg={"white"} borderRadius={"lg"} w={"full"}>
-            <Survey model={model} />
-          </Box>
-        </Flex>
+        <Survey model={model} />
       </Flex>
     </SurveyNavigationGuard>
   );
