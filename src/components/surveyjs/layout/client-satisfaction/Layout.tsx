@@ -1,12 +1,13 @@
 import React from "react";
 import { Survey } from "survey-react-ui";
-import { Flex, Box, Button } from "@chakra-ui/react";
+import { Flex, Box, Button, useTheme } from "@chakra-ui/react";
 import useSurveyNavigation from "@/components/surveyjs/useSurveyNavigation";
 import { ClientSatisfactionLayoutProps } from "@/types/surveyJs";
 import SurveyNavigationGuard from "@/components/surveyjs/SurveyNavigationGuard";
 import { useUser } from "@/providers/UserProvider";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import TopNavigation from "@/components/surveyjs/layout/client-satisfaction/TopNavigation";
+import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
 
 const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
   model,
@@ -31,6 +32,7 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
 
   const { user } = useUser();
   const { currentStage } = useWorkflow();
+  const theme = useTheme();
 
   return (
     <SurveyNavigationGuard
@@ -38,6 +40,9 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
       setToDisplayMode={switchToDisplayMode}
       setToEditMode={switchToEditMode}
     >
+      <Box flex={1} textAlign={"center"} mt={4}>
+        <LetterFlyIn>Client Satisfaction</LetterFlyIn>
+      </Box>
       <TopNavigation
         pages={pageListOptions}
         currentPage={currentPage}
@@ -47,16 +52,27 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
         prevPage={prevPage}
         nextPage={nextPage}
       />
-      <Flex
-        direction="column"
-        justify={"flex-start"}
-        align={"center"}
-        height={"full"}
-        w={"full"}
-        gap={2}
+      <Box
+        flex={1}
+        bg={theme.colors.elementBG}
+        borderRadius="md"
+        px={[2, 4]}
+        py={[2, 3]}
+        boxShadow="md"
+        mt={4}
       >
         <Survey model={model} />
-      </Flex>
+        <Flex justify={"space-between"}>
+          <Flex gap={2}>
+            <Button onClick={prevPage}>Prev</Button>
+            <Button onClick={nextPage}>Next</Button>
+          </Flex>
+          <Flex gap={2}>
+            <Button onClick={saveSurvey}>Save</Button>
+            <Button onClick={submitSurvey}>Submit</Button>
+          </Flex>
+        </Flex>
+      </Box>
     </SurveyNavigationGuard>
   );
 };
