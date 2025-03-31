@@ -169,6 +169,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
               <Close
                 style={{
                   cursor: "pointer",
+                  color: theme.colors.primary,
                 }}
               />
             </Box>

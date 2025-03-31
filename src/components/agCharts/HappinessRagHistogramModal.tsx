@@ -23,7 +23,7 @@ import {
   AgBarSeriesItemStylerParams,
   AgCartesianChartOptions,
 } from "ag-charts-enterprise";
-import SubmissionsTooltipRenderer from "@/components/agCharts/SubmissionsTooltipRenderer";
+import { SubmissionsTooltipRenderer } from "./tooltips/SubmissionsTooltipRenderer";
 
 interface ScoreDistribution {
   score: number;
@@ -118,7 +118,7 @@ const HappinessRagHistogramModal: React.FC<HappinessRagHistogramModalProps> = ({
           blur: 4,
         },
         tooltip: {
-          renderer: SubmissionsTooltipRenderer,
+          renderer: SubmissionsTooltipRenderer(theme.colors),
         },
         itemStyler: (params: AgBarSeriesItemStylerParams<any>) => {
           const { datum, xKey } = params;

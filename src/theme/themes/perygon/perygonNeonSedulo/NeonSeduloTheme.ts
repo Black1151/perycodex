@@ -15,7 +15,7 @@ export const NeonSedulo = extendTheme(baseTheme, {
     shadowColor: "red",
     primaryTextColor: "rgb(165, 165, 165)",
     secondaryTextColor: "rgb(145, 145, 145)",
-    themeTextColor: colorPalette.perygonDarkside,
+    themeTextColor: "rgba(201, 9, 9, 0.85)",
   },
 
   gradients: {

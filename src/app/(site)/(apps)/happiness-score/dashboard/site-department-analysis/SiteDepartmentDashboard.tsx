@@ -13,10 +13,11 @@ import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridCompon
 
 import SpeechBubble from "../../SpeechBubble";
 import StaffHappinessDetailsRenderer from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
-import ScoreTooltipRenderer from "@/components/agCharts/ScoreTooltipRenderer";
+
 import FilterSidebar from "@/components/Sidebars/Dashboards Filter/FilterSidebar";
 import AgChartComponent from "@/components/agCharts/AgChartComponent";
 import { dateRangeOptions } from "@/components/Sidebars/Dashboards Filter/dateRangeUtils";
+import { ScoreTooltipRenderer } from "@/components/agCharts/tooltips/ScoreTooltipRenderer";
 
 interface ManagingPartnersResponse {
   resource: {
@@ -29,7 +30,8 @@ interface ManagingPartnersResponse {
   };
 }
 
-function generateSiteSeries(siteNames: string[], xKey: string) {
+function GenerateSiteSeries(siteNames: string[], xKey: string) {
+  const theme = useTheme();
   return siteNames.map((siteName) => ({
     type: "line",
     xKey: xKey,
@@ -37,7 +39,7 @@ function generateSiteSeries(siteNames: string[], xKey: string) {
     yName: siteName,
     marker: { enabled: true },
     interpolation: { type: "smooth" },
-    tooltip: { renderer: ScoreTooltipRenderer },
+    tooltip: { renderer: ScoreTooltipRenderer(theme.colors) },
   }));
 }
 
@@ -171,7 +173,7 @@ const SiteDepartmentDashboard: React.FC = () => {
         )
       : [];
 
-  const weeklySeries = generateSiteSeries(weeklySiteNames, "week");
+  const weeklySeries = GenerateSiteSeries(weeklySiteNames, "week");
 
   const weeklyLineChartOptions = {
     data: weeklyLineChartComparisonData,
@@ -222,7 +224,7 @@ const SiteDepartmentDashboard: React.FC = () => {
         )
       : [];
 
-  const monthlySeries = generateSiteSeries(monthlySiteNames, "month");
+  const monthlySeries = GenerateSiteSeries(monthlySiteNames, "month");
 
   const monthlyLineChartOptions = {
     data: monthlyLineChartComparisonData,
@@ -281,7 +283,7 @@ const SiteDepartmentDashboard: React.FC = () => {
         yName: "Current Week (Avg)",
         cornerRadius: 10,
         fill: theme.colors.seduloGreen,
-        tooltip: { renderer: ScoreTooltipRenderer },
+        tooltip: { renderer: ScoreTooltipRenderer(theme.colors) },
         shadow: {
           enabled: true,
           color: "#191919",
@@ -297,7 +299,7 @@ const SiteDepartmentDashboard: React.FC = () => {
         yName: "Period (Avg)",
         cornerRadius: 10,
         fill: theme.colors.yellow,
-        tooltip: { renderer: ScoreTooltipRenderer },
+        tooltip: { renderer: ScoreTooltipRenderer(theme.colors) },
         shadow: {
           enabled: true,
           color: "#191919",
@@ -346,7 +348,7 @@ const SiteDepartmentDashboard: React.FC = () => {
         yName: "Current Week (Avg)",
         cornerRadius: 10,
         fill: theme.colors.seduloGreen,
-        tooltip: { renderer: ScoreTooltipRenderer },
+        tooltip: { renderer: ScoreTooltipRenderer(theme.colors) },
         shadow: {
           enabled: true,
           color: "#191919",
@@ -362,7 +364,7 @@ const SiteDepartmentDashboard: React.FC = () => {
         yName: "Period (Avg)",
         cornerRadius: 10,
         fill: theme.colors.yellow,
-        tooltip: { renderer: ScoreTooltipRenderer },
+        tooltip: { renderer: ScoreTooltipRenderer(theme.colors) },
         shadow: {
           enabled: true,
           color: "#191919",

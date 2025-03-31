@@ -11,13 +11,13 @@ import {
   AgPieSeriesOptions,
 } from "ag-charts-types";
 import AgGaugeComponent from "@/components/agCharts/AgGaugeComponent";
-import PieChartToolTipRenderer from "@/components/agCharts/PieChartTooltipRenderer";
-import SubmissionsTooltipRenderer from "@/components/agCharts/SubmissionsTooltipRenderer";
-import ScoreTooltipRenderer from "@/components/agCharts/ScoreTooltipRenderer";
+
 import { useFetchClient } from "@/hooks/useFetchClient";
 import useColor from "@/hooks/useColor";
 import { dateRangeOptions } from "@/components/Sidebars/Dashboards Filter/dateRangeUtils";
-import NoDataOverlay from "@/components/agGrids/NoDataOverlay";
+import { ScoreTooltipRenderer } from "@/components/agCharts/tooltips/ScoreTooltipRenderer";
+import { SubmissionsTooltipRenderer } from "@/components/agCharts/tooltips/SubmissionsTooltipRenderer";
+import { PieChartTooltipRenderer } from "@/components/agCharts/tooltips/PieChartTooltipRenderer";
 
 interface enpsMainDashboardResponse {
   resource: {
@@ -138,7 +138,7 @@ const AllEnpsDashboard = () => {
           };
         },
         tooltip: {
-          renderer: SubmissionsTooltipRenderer,
+          renderer: SubmissionsTooltipRenderer(theme.colors),
         },
       },
     ],
@@ -182,7 +182,7 @@ const AllEnpsDashboard = () => {
           type: "smooth",
         },
         tooltip: {
-          renderer: ScoreTooltipRenderer,
+          renderer: ScoreTooltipRenderer(theme.colors),
         },
         marker: {
           enabled: true,
@@ -260,7 +260,7 @@ const AllEnpsDashboard = () => {
     },
     tooltip: {
       enabled: true,
-      renderer: PieChartToolTipRenderer,
+      renderer: PieChartTooltipRenderer(theme.colors),
     },
   };
 

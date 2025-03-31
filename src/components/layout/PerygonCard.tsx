@@ -15,7 +15,6 @@ const Card: React.FC<CardProps> = ({ children, ...rest }) => {
       p={4}
       boxShadow={theme.shadows.primaryShadow || ""}
       {...rest}
-      color="green"
       border={theme.borders.primaryBorder}
     >
       {children}

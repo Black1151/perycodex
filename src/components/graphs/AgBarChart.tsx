@@ -8,11 +8,11 @@ import useColor from "@/hooks/useColor";
 import {
   AgBarSeriesItemStylerParams,
   AgCartesianChartOptions,
-  AgCartesianSeriesTooltipRendererParams,
 } from "ag-charts-enterprise";
 import { NoDataOverlayPink } from "../agGrids/DataGrid/DataGridComponentLight";
 import LoadingOverlayPink from "../agGrids/LoadingOverlayPink";
 import PerygonCard from "../layout/PerygonCard";
+import { SubmissionsTooltipRenderer } from "../agCharts/tooltips/SubmissionsTooltipRenderer";
 
 interface DataPoint {
   title: string;
@@ -46,17 +46,6 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
       Array.isArray(data) ? [...data].sort((a, b) => a.value - b.value) : [],
     [data]
   );
-
-  const tooltipRenderer = (params: AgCartesianSeriesTooltipRendererParams) => {
-    const datum = params.datum as DataPoint;
-    return `<div class="ag-chart-tooltip-title" style="background-color:${params.color}; border: 1px solid white; border-radius: 8px 8px 0 0;">
-        ${datum.title}
-      </div>
-      <div class="ag-chart-tooltip-content" style=" border: 1px solid white; border-radius: 0 0 8px 8px;">
-        Score: ${datum.value.toFixed(1)}<br/>
-        Count: ${datum.count}
-      </div>`;
-  };
 
   const chartOptions: AgCartesianChartOptions = useMemo(
     () => ({
@@ -95,9 +84,9 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
               fillOpacity: 1,
             },
           },
-          label: undefined, // Removed logic for showing score on small screens
+          label: undefined,
           tooltip: {
-            renderer: tooltipRenderer,
+            renderer: SubmissionsTooltipRenderer(theme.colors),
           },
           listeners: {
             nodeClick: (event: any) => {
@@ -115,13 +104,17 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
           label: {
             fontSize: 12,
             rotation: -65,
-            color: theme.colors.primary,
+            color: theme.colors.primaryTextColor,
             formatter: ({ value }: { value: string }) => value,
           },
         },
         {
           type: "number",
           position: "left",
+          label: {
+            fontSize: 12,
+            color: theme.colors.primaryTextColor,
+          },
           interval: { step: 2 },
           min: 0,
           max: 10,

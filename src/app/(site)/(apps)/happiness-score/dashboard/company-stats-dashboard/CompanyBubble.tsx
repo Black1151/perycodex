@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Box, useTheme } from "@chakra-ui/react";
+import { useTheme } from "@chakra-ui/react";
 import { AgCharts } from "ag-charts-react";
 import useColor from "@/hooks/useColor";
 
@@ -10,8 +10,7 @@ import {
   AgCartesianSeriesOptions,
   BubbleSeriesItemStylerParams,
 } from "ag-charts-enterprise";
-
-import BubbleScoresTooltipRenderer from "@/components/agCharts/BubbleScoresTooltipRenderer";
+import { BubbleScoresTooltipRenderer } from "../../../../../../components/agCharts/tooltips/BubbleScoresTooltipRenderer";
 
 interface UserScores {
   score: number;
@@ -74,7 +73,7 @@ export const CompanyBubble: React.FC<CompanyBubble> = ({ scores }) => {
       size: 0,
       maxSize: maxSize,
       tooltip: {
-        renderer: BubbleScoresTooltipRenderer,
+        renderer: BubbleScoresTooltipRenderer(theme.colors),
       },
       itemStyler: (params: BubbleSeriesItemStylerParams<any>) => {
         const { datum, xKey } = params;
