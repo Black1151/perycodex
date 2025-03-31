@@ -26,7 +26,7 @@ export const siteJson = {
           type: "dropdown",
           name: "customerId",
           visibleIf:
-            "{pgv_currentUser.role} = 'PA' or {wfv_siteType.siteTypeParam} = 'external'",
+            "{pgv_currentUser.role} = 'PA' or {wgv_siteType.siteTypeParam} = 'external'",
           title: "Customer",
           isRequired: true,
           choicesByUrl: {

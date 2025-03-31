@@ -7,7 +7,7 @@ import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSid
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { ViewTimeline as ViewTimelineIcon, Check } from "@mui/icons-material";
 import { useWorkflow } from "@/providers/WorkflowProvider";
-import { useUser } from "@/providers/UserProvider";
+import { UserContextProps, useUser } from "@/providers/UserProvider";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import { useRouter } from "next/navigation";
 import WorkflowSidebar from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
@@ -71,6 +71,15 @@ const REDIRECT_PATHS: Record<string, string> = {
   tester: "/tester",
 };
 
+const isEUAndComplete = (user: UserContextProps, stages: WorkflowStage[]) => {
+  return (
+    user.role === "EU" &&
+    stages
+      .filter((s) => s.isExternalBusinessProcess)
+      .every((s) => s.stageStatus === "Complete")
+  );
+};
+
 export default function WorkflowLayout({
   stages,
   layout,
@@ -88,6 +97,9 @@ export default function WorkflowLayout({
     setCurrentStage,
   } = useWorkflow();
 
+  const redirectPath = REDIRECT_PATHS[layout] || REDIRECT_PATHS.default;
+  const redirectUrl = `${redirectPath}?wfId=${workflowId}&toolId=${toolId}`;
+
   const router = useRouter();
   const { fetchClient } = useFetchClient();
 
@@ -97,15 +109,22 @@ export default function WorkflowLayout({
   const [currentForm, setCurrentForm] = useState<Form | null>(null);
   const [formData, setFormData] = useState<any | null>(null);
   const [isNew, setIsNew] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReady, setIsReady] = useState<boolean>(false);
   const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
+  const [isNotAuthorisedModalOpen, setIsNotAuthorisedModalOpen] =
+    useState(false);
   const [workflowVariables, setWorkflowVariables] = useState<
     | Array<{
         [key: string]: { [nestedKey: string]: any };
       }>
     | undefined
   >(undefined);
+
+  const handleLogout = async () => {
+    await fetch("/api/auth/sign-out", { method: "POST" });
+    await signOut({ redirect: false });
+    router.push("/login");
+  };
 
   const handleStageChange = useCallback(
     async (newStage: WorkflowStage) => {
@@ -124,6 +143,12 @@ export default function WorkflowLayout({
   }, []);
 
   useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    if (isEUAndComplete(user, stages)) return;
+
     if (stages.length === 1) {
       setCurrentStage(stages[0]);
     } else if (stages.length > 1) {
@@ -134,12 +159,20 @@ export default function WorkflowLayout({
           orderedStages[0],
       );
     }
-  }, [stages]);
+  }, [stages, user]);
 
   useEffect(() => {
     const code = lastSubmissionResponse?.data?.code;
 
-    // BP and whole workflow is now complete
+    if (!user) return;
+
+    const allComplete = isEUAndComplete(user, stages);
+
+    if ((code === 4 || code === 3) && stages.length > 1 && allComplete) {
+      setIsCompleteModalOpen(true);
+      return;
+    }
+
     if (code === 4 && stages.length > 1) {
       setIsCompleteModalOpen(true);
     }
@@ -158,11 +191,14 @@ export default function WorkflowLayout({
     if (code === -1 || code === 1) {
       // maybe: show an error or warning
     }
-  }, [lastSubmissionResponse]);
+  }, [lastSubmissionResponse, stages, user]);
 
   useEffect(() => {
     const fetchStageData = async () => {
-      if (!currentStage) return;
+      if (!user) {
+        return;
+      }
+      if (!currentStage || isEUAndComplete(user, stages)) return;
       setIsReady(false);
       setCurrentBusinessProcessInstanceId(String(currentStage.bpInstId));
       setToolId(String(currentStage.wfInstTool));
@@ -338,7 +374,7 @@ export default function WorkflowLayout({
           setIsAuthorised(isUserAuthorised);
 
           if (!isUserAuthorised) {
-            setIsModalOpen(true);
+            setIsNotAuthorisedModalOpen(true);
             return;
           }
 
@@ -360,20 +396,11 @@ export default function WorkflowLayout({
     fetchStageData();
   }, [currentStage]);
 
-  const redirectPath = REDIRECT_PATHS[layout] || REDIRECT_PATHS.default;
-  const redirectUrl = `${redirectPath}?wfId=${workflowId}&toolId=${toolId}`;
-
   const allExternalStagesComplete =
     user?.role === "EU" &&
     stages
       .filter((stage) => stage.isExternalBusinessProcess)
       .every((stage) => stage.stageStatus === "Complete");
-
-  const handleLogout = async () => {
-    await fetch("/api/auth/sign-out", { method: "POST" });
-    await signOut({ redirect: false });
-    router.push("/login");
-  };
 
   const onSuccess = () => {
     if (stages.length > 1) {
@@ -385,24 +412,50 @@ export default function WorkflowLayout({
 
   return (
     <>
+      {/*Unauthorised Access*/}
       <SurveyModal
-        isOpen={isModalOpen}
-        onConfirm={
-          allExternalStagesComplete && user?.role === "EU"
-            ? handleLogout
-            : () => setIsModalOpen(false)
-        }
-        onClose={() =>
-          allExternalStagesComplete && user?.role === "EU"
-            ? handleLogout()
-            : router.push("/")
-        }
+        isOpen={isNotAuthorisedModalOpen}
+        onConfirm={() => setIsNotAuthorisedModalOpen(false)}
+        onClose={() => router.push("/")}
         showButtons={{
           close: false,
           confirm: true,
         }}
         title={
-          allExternalStagesComplete && user?.role === "EU" ? (
+          <Flex
+            justify={"space-between"}
+            align={"center"}
+            flexDirection={"column"}
+            gap={2}
+          >
+            <Icon as={LockIcon} boxSize={8} color={"red.500"} />
+            <Text>Unauthorised Access</Text>
+          </Flex>
+        }
+        bodyContent={
+          <Flex align="center" flexDirection={"column"} gap={3}>
+            <Text>You are not authorized to view this stage.</Text>
+            <Text>Please select one in the sidebar to the left</Text>
+          </Flex>
+        }
+        confirmLabel={"OK"}
+        cancelLabel="Cancel"
+      />
+
+      <SurveyModal
+        isOpen={isCompleteModalOpen}
+        onConfirm={() =>
+          user?.role === "EU" ? handleLogout() : router.push(redirectUrl)
+        }
+        onClose={() =>
+          user?.role === "EU" ? handleLogout() : setIsCompleteModalOpen(false)
+        }
+        showButtons={{
+          close: user?.role !== "EU",
+          confirm: true,
+        }}
+        title={
+          user?.role === "EU" ? (
             <Flex
               justify={"space-between"}
               align={"center"}
@@ -419,56 +472,25 @@ export default function WorkflowLayout({
               flexDirection={"column"}
               gap={2}
             >
-              <Icon as={LockIcon} boxSize={8} color={"red.500"} />
-              <Text>Unauthorised Access</Text>
+              <Icon as={Check} boxSize={8} color={"green.500"} />
+              <Text>All Done!</Text>
             </Flex>
           )
         }
         bodyContent={
-          allExternalStagesComplete && user?.role === "EU" ? (
+          user?.role === "EU" ? (
             <Flex align="center" flexDirection={"column"} gap={3}>
               <Text>You’ve completed all required steps.</Text>
               <Text>You will now be logged out.</Text>
             </Flex>
           ) : (
             <Flex align="center" flexDirection={"column"} gap={3}>
-              <Text>You are not authorized to view this stage.</Text>
-              <Text>Please select one in the sidebar to the left</Text>
+              <Text>You’ve completed all required steps.</Text>
+              <Text>Finish will return you to your dashboards</Text>
             </Flex>
           )
         }
-        confirmLabel={
-          allExternalStagesComplete && user?.role === "EU" ? "Logout" : "OK"
-        }
-        cancelLabel="Cancel"
-      />
-
-      <SurveyModal
-        isOpen={isCompleteModalOpen}
-        onConfirm={() => router.push(redirectUrl)}
-        onClose={() => setIsCompleteModalOpen(false)}
-        showButtons={{
-          close: true,
-          confirm: true,
-        }}
-        title={
-          <Flex
-            justify={"space-between"}
-            align={"center"}
-            flexDirection={"column"}
-            gap={2}
-          >
-            <Icon as={Check} boxSize={8} color={"green.500"} />
-            <Text>All Done!</Text>
-          </Flex>
-        }
-        bodyContent={
-          <Flex align="center" flexDirection={"column"} gap={3}>
-            <Text>You’ve completed all required steps.</Text>
-            <Text>Finish will return you to your dashboards</Text>
-          </Flex>
-        }
-        confirmLabel="Finish"
+        confirmLabel={user?.role === "EU" ? "Logout" : "Finish"}
         cancelLabel="Cancel"
       />
 
@@ -488,7 +510,8 @@ export default function WorkflowLayout({
       )}
 
       {isReady &&
-        !isModalOpen &&
+        !isCompleteModalOpen &&
+        !isNotAuthorisedModalOpen &&
         isAuthorised &&
         currentStage &&
         currentForm && (

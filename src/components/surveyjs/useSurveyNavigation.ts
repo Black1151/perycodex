@@ -116,7 +116,7 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
 
   /*
       If a survey is saved - it means someone wants to continue editing the form
-       */
+     */
   const saveSurvey = () => {
     if (model && isEditing) {
       model.seduloState.isSave = true;

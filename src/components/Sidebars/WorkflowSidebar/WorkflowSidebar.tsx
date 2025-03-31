@@ -235,9 +235,20 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
   const getIconForStage = (stage: EnhancedWorkflowStage, full: boolean) => {
     const boxSize = stage.active && full ? 6 : 4;
 
-    if (stage.stageStatus === "Pending") {
-      if (user?.role === "EU" && stage.isExternalBusinessProcess) {
-        return (
+    if (user?.role !== "CA") {
+      if (stage.stageStatus === "Pending") {
+        if (user?.role === "EU" && stage.isExternalBusinessProcess) {
+          return (
+            <Icon
+              as={CheckCircleOutlineIcon}
+              boxSize={boxSize}
+              color={"blue.500"}
+            />
+          );
+        }
+        return !userHasAccessGroupAccess(stage) ? (
+          <Icon as={LockIcon} boxSize={boxSize} color={"red.500"} />
+        ) : (
           <Icon
             as={CheckCircleOutlineIcon}
             boxSize={boxSize}
@@ -245,20 +256,21 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
           />
         );
       }
-      return !userHasAccessGroupAccess(stage) ? (
-        <Icon as={LockIcon} boxSize={boxSize} color={"red.500"} />
-      ) : (
-        <Icon
-          as={CheckCircleOutlineIcon}
-          boxSize={boxSize}
-          color={"blue.500"}
-        />
-      );
-    }
 
-    if (stage.stageStatus === "Next") {
-      if (user?.role === "EU" && stage.isExternalBusinessProcess) {
-        return (
+      if (stage.stageStatus === "Next") {
+        if (user?.role === "EU" && stage.isExternalBusinessProcess) {
+          return (
+            <Icon
+              as={ArrowCircleRightOutlinedIcon}
+              boxSize={boxSize}
+              color={"green.500"}
+            />
+          );
+        }
+
+        return !userHasAccessGroupAccess(stage) ? (
+          <Icon as={LockIcon} boxSize={boxSize} color={"red.500"} />
+        ) : (
           <Icon
             as={ArrowCircleRightOutlinedIcon}
             boxSize={boxSize}
@@ -266,16 +278,6 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
           />
         );
       }
-
-      return !userHasAccessGroupAccess(stage) ? (
-        <Icon as={LockIcon} boxSize={boxSize} color={"red.500"} />
-      ) : (
-        <Icon
-          as={ArrowCircleRightOutlinedIcon}
-          boxSize={boxSize}
-          color={"green.500"}
-        />
-      );
     }
 
     const iconsByStatus: Record<StageStatus, ReactElement> = {
