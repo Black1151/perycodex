@@ -112,24 +112,28 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
               <LetterFlyIn fontSize={isMobile ? 30 : 32}>
                 {currentStage?.bpName}
               </LetterFlyIn>
-              <Image
-                maxW={["20%", "20%", "80%"]}
-                display={"block"}
-                src={currentStage?.headerLogo}
-              />
+              {currentStage?.headerLogo && (
+                <Image
+                  maxW={["20%", "20%", "80%"]}
+                  display={"block"}
+                  src={currentStage?.headerLogo}
+                />
+              )}
             </Flex>
-            <PerygonCard
-              borderRadius={"md"}
-              bg={theme.colors.elementBG}
-              display={["none", "none", "block"]}
-            >
-              <Text
-                color={theme.colors.primaryTextColor}
-                fontFamily={"Metropolis"}
+            {currentStage?.headerText && (
+              <PerygonCard
+                borderRadius={"md"}
+                bg={theme.colors.elementBG}
+                display={["none", "none", "block"]}
               >
-                {currentStage?.headerText}
-              </Text>
-            </PerygonCard>
+                <Text
+                  color={theme.colors.primaryTextColor}
+                  fontFamily={"Metropolis"}
+                >
+                  {currentStage?.headerText}
+                </Text>
+              </PerygonCard>
+            )}
           </Flex>
         </Box>
         <Box
