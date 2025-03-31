@@ -115,13 +115,19 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
   };
 
   /*
-      If a survey is saved - it means someone wants to continue editing the form
-       */
+            If a survey is saved - it means someone wants to continue editing the form
+             */
   const saveSurvey = () => {
     if (model && isEditing) {
       model.seduloState.isSave = true;
 
       setIsSubmitting(true);
+
+      if (!model.tryNavigateToPage(model.lastPageNo)) {
+        model.focusOnFirstError;
+        setIsSubmitting(false);
+        return;
+      }
 
       // Validate the entire survey before submitting
       if (!model.validate(true, true)) {
@@ -152,6 +158,12 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
   const submitSurvey = () => {
     if (model && isEditing) {
       setIsSubmitting(true);
+
+      if (!model.tryNavigateToPage(model.lastPageNo)) {
+        model.focusOnFirstError;
+        setIsSubmitting(false);
+        return;
+      }
 
       // Validate the entire survey before submitting
       if (!model.validate(true, true)) {

@@ -1,26 +1,16 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Flex,
   IconButton,
   Circle,
-  Tooltip,
   Text,
   useTheme,
 } from "@chakra-ui/react";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Check,
-  FirstPage,
-  LastPage,
-} from "@mui/icons-material";
-import { motion } from "framer-motion";
+import { Check, ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { PageModel } from "survey-core";
-
-const MotionFlex = motion(Flex);
 
 interface PageInfo {
   page: PageModel;
@@ -112,23 +102,28 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
       w="full"
       bg={theme.colors.elementBG}
       borderRadius="md"
-      px={[2, 4]}
-      py={[2, 3]}
+      px={[1, 3]}
+      py={[1, 2]}
       boxShadow="md"
     >
       <Flex justify="center" align="center" gap={[1, 2]}>
         {/* Left Navigation Controls */}
-        <IconButton
-          aria-label="First page"
-          icon={<FirstPage />}
-          onClick={handleFirst}
-          isDisabled={isFirstPage}
-          size={["xs", "sm"]}
-        />
+
+        {/*Not Required Go To FIRST */}
+        {/*<IconButton*/}
+        {/*  aria-label="First page"*/}
+        {/*  icon={<FirstPage />}*/}
+        {/*  onClick={handleFirst}*/}
+        {/*  isDisabled={isFirstPage}*/}
+        {/*  size={["xs", "sm"]}*/}
+        {/*/>*/}
         <IconButton
           aria-label="Previous"
-          icon={<ArrowLeft />}
+          icon={<ChevronLeft />}
+          bg="transparent"
+          _hover={{ bg: "transparent" }}
           onClick={prevPage}
+          color={!isFirstPage ? "primary" : "transparent"}
           isDisabled={isFirstPage}
           size={["xs", "sm"]}
         />
@@ -141,6 +136,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
             transform={"auto"}
             translateX={`-${offSet}px`}
             transition={"transform 0.3s ease-out"}
+            py={2}
           >
             {pages.map(({ page, title }, index) => {
               const isCompleted = index < maxPage;
@@ -166,11 +162,11 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
               }
 
               const distanceFromCurrent = Math.abs(index - currentPage);
-              let scaleValue = 0.85;
+              let scaleValue = 1;
               if (distanceFromCurrent === 1) {
-                scaleValue = 0.75;
+                scaleValue = 0.9;
               } else if (distanceFromCurrent > 1) {
-                scaleValue = 0.65;
+                scaleValue = 0.8;
               }
 
               return (
@@ -185,7 +181,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
                   transition={"transform 0.5s ease-out"}
                 >
                   <Circle
-                    size={"28px"}
+                    size={"26px"}
                     bg={circleBg}
                     color={circleColor}
                     fontWeight="bold"
@@ -213,7 +209,16 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
                     wordBreak="normal"
                     lineHeight="short"
                   >
-                    <Text color={theme.colors.primaryTextColor}>{title}</Text>
+                    <Text
+                      color={
+                        isCurrent
+                          ? theme.colors.primary
+                          : theme.colors.primaryTextColor
+                      }
+                      fontWeight={isCurrent ? "bold" : undefined}
+                    >
+                      {title}
+                    </Text>
                   </Box>
                 </Flex>
               );
@@ -222,22 +227,27 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
         </Box>
         <IconButton
           aria-label="Next"
-          icon={<ArrowRight />}
+          icon={<ChevronRight />}
+          color={!isLastPage ? "primary" : "transparent"}
+          bg={"transparent"}
+          _hover={{ bg: "transparent" }}
           onClick={nextPage}
           isDisabled={isLastPage}
           size={["xs", "sm"]}
         />
-        <IconButton
-          aria-label="Last page"
-          icon={<LastPage />}
-          onClick={handleLast}
-          isDisabled={isLastPage}
-          size={["xs", "sm"]}
-        />
+        {/*Not Required Go To LAST */}
+        {/*<IconButton*/}
+        {/*  aria-label="Last page"*/}
+        {/*  icon={<LastPage />}*/}
+        {/*  onClick={handleLast}*/}
+        {/*  isDisabled={isLastPage}*/}
+        {/*  size={["xs", "sm"]}*/}
+        {/*/>*/}
 
         <Flex
           // Position absolutely at the bottom center of this container
           position="absolute"
+          display={["none", "none", "flex"]}
           bottom="4px"
           left="50%"
           transform="translateX(-50%)"
