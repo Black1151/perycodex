@@ -84,7 +84,7 @@ export const emailScheduleJson = {
                 {
                     type: "text",
                     name: "startDate",
-                    title: "Select start date",
+                    title: "Schedule Start Date",
                     defaultValueExpression: "today()",
                     isRequired: true,
                     inputType: "date",
@@ -92,7 +92,7 @@ export const emailScheduleJson = {
                 {
                     type: "text",
                     name: "endDate",
-                    title: "Select end date",
+                    title: "Schedule End Date",
                     defaultValueExpression: "today()",
                     isRequired: true,
                     inputType: "date",

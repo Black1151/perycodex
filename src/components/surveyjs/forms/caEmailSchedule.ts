@@ -347,7 +347,7 @@ export const caEmailScheduleJson = {
         {
           type: "text",
           name: "parentStartDate",
-          title: "Select start date",
+          title: "Schedule Start Date",
           defaultValueExpression: "today()",
           isRequired: true,
           inputType: "date",
@@ -356,7 +356,7 @@ export const caEmailScheduleJson = {
         {
           type: "text",
           name: "parentEndDate",
-          title: "Select end date",
+          title: "Schedule End Date",
           defaultValueExpression: "today()",
           isRequired: true,
           inputType: "date",
