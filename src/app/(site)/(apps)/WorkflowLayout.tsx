@@ -429,7 +429,7 @@ export default function WorkflowLayout({
             gap={2}
           >
             <Icon as={LockIcon} boxSize={8} color={"red.500"} />
-            <Text>Unauthorised Access</Text>
+            <Text textAlign={"center"}>Unauthorised Access</Text>
           </Flex>
         }
         bodyContent={
@@ -463,7 +463,9 @@ export default function WorkflowLayout({
               gap={2}
             >
               <Icon as={Check} boxSize={8} color={"green.500"} />
-              <Text>Thank you for completing everything </Text>
+              <Text textAlign={"center"}>
+                Thank you for completing everything{" "}
+              </Text>
             </Flex>
           ) : (
             <Flex
@@ -473,7 +475,7 @@ export default function WorkflowLayout({
               gap={2}
             >
               <Icon as={Check} boxSize={8} color={"green.500"} />
-              <Text>All Done!</Text>
+              <Text textAlign={"center"}>All Done!</Text>
             </Flex>
           )
         }

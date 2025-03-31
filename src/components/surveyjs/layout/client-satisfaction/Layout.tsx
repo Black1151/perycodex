@@ -131,7 +131,7 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
                 onClick={prevPage}
               >
                 <ArrowBackIcon />
-                Previous
+                {isMobile ? "" : "Previous"}
               </MotionButton>
               <MotionButton
                 size={isMobile ? "sm" : "md"}
@@ -147,7 +147,7 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
                 whileTap={{ scale: 0.95 }}
               >
                 <ArrowForwardIcon />
-                Next
+                {isMobile ? "" : "Next"}
               </MotionButton>
             </Flex>
             <Flex gap={2}>
@@ -165,7 +165,7 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
                   whileTap={{ scale: 0.95 }}
                 >
                   <PublishIcon />
-                  Save
+                  {isMobile ? "" : "Save"}
                 </MotionButton>
               )}
               <MotionButton
@@ -181,7 +181,7 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
                 whileTap={{ scale: 0.95 }}
               >
                 <DoneIcon />
-                Submit
+                {isMobile ? "" : "Submit"}
               </MotionButton>
             </Flex>
           </Flex>

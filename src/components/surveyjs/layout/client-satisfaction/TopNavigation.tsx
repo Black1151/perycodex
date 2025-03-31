@@ -8,6 +8,7 @@ import {
   Circle,
   Text,
   useTheme,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { Check, ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { PageModel } from "survey-core";
@@ -42,11 +43,13 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
   const pagesAllowed = 5;
 
   const totalPages = pages.length;
+
+  // Used if you uncomment the arrows below in return
   const handleFirst = () => jumpToPage(pages[0].page);
   const handleLast = () => jumpToPage(pages[totalPages - 1].page);
 
-  const itemSize = 100;
-  const gapSize = 8;
+  const itemSize = useBreakpointValue({ base: 70, md: 100 }) ?? 100;
+  const gapSize = useBreakpointValue({ base: 0, md: 8 }) ?? 8;
   const totalItemSize = itemSize + gapSize;
   const totalBarSize = pagesAllowed * totalItemSize;
 
@@ -202,7 +205,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
                     {circleContent}
                   </Circle>
                   <Box
-                    fontSize={"xs"}
+                    fontSize={["xs", "xs", "md"]}
                     mt={1}
                     textAlign="center"
                     whiteSpace="normal"
