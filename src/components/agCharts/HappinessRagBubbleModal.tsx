@@ -18,7 +18,6 @@ import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import { AgCharts } from "ag-charts-react";
 import { useRouter } from "next/navigation";
 import useColor from "@/hooks/useColor";
-import BubbleScoresTooltipRenderer from "@/components/agCharts/BubbleScoresTooltipRenderer";
 
 import {
   AgBubbleSeriesTooltipRendererParams,
@@ -26,6 +25,7 @@ import {
   AgCartesianSeriesOptions,
   BubbleSeriesItemStylerParams,
 } from "ag-charts-enterprise";
+import { BubbleScoresTooltipRenderer } from "@/components/agCharts/tooltips/BubbleScoresTooltipRenderer";
 
 interface UserScores {
   score: number;
@@ -143,7 +143,7 @@ const HappinessRagHistogramModal: React.FC<HappinessRagBubbleModal> = ({
       sizeName: "Submissions",
       size: 0,
       maxSize: maxSize,
-      tooltip: { renderer: BubbleScoresTooltipRenderer },
+      tooltip: { renderer: BubbleScoresTooltipRenderer(theme.colors) },
       itemStyler: (params: BubbleSeriesItemStylerParams<any>) => {
         const { datum, xKey } = params;
         const score = parseInt(datum[xKey], 10); // Retrieve the score value

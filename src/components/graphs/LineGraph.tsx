@@ -10,7 +10,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { perygonTheme } from "@/theme/themes/perygon/perygonTheme/perygonTheme";
+
 import PerygonCard from "../layout/PerygonCard";
 
 interface DataPoint {
@@ -92,8 +92,8 @@ const LineGraph: React.FC<LineGraphProps> = memo(
 
     const getHappinessColor = (value: number) => {
       const roundedValue = Math.round(value);
-      return perygonTheme.colors.happinessScale[
-        roundedValue as keyof typeof perygonTheme.colors.happinessScale
+      return theme.colors.happinessScale[
+        roundedValue as keyof typeof theme.colors.happinessScale
       ];
     };
 
@@ -110,11 +110,7 @@ const LineGraph: React.FC<LineGraphProps> = memo(
           borderRadius={{ base: "8px", md: "16px" }}
           // boxShadow="lg"
         >
-          <Text
-            color={perygonTheme.colors.primary}
-            fontSize="xl"
-            textAlign="center"
-          >
+          <Text color={theme.colors.primary} fontSize="xl" textAlign="center">
             No history to display
           </Text>
         </Flex>
@@ -285,7 +281,7 @@ const LineGraph: React.FC<LineGraphProps> = memo(
                     key={index}
                     label={`Score: ${point.value.toFixed(2)} on: ${point.title}`}
                     placement="top"
-                    bg={perygonTheme.colors.primary}
+                    bg={theme.colors.primary}
                     color="white"
                     borderRadius="md"
                   >

@@ -9,7 +9,7 @@ import {
   AgBarSeriesItemStylerParams,
   AgCartesianChartOptions,
 } from "ag-charts-enterprise";
-import SubmissionsTooltipRenderer from "@/components/agCharts/SubmissionsTooltipRenderer";
+import { SubmissionsTooltipRenderer } from "@/components/agCharts/tooltips/SubmissionsTooltipRenderer";
 
 interface ScoreDistribution {
   score: number;
@@ -67,7 +67,7 @@ export const CompanyHistogram: React.FC<CompanyHistogramProps> = ({
           blur: 4,
         },
         tooltip: {
-          renderer: SubmissionsTooltipRenderer,
+          renderer: SubmissionsTooltipRenderer(theme.colors),
         },
         itemStyler: (params: AgBarSeriesItemStylerParams<any>) => {
           const { datum, xKey } = params;

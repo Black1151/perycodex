@@ -25,11 +25,11 @@ import { useUser } from "@/providers/UserProvider";
 import { Info } from "@mui/icons-material";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import StaffHappinessDetailsRenderer from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
-import ScoreTooltipRenderer from "@/components/agCharts/ScoreTooltipRenderer";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import FilterSidebar from "@/components/Sidebars/Dashboards Filter/FilterSidebar";
 import { dateRangeOptions } from "@/components/Sidebars/Dashboards Filter/dateRangeUtils";
 import PerygonCard from "@/components/layout/PerygonCard";
+import { ScoreTooltipRenderer } from "@/components/agCharts/tooltips/ScoreTooltipRenderer";
 
 // Define interfaces for each data type
 interface UserScore {
@@ -286,7 +286,7 @@ const UserDashboard: React.FC = () => {
           enabled: true,
           fill: theme.colors.primary,
         },
-        tooltip: { renderer: ScoreTooltipRenderer },
+        tooltip: { renderer: ScoreTooltipRenderer(theme.colors) },
         interpolation: {
           type: "smooth",
         },
@@ -297,7 +297,7 @@ const UserDashboard: React.FC = () => {
         yKey: "site",
         yName: "Site",
         marker: { enabled: true },
-        tooltip: { renderer: ScoreTooltipRenderer },
+        tooltip: { renderer: ScoreTooltipRenderer(theme.colors) },
         interpolation: {
           type: "smooth",
         },
@@ -308,7 +308,7 @@ const UserDashboard: React.FC = () => {
         yKey: "department",
         yName: "Department",
         marker: { enabled: true },
-        tooltip: { renderer: ScoreTooltipRenderer },
+        tooltip: { renderer: ScoreTooltipRenderer(theme.colors) },
         interpolation: {
           type: "smooth",
         },
@@ -319,7 +319,7 @@ const UserDashboard: React.FC = () => {
         yKey: "company",
         yName: "Company",
         marker: { enabled: true },
-        tooltip: { renderer: ScoreTooltipRenderer },
+        tooltip: { renderer: ScoreTooltipRenderer(theme.colors) },
         interpolation: {
           type: "smooth",
         },
@@ -333,13 +333,13 @@ const UserDashboard: React.FC = () => {
           rotation: 300,
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: theme.colors.primary,
+          color: theme.colors.primaryTextColor,
         },
         title: {
           text: "Week End",
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: "black",
+          color: theme.colors.primaryTextColor,
         },
       },
       {
@@ -349,12 +349,12 @@ const UserDashboard: React.FC = () => {
           text: "Happiness Score",
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: "black",
+          color: theme.colors.primaryTextColor,
         },
         label: {
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: theme.colors.primary,
+          color: theme.colors.primaryTextColor,
         },
       },
     ],
@@ -383,7 +383,7 @@ const UserDashboard: React.FC = () => {
         yName: "User",
         stroke: theme.colors.primary,
         marker: { enabled: true, fill: theme.colors.primary },
-        tooltip: { renderer: ScoreTooltipRenderer },
+        tooltip: { renderer: ScoreTooltipRenderer(theme.colors) },
         interpolation: {
           type: "smooth",
         },
@@ -394,7 +394,7 @@ const UserDashboard: React.FC = () => {
         yKey: "site",
         yName: "Site",
         marker: { enabled: true },
-        tooltip: { renderer: ScoreTooltipRenderer },
+        tooltip: { renderer: ScoreTooltipRenderer(theme.colors) },
         interpolation: {
           type: "smooth",
         },
@@ -405,7 +405,7 @@ const UserDashboard: React.FC = () => {
         yKey: "department",
         yName: "Department",
         marker: { enabled: true },
-        tooltip: { renderer: ScoreTooltipRenderer },
+        tooltip: { renderer: ScoreTooltipRenderer(theme.colors) },
         interpolation: {
           type: "smooth",
         },
@@ -416,7 +416,7 @@ const UserDashboard: React.FC = () => {
         yKey: "company",
         yName: "Company",
         marker: { enabled: true },
-        tooltip: { renderer: ScoreTooltipRenderer },
+        tooltip: { renderer: ScoreTooltipRenderer(theme.colors) },
         interpolation: {
           type: "smooth",
         },
@@ -430,13 +430,13 @@ const UserDashboard: React.FC = () => {
           rotation: 300,
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: theme.colors.primary,
+          color: theme.colors.primaryTextColor,
         },
         title: {
           text: "Month End",
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: "black",
+          color: theme.colors.primaryTextColor,
         },
       },
       {
@@ -446,12 +446,12 @@ const UserDashboard: React.FC = () => {
           text: "Happiness Score",
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: "black",
+          color: theme.colors.primaryTextColor,
         },
         label: {
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: theme.colors.primary,
+          color: theme.colors.primaryTextColor,
         },
       },
     ],

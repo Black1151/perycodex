@@ -22,7 +22,7 @@ import {
   CreateCrossFilterChartParams,
   FirstDataRenderedEvent,
   GridApi,
-  ChartRef, // <-- Needed for typed chart references
+  ChartRef,
 } from "ag-grid-community";
 
 import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridComponentLight";
@@ -36,10 +36,10 @@ import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import { columnDefs } from "@/app/(site)/(apps)/happiness-score/dashboard/scores-and-comments/GridColumnDefs";
 import { modalColDef } from "@/app/(site)/(apps)/happiness-score/dashboard/scores-and-comments/ModalColumnDefs";
 import { AgNodeClickEvent } from "ag-charts-types";
-import SubmissionsTooltipRenderer from "@/components/agCharts/SubmissionsTooltipRenderer";
 import { dateRangeOptions } from "@/components/Sidebars/Dashboards Filter/dateRangeUtils";
 import { useThemeContext } from "@/providers/ChakraThemeProvider";
 import PerygonCard from "@/components/layout/PerygonCard";
+import { SubmissionsTooltipRenderer } from "@/components/agCharts/tooltips/SubmissionsTooltipRenderer";
 
 interface ApiResponse {
   data: RowData[];
@@ -87,21 +87,16 @@ const ScoresCommentsDashboard: React.FC = () => {
   const { fetchClient } = useFetchClient();
   const { user } = useUser();
   const { getColor } = useColor();
-  // If you’re switching themes at runtime, you might watch a `themeName` here
-  const { themeName } = useThemeContext(); // optional if you have dynamic themes
+  const { themeName } = useThemeContext();
 
-  // Grid API reference
   const [gridApi, setGridApi] = useState<GridApi | null>(null);
 
-  // Keep track of active AG Grid ChartRefs so we can destroy them later
   const chartRefs = useRef<ChartRef[]>([]);
 
-  // Modal state
   const [isBarModalOpen, setIsBarModalOpen] = useState(false);
   const [barModalTitle, setBarModalTitle] = useState("");
   const [filterModel, setFilterModel] = useState({});
 
-  // Column definitions
   const defaultColDef: ColDef = {
     resizable: true,
     filter: false,
@@ -114,9 +109,6 @@ const ScoresCommentsDashboard: React.FC = () => {
     flex: isMobile ? 0 : 1,
   };
 
-  /**
-   * Fetch data from your API
-   */
   const getData = async (postBody: Record<string, any> = filterOptions) => {
     if (!toolId || !workflowId || !user?.customerId) {
       return;
@@ -138,11 +130,10 @@ const ScoresCommentsDashboard: React.FC = () => {
       );
 
       if (response && typeof response === "object" && "data" in response) {
-        // Preprocess data: add 'eowDate' and 'monthYear'
         const processedData = response.data.map((item: RowData) => {
           const createdAtDate = parseISO(item.createdAt);
-          const dayOfWeek = createdAtDate.getDay(); // 0 = Sunday, 1 = Monday, ...
-          const eowDate = addDays(createdAtDate, 7 - dayOfWeek); // Next Sunday
+          const dayOfWeek = createdAtDate.getDay();
+          const eowDate = addDays(createdAtDate, 7 - dayOfWeek);
           return {
             ...item,
             eowDate: format(eowDate, "yyyy-MM-dd"),
@@ -160,20 +151,14 @@ const ScoresCommentsDashboard: React.FC = () => {
     }
   };
 
-  /**
-   * Create (or recreate) charts whenever grid data / theme changes
-   */
   useEffect(() => {
-    // Only proceed if we have a valid gridApi and data to chart
     if (!gridApi || gridData.length === 0) return;
 
-    // 1) Destroy any existing chart references
     chartRefs.current.forEach((chartRef) => {
       chartRef.destroyChart();
     });
     chartRefs.current = [];
 
-    // 2) Build your chart configs
     const chartConfigs: SeduloCrossFilterChartParams[] = [
       {
         id: "chart1",
@@ -185,7 +170,7 @@ const ScoresCommentsDashboard: React.FC = () => {
         chartThemeOverrides: {
           common: {
             background: {
-              fill: theme.colors.elementBG, // Pull from your active Chakra theme
+              fill: theme.colors.elementBG,
             },
             padding: { top: 20, left: 20, right: 20, bottom: 20 },
             axes: {
@@ -194,12 +179,15 @@ const ScoresCommentsDashboard: React.FC = () => {
                   rotation: 340,
                   fontSize: 10,
                   fontFamily: "Metropolis",
-                  color: theme.colors.primary,
+                  color: theme.colors.primaryTextColor,
                 },
                 gridLine: { width: 0 },
               },
               number: {
                 position: "right",
+                label: {
+                  color: theme.colors.primaryTextColor,
+                },
                 crosshair: {
                   enabled: true,
                   label: { enabled: true },
@@ -217,7 +205,7 @@ const ScoresCommentsDashboard: React.FC = () => {
           bar: {
             series: {
               tooltip: {
-                renderer: SubmissionsTooltipRenderer,
+                renderer: SubmissionsTooltipRenderer(theme.colors),
               },
               cornerRadius: 10,
               shadow: {
@@ -282,12 +270,15 @@ const ScoresCommentsDashboard: React.FC = () => {
                   rotation: 300,
                   fontSize: 10,
                   fontFamily: "Metropolis",
-                  color: theme.colors.primaryText,
+                  color: theme.colors.primaryTextColor,
                 },
                 gridLine: { width: 0 },
               },
               number: {
                 position: "left",
+                label: {
+                  color: theme.colors.primaryTextColor,
+                },
                 crosshair: {
                   enabled: true,
                   label: { enabled: true },
@@ -306,7 +297,7 @@ const ScoresCommentsDashboard: React.FC = () => {
             series: {
               cornerRadius: 10,
               tooltip: {
-                renderer: SubmissionsTooltipRenderer,
+                renderer: SubmissionsTooltipRenderer(theme.colors),
               },
               shadow: {
                 enabled: true,
@@ -369,12 +360,15 @@ const ScoresCommentsDashboard: React.FC = () => {
                   rotation: 300,
                   fontSize: 10,
                   fontFamily: "Metropolis",
-                  color: theme.colors.primary,
+                  color: theme.colors.primaryTextColor,
                 },
                 gridLine: { width: 0 },
               },
               number: {
                 position: "left",
+                label: {
+                  color: theme.colors.primaryTextColor,
+                },
                 crosshair: {
                   enabled: true,
                   label: { enabled: true },
@@ -404,7 +398,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                 },
               },
               tooltip: {
-                renderer: SubmissionsTooltipRenderer,
+                renderer: SubmissionsTooltipRenderer(theme.colors),
               },
             },
           },
@@ -429,12 +423,15 @@ const ScoresCommentsDashboard: React.FC = () => {
                   rotation: 300,
                   fontSize: 10,
                   fontFamily: "Metropolis",
-                  color: theme.colors.primary,
+                  color: theme.colors.primaryTextColor,
                 },
                 gridLine: { width: 0 },
               },
               number: {
                 position: "left",
+                label: {
+                  color: theme.colors.primaryTextColor,
+                },
                 crosshair: {
                   enabled: true,
                   label: { enabled: true },
@@ -464,7 +461,7 @@ const ScoresCommentsDashboard: React.FC = () => {
                 },
               },
               tooltip: {
-                renderer: SubmissionsTooltipRenderer,
+                renderer: SubmissionsTooltipRenderer(theme.colors),
               },
             },
           },
@@ -472,7 +469,6 @@ const ScoresCommentsDashboard: React.FC = () => {
       },
     ];
 
-    // 3) Create the charts, store their references
     chartConfigs.forEach((config) => {
       const container = document.getElementById(config.id) as HTMLElement;
       if (container) {
@@ -481,36 +477,20 @@ const ScoresCommentsDashboard: React.FC = () => {
           chartContainer: container,
           suppressChartRanges: true,
         });
-        // Save the reference so we can destroy it on re-render or theme change
         chartRefs.current.push(chartRef as ChartRef);
       }
     });
-  }, [
-    gridApi,
-    gridData,
-    theme, // Re-run if Chakra theme changes
-    themeName, // If you switch your custom theme at runtime
-    getColor,
-  ]);
+  }, [gridApi, gridData, theme, themeName, getColor]);
 
-  /**
-   * Remember the Grid API from the onGridReady
-   */
   const handleGridReady = (params: FirstDataRenderedEvent) => {
     setGridApi(params.api);
   };
 
-  /**
-   * Sidebar filter changes
-   */
   const onFilterChange = (postBody: Record<string, any>) => {
     setFilterOptions(postBody);
     getData(postBody);
   };
 
-  /**
-   * Initial load
-   */
   useEffect(() => {
     if (!toolId || !workflowId || !user?.customerId) return;
 
@@ -528,9 +508,6 @@ const ScoresCommentsDashboard: React.FC = () => {
     }
   }, [toolId, workflowId, user]);
 
-  /**
-   * Render
-   */
   return (
     <>
       <FilterSidebar

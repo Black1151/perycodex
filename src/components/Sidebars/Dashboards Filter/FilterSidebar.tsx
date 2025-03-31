@@ -230,7 +230,6 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         minH={"40px"}
         variant="green"
         onClick={handleApplyFilters}
-        _hover={{ bg: theme.colors.primary }}
       >
         Apply Filters
       </Button>
