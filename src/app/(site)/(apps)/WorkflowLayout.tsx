@@ -512,7 +512,6 @@ export default function WorkflowLayout({
       )}
 
       {isReady &&
-        !isCompleteModalOpen &&
         !isNotAuthorisedModalOpen &&
         isAuthorised &&
         currentStage &&

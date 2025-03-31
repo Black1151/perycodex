@@ -6,6 +6,8 @@ import {
   Button,
   useTheme,
   useBreakpointValue,
+  Image,
+  Text,
 } from "@chakra-ui/react";
 import useSurveyNavigation from "@/components/surveyjs/useSurveyNavigation";
 import { ClientSatisfactionLayoutProps } from "@/types/surveyJs";
@@ -19,6 +21,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DoneIcon from "@mui/icons-material/Done";
 import PublishIcon from "@mui/icons-material/Publish";
+import PerygonCard from "@/components/layout/PerygonCard";
 
 const MotionButton = motion(Button);
 
@@ -89,8 +92,45 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
         gap={2}
         mt={2}
       >
-        <Box flex={1}>
-          <LetterFlyIn fontSize={32}>Client Satisfaction</LetterFlyIn>
+        <Box flex={1} height={["10svh", "10svh", "100svh"]}>
+          <Flex
+            position={"sticky"}
+            top={20}
+            flexDirection={"column"}
+            justify={"center"}
+            align={"center"}
+            px={"20px"}
+            gap={4}
+          >
+            <Flex
+              flexDirection={["row-reverse", "row-reverse", "column"]}
+              justify={"center"}
+              align={"center"}
+              px={"20px"}
+              gap={2}
+            >
+              <LetterFlyIn fontSize={isMobile ? 30 : 32}>
+                {currentStage?.bpName}
+              </LetterFlyIn>
+              <Image
+                maxW={["20%", "20%", "80%"]}
+                display={"block"}
+                src={currentStage?.headerLogo}
+              />
+            </Flex>
+            <PerygonCard
+              borderRadius={"md"}
+              bg={theme.colors.elementBG}
+              display={["none", "none", "block"]}
+            >
+              <Text
+                color={theme.colors.primaryTextColor}
+                fontFamily={"Metropolis"}
+              >
+                {currentStage?.headerText}
+              </Text>
+            </PerygonCard>
+          </Flex>
         </Box>
         <Box
           flex={2}
@@ -114,6 +154,7 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
           <Flex justify={"space-between"}>
             <Flex gap={2}>
               <MotionButton
+                borderRadius="full"
                 size={isMobile ? "sm" : "md"}
                 disabled={isFirstPage}
                 bgColor="darkGray"
@@ -134,6 +175,7 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
                 {isMobile ? "" : "Previous"}
               </MotionButton>
               <MotionButton
+                borderRadius="full"
                 size={isMobile ? "sm" : "md"}
                 onClick={nextPage}
                 disabled={isLastPage}
@@ -153,6 +195,7 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
             <Flex gap={2}>
               {canSave() && (
                 <MotionButton
+                  borderRadius="full"
                   size={isMobile ? "sm" : "md"}
                   onClick={saveSurvey}
                   bgColor="green"
@@ -168,21 +211,24 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
                   {isMobile ? "" : "Save"}
                 </MotionButton>
               )}
-              <MotionButton
-                size={isMobile ? "sm" : "md"}
-                onClick={submitSurvey}
-                bgColor="green"
-                border="1px solid lightGray"
-                w={["2rem", "full"]}
-                h={["2rem", "3rem"]}
-                color="white"
-                _hover={{ color: "green", backgroundColor: "white" }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <DoneIcon />
-                {isMobile ? "" : "Submit"}
-              </MotionButton>
+              {isEditing && (
+                <MotionButton
+                  borderRadius="full"
+                  size={isMobile ? "sm" : "md"}
+                  onClick={submitSurvey}
+                  bgColor="green"
+                  border="1px solid lightGray"
+                  w={["2rem", "full"]}
+                  h={["2rem", "3rem"]}
+                  color="white"
+                  _hover={{ color: "green", backgroundColor: "white" }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <DoneIcon />
+                  {isMobile ? "" : "Submit"}
+                </MotionButton>
+              )}
             </Flex>
           </Flex>
         </Box>

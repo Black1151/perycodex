@@ -100,7 +100,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
   return (
     <Box
       position="sticky"
-      top="0"
+      top={"60px"}
       zIndex={90}
       w="full"
       bg={theme.colors.elementBG}
