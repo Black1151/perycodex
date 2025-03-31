@@ -266,7 +266,9 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 isChecked={selectedSites.includes(site.id)}
                 onChange={() => handleSiteChange(site.id)}
               >
-                {site.siteName}
+                <Text color={theme.colors.primaryTextColor}>
+                  {site.siteName}
+                </Text>
               </Checkbox>
             ))}
           </VStack>
@@ -305,7 +307,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 isChecked={selectedDepartments.includes(dept.id)}
                 onChange={() => handleDepartmentChange(dept.id)}
               >
-                {dept.name}
+                <Text color={theme.colors.primaryTextColor}>{dept.name}</Text>
               </Checkbox>
             ))}
           </VStack>
