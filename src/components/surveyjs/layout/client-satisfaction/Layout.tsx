@@ -34,7 +34,6 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
 }) => {
   const {
     currentPage,
-    setCurrentPage,
     nextPage,
     prevPage,
     jumpToPage,
@@ -157,47 +156,49 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
           <Survey model={model} />
           <Flex justify={"space-between"}>
             <Flex gap={2}>
-              <MotionButton
-                borderRadius="full"
-                size={isMobile ? "sm" : "md"}
-                disabled={isFirstPage}
-                bgColor="darkGray"
-                w={["2rem", "full"]}
-                h={["2rem", "3rem"]}
-                border="1px solid darkGray"
-                color="white"
-                _hover={{ color: "darkGray", backgroundColor: "white" }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                display="flex"
-                alignItems="center"
-                gap={[0, 0, 2]}
-                lineHeight={0}
-                onClick={prevPage}
-              >
-                <ArrowBackIcon />
-                {isMobile ? "" : "Previous"}
-              </MotionButton>
-              <MotionButton
-                borderRadius="full"
-                size={isMobile ? "sm" : "md"}
-                onClick={nextPage}
-                disabled={isLastPage}
-                bgColor="darkGray"
-                w={["2rem", "full"]}
-                h={["2rem", "3rem"]}
-                border="1px solid darkGray"
-                color="white"
-                _hover={{ color: "darkGray", backgroundColor: "white" }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <ArrowForwardIcon />
-                {isMobile ? "" : "Next"}
-              </MotionButton>
+              {!isFirstPage && (
+                <MotionButton
+                  borderRadius="full"
+                  size={isMobile ? "sm" : "md"}
+                  bgColor="darkGray"
+                  w={["2rem", "full"]}
+                  h={["2rem", "3rem"]}
+                  border="1px solid darkGray"
+                  color="white"
+                  _hover={{ color: "darkGray", backgroundColor: "white" }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  display="flex"
+                  alignItems="center"
+                  gap={[0, 0, 2]}
+                  lineHeight={0}
+                  onClick={prevPage}
+                >
+                  <ArrowBackIcon />
+                  {isMobile ? "" : "Previous"}
+                </MotionButton>
+              )}
+              {!isLastPage && (
+                <MotionButton
+                  borderRadius="full"
+                  size={isMobile ? "sm" : "md"}
+                  onClick={nextPage}
+                  bgColor="darkGray"
+                  w={["2rem", "full"]}
+                  h={["2rem", "3rem"]}
+                  border="1px solid darkGray"
+                  color="white"
+                  _hover={{ color: "darkGray", backgroundColor: "white" }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <ArrowForwardIcon />
+                  {isMobile ? "" : "Next"}
+                </MotionButton>
+              )}
             </Flex>
             <Flex gap={2}>
-              {canSave() && (
+              {isEditing && canSave() && (
                 <MotionButton
                   borderRadius="full"
                   size={isMobile ? "sm" : "md"}
