@@ -52,7 +52,15 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
   const theme = useTheme();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
+  if (!user) {
+    return;
+  }
+
   const canSave = () => {
+    if (user.role === "EU") {
+      return false;
+    }
+
     // Assets and Risks after the fact
     if (allowAlwaysEdit && allowAlwaysEdit === true) {
       return true;
