@@ -127,7 +127,7 @@ const CompanyStats: React.FC = () => {
   const getData = async () => {
     if (!toolId || !workflowId || !user?.customerId) {
       console.warn(
-        "Required data (toolId, workflowId, or customerId) is missing"
+        "Required data (toolId, workflowId, or customerId) is missing",
       );
       return; // Prevent fetching if values are not ready
     }
@@ -144,7 +144,7 @@ const CompanyStats: React.FC = () => {
             workflowId: workflowId,
             customerId: user.customerId,
           },
-        }
+        },
       );
 
       if (response) {
@@ -390,7 +390,7 @@ const CompanyStats: React.FC = () => {
   };
 
   return (
-    <VStack align="stretch" w="full" spacing={8} py={2}>
+    <VStack align="stretch" w="full" spacing={6} py={2}>
       <SurveyModal
         isOpen={isOpen}
         onClose={onClose}

@@ -12,7 +12,7 @@ import { useUser } from "@/providers/UserProvider";
 import {
   registerSurveyFunctionsWithoutSurvey,
   registerSurveyJsFunctionsWithSurvey,
-} from "@/components/surveyjs/globalJsFunctions";
+} from "@/components/surveyjs/GlobalFunctions/globalJsFunctions";
 import eNPSLayout from "@/components/surveyjs/layout/enps/Layout";
 import ClientSatisfactionLayout from "@/components/surveyjs/layout/client-satisfaction/Layout";
 

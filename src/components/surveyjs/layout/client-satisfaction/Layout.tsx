@@ -63,7 +63,7 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
     if (
       saveAllowed &&
       saveAllowed === true &&
-      currentStage?.stageStatus !== "Completed"
+      currentStage?.stageStatus !== "Complete"
     ) {
       return true;
     }
