@@ -364,7 +364,7 @@ export default function WorkflowLayout({
 
     if (!user) return;
 
-    if (code > 1) {
+    if (code > 1 && user.role === "EU") {
       fetchStageData();
     }
 
