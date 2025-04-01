@@ -315,7 +315,11 @@ export default function WorkflowLayout({
           return;
         }
 
-        if (currentStage.allowAlwaysEdit && isUserAuthorised) {
+        if (
+          currentStage.allowAlwaysEdit &&
+          user.role !== "EU" &&
+          isUserAuthorised
+        ) {
           setIsNew(true);
         } else if (
           (formDataset.statusId === 1 || formDataset.statusId === 2) &&
