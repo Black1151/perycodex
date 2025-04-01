@@ -1,5 +1,5 @@
 import PerygonCard from "@/components/layout/PerygonCard";
-import { Flex, Center, Text } from "@chakra-ui/react";
+import { Flex, Center, Text, useTheme } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
 interface MasonryCardProps {
@@ -8,8 +8,17 @@ interface MasonryCardProps {
 }
 
 export const MasonryCard: React.FC<MasonryCardProps> = ({ title, content }) => {
+  const theme = useTheme();
+
   return (
-    <PerygonCard display="flex" height="100%" width="100%" p={4} flex="1">
+    <PerygonCard
+      display="flex"
+      height="100%"
+      width="100%"
+      p={4}
+      flex="1"
+      bg={theme.fringeCases.recognitionCard.elementBG}
+    >
       <Flex
         direction="column"
         alignItems="center"
@@ -26,7 +35,7 @@ export const MasonryCard: React.FC<MasonryCardProps> = ({ title, content }) => {
         </Text>
         <Center flex={1} py={4}>
           <Text
-            color="themeTextColor"
+            color={theme.fringeCases.recognitionCard.secondaryTextColor}
             fontSize={["2xl", null, null, "2xl", null, null, "4xl"]}
           >
             {content}

@@ -23,6 +23,14 @@ export const perygonThemeBlue = extendTheme(baseTheme, {
     secondaryGradientTransparent: `linear-gradient(to bottom right, rgba(0, 6, 125, 0.8), rgba(60, 51, 232,0.8))`,
   },
 
+  fringeCases: {
+    recognitionCard: {
+      elementBG: "rgb(78, 116, 227)",
+      textColor: "black",
+      secondaryTextColor: "white",
+    },
+  },
+
   components: {
     ...baseTheme.components,
     Button: {

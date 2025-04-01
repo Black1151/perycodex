@@ -40,6 +40,14 @@ export const baseTheme = extendTheme({
     },
   },
 
+  fringeCases: {
+    recognitionCard: {
+      elementBG: "elementBG",
+      textColor: "primaryTextColor",
+      secondaryTextColor: "themeTextColor",
+    },
+  },
+
   fonts: {
     heading: "Metropolis, sans-serif",
     body: "Metropolis, sans-serif",

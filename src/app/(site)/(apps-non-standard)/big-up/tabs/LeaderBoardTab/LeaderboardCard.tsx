@@ -1,6 +1,5 @@
 import React from "react";
 import { Flex, Avatar, Text, Divider, BoxProps } from "@chakra-ui/react";
-import Card from "../../components/Card";
 import { EmojiEvents } from "@mui/icons-material";
 import PerygonCard from "@/components/layout/PerygonCard";
 
