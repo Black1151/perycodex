@@ -1,6 +1,5 @@
 import React from "react";
-import { Flex, Avatar, Text, Divider } from "@chakra-ui/react";
-import Card from "../components/Card";
+import { Flex, Avatar, Text, Divider, useTheme } from "@chakra-ui/react";
 import {
   getMedalColor,
   getOrdinalSuffix,
@@ -35,8 +34,15 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
 
   const rankOrdinal = ranking && getOrdinalSuffix(ranking);
 
+  const theme = useTheme();
+
   return (
-    <PerygonCard width="100%" height="100%" justifyContent="space-between">
+    <PerygonCard
+      width="100%"
+      height="100%"
+      justifyContent="space-between"
+      bg={theme.fringeCases.recognitionCard.elementBG}
+    >
       <Flex flexDirection="column" justifyContent="space-between" height="100%">
         <Flex align="center" mb={3} gap={5}>
           <Avatar
@@ -57,7 +63,7 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
             <Text
               fontWeight="bold"
               fontSize={["sm", "md", "xl"]}
-              color="themeTextColor"
+              color={theme.fringeCases.recognitionCard.secondaryTextColor}
             >
               {name}
             </Text>
@@ -80,7 +86,7 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
                 )}
                 <Text
                   fontWeight="bold"
-                  color="themeTextColor"
+                  color={theme.fringeCases.recognitionCard.secondaryTextColor}
                   fontSize={["sm", "lg"]}
                 >
                   {!medalColor && "Rank: "}
@@ -105,7 +111,7 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
           <Text
             ml="auto"
             fontWeight="bold"
-            color="themeTextColor"
+            color={theme.fringeCases.recognitionCard.secondaryTextColor}
             fontSize={["xl", null, null, "2xl", null, "4xl"]}
           >
             {score.toLocaleString()}

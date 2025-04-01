@@ -118,7 +118,7 @@ const LineGraph: React.FC<LineGraphProps> = memo(
     }
 
     return (
-      <PerygonCard>
+      <PerygonCard width="100%">
         <Flex
           height={`${totalHeight}px`}
           position="relative"

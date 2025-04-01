@@ -14,8 +14,8 @@ const Card: React.FC<CardProps> = ({ children, ...rest }) => {
       bg="elementBG"
       p={4}
       boxShadow={theme.shadows.primaryShadow || ""}
-      {...rest}
       border={theme.borders.primaryBorder}
+      {...rest}
     >
       {children}
     </Box>

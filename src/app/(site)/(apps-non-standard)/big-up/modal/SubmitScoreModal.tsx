@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { BigUpTeamMember } from "../types";
 import TeamMemberAutocomplete from "../components/TeamMemberAutocomplete";
-import { BigUpModalContent } from "./components/BigUpModalContent";
+import PerygonCard from "@/components/layout/PerygonCard";
 
 interface SubmitScoreModalProps {
   isOpen: boolean;
@@ -67,111 +67,117 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
       returnFocusOnClose={false}
     >
       <ModalOverlay />
-      <BigUpModalContent>
-        <ModalHeader color="primary" fontSize="2xl">
-          Give Recognition
-        </ModalHeader>
-        <ModalCloseButton color="white" />
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <ModalBody>
-            <FormControl mb={4} isRequired>
-              <FormLabel color="primaryTextColor">Team Member</FormLabel>
-              <Controller
-                name="teamMember"
-                control={control}
-                rules={{ required: "Team Member is required" }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TeamMemberAutocomplete
-                    value={value}
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    teamMembers={teamMembers}
-                    placeholder="Start typing to search..."
-                  />
-                )}
-              />
-            </FormControl>
-            <FormControl mb={4} isRequired>
-              <FormLabel color="primaryTextColor">Category</FormLabel>
-              <Controller
-                name="category"
-                control={control}
-                rules={{ required: "Category is required" }}
-                render={({ field }) => (
-                  <Select
-                    placeholder="Choose a category..."
-                    {...field}
-                    bg="elementBG"
-                    color="primary"
-                    borderColor="primary"
-                    _hover={{ borderColor: "primary" }}
-                    _focus={{
-                      bg: "elementBG",
-                      color: "primary",
-                    }}
-                    sx={{
-                      option: {
-                        backgroundColor: "elementBG",
-                        color: "primary",
-                      },
-                    }}
-                  >
-                    {categories.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </Select>
-                )}
-              />
-            </FormControl>
-            <FormControl mb={4} isRequired>
-              <FormLabel color="primaryTextColor">Message</FormLabel>
-              <Controller
-                name="message"
-                control={control}
-                rules={{ required: "Message is required" }}
-                render={({ field }) => (
-                  <>
-                    <Textarea
-                      placeholder="Enter your message here..."
-                      maxLength={maxLength}
+      <ModalContent>
+        <PerygonCard bg={theme.fringeCases.recognitionCard.elementBG}>
+          <ModalHeader
+            // color="primary"
+            fontSize="2xl"
+            color={theme.fringeCases.recognitionCard.secondaryTextColor}
+          >
+            Give Recognition
+          </ModalHeader>
+          <ModalCloseButton color="white" />
+          <form onSubmit={handleSubmit(handleFormSubmit)}>
+            <ModalBody>
+              <FormControl mb={4} isRequired>
+                <FormLabel color="primaryTextColor">Team Member</FormLabel>
+                <Controller
+                  name="teamMember"
+                  control={control}
+                  rules={{ required: "Team Member is required" }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TeamMemberAutocomplete
+                      value={value}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      teamMembers={teamMembers}
+                      placeholder="Start typing to search..."
+                    />
+                  )}
+                />
+              </FormControl>
+              <FormControl mb={4} isRequired>
+                <FormLabel color="primaryTextColor">Category</FormLabel>
+                <Controller
+                  name="category"
+                  control={control}
+                  rules={{ required: "Category is required" }}
+                  render={({ field }) => (
+                    <Select
+                      placeholder="Choose a category..."
                       {...field}
                       bg="elementBG"
-                      color={theme.colors.primaryTextColor}
+                      color="primary"
                       borderColor="primary"
                       _hover={{ borderColor: "primary" }}
-                    />
-                    <Text fontSize="sm" color="primary">
-                      {message.length}/{maxLength} characters
-                    </Text>
-                  </>
-                )}
-              />
-            </FormControl>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              bg="primary"
-              color="white"
-              mr={3}
-              type="submit"
-              _hover={{ bg: "white", color: "primary" }}
-            >
-              Submit
-            </Button>
-            <Button
-              onClick={handleClose}
-              variant="outline"
-              borderColor="primary"
-              color="primary"
-              _hover={{ bg: "rgba(255, 20, 147, 0.1)" }}
-            >
-              Cancel
-            </Button>
-          </ModalFooter>
-        </form>
-      </BigUpModalContent>
+                      _focus={{
+                        bg: "elementBG",
+                        color: "primary",
+                      }}
+                      sx={{
+                        option: {
+                          backgroundColor: "elementBG",
+                          color: "primary",
+                        },
+                      }}
+                    >
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </Select>
+                  )}
+                />
+              </FormControl>
+              <FormControl mb={4} isRequired>
+                <FormLabel color="primaryTextColor">Message</FormLabel>
+                <Controller
+                  name="message"
+                  control={control}
+                  rules={{ required: "Message is required" }}
+                  render={({ field }) => (
+                    <>
+                      <Textarea
+                        placeholder="Enter your message here..."
+                        maxLength={maxLength}
+                        {...field}
+                        bg="elementBG"
+                        color={theme.colors.primaryTextColor}
+                        borderColor="primary"
+                        _hover={{ borderColor: "primary" }}
+                      />
+                      <Text fontSize="sm" color="primary">
+                        {message.length}/{maxLength} characters
+                      </Text>
+                    </>
+                  )}
+                />
+              </FormControl>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                bg="primary"
+                color="white"
+                mr={3}
+                type="submit"
+                _hover={{ bg: "white", color: "primary" }}
+              >
+                Submit
+              </Button>
+              <Button
+                onClick={handleClose}
+                variant="outline"
+                borderColor="primary"
+                color="white"
+                _hover={{ bg: "rgba(255, 20, 147, 0.1)", borderColor: "white" }}
+              >
+                Cancel
+              </Button>
+            </ModalFooter>
+          </form>
+        </PerygonCard>
+      </ModalContent>
     </Modal>
   );
 };

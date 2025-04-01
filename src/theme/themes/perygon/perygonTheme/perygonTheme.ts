@@ -19,6 +19,14 @@ export const perygonTheme = extendTheme(baseTheme, {
     themeTextColor: colorPalette.perygonPink,
   },
 
+  fringeCases: {
+    recognitionCard: {
+      elementBG: "rgb(255, 100, 167)",
+      textColor: "black",
+      secondaryTextColor: "white",
+    },
+  },
+
   gradients: {
     ...baseTheme.gradients,
     primaryGradient: "linear(to-br, secondary 60%, primary 100%)",

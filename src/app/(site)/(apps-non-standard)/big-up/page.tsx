@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Flex, Grid, VStack } from "@chakra-ui/react";
+import { Flex, Grid, useTheme, VStack } from "@chakra-ui/react";
 import { BigUpMasonry } from "./masonry/BigUpMasonry";
 import { PerygonTabs } from "./tabs/PerygonTabs";
 import { useRouter } from "next/navigation";
@@ -23,6 +23,7 @@ import PerygonCard from "@/components/layout/PerygonCard";
 
 export default function BigUpPage() {
   const router = useRouter();
+  const theme = useTheme();
 
   const { dashboardData, fetchDashboardData, loading } = useBigUpDashboard();
   const { userStats, fetchUserStats } = useBigUpUserStats();
@@ -149,7 +150,14 @@ export default function BigUpPage() {
         },
       }}
     >
-      <PerygonCard display="flex" width="100%" p={2} pr={6} alignItems="center">
+      <PerygonCard
+        display="flex"
+        width="100%"
+        p={2}
+        pr={6}
+        alignItems="center"
+        bg={theme.fringeCases.recognitionCard.elementBG}
+      >
         <RecognitionHeader
           headingText="Recognition Hub"
           onAddButtonClick={() => setIsSubmitModalOpen(true)}
