@@ -19,7 +19,7 @@ export async function perygonApiRequest(params) {
 
   try {
     // Construct the URL using the base URL and props
-    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/forms${endpoint}?${query}`;
+    const url = `/api/surveyjs/forms${endpoint}?${query}`;
 
     // Make the GET request
     const response = await fetch(url);
