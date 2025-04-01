@@ -136,8 +136,8 @@ function DataGridComponentLight<T>({
         fontSize: "13px",
         display: "flex",
         alignItems: "center",
+        fontFamily: "Metropolis",
       },
-      fontFamily: "Metropolis",
       ...customDefaultColDef,
     }),
     [isMobile, customDefaultColDef]
