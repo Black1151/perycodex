@@ -126,12 +126,210 @@ export default function WorkflowLayout({
     router.push("/login");
   };
 
-  const handleStageChange = useCallback(
-    async (newStage: WorkflowStage) => {
-      setCurrentStage(newStage);
-    },
-    [fetchClient],
-  );
+  const handleStageChange = useCallback(async (newStage: WorkflowStage) => {
+    setCurrentStage(newStage);
+  }, []);
+
+  const fetchStageData = async () => {
+    if (!user) {
+      return;
+    }
+    if (!currentStage) return;
+
+    setIsReady(false);
+    setCurrentBusinessProcessInstanceId(String(currentStage.bpInstId));
+    setToolId(String(currentStage.wfInstTool));
+    setWorkflowId(String(currentStage.wfId));
+
+    try {
+      const formDataRequest = currentStage.formId
+        ? fetchClient<Form>(`/api/workflows/getForm`, {
+            method: "POST",
+            body: { formId: currentStage.formId },
+            redirectOnError: false,
+          })
+        : Promise.resolve(null);
+
+      const formDatasetRequest = currentStage.bpInstId
+        ? fetchClient<FormDataResponse>(`/api/workflows/getFormData`, {
+            method: "POST",
+            body: { businessProcessInstanceId: currentStage.bpInstId },
+            redirectOnError: false,
+          })
+        : Promise.resolve(null);
+
+      const variablesRequest = workflowInstanceId
+        ? fetchClient<Variables[]>("/api/workflows/getVariables", {
+            method: "POST",
+            body: {
+              workflowInstanceId: workflowInstanceId,
+            },
+            redirectOnError: false,
+          })
+        : Promise.resolve(null);
+
+      const [formDataResource, formDataset, variablesResponse] =
+        await Promise.all([
+          formDataRequest,
+          formDatasetRequest,
+          variablesRequest,
+        ]);
+
+      setCurrentForm(formDataResource || null);
+
+      if (variablesResponse) {
+        const processedVariables: Array<{ [key: string]: any }> = [];
+
+        variablesResponse.forEach((variable) => {
+          let parsedValue: any = variable.fieldValue;
+
+          try {
+            switch (variable.dataType.toLowerCase()) {
+              case "number":
+                parsedValue = parseFloat(variable.fieldValue);
+                if (isNaN(parsedValue)) {
+                  parsedValue = variable.fieldValue;
+                }
+                break;
+              case "boolean":
+                parsedValue =
+                  variable.fieldValue.toLowerCase() === "true"
+                    ? true
+                    : variable.fieldValue.toLowerCase() === "false"
+                      ? false
+                      : variable.fieldValue;
+                break;
+              case "json":
+                parsedValue = JSON.parse(variable.fieldValue);
+                break;
+              case "date":
+                parsedValue = new Date(variable.fieldValue);
+                if (isNaN(parsedValue.getTime())) {
+                  parsedValue = variable.fieldValue;
+                }
+                break;
+              default:
+                break;
+            }
+          } catch (error) {
+            console.error(
+              `Error parsing value for ${variable.fieldName}:`,
+              error,
+            );
+            parsedValue = variable.fieldValue;
+          }
+
+          if (typeof parsedValue === "object" && parsedValue !== null) {
+            processedVariables.push({ [variable.fieldName]: parsedValue });
+          } else {
+            processedVariables.push({ [variable.fieldName]: parsedValue });
+          }
+        });
+
+        setWorkflowVariables(processedVariables);
+      } else {
+        setWorkflowVariables(undefined);
+      }
+
+      if (formDataset) {
+        const parsedResponse =
+          typeof formDataset.jsonResponse === "string"
+            ? JSON.parse(formDataset.jsonResponse)
+            : formDataset.jsonResponse;
+        setFormData(parsedResponse);
+
+        const isUserAuthorised = (() => {
+          // Definitive order of events
+
+          // You should never be able to click a stage if it is pending
+          if (currentStage.stageStatus === "Pending") {
+            return false;
+          }
+
+          // A CA should be able to click into everything regardless if it has been completed or next
+          if (
+            user &&
+            user.role === "CA" &&
+            (currentStage.stageStatus === "Next" ||
+              currentStage.stageStatus === "Complete")
+          ) {
+            return true;
+          }
+
+          // An EU should only be allowed if the stage isExternalBusinessProcess = true
+          if (user && user.role === "EU") {
+            return currentStage.isExternalBusinessProcess;
+          }
+
+          // Optional order of events
+          const internalIsUserAuthorised = true;
+
+          // Check if the user is the creator or started the process
+          if (
+            formDataset.createdBy === user?.userId ||
+            formDataset.startedBy === user?.userId ||
+            formDataset.createdBy === 0 || // 0 may indicate public access
+            formDataset.startedBy === 0
+          ) {
+            return true;
+          }
+
+          // Checking the logic around the Global Variables
+          if (
+            // If stage is locked (bound by the GV as not startByDefault) and there is no isGlobalVariableBlocking
+            currentStage.stageStatus === "Locked"
+          ) {
+            return false;
+          }
+
+          // If there is a UAG a user should be part of that group to be able to access it
+          if (
+            currentStage.userAccessGroupNames &&
+            currentStage.userAccessGroupNames.length > 0
+          ) {
+            if (!user) {
+              return false;
+            }
+
+            if (!user?.groupNames?.length) {
+              return false;
+            }
+
+            const hasAccess = currentStage.userAccessGroupNames.some(
+              (groupName) => user?.groupNames?.includes(groupName) ?? false,
+            );
+
+            if (!hasAccess) {
+              return false;
+            }
+          }
+
+          // If no restrictions apply, authorize by default
+          return internalIsUserAuthorised;
+        })();
+
+        setIsAuthorised(isUserAuthorised);
+
+        if (!isUserAuthorised) {
+          setIsNotAuthorisedModalOpen(true);
+          return;
+        }
+
+        if (currentStage.allowAlwaysEdit && isUserAuthorised) {
+          setIsNew(true);
+        } else if (
+          (formDataset.statusId === 1 || formDataset.statusId === 2) &&
+          isUserAuthorised
+        ) {
+          setIsNew(true);
+        } else if (formDataset.statusId === 3) {
+          setIsNew(false);
+        }
+      }
+    } finally {
+      setIsReady(true);
+    }
+  };
 
   useEffect(() => {
     setCurrentWorkflowInstanceId(workflowInstanceId);
@@ -140,7 +338,7 @@ export default function WorkflowLayout({
       setCurrentWorkflowInstanceId(null);
       setCurrentBusinessProcessInstanceId(null);
     };
-  }, []);
+  }, [workflowInstanceId]);
 
   useEffect(() => {
     if (!user) {
@@ -165,6 +363,10 @@ export default function WorkflowLayout({
     const code = lastSubmissionResponse?.data?.code;
 
     if (!user) return;
+
+    if (code > 1) {
+      fetchStageData();
+    }
 
     const allComplete = isEUAndComplete(user, stages);
 
@@ -194,213 +396,8 @@ export default function WorkflowLayout({
   }, [lastSubmissionResponse, stages, user]);
 
   useEffect(() => {
-    const fetchStageData = async () => {
-      if (!user) {
-        return;
-      }
-      if (!currentStage || isEUAndComplete(user, stages)) return;
-      setIsReady(false);
-      setCurrentBusinessProcessInstanceId(String(currentStage.bpInstId));
-      setToolId(String(currentStage.wfInstTool));
-      setWorkflowId(String(currentStage.wfId));
-
-      try {
-        const formDataRequest = currentStage.formId
-          ? fetchClient<Form>(`/api/workflows/getForm`, {
-              method: "POST",
-              body: { formId: currentStage.formId },
-              redirectOnError: false,
-            })
-          : Promise.resolve(null);
-
-        const formDatasetRequest = currentStage.bpInstId
-          ? fetchClient<FormDataResponse>(`/api/workflows/getFormData`, {
-              method: "POST",
-              body: { businessProcessInstanceId: currentStage.bpInstId },
-              redirectOnError: false,
-            })
-          : Promise.resolve(null);
-
-        const variablesRequest = workflowInstanceId
-          ? fetchClient<Variables[]>("/api/workflows/getVariables", {
-              method: "POST",
-              body: {
-                workflowInstanceId: workflowInstanceId,
-              },
-              redirectOnError: false,
-            })
-          : Promise.resolve(null);
-
-        const [formDataResource, formDataset, variablesResponse] =
-          await Promise.all([
-            formDataRequest,
-            formDatasetRequest,
-            variablesRequest,
-          ]);
-
-        setCurrentForm(formDataResource || null);
-
-        if (variablesResponse) {
-          const processedVariables: Array<{ [key: string]: any }> = [];
-
-          variablesResponse.forEach((variable) => {
-            let parsedValue: any = variable.fieldValue;
-
-            try {
-              switch (variable.dataType.toLowerCase()) {
-                case "number":
-                  parsedValue = parseFloat(variable.fieldValue);
-                  if (isNaN(parsedValue)) {
-                    parsedValue = variable.fieldValue;
-                  }
-                  break;
-                case "boolean":
-                  parsedValue =
-                    variable.fieldValue.toLowerCase() === "true"
-                      ? true
-                      : variable.fieldValue.toLowerCase() === "false"
-                        ? false
-                        : variable.fieldValue;
-                  break;
-                case "json":
-                  parsedValue = JSON.parse(variable.fieldValue);
-                  break;
-                case "date":
-                  parsedValue = new Date(variable.fieldValue);
-                  if (isNaN(parsedValue.getTime())) {
-                    parsedValue = variable.fieldValue;
-                  }
-                  break;
-                default:
-                  break;
-              }
-            } catch (error) {
-              console.error(
-                `Error parsing value for ${variable.fieldName}:`,
-                error,
-              );
-              parsedValue = variable.fieldValue;
-            }
-
-            if (typeof parsedValue === "object" && parsedValue !== null) {
-              processedVariables.push({ [variable.fieldName]: parsedValue });
-            } else {
-              processedVariables.push({ [variable.fieldName]: parsedValue });
-            }
-          });
-
-          setWorkflowVariables(processedVariables);
-        } else {
-          setWorkflowVariables(undefined);
-        }
-
-        if (formDataset) {
-          const parsedResponse =
-            typeof formDataset.jsonResponse === "string"
-              ? JSON.parse(formDataset.jsonResponse)
-              : formDataset.jsonResponse;
-          setFormData(parsedResponse);
-
-          const isUserAuthorised = (() => {
-            // Definitive order of events
-
-            // You should never be able to click a stage if it is pending
-            if (currentStage.stageStatus === "Pending") {
-              return false;
-            }
-
-            // A CA should be able to click into everything regardless if it has been completed or next
-            if (
-              user &&
-              user.role === "CA" &&
-              (currentStage.stageStatus === "Next" ||
-                currentStage.stageStatus === "Complete")
-            ) {
-              return true;
-            }
-
-            // An EU should only be allowed if the stage isExternalBusinessProcess = true
-            if (user && user.role === "EU") {
-              return currentStage.isExternalBusinessProcess;
-            }
-
-            // Optional order of events
-            const internalIsUserAuthorised = true;
-
-            // Check if the user is the creator or started the process
-            if (
-              formDataset.createdBy === user?.userId ||
-              formDataset.startedBy === user?.userId ||
-              formDataset.createdBy === 0 || // 0 may indicate public access
-              formDataset.startedBy === 0
-            ) {
-              return true;
-            }
-
-            // Checking the logic around the Global Variables
-            if (
-              // If stage is locked (bound by the GV as not startByDefault) and there is no isGlobalVariableBlocking
-              currentStage.stageStatus === "Locked"
-            ) {
-              return false;
-            }
-
-            // If there is a UAG a user should be part of that group to be able to access it
-            if (
-              currentStage.userAccessGroupNames &&
-              currentStage.userAccessGroupNames.length > 0
-            ) {
-              if (!user) {
-                return false;
-              }
-
-              if (!user?.groupNames?.length) {
-                return false;
-              }
-
-              const hasAccess = currentStage.userAccessGroupNames.some(
-                (groupName) => user?.groupNames?.includes(groupName) ?? false,
-              );
-
-              if (!hasAccess) {
-                return false;
-              }
-            }
-
-            // If no restrictions apply, authorize by default
-            return internalIsUserAuthorised;
-          })();
-
-          setIsAuthorised(isUserAuthorised);
-
-          if (!isUserAuthorised) {
-            setIsNotAuthorisedModalOpen(true);
-            return;
-          }
-
-          if (currentStage.allowAlwaysEdit && isUserAuthorised) {
-            setIsNew(true);
-          } else if (
-            (formDataset.statusId === 1 || formDataset.statusId === 2) &&
-            isUserAuthorised
-          ) {
-            setIsNew(true);
-          } else if (formDataset.statusId === 3) {
-            setIsNew(false);
-          }
-        }
-      } finally {
-        setIsReady(true);
-      }
-    };
     fetchStageData();
   }, [currentStage]);
-
-  const allExternalStagesComplete =
-    user?.role === "EU" &&
-    stages
-      .filter((stage) => stage.isExternalBusinessProcess)
-      .every((stage) => stage.stageStatus === "Complete");
 
   const onSuccess = () => {
     if (stages.length > 1) {

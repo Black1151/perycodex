@@ -7,7 +7,7 @@ import HappinessLayout from "@/components/surveyjs/layout/happiness/Layout";
 import { LayoutProps, SurveyComponentProps } from "@/types/surveyJs";
 import useSurvey from "@/components/surveyjs/useSurvey";
 import useSurveySubmission from "@/components/surveyjs/useSurveySubmission";
-import { Box, Flex, Spinner } from "@chakra-ui/react";
+import { Box, Spinner } from "@chakra-ui/react";
 import { useUser } from "@/providers/UserProvider";
 import {
   registerSurveyFunctionsWithoutSurvey,
