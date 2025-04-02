@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { Check, ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { PageModel } from "survey-core";
+import { useWorkflow } from "@/providers/WorkflowProvider";
 
 interface PageInfo {
   page: PageModel;
@@ -39,6 +40,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
 }) => {
   const theme = useTheme();
   const [maxPage, setMaxPage] = useState(currentPage);
+  const { currentStage } = useWorkflow();
 
   const pagesAllowed = 5;
 
@@ -151,17 +153,23 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
               let circleColor = "gray.700"; // text/icon color
               let circleContent: React.ReactNode = index + 1; // default label
 
-              if (isCompleted) {
+              if (currentStage?.bpInstStatus !== 3) {
+                if (isCompleted) {
+                  circleBg = theme.colors.seduloGreen;
+                  circleColor = "white";
+                  circleContent = <Check fontSize="small" />;
+                } else if (isCurrent) {
+                  circleBg = theme.colors.elementBg;
+                  circleColor = theme.colors.primaryTextColor;
+                  // could show numeric label or something like a spinner icon, etc.
+                } else if (isNotStarted) {
+                  circleBg = "gray.200";
+                  circleColor = "gray.600";
+                }
+              } else {
                 circleBg = theme.colors.seduloGreen;
                 circleColor = "white";
                 circleContent = <Check fontSize="small" />;
-              } else if (isCurrent) {
-                circleBg = theme.colors.elementBg;
-                circleColor = theme.colors.primaryTextColor;
-                // could show numeric label or something like a spinner icon, etc.
-              } else if (isNotStarted) {
-                circleBg = "gray.200";
-                circleColor = "gray.600";
               }
 
               const distanceFromCurrent = Math.abs(index - currentPage);

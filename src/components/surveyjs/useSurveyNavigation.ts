@@ -10,35 +10,23 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
     { page: PageModel; title: string }[]
   >([]);
 
-  useEffect(() => {
-    setIsEditing(model?.mode === "edit");
-  }, [model]);
+  // Get the list of visible PageModel objects with dynamically replaced variables in titles
+  // Returns an array of objects with each object containing the page, the new title, and the index
+  const getPageListOptions = (): {
+    page: PageModel;
+    title: string;
+    index: number;
+  }[] => {
+    if (!model) return [];
 
-  useEffect(() => {
-    // Initialize the current page when model is available
-    if (model) {
-      setCurrentPage(model.currentPageNo);
-      setPageListOptions(getPageListOptions()); // Update the page list options initially
-    }
-
-    // Attach event listeners for page and value changes
-    const onPageChangeHandler = () => {
-      setCurrentPage(model?.currentPageNo || 0);
-    };
-
-    const onValueChangeHandler = () => {
-      setPageListOptions(getPageListOptions()); // Update the page list when values change
-    };
-
-    model?.onCurrentPageChanged.add(onPageChangeHandler);
-    model?.onValueChanged.add(onValueChangeHandler);
-
-    // Cleanup event listeners when the component unmounts
-    return () => {
-      model?.onCurrentPageChanged.remove(onPageChangeHandler);
-      model?.onValueChanged.remove(onValueChangeHandler); // Correct: remove instead of add here
-    };
-  }, [model]);
+    return model.visiblePages.map((page: PageModel, index: number) => {
+      let title = page.title || `Page ${index + 1}`; // Default title if none exists
+      if (title) {
+        title = replaceVariables(title, model); // Replace variables in the title
+      }
+      return { page, title, index }; // Return an object with the page, title, and index
+    });
+  };
 
   const nextPage = () => {
     if (model && !model.isLastPage) {
@@ -96,27 +84,9 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
     });
   };
 
-  // Get the list of visible PageModel objects with dynamically replaced variables in titles
-  // Returns an array of objects with each object containing the page, the new title, and the index
-  const getPageListOptions = (): {
-    page: PageModel;
-    title: string;
-    index: number;
-  }[] => {
-    if (!model) return [];
-
-    return model.visiblePages.map((page: PageModel, index: number) => {
-      let title = page.title || `Page ${index + 1}`; // Default title if none exists
-      if (title) {
-        title = replaceVariables(title, model); // Replace variables in the title
-      }
-      return { page, title, index }; // Return an object with the page, title, and index
-    });
-  };
-
   /*
-      If a survey is saved - it means someone wants to continue editing the form
-     */
+            If a survey is saved - it means someone wants to continue editing the form
+           */
   const saveSurvey = () => {
     if (model && isEditing) {
       model.seduloState.isSave = true;
@@ -136,10 +106,6 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
           setIsSubmitting(false);
           return;
         }
-
-        // Assuming the form is complete and valid
-        model.clear(false, false);
-        model.render();
       } else {
         // If there are errors, focus on the first page with an error
         model.focusOnFirstError;
@@ -166,12 +132,6 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
           setIsSubmitting(false);
           return;
         }
-
-        // Assuming the form is complete and valid
-        model.clear(false, false);
-        model.render();
-
-        switchToDisplayMode();
       } else {
         // If there are errors, focus on the first page with an error
         model.focusOnFirstError;
@@ -209,6 +169,36 @@ const useSurveyNavigation = (model: SurveyModel | null, dataset: any) => {
       switchToDisplayMode();
     }
   };
+
+  useEffect(() => {
+    setIsEditing(model?.mode === "edit");
+  }, [model]);
+
+  useEffect(() => {
+    // Initialize the current page when model is available
+    if (model) {
+      setCurrentPage(model.currentPageNo);
+      setPageListOptions(getPageListOptions()); // Update the page list options initially
+    }
+
+    // Attach event listeners for page and value changes
+    const onPageChangeHandler = () => {
+      setCurrentPage(model?.currentPageNo || 0);
+    };
+
+    const onValueChangeHandler = () => {
+      setPageListOptions(getPageListOptions()); // Update the page list when values change
+    };
+
+    model?.onCurrentPageChanged.add(onPageChangeHandler);
+    model?.onValueChanged.add(onValueChangeHandler);
+
+    // Cleanup event listeners when the component unmounts
+    return () => {
+      model?.onCurrentPageChanged.remove(onPageChangeHandler);
+      model?.onValueChanged.remove(onValueChangeHandler); // Correct: remove instead of add here
+    };
+  }, [model]);
 
   return {
     currentPage,
