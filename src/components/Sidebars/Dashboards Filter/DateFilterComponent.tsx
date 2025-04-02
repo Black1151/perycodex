@@ -67,6 +67,11 @@ const DateFilter = <T extends DateRangeMode>({
       value={defaultDateFilter}
       onChange={(e) => handleDateChange(e.target.value)}
       color={theme.colors.primaryTextColor}
+      sx={{
+        option: {
+          backgroundColor: theme.colors.elementBG,
+        },
+      }}
     >
       {dateRangeOptions[dateFilterMode].map((range) => (
         <option

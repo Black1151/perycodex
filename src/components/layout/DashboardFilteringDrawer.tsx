@@ -191,6 +191,11 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                   onChange={(e) => onWeekChange(e.target.value)}
                   isDisabled={isUpdating}
                   color={theme.colors.primaryTextColor}
+                  sx={{
+                    option: {
+                      backgroundColor: theme.colors.elementBG,
+                    },
+                  }}
                 >
                   {weekOptions.map((week) => (
                     <option

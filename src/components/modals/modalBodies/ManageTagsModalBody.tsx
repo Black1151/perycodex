@@ -12,6 +12,7 @@ import {
   TabPanels,
   Tabs,
   Text,
+  useTheme,
   VStack,
 } from "@chakra-ui/react";
 import { Tag } from "@/components/AdminDetailsBanners/TagDetailsBanner";
@@ -40,6 +41,8 @@ export function ManageTagsModalBody({
   const { recordIds, recordTypeId } = useTags();
   const recordId = recordIds?.recordId;
 
+  const theme = useTheme();
+
   const resetFormState = () => {
     setSelectedTagId("");
     setSelectedTagToRemoveId("");
@@ -57,7 +60,7 @@ export function ManageTagsModalBody({
         body: { customerId, recordTypeId, recordId },
         errorMessage: "Failed to fetch available tags",
         redirectOnError: false,
-      },
+      }
     );
 
     if (data) {
@@ -103,7 +106,7 @@ export function ManageTagsModalBody({
         {
           method: "GET",
           redirectOnError: false,
-        },
+        }
       );
 
       if (newTagsResponse) {
@@ -135,7 +138,7 @@ export function ManageTagsModalBody({
           headers: {
             "Content-Type": "application/json",
           },
-        },
+        }
       );
 
       const data = await response.json();
@@ -150,7 +153,7 @@ export function ManageTagsModalBody({
         {
           method: "GET",
           redirectOnError: false,
-        },
+        }
       );
 
       if (newTagsResponse) {
@@ -234,6 +237,11 @@ export function ManageTagsModalBody({
                 <Select
                   placeholder="Select a tag to add"
                   value={selectedTagId}
+                  sx={{
+                    option: {
+                      backgroundColor: theme.colors.elementBG,
+                    },
+                  }}
                   onChange={(e) => {
                     setSelectedTagId(e.target.value);
                   }}
@@ -279,6 +287,11 @@ export function ManageTagsModalBody({
                     setSelectedTagToRemoveId(e.target.value);
                   }}
                   py={5}
+                  sx={{
+                    option: {
+                      backgroundColor: theme.colors.elementBG,
+                    },
+                  }}
                 >
                   {tags.map((tag: any) => (
                     <option key={tag.id} value={tag.tagAssocId}>

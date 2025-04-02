@@ -178,6 +178,11 @@ const SurveyTestComponent: React.FC<SurveyTestComponentProps> = ({
                 value={layout}
                 onChange={(e) => setLayout(e.target.value as SurveyLayoutType)}
                 variant="filled"
+                sx={{
+                  option: {
+                    backgroundColor: theme.colors.elementBG,
+                  },
+                }}
               >
                 <option value="default">Default</option>
                 <option value="happiness">Happiness</option>
@@ -202,6 +207,11 @@ const SurveyTestComponent: React.FC<SurveyTestComponentProps> = ({
                 value={cssPath}
                 onChange={(e) => setCssPath(e.target.value)}
                 variant="filled"
+                sx={{
+                  option: {
+                    backgroundColor: theme.colors.elementBG,
+                  },
+                }}
               >
                 {cssFiles.map((file) => (
                   <option key={file} value={file}>
@@ -218,6 +228,11 @@ const SurveyTestComponent: React.FC<SurveyTestComponentProps> = ({
                 value={sjsPath}
                 onChange={(e) => setSjsPath(e.target.value)}
                 variant="filled"
+                sx={{
+                  option: {
+                    backgroundColor: theme.colors.elementBG,
+                  },
+                }}
               >
                 {sjsFiles.map((file) => (
                   <option key={file} value={file}>
@@ -234,6 +249,11 @@ const SurveyTestComponent: React.FC<SurveyTestComponentProps> = ({
                 value={jsPath}
                 onChange={(e) => setJsPath(e.target.value)}
                 variant="filled"
+                sx={{
+                  option: {
+                    backgroundColor: theme.colors.elementBG,
+                  },
+                }}
               >
                 {jsFiles.map((file) => (
                   <option key={file} value={file}>

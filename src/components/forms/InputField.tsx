@@ -145,6 +145,9 @@ export function InputField({
             pl={0}
             sx={{
               color: selectedValue === "" ? "gray.400" : "black",
+              option: {
+                backgroundColor: theme.colors.elementBG,
+              },
             }}
             {...commonStyles}
             disabled={disabled}

@@ -7,6 +7,7 @@ import {
   Select,
   Text,
   useBreakpointValue,
+  useTheme,
 } from "@chakra-ui/react";
 import { KeyboardArrowLeft, KeyboardArrowRight } from "@mui/icons-material";
 import { AgGridReact } from "ag-grid-react";
@@ -72,6 +73,8 @@ const CustomGridBottomPaginationLight: React.FC<
     ? `${paginationInfo.currentPage} of ${paginationInfo.totalPages}`
     : `Page ${paginationInfo.currentPage} of ${paginationInfo.totalPages}`;
 
+  const theme = useTheme();
+
   return (
     <Box w="full" px={1} color="black" mt={2}>
       <Grid templateColumns="1fr 1fr" alignItems="center">
@@ -88,6 +91,11 @@ const CustomGridBottomPaginationLight: React.FC<
             width="auto"
             value={paginationInfo.pageSize}
             color="primaryTextColor"
+            sx={{
+              option: {
+                backgroundColor: theme.colors.elementBG,
+              },
+            }}
             onChange={(e) => {
               const newPageSize = Number(e.target.value);
               if (gridRef.current?.api) {
