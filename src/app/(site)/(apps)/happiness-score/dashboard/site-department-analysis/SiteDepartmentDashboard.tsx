@@ -178,6 +178,9 @@ const SiteDepartmentDashboard: React.FC = () => {
   const weeklyLineChartOptions = {
     data: weeklyLineChartComparisonData,
     series: weeklySeries,
+    background: {
+      fill: theme.colors.elementBG,
+    },
     axes: [
       {
         type: "category",
@@ -186,13 +189,13 @@ const SiteDepartmentDashboard: React.FC = () => {
           rotation: 300,
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: theme.colors.primary,
+          color: theme.colors.primaryTextColor,
         },
         title: {
           text: "Week",
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: "black",
+          color: theme.colors.primaryTextColor,
         },
       },
       {
@@ -202,18 +205,21 @@ const SiteDepartmentDashboard: React.FC = () => {
           text: "Happiness Score",
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: "black",
+          color: theme.colors.primaryTextColor,
         },
         label: {
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: theme.colors.primary,
+          color: theme.colors.primaryTextColor,
         },
       },
     ],
     zoom: { enabled: false },
     navigator: { enabled: false },
-    legend: { position: "bottom" as const },
+    legend: {
+      position: "bottom" as const,
+      item: { label: { color: theme.colors.primaryTextColor } },
+    },
     padding: { top: 20, left: 20, right: 20, bottom: 50 },
   };
 
@@ -229,6 +235,9 @@ const SiteDepartmentDashboard: React.FC = () => {
   const monthlyLineChartOptions = {
     data: monthlyLineChartComparisonData,
     series: monthlySeries,
+    background: {
+      fill: theme.colors.elementBG,
+    },
     axes: [
       {
         type: "category",
@@ -237,13 +246,13 @@ const SiteDepartmentDashboard: React.FC = () => {
           rotation: 300,
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: theme.colors.primary,
+          color: theme.colors.primaryTextColor,
         },
         title: {
           text: "Month",
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: "black",
+          color: theme.colors.primaryTextColor,
         },
       },
       {
@@ -253,18 +262,21 @@ const SiteDepartmentDashboard: React.FC = () => {
           text: "Happiness Score",
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: "black",
+          color: theme.colors.primaryTextColor,
         },
         label: {
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: theme.colors.primary,
+          color: theme.colors.primaryTextColor,
         },
       },
     ],
     zoom: { enabled: false },
     navigator: { enabled: false },
-    legend: { position: "bottom" as const },
+    legend: {
+      position: "bottom" as const,
+      item: { label: { color: theme.colors.primaryTextColor } },
+    },
     padding: { top: 20, left: 20, right: 20, bottom: 50 },
   };
 
@@ -275,6 +287,9 @@ const SiteDepartmentDashboard: React.FC = () => {
   const officeLeaderboardBarOptions: AgCartesianChartOptions = {
     data: sortedOfficeLeaderboard,
     padding: { top: 20, left: 20, right: 20, bottom: 50 },
+    background: {
+      fill: theme.colors.elementBG,
+    },
     series: [
       {
         type: "bar",
@@ -317,7 +332,7 @@ const SiteDepartmentDashboard: React.FC = () => {
           rotation: 300,
           fontSize: 10,
           fontFamily: "Metropolis",
-          color: theme.colors.primary,
+          color: theme.colors.primaryTextColor,
         },
       },
       {
@@ -326,11 +341,14 @@ const SiteDepartmentDashboard: React.FC = () => {
         label: {
           fontSize: 10,
           fontFamily: "Metropolis",
-          color: theme.colors.primary,
+          color: theme.colors.primaryTextColor,
         },
       },
     ],
-    legend: { position: "bottom" as const },
+    legend: {
+      position: "bottom" as const,
+      item: { label: { color: theme.colors.primaryTextColor } },
+    },
   };
 
   const sortedDepartmentLeaderboard = [...departmentLeaderboardData].sort(
@@ -340,6 +358,9 @@ const SiteDepartmentDashboard: React.FC = () => {
   const departmentLeaderboardBarOptions: AgCartesianChartOptions = {
     data: sortedDepartmentLeaderboard,
     padding: { top: 20, left: 20, right: 20, bottom: 50 },
+    background: {
+      fill: theme.colors.elementBG,
+    },
     series: [
       {
         type: "bar",
@@ -382,7 +403,7 @@ const SiteDepartmentDashboard: React.FC = () => {
           rotation: 300,
           fontSize: 10,
           fontFamily: "Metropolis",
-          color: theme.colors.primary,
+          color: theme.colors.primaryTextColor,
         },
       },
       {
@@ -391,11 +412,14 @@ const SiteDepartmentDashboard: React.FC = () => {
         label: {
           fontSize: 10,
           fontFamily: "Metropolis",
-          color: theme.colors.primary,
+          color: theme.colors.primaryTextColor,
         },
       },
     ],
-    legend: { position: "bottom" as const },
+    legend: {
+      position: "bottom" as const,
+      item: { label: { color: theme.colors.primaryTextColor } },
+    },
   };
 
   const onFilterChange = (postBody: Record<string, any>) => {
