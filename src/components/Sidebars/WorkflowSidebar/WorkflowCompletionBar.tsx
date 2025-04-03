@@ -18,7 +18,7 @@ const WorkflowCompletionBar: React.FC<WorkflowCompletionBarProps> = ({
 
   const totalStages = validStages.length;
   const completedStages = validStages.filter(
-    (stage) => stage.bpInstStatus === 3
+    (stage) => stage.bpInstStatus === 3,
   ).length;
   const completionPercent =
     totalStages === 0 ? 0 : (completedStages / totalStages) * 100;
@@ -37,7 +37,7 @@ const WorkflowCompletionBar: React.FC<WorkflowCompletionBarProps> = ({
     >
       <BackButton
         prevRoute={toolPath ?? "/"}
-        color="primaryTextColor"
+        color="black"
         iconSize={"small"}
         _hover={{ color: "primary", transform: "translateX(-5px)" }}
         ml={2}

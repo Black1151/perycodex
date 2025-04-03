@@ -1,5 +1,5 @@
 export const colorPalette = {
-  silver: "rgb(98, 117, 158)",
+  silver: "rgb(88, 88, 88)",
   darkSilver: "rgb(29, 29, 29)",
   brightSilver: "rgb(220, 220, 220)",
   seduloRed: "#B4213D",
