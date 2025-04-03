@@ -89,7 +89,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
 
   // Handle Sidebar state
   const [drawerState, setDrawerState] = useState<DrawerStateOptions>(
-    sidebarProps.drawerState,
+    sidebarProps.drawerState
   );
   const canHalf = true;
   const canFull = true;
@@ -101,7 +101,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
 
   const onToggle = () => {
     setDrawerState((curr) =>
-      curr === "half-open" ? "fully-open" : "half-open",
+      curr === "half-open" ? "fully-open" : "half-open"
     );
   };
 
@@ -140,10 +140,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
     let canClick: boolean = true;
 
     // Checking the logic around the Global Variables
-    if (
-      // If stage is locked (bound by the GV as not startByDefault) and there is no isGlobalVariableBlocking
-      stage.stageStatus === "Locked"
-    ) {
+    if (stage.stageStatus === "Locked") {
       return false;
     }
 
@@ -158,7 +155,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
       }
 
       const hasAccess = stage.userAccessGroupNames.some(
-        (groupName) => user?.groupNames?.includes(groupName) ?? false,
+        (groupName) => user?.groupNames?.includes(groupName) ?? false
       );
 
       if (!hasAccess) {
@@ -168,17 +165,15 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
 
     return canClick;
   };
-  // Dictates if the user is allowed to click on the stage
+
+  // Dictates if the user is allowed to see the stage
   const canShowStage = (stage: WorkflowStage): boolean => {
     // An EU should only be allowed if the stage isExternalBusinessProcess = true
     if (user && user.role === "EU") {
       return stage.isExternalBusinessProcess;
     }
 
-    if (
-      // If stage is locked (bound by the GV as not startByDefault) and there is no isGlobalVariableBlocking
-      stage.stageStatus === "Locked"
-    ) {
+    if (stage.stageStatus === "Locked") {
       return false;
     }
 
@@ -192,7 +187,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
       }
 
       return stage.userAccessGroupNames.some((groupName) =>
-        user?.groupNames?.includes(groupName),
+        user?.groupNames?.includes(groupName)
       );
     }
 
@@ -206,7 +201,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
       canClick: canClickStage(stage),
       canShow: canShowStage(stage),
       active: stage.bpInstId === currentStage?.bpInstId,
-    })),
+    }))
   );
 
   useEffect(() => {
@@ -216,8 +211,9 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
         canClick: canClickStage(stage),
         canShow: canShowStage(stage),
         active: stage.bpInstId === currentStage?.bpInstId,
-      })),
+      }))
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workflowStages, currentStage?.bpInstId]);
 
   const handleClick = (stage: EnhancedWorkflowStage) => {
@@ -228,7 +224,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
 
   const isStageStatus = (value: string): value is StageStatus => {
     return ["Next", "Complete", "Locked", "Pending", "In Progress"].includes(
-      value,
+      value
     );
   };
 
@@ -242,7 +238,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
             <Icon
               as={CheckCircleOutlineIcon}
               boxSize={boxSize}
-              color={"blue.500"}
+              color={"secondaryTextColor"}
             />
           );
         }
@@ -252,7 +248,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
           <Icon
             as={CheckCircleOutlineIcon}
             boxSize={boxSize}
-            color={"blue.500"}
+            color={"secondaryTextColor"}
           />
         );
       }
@@ -263,7 +259,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
             <Icon
               as={ArrowCircleRightOutlinedIcon}
               boxSize={boxSize}
-              color={"green.500"}
+              color={"primary"}
             />
           );
         }
@@ -274,7 +270,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
           <Icon
             as={ArrowCircleRightOutlinedIcon}
             boxSize={boxSize}
-            color={"green.500"}
+            color={"primary"}
           />
         );
       }
@@ -285,25 +281,25 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
         <Icon
           as={ArrowCircleRightOutlinedIcon}
           boxSize={boxSize}
-          color={"green.500"}
+          color={"primary"}
         />
       ),
       Complete: (
-        <Icon as={CheckCircleIcon} boxSize={boxSize} color={"green.500"} />
+        <Icon as={CheckCircleIcon} boxSize={boxSize} color={"primary"} />
       ),
       Locked: <Icon as={LockIcon} boxSize={boxSize} color={"red.500"} />,
       Pending: (
         <Icon
           as={CheckCircleOutlineIcon}
           boxSize={boxSize}
-          color={"blue.500"}
+          color={"secondaryTextColor"}
         />
       ),
       "In Progress": (
         <Icon
           as={OutlinedFlagOutlinedIcon}
           boxSize={boxSize}
-          color={"green.500"}
+          color={"primary"}
         />
       ),
     };
@@ -328,9 +324,10 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
             p={3}
             gap={2}
             border={stage.active ? "3px solid" : "1px solid"}
-            borderColor={stage.active ? "green.500" : "black"}
+            borderColor={stage.active ? "primary" : "primaryTextColor"}
+            dropShadow={stage.active ? "primaryShadow" : "none"}
             bg={"transparent"}
-            color={"black"}
+            color={"primaryTextColor"}
             alignItems="center"
             flexDirection={"column"}
             position="relative"
@@ -354,7 +351,12 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
                 }
               />
             </Box>
-            <Text flex={1} zIndex={2} textAlign={"center"}>
+            <Text
+              flex={1}
+              zIndex={2}
+              textAlign={"center"}
+              color="primaryTextColor"
+            >
               {stage.bpName}
             </Text>
             <Flex gap={2} justify={"space-between"} align={"center"} w={"full"}>
@@ -365,8 +367,8 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
                   stage.stageStatus === "Complete" ||
                   stage.stageStatus === "Next" ||
                   stage.stageStatus === "In Progress"
-                    ? "green.500"
-                    : "blue.500"
+                    ? "primary"
+                    : "secondaryTextColor"
                 }
               >
                 {stage.stageStatus}
@@ -395,9 +397,9 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
               p={2}
               gap={2}
               border={stage.active ? "3px solid" : "1px solid"}
-              borderColor={stage.active ? "green.500" : "black"}
+              borderColor={stage.active ? "primary" : "primaryTextColor"}
               bg={"transparent"}
-              color={"black"}
+              color={"primaryTextColor"}
               borderRadius="md"
               cursor={stage.canClick ? "pointer" : "not-allowed"}
               _hover={{
@@ -410,7 +412,6 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
               position={"relative"}
               boxSizing={"border-box"}
             >
-              {" "}
               <Icon
                 as={
                   getMuiIconByName(stage.smallIconImageUrl || "") ?? WidgetsIcon
@@ -464,9 +465,9 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
             gap={2}
             maxW={"200px"}
             border={"1px solid"}
-            borderColor={stage.active ? "green.500" : "gray"}
-            bg={stage.active ? "green.500" : "transparent"}
-            color={stage.active ? "white" : "black"}
+            borderColor={stage.active ? "primary" : "gray"}
+            bg={stage.active ? "primary" : "transparent"}
+            color={stage.active ? "white" : "primaryTextColor"}
             borderRadius="md"
             cursor={stage.canClick ? "pointer" : "not-allowed"}
             display="flex"
@@ -477,7 +478,6 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
             onClick={() => handleClick(stage)}
           >
             <VStack spacing={1} w={"full"} maxW={"full"}>
-              {" "}
               <Icon
                 as={
                   getMuiIconByName(stage.smallIconImageUrl || "") ?? WidgetsIcon
