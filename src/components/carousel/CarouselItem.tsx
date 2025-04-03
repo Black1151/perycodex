@@ -23,6 +23,7 @@ export interface CarouselItemProps {
   toolId: string;
   toolWfId: string;
   isUAGLocked: boolean;
+  logoImage: string;
 }
 
 const CarouselItem: React.FC<CarouselItemProps> = ({
@@ -34,7 +35,13 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
 }) => {
   const theme = useTheme();
   return (
-    <VStack flex={1} mx={[0, 2]} height={60}>
+    <VStack
+      flex={1}
+      mx={[0, 2]}
+      height={60}
+      border={isSelected ? "2px solid var(--chakra-colors-primary)" : "none"}
+      width={isSelected ? 600 : "auto"}
+    >
       <Box
         backgroundPosition="center"
         backgroundRepeat="no-repeat"
@@ -85,7 +92,7 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
                 alignItems="center"
                 justifyContent="center"
                 height={
-                  isSelected ? ["100px", null, "150px"] : ["50px", null, "75px"]
+                  isSelected ? ["50px", null, "75px"] : ["100px", null, "150px"]
                 }
                 bg="gray.100"
                 aspectRatio={1}
@@ -102,14 +109,14 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
             }
             alt={alt}
             height={
-              isSelected ? ["100px", null, "150px"] : ["50px", null, "75px"]
+              isSelected ? ["50px", null, "75px"] : ["100px", null, "150px"]
             }
             objectFit="contain"
             transition="height 0.5s ease-in-out"
           />
         </Box>
       </Box>
-      <Flex
+      {/* <Flex
         bg={isSelected ? theme.colors.primary : "white"}
         p={[1, null, 2]}
         borderRadius={5}
@@ -133,7 +140,7 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
         >
           {name.split(" ").join("\n")}
         </Text>
-      </Flex>
+      </Flex> */}
     </VStack>
   );
 };

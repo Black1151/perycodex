@@ -16,7 +16,7 @@ const Carousel: React.FC<CarouselProps> = ({
 }) => {
   const { currentIndex, prevSlide, nextSlide, updateIndex } = useCarousel(
     carouselItems.length,
-    setParentIndex,
+    setParentIndex
   );
 
   const touchStartX = useRef(0);
@@ -35,7 +35,7 @@ const Carousel: React.FC<CarouselProps> = ({
         action();
       }
     },
-    [isTransitioning],
+    [isTransitioning]
   );
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -60,8 +60,10 @@ const Carousel: React.FC<CarouselProps> = ({
 
   return (
     <VStack
-      width={carouselItems.length < 5 ? "70%" : "90%"}
-      maxWidth={1200}
+      // width={carouselItems.length < 5 ? "70%" : "90%"}
+
+      // maxWidth={1200}
+      width="100%"
       spacing={4}
       height={["150px", "240px"]}
       mx={30}
