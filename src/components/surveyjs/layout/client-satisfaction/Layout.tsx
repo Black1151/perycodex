@@ -22,6 +22,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DoneIcon from "@mui/icons-material/Done";
 import PublishIcon from "@mui/icons-material/Publish";
 import PerygonCard from "@/components/layout/PerygonCard";
+import PerygonPageContainer from "@/components/layout/PerygonPageContainer";
 
 const MotionButton = motion(Button);
 
@@ -90,6 +91,7 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
       setToDisplayMode={switchToDisplayMode}
       setToEditMode={switchToEditMode}
     >
+      {/* <PerygonPageContainer> */}
       <Flex
         direction="row"
         justify={"flex-start"}
@@ -151,6 +153,7 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
           py={[2, 3]}
           boxShadow="md"
           minWidth={["full", "45%"]}
+          height="100%"
         >
           <TopNavigation
             pages={pageListOptions}
@@ -161,7 +164,10 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
             prevPage={prevPage}
             nextPage={nextPage}
           />
-          <Survey model={model} />
+          <Flex flex={1} height="65vh" width="100%">
+            <Survey model={model} />
+          </Flex>
+
           <Flex justify={"space-between"}>
             <Flex gap={2}>
               {!isFirstPage && (
@@ -246,6 +252,7 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
           </Flex>
         </Box>
       </Flex>
+      {/* </PerygonPageContainer> */}
     </SurveyNavigationGuard>
   );
 };

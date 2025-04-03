@@ -214,7 +214,7 @@ export default function WorkflowLayout({
           } catch (error) {
             console.error(
               `Error parsing value for ${variable.fieldName}:`,
-              error,
+              error
             );
             parsedValue = variable.fieldValue;
           }
@@ -296,7 +296,7 @@ export default function WorkflowLayout({
             }
 
             const hasAccess = currentStage.userAccessGroupNames.some(
-              (groupName) => user?.groupNames?.includes(groupName) ?? false,
+              (groupName) => user?.groupNames?.includes(groupName) ?? false
             );
 
             if (!hasAccess) {
@@ -358,7 +358,7 @@ export default function WorkflowLayout({
       setCurrentStage(
         orderedStages.find((stage) => stage.stageStatus === "Next") ||
           orderedStages.find((stage) => stage.stageStatus === "In Progress") ||
-          orderedStages[0],
+          orderedStages[0]
       );
     }
   }, [stages, user]);
