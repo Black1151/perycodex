@@ -91,7 +91,6 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
       setToDisplayMode={switchToDisplayMode}
       setToEditMode={switchToEditMode}
     >
-      {/* <PerygonPageContainer> */}
       <Flex
         direction="row"
         justify={"flex-start"}
@@ -100,6 +99,7 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
         w={"full"}
         gap={2}
         mt={2}
+        maxHeight={["100%", null, "80vh"]}
       >
         <Box flex={1} height={["10svh", "10svh", "100svh"]}>
           <Flex
@@ -164,7 +164,7 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
             prevPage={prevPage}
             nextPage={nextPage}
           />
-          <Flex flex={1} height="65vh" width="100%">
+          <Flex flex={1} height={["100%", null, "65vh"]} width="100%">
             <Survey model={model} />
           </Flex>
 
@@ -252,7 +252,6 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
           </Flex>
         </Box>
       </Flex>
-      {/* </PerygonPageContainer> */}
     </SurveyNavigationGuard>
   );
 };
