@@ -9,7 +9,10 @@ import { checkEqual } from "./checkEqual";
 import { getObjectFieldFromDropdown } from "./getObjectFieldFromDropdown";
 import { validateJson } from "./validateJson";
 
-export const registerSurveyFunctionsWithoutSurvey = async () => {
+// !!!!!!! IMPORTANT
+// ANY ASYNC FUNCTIONS MUST NOT. I REPEAT NOT!!! BE ARROW FUNCTIONS. THEY MAKE USE OF "THIS" WHICH NEEDS NORMAL FUNCTION SYNTAX
+
+export async function registerSurveyFunctionsWithoutSurvey() {
   FunctionFactory.Instance.register(
     "fetchPostcodeData",
     fetchPostcodeData,
@@ -23,9 +26,9 @@ export const registerSurveyFunctionsWithoutSurvey = async () => {
   FunctionFactory.Instance.register("perygonArraySum", perygonArraySum);
   FunctionFactory.Instance.register("validateJson", validateJson);
   FunctionFactory.Instance.register("decodeJson", decodeJson);
-};
+}
 
-export const registerSurveyFunctionsWithSurvey = async (survey) => {
+export async function registerSurveyFunctionsWithSurvey(survey) {
   FunctionFactory.Instance.register(
     "getObjectFieldFromDropdown",
     getObjectFieldFromDropdown(survey),
@@ -33,4 +36,4 @@ export const registerSurveyFunctionsWithSurvey = async (survey) => {
   FunctionFactory.Instance.register("getObjectField", getObjectField(survey));
   FunctionFactory.Instance.register("setImageField", setImageField(survey));
   FunctionFactory.Instance.register("checkEqual", checkEqual(survey));
-};
+}

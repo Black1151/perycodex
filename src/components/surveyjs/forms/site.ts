@@ -115,7 +115,7 @@ export const siteJson = {
           },
         },
         {
-          type: "text",
+          type: "expression",
           name: "latitude",
           title: "Latitude",
           setValueExpression: "fetchPostcodeData({postcode},'result.latitude')",
@@ -125,7 +125,7 @@ export const siteJson = {
           placeholder: "Latitude",
         },
         {
-          type: "text",
+          type: "expression",
           name: "longitude",
           title: "Longitude",
           setValueExpression:

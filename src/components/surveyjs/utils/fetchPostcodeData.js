@@ -4,7 +4,7 @@
  * @param {Array} props - Array containing [postcode, resultField].
  * @returns {Promise<any>} - Returns a promise that resolves with the field's value or an error message.
  */
-export const fetchPostcodeData = async (props) => {
+export async function fetchPostcodeData(props) {
   const [postcode, resultField] = props;
 
   // Check if both postcode and resultField are provided
@@ -38,10 +38,10 @@ export const fetchPostcodeData = async (props) => {
     }
 
     // Return the field's value
-    return this.returnResult(result);
+    return this.returnResult(String(result));
   } catch (error) {
     // Handle any errors that occurred during the fetch
     console.error("Error fetching postcode data:", error.message);
     return this.returnResult(0.0);
   }
-};
+}
