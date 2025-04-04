@@ -28,9 +28,9 @@ type Props = {
 };
 
 const WorkflowEngineDebugger = ({ data }: Props) => {
-  if (process.env.NODE_ENV !== "development") return null;
-
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  if (process.env.NODE_ENV !== "development") return null;
 
   return (
     <>
