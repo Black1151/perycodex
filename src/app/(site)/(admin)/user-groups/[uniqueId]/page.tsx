@@ -1,10 +1,11 @@
 import { redirect } from "next/navigation";
 import { UserGroupDetailsBanner } from "@/components/AdminDetailsBanners/UserGroupDetailsBanner";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import apiClient from "@/lib/apiClient";
 import { checkUserRole, getUser } from "@/lib/dal";
 import UserGroupsTabs from "@/app/(site)/(admin)/user-groups/[uniqueId]/UserGroupTabs";
 import { userGroupJson } from "@/components/surveyjs/forms/userGroup";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 interface UserInGroup {
   id: number;
@@ -85,15 +86,26 @@ export default async function UserGroupsDetailPage({
     return (
       <>
         <UserGroupDetailsBanner userGroup={userGroupData} />
-        <SurveyComponent
-          surveyJson={userGroupJson}
+        <AdminFormWrapper
+          formJson={userGroupJson}
+          data={userGroupData}
+          layoutConfig={{
+            layoutKey: "default",
+            layoutProps: {},
+          }}
+          globalVariables={[]}
+          stylingConfig={{
+            sjsFilePath: "admin",
+            cssFilePath: "admin",
+          }}
+          jsImport={""}
+          excludeKeys={[]}
           endpoint={`/userGroup/${params.uniqueId}`}
-          isNew={false}
-          layout={"default"}
-          dataset={userGroupData}
-          sjsPath={"admin"}
-          cssPath={"admin"}
+          formSuccessMessage={null}
           reloadPageOnSuccess={true}
+          redirectUrl={null}
+          isNew={false}
+          isAllowedToEdit={true}
         />
       </>
     );

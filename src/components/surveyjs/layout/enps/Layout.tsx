@@ -1,36 +1,22 @@
 import React from "react";
 import { Survey } from "survey-react-ui";
 import { Button, Flex, Heading, Image, Text } from "@chakra-ui/react";
-import useSurveyNavigation from "@/components/surveyjs/useSurveyNavigation";
-import { eNPSLayoutProps } from "@/types/surveyJs";
+import { eNPSLayoutProps } from "@/types/form";
 import SurveyNavigationGuard from "@/components/surveyjs/SurveyNavigationGuard";
 import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
 import { useUser } from "@/providers/UserProvider";
 
-const ENPSLayout: React.FC<eNPSLayoutProps> = ({ model, dataset, canEdit }) => {
-  const {
-    currentPage,
-    setCurrentPage,
-    nextPage,
-    prevPage,
-    jumpToPage,
-    submitSurvey,
-    saveSurvey,
-    switchToDisplayMode,
-    switchToEditMode,
-    pageListOptions,
-    isFirstPage,
-    isLastPage,
-    isEditing,
-  } = useSurveyNavigation(model, dataset);
-
+const ENPSLayout: React.FC<eNPSLayoutProps> = ({
+  surveyJSModel,
+  formNavigation,
+}) => {
   const { user } = useUser();
 
   return (
     <SurveyNavigationGuard
-      isEditing={isEditing}
-      setToDisplayMode={switchToDisplayMode}
-      setToEditMode={switchToEditMode}
+      isEditing={formNavigation.isEditMode}
+      setToDisplayMode={formNavigation.switchToDisplayMode}
+      setToEditMode={formNavigation.switchToEditMode}
     >
       <Flex
         direction="column"
@@ -39,7 +25,6 @@ const ENPSLayout: React.FC<eNPSLayoutProps> = ({ model, dataset, canEdit }) => {
         height={"full"}
         gap={2}
       >
-        {/*TODO: this could be tool logo instead of hard coded*/}
         <Image
           src="/images/eNPS_White-on-pink_800x800.png"
           maxW="150px"
@@ -77,9 +62,9 @@ const ENPSLayout: React.FC<eNPSLayoutProps> = ({ model, dataset, canEdit }) => {
           {user?.customerName ? user.customerName : "our company"} as a place to
           work?
         </Heading>
-        <Survey model={model} />
+        <Survey model={surveyJSModel} />
         {/* Submit Button */}
-        {isEditing && (
+        {formNavigation.isEditMode && (
           <Button
             px={8}
             py={4}
@@ -96,7 +81,7 @@ const ENPSLayout: React.FC<eNPSLayoutProps> = ({ model, dataset, canEdit }) => {
               boxShadow: "lg",
             }}
             borderRadius="full"
-            onClick={submitSurvey}
+            onClick={formNavigation.submitSurvey}
           >
             Submit
           </Button>

@@ -6,7 +6,7 @@
  * @returns {number} The transformed data or an empty array in case of an error.
  * @param params
  */
-export function perygonArraySum(params) {
+export const perygonArraySum = (params) => {
   const jsonArray = params[0];
   const key = params[1];
 
@@ -29,4 +29,4 @@ export function perygonArraySum(params) {
     console.warn("perygonArraySum failed: ", error);
     return 0;
   }
-}
+};

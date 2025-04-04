@@ -1,19 +1,22 @@
 import { redirect } from "next/navigation";
 import { userTeamJson } from "@/components/surveyjs/forms/userTeam";
 import { UserTeamDetailsBanner } from "@/components/AdminDetailsBanners/UserTeamDetailsBanner";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import apiClient from "@/lib/apiClient";
-import { checkUserRole } from "@/lib/dal";
+import { checkUserRole, getUser } from "@/lib/dal";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import { userTeamMembersListFields } from "@/components/agGrids/dataFields/userTeamMembersListFields";
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import React from "react";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
+import { checkUserRoleAccess } from "@/components/surveyjs/lib/utils";
 
 export default async function TeamsDetailPage({
   params,
 }: {
   params: { uniqueId: string };
 }) {
+  const user = await getUser();
   await checkUserRole(`/teams/${params.uniqueId}`);
 
   const [userTeamDetailsRes, userTeamMembersRes] = await Promise.all([
@@ -55,16 +58,26 @@ export default async function TeamsDetailPage({
         </TabList>
         <TabPanels>
           <TabPanel p={0}>
-            <SurveyComponent
-              surveyJson={userTeamJson}
-              layout={"default"}
+            <AdminFormWrapper
+              formJson={userTeamJson}
+              data={userTeamData}
+              layoutConfig={{
+                layoutKey: "default",
+                layoutProps: {},
+              }}
+              globalVariables={[]}
+              stylingConfig={{
+                sjsFilePath: "admin",
+                cssFilePath: "admin",
+              }}
+              jsImport={""}
+              excludeKeys={[]}
               endpoint={`/userTeam/${params.uniqueId}`}
-              isNew={false}
-              rolesCanEdit={["PA", "CA"]}
-              dataset={userTeamData}
-              sjsPath={"admin"}
-              cssPath={"admin"}
+              formSuccessMessage={null}
               reloadPageOnSuccess={true}
+              redirectUrl={null}
+              isNew={false}
+              isAllowedToEdit={checkUserRoleAccess(user.role, ["PA", "CA"])}
             />
           </TabPanel>
           <TabPanel p={0}>

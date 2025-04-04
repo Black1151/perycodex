@@ -1,15 +1,18 @@
 import { DashboardWorkflowDetailsBanner } from "@/components/AdminDetailsBanners/DashboardWorkflowBanner";
 import { dashboardWorkflowJson } from "@/components/surveyjs/forms/dashboardWorkflow";
 import { redirect } from "next/navigation";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
-import { checkUserRole } from "@/lib/dal";
+
+import { checkUserRole, getUser } from "@/lib/dal";
 import apiClient from "@/lib/apiClient";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
+import { checkUserRoleAccess } from "@/components/surveyjs/lib/utils";
 
 export default async function DashboardWorkflowDetailsPage({
   params,
 }: {
   params: { uniqueId: string };
 }) {
+  const user = await getUser();
   await checkUserRole(`/dashboard-workflows/${params.uniqueId}`);
 
   const res = await apiClient(
@@ -28,17 +31,26 @@ export default async function DashboardWorkflowDetailsPage({
       <DashboardWorkflowDetailsBanner
         dashboardWorkflow={dashboardWorkflowData}
       />
-      <SurveyComponent
-        surveyJson={dashboardWorkflowJson}
-        endpoint={`/dashboardWorkflow/${params.uniqueId}`}
-        isNew={false}
-        rolesCanEdit={["PA"]}
-        dataset={dashboardWorkflowData}
+      <AdminFormWrapper
+        formJson={dashboardWorkflowJson}
+        data={dashboardWorkflowData}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
         excludeKeys={["imageUrl"]}
-        layout={"default"}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        endpoint={`/dashboardWorkflow/${params.uniqueId}`}
+        formSuccessMessage={null}
         reloadPageOnSuccess={true}
+        redirectUrl={null}
+        isNew={false}
+        isAllowedToEdit={checkUserRoleAccess(user.role, ["PA"])}
       />
     </div>
   );

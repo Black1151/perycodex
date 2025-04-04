@@ -1,7 +1,8 @@
 import AdminHeader from "@/components/AdminHeader";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import { toolsJson } from "@/components/surveyjs/forms/tools";
 import { checkUserRole } from "@/lib/dal";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function ToolsCreatePage() {
   await checkUserRole("/tools/create");
@@ -9,14 +10,26 @@ export default async function ToolsCreatePage() {
   return (
     <>
       <AdminHeader headingText="Create Tool" />
-      <SurveyComponent
-        surveyJson={toolsJson}
+      <AdminFormWrapper
+        formJson={toolsJson}
+        data={null}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
+        excludeKeys={[]}
         endpoint={"/toolConfig"}
-        isNew={true}
-        layout={"default"}
+        formSuccessMessage={null}
+        reloadPageOnSuccess={false}
         redirectUrl={"/tools"}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        isNew={true}
+        isAllowedToEdit={true}
       />
     </>
   );

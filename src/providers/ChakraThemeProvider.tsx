@@ -1,6 +1,6 @@
 // ThemeProvider.tsx
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { themeRegistry, ThemeName } from "@/theme/themes/themeRegistry";
 

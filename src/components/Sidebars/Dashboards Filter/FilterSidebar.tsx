@@ -17,7 +17,6 @@ import { useFetchClient } from "@/hooks/useFetchClient";
 import { Clear, FilterAlt } from "@mui/icons-material";
 import DateFilter from "@/components/Sidebars/Dashboards Filter/DateFilterComponent";
 import { format, parseISO } from "date-fns";
-import { values } from "lodash";
 import { DrawerStateOptions } from "@/components/Sidebars/useDrawerState";
 
 interface FilterSidebarProps {
@@ -72,7 +71,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   };
   const onToggle = () => {
     setDrawerState((curr) =>
-      curr === "half-open" ? "fully-open" : "half-open"
+      curr === "half-open" ? "fully-open" : "half-open",
     );
   };
   const onClose = () => {
@@ -99,7 +98,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
       try {
         const response = await fetchClient<SiteResponse>(
           "/api/site/allBy?selectColumns=id,siteName",
-          { method: "GET", redirectOnError: false }
+          { method: "GET", redirectOnError: false },
         );
         if (response && response.resource) setSites(response.resource);
       } catch (error) {
@@ -114,7 +113,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
       try {
         const response = await fetchClient<DepartmentResponse>(
           "/api/userTeam/allBy?selectColumns=id,name&parentTeamId=null",
-          { method: "GET", redirectOnError: false }
+          { method: "GET", redirectOnError: false },
         );
         if (response && response.resource) setDepartments(response.resource);
       } catch (error) {
@@ -127,7 +126,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
     setSelectedSites((prev) =>
       prev.includes(siteId)
         ? prev.filter((id) => id !== siteId)
-        : [...prev, siteId]
+        : [...prev, siteId],
     );
   };
 
@@ -135,7 +134,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
     setSelectedDepartments((prev) =>
       prev.includes(deptId)
         ? prev.filter((id) => id !== deptId)
-        : [...prev, deptId]
+        : [...prev, deptId],
     );
   };
 

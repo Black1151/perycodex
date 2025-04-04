@@ -20,7 +20,7 @@ import OutlinedFlagOutlinedIcon from "@mui/icons-material/OutlinedFlagOutlined";
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import { useUser } from "@/providers/UserProvider";
 import { DrawerStateOptions } from "@/components/Sidebars/useDrawerState";
-import { SurveyLayoutType } from "@/types/surveyJs";
+import { LayoutKeys } from "@/types/form";
 import Bottombar from "@/components/Bottombar/Bottombar";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import WorkflowCompletionBar from "@/components/Sidebars/WorkflowSidebar/WorkflowCompletionBar";
@@ -57,7 +57,7 @@ export interface WorkflowStage {
   anonSubmission: boolean;
   headerLogo?: string;
   headerText?: string;
-  layout: SurveyLayoutType | null;
+  layout: LayoutKeys | null;
   bpInstId: number;
   bpInstBpId: number;
   bpInstCustomer: number;

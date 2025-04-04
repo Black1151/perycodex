@@ -1,9 +1,10 @@
 import apiClient from "@/lib/apiClient";
 import { redirect } from "next/navigation";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import { EmailTemplateDetailsBanner } from "@/components/AdminDetailsBanners/EmailTemplateDetailsBanner";
 import { emailTemplateJson } from "@/components/surveyjs/forms/emailTemplate";
 import { checkUserRole } from "@/lib/dal";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function EmailTemplatesDetailPage({
   params,
@@ -24,15 +25,26 @@ export default async function EmailTemplatesDetailPage({
   return (
     <>
       <EmailTemplateDetailsBanner emailTemplate={emailTemplateData} />
-      <SurveyComponent
-        surveyJson={emailTemplateJson}
+      <AdminFormWrapper
+        formJson={emailTemplateJson}
+        data={emailTemplateData}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
+        excludeKeys={[]}
         endpoint={`/emailTemplate/${params.uniqueId}`}
-        isNew={false}
-        dataset={emailTemplateData}
-        layout={"default"}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        formSuccessMessage={null}
         reloadPageOnSuccess={true}
+        redirectUrl={null}
+        isNew={false}
+        isAllowedToEdit={true}
       />
     </>
   );

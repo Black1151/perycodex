@@ -8,9 +8,10 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import { inviteUserJson } from "@/components/surveyjs/forms/inviteUser";
 import React from "react";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 interface InviteNewUserModalForPAProps {
   isOpen: boolean; // Controlled by the parent
@@ -41,21 +42,31 @@ const InviteNewUserModalForPA = ({
           </Flex>
         </ModalHeader>
         <ModalBody>
-          <SurveyComponent
-            surveyJson={inviteUserJson}
-            endpoint={"/registerByInvite"}
-            isNew={true}
+          <AdminFormWrapper
+            formJson={inviteUserJson}
+            data={null}
+            layoutConfig={{
+              layoutKey: "default",
+              layoutProps: {
+                showTopNavigation: false,
+                showBottomNavigation: true,
+              },
+            }}
+            globalVariables={[]}
+            stylingConfig={{
+              sjsFilePath: "admin",
+              cssFilePath: "admin",
+            }}
+            jsImport={""}
             excludeKeys={["imageUrl"]}
-            layout={"default"}
-            sjsPath={"admin"}
-            cssPath={"admin"}
+            endpoint={"/registerByInvite"}
+            formSuccessMessage={null}
+            reloadPageOnSuccess={true}
+            redirectUrl={null}
+            isNew={true}
+            isAllowedToEdit={true}
             onSurveySuccess={handleSurveySuccess}
             onSurveyFailure={handleSurveyFailure}
-            layoutOptions={{
-              showTopNavigation: false,
-              showBottomNavigation: true,
-            }}
-            reloadPageOnSuccess={true}
           />
         </ModalBody>
       </ModalContent>

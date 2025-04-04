@@ -8,9 +8,10 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import React from "react";
 import { duplicateCustomerEmailSchedule } from "@/components/surveyjs/forms/duplicateCustomerEmailSchedule";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 interface AssignScheduleProps {
   isOpen: boolean; // Controlled by the parent
@@ -44,21 +45,31 @@ const AssignSchedule = ({ isOpen, onClose, id }: AssignScheduleProps) => {
           </Flex>
         </ModalHeader>
         <ModalBody>
-          <SurveyComponent
-            surveyJson={duplicateCustomerEmailSchedule}
+          <AdminFormWrapper
+            formJson={duplicateCustomerEmailSchedule}
+            data={data}
+            layoutConfig={{
+              layoutKey: "default",
+              layoutProps: {
+                showTopNavigation: false,
+                showBottomNavigation: true,
+              },
+            }}
+            globalVariables={[]}
+            stylingConfig={{
+              sjsFilePath: "admin",
+              cssFilePath: "admin",
+            }}
+            jsImport={""}
+            excludeKeys={[]}
             endpoint={"/createCustomerEmailSchedule"}
+            formSuccessMessage={null}
+            reloadPageOnSuccess={true}
+            redirectUrl={null}
             isNew={true}
-            dataset={data}
-            layout={"default"}
-            sjsPath={"admin"}
-            cssPath={"admin"}
+            isAllowedToEdit={true}
             onSurveySuccess={handleSurveySuccess}
             onSurveyFailure={handleSurveyFailure}
-            layoutOptions={{
-              showTopNavigation: false,
-              showBottomNavigation: true,
-            }}
-            reloadPageOnSuccess={true}
           />
         </ModalBody>
       </ModalContent>
