@@ -21,6 +21,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DoneIcon from "@mui/icons-material/Done";
 import PublishIcon from "@mui/icons-material/Publish";
 import PerygonCard from "@/components/layout/PerygonCard";
+import PerygonPageContainer from "@/components/layout/PerygonPageContainer";
 
 const MotionButton = motion(Button);
 
@@ -81,6 +82,7 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
         w={"full"}
         gap={2}
         mt={2}
+        maxHeight={["100%", null, "80vh"]}
       >
         <Box flex={1} height={["10svh", "10svh", "100svh"]}>
           <Flex
@@ -134,9 +136,13 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
           py={[2, 3]}
           boxShadow="md"
           minWidth={["full", "45%"]}
+          height="100%"
         >
           <TopNavigation {...formNavigation} />
-          <Survey model={surveyJSModel} />
+          <Flex flex={1} height={["100%", null, "65vh"]} width="100%">
+            <Survey model={surveyJSModel} />
+          </Flex>
+
           <Flex justify={"space-between"}>
             <Flex gap={2}>
               {!formNavigation.isFirstPage && (
