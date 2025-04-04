@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { Box, Button, Center, keyframes, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Center, Text, VStack } from "@chakra-ui/react";
+import { keyframes } from "@emotion/react";
 import { SpringScale } from "@/components/animations/SpringScale";
 import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
 import Link from "next/link";
