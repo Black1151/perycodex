@@ -6,8 +6,8 @@ This is a dumb renderer, its only job is to handle layout selection and initiali
 import React, { useEffect, useState } from "react";
 
 // SurveyJS
-// import "survey-core/survey-core.min.css";
-import "survey-core/defaultV2.css";
+import "survey-core/survey-core.min.css";
+// import "survey-core/defaultV2.css";
 
 // Form Layout Types
 import DefaultLayout from "@/components/surveyjs/layout/default/Layout";

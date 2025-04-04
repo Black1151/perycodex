@@ -4,8 +4,8 @@
 import React, { useEffect, useState } from "react";
 
 // Survey JS
-
-import "survey-core/defaultV2.css";
+import "survey-core/survey-core.min.css";
+// import "survey-core/defaultV2.css";
 import { Model } from "survey-core";
 
 // Admin Form
