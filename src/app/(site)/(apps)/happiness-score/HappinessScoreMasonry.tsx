@@ -1,7 +1,6 @@
 import { ScaleClickable } from "@/components/animations/ScaleClickable";
 import { SpringScale } from "@/components/animations/SpringScale";
 import { StatBox } from "@/components/Masonry/StatsMasonry/StatBox";
-import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 
 import { Box, GridItem, SimpleGrid, useTheme, VStack } from "@chakra-ui/react";
 import React from "react";

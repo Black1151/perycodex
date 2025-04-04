@@ -1,8 +1,9 @@
 import { userJson } from "@/components/surveyjs/forms/user";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import AdminHeader from "@/components/AdminHeader";
 import { checkUserRole, getUser } from "@/lib/dal";
 import { redirect } from "next/navigation";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 interface SearchParams {
   userType?: string;
@@ -45,16 +46,28 @@ export default async function UsersCreatePage({
   return (
     <>
       <AdminHeader headingText={headerTitle} />
-      <SurveyComponent
-        surveyJson={userJson}
-        endpoint={"/user"}
-        isNew={true}
-        layout={"default"}
+      <AdminFormWrapper
+        formJson={userJson}
+        data={null}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={surveyVariables}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
         excludeKeys={["imageUrl"]}
-        includeVariables={surveyVariables}
-        redirectUrl={"/users"}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        endpoint={"/user"}
+        formSuccessMessage={null}
+        reloadPageOnSuccess={false}
+        redirectUrl={
+          user.role === "PA" ? "/users" : `/users?userType=${userTypeParam}`
+        }
+        isNew={true}
+        isAllowedToEdit={true}
       />
     </>
   );

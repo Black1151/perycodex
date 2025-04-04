@@ -7,7 +7,7 @@
  * @returns {Promise<*>} The transformed data or an empty array in case of an error.
  * @param params
  */
-export async function perygonApiRequest(params) {
+export const perygonApiRequest = async (params) => {
   const endpoint = params[0];
   const query = params[1];
   const mappings = params[2];
@@ -36,7 +36,7 @@ export async function perygonApiRequest(params) {
   } catch (error) {
     return []; // Return an empty array in case of error
   }
-}
+};
 
 /**
  * Applies key mappings to each object in the data array.

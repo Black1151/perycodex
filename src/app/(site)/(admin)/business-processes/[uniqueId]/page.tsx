@@ -1,9 +1,10 @@
 import apiClient from "@/lib/apiClient";
 import { redirect } from "next/navigation";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import { businessProcessJson } from "@/components/surveyjs/forms/businessProcess";
 import { BusinessProcessDetailsBanner } from "@/components/AdminDetailsBanners/BusinessProcessDetailsBanner";
 import { checkUserRole } from "@/lib/dal";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function BusinessProcessesDetailPage({
   params,
@@ -24,15 +25,26 @@ export default async function BusinessProcessesDetailPage({
   return (
     <>
       <BusinessProcessDetailsBanner businessProcess={businessProcessData} />
-      <SurveyComponent
-        surveyJson={businessProcessJson}
+      <AdminFormWrapper
+        formJson={businessProcessJson}
+        data={businessProcessData}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
+        excludeKeys={[]}
         endpoint={`/businessProcess/${params.uniqueId}`}
-        isNew={false}
-        dataset={businessProcessData}
-        layout={"default"}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        formSuccessMessage={null}
         reloadPageOnSuccess={true}
+        redirectUrl={null}
+        isNew={false}
+        isAllowedToEdit={true}
       />
     </>
   );

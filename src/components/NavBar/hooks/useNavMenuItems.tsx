@@ -1,4 +1,3 @@
-// hooks/useNavMenuItems.ts
 import { useRouter } from "next/navigation";
 import { MenuItemProps } from "@/components/NavBar/components/types";
 import {
@@ -15,12 +14,27 @@ import {
 const useNavMenuItems = (
   userRole: string,
   handleLogout: () => void,
-  openResetModal: () => void
+  openResetModal: () => void,
 ): MenuItemProps[] => {
   const router = useRouter();
 
   if (userRole === "EU") {
     return [
+      {
+        label: "Logout",
+        icon: <ExitToAppIcon />,
+        onClick: handleLogout,
+      },
+    ];
+  }
+
+  if (userRole === "PA") {
+    return [
+      {
+        label: "Admin",
+        icon: <SettingsIcon />,
+        onClick: () => router.push("/customers"),
+      },
       {
         label: "Logout",
         icon: <ExitToAppIcon />,
@@ -67,16 +81,7 @@ const useNavMenuItems = (
     },
   ];
 
-  if (userRole === "PA") {
-    return [
-      {
-        label: "Admin",
-        icon: <SettingsIcon />,
-        onClick: () => router.push("/customers"),
-      },
-      ...commonMenuItems,
-    ];
-  } else if (userRole === "CA") {
+  if (userRole === "CA") {
     return [
       {
         label: "Admin Tools",

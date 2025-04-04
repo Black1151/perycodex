@@ -8,12 +8,13 @@ import {
   useState,
 } from "react";
 import { useFetchClient } from "@/hooks/useFetchClient";
+import { Role } from "@/types/user";
 
 export interface UserContextProps {
   userId: number;
   userUniqueId: string;
   email: string;
-  role: string;
+  role: Role;
   firstName?: string;
   lastName?: string;
   fullName?: string;

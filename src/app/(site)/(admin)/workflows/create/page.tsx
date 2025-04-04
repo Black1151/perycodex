@@ -1,7 +1,8 @@
 import AdminHeader from "@/components/AdminHeader";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import { workflowJson } from "@/components/surveyjs/forms/workflows";
 import { checkUserRole } from "@/lib/dal";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function WorkflowsCreatePage() {
   await checkUserRole("/workflows/create");
@@ -9,14 +10,26 @@ export default async function WorkflowsCreatePage() {
   return (
     <>
       <AdminHeader headingText="Create Workflow" />
-      <SurveyComponent
-        surveyJson={workflowJson}
+      <AdminFormWrapper
+        formJson={workflowJson}
+        data={null}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
+        excludeKeys={[]}
         endpoint={"/workflow"}
-        isNew={true}
-        layout={"default"}
+        formSuccessMessage={null}
+        reloadPageOnSuccess={false}
         redirectUrl={"/workflows"}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        isNew={true}
+        isAllowedToEdit={true}
       />
     </>
   );

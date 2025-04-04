@@ -1,9 +1,10 @@
 import apiClient from "@/lib/apiClient";
 import { redirect } from "next/navigation";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import { TagDetailsBanner } from "@/components/AdminDetailsBanners/TagDetailsBanner";
 import { tagsJson } from "@/components/surveyjs/forms/tags";
 import { checkUserRole } from "@/lib/dal";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function TagsDetailPage({
   params,
@@ -24,15 +25,26 @@ export default async function TagsDetailPage({
   return (
     <>
       <TagDetailsBanner tag={tagData} />
-      <SurveyComponent
-        surveyJson={tagsJson}
+      <AdminFormWrapper
+        formJson={tagsJson}
+        data={tagData}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
+        excludeKeys={[]}
         endpoint={`/tag/${params.uniqueId}`}
-        isNew={false}
-        dataset={tagData}
-        layout={"default"}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        formSuccessMessage={null}
         reloadPageOnSuccess={true}
+        redirectUrl={null}
+        isNew={false}
+        isAllowedToEdit={true}
       />
     </>
   );

@@ -4,6 +4,7 @@ import WorkflowLayout from "@/app/(site)/(apps)/WorkflowLayout";
 import { verifySession } from "@/lib/dal";
 import { redirect } from "next/navigation";
 import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
+import NewWorkflowLayout from "@/app/(site)/(apps)/NewWorkflowLayout";
 
 // Define the structure of the API response
 interface ApiResponse {
@@ -32,7 +33,7 @@ export default async function ClientSatisfactionWorkflowPage({
   const stages = responseData.resource;
 
   return (
-    <WorkflowLayout
+    <NewWorkflowLayout
       stages={stages}
       layout={"client-satisfaction"}
       workflowInstanceId={workflowInstanceId}

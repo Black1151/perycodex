@@ -41,7 +41,6 @@ import {
   SiteBarGraphData,
   SpeechBubbleData,
 } from "./types";
-import apiClient from "@/lib/apiClient";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import StaffHappinessDetailsRenderer from "@/components/agGrids/CellRenderers/HappinessScore/StaffHappinessDetailsRenderer";
 
@@ -108,12 +107,12 @@ export default function ManagerDashboardInner({
           // successMessage: "Site data fetched successfully!",
           errorMessage: "Could not retrieve site data.",
           redirectOnError: false,
-        }
+        },
       );
       setBarModalLineGraphData(response?.data ?? []);
       return response;
     },
-    [fetchClient]
+    [fetchClient],
   );
 
   const fetchDeptHistory = useCallback(
@@ -124,12 +123,12 @@ export default function ManagerDashboardInner({
           method: "GET",
           errorMessage: "Could not retrieve department data.",
           redirectOnError: false,
-        }
+        },
       );
       setBarModalLineGraphData((response?.data as DataPoint[]) ?? []);
       return response;
     },
-    [fetchClient]
+    [fetchClient],
   );
 
   const handleUserClick = useCallback(
@@ -137,7 +136,7 @@ export default function ManagerDashboardInner({
       fetchHappinessScoreTwoMonthHistory(userId);
       setIsBarModalOpen(false);
     },
-    [fetchHappinessScoreTwoMonthHistory]
+    [fetchHappinessScoreTwoMonthHistory],
   );
 
   const departmentBarData = useMemo(
@@ -148,7 +147,7 @@ export default function ManagerDashboardInner({
         count: dept.count,
         deptId: dept.deptId,
       })),
-    [departmentsData]
+    [departmentsData],
   );
 
   const siteBarData = useMemo(
@@ -159,14 +158,14 @@ export default function ManagerDashboardInner({
         value: site.averageScore,
         count: site.count,
       })),
-    [sitesData]
+    [sitesData],
   );
 
   const handleDepartmentBarClick = useCallback(
     async (title: string) => {
       const dataPoint = departmentBarData.find((d) => d.title === title);
       const filteredPeople = peopleListData.filter(
-        (person) => person.department === title && person.score !== null
+        (person) => person.department === title && person.score !== null,
       );
 
       setBarModalTitle(`Department: ${title}`);
@@ -179,14 +178,14 @@ export default function ManagerDashboardInner({
         setIsBarModalOpen(true);
       }
     },
-    [peopleListData, departmentBarData, fetchDeptHistory]
+    [peopleListData, departmentBarData, fetchDeptHistory],
   );
 
   const handleSiteBarClick = useCallback(
     async (title: string) => {
       const dataPoint = siteBarData.find((d) => d.title === title);
       const filteredPeople = peopleListData.filter(
-        (person) => person.site === title && person.score !== null
+        (person) => person.site === title && person.score !== null,
       );
 
       setBarModalTitle(`Site: ${title}`);
@@ -199,14 +198,14 @@ export default function ManagerDashboardInner({
         setIsBarModalOpen(true);
       }
     },
-    [peopleListData, siteBarData, fetchSiteHistory]
+    [peopleListData, siteBarData, fetchSiteHistory],
   );
 
   const handleMasonryClick = useCallback(
     (category: string) => {
       if (category === "Did not participate") {
         const nonParticipants = peopleListData.filter(
-          (person) => person.score === null || person.score === undefined
+          (person) => person.score === null || person.score === undefined,
         );
         setBarModalTitle("Did Not Participate");
         setBarModalData(nonParticipants);
@@ -239,7 +238,7 @@ export default function ManagerDashboardInner({
         (person) =>
           person.score !== null &&
           person.score >= minScore &&
-          person.score <= maxScore
+          person.score <= maxScore,
       );
 
       setBarModalTitle(`Score Range: ${category}`);
@@ -249,7 +248,7 @@ export default function ManagerDashboardInner({
       setBarModalLineGraphData([]);
       setIsBarModalOpen(true);
     },
-    [peopleListData]
+    [peopleListData],
   );
 
   const columnDefs = useMemo<ColDef<Person>[]>(() => {
@@ -314,7 +313,7 @@ export default function ManagerDashboardInner({
 
   const submittedPeopleListData = useMemo(() => {
     return peopleListData.filter(
-      (person) => person.score !== null && person.score !== undefined
+      (person) => person.score !== null && person.score !== undefined,
     );
   }, [peopleListData]);
 

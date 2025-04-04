@@ -1,7 +1,8 @@
 import AdminHeader from "@/components/AdminHeader";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import { optionListGroupsJson } from "@/components/surveyjs/forms/optionListGroups";
 import { checkUserRole } from "@/lib/dal";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function OptionListGroupsCreatePage() {
   await checkUserRole("/option-lists/groups/create");
@@ -9,14 +10,26 @@ export default async function OptionListGroupsCreatePage() {
   return (
     <>
       <AdminHeader headingText="Create Option List Group" />
-      <SurveyComponent
-        surveyJson={optionListGroupsJson}
+      <AdminFormWrapper
+        formJson={optionListGroupsJson}
+        data={null}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
+        excludeKeys={[]}
         endpoint={"/optionListGroup"}
-        isNew={true}
-        layout={"default"}
+        formSuccessMessage={null}
+        reloadPageOnSuccess={false}
         redirectUrl={"/option-lists"}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        isNew={true}
+        isAllowedToEdit={true}
       />
     </>
   );

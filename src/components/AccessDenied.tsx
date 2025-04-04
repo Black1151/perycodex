@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import ErrorBox from "@/components/layout/ErrorBox";
-import { PerygonContainer } from "@/components/layout/PerygonContainer";
 import { Box } from "@chakra-ui/react";
 
 export default function AccessDenied() {

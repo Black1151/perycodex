@@ -1,7 +1,8 @@
 import { dashboardJson } from "@/components/surveyjs/forms/dashboard";
 import AdminHeader from "@/components/AdminHeader";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
-import { checkUserRole, getUser } from "@/lib/dal";
+
+import { checkUserRole } from "@/lib/dal";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function DashboardsCreatePage() {
   await checkUserRole(`/dashboards/create`);
@@ -11,14 +12,26 @@ export default async function DashboardsCreatePage() {
   return (
     <>
       <AdminHeader headingText={headerTitle} />
-      <SurveyComponent
-        surveyJson={dashboardJson}
+      <AdminFormWrapper
+        formJson={dashboardJson}
+        data={null}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
+        excludeKeys={[]}
         endpoint={"/dashboard"}
-        isNew={true}
-        layout={"default"}
+        formSuccessMessage={null}
+        reloadPageOnSuccess={false}
         redirectUrl={"/dashboards"}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        isNew={true}
+        isAllowedToEdit={true}
       />
     </>
   );
