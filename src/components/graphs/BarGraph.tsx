@@ -3,13 +3,13 @@ import {
   Box,
   Flex,
   HStack,
-  keyframes,
   Text,
   Tooltip,
   useMediaQuery,
   useTheme,
   VStack,
 } from "@chakra-ui/react";
+import { keyframes } from "@emotion/react";
 import { motion } from "framer-motion";
 import useColor from "@/hooks/useColor";
 import { perygonTheme } from "@/theme/themes/perygon/perygonTheme/perygonTheme";
