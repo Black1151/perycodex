@@ -7,6 +7,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
+import PerygonCard from "../layout/PerygonCard";
 
 interface PerygonModalProps {
   title: string;
@@ -25,26 +26,28 @@ export function PerygonModal({
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent borderRadius="md" bg="elementBG">
-        <ModalHeader
-          color="primaryTextColor"
-          width="100%"
-          borderTopRadius="md"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          {title}
-          <Box
-            onClick={onClose}
-            cursor="pointer"
+        <PerygonCard>
+          <ModalHeader
+            color="primaryTextColor"
+            width="100%"
+            borderTopRadius="md"
             display="flex"
             alignItems="center"
             justifyContent="center"
-          />
-        </ModalHeader>
-        <ModalBody textAlign="center" color="elementBG">
-          {body}
-        </ModalBody>{" "}
+          >
+            {title}
+            <Box
+              onClick={onClose}
+              cursor="pointer"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+            />
+          </ModalHeader>
+          <ModalBody textAlign="center" color="elementBG">
+            {body}
+          </ModalBody>{" "}
+        </PerygonCard>
       </ModalContent>
     </Modal>
   );
