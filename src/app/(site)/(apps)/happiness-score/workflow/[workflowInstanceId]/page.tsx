@@ -1,9 +1,9 @@
 import React from "react";
 import apiClient from "@/lib/apiClient";
-import WorkflowLayout from "../../../WorkflowLayout";
 import { verifySession } from "@/lib/dal";
 import { redirect } from "next/navigation";
 import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
+import NewWorkflowLayout from "@/app/(site)/(apps)/NewWorkflowLayout";
 
 // Define the structure of the API response
 interface ApiResponse {
@@ -33,7 +33,7 @@ export default async function HappinessScoreWorkflowPage({
 
   // Pass the fetched data to WorkflowLayout
   return (
-    <WorkflowLayout
+    <NewWorkflowLayout
       stages={stages}
       layout={"happiness"}
       workflowInstanceId={workflowInstanceId}

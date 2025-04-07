@@ -1,9 +1,9 @@
 import React from "react";
 import apiClient from "@/lib/apiClient";
-import WorkflowLayout from "@/app/(site)/(apps)/WorkflowLayout";
 import { verifySession } from "@/lib/dal";
 import { redirect } from "next/navigation";
 import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
+import NewWorkflowLayout from "@/app/(site)/(apps)/NewWorkflowLayout";
 
 interface ApiResponse {
   resource: WorkflowStage[];
@@ -32,7 +32,7 @@ export default async function ENPSWorkflowPage({
 
   // Pass the fetched data to WorkflowLayout
   return (
-    <WorkflowLayout
+    <NewWorkflowLayout
       stages={stages}
       layout={"enps"}
       workflowInstanceId={workflowInstanceId}

@@ -1,6 +1,5 @@
 import React from "react";
 import apiClient from "@/lib/apiClient";
-import WorkflowLayout from "@/app/(site)/(apps)/WorkflowLayout";
 import { verifySession } from "@/lib/dal";
 import { redirect } from "next/navigation";
 import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
