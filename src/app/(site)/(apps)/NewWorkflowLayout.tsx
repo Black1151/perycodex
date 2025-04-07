@@ -256,6 +256,14 @@ const NewWorkflowLayout = ({
     setLastSubmissionResponse(null);
   }, [lastSubmissionResponse]);
 
+  useEffect(() => {
+    return () => {
+      setCurrentStage(null);
+      setCurrentBusinessProcessInstanceId(null);
+      setCurrentWorkflowInstanceId(null);
+    };
+  }, []);
+
   const handleIsCompleteClose = () => {
     router.refresh();
     setIsCompleteModalOpen(false);
