@@ -220,7 +220,11 @@ const NewWorkflowLayout = ({
       // Code 4 - Workflow is now complete
       if (code === 4) {
         if (stages.length === 1) {
-          router.push(redirectUrl);
+          if (currentStage.alwaysShowStageComplete) {
+            setIsCompleteModalOpen(true);
+          } else {
+            router.push(redirectUrl);
+          }
         }
 
         if (stages.length > 1) {
@@ -321,7 +325,7 @@ const NewWorkflowLayout = ({
           user?.role === "EU" ? handleLogout() : router.push(redirectUrl)
         }
         onClose={() =>
-          user?.role === "EU" ? handleLogout() : setIsCompleteModalOpen(false)
+          user?.role === "EU" ? handleLogout() : router.refresh()
         }
         showButtons={{
           close: user?.role !== "EU",
