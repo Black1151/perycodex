@@ -80,8 +80,7 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
         "https://perygonblob.blob.core.windows.net/public/logo-happiness-score.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D",
       iconImage:
         "https://perygonblob.blob.core.windows.net/public/Perygon_Happiness_score_icon.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D",
-      thumbNailImage:
-        "https://perygonblob.blob.core.windows.net/public/Perygon_Happiness_score_icon.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D",
+      thumbNailImage: "/carousel/logos/happiness-score-logo-new.webp",
       backgroundImage: "/carousel/happiness-score-carousel-bg.webp",
       alt: "Happiness Score",
       name: "Happiness Score",
@@ -97,8 +96,7 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
         "https://perygonblob.blob.core.windows.net/public/eNPS-235x91_white_colour.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D",
       iconImage:
         "https://perygonblob.blob.core.windows.net/public/eNPS_White-on-pink_800x800.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D",
-      thumbNailImage:
-        "https://perygonblob.blob.core.windows.net/public/eNPS_White-on-pink_800x800.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D",
+      thumbNailImage: "/carousel/logos/enps-logo-new.webp",
       backgroundImage: "/carousel/enps-carousel-bg.webp",
       alt: "Employee NPS",
       name: "Employee NPS",
@@ -106,7 +104,7 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
         "Employee Net Promoter Score (eNPS) is a tool used by organizations to measure employee engagement and satisfaction. It’s an adaptation of the traditional Net Promoter Score (NPS) used to gauge customer loyalty but applied internally....",
       appUrl: "/enps",
       toolWfId: "2",
-      isUAGLocked: true,
+      isUAGLocked: false,
     },
     {
       toolId: "3",
@@ -114,10 +112,8 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
         "https://perygonblob.blob.core.windows.net/public/Client%20satisfaction235x92-8-v2.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D",
       iconImage:
         "https://perygonblob.blob.core.windows.net/public/Client-satisfaction-icon-green_800x800.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D",
-      thumbNailImage:
-        "https://perygonblob.blob.core.windows.net/public/Client-satisfaction-icon-green_800x800.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D",
-      backgroundImage:
-        "https://perygonblob.blob.core.windows.net/public/Client satisfactionDark-100.jpg?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D",
+      thumbNailImage: "/carousel/logos/client-satisfaction-logo-new.png",
+      backgroundImage: "/carousel/client-satisfaction-bg.webp",
       alt: "Client Satisfaction",
       name: "Client Satisfaction",
       description:
@@ -130,10 +126,8 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
       toolId: "4",
       logoImage:
         "https://perygonblob.blob.core.windows.net/public/Perygon_Business_Score_logo.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D",
-      iconImage:
-        "https://perygonblob.blob.core.windows.net/public/Perygon_Business_Score_icon.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D",
-      thumbNailImage:
-        "https://perygonblob.blob.core.windows.net/public/Perygon_Business_Score_icon.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D",
+      iconImage: "/carousel/logos/business-score-icon-new.png",
+      thumbNailImage: "/carousel/logos/business-score-logo-new.webp",
       backgroundImage: "/carousel/business-score-carousel-bg.webp",
       alt: "Business Score",
       name: "Business Score",
@@ -149,8 +143,7 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
         "https://perygonblob.blob.core.windows.net/public/Client%20satisfaction235x92-8-v2.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D",
       iconImage:
         "https://perygonblob.blob.core.windows.net/public/Client-satisfaction-icon-green_800x800.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D",
-      thumbNailImage:
-        "https://perygonblob.blob.core.windows.net/public/Client-satisfaction-icon-green_800x800.png?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D",
+      thumbNailImage: "/carousel/logos/client-satisfaction-logo-new.png",
       backgroundImage:
         "https://perygonblob.blob.core.windows.net/public/Client satisfactionDark-100.jpg?sp=r&st=2024-10-29T11:53:27Z&se=2030-11-01T19:53:27Z&sv=2022-11-02&sr=c&sig=6el1LfIDyAeUG4tDxdrAm9t%2FLl8tg0Mysfc9lrB1g5Q%3D",
       alt: "Client Satisfaction #2",

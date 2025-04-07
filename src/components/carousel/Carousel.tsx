@@ -64,8 +64,8 @@ const Carousel: React.FC<CarouselProps> = ({
 
       // maxWidth={1200}
       width="100%"
-      spacing={4}
-      height={["150px", "240px"]}
+      // spacing={10}
+      // height={["150px", "240px"]}
       mx={30}
       mb={[0, 10]}
       position="relative"
@@ -85,7 +85,7 @@ const Carousel: React.FC<CarouselProps> = ({
         side={["-30px", "-40px"]}
       />
 
-      <Box width="100%">
+      <VStack width="100%" gap={61}>
         <HStack
           spacing={4}
           justifyContent="space-between"
@@ -147,7 +147,7 @@ const Carousel: React.FC<CarouselProps> = ({
           currentIndex={currentIndex}
           onDotClick={(index) => debouncedSlide(() => updateIndex(index))}
         />
-      </Box>
+      </VStack>
     </VStack>
   );
 };

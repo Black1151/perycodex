@@ -14,7 +14,7 @@ const CarouselDots: React.FC<CarouselDotsProps> = ({
   onDotClick,
 }) => (
   <HStack
-    spacing={[2, 4]}
+    spacing={[2, 8]}
     justifyContent="center"
     alignItems="center"
     width="full"
