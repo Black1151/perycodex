@@ -24,9 +24,9 @@ export function PerygonModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent borderRadius="md">
+      <ModalContent borderRadius="md" bg="elementBG">
         <ModalHeader
-          color="black"
+          color="primaryTextColor"
           width="100%"
           borderTopRadius="md"
           display="flex"
@@ -40,9 +40,11 @@ export function PerygonModal({
             display="flex"
             alignItems="center"
             justifyContent="center"
-          ></Box>
+          />
         </ModalHeader>
-        <ModalBody textAlign="center">{body}</ModalBody>{" "}
+        <ModalBody textAlign="center" color="elementBG">
+          {body}
+        </ModalBody>{" "}
       </ModalContent>
     </Modal>
   );
