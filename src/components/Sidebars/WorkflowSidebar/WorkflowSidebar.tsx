@@ -71,6 +71,7 @@ export interface WorkflowStage {
   isGlobalVariableBlocking: boolean | null;
   allowAlwaysEdit: boolean;
   saveAllowed: boolean;
+  alwaysShowStageComplete: boolean;
 }
 
 export interface EnhancedWorkflowStage extends WorkflowStage {

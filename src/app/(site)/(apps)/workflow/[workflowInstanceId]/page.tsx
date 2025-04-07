@@ -1,14 +1,10 @@
 import React from "react";
-import apiClient from "@/lib/apiClient";
-import WorkflowLayout from "@/app/(site)/(apps)/WorkflowLayout";
+import NewWorkflowLayout from "@/app/(site)/(apps)/NewWorkflowLayout";
 import { verifySession } from "@/lib/dal";
 import { redirect } from "next/navigation";
-import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
+import { getWorkflowStages } from "@/utils/functions/workflow";
 
-// Define the structure of the API response
-interface ApiResponse {
-  resource: WorkflowStage[];
-}
+export const revalidate = 0;
 
 export default async function HappinessScoreWorkflowPage({
   params,
@@ -17,23 +13,16 @@ export default async function HappinessScoreWorkflowPage({
 }) {
   const session = await verifySession();
 
-  // If there's no session, redirect to login
-  if (!session) {
+  const workflowInstanceId = params.workflowInstanceId;
+
+  if (!session || !workflowInstanceId) {
     redirect("/login");
   }
 
-  const workflowInstanceId = params.workflowInstanceId || null;
+  const stages = await getWorkflowStages(workflowInstanceId);
 
-  // Fetching workflow stages data
-  const response = await apiClient(
-    `/getAllView?view=vwWorkflowStageInstancesStatus&wfInstId=${workflowInstanceId}`,
-  );
-  const responseData: ApiResponse = await response.json();
-  const stages = responseData.resource;
-
-  // Pass the fetched data to WorkflowLayout
   return (
-    <WorkflowLayout
+    <NewWorkflowLayout
       stages={stages}
       layout={"default"}
       workflowInstanceId={workflowInstanceId}

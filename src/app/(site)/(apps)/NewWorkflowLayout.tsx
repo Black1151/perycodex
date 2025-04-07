@@ -109,6 +109,7 @@ const NewWorkflowLayout = ({
     if (stages.length === 1) {
       setCurrentStage(stages[0]);
       setCurrentBusinessProcessInstanceId(String(stages[0].bpInstId));
+      setCurrentWorkflowInstanceId(String(stages[0].wfInstId));
     }
 
     if (stages.length > 1) {
@@ -207,6 +208,7 @@ const NewWorkflowLayout = ({
     if (!user || !lastSubmissionResponse || !currentStage) return;
 
     const code = lastSubmissionResponse?.data?.code;
+    const isSave = lastSubmissionResponse.isSave;
 
     if (user.role === "EU") {
       if (code === 4) {
@@ -220,7 +222,13 @@ const NewWorkflowLayout = ({
       // Code 4 - Workflow is now complete
       if (code === 4) {
         if (stages.length === 1) {
-          router.push(redirectUrl);
+          if (currentStage.alwaysShowStageComplete) {
+            router.refresh();
+            setIsCompleteModalOpen(true);
+          } else {
+            router.refresh();
+            router.push(redirectUrl);
+          }
         }
 
         if (stages.length > 1) {
@@ -231,7 +239,10 @@ const NewWorkflowLayout = ({
       // Code 3 - Business Process has been updated
       if (code === 3) {
         if (stages.length === 1) {
-          router.push(redirectUrl);
+          if (!isSave) {
+            router.refresh();
+            router.push(redirectUrl);
+          }
         }
 
         if (stages.length > 1) {
@@ -248,6 +259,19 @@ const NewWorkflowLayout = ({
 
     setLastSubmissionResponse(null);
   }, [lastSubmissionResponse]);
+
+  useEffect(() => {
+    return () => {
+      setCurrentStage(null);
+      setCurrentBusinessProcessInstanceId(null);
+      setCurrentWorkflowInstanceId(null);
+    };
+  }, []);
+
+  const handleIsCompleteClose = () => {
+    router.refresh();
+    setIsCompleteModalOpen(false);
+  };
 
   return (
     <>
@@ -321,7 +345,7 @@ const NewWorkflowLayout = ({
           user?.role === "EU" ? handleLogout() : router.push(redirectUrl)
         }
         onClose={() =>
-          user?.role === "EU" ? handleLogout() : setIsCompleteModalOpen(false)
+          user?.role === "EU" ? handleLogout() : handleIsCompleteClose()
         }
         showButtons={{
           close: user?.role !== "EU",
@@ -378,32 +402,30 @@ const NewWorkflowLayout = ({
         drawerState={"fully-open"}
       />
 
-      {process.env.NODE_ENV === "development" && (
-        <WorkflowEngineDebugger
-          data={[
-            { label: "User", value: user },
-            {
-              label: "Tool & Workflow",
-              value: {
-                toolId,
-                workflowId,
-                workflowInstanceId,
-                currentWorkflowInstanceId,
-                currentBusinessProcessInstanceId,
-              },
+      <WorkflowEngineDebugger
+        data={[
+          { label: "User", value: user },
+          {
+            label: "Tool & Workflow",
+            value: {
+              toolId,
+              workflowId,
+              workflowInstanceId,
+              currentWorkflowInstanceId,
+              currentBusinessProcessInstanceId,
             },
-            { label: "Current Stage", value: currentStage },
-            { label: "Form", value: formJson },
-            { label: "Form Data", value: data },
-            { label: "Form Variables", value: formVariables },
-            { label: "User Authorised", value: isAuthorisedToViewPage },
-            {
-              label: "Last Submission Response",
-              value: lastSubmissionResponse,
-            },
-          ]}
-        />
-      )}
+          },
+          { label: "Current Stage", value: currentStage },
+          { label: "Form", value: formJson },
+          { label: "Form Data", value: data },
+          { label: "Form Variables", value: formVariables },
+          { label: "User Authorised", value: isAuthorisedToViewPage },
+          {
+            label: "Last Submission Response",
+            value: lastSubmissionResponse,
+          },
+        ]}
+      />
     </>
   );
 };
