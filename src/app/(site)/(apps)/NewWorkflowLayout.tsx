@@ -398,32 +398,30 @@ const NewWorkflowLayout = ({
         drawerState={"fully-open"}
       />
 
-      {process.env.NODE_ENV === "development" && (
-        <WorkflowEngineDebugger
-          data={[
-            { label: "User", value: user },
-            {
-              label: "Tool & Workflow",
-              value: {
-                toolId,
-                workflowId,
-                workflowInstanceId,
-                currentWorkflowInstanceId,
-                currentBusinessProcessInstanceId,
-              },
+      <WorkflowEngineDebugger
+        data={[
+          { label: "User", value: user },
+          {
+            label: "Tool & Workflow",
+            value: {
+              toolId,
+              workflowId,
+              workflowInstanceId,
+              currentWorkflowInstanceId,
+              currentBusinessProcessInstanceId,
             },
-            { label: "Current Stage", value: currentStage },
-            { label: "Form", value: formJson },
-            { label: "Form Data", value: data },
-            { label: "Form Variables", value: formVariables },
-            { label: "User Authorised", value: isAuthorisedToViewPage },
-            {
-              label: "Last Submission Response",
-              value: lastSubmissionResponse,
-            },
-          ]}
-        />
-      )}
+          },
+          { label: "Current Stage", value: currentStage },
+          { label: "Form", value: formJson },
+          { label: "Form Data", value: data },
+          { label: "Form Variables", value: formVariables },
+          { label: "User Authorised", value: isAuthorisedToViewPage },
+          {
+            label: "Last Submission Response",
+            value: lastSubmissionResponse,
+          },
+        ]}
+      />
     </>
   );
 };
