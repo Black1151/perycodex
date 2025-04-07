@@ -1,6 +1,6 @@
 import React from "react";
 import apiClient from "@/lib/apiClient";
-import WorkflowLayout from "@/app/(site)/(apps)/WorkflowLayout";
+import NewWorkflowLayout from "@/app/(site)/(apps)/NewWorkflowLayout";
 import { verifySession } from "@/lib/dal";
 import { redirect } from "next/navigation";
 import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
@@ -31,7 +31,7 @@ export default async function ClientSatisfactionWorkflowPage({
   const stages = responseData.resource;
 
   return (
-    <WorkflowLayout
+    <NewWorkflowLayout
       stages={stages}
       layout={"tester"}
       workflowInstanceId={workflowInstanceId}
