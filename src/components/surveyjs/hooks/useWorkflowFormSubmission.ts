@@ -56,8 +56,6 @@ const useWorkflowFormSubmission = ({
         throw new Error(errorData.error || "Failed to submit data");
       }
 
-      formNavigation.switchToDisplayMode();
-
       const result = await response.json();
 
       if (onSubmissionResponse) {
@@ -83,9 +81,6 @@ const useWorkflowFormSubmission = ({
 
       surveyJSModel.data = filteredData;
 
-      surveyJSModel.clear(false, false);
-      surveyJSModel.render();
-
       if (isSaveMode) {
         formNavigation.switchToEditMode();
       }
@@ -105,10 +100,6 @@ const useWorkflowFormSubmission = ({
         isClosable: true,
         position: "bottom-right",
       });
-
-      surveyJSModel.data = filteredData;
-      surveyJSModel.clear(false, false);
-      surveyJSModel.render();
 
       formNavigation.switchToEditMode();
     }

@@ -43,10 +43,18 @@ const useInitialiseForm = ({
 
         if (cssFilePath) {
           const cssHref = `/cssPath/${cssFilePath}.css`;
-          linkElement = document.createElement("link");
-          linkElement.rel = "stylesheet";
-          linkElement.href = cssHref;
-          document.head.appendChild(linkElement);
+
+          // Check if the stylesheet is already included
+          const isAlreadyIncluded = Array.from(document.styleSheets).some(
+            (sheet) => sheet.href && sheet.href.includes(cssHref),
+          );
+
+          if (!isAlreadyIncluded) {
+            const linkElement = document.createElement("link");
+            linkElement.rel = "stylesheet";
+            linkElement.href = cssHref;
+            document.head.appendChild(linkElement);
+          }
         }
 
         initializeSurvey(surveyJSModel, user, globalVariables, data, isNew);

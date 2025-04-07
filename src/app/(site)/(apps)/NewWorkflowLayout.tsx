@@ -221,12 +221,11 @@ const NewWorkflowLayout = ({
     } else {
       // Code 4 - Workflow is now complete
       if (code === 4) {
+        router.refresh();
         if (stages.length === 1) {
           if (currentStage.alwaysShowStageComplete) {
-            router.refresh();
             setIsCompleteModalOpen(true);
           } else {
-            router.refresh();
             router.push(redirectUrl);
           }
         }
