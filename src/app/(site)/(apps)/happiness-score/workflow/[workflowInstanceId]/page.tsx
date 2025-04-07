@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
 import NewWorkflowLayout from "@/app/(site)/(apps)/NewWorkflowLayout";
 
+export const revalidate = 0;
+
 // Define the structure of the API response
 interface ApiResponse {
   resource: WorkflowStage[];
@@ -31,6 +33,7 @@ export default async function HappinessScoreWorkflowPage({
       cache: "no-store",
     },
   );
+
   const responseData: ApiResponse = await response.json();
   const stages = responseData.resource;
 

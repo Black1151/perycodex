@@ -109,6 +109,7 @@ const NewWorkflowLayout = ({
     if (stages.length === 1) {
       setCurrentStage(stages[0]);
       setCurrentBusinessProcessInstanceId(String(stages[0].bpInstId));
+      setCurrentWorkflowInstanceId(String(stages[0].wfInstId));
     }
 
     if (stages.length > 1) {

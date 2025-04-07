@@ -5,6 +5,8 @@ import { verifySession } from "@/lib/dal";
 import { redirect } from "next/navigation";
 import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
 
+export const revalidate = 0;
+
 interface ApiResponse {
   resource: WorkflowStage[];
 }
