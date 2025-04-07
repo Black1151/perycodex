@@ -207,6 +207,7 @@ const NewWorkflowLayout = ({
     if (!user || !lastSubmissionResponse || !currentStage) return;
 
     const code = lastSubmissionResponse?.data?.code;
+    const isSave = lastSubmissionResponse.isSave;
 
     if (user.role === "EU") {
       if (code === 4) {
@@ -235,7 +236,9 @@ const NewWorkflowLayout = ({
       // Code 3 - Business Process has been updated
       if (code === 3) {
         if (stages.length === 1) {
-          router.push(redirectUrl);
+          if (!isSave) {
+            router.push(redirectUrl);
+          }
         }
 
         if (stages.length > 1) {
@@ -252,6 +255,11 @@ const NewWorkflowLayout = ({
 
     setLastSubmissionResponse(null);
   }, [lastSubmissionResponse]);
+
+  const handleIsCompleteClose = () => {
+    router.refresh();
+    setIsCompleteModalOpen(false);
+  };
 
   return (
     <>
@@ -325,7 +333,7 @@ const NewWorkflowLayout = ({
           user?.role === "EU" ? handleLogout() : router.push(redirectUrl)
         }
         onClose={() =>
-          user?.role === "EU" ? handleLogout() : router.refresh()
+          user?.role === "EU" ? handleLogout() : handleIsCompleteClose()
         }
         showButtons={{
           close: user?.role !== "EU",

@@ -59,6 +59,7 @@ export interface WorkflowFormWrapperProps extends BaseFormComponentProps {
 export type SubmissionResponse = {
   success: boolean;
   message?: string;
+  isSave: boolean;
   data?: Record<string, any>;
 };
 

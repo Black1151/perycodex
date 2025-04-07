@@ -27,6 +27,7 @@ const useWorkflowFormSubmission = ({
         jsonResponse: filteredData,
         isComplete: !isSaveMode,
       };
+
       if (surveyJSModel.seduloState) {
         surveyJSModel.seduloState.isSave = false;
       }
@@ -63,6 +64,7 @@ const useWorkflowFormSubmission = ({
         onSubmissionResponse({
           success: result.success,
           message: result.message,
+          isSave: isSaveMode,
           data: {
             code: result.code, // -1, 0, 1, 2, 3, 4 (READS THE SUBMISSION RESPONSE)
             ...result.data, // in case you need other info too
@@ -72,7 +74,7 @@ const useWorkflowFormSubmission = ({
 
       toast({
         title: "Submitted successfully.",
-        description: formSuccessMessage,
+        description: isSaveMode ? "Saved Successfully" : formSuccessMessage,
         status: "success",
         duration: 5000,
         isClosable: true,
@@ -83,6 +85,10 @@ const useWorkflowFormSubmission = ({
 
       surveyJSModel.clear(false, false);
       surveyJSModel.render();
+
+      if (isSaveMode) {
+        formNavigation.switchToEditMode();
+      }
 
       if (redirectUrl) {
         setTimeout(() => router.push(redirectUrl), 1000);
