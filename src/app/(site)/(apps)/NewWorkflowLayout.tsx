@@ -223,8 +223,10 @@ const NewWorkflowLayout = ({
       if (code === 4) {
         if (stages.length === 1) {
           if (currentStage.alwaysShowStageComplete) {
+            router.refresh();
             setIsCompleteModalOpen(true);
           } else {
+            router.refresh();
             router.push(redirectUrl);
           }
         }
@@ -238,6 +240,7 @@ const NewWorkflowLayout = ({
       if (code === 3) {
         if (stages.length === 1) {
           if (!isSave) {
+            router.refresh();
             router.push(redirectUrl);
           }
         }
