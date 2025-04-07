@@ -1,3 +1,4 @@
+import { useUser } from "@/providers/UserProvider";
 import {
   Button,
   Modal,
@@ -30,7 +31,12 @@ type Props = {
 const WorkflowEngineDebugger = ({ data }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  if (process.env.NODE_ENV !== "development") return null;
+  const { showDeveloperBoard } = useUser();
+
+  const isDevelopment = process.env.NODE_ENV === "development";
+  const shouldRender = isDevelopment || (!isDevelopment && showDeveloperBoard);
+
+  if (!shouldRender) return null;
 
   return (
     <>
