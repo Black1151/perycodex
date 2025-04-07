@@ -27,7 +27,11 @@ export default async function HappinessScoreWorkflowPage({
   // Fetching workflow stages data
   const response = await apiClient(
     `/getAllView?view=vwWorkflowStageInstancesStatus&wfInstId=${workflowInstanceId}`,
+    {
+      cache: "no-store",
+    },
   );
+
   const responseData: ApiResponse = await response.json();
   const stages = responseData.resource;
 

@@ -24,6 +24,9 @@ export default async function ClientSatisfactionWorkflowPage({
 
   const response = await apiClient(
     `/getAllView?view=vwWorkflowStageInstancesStatus&wfInstId=${workflowInstanceId}`,
+    {
+      cache: "no-store",
+    },
   );
 
   const responseData: ApiResponse = await response.json();
