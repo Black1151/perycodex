@@ -508,7 +508,7 @@ const checkIsUserAuthorisedForCurrentStage = (
   // A CA should be able to click into everything regardless if it has been completed or next
   if (
     user &&
-    user.role === "CA" &&
+    ["CA", "CS", "CL"].includes(user.role) &&
     (currentStage.stageStatus === "Next" ||
       currentStage.stageStatus === "Complete")
   ) {
@@ -522,16 +522,6 @@ const checkIsUserAuthorisedForCurrentStage = (
 
   // Optional order of events
   const internalIsUserAuthorised = true;
-
-  // Check if the user is the creator or started the process
-  if (
-    formDataset.createdBy === user?.userId ||
-    formDataset.startedBy === user?.userId ||
-    formDataset.createdBy === 0 || // 0 may indicate public access
-    formDataset.startedBy === 0
-  ) {
-    return true;
-  }
 
   // Checking the logic around the Global Variables
   if (
@@ -561,6 +551,16 @@ const checkIsUserAuthorisedForCurrentStage = (
     if (!hasAccess) {
       return false;
     }
+  }
+
+  // Check if the user is the creator or started the process
+  if (
+    formDataset.createdBy === user?.userId ||
+    formDataset.startedBy === user?.userId ||
+    formDataset.createdBy === 0 || // 0 may indicate public access
+    formDataset.startedBy === 0
+  ) {
+    return true;
   }
 
   return true;
