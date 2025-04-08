@@ -21,4 +21,8 @@ export const scrollBarThemes = {
   "::-webkit-scrollbar-thumb:hover": {
     backgroundColor: "var(--chakra-colors-secondary)",
   },
+
+  ".sv-scroll__scrollbar": {
+    overflowY: "auto !important",
+  },
 };

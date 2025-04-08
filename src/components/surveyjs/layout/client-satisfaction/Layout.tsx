@@ -22,6 +22,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import PublishIcon from "@mui/icons-material/Publish";
 import PerygonCard from "@/components/layout/PerygonCard";
 import PerygonPageContainer from "@/components/layout/PerygonPageContainer";
+import BackButton from "@/components/BackButton";
 
 const MotionButton = motion(Button);
 
@@ -32,7 +33,7 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
   allowAlwaysEdit,
 }) => {
   const { user } = useUser();
-  const { currentStage } = useWorkflow();
+  const { currentStage, toolPath } = useWorkflow();
   const theme = useTheme();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
@@ -100,7 +101,18 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
               align={"center"}
               px={"20px"}
               gap={2}
+              w={"full"}
+              position={"relative"}
             >
+              <Flex
+                position={"absolute"}
+                left={0}
+                top={0}
+                justify={"center"}
+                align={"center"}
+              >
+                <BackButton prevRoute={toolPath ?? undefined} />
+              </Flex>
               <LetterFlyIn fontSize={isMobile ? 30 : 32}>
                 {currentStage?.bpName}
               </LetterFlyIn>

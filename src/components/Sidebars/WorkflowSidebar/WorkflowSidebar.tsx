@@ -167,6 +167,14 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
       }
     }
 
+    if (
+      user &&
+      ["CS", "CL"].includes(user.role) &&
+      (stage.stageStatus === "Next" || stage.stageStatus === "Complete")
+    ) {
+      return true;
+    }
+
     return canClick;
   };
   // Dictates if the user is allowed to click on the stage
@@ -277,6 +285,20 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
             boxSize={boxSize}
             color={"green.500"}
           />
+        );
+      }
+
+      if (stage.stageStatus === "Complete") {
+        if (user?.role === "EU" && stage.isExternalBusinessProcess) {
+          return (
+            <Icon as={CheckCircleIcon} boxSize={boxSize} color={"green.500"} />
+          );
+        }
+
+        return !userHasAccessGroupAccess(stage) ? (
+          <Icon as={LockIcon} boxSize={boxSize} color={"red.500"} />
+        ) : (
+          <Icon as={CheckCircleIcon} boxSize={boxSize} color={"green.500"} />
         );
       }
     }

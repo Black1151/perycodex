@@ -44,6 +44,7 @@ const NewWorkflowLayout = ({
   stages,
   layout,
   workflowInstanceId,
+  hasAccess,
 }: WorkflowLayoutProps) => {
   const { user } = useUser();
   const { fetchClient } = useFetchClient();
@@ -53,6 +54,7 @@ const NewWorkflowLayout = ({
     setToolId,
     workflowId,
     setWorkflowId,
+    toolPath,
     currentWorkflowInstanceId,
     setCurrentWorkflowInstanceId,
     currentBusinessProcessInstanceId,
@@ -221,12 +223,11 @@ const NewWorkflowLayout = ({
     } else {
       // Code 4 - Workflow is now complete
       if (code === 4) {
+        router.refresh();
         if (stages.length === 1) {
           if (currentStage.alwaysShowStageComplete) {
-            router.refresh();
             setIsCompleteModalOpen(true);
           } else {
-            router.refresh();
             router.push(redirectUrl);
           }
         }
@@ -281,7 +282,38 @@ const NewWorkflowLayout = ({
         </Flex>
       )}
 
-      {currentStage && isAuthorisedToViewPage && isReady && (
+      {!hasAccess && (
+        <SurveyModal
+          isOpen={!hasAccess}
+          onConfirm={() => router.push(toolPath ?? "/")}
+          onClose={() => router.push("/")}
+          showButtons={{
+            close: false,
+            confirm: true,
+          }}
+          title={
+            <Flex
+              justify={"space-between"}
+              align={"center"}
+              flexDirection={"column"}
+              gap={2}
+            >
+              <Icon as={LockIcon} boxSize={8} color={"red.500"} />
+              <Text textAlign={"center"}>Unauthorised Access</Text>
+            </Flex>
+          }
+          bodyContent={
+            <Flex align="center" flexDirection={"column"} gap={3}>
+              <Text>You are not authorized to view this Workflow.</Text>
+              <Text>You will be redirected after clicking the button.</Text>
+            </Flex>
+          }
+          confirmLabel={"OK"}
+          cancelLabel="Cancel"
+        />
+      )}
+
+      {currentStage && isAuthorisedToViewPage && isReady && hasAccess && (
         <WorkflowFormWrapper
           formJson={formJson}
           layoutConfig={{
@@ -509,7 +541,7 @@ const checkIsUserAuthorisedForCurrentStage = (
   // A CA should be able to click into everything regardless if it has been completed or next
   if (
     user &&
-    user.role === "CA" &&
+    ["CA"].includes(user.role) &&
     (currentStage.stageStatus === "Next" ||
       currentStage.stageStatus === "Complete")
   ) {
@@ -523,16 +555,6 @@ const checkIsUserAuthorisedForCurrentStage = (
 
   // Optional order of events
   const internalIsUserAuthorised = true;
-
-  // Check if the user is the creator or started the process
-  if (
-    formDataset.createdBy === user?.userId ||
-    formDataset.startedBy === user?.userId ||
-    formDataset.createdBy === 0 || // 0 may indicate public access
-    formDataset.startedBy === 0
-  ) {
-    return true;
-  }
 
   // Checking the logic around the Global Variables
   if (
@@ -562,6 +584,25 @@ const checkIsUserAuthorisedForCurrentStage = (
     if (!hasAccess) {
       return false;
     }
+  }
+
+  if (
+    user &&
+    ["CS", "CL"].includes(user.role) &&
+    (currentStage.stageStatus === "Next" ||
+      currentStage.stageStatus === "Complete")
+  ) {
+    return true;
+  }
+
+  // Check if the user is the creator or started the process
+  if (
+    formDataset.createdBy === user?.userId ||
+    formDataset.startedBy === user?.userId ||
+    formDataset.createdBy === 0 || // 0 may indicate public access
+    formDataset.startedBy === 0
+  ) {
+    return true;
   }
 
   return true;
