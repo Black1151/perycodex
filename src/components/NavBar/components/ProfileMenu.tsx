@@ -38,7 +38,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
   themeDropdownOptions,
 }) => {
   const theme = useTheme();
-  const { setThemeId } = useThemeContext();
+  const { setThemeId, themeId } = useThemeContext();
 
   const pulsatingIconSize = useBreakpointValue({ base: 20, md: 25 });
 
@@ -123,6 +123,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
 
         <MenuGroup title="Switch Theme" gap={0}>
           <Select
+            value={themeId}
             onChange={(e) => setThemeId(Number(e.target.value))}
             bg="elementBG"
             borderColor={theme.colors.primary}
