@@ -102,26 +102,20 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
               px={"20px"}
               gap={2}
               w={"full"}
+              position={"relative"}
             >
               <Flex
-                w={"full"}
+                position={"absolute"}
+                left={0}
+                top={0}
                 justify={"center"}
                 align={"center"}
-                position={"relative"}
               >
-                <Flex
-                  position={"absolute"}
-                  left={0}
-                  top={0}
-                  justify={"center"}
-                  align={"center"}
-                >
-                  <BackButton prevRoute={toolPath ?? undefined} />
-                </Flex>
-                <LetterFlyIn fontSize={isMobile ? 30 : 32}>
-                  {currentStage?.bpName}
-                </LetterFlyIn>
+                <BackButton prevRoute={toolPath ?? undefined} />
               </Flex>
+              <LetterFlyIn fontSize={isMobile ? 30 : 32}>
+                {currentStage?.bpName}
+              </LetterFlyIn>
               {currentStage?.headerLogo && (
                 <Image
                   maxW={["20%", "20%", "80%"]}

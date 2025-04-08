@@ -2,7 +2,10 @@ import React from "react";
 import { verifySession } from "@/lib/dal";
 import { redirect } from "next/navigation";
 import NewWorkflowLayout from "@/app/(site)/(apps)/NewWorkflowLayout";
-import { getWorkflowStages } from "@/utils/functions/workflow";
+import {
+  checkUserWorkflowAccess,
+  getWorkflowStages,
+} from "@/utils/functions/workflow";
 
 export default async function HappinessScoreWorkflowPage({
   params,
@@ -17,14 +20,15 @@ export default async function HappinessScoreWorkflowPage({
     redirect("/login");
   }
 
+  const hasAccess = await checkUserWorkflowAccess(workflowInstanceId);
   const stages = await getWorkflowStages(workflowInstanceId);
 
-  // Pass the fetched data to WorkflowLayout
   return (
     <NewWorkflowLayout
       stages={stages}
       layout={"happiness"}
       workflowInstanceId={workflowInstanceId}
+      hasAccess={hasAccess}
     />
   );
 }

@@ -44,6 +44,7 @@ const NewWorkflowLayout = ({
   stages,
   layout,
   workflowInstanceId,
+  hasAccess,
 }: WorkflowLayoutProps) => {
   const { user } = useUser();
   const { fetchClient } = useFetchClient();
@@ -53,6 +54,7 @@ const NewWorkflowLayout = ({
     setToolId,
     workflowId,
     setWorkflowId,
+    toolPath,
     currentWorkflowInstanceId,
     setCurrentWorkflowInstanceId,
     currentBusinessProcessInstanceId,
@@ -280,7 +282,38 @@ const NewWorkflowLayout = ({
         </Flex>
       )}
 
-      {currentStage && isAuthorisedToViewPage && isReady && (
+      {!hasAccess && (
+        <SurveyModal
+          isOpen={!hasAccess}
+          onConfirm={() => router.push(toolPath ?? "/")}
+          onClose={() => router.push("/")}
+          showButtons={{
+            close: false,
+            confirm: true,
+          }}
+          title={
+            <Flex
+              justify={"space-between"}
+              align={"center"}
+              flexDirection={"column"}
+              gap={2}
+            >
+              <Icon as={LockIcon} boxSize={8} color={"red.500"} />
+              <Text textAlign={"center"}>Unauthorised Access</Text>
+            </Flex>
+          }
+          bodyContent={
+            <Flex align="center" flexDirection={"column"} gap={3}>
+              <Text>You are not authorized to view this Workflow.</Text>
+              <Text>You will be redirected after clicking the button.</Text>
+            </Flex>
+          }
+          confirmLabel={"OK"}
+          cancelLabel="Cancel"
+        />
+      )}
+
+      {currentStage && isAuthorisedToViewPage && isReady && hasAccess && (
         <WorkflowFormWrapper
           formJson={formJson}
           layoutConfig={{
@@ -508,7 +541,7 @@ const checkIsUserAuthorisedForCurrentStage = (
   // A CA should be able to click into everything regardless if it has been completed or next
   if (
     user &&
-    ["CA", "CS", "CL"].includes(user.role) &&
+    ["CA"].includes(user.role) &&
     (currentStage.stageStatus === "Next" ||
       currentStage.stageStatus === "Complete")
   ) {
@@ -551,6 +584,15 @@ const checkIsUserAuthorisedForCurrentStage = (
     if (!hasAccess) {
       return false;
     }
+  }
+
+  if (
+    user &&
+    ["CS", "CL"].includes(user.role) &&
+    (currentStage.stageStatus === "Next" ||
+      currentStage.stageStatus === "Complete")
+  ) {
+    return true;
   }
 
   // Check if the user is the creator or started the process
