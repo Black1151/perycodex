@@ -40,11 +40,14 @@ const REDIRECT_PATHS: Record<string, string> = {
   tester: "/tester",
 };
 
+interface WorkflowResponse {
+  access: boolean;
+}
+
 const NewWorkflowLayout = ({
   stages,
   layout,
   workflowInstanceId,
-  hasAccess,
 }: WorkflowLayoutProps) => {
   const { user } = useUser();
   const { fetchClient } = useFetchClient();
@@ -66,6 +69,7 @@ const NewWorkflowLayout = ({
   const [isReady, setIsReady] = useState<boolean>(false);
   const [formJson, setFormJson] = useState<Form | null>(null);
   const [data, setData] = useState<any | null>(null);
+  const [userHasAccess, setUserHasAccess] = useState<boolean | null>(null);
   const [isAllowedToEdit, setIsAllowedToEdit] = useState<boolean>(true);
   const [formVariables, setFormVariables] = useState<
     | Array<{
@@ -98,6 +102,35 @@ const NewWorkflowLayout = ({
   };
 
   const redirectUrl = `${REDIRECT_PATHS[layout] || REDIRECT_PATHS.default}?wfId=${workflowId}&toolId=${toolId}`;
+
+  const userHasWorkflowAccess = async () => {
+    try {
+      const response: WorkflowResponse | null = await fetchClient(
+        "/api/workflows/workflowAccess",
+        {
+          method: "POST",
+          body: {
+            workflowInstanceId,
+          },
+        },
+      );
+
+      if (response) {
+        setUserHasAccess(true);
+        return;
+      }
+
+      setUserHasAccess(false);
+      return;
+    } catch (e) {
+      setUserHasAccess(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!user || !workflowInstanceId) return;
+    userHasWorkflowAccess();
+  }, [workflowInstanceId]);
 
   useEffect(() => {
     if (!user || !stages) return;
@@ -282,9 +315,9 @@ const NewWorkflowLayout = ({
         </Flex>
       )}
 
-      {!hasAccess && (
+      {userHasAccess !== null && !userHasAccess && isReady && (
         <SurveyModal
-          isOpen={!hasAccess}
+          isOpen={!userHasAccess}
           onConfirm={() => router.push(toolPath ?? "/")}
           onClose={() => router.push("/")}
           showButtons={{
@@ -313,33 +346,36 @@ const NewWorkflowLayout = ({
         />
       )}
 
-      {currentStage && isAuthorisedToViewPage && isReady && hasAccess && (
-        <WorkflowFormWrapper
-          formJson={formJson}
-          layoutConfig={{
-            layoutKey: currentStage.layout ?? layout,
-            layoutProps: {
-              showTitle: true,
-              saveAllowed: currentStage.saveAllowed,
-              allowAlwaysEdit: currentStage.allowAlwaysEdit,
-            },
-          }}
-          stylingConfig={{
-            cssFilePath: currentStage.cssThemeFileUrl ?? "",
-            sjsFilePath: currentStage.sjsThemeFileUrl ?? "",
-          }}
-          jsImport={currentStage.jsAdditionalFileUrl ?? ""}
-          data={data ?? null}
-          excludeKeys={[]}
-          formSuccessMessage={""}
-          redirectUrl={null}
-          isAllowedToEdit={isAllowedToEdit}
-          globalVariables={formVariables}
-          endpoint={`/api/workflows/saveWorkflow/${currentStage.bpInstId}`}
-          isNew={true}
-          onSubmissionResponse={handleLastSubmissionResponse}
-        />
-      )}
+      {currentStage &&
+        isAuthorisedToViewPage &&
+        isReady &&
+        userHasAccess === true && (
+          <WorkflowFormWrapper
+            formJson={formJson}
+            layoutConfig={{
+              layoutKey: currentStage.layout ?? layout,
+              layoutProps: {
+                showTitle: true,
+                saveAllowed: currentStage.saveAllowed,
+                allowAlwaysEdit: currentStage.allowAlwaysEdit,
+              },
+            }}
+            stylingConfig={{
+              cssFilePath: currentStage.cssThemeFileUrl ?? "",
+              sjsFilePath: currentStage.sjsThemeFileUrl ?? "",
+            }}
+            jsImport={currentStage.jsAdditionalFileUrl ?? ""}
+            data={data ?? null}
+            excludeKeys={[]}
+            formSuccessMessage={""}
+            redirectUrl={null}
+            isAllowedToEdit={isAllowedToEdit}
+            globalVariables={formVariables}
+            endpoint={`/api/workflows/saveWorkflow/${currentStage.bpInstId}`}
+            isNew={true}
+            onSubmissionResponse={handleLastSubmissionResponse}
+          />
+        )}
 
       {/*Unauthorised Access*/}
       <SurveyModal

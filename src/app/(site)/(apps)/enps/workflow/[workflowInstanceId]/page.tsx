@@ -2,10 +2,7 @@ import React from "react";
 import { verifySession } from "@/lib/dal";
 import { redirect } from "next/navigation";
 import NewWorkflowLayout from "@/app/(site)/(apps)/NewWorkflowLayout";
-import {
-  checkUserWorkflowAccess,
-  getWorkflowStages,
-} from "@/utils/functions/workflow";
+import { getWorkflowStages } from "@/utils/functions/workflow";
 
 export default async function ENPSWorkflowPage({
   params,
@@ -20,7 +17,6 @@ export default async function ENPSWorkflowPage({
     redirect("/login");
   }
 
-  const hasAccess = await checkUserWorkflowAccess(workflowInstanceId);
   const stages = await getWorkflowStages(workflowInstanceId);
 
   return (
@@ -28,7 +24,6 @@ export default async function ENPSWorkflowPage({
       stages={stages}
       layout={"enps"}
       workflowInstanceId={workflowInstanceId}
-      hasAccess={hasAccess}
     />
   );
 }

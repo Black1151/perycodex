@@ -5,7 +5,6 @@ export interface WorkflowLayoutProps {
   stages: WorkflowStage[];
   layout: LayoutKeys;
   workflowInstanceId: string | null;
-  hasAccess: boolean;
 }
 
 export interface Form {
