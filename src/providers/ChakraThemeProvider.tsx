@@ -5,31 +5,31 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { themeRegistry, ThemeName } from "@/theme/themes/themeRegistry";
 
 interface IThemeContext {
-  themeName: ThemeName;
-  setThemeName: (name: ThemeName) => void;
+  themeId: ThemeName;
+  setThemeId: (name: ThemeName) => void;
 }
 
 const ThemeContext = createContext<IThemeContext>({
-  themeName: "perygonLight",
-  setThemeName: () => {},
+  themeId: 1,
+  setThemeId: () => {},
 });
 
 export const useThemeContext = () => useContext(ThemeContext);
 
 interface CustomThemeProviderProps {
   children: React.ReactNode;
-  defaultThemeName?: ThemeName;
+  defaultThemeId?: ThemeName;
 }
 
 export const ChakraThemeProvider: React.FC<CustomThemeProviderProps> = ({
   children,
-  defaultThemeName = "perygonLight",
+  defaultThemeId = 1,
 }) => {
-  const [themeName, setThemeName] = useState<ThemeName>(defaultThemeName);
-  const activeTheme = themeRegistry[themeName];
+  const [themeId, setThemeId] = useState<ThemeName>(defaultThemeId);
+  const activeTheme = themeRegistry[themeId];
 
   return (
-    <ThemeContext.Provider value={{ themeName, setThemeName }}>
+    <ThemeContext.Provider value={{ themeId, setThemeId }}>
       <ChakraProvider theme={activeTheme}>{children}</ChakraProvider>
     </ThemeContext.Provider>
   );

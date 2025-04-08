@@ -13,6 +13,7 @@ import {
   MenuDivider,
   MenuGroup,
   useBreakpointValue,
+  Select,
 } from "@chakra-ui/react";
 import PersonIcon from "@mui/icons-material/Person";
 import { Celebration } from "@mui/icons-material";
@@ -21,26 +22,23 @@ import PulsatingIcon from "./PulsatingIcon";
 import { MenuItemProps } from "./types";
 import { useThemeContext } from "@/providers/ChakraThemeProvider";
 import { ThemeName, themeRegistry } from "@/theme/themes/themeRegistry";
+import { ThemeDropdownOption } from "../NavBar";
 
 interface ProfileMenuProps {
   userImageUrl: string;
   menuItems: MenuItemProps[];
   unread: boolean;
+  themeDropdownOptions: ThemeDropdownOption[];
 }
 
 const ProfileMenu: React.FC<ProfileMenuProps> = ({
   userImageUrl,
   menuItems,
   unread,
+  themeDropdownOptions,
 }) => {
-  // Current active theme from Chakra (useTheme) - primarily used for any styling references
   const theme = useTheme();
-
-  // Access the theme-switching logic from your Theme Context
-  const { setThemeName } = useThemeContext();
-
-  // List of all possible theme options
-  const allThemes = Object.keys(themeRegistry) as ThemeName[];
+  const { setThemeId } = useThemeContext();
 
   const pulsatingIconSize = useBreakpointValue({ base: 20, md: 25 });
 
@@ -97,10 +95,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
           />
         )}
       </Box>
-
-      {/* The main menu content */}
       <MenuList bg="elementBG" color={theme.colors.themeTextColor} px={2}>
-        {/* Render your existing menu items */}
         {menuItems.map((item) => (
           <MenuItem
             key={item.label}
@@ -126,20 +121,28 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
 
         <MenuDivider />
 
-        <MenuGroup title="Switch Theme">
-          {allThemes.map((tName) => (
-            <MenuItem
-              key={tName}
-              onClick={() => setThemeName(tName)}
-              fontSize={[14, 16, 18]}
-              _hover={{
-                backgroundColor: theme.colors.primary,
-                color: "white",
-              }}
-            >
-              {tName}
-            </MenuItem>
-          ))}
+        <MenuGroup title="Switch Theme" gap={0}>
+          <Select
+            onChange={(e) => setThemeId(Number(e.target.value))}
+            bg="elementBG"
+            borderColor={theme.colors.primary}
+            p={0}
+            pb={5}
+            px={1}
+            mt={0}
+            top={-2}
+            sx={{
+              option: {
+                backgroundColor: theme.colors.elementBG,
+              },
+            }}
+          >
+            {themeDropdownOptions.map((theme) => (
+              <option key={theme.value} value={theme.value}>
+                {theme.label}
+              </option>
+            ))}
+          </Select>
         </MenuGroup>
       </MenuList>
     </Menu>

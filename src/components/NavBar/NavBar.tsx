@@ -21,6 +21,11 @@ import { useUnread } from "../contexts/UnreadRecognitionContext";
 const MotionBox = motion(Box);
 const MotionHStack = motion(HStack);
 
+export interface ThemeDropdownOption {
+  label: string;
+  value: string;
+}
+
 export interface NavBarProps {
   userFirstName: string;
   userImageUrl: string;
@@ -35,10 +40,12 @@ const NavBar: React.FC<NavBarProps> = ({
   const router = useRouter();
   const { user } = useUser();
   const theme = useTheme();
-
   const { toolLogo, toolPath } = useWorkflow();
   const { unread, checkUnread } = useUnread();
   const [passwordResetModalOpen, setPasswordResetModalOpen] = useState(false);
+  const [themeDropdownOptions, setThemeDropdownOptions] = useState<
+    ThemeDropdownOption[]
+  >([]);
 
   // Call checkUnread on mount so unread updates on load
   useEffect(() => {
@@ -55,6 +62,27 @@ const NavBar: React.FC<NavBarProps> = ({
   };
 
   const menuItems = useNavMenuItems(userRole, handleLogout, openResetModal);
+
+  const buildThemeDropdownOptions = async () => {
+    const response = await fetch("/api/theme/getThemesForCustomer", {
+      method: "POST",
+      body: JSON.stringify({ customerUuid: user?.customerUniqueId }),
+    });
+    const data = await response.json();
+
+    const dropdownOptions = data.resource.map((theme: any) => ({
+      label: theme.themename,
+      value: theme.id,
+    }));
+
+    console.log("dropdownOptions", dropdownOptions);
+
+    setThemeDropdownOptions(dropdownOptions);
+  };
+
+  useEffect(() => {
+    buildThemeDropdownOptions();
+  }, []);
 
   return (
     <>
@@ -102,6 +130,7 @@ const NavBar: React.FC<NavBarProps> = ({
             userImageUrl={userImageUrl}
             menuItems={menuItems}
             unread={unread}
+            themeDropdownOptions={themeDropdownOptions}
           />
         </MotionHStack>
       </HStack>
