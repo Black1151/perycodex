@@ -400,7 +400,7 @@ export default function SideBars() {
 
   return (
     <>
-      {!["/my-profile", "/activity"].includes(pathname) && (
+      {!["/my-profile", "/activity", "/client-activity"].includes(pathname) && (
         <NavigationSidebar
           menuItems={leftMenuItems}
           drawerState={"half-open"}
