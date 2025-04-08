@@ -51,8 +51,6 @@ export default async function ActivityPage() {
   let myActivityUrl = `/getAllView?view=vwProgressList&wfInstStartedBy=${user.userId}`; // Everyone
   let myDeptsActivityUrl = `/getAllView?view=vwProgressList&wfStarterTeamManagerId=${user.userId}`; // User who is manager
   let ourActivityUrl = `/getAllView?view=vwProgressList&wfInstCustId=${user.customerId}`; // CS CL CA
-  let ourClientActivityUrl = `/getAllView?view=vwProgressList&wfInstCustParentId=${user.customerId}`; // CS CL CA
-
 
   let resArray: string[] = [];
 
@@ -72,8 +70,6 @@ export default async function ActivityPage() {
     // Only fetch Our Activity and Department Activity if the role matches
     apiCalls.push(apiClient(ourActivityUrl, { cache: "no-store" }));
     resArray.push("ourActivityRes");
-    apiCalls.push(apiClient(ourClientActivityUrl, { cache: "no-store" }));
-    resArray.push("ourClientActivityRes");
   }
 
   // Execute the relevant API calls in parallel
@@ -97,7 +93,6 @@ export default async function ActivityPage() {
   const myActivityData = responses["myActivityRes"] || [];
   const myDeptsActivityData = responses["myDeptsActivityRes"] || [];
   const ourActivityData = responses["ourActivityRes"] || [];
-  const ourClientActivityData = responses["ourClientActivityRes"] || [];
 
   // Create data sources for TabbedGrids
   const dataSources = [
@@ -121,12 +116,6 @@ export default async function ActivityPage() {
     dataSources.push({
       data: ourActivityData,
       title: "Our Activity",
-      fields: activityFields,
-    });
-
-    dataSources.push({
-      data: ourClientActivityData,
-      title: "Our Client Activity",
       fields: activityFields,
     });
   }
