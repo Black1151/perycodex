@@ -21,7 +21,6 @@ import { Celebration } from "@mui/icons-material";
 import PulsatingIcon from "./PulsatingIcon";
 import { MenuItemProps } from "./types";
 import { useThemeContext } from "@/providers/ChakraThemeProvider";
-import { ThemeName, themeRegistry } from "@/theme/themes/themeRegistry";
 import { ThemeDropdownOption } from "../NavBar";
 
 interface ProfileMenuProps {
