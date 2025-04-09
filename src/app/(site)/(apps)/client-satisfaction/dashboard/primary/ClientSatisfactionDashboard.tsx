@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import FilterSidebar from "@/components/Sidebars/Dashboards Filter/FilterSidebar";
 import AgChartComponent from "@/components/agCharts/AgChartComponent";
 import AgGaugeComponent from "@/components/agCharts/AgGaugeComponent";
-import { Flex, VStack } from "@chakra-ui/react";
+import { Flex, VStack, Box, Text } from "@chakra-ui/react";
 import { useTheme } from "@chakra-ui/react";
 import { dateRangeOptions } from "@/components/Sidebars/Dashboards Filter/dateRangeUtils";
 import { ScoreTooltipRenderer } from "@/components/agCharts/tooltips/ScoreTooltipRenderer";
@@ -12,6 +12,9 @@ import { serviceCommentsColumnDefs } from "./ServiceGridColumnDefs";
 import { AgRadialGaugeOptions } from "ag-charts-community";
 import { GridApi, FirstDataRenderedEvent } from "ag-grid-charts-enterprise";
 import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridComponentLight";
+import PerygonCard from "@/components/layout/PerygonCard";
+import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
+import { set } from "lodash";
 
 interface clientSatisfactionDashboardResponse {
     resource: {
@@ -28,6 +31,10 @@ interface clientSatisfactionDashboardResponse {
             serviceComments: serviceComment[];
         }
         companyComments: companyComment[];
+        feedbackCount: {
+            feedbackCount: number;
+            feedbackCountChangePercent: number; // Change from previous period (%) (negative for decrease)
+        };
     };
 }
 
@@ -116,6 +123,8 @@ const ClientSatisfactionDashboard = () => {
     const [serviceComments, setServiceComments] = useState<serviceComment[] | null>(null);
     const [staffCommentsGridData, setStaffCommentsGridData] = useState<Record<string, any>[]>([]);
     const [serviceCommentsGridData, setServiceCommentsGridData] = useState<Record<string, any>[]>([]);
+    const [feedbackCount, setFeedbackCount] = useState<number>(0);
+    const [feedbackCountChangePercent, setFeedbackCountChangePercent] = useState<number>(0);
     const [gridApi, setGridApi] = useState<GridApi | null>(null);
     const [filterModel, setFilterModel] = useState({});
 
@@ -374,6 +383,10 @@ const ClientSatisfactionDashboard = () => {
                             rating: 4,
                         }
                     ],
+                    feedbackCount: {
+                        feedbackCount: 100,
+                        feedbackCountChangePercent: 10, // e.g. +10% from last week
+                    },
                 }
             };
 
@@ -387,6 +400,8 @@ const ClientSatisfactionDashboard = () => {
                 setCompanyComments(response.resource.companyComments);
                 setStaffComments(response.resource.staff.staffComments);
                 setServiceComments(response.resource.service.serviceComments);
+                setFeedbackCount(response.resource.feedbackCount.feedbackCount);
+                setFeedbackCountChangePercent(response.resource.feedbackCount.feedbackCountChangePercent);
 
                 // Assign grid data using staff comments
                 const staffCommentsData = response.resource.staff.staffComments.map((comment) => ({
@@ -609,30 +624,67 @@ const ClientSatisfactionDashboard = () => {
             <VStack align="stretch" spacing={6} w="full" py={4}>
                 <Flex w={"100%"} gap={6} direction={"row"}>
                     {/* Gauge */}
-                    <AgGaugeComponent
-                        flex={"25%"}
-                        title={"Average Staff Rating"}
-                        chartOptions={kpiGuagesOptions[0]}
-                        noData={!kpiData.nps}
-                    />
-                    <AgGaugeComponent
-                        flex={"25%"}
-                        title={"Average Department Rating"}
-                        chartOptions={kpiGuagesOptions[1]}
-                        noData={!kpiData.nps}
-                    />
-                    <AgGaugeComponent
-                        flex={"25%"}
-                        title={"Average Overall Company Rating"}
-                        chartOptions={kpiGuagesOptions[2]}
-                        noData={!kpiData.nps}
-                    />
-                    <AgGaugeComponent
-                        flex={"25%"}
-                        title={"NPS"}
-                        chartOptions={kpiGuagesOptions[3]}
-                        noData={!kpiData.nps}
-                    />
+                    <Flex w={"40%"} gap={6} direction={"column"}>
+                        <AgGaugeComponent
+                            flex={"100%"}
+                            chartOptions={kpiGuagesOptions[3]}
+                            noData={!kpiData.nps}
+                            height="100%"
+                        />
+                    </Flex>
+                    <Flex w={"60%"} gap={6} direction={"column"}>
+                        <Flex w={"100%"} gap={6} direction={"row"}>
+                            <AgGaugeComponent
+                                flex={"50%"}
+                                chartOptions={kpiGuagesOptions[0]}
+                                noData={!kpiData.nps}
+                                height="300px"
+                            />
+                            <AgGaugeComponent
+                                flex={"50%"}
+                                chartOptions={kpiGuagesOptions[2]}
+                                noData={!kpiData.nps}
+                                height="300px"
+                            />
+                        </Flex>
+                        <Flex w={"100%"} gap={6} direction={"row"}>
+                            <AgGaugeComponent
+                                flex={"50%"}
+                                chartOptions={kpiGuagesOptions[1]}
+                                noData={!kpiData.nps}
+                                height="300px"
+                            />
+                            <Box flex={"50%"} minWidth="300px" height={"300px"}>
+                                <PerygonCard height={"100%"}>
+                                    <Flex align="center" gap={1} direction="column" justifyContent="center" height={"100%"}>
+                                        <Text fontSize={"6xl"}>{feedbackCount}</Text>
+                                        <Text fontSize={"xl"}>Total Client Responses</Text>
+                                        {feedbackCountChangePercent > 0 && (
+                                            <>
+                                                <Text fontSize="lg" fontWeight={"bold"} color="green.500">
+                                                    Up {feedbackCountChangePercent}% From Last Week
+                                                </Text>
+                                            </>
+                                        )}
+
+                                        {feedbackCountChangePercent < 0 && (
+                                            <>
+                                                <Text fontSize="lg" fontWeight={"bold"} color="red.500">
+                                                    Down {feedbackCountChangePercent}% From Last Week
+                                                </Text>
+                                            </>
+                                        )}
+
+                                        {feedbackCountChangePercent === 0 && (
+                                            <Text fontSize="lg" fontWeight={"bold"}>
+                                                0% Change From Last Week
+                                            </Text>
+                                        )}
+                                    </Flex>
+                                </PerygonCard>
+                            </Box>
+                        </Flex>
+                    </Flex>
                 </Flex>
             </VStack>
 
@@ -888,4 +940,4 @@ const ClientSatisfactionDashboard = () => {
     );
 }
 
-            export default ClientSatisfactionDashboard;
+export default ClientSatisfactionDashboard;
