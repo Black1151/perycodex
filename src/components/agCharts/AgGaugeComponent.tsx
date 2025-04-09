@@ -13,10 +13,10 @@ LicenseManager.setLicenseKey(
 
 interface AgChartComponentProps {
   flex: string;
-  title: string;
+  title?: string; 
   chartOptions: any;
   noData: boolean;
-  height?: string; // Optional height prop
+  height?: string;
 }
 
 const AgChartComponent = ({
@@ -28,9 +28,11 @@ const AgChartComponent = ({
 }: AgChartComponentProps) => {
   return (
     <Box flex={flex} minWidth="300px">
-      <Flex width="100%" justifyContent="center" align="center" mb={4}>
-        <SectionHeader>{title}</SectionHeader>
-      </Flex>
+      {title && (
+        <Flex width="100%" justifyContent="center" align="center" mb={4}>
+          <SectionHeader>{title}</SectionHeader>
+        </Flex>
+      )}
 
       <PerygonCard height={height}>
         {noData ? (
