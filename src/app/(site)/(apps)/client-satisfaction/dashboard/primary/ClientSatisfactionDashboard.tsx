@@ -31,10 +31,6 @@ interface clientSatisfactionDashboardResponse {
             serviceComments: serviceComment[];
         }
         companyComments: companyComment[];
-        feedbackCount: {
-            feedbackCount: number;
-            feedbackCountChangePercent: number; // Change from previous period (%) (negative for decrease)
-        };
     };
 }
 
@@ -43,6 +39,7 @@ interface kpiData {
     avgServiceRating: number;
     avgOverallRating: number;
     nps: number;
+    feedbackCount: number,
 }
 
 interface npsScore {
@@ -144,6 +141,7 @@ const ClientSatisfactionDashboard = () => {
                         avgServiceRating: 4.2,
                         avgOverallRating: 4.3,
                         nps: 75,
+                        feedbackCount: 100,
                     },
                     nps: [
                         {
@@ -383,10 +381,6 @@ const ClientSatisfactionDashboard = () => {
                             rating: 4,
                         }
                     ],
-                    feedbackCount: {
-                        feedbackCount: 100,
-                        feedbackCountChangePercent: 10, // e.g. +10% from last week
-                    },
                 }
             };
 
@@ -400,8 +394,7 @@ const ClientSatisfactionDashboard = () => {
                 setCompanyComments(response.resource.companyComments);
                 setStaffComments(response.resource.staff.staffComments);
                 setServiceComments(response.resource.service.serviceComments);
-                setFeedbackCount(response.resource.feedbackCount.feedbackCount);
-                setFeedbackCountChangePercent(response.resource.feedbackCount.feedbackCountChangePercent);
+                setFeedbackCount(response.resource.kpi.feedbackCount);
 
                 // Assign grid data using staff comments
                 const staffCommentsData = response.resource.staff.staffComments.map((comment) => ({
@@ -622,64 +615,84 @@ const ClientSatisfactionDashboard = () => {
 
             {/* KPI Cards */}
             <VStack align="stretch" spacing={6} w="full" py={4}>
-                <Flex w={"100%"} gap={6} direction={"row"}>
-                    {/* Gauge */}
-                    <Flex w={"40%"} gap={6} direction={"column"}>
+                <Flex
+                    w="100%"
+                    gap={6}
+                    // Stack on smaller screens, side-by-side on md+
+                    direction={{ base: "column", lg: "row" }}
+                >
+                    {/* Left column (Gauge) */}
+                    <Flex
+                        // 100% on mobile; 40% on lg+
+                        w={{ base: "100%", lg: "40%" }}
+                        gap={6}
+                        direction="column"
+                    // If you want the same height on mobile, you can fix height here.
+                    // e.g., h={{ base: "300px", md: "auto" }}
+                    >
                         <AgGaugeComponent
-                            flex={"100%"}
+                            flex="1"
                             chartOptions={kpiGuagesOptions[3]}
                             noData={!kpiData.nps}
+                            // You could also make the height responsive:
+                            // height={{ base: "300px", md: "100%" }}
                             height="100%"
                         />
                     </Flex>
-                    <Flex w={"60%"} gap={6} direction={"column"}>
-                        <Flex w={"100%"} gap={6} direction={"row"}>
+
+                    {/* Right column */}
+                    <Flex
+                        w={{ base: "100%", lg: "60%" }}
+                        gap={6}
+                        direction="column"
+                    >
+                        {/* Row #1 on desktop; stack on mobile */}
+                        <Flex
+                            w="100%"
+                            gap={6}
+                            direction={{ base: "column", md: "row" }}
+                        >
                             <AgGaugeComponent
-                                flex={"50%"}
+                                flex="1"
                                 chartOptions={kpiGuagesOptions[0]}
                                 noData={!kpiData.nps}
                                 height="300px"
                             />
                             <AgGaugeComponent
-                                flex={"50%"}
+                                flex="1"
                                 chartOptions={kpiGuagesOptions[2]}
                                 noData={!kpiData.nps}
                                 height="300px"
                             />
                         </Flex>
-                        <Flex w={"100%"} gap={6} direction={"row"}>
+
+                        {/* Row #2 on desktop; stack on mobile */}
+                        <Flex
+                            w="100%"
+                            gap={6}
+                            direction={{ base: "column", md: "row" }}
+                        >
                             <AgGaugeComponent
-                                flex={"50%"}
+                                flex="1"
                                 chartOptions={kpiGuagesOptions[1]}
                                 noData={!kpiData.nps}
                                 height="300px"
                             />
-                            <Box flex={"50%"} minWidth="300px" height={"300px"}>
-                                <PerygonCard height={"100%"}>
-                                    <Flex align="center" gap={1} direction="column" justifyContent="center" height={"100%"}>
-                                        <Text fontSize={"6xl"}>{feedbackCount}</Text>
-                                        <Text fontSize={"xl"}>Total Client Responses</Text>
-                                        {feedbackCountChangePercent > 0 && (
-                                            <>
-                                                <Text fontSize="lg" fontWeight={"bold"} color="green.500">
-                                                    Up {feedbackCountChangePercent}% From Last Week
-                                                </Text>
-                                            </>
-                                        )}
-
-                                        {feedbackCountChangePercent < 0 && (
-                                            <>
-                                                <Text fontSize="lg" fontWeight={"bold"} color="red.500">
-                                                    Down {feedbackCountChangePercent}% From Last Week
-                                                </Text>
-                                            </>
-                                        )}
-
-                                        {feedbackCountChangePercent === 0 && (
-                                            <Text fontSize="lg" fontWeight={"bold"}>
-                                                0% Change From Last Week
-                                            </Text>
-                                        )}
+                            <Box
+                                flex="1"
+                                minWidth="300px"
+                                height="300px"
+                            >
+                                <PerygonCard height="100%">
+                                    <Flex
+                                        align="center"
+                                        gap={1}
+                                        direction="column"
+                                        justifyContent="center"
+                                        height="100%"
+                                    >
+                                        <Text fontSize="6xl">{feedbackCount}</Text>
+                                        <Text fontSize="xl">Total Client Responses</Text>
                                     </Flex>
                                 </PerygonCard>
                             </Box>
@@ -687,6 +700,8 @@ const ClientSatisfactionDashboard = () => {
                     </Flex>
                 </Flex>
             </VStack>
+
+
 
             {/* NPS Breakdown Bar Chart */}
             <VStack align="stretch" spacing={6} w="full" py={4}>
