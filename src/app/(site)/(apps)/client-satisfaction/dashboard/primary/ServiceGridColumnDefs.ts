@@ -7,6 +7,7 @@ export const serviceCommentsColumnDefs: ColDef[] = [
         sortable: true,
         filter: true,
         resizable: true,
+        rowGroup: true,
     },
     {
         field: "site",

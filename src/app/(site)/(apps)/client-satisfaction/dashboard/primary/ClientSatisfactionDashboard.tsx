@@ -39,7 +39,6 @@ const ClientSatisfactionDashboard = () => {
     const [gridApi, setGridApi] = useState<GridApi | null>(null);
     const [filterModel, setFilterModel] = useState({});
     const { toolId, workflowId } = useWorkflow();
-    
 
     const handleGridReady = (params: FirstDataRenderedEvent) => {
         setGridApi(params.api);
@@ -261,7 +260,7 @@ const ClientSatisfactionDashboard = () => {
     const defaultDateFilterOption = "last6Months";
 
     useEffect(() => {
-        if(!toolId || !workflowId) {
+        if (!toolId || !workflowId) {
             return;
         }
         const monthlyOption = dateRangeOptions[dateRangeOption].find(
@@ -385,8 +384,6 @@ const ClientSatisfactionDashboard = () => {
                 </Flex>
             </VStack>
 
-
-
             {/* NPS Breakdown Bar Chart */}
             <VStack align="stretch" spacing={6} w="full" py={4}>
                 <Flex w={"100%"} gap={6} flexWrap={"wrap"}>
@@ -486,129 +483,246 @@ const ClientSatisfactionDashboard = () => {
                     {/* Combine topStaff and bottomStaff */}
                     {topStaff && bottomStaff && (
                         <>
-                            <AgChartComponent
-                                flex="1 1 100%"
-                                title="Staff Ratings (Top & Bottom 5)"
-                                chartOptions={{
-                                    type: "bar",
-                                    data: [...topStaff, ...bottomStaff].map((staff) => ({
-                                        name: staff.staffName,
-                                        rating: staff.avgRating,
-                                    })),
-                                    series: [
-                                        {
-                                            type: "bar",
-                                            xKey: "name",
-                                            yKey: "rating",
-                                            yName: "Average Rating",
-                                            fill: "#4caf50",
-                                            tooltip: {
-                                                renderer: ({
-                                                    datum,
-                                                }: {
-                                                    datum: { name: string; rating: number };
-                                                }) => ({
-                                                    content: `${datum.name}: ${datum.rating.toFixed(2)}`,
-                                                }),
+                            <Flex direction={{ base: "column", md: "row" }} gap={6} w="100%">
+                                {/* Top 5 Staff Ratings */}
+                                <AgChartComponent
+                                    flex="1"
+                                    title="Top 5 Average Staff Ratings"
+                                    chartOptions={{
+                                        type: "bar",
+                                        data: topStaff.map((staff) => ({
+                                            name: staff.staffName,
+                                            rating: staff.avgRating,
+                                        })),
+                                        series: [
+                                            {
+                                                type: "bar",
+                                                xKey: "name",
+                                                yKey: "rating",
+                                                yName: "Average Rating",
+                                                fill: "#4caf50",
+                                                tooltip: {
+                                                    renderer: ({ datum }: { datum: { name: string; rating: number } }) => ({
+                                                        content: `${datum.name}: ${datum.rating.toFixed(2)}`,
+                                                    }),
+                                                },
                                             },
-                                        },
-                                    ],
-                                    axes: [
-                                        {
-                                            type: "category",
-                                            position: "bottom",
-                                            title: {
-                                                text: "Staff Member",
-                                                fontSize: 12,
-                                                fontWeight: 500,
+                                        ],
+                                        axes: [
+                                            {
+                                                type: "category",
+                                                position: "bottom",
+                                                title: {
+                                                    text: "Staff Member",
+                                                    fontSize: 12,
+                                                    fontWeight: 500,
+                                                },
+                                                label: {
+                                                    rotation: -30,
+                                                },
                                             },
-                                            label: {
-                                                rotation: -30,
+                                            {
+                                                type: "number",
+                                                position: "left",
+                                                title: {
+                                                    text: "Average Rating",
+                                                    fontSize: 12,
+                                                    fontWeight: 500,
+                                                },
+                                                min: 0,
+                                                max: 10,
                                             },
-                                        },
-                                        {
-                                            type: "number",
-                                            position: "left",
-                                            title: {
-                                                text: "Average Rating",
-                                                fontSize: 12,
-                                                fontWeight: 500,
-                                            },
-                                            min: 0,
-                                            max: 10,
-                                        },
-                                    ],
-                                }}
-                                noData={
-                                    !topStaff || topStaff.length === 0 || !bottomStaff || bottomStaff.length === 0
-                                }
-                            />
+                                        ],
+                                    }}
+                                    noData={!topStaff || topStaff.length === 0}
+                                />
 
-                            <AgChartComponent
-                                flex="1 1 100%"
-                                title="Staff Feedback Breakdown (Top & Bottom 5)"
-                                chartOptions={{
-                                    type: "bar",
-                                    data: [...topStaff, ...bottomStaff].map((staff) => ({
-                                        name: staff.staffName,
-                                        positive: staff.positiveCount,
-                                        neutral: staff.neutralCount,
-                                        negative: staff.negativeCount,
-                                    })),
-                                    series: [
-                                        {
-                                            type: "bar",
-                                            xKey: "name",
-                                            yKey: "positive",
-                                            yName: "Positive",
-                                            stacked: true,
-                                            fill: "#4caf50",
-                                        },
-                                        {
-                                            type: "bar",
-                                            xKey: "name",
-                                            yKey: "neutral",
-                                            yName: "Neutral",
-                                            stacked: true,
-                                            fill: "#ffeb3b",
-                                        },
-                                        {
-                                            type: "bar",
-                                            xKey: "name",
-                                            yKey: "negative",
-                                            yName: "Negative",
-                                            stacked: true,
-                                            fill: "#f44336",
-                                        },
-                                    ],
-                                    axes: [
-                                        {
-                                            type: "category",
-                                            position: "bottom",
-                                            title: {
-                                                text: "Staff Member",
-                                                fontSize: 12,
-                                                fontWeight: 500,
+                                {/* Top 5 Feedback Breakdown */}
+                                <AgChartComponent
+                                    flex="1"
+                                    title="Top 5 Staff Feedback Breakdown"
+                                    chartOptions={{
+                                        type: "bar",
+                                        data: topStaff.map((staff) => ({
+                                            name: staff.staffName,
+                                            positive: staff.positiveCount,
+                                            neutral: staff.neutralCount,
+                                            negative: staff.negativeCount,
+                                        })),
+                                        series: [
+                                            {
+                                                type: "bar",
+                                                xKey: "name",
+                                                yKey: "positive",
+                                                yName: "Positive",
+                                                stacked: true,
+                                                fill: "#4caf50",
                                             },
-                                            label: {
-                                                rotation: -30,
+                                            {
+                                                type: "bar",
+                                                xKey: "name",
+                                                yKey: "neutral",
+                                                yName: "Neutral",
+                                                stacked: true,
+                                                fill: "#ffeb3b",
                                             },
-                                        },
-                                        {
-                                            type: "number",
-                                            position: "left",
-                                            title: {
-                                                text: "Feedback Count",
-                                                fontSize: 12,
-                                                fontWeight: 500,
+                                            {
+                                                type: "bar",
+                                                xKey: "name",
+                                                yKey: "negative",
+                                                yName: "Negative",
+                                                stacked: true,
+                                                fill: "#f44336",
                                             },
-                                        },
-                                    ],
-                                }}
-                                noData={
-                                    !topStaff || topStaff.length === 0 || !bottomStaff || bottomStaff.length === 0
-                                }
-                            />
+                                        ],
+                                        axes: [
+                                            {
+                                                type: "category",
+                                                position: "bottom",
+                                                title: {
+                                                    text: "Staff Member",
+                                                    fontSize: 12,
+                                                    fontWeight: 500,
+                                                },
+                                                label: {
+                                                    rotation: -30,
+                                                },
+                                            },
+                                            {
+                                                type: "number",
+                                                position: "left",
+                                                title: {
+                                                    text: "Feedback Count",
+                                                    fontSize: 12,
+                                                    fontWeight: 500,
+                                                },
+                                            },
+                                        ],
+                                    }}
+                                    noData={!topStaff || topStaff.length === 0}
+                                />
+                            </Flex>
+
+                            <Flex direction={{ base: "column", md: "row" }} gap={6} w="100%">
+                                {/* Bottom 5 Staff Ratings */}
+                                <AgChartComponent
+                                    flex="1"
+                                    title="Bottom 5 Average Staff Ratings"
+                                    chartOptions={{
+                                        type: "bar",
+                                        data: bottomStaff.map((staff) => ({
+                                            name: staff.staffName,
+                                            rating: staff.avgRating,
+                                        })),
+                                        series: [
+                                            {
+                                                type: "bar",
+                                                xKey: "name",
+                                                yKey: "rating",
+                                                yName: "Average Rating",
+                                                fill: "#f44336", // Optional: use red for low ratings
+                                                tooltip: {
+                                                    renderer: ({ datum }: { datum: { name: string; rating: number } }) => ({
+                                                        content: `${datum.name}: ${datum.rating.toFixed(2)}`,
+                                                    }),
+                                                },
+                                            },
+                                        ],
+                                        axes: [
+                                            {
+                                                type: "category",
+                                                position: "bottom",
+                                                title: {
+                                                    text: "Staff Member",
+                                                    fontSize: 12,
+                                                    fontWeight: 500,
+                                                },
+                                                label: {
+                                                    rotation: -30,
+                                                },
+                                            },
+                                            {
+                                                type: "number",
+                                                position: "left",
+                                                title: {
+                                                    text: "Average Rating",
+                                                    fontSize: 12,
+                                                    fontWeight: 500,
+                                                },
+                                                min: 0,
+                                                max: 10,
+                                            },
+                                        ],
+                                    }}
+                                    noData={!bottomStaff || bottomStaff.length === 0}
+                                />
+
+                                {/* Bottom 5 Feedback Breakdown */}
+                                <AgChartComponent
+                                    flex="1"
+                                    title="Bottom 5 Staff Feedback Breakdown"
+                                    chartOptions={{
+                                        type: "bar",
+                                        data: bottomStaff.map((staff) => ({
+                                            name: staff.staffName,
+                                            positive: staff.positiveCount,
+                                            neutral: staff.neutralCount,
+                                            negative: staff.negativeCount,
+                                        })),
+                                        series: [
+                                            {
+                                                type: "bar",
+                                                xKey: "name",
+                                                yKey: "positive",
+                                                yName: "Positive",
+                                                stacked: true,
+                                                fill: "#4caf50",
+                                            },
+                                            {
+                                                type: "bar",
+                                                xKey: "name",
+                                                yKey: "neutral",
+                                                yName: "Neutral",
+                                                stacked: true,
+                                                fill: "#ffeb3b",
+                                            },
+                                            {
+                                                type: "bar",
+                                                xKey: "name",
+                                                yKey: "negative",
+                                                yName: "Negative",
+                                                stacked: true,
+                                                fill: "#f44336",
+                                            },
+                                        ],
+                                        axes: [
+                                            {
+                                                type: "category",
+                                                position: "bottom",
+                                                title: {
+                                                    text: "Staff Member",
+                                                    fontSize: 12,
+                                                    fontWeight: 500,
+                                                },
+                                                label: {
+                                                    rotation: -30,
+                                                },
+                                            },
+                                            {
+                                                type: "number",
+                                                position: "left",
+                                                title: {
+                                                    text: "Feedback Count",
+                                                    fontSize: 12,
+                                                    fontWeight: 500,
+                                                },
+                                            },
+                                        ],
+                                    }}
+                                    noData={!bottomStaff || bottomStaff.length === 0}
+                                />
+                            </Flex>
+
                         </>
                     )}
                 </Flex>
@@ -623,6 +737,7 @@ const ClientSatisfactionDashboard = () => {
                 refreshData={getData}
                 enableAutoRefresh={true}
                 title="Score and Comments"
+                groupDisplayType="groupRows"
             />
 
             <DataGridComponentLight
@@ -634,6 +749,7 @@ const ClientSatisfactionDashboard = () => {
                 refreshData={getData}
                 enableAutoRefresh={true}
                 title="Service Comments"
+                groupDisplayType="groupRows"
             />
         </>
     );
