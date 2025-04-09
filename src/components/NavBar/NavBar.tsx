@@ -75,8 +75,6 @@ const NavBar: React.FC<NavBarProps> = ({
       value: theme.id,
     }));
 
-    console.log("dropdownOptions", dropdownOptions);
-
     setThemeDropdownOptions(dropdownOptions);
   };
 
