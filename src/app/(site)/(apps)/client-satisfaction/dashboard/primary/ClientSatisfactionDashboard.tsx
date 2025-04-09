@@ -384,12 +384,40 @@ const ClientSatisfactionDashboard = () => {
                 </Flex>
             </VStack>
 
+            {/* NPS Trend Line Chart */}
+            <VStack align="stretch" spacing={6} w="full" py={4}>
+                <Flex w={"100%"} gap={6} direction={"row"}>
+                    <AgChartComponent
+                        flex={"1 1 45%"}
+                        title={"NPS Trend Over Time"}
+                        chartOptions={{
+                            type: "line",
+                            data: npsData.scores.map((score) => ({
+                                x: score.monthYear,
+                                y: score.score,
+                            })),
+                            series: [
+                                {
+                                    type: "line",
+                                    xKey: "x",
+                                    yKey: "y",
+                                    tooltip: {
+                                        renderer: ScoreTooltipRenderer,
+                                    },
+                                },
+                            ],
+                        }}
+                        noData={npsData.scores.length === 0}
+                    />
+                </Flex>
+            </VStack>
+
             {/* NPS Breakdown Bar Chart */}
             <VStack align="stretch" spacing={6} w="full" py={4}>
                 <Flex w={"100%"} gap={6} flexWrap={"wrap"}>
                     <AgChartComponent
                         flex={"1 1 100%"}
-                        title={"NPS Breakdown"}
+                        title={"Promoters, Passives & Detractors Over Time"}
                         chartOptions={{
                             type: "bar",
                             data: npsData.scores.map((score) => ({
@@ -441,34 +469,6 @@ const ClientSatisfactionDashboard = () => {
                                         text: "Responses",
                                         fontSize: 12,
                                         fontWeight: 500,
-                                    },
-                                },
-                            ],
-                        }}
-                        noData={npsData.scores.length === 0}
-                    />
-                </Flex>
-            </VStack>
-
-            {/* NPS Trend Line Chart */}
-            <VStack align="stretch" spacing={6} w="full" py={4}>
-                <Flex w={"100%"} gap={6} direction={"row"}>
-                    <AgChartComponent
-                        flex={"1 1 45%"}
-                        title={"NPS Trend Over Time"}
-                        chartOptions={{
-                            type: "line",
-                            data: npsData.scores.map((score) => ({
-                                x: score.monthYear,
-                                y: score.score,
-                            })),
-                            series: [
-                                {
-                                    type: "line",
-                                    xKey: "x",
-                                    yKey: "y",
-                                    tooltip: {
-                                        renderer: ScoreTooltipRenderer,
                                     },
                                 },
                             ],

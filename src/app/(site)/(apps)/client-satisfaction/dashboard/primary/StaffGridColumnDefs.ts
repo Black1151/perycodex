@@ -16,6 +16,12 @@ export const staffCommentsColumnDefs: ColDef[] = [
         chartDataType: "category",
     },
     {
+        field: "clientName",
+        headerName: "Client Name",
+        filter: "agMultiColumnFilter",
+        chartDataType: "category",
+    },
+    {
         field: "date",
         headerName: "Date",
     },

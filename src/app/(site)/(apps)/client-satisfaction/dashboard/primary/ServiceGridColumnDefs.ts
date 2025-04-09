@@ -10,6 +10,13 @@ export const serviceCommentsColumnDefs: ColDef[] = [
         rowGroup: true,
     },
     {
+        headerName: "Client Name",
+        field: "clientName",
+        sortable: true,
+        filter: true,
+        resizable: true,
+    },
+    {
         field: "site",
         headerName: "Site",
         filter: "agMultiColumnFilter",
