@@ -52,6 +52,7 @@ interface DataGridComponentProps<T> {
   flex?: string;
   title?: string;
   handleRowClick?: (rowData: T) => void;
+  groupDisplayType?: "singleColumn" | "multipleColumns" | "groupRows";
 }
 
 interface PaginationInfo {
@@ -85,6 +86,7 @@ function DataGridComponentLight<T>({
   flex = "1 1 100%",
   title,
   handleRowClick,
+  groupDisplayType = "singleColumn",
 }: DataGridComponentProps<T>) {
   const gridRef = useRef<AgGridReact>(null);
   const router = useRouter();
@@ -434,6 +436,7 @@ function DataGridComponentLight<T>({
               }
               rowHeight={50}
               getChartToolbarItems={() => []}
+              groupDisplayType={groupDisplayType}
             />
 
             <CustomGridBottomPaginationLight
