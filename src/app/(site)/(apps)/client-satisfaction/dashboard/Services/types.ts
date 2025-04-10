@@ -4,7 +4,6 @@ interface ServiceDashboardProps {
         serviceStats: serviceStat[];
         highestRatedService: serviceStat[];
         highestResponseService: serviceStat[];
-        serviceNPS: npsScore[];
         histogramDataSet: histogramData[];
     }
 }
@@ -22,18 +21,15 @@ interface serviceStat {
     serviceName: string;
     avgRating: number;
     totalResponses: number;
-}
-
-export interface npsScore {
-    serviceName: string;
-    score: number;
+    nps: number;
     detractors: number;
     passives: number;
     promoters: number;
-    totalResponses: number;
 }
 
 interface histogramData {
     value: number; // 0-10 x axis
     count: number // y axis
 }
+
+export type { ServiceDashboardProps, serviceComment, serviceStat, histogramData };

@@ -3,39 +3,35 @@ import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
 import ScoreRenderer from "@/components/agGrids/CellRenderers/ClientSatisfaction/ScoreRenderer";
 import { dateValueFormatter } from "@/components/agGrids/ValueFormatters/dateValueFormatter";
 
-export const ModalGridColumnDefs: ColDef[] = [
+export const servicesCommentsColumnDefs: ColDef[] = [
+    {
+        headerName: "Service",
+        field: "serviceName",
+        sortable: true,
+        filter: true,
+        resizable: true,
+        rowGroup: true,
+    },
+    {
+        field: "date",
+        headerName: "Date",
+        valueFormatter: (params) => dateValueFormatter(params.value),
+    },
+    {
+        field: "site",
+        headerName: "Site",
+        filter: "agMultiColumnFilter",
+        chartDataType: "category",
+    },
     {
         field: "clientName",
         headerName: "Client Name",
         filter: "agMultiColumnFilter",
         chartDataType: "category",
-        // cellRenderer: UserRenderer,
-        // cellRendererParams: {
-        //     nameField: "clientName",
-        //   },
-    },
-    {
-        headerName: "Staff Name",
-        field: "staffName",
-        sortable: true,
-        filter: true,
-        resizable: true,
-        // cellRenderer: UserRenderer,
-        // cellRendererParams: {
-        //     nameField: "staffName",
-        //   },
-    },
-    {
-        field: "monthYear",
-        headerName: "Date",
-        filter: true,
-        valueFormatter: (params) => dateValueFormatter(params.value),
-    },
-    {
-        field: "siteName",
-        headerName: "Site",
-        filter: true,
-        chartDataType: "category",
+        cellRenderer: UserRenderer,
+        cellRendererParams: {
+            nameField: "clientName",
+          },
     },
     {
         field: "rating",

@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from "react";
-import FilterSidebar from "@/components/Sidebars/Dashboards Filter/FilterSidebar";
+import { DashboardFilteringDrawer } from "@/components/layout/DashboardFilteringDrawer";
 import AgChartComponent from "@/components/agCharts/AgChartComponent";
 import AgGaugeComponent from "@/components/agCharts/AgGaugeComponent";
 import { Flex, VStack, Box, Text } from "@chakra-ui/react";
@@ -23,6 +23,10 @@ import { AgNodeClickEvent } from "ag-charts-community";
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody } from "@chakra-ui/react";
 import { ModalGridColumnDefs } from "./MoalGridColDefs";
 
+interface filterModel {
+    monthYear: string;
+}
+
 const ClientSatisfactionDashboard = () => {
     const [filterOptions, setFilterOptions] = useState<Record<string, any>>({});
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -42,7 +46,7 @@ const ClientSatisfactionDashboard = () => {
     const [feedbackCount, setFeedbackCount] = useState<number>(0);
     const [feedbackCountChangePercent, setFeedbackCountChangePercent] = useState<number>(0);
     const [gridApi, setGridApi] = useState<GridApi | null>(null);
-    const [filterModel, setFilterModel] = useState({});
+    const [filterModel, setFilterModel] = useState<filterModel>({ monthYear: "" });
     const { toolId, workflowId } = useWorkflow();
     const [isBarModalOpen, setIsBarModalOpen] = useState(false);
     const [barModalTitle, setBarModalTitle] = useState("");
@@ -284,14 +288,12 @@ const ClientSatisfactionDashboard = () => {
 
     useEffect(() => {
         if (isBarModalOpen && filterModel && companyComments) {
-            setModalGridData(companyComments.filter((data) => {
-                const commentMonth = new Date(data.date).toLocaleString("default", {
-                    month: "short",
-                    year: "numeric",
-                });
-                return commentMonth === filterModel.monthYear;
-            }
-            ));
+            setModalGridData(
+                companyComments.filter((data) => {
+                  const commentMonth = data.date.slice(0, 7); // Extracts "YYYY-MM"
+                  return commentMonth === filterModel.monthYear;
+                })
+              );
         }
     }, [isBarModalOpen, filterModel]);
 
@@ -305,16 +307,7 @@ const ClientSatisfactionDashboard = () => {
 
     return (
         <>
-            <FilterSidebar
-                onApplyFilters={onFilterChange}
-                filterOptions={{
-                    showDepartmentsFilter: false,
-                    showSitesFilter: false,
-                    showDateFilter: true,
-                }}
-                dateFilterMode={dateRangeOption}
-                defaultDateFilter={defaultDateFilterOption}
-            />
+            {/* TODO: ADD FILTER BACK IN HERE */}
 
             {/* Bar Modal */}
             <Modal
@@ -345,6 +338,7 @@ const ClientSatisfactionDashboard = () => {
                                 />
                                 <pre>FILTER MODEL: {JSON.stringify(filterModel)}</pre>
                                 <pre>DATA: {JSON.stringify(modalGridData)}</pre>
+                                <pre>COMPANY COMMENTS: {JSON.stringify(companyComments)}</pre>
                             </Box>
                         </VStack>
                     </ModalBody>
@@ -361,7 +355,7 @@ const ClientSatisfactionDashboard = () => {
                                 <AgGaugeComponent
                                     flex="1"
                                     chartOptions={kpiGuagesOptions[3]}
-                                    noData={!kpiData.nps}
+                                    noData={!kpiData}
                                     height="100%"
                                     href="/dashboard/nps"
                                 />
@@ -378,7 +372,7 @@ const ClientSatisfactionDashboard = () => {
                                     <AgGaugeComponent
                                         flex="1"
                                         chartOptions={kpiGuagesOptions[0]}
-                                        noData={!kpiData.nps}
+                                        noData={!kpiData}
                                         height="300px"
                                     />
                                 </GaugeLinkWrapper>
@@ -389,7 +383,7 @@ const ClientSatisfactionDashboard = () => {
                                     <AgGaugeComponent
                                         flex="1"
                                         chartOptions={kpiGuagesOptions[2]}
-                                        noData={!kpiData.nps}
+                                        noData={!kpiData}
                                         height="300px"
                                     />
                                 </GaugeLinkWrapper>
@@ -403,7 +397,7 @@ const ClientSatisfactionDashboard = () => {
                                     <AgGaugeComponent
                                         flex="1"
                                         chartOptions={kpiGuagesOptions[1]}
-                                        noData={!kpiData.nps}
+                                        noData={!kpiData}
                                         height="300px"
                                     />
                                 </GaugeLinkWrapper>
@@ -427,7 +421,6 @@ const ClientSatisfactionDashboard = () => {
                     </Flex>
                 </Flex>
             </VStack>
-
 
             {/* NPS Trend Line Chart */}
             <VStack align="stretch" spacing={6} w="full" py={4}>
@@ -716,10 +709,10 @@ const ClientSatisfactionDashboard = () => {
                                                 yName: "Average Rating",
                                                 fill: "#f44336", // Optional: use red for low ratings
                                                 tooltip: {
-                                                    renderer: ({ datum }: { datum: { name: string; rating: number } }) => ({
-                                                        content: `${datum.name}: ${datum.rating.toFixed(2)}`,
+                                                    renderer: ({ datum }: { datum: { name: any; rating: number } }) => ({
+                                                      content: `${String(datum.name).trim()}: ${datum.rating.toFixed(2)}`,
                                                     }),
-                                                },
+                                                  },                                                  
                                             },
                                         ],
                                         axes: [
