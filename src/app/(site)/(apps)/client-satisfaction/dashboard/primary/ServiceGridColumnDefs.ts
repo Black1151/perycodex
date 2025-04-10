@@ -1,4 +1,7 @@
 import {ColDef} from "ag-grid-community";
+import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
+import ScoreRenderer from "@/components/agGrids/CellRenderers/ClientSatisfaction/ScoreRenderer";
+import { dateValueFormatter } from "@/components/agGrids/ValueFormatters/dateValueFormatter";
 
 export const serviceCommentsColumnDefs: ColDef[] = [
     {
@@ -15,22 +18,24 @@ export const serviceCommentsColumnDefs: ColDef[] = [
         sortable: true,
         filter: true,
         resizable: true,
-    },
-    {
-        field: "site",
-        headerName: "Site",
-        filter: "agMultiColumnFilter",
-        chartDataType: "category",
+        cellRenderer: UserRenderer,
+        cellRendererParams: {
+            nameField: "clientName",
+        },
     },
     {
         field: "date",
         headerName: "Date",
+        sortable: true,
+        filter: true,
+        valueFormatter: (params) => dateValueFormatter(params.value),
     },
     {
         field: "rating",
         headerName: "Rating",
         chartDataType: "category",
-    },
+        cellRenderer: ScoreRenderer,
+    },    
     {
         field: "comment",
         headerName: "Comment",
