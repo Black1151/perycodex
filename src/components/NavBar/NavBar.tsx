@@ -129,6 +129,7 @@ const NavBar: React.FC<NavBarProps> = ({
             menuItems={menuItems}
             unread={unread}
             themeDropdownOptions={themeDropdownOptions}
+            handleLogout={handleLogout}
           />
         </MotionHStack>
       </HStack>

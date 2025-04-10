@@ -15,7 +15,7 @@ import {
 const useNavMenuItems = (
   userRole: string,
   handleLogout: () => void,
-  openResetModal: () => void,
+  openResetModal: () => void
 ): MenuItemProps[] => {
   const router = useRouter();
 
@@ -46,13 +46,11 @@ const useNavMenuItems = (
 
   const commonMenuItems: MenuItemProps[] = [];
   if (userRole === "CA") {
-    commonMenuItems.push(
-        {
-          label: "Admin Tools",
-          icon: <SettingsIcon />,
-          onClick: () => router.push("/users?userType=internal"),
-        }
-    );
+    commonMenuItems.push({
+      label: "Admin Tools",
+      icon: <SettingsIcon />,
+      onClick: () => router.push("/users?userType=internal"),
+    });
   }
   commonMenuItems.push(
     {
@@ -77,13 +75,11 @@ const useNavMenuItems = (
     }
   );
   if (["CS", "CL", "CA"].includes(userRole)) {
-    commonMenuItems.push(
-        {
-          label: "Client Activity",
-          icon: <ViewTimeline/>,
-          onClick: () => router.push("/client-activity"),
-        }
-    );
+    commonMenuItems.push({
+      label: "Client Activity",
+      icon: <ViewTimeline />,
+      onClick: () => router.push("/client-activity"),
+    });
   }
   commonMenuItems.push(
     {
@@ -95,11 +91,6 @@ const useNavMenuItems = (
       label: "Reset Password",
       icon: <LockIcon />,
       onClick: openResetModal,
-    },
-    {
-      label: "Logout",
-      icon: <ExitToAppIcon />,
-      onClick: handleLogout,
     }
   );
   return commonMenuItems;

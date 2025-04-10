@@ -14,9 +14,10 @@ import {
   MenuGroup,
   useBreakpointValue,
   Select,
+  HStack,
 } from "@chakra-ui/react";
 import PersonIcon from "@mui/icons-material/Person";
-import { Celebration } from "@mui/icons-material";
+import { Celebration, ExitToApp, Palette } from "@mui/icons-material";
 
 import PulsatingIcon from "./PulsatingIcon";
 import { MenuItemProps } from "./types";
@@ -28,6 +29,7 @@ interface ProfileMenuProps {
   menuItems: MenuItemProps[];
   unread: boolean;
   themeDropdownOptions: ThemeDropdownOption[];
+  handleLogout: () => void;
 }
 
 const ProfileMenu: React.FC<ProfileMenuProps> = ({
@@ -35,6 +37,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
   menuItems,
   unread,
   themeDropdownOptions,
+  handleLogout,
 }) => {
   const theme = useTheme();
   const { setThemeId, themeId } = useThemeContext();
@@ -117,21 +120,24 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
             </Text>
           </MenuItem>
         ))}
+        <HStack maxHeight="40px" overflow="none">
+          <Box pl={3}>
+            <Palette />
+          </Box>
 
-        <MenuDivider />
-
-        <MenuGroup title="Switch Theme" gap={0}>
           <Select
-            value={themeId}
+            fontSize={16}
+            value={themeId!}
             onChange={(e) => setThemeId(Number(e.target.value))}
             bg="elementBG"
             borderColor={theme.colors.primary}
+            maxWidth="210px"
             p={0}
             pb={5}
             px={1}
             mt={0}
-            top={-2}
             sx={{
+              fontSize: 16,
               option: {
                 backgroundColor: theme.colors.elementBG,
               },
@@ -143,7 +149,27 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
               </option>
             ))}
           </Select>
-        </MenuGroup>
+        </HStack>
+        <MenuItem
+          key={"logout"}
+          fontSize={[14, 16, 18]}
+          display="flex"
+          alignItems="center"
+          position="relative"
+          overflow="hidden"
+          bg="elementBG"
+          borderRadius="md"
+          _hover={{
+            backgroundColor: theme.colors.primary,
+            color: "white",
+          }}
+          onClick={handleLogout}
+        >
+          <ExitToApp />
+          <Text flex={1} zIndex={2} ml={2}>
+            Logout
+          </Text>
+        </MenuItem>
       </MenuList>
     </Menu>
   );
