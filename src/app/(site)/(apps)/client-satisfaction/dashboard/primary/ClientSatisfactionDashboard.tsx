@@ -18,6 +18,7 @@ import { set } from "lodash";
 import { clientSatisfactionDashboardResponse, kpiData, npsScore, staffRating, staffComment, serviceRating, serviceComment, npsData, companyComment } from "./types";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { useWorkflow } from "@/providers/WorkflowProvider";
+import GaugeLinkWrapper from "./GaugeLinkWrapper";
 
 const ClientSatisfactionDashboard = () => {
     const [filterOptions, setFilterOptions] = useState<Record<string, any>>({});
@@ -298,74 +299,63 @@ const ClientSatisfactionDashboard = () => {
 
             {/* KPI Cards */}
             <VStack align="stretch" spacing={6} w="full" py={4}>
-                <Flex
-                    w="100%"
-                    gap={6}
-                    // Stack on smaller screens, side-by-side on md+
-                    direction={{ base: "column", lg: "row" }}
-                >
+                <Flex w="100%" gap={6} direction={{ base: "column", lg: "row" }}>
                     {/* Left column (Gauge) */}
-                    <Flex
-                        // 100% on mobile; 40% on lg+
-                        w={{ base: "100%", lg: "40%" }}
-                        gap={6}
-                        direction="column"
-                    // If you want the same height on mobile, you can fix height here.
-                    // e.g., h={{ base: "300px", md: "auto" }}
-                    >
-                        <AgGaugeComponent
-                            flex="1"
-                            chartOptions={kpiGuagesOptions[3]}
-                            noData={!kpiData.nps}
-                            // You could also make the height responsive:
-                            // height={{ base: "300px", md: "100%" }}
-                            height="100%"
-                        />
+                    <Flex w={{ base: "100%", lg: "40%" }} gap={6} direction="column">
+                        <Box flex="1" height="100%">
+                            <GaugeLinkWrapper href="/dashboard/nps">
+                                <AgGaugeComponent
+                                    flex="1"
+                                    chartOptions={kpiGuagesOptions[3]}
+                                    noData={!kpiData.nps}
+                                    height="100%"
+                                    href="/dashboard/nps"
+                                />
+                            </GaugeLinkWrapper>
+                        </Box>
                     </Flex>
 
                     {/* Right column */}
-                    <Flex
-                        w={{ base: "100%", lg: "60%" }}
-                        gap={6}
-                        direction="column"
-                    >
+                    <Flex w={{ base: "100%", lg: "60%" }} gap={6} direction="column">
                         {/* Row #1 on desktop; stack on mobile */}
-                        <Flex
-                            w="100%"
-                            gap={6}
-                            direction={{ base: "column", md: "row" }}
-                        >
-                            <AgGaugeComponent
-                                flex="1"
-                                chartOptions={kpiGuagesOptions[0]}
-                                noData={!kpiData.nps}
-                                height="300px"
-                            />
-                            <AgGaugeComponent
-                                flex="1"
-                                chartOptions={kpiGuagesOptions[2]}
-                                noData={!kpiData.nps}
-                                height="300px"
-                            />
+                        <Flex w="100%" gap={6} direction={{ base: "column", md: "row" }}>
+                            <Box flex="1" height="300px">
+                                <GaugeLinkWrapper href="/dashboard/satisfaction">
+                                    <AgGaugeComponent
+                                        flex="1"
+                                        chartOptions={kpiGuagesOptions[0]}
+                                        noData={!kpiData.nps}
+                                        height="300px"
+                                    />
+                                </GaugeLinkWrapper>
+                            </Box>
+
+                            <Box flex="1" height="300px">
+                                <GaugeLinkWrapper href="/dashboard/efficiency">
+                                    <AgGaugeComponent
+                                        flex="1"
+                                        chartOptions={kpiGuagesOptions[2]}
+                                        noData={!kpiData.nps}
+                                        height="300px"
+                                    />
+                                </GaugeLinkWrapper>
+                            </Box>
                         </Flex>
 
                         {/* Row #2 on desktop; stack on mobile */}
-                        <Flex
-                            w="100%"
-                            gap={6}
-                            direction={{ base: "column", md: "row" }}
-                        >
-                            <AgGaugeComponent
-                                flex="1"
-                                chartOptions={kpiGuagesOptions[1]}
-                                noData={!kpiData.nps}
-                                height="300px"
-                            />
-                            <Box
-                                flex="1"
-                                minWidth="300px"
-                                height="300px"
-                            >
+                        <Flex w="100%" gap={6} direction={{ base: "column", md: "row" }}>
+                            <Box flex="1" height="300px">
+                                <GaugeLinkWrapper href="/dashboard/retention">
+                                    <AgGaugeComponent
+                                        flex="1"
+                                        chartOptions={kpiGuagesOptions[1]}
+                                        noData={!kpiData.nps}
+                                        height="300px"
+                                    />
+                                </GaugeLinkWrapper>
+                            </Box>
+
+                            <Box flex="1" minWidth="300px" height="300px">
                                 <PerygonCard height="100%">
                                     <Flex
                                         align="center"
@@ -383,6 +373,7 @@ const ClientSatisfactionDashboard = () => {
                     </Flex>
                 </Flex>
             </VStack>
+
 
             {/* NPS Trend Line Chart */}
             <VStack align="stretch" spacing={6} w="full" py={4}>
