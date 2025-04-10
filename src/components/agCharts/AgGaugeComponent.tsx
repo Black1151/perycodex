@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { Box, Flex } from "@chakra-ui/react";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import { AgGauge } from "ag-charts-react";
@@ -13,10 +14,11 @@ LicenseManager.setLicenseKey(
 
 interface AgChartComponentProps {
   flex: string;
-  title?: string; 
+  title?: string;
   chartOptions: any;
   noData: boolean;
   height?: string;
+  href?: string;
 }
 
 const AgChartComponent = ({
@@ -24,10 +26,11 @@ const AgChartComponent = ({
   title,
   chartOptions,
   noData,
-  height = "500px", // Fallback to default height
+  height = "500px",
+  href,
 }: AgChartComponentProps) => {
-  return (
-    <Box flex={flex} minWidth="300px">
+  const content = (
+    <Box flex={flex} minWidth="300px" height={height}>
       {title && (
         <Flex width="100%" justifyContent="center" align="center" mb={4}>
           <SectionHeader>{title}</SectionHeader>
@@ -45,6 +48,14 @@ const AgChartComponent = ({
         )}
       </PerygonCard>
     </Box>
+  );
+
+  return href ? (
+    <Link href={href} passHref legacyBehavior>
+      <a style={{ display: "block", height: "100%", cursor:"pointer"}}>{content}</a>
+    </Link>
+  ) : (
+    content
   );
 };
 
