@@ -19,6 +19,9 @@ import { clientSatisfactionDashboardResponse, kpiData, npsScore, staffRating, st
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import GaugeLinkWrapper from "./GaugeLinkWrapper";
+import { AgNodeClickEvent } from "ag-charts-community";
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody } from "@chakra-ui/react";
+import { ModalGridColumnDefs } from "./MoalGridColDefs";
 
 const ClientSatisfactionDashboard = () => {
     const [filterOptions, setFilterOptions] = useState<Record<string, any>>({});
@@ -35,11 +38,14 @@ const ClientSatisfactionDashboard = () => {
     const [serviceComments, setServiceComments] = useState<serviceComment[] | null>(null);
     const [staffCommentsGridData, setStaffCommentsGridData] = useState<Record<string, any>[]>([]);
     const [serviceCommentsGridData, setServiceCommentsGridData] = useState<Record<string, any>[]>([]);
+    const [modalGridData, setModalGridData] = useState<Record<string, any>[]>([]);
     const [feedbackCount, setFeedbackCount] = useState<number>(0);
     const [feedbackCountChangePercent, setFeedbackCountChangePercent] = useState<number>(0);
     const [gridApi, setGridApi] = useState<GridApi | null>(null);
     const [filterModel, setFilterModel] = useState({});
     const { toolId, workflowId } = useWorkflow();
+    const [isBarModalOpen, setIsBarModalOpen] = useState(false);
+    const [barModalTitle, setBarModalTitle] = useState("");
 
     const handleGridReady = (params: FirstDataRenderedEvent) => {
         setGridApi(params.api);
@@ -276,6 +282,19 @@ const ClientSatisfactionDashboard = () => {
         }
     }, [toolId, workflowId]);
 
+    useEffect(() => {
+        if (isBarModalOpen && filterModel && companyComments) {
+            setModalGridData(companyComments.filter((data) => {
+                const commentMonth = new Date(data.date).toLocaleString("default", {
+                    month: "short",
+                    year: "numeric",
+                });
+                return commentMonth === filterModel.monthYear;
+            }
+            ));
+        }
+    }, [isBarModalOpen, filterModel]);
+
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -296,6 +315,41 @@ const ClientSatisfactionDashboard = () => {
                 dateFilterMode={dateRangeOption}
                 defaultDateFilter={defaultDateFilterOption}
             />
+
+            {/* Bar Modal */}
+            <Modal
+                isOpen={isBarModalOpen}
+                onClose={() => setIsBarModalOpen(false)}
+                size="5xl"
+            >
+                <ModalOverlay />
+                <ModalContent bgGradient={theme.gradients.primaryGradient}>
+                    <ModalHeader color="white">{barModalTitle}</ModalHeader>
+                    <ModalCloseButton color="white" />
+                    <ModalBody pb={10}>
+                        <VStack minHeight={520}>
+                            <Box
+                                className="ag-theme-alpine"
+                                w="100%"
+                                p={1}
+                                pb="7px"
+                                borderRadius="xl"
+                                boxShadow="md"
+                                bgColor="white"
+                            >
+                                <DataGridComponentLight
+                                    data={modalGridData}
+                                    initialFields={ModalGridColumnDefs}
+                                    showTopBar={false}
+                                    filterModel={filterModel}
+                                />
+                                <pre>FILTER MODEL: {JSON.stringify(filterModel)}</pre>
+                                <pre>DATA: {JSON.stringify(modalGridData)}</pre>
+                            </Box>
+                        </VStack>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
 
             {/* KPI Cards */}
             <VStack align="stretch" spacing={6} w="full" py={4}>
@@ -443,6 +497,55 @@ const ClientSatisfactionDashboard = () => {
                                     fill: "green",
                                 },
                             ],
+                            listeners: {
+                                seriesNodeClick: (params: AgNodeClickEvent<any, any>) => {
+                                    console.log("Node clicked:", params);
+
+                                    const { xKey, yKey, datum } = params;
+
+                                    if (datum && xKey && yKey) {
+                                        // Extract month (x-axis value)
+                                        const xValue =
+                                            typeof datum[xKey] === "object" ? datum[xKey]?.value : datum[xKey];
+
+                                        // Convert to lowercase label for title
+                                        const label = yKey.charAt(0).toUpperCase() + yKey.slice(1);
+
+                                        // Determine rating range based on the clicked series
+                                        let ratingFilter: (rating: number) => boolean = () => true;
+
+                                        if (yKey === "promoters") {
+                                            ratingFilter = (r) => r >= 9 && r <= 10;
+                                        } else if (yKey === "passives") {
+                                            ratingFilter = (r) => r >= 7 && r <= 8;
+                                        } else if (yKey === "detractors") {
+                                            ratingFilter = (r) => r >= 0 && r <= 6;
+                                        }
+
+                                        // Filter companyComments based on month and rating
+                                        const filteredData = companyComments.filter((comment) => {
+                                            const matchesRating = ratingFilter(comment.rating);
+
+                                            // Extract month from date string (assuming format like "2025-04-10")
+                                            const commentMonth = new Date(comment.date).toLocaleString("default", {
+                                                month: "short",
+                                                year: "numeric",
+                                            });
+
+                                            const matchesMonth = commentMonth === xValue;
+
+                                            return matchesRating && matchesMonth;
+                                        });
+
+                                        // Update modal state
+                                        setBarModalTitle(`Month: ${xValue} · Type: ${label}`);
+                                        setFilterModel({ monthYear: xValue });
+                                        setModalGridData(filteredData);
+                                        setIsBarModalOpen(true);
+                                    }
+                                },
+                            },
+
                             axes: [
                                 {
                                     type: "category",
