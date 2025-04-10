@@ -1,3 +1,5 @@
+import { Histogram } from "perf_hooks";
+
 export interface clientSatisfactionDashboardResponse {
     resource: {
         kpi: kpiData;
@@ -13,6 +15,7 @@ export interface clientSatisfactionDashboardResponse {
             serviceComments: serviceComment[];
         }
         companyComments: companyComment[];
+        histogramDataSet: histogramData[]
     };
 }
 
@@ -36,6 +39,7 @@ export interface npsScore {
 export interface staffRating {
     staffId: string;
     staffName: string;
+    profileImgUrl: string;
     positiveCount: number;
     neutralCount: number;
     negativeCount: number;
@@ -87,3 +91,7 @@ export interface companyComment {
     rating: number;
 }
 
+interface histogramData {
+    value: number; // 0-10 x axis
+    count: number // y axis
+}
