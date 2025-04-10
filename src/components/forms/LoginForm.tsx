@@ -112,14 +112,14 @@ export function LoginForm() {
           successMessage: "Successfully logged in!",
           errorMessage: "Incorrect user or password",
           redirectOnError: false,
-        }
+        },
       );
       if (result) {
         router.push(result.redirectUrl);
       }
     } else {
       const appleSub = String(
-        await decryptData(decodeURIComponent(linkAppleAccountSub))
+        await decryptData(decodeURIComponent(linkAppleAccountSub)),
       );
 
       const appleLinkingResult: {
@@ -138,7 +138,7 @@ export function LoginForm() {
             sub: appleSub,
           },
           suppressError: true,
-        }
+        },
       );
       if (appleLinkingResult !== null) {
         if (appleLinkingResult.redirectUrl) {
@@ -214,7 +214,7 @@ export function LoginForm() {
                   if (secretKey !== undefined) {
                     const encryptedToken = CryptoJS.AES.encrypt(
                       result.sub,
-                      secretKey
+                      secretKey,
                     ).toString();
                     const appleAccountSubRedirectUrl = secureLink
                       ? `/login/?link-apple-account-sub=${encodeURIComponent(encryptedToken)}&l=${secureLink}`
@@ -261,7 +261,7 @@ export function LoginForm() {
                       : null,
                 },
                 suppressError: true,
-              }
+              },
             );
 
             if (result) {
@@ -534,7 +534,7 @@ export function LoginForm() {
           align={"center"}
         >
           <Text p="0" pt="10px" fontSize={["10px", "12px"]} color="gray">
-            Copyright &copy; 2024 Sedulo Limited (v1.1.5)
+            Copyright &copy; 2024 Sedulo Limited (v1.2.0)
           </Text>
           <Link href={"/privacy-policy"}>
             <Text p="0" pt="10px" fontSize={["10px", "12px"]} color="gray">

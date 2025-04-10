@@ -19,7 +19,6 @@ export default async function ENPSWorkflowPage({
 
   const stages = await getWorkflowStages(workflowInstanceId);
 
-  // Pass the fetched data to WorkflowLayout
   return (
     <NewWorkflowLayout
       stages={stages}

@@ -96,6 +96,10 @@ const useFormNavigation = ({
       if (!surveyJSModel.completeLastPage()) {
         surveyJSModel.autoFocusFirstError;
         return;
+      } else {
+        switchToDisplayMode();
+        surveyJSModel.clear(false, false);
+        surveyJSModel.render();
       }
     } else {
       // If there are errors, focus on the first page with an error
@@ -116,6 +120,10 @@ const useFormNavigation = ({
       if (!surveyJSModel.completeLastPage()) {
         surveyJSModel.autoFocusFirstError;
         return;
+      } else {
+        switchToDisplayMode();
+        surveyJSModel.clear(false, false);
+        surveyJSModel.render();
       }
     } else {
       // If there are errors, focus on the first page with an error

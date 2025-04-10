@@ -194,12 +194,12 @@ export function ManageTagsModalBody({
           setSelectedTabIndex(index);
         }}
       >
-        <TabList>
+        <TabList borderBottom="none">
           <Tab
             _selected={{
-              color: "green.500",
-              borderBottom: "2px solid",
-              borderBottomColor: "green.500",
+              color: "white",
+              bg: "green.500",
+              borderTopRadius: "md",
             }}
             _focus={{
               boxShadow: "none",
@@ -208,14 +208,18 @@ export function ManageTagsModalBody({
               background: "none",
             }}
             width="50%"
+            color="green.500"
+            border="1px solid"
+            borderColor="green.500"
+            borderTopRadius="md"
           >
             Add
           </Tab>
           <Tab
             _selected={{
-              color: "red.500",
-              borderBottom: "2px solid",
-              borderBottomColor: "red.500",
+              color: "white",
+              bg: "red.500",
+              borderTopRadius: "md",
             }}
             _focus={{
               boxShadow: "none",
@@ -224,6 +228,10 @@ export function ManageTagsModalBody({
               background: "none",
             }}
             width="50%"
+            color="red.500"
+            border="1px solid"
+            borderColor="red.500"
+            borderTopRadius="md"
           >
             Remove
           </Tab>
@@ -237,9 +245,14 @@ export function ManageTagsModalBody({
                 <Select
                   placeholder="Select a tag to add"
                   value={selectedTagId}
+                  color="primaryTextColor"
                   sx={{
                     option: {
                       backgroundColor: theme.colors.elementBG,
+                    },
+                    "&:focus": {
+                      borderColor: "primary",
+                      boxShadow: `0 0 0 1px ${theme.colors.primary}`,
                     },
                   }}
                   onChange={(e) => {
@@ -250,7 +263,13 @@ export function ManageTagsModalBody({
                   {availableTags && availableTags[1] ? (
                     availableTags.map((tag: Tag) => {
                       return (
-                        <option key={tag.id} value={String(tag.id)}>
+                        <option
+                          style={{
+                            backgroundColor: theme.colors.elementBG,
+                          }}
+                          key={tag.id}
+                          value={String(tag.id)}
+                        >
                           {tag.name}
                         </option>
                       );
@@ -269,6 +288,14 @@ export function ManageTagsModalBody({
                 alignItems="center"
                 gap={[0, 0, 2]}
                 lineHeight={0}
+                _hover={
+                  !selectedTagId
+                    ? {}
+                    : {
+                        backgroundColor: "transparent",
+                        color: "green.900",
+                      }
+                }
               >
                 <Add />
                 Add Tag
@@ -281,6 +308,7 @@ export function ManageTagsModalBody({
             <VStack spacing={4} align="stretch">
               <Box>
                 <Select
+                  color="primaryTextColor"
                   placeholder="Select a tag to remove"
                   value={selectedTagToRemoveId}
                   onChange={(e) => {
@@ -290,6 +318,11 @@ export function ManageTagsModalBody({
                   sx={{
                     option: {
                       backgroundColor: theme.colors.elementBG,
+                      color: "primaryTextColor",
+                    },
+                    "&:focus": {
+                      borderColor: "primary",
+                      boxShadow: `0 0 0 1px ${theme.colors.primary}`,
                     },
                   }}
                 >
@@ -309,8 +342,16 @@ export function ManageTagsModalBody({
                 alignItems="center"
                 gap={[0, 0, 2]}
                 lineHeight={0}
+                _hover={
+                  !selectedTagToRemoveId
+                    ? {}
+                    : {
+                        backgroundColor: "transparent",
+                        color: "red.900",
+                      }
+                }
               >
-                <Remove />
+                <Add />
                 Remove Tag
               </Button>
             </VStack>
@@ -321,11 +362,15 @@ export function ManageTagsModalBody({
       <Button
         mx={4}
         variant="darkGray"
+        border="none"
         onClick={onClose}
         display="flex"
         alignItems="center"
         gap={[0, 0, 2]}
         lineHeight={0}
+        _hover={{
+          backgroundColor: theme.colors.primary,
+        }}
       >
         <Check />
         Done
