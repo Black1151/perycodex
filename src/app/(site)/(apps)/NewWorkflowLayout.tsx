@@ -225,7 +225,23 @@ const NewWorkflowLayout = ({
           ? JSON.parse(formDataset.jsonResponse)
           : formDataset?.jsonResponse;
       setData(parsedData);
-      if (formVariables) setFormVariables(parseFormVariables(formVariables));
+
+      const stageMetaPlain = Object.fromEntries(
+        requiredWorkflowVariables.map((key) => [
+          key,
+          currentStage[key as keyof WorkflowStage],
+        ]),
+      );
+      const workflowMetaObject = {
+        currentStageMeta: stageMetaPlain,
+      };
+
+      if (formVariables) {
+        const parsedVariables = parseFormVariables(formVariables);
+        setFormVariables([workflowMetaObject, ...parsedVariables]);
+      } else {
+        setFormVariables([workflowMetaObject]);
+      }
 
       const isAuthorised = checkIsUserAuthorisedForCurrentStage(
         user,
@@ -643,3 +659,29 @@ const checkIsUserAuthorisedForCurrentStage = (
 
   return true;
 };
+
+const requiredWorkflowVariables = [
+  "wfInstId",
+  "wfInstCustomer",
+  "wfInstCreatedBy",
+  "wfInstStatus",
+  "wfInstTool",
+  "wfId",
+  "wfName",
+  "bpId",
+  "bpName",
+  "bpOrder",
+  "anonSubmission",
+  "bpInstId",
+  "bpInstBpId",
+  "bpInstCustomer",
+  "bpInstCreatedBy",
+  "bpInstStartdDate",
+  "bpInstStatus",
+  "stageStatus",
+  "isExternalBusinessProcess",
+  "wfInstStartDate",
+  "wfInstCompleteDate",
+  "bpInstCompleteDate",
+  "bpInstStartedBy",
+];
