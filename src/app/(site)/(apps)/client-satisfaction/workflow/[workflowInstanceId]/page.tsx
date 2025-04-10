@@ -1,12 +1,8 @@
 import React from "react";
 import { verifySession } from "@/lib/dal";
 import { redirect } from "next/navigation";
-import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
 import NewWorkflowLayout from "@/app/(site)/(apps)/NewWorkflowLayout";
-import {
-  checkUserWorkflowAccess,
-  getWorkflowStages,
-} from "@/utils/functions/workflow";
+import { getWorkflowStages } from "@/utils/functions/workflow";
 
 export default async function ClientSatisfactionWorkflowPage({
   params,
@@ -21,7 +17,6 @@ export default async function ClientSatisfactionWorkflowPage({
     redirect("/login");
   }
 
-  const hasAccess = await checkUserWorkflowAccess(workflowInstanceId);
   const stages = await getWorkflowStages(workflowInstanceId);
 
   return (
@@ -29,7 +24,6 @@ export default async function ClientSatisfactionWorkflowPage({
       stages={stages}
       layout={"client-satisfaction"}
       workflowInstanceId={workflowInstanceId}
-      hasAccess={hasAccess}
     />
   );
 }
