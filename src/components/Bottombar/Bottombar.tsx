@@ -17,7 +17,7 @@ const Bottombar: React.FC<BottombarProps> = ({ loading = false, content }) => {
       bottom={0}
       left={0}
       right={0}
-      bg="white"
+      bg="elementBG"
       maxH={"100px"}
       boxShadow="xl"
       zIndex={99}
