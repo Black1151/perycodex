@@ -6,7 +6,7 @@ import { Flex } from "@chakra-ui/react";
 import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridComponentLight";
 import AgChartComponent from "@/components/agCharts/AgChartComponent";
 import FilterSidebar from "@/components/Sidebars/Dashboards Filter/FilterSidebar";
-import { staffCommentsColumnDefs } from './colDefs';
+import { staffCommentsColumnDefs } from './colDefsX';
 import { StaffDashboardProps } from './types';
 
 const StaffDashboard = () => {
