@@ -36,11 +36,6 @@ const useNavMenuItems = (
         icon: <SettingsIcon />,
         onClick: () => router.push("/customers"),
       },
-      {
-        label: "Logout",
-        icon: <ExitToAppIcon />,
-        onClick: handleLogout,
-      },
     ];
   }
 

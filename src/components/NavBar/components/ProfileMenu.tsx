@@ -125,29 +125,31 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
           </MenuItem>
         ))}
 
-        <HStack px={3} py={2}>
-          <Palette />
-          <Select
-            fontSize={16}
-            value={themeId!}
-            onChange={(e) => setThemeId(Number(e.target.value))}
-            bg="elementBG"
-            borderColor={theme.colors.primary}
-            maxWidth="210px"
-            sx={{
-              fontSize: 16,
-              option: {
-                backgroundColor: theme.colors.elementBG,
-              },
-            }}
-          >
-            {themeDropdownOptions.map((themeOption) => (
-              <option key={themeOption.value} value={themeOption.value}>
-                {themeOption.label}
-              </option>
-            ))}
-          </Select>
-        </HStack>
+        {themeDropdownOptions[0] && (
+          <HStack px={3} py={2}>
+            <Palette />
+            <Select
+              fontSize={16}
+              value={themeId!}
+              onChange={(e) => setThemeId(Number(e.target.value))}
+              bg="elementBG"
+              borderColor={theme.colors.primary}
+              maxWidth="210px"
+              sx={{
+                fontSize: [14, 16, 18],
+                option: {
+                  backgroundColor: theme.colors.elementBG,
+                },
+              }}
+            >
+              {themeDropdownOptions.map((themeOption) => (
+                <option key={themeOption.value} value={themeOption.value}>
+                  {themeOption.label}
+                </option>
+              ))}
+            </Select>
+          </HStack>
+        )}
 
         <MenuItem
           closeOnSelect
