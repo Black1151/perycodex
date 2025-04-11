@@ -5,15 +5,8 @@ export interface clientSatisfactionDashboardResponse {
         kpi: kpiData;
         nps: npsScore[];
         topStaff: staffRating[];
-        bottomStaff: staffRating[];
-        staff: {
-            staffAvgRating: staffRating[];
-            staffComments: staffComment[];
-        };
-        service: {
-            serviceAvgRating: serviceRating[];
-            serviceComments: serviceComment[];
-        }
+        staffComments: staffComment[];
+        serviceComments: serviceComment[];
         companyComments: companyComment[];
         histogramDataSet: histogramData[]
     };
@@ -43,12 +36,14 @@ export interface staffRating {
     positiveCount: number;
     neutralCount: number;
     negativeCount: number;
+    totalResponses: number;
     avgRating: number;
 }
 
 export interface staffComment {
     staffId: string;
     staffName: string;
+    staffImgUrl: string;
     comment: string;
     site: string;
     date: string;
@@ -71,7 +66,6 @@ export interface serviceComment {
     serviceId: string;
     serviceName: string;
     comment: string;
-    site: string;
     date: string;
     clientId: string;
     clientName: string;
@@ -84,7 +78,6 @@ export interface npsData {
 
 export interface companyComment {
     comment: string;
-    site: string;
     date: string;
     clientId: string;
     clientName: string;

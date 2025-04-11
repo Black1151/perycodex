@@ -1,36 +1,65 @@
-'use client'
+'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { GridApi, FirstDataRenderedEvent } from 'ag-grid-community';
-import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridComponentLight";
-import { StaffDashboardProps, staffComment, staffStats, histogramData } from "./types";
-import { staffCommentsColumnDefs } from "./colDefs";
-import { staffCommentsGridData } from "./mockData";
-import AgChartComponent from "@/components/agCharts/AgChartComponent";
 import { Flex } from "@chakra-ui/react";
+import { format, parseISO } from 'date-fns';
+
+import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridComponentLight";
+import AgChartComponent from "@/components/agCharts/AgChartComponent";
+import { staffCommentsColumnDefs } from "./colDefs";
+import { StaffDashboardProps } from "./types";
 import FilterSidebar from "@/components/Sidebars/Dashboards Filter/FilterSidebar";
 
 const StaffDashboard = () => {
     const [gridApi, setGridApi] = useState<GridApi | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [rowData, setRowData] = useState<any[]>([]);
-    const [gridData, setGridData] = useState<StaffDashboardProps>(staffCommentsGridData);
+    const [gridData, setGridData] = useState<StaffDashboardProps | null>(null);
 
     const handleGridReady = (params: FirstDataRenderedEvent) => {
         setGridApi(params.api);
     };
 
-    const top5ResponseCounts = [...gridData.resource.staffStats]
-        .sort((a, b) => b.totalResponses - a.totalResponses)
-        .slice(0, 5);
+    const onApplyFilters = async (postBody: { startDate?: Date; endDate?: Date; siteId?: string }) => {
+        if (!postBody.startDate || !postBody.endDate) return;
 
-    const top5Averages = [...gridData.resource.staffStats]
-        .sort((a, b) => b.avgRating - a.avgRating)
-        .slice(0, 5);
+        setIsLoading(true);
+
+        try {
+            const res = await fetch("/api/client-satisfaction/staff", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    startDate: postBody.startDate,
+                    endDate: postBody.endDate,
+                    siteId: postBody.siteId,
+                }),
+            });
+
+            if (!res.ok) throw new Error("Failed to fetch staff dashboard data");
+
+            const data: StaffDashboardProps = await res.json();
+            setGridData(data);
+        } catch (err) {
+            console.error("Error loading staff dashboard:", err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const staffStats = useMemo(() => gridData?.resource.staffStats || [], [gridData]);
+
+    const top5ResponseCounts = useMemo(() => {
+        return [...staffStats].sort((a, b) => b.totalResponses - a.totalResponses).slice(0, 5);
+    }, [staffStats]);
+
+    const top5Averages = useMemo(() => {
+        return [...staffStats].sort((a, b) => b.avgRating - a.avgRating).slice(0, 5);
+    }, [staffStats]);
 
     const scatterChartOptions = {
         autoSize: true,
-        data: gridData.resource.staffStats, // uses staffStats now
+        data: staffStats,
         series: [
             {
                 type: 'scatter',
@@ -38,7 +67,7 @@ const StaffDashboard = () => {
                 yKey: 'avgRating',
                 marker: {
                     size: 10,
-                    fill: '#4CAF50', // green for a better visual representation
+                    fill: '#4CAF50',
                 },
                 tooltip: {
                     renderer: ({ datum }: { datum: { staffName: string; totalResponses: number; avgRating: number } }) => ({
@@ -51,17 +80,13 @@ const StaffDashboard = () => {
             {
                 type: 'number',
                 position: 'bottom',
-                title: {
-                    text: 'Total Responses'
-                },
+                title: { text: 'Total Responses' },
                 min: 0,
             },
             {
                 type: 'number',
                 position: 'left',
-                title: {
-                    text: 'Average Rating'
-                },
+                title: { text: 'Average Rating' },
                 min: 0,
                 max: 10,
             }
@@ -145,10 +170,19 @@ const StaffDashboard = () => {
 
     return (
         <>
-            {/* ADD FILTER BACK IN HERE */}
-            
+            <FilterSidebar
+                onApplyFilters={onApplyFilters}
+                filterOptions={{
+                    showDateFilter: true,
+                    showSitesFilter: true,
+                    showDepartmentsFilter: true,
+                }}
+                dateFilterMode="monthly"
+                defaultDateFilter="currentMonth"
+            />
+
             <DataGridComponentLight
-                data={gridData.resource.staffComments}
+                data={gridData?.resource.staffComments || []}
                 loading={isLoading}
                 initialFields={staffCommentsColumnDefs}
                 showTopBar={false}
@@ -158,35 +192,30 @@ const StaffDashboard = () => {
                 groupDisplayType="groupRows"
             />
 
-            <Flex
-                w="100%"
-                gap={6}
-                direction={{ base: "column", lg: "row" }}
-            >
+            <Flex w="100%" gap={6} direction={{ base: "column", lg: "row" }}>
                 <AgChartComponent
                     flex="1"
                     title="Top 5 Staff by Average Rating"
                     chartOptions={top5AveragesChartOptions}
-                    noData={false}
+                    noData={!top5Averages.length}
                 />
 
                 <AgChartComponent
                     flex="1"
                     title="Top 5 Staff by Total Responses"
                     chartOptions={top5ResponseCountsChartOptions}
-                    noData={false}
+                    noData={!top5ResponseCounts.length}
                 />
             </Flex>
-
 
             <AgChartComponent
                 flex="1 1 100%"
                 title="Staff Score and Comments"
                 chartOptions={scatterChartOptions}
-                noData={false}
+                noData={!staffStats.length}
             />
         </>
-    )
-}
+    );
+};
 
-export default StaffDashboard
+export default StaffDashboard;

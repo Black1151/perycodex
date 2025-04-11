@@ -6,47 +6,30 @@ import { Flex, VStack, Box, Text } from "@chakra-ui/react";
 import { useTheme } from "@chakra-ui/react";
 import { dateRangeOptions } from "@/components/Sidebars/Dashboards Filter/dateRangeUtils";
 import { ScoreTooltipRenderer } from "@/components/agCharts/tooltips/ScoreTooltipRenderer";
-import { staffCommentsColumnDefs } from "./StaffGridColumnDefs";
-import { serviceCommentsColumnDefs } from "./ServiceGridColumnDefs";
 import { AgRadialGaugeOptions } from "ag-charts-community";
 import { GridApi, FirstDataRenderedEvent } from "ag-grid-charts-enterprise";
 import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridComponentLight";
 import PerygonCard from "@/components/layout/PerygonCard";
 import { format } from "date-fns";
-import { clientSatisfactionDashboardResponse, kpiData, npsScore, staffRating, staffComment, serviceRating, serviceComment, npsData, companyComment } from "./types";
+import { MyClientsDashboardProps, staffComment, staffStats, npsScore, companyStat, histogramData } from "./types";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { useWorkflow } from "@/providers/WorkflowProvider";
-import GaugeLinkWrapper from "./GaugeLinkWrapper";
 import { AgNodeClickEvent } from "ag-charts-community";
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody } from "@chakra-ui/react";
-import { ModalGridColumnDefs } from "./MoalGridColDefs";
 import FilterSidebar from "@/components/Sidebars/Dashboards Filter/FilterSidebar";
 
 interface filterModel {
     monthYear: string;
-    commentType: string;
 }
 
-const ClientSatisfactionDashboard = () => {
+const MyClientsDashboard = () => {
     const [filterOptions, setFilterOptions] = useState<Record<string, any>>({});
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [kpiData, setKpiData] = useState<kpiData>();
-    const [npsData, setNpsData] = useState<npsData>();
-    const [staffData, setStaffData] = useState<staffRating[] | null>(null);
-    const [serviceData, setServiceData] = useState<serviceRating[] | null>(null);
-    const [companyComments, setCompanyComments] = useState<companyComment[] | null>(null);
     const theme = useTheme();
-    const [topStaff, setTopStaff] = useState<staffRating[] | null>(null);
-    const [bottomStaff, setBottomStaff] = useState<staffRating[] | null>(null);
-    const [staffComments, setStaffComments] = useState<staffComment[] | null>(null);
-    const [serviceComments, setServiceComments] = useState<serviceComment[] | null>(null);
-    const [staffCommentsGridData, setStaffCommentsGridData] = useState<Record<string, any>[]>([]);
-    const [serviceCommentsGridData, setServiceCommentsGridData] = useState<Record<string, any>[]>([]);
     const [modalGridData, setModalGridData] = useState<Record<string, any>[]>([]);
     const [feedbackCount, setFeedbackCount] = useState<number>(0);
-    const [feedbackCountChangePercent, setFeedbackCountChangePercent] = useState<number>(0);
     const [gridApi, setGridApi] = useState<GridApi | null>(null);
-    const [filterModel, setFilterModel] = useState<filterModel>({ monthYear: "", commentType: "" });
+    const [filterModel, setFilterModel] = useState<filterModel>({ monthYear: "" });
     const { toolId, workflowId } = useWorkflow();
     const [isBarModalOpen, setIsBarModalOpen] = useState(false);
     const [barModalTitle, setBarModalTitle] = useState("");
@@ -80,8 +63,8 @@ const ClientSatisfactionDashboard = () => {
         console.log("Request Body:", requestBody);
 
         try {
-            const response = await fetchClient<clientSatisfactionDashboardResponse>(
-                "/api/client-satisfaction/summary",
+            const response = await fetchClient<MyClientsDashboardProps>(
+                "/api/client-satisfaction/my-clients",
                 {
                     method: "POST",
                     body: requestBody,
@@ -306,17 +289,11 @@ const ClientSatisfactionDashboard = () => {
             setModalGridData(
                 companyComments.filter((data) => {
                     const commentMonth = data.date.slice(0, 7); // Extracts "YYYY-MM"
-                    const commentType = data.rating > 8 ? "promoters" : data.rating > 6 ? "passives" : "detractors";
-
-                    return (
-                        commentMonth === filterModel.monthYear &&
-                        commentType === filterModel.commentType
-                    );
+                    return commentMonth === filterModel.monthYear;
                 })
             );
         }
-    }, [isBarModalOpen, filterModel, companyComments]);
-
+    }, [isBarModalOpen, filterModel]);
 
     if (isLoading) {
         return <div>Loading...</div>;
@@ -335,8 +312,8 @@ const ClientSatisfactionDashboard = () => {
                     showSitesFilter: false,
                     showDepartmentsFilter: false,
                 }}
-                dateFilterMode={dateRangeOption}
-                defaultDateFilter={defaultDateFilterOption}
+                dateFilterMode="monthly"
+                defaultDateFilter="last6Months"
             />
 
             {/* Bar Modal */}
@@ -366,6 +343,9 @@ const ClientSatisfactionDashboard = () => {
                                     showTopBar={false}
                                     filterModel={filterModel}
                                 />
+                                <pre>FILTER MODEL: {JSON.stringify(filterModel)}</pre>
+                                <pre>DATA: {JSON.stringify(modalGridData)}</pre>
+                                <pre>COMPANY COMMENTS: {JSON.stringify(companyComments)}</pre>
                             </Box>
                         </VStack>
                     </ModalBody>
@@ -471,25 +451,7 @@ const ClientSatisfactionDashboard = () => {
                                     },
                                 },
                             ],
-                            axes: [
-                                {
-                                    type: "category",
-                                    position: "bottom",
-                                    title: {
-                                        text: "Month",
-                                    },
-                                },
-                                {
-                                    type: "number",
-                                    position: "left",
-                                    title: {
-                                        text: "NPS Score",
-                                    },
-                                    min: 0, // 👈 Set Y-axis minimum here
-                                },
-                            ],
                         }}
-
                         noData={npsData.scores.length === 0}
                     />
                 </Flex>
@@ -542,7 +504,6 @@ const ClientSatisfactionDashboard = () => {
                                     const { xKey, yKey, datum } = params;
 
                                     if (datum && xKey && yKey) {
-
                                         // Extract month (x-axis value)
                                         const xValue =
                                             typeof datum[xKey] === "object" ? datum[xKey]?.value : datum[xKey];
@@ -577,19 +538,10 @@ const ClientSatisfactionDashboard = () => {
                                         });
 
                                         // Update modal state
-                                        setBarModalTitle(`${xValue} - ${label}`);
-                                        setFilterModel({ monthYear: xValue, commentType: yKey });
-
-                                        // Build modalGridData with full row info
-                                        const finalModalGridRows = filteredData.map((comment) => ({
-                                            clientName: comment.clientName,
-                                            rating: comment.rating,
-                                            comment: comment.comment,
-                                        }));
-
-                                        setModalGridData(finalModalGridRows);
+                                        setBarModalTitle(`Month: ${xValue} · Type: ${label}`);
+                                        setFilterModel({ monthYear: xValue });
+                                        setModalGridData(filteredData);
                                         setIsBarModalOpen(true);
-
                                     }
                                 },
                             },
@@ -897,4 +849,4 @@ const ClientSatisfactionDashboard = () => {
     );
 }
 
-export default ClientSatisfactionDashboard;
+export default MyClientsDashboard;

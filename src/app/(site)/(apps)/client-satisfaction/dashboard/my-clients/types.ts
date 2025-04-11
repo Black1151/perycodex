@@ -41,3 +41,5 @@ interface histogramData {
     value: number; // 0-10 x axis
     count: number // y axis
 }
+
+export type { MyClientsDashboardProps, staffComment, staffStats, npsScore, companyStat, histogramData }
