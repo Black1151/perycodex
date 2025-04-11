@@ -1,15 +1,13 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { GridApi, FirstDataRenderedEvent } from 'ag-grid-community';
 import { Flex } from "@chakra-ui/react";
-import { format, parseISO } from 'date-fns';
-
 import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridComponentLight";
 import AgChartComponent from "@/components/agCharts/AgChartComponent";
-import { staffCommentsColumnDefs } from "./colDefs";
-import { StaffDashboardProps } from "./types";
 import FilterSidebar from "@/components/Sidebars/Dashboards Filter/FilterSidebar";
+import { staffCommentsColumnDefs } from './colDefs';
+import { StaffDashboardProps } from './types';
 
 const StaffDashboard = () => {
     const [gridApi, setGridApi] = useState<GridApi | null>(null);
