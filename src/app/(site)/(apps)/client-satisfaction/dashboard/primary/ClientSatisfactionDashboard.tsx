@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React, { useState, useEffect } from "react";
 import AgChartComponent from "@/components/agCharts/AgChartComponent";
 import AgGaugeComponent from "@/components/agCharts/AgGaugeComponent";
@@ -13,888 +13,807 @@ import { GridApi, FirstDataRenderedEvent } from "ag-grid-charts-enterprise";
 import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridComponentLight";
 import PerygonCard from "@/components/layout/PerygonCard";
 import { format } from "date-fns";
-import { clientSatisfactionDashboardResponse, kpiData, npsScore, staffRating, staffComment, serviceRating, serviceComment, npsData, companyComment } from "./types";
+import {
+  clientSatisfactionDashboardResponse,
+  kpiData,
+  staffRating,
+  staffComment,
+  serviceRating,
+  serviceComment,
+  npsData,
+  companyComment,
+} from "./types";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import GaugeLinkWrapper from "./GaugeLinkWrapper";
 import { AgNodeClickEvent } from "ag-charts-community";
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody } from "@chakra-ui/react";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+} from "@chakra-ui/react";
 import { ModalGridColumnDefs } from "./MoalGridColDefs";
 import FilterSidebar from "@/components/Sidebars/Dashboards Filter/FilterSidebar";
 
 interface filterModel {
-    monthYear: string;
-    commentType: string;
+  monthYear: string;
+  commentType: string;
 }
 
 const ClientSatisfactionDashboard = () => {
-    const [filterOptions, setFilterOptions] = useState<Record<string, any>>({});
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [kpiData, setKpiData] = useState<kpiData>();
-    const [npsData, setNpsData] = useState<npsData>();
-    const [staffData, setStaffData] = useState<staffRating[] | null>(null);
-    const [serviceData, setServiceData] = useState<serviceRating[] | null>(null);
-    const [companyComments, setCompanyComments] = useState<companyComment[] | null>(null);
-    const theme = useTheme();
-    const [topStaff, setTopStaff] = useState<staffRating[] | null>(null);
-    const [bottomStaff, setBottomStaff] = useState<staffRating[] | null>(null);
-    const [staffComments, setStaffComments] = useState<staffComment[] | null>(null);
-    const [serviceComments, setServiceComments] = useState<serviceComment[] | null>(null);
-    const [staffCommentsGridData, setStaffCommentsGridData] = useState<Record<string, any>[]>([]);
-    const [serviceCommentsGridData, setServiceCommentsGridData] = useState<Record<string, any>[]>([]);
-    const [modalGridData, setModalGridData] = useState<Record<string, any>[]>([]);
-    const [feedbackCount, setFeedbackCount] = useState<number>(0);
-    const [feedbackCountChangePercent, setFeedbackCountChangePercent] = useState<number>(0);
-    const [gridApi, setGridApi] = useState<GridApi | null>(null);
-    const [filterModel, setFilterModel] = useState<filterModel>({ monthYear: "", commentType: "" });
-    const { toolId, workflowId } = useWorkflow();
-    const [isBarModalOpen, setIsBarModalOpen] = useState(false);
-    const [barModalTitle, setBarModalTitle] = useState("");
+  const [filterOptions, setFilterOptions] = useState<Record<string, any>>({});
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [kpiData, setKpiData] = useState<kpiData>();
+  const [npsData, setNpsData] = useState<npsData>();
+  const [companyComments, setCompanyComments] = useState<
+    companyComment[] | null
+  >(null);
+  const theme = useTheme();
+  const [topStaff, setTopStaff] = useState<staffRating[] | null>(null);
+  const [topStaffByCount, setTopStaffByCount] = useState<staffRating[] | null>(
+    null,
+  );
+  const [staffComments, setStaffComments] = useState<staffComment[] | null>(
+    null,
+  );
+  const [serviceComments, setServiceComments] = useState<
+    serviceComment[] | null
+  >(null);
+  const [staffCommentsGridData, setStaffCommentsGridData] = useState<
+    Record<string, any>[]
+  >([]);
+  const [serviceCommentsGridData, setServiceCommentsGridData] = useState<
+    Record<string, any>[]
+  >([]);
+  const [modalGridData, setModalGridData] = useState<Record<string, any>[]>([]);
+  const [feedbackCount, setFeedbackCount] = useState<number>(0);
+  const [feedbackCountChangePercent, setFeedbackCountChangePercent] =
+    useState<number>(0);
+  const [gridApi, setGridApi] = useState<GridApi | null>(null);
+  const [filterModel, setFilterModel] = useState<filterModel>({
+    monthYear: "",
+    commentType: "",
+  });
+  const { toolId, workflowId } = useWorkflow();
+  const [isBarModalOpen, setIsBarModalOpen] = useState(false);
+  const [barModalTitle, setBarModalTitle] = useState("");
 
-    const handleGridReady = (params: FirstDataRenderedEvent) => {
-        setGridApi(params.api);
+  const handleGridReady = (params: FirstDataRenderedEvent) => {
+    setGridApi(params.api);
+  };
+
+  const { fetchClient } = useFetchClient();
+
+  const getData = async (postBody: Record<string, any> = filterOptions) => {
+    setIsLoading(true);
+
+    // Format dates to "yyyy-MM-dd"
+    const formattedBody = {
+      ...postBody,
+      startDate: postBody.startDate
+        ? format(new Date(postBody.startDate), "yyyy-MM-dd")
+        : undefined,
+      endDate: postBody.endDate
+        ? format(new Date(postBody.endDate), "yyyy-MM-dd")
+        : undefined,
     };
 
-    const { fetchClient } = useFetchClient();
-
-    const getData = async (postBody: Record<string, any> = filterOptions) => {
-        setIsLoading(true);
-
-        // Format dates to "yyyy-MM-dd"
-        const formattedBody = {
-            ...postBody,
-            startDate: postBody.startDate
-                ? format(new Date(postBody.startDate), "yyyy-MM-dd")
-                : undefined,
-            endDate: postBody.endDate
-                ? format(new Date(postBody.endDate), "yyyy-MM-dd")
-                : undefined,
-        };
-
-        const requestBody = {
-            toolId,
-            workflowId,
-            ...formattedBody,
-        };
-
-        console.log("Request Body:", requestBody);
-
-        try {
-            const response = await fetchClient<clientSatisfactionDashboardResponse>(
-                "/api/client-satisfaction/summary",
-                {
-                    method: "POST",
-                    body: requestBody,
-                }
-            );
-            console.log("Response from API:", response);
-
-            if (response && response) {
-                setKpiData(response.resource.kpi);
-                setStaffData(response.resource.staff.staffAvgRating);
-                setTopStaff(response.resource.topStaff);
-                setBottomStaff(response.resource.bottomStaff);
-                setNpsData({ scores: response.resource.nps });
-                setServiceData(response.resource.service.serviceAvgRating);
-                setCompanyComments(response.resource.companyComments);
-                setStaffComments(response.resource.staff.staffComments);
-                setServiceComments(response.resource.service.serviceComments);
-                setFeedbackCount(response.resource.kpi.feedbackCount);
-
-                // Assign grid data using staff comments
-                const staffCommentsData = response.resource.staff.staffComments.map((comment) => ({
-                    type: "Staff",
-                    staffId: comment.staffId,
-                    staffName: comment.staffName,
-                    comment: comment.comment,
-                    site: comment.site,
-                    date: comment.date,
-                    clientId: comment.clientId,
-                    clientName: comment.clientName,
-                    rating: comment.rating,
-                }));
-
-                // Assign grid data using service comments
-                const serviceCommentsData = response.resource.service.serviceComments.map((comment) => ({
-                    type: "Service",
-                    serviceId: comment.serviceId,
-                    serviceName: comment.serviceName,
-                    comment: comment.comment,
-                    site: comment.site,
-                    date: comment.date,
-                    clientId: comment.clientId,
-                    clientName: comment.clientName,
-                    rating: comment.rating,
-                }));
-
-                setStaffCommentsGridData(staffCommentsData);
-                setServiceCommentsGridData(serviceCommentsData);
-            } else {
-            }
-        } catch (error) {
-            console.log("Error fetching data:", error);
-        } finally {
-            setIsLoading(false);
-        }
+    const requestBody = {
+      toolId,
+      workflowId,
+      ...formattedBody,
     };
 
-    const onFilterChange = (postBody: Record<string, any>) => {
-        setFilterOptions(postBody);
-        getData(postBody);
-    };
+    console.log("Request Body:", requestBody);
 
-    let kpiGuagesOptions: AgRadialGaugeOptions[] = [];
+    try {
+      const response = await fetchClient<clientSatisfactionDashboardResponse>(
+        "/api/client-satisfaction/summary",
+        {
+          method: "POST",
+          body: requestBody,
+        },
+      );
+      console.log("Response from API:", response);
 
-    if (kpiData && npsData && staffData && serviceData && companyComments && topStaff && bottomStaff) {
-        kpiGuagesOptions = [
-            {
-                background: {
-                    fill: theme.colors.elementBG,
-                },
-                type: "radial-gauge",
-                value: kpiData.avgStaffRating,
-                scale: {
-                    min: 0,
-                    max: 10,
-                },
-                secondaryLabel: {
-                    text: "Average Staff Rating",
-                },
-                cornerMode: "item",
-                cornerRadius: 99,
-                startAngle: 225,
-                endAngle: 495,
-                bar: {
-                    fills: [
-                        { color: "red", stop: -100 },
-                        { color: theme.colors.yellow, stop: 0 },
-                        { color: theme.colors.seduloGreen, stop: 100 },
-                    ],
-                    fillMode: "continuous",
-                },
-                segmentation: {
-                    enabled: true,
-                    interval: {
-                        count: 3,
-                    },
-                    spacing: 4,
-                },
-            },
-            {
-                background: {
-                    fill: theme.colors.elementBG,
-                },
-                type: "radial-gauge",
-                value: kpiData.avgServiceRating,
-                scale: {
-                    min: 0,
-                    max: 10,
-                },
-                secondaryLabel: {
-                    text: "Average Service Rating",
-                },
-                cornerMode: "item",
-                cornerRadius: 99,
-                startAngle: 225,
-                endAngle: 495,
-                bar: {
-                    fills: [
-                        { color: "red", stop: -100 },
-                        { color: theme.colors.yellow, stop: 0 },
-                        { color: theme.colors.seduloGreen, stop: 100 },
-                    ],
-                    fillMode: "continuous",
-                },
-                segmentation: {
-                    enabled: true,
-                    interval: {
-                        count: 3,
-                    },
-                    spacing: 4,
-                },
-            },
-            {
-                background: {
-                    fill: theme.colors.elementBG,
-                },
-                type: "radial-gauge",
-                value: kpiData.avgOverallRating,
-                scale: {
-                    min: 0,
-                    max: 10,
-                },
-                secondaryLabel: {
-                    text: "Average Overall Rating",
-                },
-                cornerMode: "item",
-                cornerRadius: 99,
-                startAngle: 225,
-                endAngle: 495,
-                bar: {
-                    fills: [
-                        { color: "red", stop: -100 },
-                        { color: theme.colors.yellow, stop: 0 },
-                        { color: theme.colors.seduloGreen, stop: 100 },
-                    ],
-                    fillMode: "continuous",
-                },
-                segmentation: {
-                    enabled: true,
-                    interval: {
-                        count: 3,
-                    },
-                    spacing: 4,
-                },
-            },
-            {
-                background: {
-                    fill: theme.colors.elementBG,
-                },
-                type: "radial-gauge",
-                value: kpiData.nps,
-                scale: {
-                    min: -100,
-                    max: 100,
-                },
-                secondaryLabel: {
-                    text: "NPS Score",
-                },
-                cornerMode: "item",
-                cornerRadius: 99,
-                startAngle: 225,
-                endAngle: 495,
-                bar: {
-                    fills: [
-                        { color: "red", stop: -100 },
-                        { color: theme.colors.yellow, stop: 0 },
-                        { color: theme.colors.seduloGreen, stop: 100 },
-                    ],
-                    fillMode: "continuous",
-                },
-                segmentation: {
-                    enabled: true,
-                    interval: {
-                        count: 3,
-                    },
-                    spacing: 4,
-                },
-            }
-        ];
-    };
+      if (response && response) {
+        setKpiData(response.resource.kpi);
+        setTopStaff(response.resource.topStaffByRating);
+        setTopStaffByCount(response.resource.topStaffByCount);
+        setNpsData({ scores: response.resource.nps });
+        setCompanyComments(response.resource.companyComments);
+        setStaffComments(response.resource.staffComments);
+        setServiceComments(response.resource.serviceComments);
+        setFeedbackCount(response.resource.kpi.feedbackCount);
 
-    const dateRangeOption = "monthly";
-    const defaultDateFilterOption = "last6Months";
-
-    useEffect(() => {
-        if (!toolId || !workflowId) {
-            return;
-        }
-        const monthlyOption = dateRangeOptions[dateRangeOption].find(
-            (opt) => opt.value === defaultDateFilterOption
+        // Assign grid data using staff comments
+        const staffCommentsData = response.resource.staffComments.map(
+          (comment) => ({
+            type: "Staff",
+            staffId: comment.staffId,
+            staffName: comment.staffName,
+            comment: comment.comment,
+            site: comment.site,
+            date: comment.date,
+            clientId: comment.clientId,
+            clientName: comment.clientName,
+            rating: comment.rating,
+          }),
         );
 
-        if (monthlyOption) {
-            const [startDate, endDate] = monthlyOption.getRange();
-            getData({ startDate, endDate });
-        } else {
-            getData();
-        }
-    }, [toolId, workflowId]);
+        // Assign grid data using service comments
+        const serviceCommentsData = response.resource.serviceComments.map(
+          (comment) => ({
+            type: "Service",
+            serviceId: comment.serviceId,
+            serviceName: comment.serviceName,
+            comment: comment.comment,
+            date: comment.date,
+            clientId: comment.clientId,
+            clientName: comment.clientName,
+            rating: comment.rating,
+          }),
+        );
 
-    useEffect(() => {
-        if (isBarModalOpen && filterModel && companyComments) {
-            setModalGridData(
-                companyComments.filter((data) => {
-                    const commentMonth = data.date.slice(0, 7); // Extracts "YYYY-MM"
-                    const commentType = data.rating > 8 ? "promoters" : data.rating > 6 ? "passives" : "detractors";
-
-                    return (
-                        commentMonth === filterModel.monthYear &&
-                        commentType === filterModel.commentType
-                    );
-                })
-            );
-        }
-    }, [isBarModalOpen, filterModel, companyComments]);
-
-
-    if (isLoading) {
-        return <div>Loading...</div>;
+        setStaffCommentsGridData(staffCommentsData);
+        setServiceCommentsGridData(serviceCommentsData);
+      } else {
+      }
+    } catch (error) {
+      console.log("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    if (!kpiData || !npsData || !staffData || !serviceData || !companyComments || !topStaff || !bottomStaff) {
-        return <div>No data available</div>;
+  const onFilterChange = (postBody: Record<string, any>) => {
+    setFilterOptions(postBody);
+    getData(postBody);
+  };
+
+  let kpiGuagesOptions: AgRadialGaugeOptions[] = [];
+
+  if (kpiData && npsData && companyComments && topStaff) {
+    kpiGuagesOptions = [
+      {
+        background: {
+          fill: theme.colors.elementBG,
+        },
+        type: "radial-gauge",
+        value: kpiData.avgStaffRating,
+        scale: {
+          min: 0,
+          max: 10,
+        },
+        secondaryLabel: {
+          text: "Average Staff Rating",
+        },
+        cornerMode: "item",
+        cornerRadius: 99,
+        startAngle: 225,
+        endAngle: 495,
+        bar: {
+          fills: [
+            { color: "red", stop: -100 },
+            { color: theme.colors.yellow, stop: 0 },
+            { color: theme.colors.seduloGreen, stop: 100 },
+          ],
+          fillMode: "continuous",
+        },
+        segmentation: {
+          enabled: true,
+          interval: {
+            count: 3,
+          },
+          spacing: 4,
+        },
+      },
+      {
+        background: {
+          fill: theme.colors.elementBG,
+        },
+        type: "radial-gauge",
+        value: kpiData.avgServiceRating,
+        scale: {
+          min: 0,
+          max: 10,
+        },
+        secondaryLabel: {
+          text: "Average Service Rating",
+        },
+        cornerMode: "item",
+        cornerRadius: 99,
+        startAngle: 225,
+        endAngle: 495,
+        bar: {
+          fills: [
+            { color: "red", stop: -100 },
+            { color: theme.colors.yellow, stop: 0 },
+            { color: theme.colors.seduloGreen, stop: 100 },
+          ],
+          fillMode: "continuous",
+        },
+        segmentation: {
+          enabled: true,
+          interval: {
+            count: 3,
+          },
+          spacing: 4,
+        },
+      },
+      {
+        background: {
+          fill: theme.colors.elementBG,
+        },
+        type: "radial-gauge",
+        value: kpiData.avgOverallRating,
+        scale: {
+          min: 0,
+          max: 10,
+        },
+        secondaryLabel: {
+          text: "Average Overall Rating",
+        },
+        cornerMode: "item",
+        cornerRadius: 99,
+        startAngle: 225,
+        endAngle: 495,
+        bar: {
+          fills: [
+            { color: "red", stop: -100 },
+            { color: theme.colors.yellow, stop: 0 },
+            { color: theme.colors.seduloGreen, stop: 100 },
+          ],
+          fillMode: "continuous",
+        },
+        segmentation: {
+          enabled: true,
+          interval: {
+            count: 3,
+          },
+          spacing: 4,
+        },
+      },
+      {
+        background: {
+          fill: theme.colors.elementBG,
+        },
+        type: "radial-gauge",
+        value: kpiData.nps,
+        scale: {
+          min: -100,
+          max: 100,
+        },
+        secondaryLabel: {
+          text: "NPS Score",
+        },
+        cornerMode: "item",
+        cornerRadius: 99,
+        startAngle: 225,
+        endAngle: 495,
+        bar: {
+          fills: [
+            { color: "red", stop: -100 },
+            { color: theme.colors.yellow, stop: 0 },
+            { color: theme.colors.seduloGreen, stop: 100 },
+          ],
+          fillMode: "continuous",
+        },
+        segmentation: {
+          enabled: true,
+          interval: {
+            count: 3,
+          },
+          spacing: 4,
+        },
+      },
+    ];
+  }
+
+  const dateRangeOption = "monthly";
+  const defaultDateFilterOption = "last6Months";
+
+  useEffect(() => {
+    if (!toolId || !workflowId) {
+      return;
     }
-
-    return (
-        <>
-            <FilterSidebar
-                onApplyFilters={onFilterChange}
-                filterOptions={{
-                    showDateFilter: true,
-                    showSitesFilter: false,
-                    showDepartmentsFilter: false,
-                }}
-                dateFilterMode={dateRangeOption}
-                defaultDateFilter={defaultDateFilterOption}
-            />
-
-            {/* Bar Modal */}
-            <Modal
-                isOpen={isBarModalOpen}
-                onClose={() => setIsBarModalOpen(false)}
-                size="5xl"
-            >
-                <ModalOverlay />
-                <ModalContent bgGradient={theme.gradients.primaryGradient}>
-                    <ModalHeader color="white">{barModalTitle}</ModalHeader>
-                    <ModalCloseButton color="white" />
-                    <ModalBody pb={10}>
-                        <VStack minHeight={520}>
-                            <Box
-                                className="ag-theme-alpine"
-                                w="100%"
-                                p={1}
-                                pb="7px"
-                                borderRadius="xl"
-                                boxShadow="md"
-                                bgColor="white"
-                            >
-                                <DataGridComponentLight
-                                    data={modalGridData}
-                                    initialFields={ModalGridColumnDefs}
-                                    showTopBar={false}
-                                    filterModel={filterModel}
-                                />
-                            </Box>
-                        </VStack>
-                    </ModalBody>
-                </ModalContent>
-            </Modal>
-
-            {/* KPI Cards */}
-            <VStack align="stretch" spacing={6} w="full" py={4}>
-                <Flex w="100%" gap={6} direction={{ base: "column", lg: "row" }}>
-                    {/* Left column (Gauge) */}
-                    <Flex w={{ base: "100%", lg: "40%" }} gap={6} direction="column">
-                        <Box flex="1" height="100%">
-                            <GaugeLinkWrapper href="/dashboard/nps">
-                                <AgGaugeComponent
-                                    flex="1"
-                                    chartOptions={kpiGuagesOptions[3]}
-                                    noData={!kpiData}
-                                    height="100%"
-                                    href="/dashboard/nps"
-                                />
-                            </GaugeLinkWrapper>
-                        </Box>
-                    </Flex>
-
-                    {/* Right column */}
-                    <Flex w={{ base: "100%", lg: "60%" }} gap={6} direction="column">
-                        {/* Row #1 on desktop; stack on mobile */}
-                        <Flex w="100%" gap={6} direction={{ base: "column", md: "row" }}>
-                            <Box flex="1" height="300px">
-                                <GaugeLinkWrapper href="/dashboard/satisfaction">
-                                    <AgGaugeComponent
-                                        flex="1"
-                                        chartOptions={kpiGuagesOptions[0]}
-                                        noData={!kpiData}
-                                        height="300px"
-                                    />
-                                </GaugeLinkWrapper>
-                            </Box>
-
-                            <Box flex="1" height="300px">
-                                <GaugeLinkWrapper href="/dashboard/efficiency">
-                                    <AgGaugeComponent
-                                        flex="1"
-                                        chartOptions={kpiGuagesOptions[2]}
-                                        noData={!kpiData}
-                                        height="300px"
-                                    />
-                                </GaugeLinkWrapper>
-                            </Box>
-                        </Flex>
-
-                        {/* Row #2 on desktop; stack on mobile */}
-                        <Flex w="100%" gap={6} direction={{ base: "column", md: "row" }}>
-                            <Box flex="1" height="300px">
-                                <GaugeLinkWrapper href="/dashboard/retention">
-                                    <AgGaugeComponent
-                                        flex="1"
-                                        chartOptions={kpiGuagesOptions[1]}
-                                        noData={!kpiData}
-                                        height="300px"
-                                    />
-                                </GaugeLinkWrapper>
-                            </Box>
-
-                            <Box flex="1" minWidth="300px" height="300px">
-                                <PerygonCard height="100%">
-                                    <Flex
-                                        align="center"
-                                        gap={1}
-                                        direction="column"
-                                        justifyContent="center"
-                                        height="100%"
-                                    >
-                                        <Text fontSize="6xl">{feedbackCount}</Text>
-                                        <Text fontSize="xl">Total Client Responses</Text>
-                                    </Flex>
-                                </PerygonCard>
-                            </Box>
-                        </Flex>
-                    </Flex>
-                </Flex>
-            </VStack>
-
-            {/* NPS Trend Line Chart */}
-            <VStack align="stretch" spacing={6} w="full" py={4}>
-                <Flex w={"100%"} gap={6} direction={"row"}>
-                    <AgChartComponent
-                        flex={"1 1 45%"}
-                        title={"NPS Trend Over Time"}
-                        chartOptions={{
-                            type: "line",
-                            data: npsData.scores.map((score) => ({
-                                x: score.monthYear,
-                                y: score.score,
-                            })),
-                            series: [
-                                {
-                                    type: "line",
-                                    xKey: "x",
-                                    yKey: "y",
-                                    tooltip: {
-                                        renderer: ScoreTooltipRenderer,
-                                    },
-                                },
-                            ],
-                            axes: [
-                                {
-                                    type: "category",
-                                    position: "bottom",
-                                    title: {
-                                        text: "Month",
-                                    },
-                                },
-                                {
-                                    type: "number",
-                                    position: "left",
-                                    title: {
-                                        text: "NPS Score",
-                                    },
-                                    min: 0, // 👈 Set Y-axis minimum here
-                                },
-                            ],
-                        }}
-
-                        noData={npsData.scores.length === 0}
-                    />
-                </Flex>
-            </VStack>
-
-            {/* NPS Breakdown Bar Chart */}
-            <VStack align="stretch" spacing={6} w="full" py={4}>
-                <Flex w={"100%"} gap={6} flexWrap={"wrap"}>
-                    <AgChartComponent
-                        flex={"1 1 100%"}
-                        title={"Promoters, Passives & Detractors Over Time"}
-                        chartOptions={{
-                            type: "bar",
-                            data: npsData.scores.map((score) => ({
-                                month: score.monthYear,
-                                detractors: score.detractors,
-                                passives: score.passives,
-                                promoters: score.promoters,
-                            })),
-                            series: [
-                                {
-                                    type: "bar",
-                                    stacked: true,
-                                    xKey: "month",
-                                    yKey: "detractors",
-                                    yName: "Detractors",
-                                    fill: "red",
-                                },
-                                {
-                                    type: "bar",
-                                    stacked: true,
-                                    xKey: "month",
-                                    yKey: "passives",
-                                    yName: "Passives",
-                                    fill: "orange",
-                                },
-                                {
-                                    type: "bar",
-                                    stacked: true,
-                                    xKey: "month",
-                                    yKey: "promoters",
-                                    yName: "Promoters",
-                                    fill: "green",
-                                },
-                            ],
-                            listeners: {
-                                seriesNodeClick: (params: AgNodeClickEvent<any, any>) => {
-                                    console.log("Node clicked:", params);
-
-                                    const { xKey, yKey, datum } = params;
-
-                                    if (datum && xKey && yKey) {
-
-                                        // Extract month (x-axis value)
-                                        const xValue =
-                                            typeof datum[xKey] === "object" ? datum[xKey]?.value : datum[xKey];
-
-                                        // Convert to lowercase label for title
-                                        const label = yKey.charAt(0).toUpperCase() + yKey.slice(1);
-
-                                        // Determine rating range based on the clicked series
-                                        let ratingFilter: (rating: number) => boolean = () => true;
-
-                                        if (yKey === "promoters") {
-                                            ratingFilter = (r) => r >= 9 && r <= 10;
-                                        } else if (yKey === "passives") {
-                                            ratingFilter = (r) => r >= 7 && r <= 8;
-                                        } else if (yKey === "detractors") {
-                                            ratingFilter = (r) => r >= 0 && r <= 6;
-                                        }
-
-                                        // Filter companyComments based on month and rating
-                                        const filteredData = companyComments.filter((comment) => {
-                                            const matchesRating = ratingFilter(comment.rating);
-
-                                            // Extract month from date string (assuming format like "2025-04-10")
-                                            const commentMonth = new Date(comment.date).toLocaleString("default", {
-                                                month: "short",
-                                                year: "numeric",
-                                            });
-
-                                            const matchesMonth = commentMonth === xValue;
-
-                                            return matchesRating && matchesMonth;
-                                        });
-
-                                        // Update modal state
-                                        setBarModalTitle(`${xValue} - ${label}`);
-                                        setFilterModel({ monthYear: xValue, commentType: yKey });
-
-                                        // Build modalGridData with full row info
-                                        const finalModalGridRows = filteredData.map((comment) => ({
-                                            clientName: comment.clientName,
-                                            rating: comment.rating,
-                                            comment: comment.comment,
-                                        }));
-
-                                        setModalGridData(finalModalGridRows);
-                                        setIsBarModalOpen(true);
-
-                                    }
-                                },
-                            },
-
-                            axes: [
-                                {
-                                    type: "category",
-                                    position: "bottom",
-                                    title: {
-                                        text: "Month",
-                                        fontSize: 12,
-                                        fontWeight: 500,
-                                    },
-                                },
-                                {
-                                    type: "number",
-                                    position: "left",
-                                    title: {
-                                        text: "Responses",
-                                        fontSize: 12,
-                                        fontWeight: 500,
-                                    },
-                                },
-                            ],
-                        }}
-                        noData={npsData.scores.length === 0}
-                    />
-                </Flex>
-            </VStack>
-
-            <VStack align="stretch" spacing={6} w="full" py={4}>
-                <Flex w="100%" gap={6} flexWrap="wrap">
-                    {/* Combine topStaff and bottomStaff */}
-                    {topStaff && bottomStaff && (
-                        <>
-                            <Flex direction={{ base: "column", md: "row" }} gap={6} w="100%">
-                                {/* Top 5 Staff Ratings */}
-                                <AgChartComponent
-                                    flex="1"
-                                    title="Top 5 Average Staff Ratings"
-                                    chartOptions={{
-                                        type: "bar",
-                                        data: topStaff.map((staff) => ({
-                                            name: staff.staffName,
-                                            rating: staff.avgRating,
-                                        })),
-                                        series: [
-                                            {
-                                                type: "bar",
-                                                xKey: "name",
-                                                yKey: "rating",
-                                                yName: "Average Rating",
-                                                fill: "#4caf50",
-                                                tooltip: {
-                                                    renderer: ({ datum }: { datum: { name: string; rating: number } }) => ({
-                                                        content: `${datum.name}: ${datum.rating.toFixed(2)}`,
-                                                    }),
-                                                },
-                                            },
-                                        ],
-                                        axes: [
-                                            {
-                                                type: "category",
-                                                position: "bottom",
-                                                title: {
-                                                    text: "Staff Member",
-                                                    fontSize: 12,
-                                                    fontWeight: 500,
-                                                },
-                                                label: {
-                                                    rotation: -30,
-                                                },
-                                            },
-                                            {
-                                                type: "number",
-                                                position: "left",
-                                                title: {
-                                                    text: "Average Rating",
-                                                    fontSize: 12,
-                                                    fontWeight: 500,
-                                                },
-                                                min: 0,
-                                                max: 10,
-                                            },
-                                        ],
-                                    }}
-                                    noData={!topStaff || topStaff.length === 0}
-                                />
-
-                                {/* Top 5 Feedback Breakdown */}
-                                <AgChartComponent
-                                    flex="1"
-                                    title="Top 5 Staff Feedback Breakdown"
-                                    chartOptions={{
-                                        type: "bar",
-                                        data: topStaff.map((staff) => ({
-                                            name: staff.staffName,
-                                            positive: staff.positiveCount,
-                                            neutral: staff.neutralCount,
-                                            negative: staff.negativeCount,
-                                        })),
-                                        series: [
-                                            {
-                                                type: "bar",
-                                                xKey: "name",
-                                                yKey: "positive",
-                                                yName: "Positive",
-                                                stacked: true,
-                                                fill: "#4caf50",
-                                            },
-                                            {
-                                                type: "bar",
-                                                xKey: "name",
-                                                yKey: "neutral",
-                                                yName: "Neutral",
-                                                stacked: true,
-                                                fill: "#ffeb3b",
-                                            },
-                                            {
-                                                type: "bar",
-                                                xKey: "name",
-                                                yKey: "negative",
-                                                yName: "Negative",
-                                                stacked: true,
-                                                fill: "#f44336",
-                                            },
-                                        ],
-                                        axes: [
-                                            {
-                                                type: "category",
-                                                position: "bottom",
-                                                title: {
-                                                    text: "Staff Member",
-                                                    fontSize: 12,
-                                                    fontWeight: 500,
-                                                },
-                                                label: {
-                                                    rotation: -30,
-                                                },
-                                            },
-                                            {
-                                                type: "number",
-                                                position: "left",
-                                                title: {
-                                                    text: "Feedback Count",
-                                                    fontSize: 12,
-                                                    fontWeight: 500,
-                                                },
-                                            },
-                                        ],
-                                    }}
-                                    noData={!topStaff || topStaff.length === 0}
-                                />
-                            </Flex>
-
-                            <Flex direction={{ base: "column", md: "row" }} gap={6} w="100%">
-                                {/* Bottom 5 Staff Ratings */}
-                                <AgChartComponent
-                                    flex="1"
-                                    title="Bottom 5 Average Staff Ratings"
-                                    chartOptions={{
-                                        type: "bar",
-                                        data: bottomStaff.map((staff) => ({
-                                            name: staff.staffName,
-                                            rating: staff.avgRating,
-                                        })),
-                                        series: [
-                                            {
-                                                type: "bar",
-                                                xKey: "name",
-                                                yKey: "rating",
-                                                yName: "Average Rating",
-                                                fill: "#f44336", // Optional: use red for low ratings
-                                                tooltip: {
-                                                    renderer: ({ datum }: { datum: { name: any; rating: number } }) => ({
-                                                        content: `${String(datum.name).trim()}: ${datum.rating.toFixed(2)}`,
-                                                    }),
-                                                },
-                                            },
-                                        ],
-                                        axes: [
-                                            {
-                                                type: "category",
-                                                position: "bottom",
-                                                title: {
-                                                    text: "Staff Member",
-                                                    fontSize: 12,
-                                                    fontWeight: 500,
-                                                },
-                                                label: {
-                                                    rotation: -30,
-                                                },
-                                            },
-                                            {
-                                                type: "number",
-                                                position: "left",
-                                                title: {
-                                                    text: "Average Rating",
-                                                    fontSize: 12,
-                                                    fontWeight: 500,
-                                                },
-                                                min: 0,
-                                                max: 10,
-                                            },
-                                        ],
-                                    }}
-                                    noData={!bottomStaff || bottomStaff.length === 0}
-                                />
-
-                                {/* Bottom 5 Feedback Breakdown */}
-                                <AgChartComponent
-                                    flex="1"
-                                    title="Bottom 5 Staff Feedback Breakdown"
-                                    chartOptions={{
-                                        type: "bar",
-                                        data: bottomStaff.map((staff) => ({
-                                            name: staff.staffName,
-                                            positive: staff.positiveCount,
-                                            neutral: staff.neutralCount,
-                                            negative: staff.negativeCount,
-                                        })),
-                                        series: [
-                                            {
-                                                type: "bar",
-                                                xKey: "name",
-                                                yKey: "positive",
-                                                yName: "Positive",
-                                                stacked: true,
-                                                fill: "#4caf50",
-                                            },
-                                            {
-                                                type: "bar",
-                                                xKey: "name",
-                                                yKey: "neutral",
-                                                yName: "Neutral",
-                                                stacked: true,
-                                                fill: "#ffeb3b",
-                                            },
-                                            {
-                                                type: "bar",
-                                                xKey: "name",
-                                                yKey: "negative",
-                                                yName: "Negative",
-                                                stacked: true,
-                                                fill: "#f44336",
-                                            },
-                                        ],
-                                        axes: [
-                                            {
-                                                type: "category",
-                                                position: "bottom",
-                                                title: {
-                                                    text: "Staff Member",
-                                                    fontSize: 12,
-                                                    fontWeight: 500,
-                                                },
-                                                label: {
-                                                    rotation: -30,
-                                                },
-                                            },
-                                            {
-                                                type: "number",
-                                                position: "left",
-                                                title: {
-                                                    text: "Feedback Count",
-                                                    fontSize: 12,
-                                                    fontWeight: 500,
-                                                },
-                                            },
-                                        ],
-                                    }}
-                                    noData={!bottomStaff || bottomStaff.length === 0}
-                                />
-                            </Flex>
-
-                        </>
-                    )}
-                </Flex>
-            </VStack>
-
-            <DataGridComponentLight
-                data={staffCommentsGridData}
-                loading={isLoading}
-                initialFields={staffCommentsColumnDefs}
-                showTopBar={false}
-                onGridReady={handleGridReady}
-                refreshData={getData}
-                enableAutoRefresh={true}
-                title="Score and Comments"
-                groupDisplayType="groupRows"
-            />
-
-            <DataGridComponentLight
-                data={serviceCommentsGridData}
-                loading={isLoading}
-                initialFields={serviceCommentsColumnDefs}
-                showTopBar={false}
-                onGridReady={handleGridReady}
-                refreshData={getData}
-                enableAutoRefresh={true}
-                title="Service Comments"
-                groupDisplayType="groupRows"
-            />
-        </>
+    const monthlyOption = dateRangeOptions[dateRangeOption].find(
+      (opt) => opt.value === defaultDateFilterOption,
     );
-}
+
+    if (monthlyOption) {
+      const [startDate, endDate] = monthlyOption.getRange();
+      getData({ startDate, endDate });
+    } else {
+      getData();
+    }
+  }, [toolId, workflowId]);
+
+  useEffect(() => {
+    if (isBarModalOpen && filterModel && companyComments) {
+      setModalGridData(
+        companyComments.filter((data) => {
+          const commentMonth = data.date.slice(0, 7); // Extracts "YYYY-MM"
+          const commentType =
+            data.rating > 8
+              ? "promoters"
+              : data.rating > 6
+                ? "passives"
+                : "detractors";
+
+          return (
+            commentMonth === filterModel.monthYear &&
+            commentType === filterModel.commentType
+          );
+        }),
+      );
+    }
+  }, [isBarModalOpen, filterModel, companyComments]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!kpiData || !npsData || !companyComments || !topStaff) {
+    return <div>No data available</div>;
+  }
+
+  return (
+    <>
+      <FilterSidebar
+        onApplyFilters={onFilterChange}
+        filterOptions={{
+          showDateFilter: true,
+          showSitesFilter: false,
+          showDepartmentsFilter: false,
+        }}
+        dateFilterMode={dateRangeOption}
+        defaultDateFilter={defaultDateFilterOption}
+      />
+
+      {/* Bar Modal */}
+      <Modal
+        isOpen={isBarModalOpen}
+        onClose={() => setIsBarModalOpen(false)}
+        size="5xl"
+      >
+        <ModalOverlay />
+        <ModalContent bgGradient={theme.gradients.primaryGradient}>
+          <ModalHeader color="white">{barModalTitle}</ModalHeader>
+          <ModalCloseButton color="white" />
+          <ModalBody pb={10}>
+            <VStack minHeight={520}>
+              <Box
+                className="ag-theme-alpine"
+                w="100%"
+                p={1}
+                pb="7px"
+                borderRadius="xl"
+                boxShadow="md"
+                bgColor="white"
+              >
+                <DataGridComponentLight
+                  data={modalGridData}
+                  initialFields={ModalGridColumnDefs}
+                  showTopBar={false}
+                  filterModel={filterModel}
+                />
+              </Box>
+            </VStack>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
+      {/* KPI Cards */}
+      <VStack align="stretch" spacing={6} w="full" py={4}>
+        <Flex w="100%" gap={6} direction={{ base: "column", lg: "row" }}>
+          {/* Left column (Gauge) */}
+          <Flex w={{ base: "100%", lg: "40%" }} gap={6} direction="column">
+            <Box flex="1" height="100%">
+              <GaugeLinkWrapper href="/dashboard/nps">
+                <AgGaugeComponent
+                  flex="1"
+                  chartOptions={kpiGuagesOptions[3]}
+                  noData={!kpiData}
+                  height="100%"
+                  href="/dashboard/nps"
+                />
+              </GaugeLinkWrapper>
+            </Box>
+          </Flex>
+
+          {/* Right column */}
+          <Flex w={{ base: "100%", lg: "60%" }} gap={6} direction="column">
+            {/* Row #1 on desktop; stack on mobile */}
+            <Flex w="100%" gap={6} direction={{ base: "column", md: "row" }}>
+              <Box flex="1" height="300px">
+                <GaugeLinkWrapper href="/dashboard/satisfaction">
+                  <AgGaugeComponent
+                    flex="1"
+                    chartOptions={kpiGuagesOptions[0]}
+                    noData={!kpiData}
+                    height="300px"
+                  />
+                </GaugeLinkWrapper>
+              </Box>
+
+              <Box flex="1" height="300px">
+                <GaugeLinkWrapper href="/dashboard/efficiency">
+                  <AgGaugeComponent
+                    flex="1"
+                    chartOptions={kpiGuagesOptions[2]}
+                    noData={!kpiData}
+                    height="300px"
+                  />
+                </GaugeLinkWrapper>
+              </Box>
+            </Flex>
+
+            {/* Row #2 on desktop; stack on mobile */}
+            <Flex w="100%" gap={6} direction={{ base: "column", md: "row" }}>
+              <Box flex="1" height="300px">
+                <GaugeLinkWrapper href="/dashboard/retention">
+                  <AgGaugeComponent
+                    flex="1"
+                    chartOptions={kpiGuagesOptions[1]}
+                    noData={!kpiData}
+                    height="300px"
+                  />
+                </GaugeLinkWrapper>
+              </Box>
+
+              <Box flex="1" minWidth="300px" height="300px">
+                <PerygonCard height="100%">
+                  <Flex
+                    align="center"
+                    gap={1}
+                    direction="column"
+                    justifyContent="center"
+                    height="100%"
+                  >
+                    <Text fontSize="6xl">{feedbackCount}</Text>
+                    <Text fontSize="xl">Total Client Responses</Text>
+                  </Flex>
+                </PerygonCard>
+              </Box>
+            </Flex>
+          </Flex>
+        </Flex>
+      </VStack>
+
+      {/* NPS Trend Line Chart */}
+      <VStack align="stretch" spacing={6} w="full" py={4}>
+        <Flex w={"100%"} gap={6} direction={"row"}>
+          <AgChartComponent
+            flex={"1 1 45%"}
+            title={"NPS Trend Over Time"}
+            chartOptions={{
+              type: "line",
+              data: npsData.scores.map((score) => ({
+                x: score.monthYear,
+                y: score.score,
+              })),
+              series: [
+                {
+                  type: "line",
+                  xKey: "x",
+                  yKey: "y",
+                  tooltip: {
+                    renderer: ScoreTooltipRenderer,
+                  },
+                },
+              ],
+              axes: [
+                {
+                  type: "category",
+                  position: "bottom",
+                  title: {
+                    text: "Month",
+                  },
+                },
+                {
+                  type: "number",
+                  position: "left",
+                  title: {
+                    text: "NPS Score",
+                  },
+                  min: 0, // 👈 Set Y-axis minimum here
+                },
+              ],
+            }}
+            noData={npsData.scores.length === 0}
+          />
+        </Flex>
+      </VStack>
+
+      {/* NPS Breakdown Bar Chart */}
+      <VStack align="stretch" spacing={6} w="full" py={4}>
+        <Flex w={"100%"} gap={6} flexWrap={"wrap"}>
+          <AgChartComponent
+            flex={"1 1 100%"}
+            title={"Promoters, Passives & Detractors Over Time"}
+            chartOptions={{
+              type: "bar",
+              data: npsData.scores.map((score) => ({
+                month: score.monthYear,
+                detractors: score.detractors,
+                passives: score.passives,
+                promoters: score.promoters,
+              })),
+              series: [
+                {
+                  type: "bar",
+                  stacked: true,
+                  xKey: "month",
+                  yKey: "detractors",
+                  yName: "Detractors",
+                  fill: "red",
+                },
+                {
+                  type: "bar",
+                  stacked: true,
+                  xKey: "month",
+                  yKey: "passives",
+                  yName: "Passives",
+                  fill: "orange",
+                },
+                {
+                  type: "bar",
+                  stacked: true,
+                  xKey: "month",
+                  yKey: "promoters",
+                  yName: "Promoters",
+                  fill: "green",
+                },
+              ],
+              listeners: {
+                seriesNodeClick: (params: AgNodeClickEvent<any, any>) => {
+                  console.log("Node clicked:", params);
+
+                  const { xKey, yKey, datum } = params;
+
+                  if (datum && xKey && yKey) {
+                    // Extract month (x-axis value)
+                    const xValue =
+                      typeof datum[xKey] === "object"
+                        ? datum[xKey]?.value
+                        : datum[xKey];
+
+                    // Convert to lowercase label for title
+                    const label = yKey.charAt(0).toUpperCase() + yKey.slice(1);
+
+                    // Determine rating range based on the clicked series
+                    let ratingFilter: (rating: number) => boolean = () => true;
+
+                    if (yKey === "promoters") {
+                      ratingFilter = (r) => r >= 9 && r <= 10;
+                    } else if (yKey === "passives") {
+                      ratingFilter = (r) => r >= 7 && r <= 8;
+                    } else if (yKey === "detractors") {
+                      ratingFilter = (r) => r >= 0 && r <= 6;
+                    }
+
+                    // Filter companyComments based on month and rating
+                    const filteredData = companyComments.filter((comment) => {
+                      const matchesRating = ratingFilter(comment.rating);
+
+                      // Extract month from date string (assuming format like "2025-04-10")
+                      const commentMonth = new Date(
+                        comment.date,
+                      ).toLocaleString("default", {
+                        month: "short",
+                        year: "numeric",
+                      });
+
+                      const matchesMonth = commentMonth === xValue;
+
+                      return matchesRating && matchesMonth;
+                    });
+
+                    // Update modal state
+                    setBarModalTitle(`${xValue} - ${label}`);
+                    setFilterModel({ monthYear: xValue, commentType: yKey });
+
+                    // Build modalGridData with full row info
+                    const finalModalGridRows = filteredData.map((comment) => ({
+                      clientName: comment.clientName,
+                      rating: comment.rating,
+                      comment: comment.comment,
+                    }));
+
+                    setModalGridData(finalModalGridRows);
+                    setIsBarModalOpen(true);
+                  }
+                },
+              },
+
+              axes: [
+                {
+                  type: "category",
+                  position: "bottom",
+                  title: {
+                    text: "Month",
+                    fontSize: 12,
+                    fontWeight: 500,
+                  },
+                },
+                {
+                  type: "number",
+                  position: "left",
+                  title: {
+                    text: "Responses",
+                    fontSize: 12,
+                    fontWeight: 500,
+                  },
+                },
+              ],
+            }}
+            noData={npsData.scores.length === 0}
+          />
+        </Flex>
+      </VStack>
+
+      <VStack align="stretch" spacing={6} w="full" py={4}>
+        <Flex w="100%" gap={6} flexWrap="wrap">
+          {/* Combine topStaff and bottomStaff */}
+          {topStaff && topStaffByCount && (
+            <>
+              <Flex direction={{ base: "column", md: "row" }} gap={6} w="100%">
+                {/* Top 5 Staff Ratings */}
+                <AgChartComponent
+                  flex="1"
+                  title="Top 5 Average Staff Ratings"
+                  chartOptions={{
+                    type: "bar",
+                    data: topStaff.map((staff) => ({
+                      name: staff.staffName,
+                      rating: staff.avgRating,
+                    })),
+                    series: [
+                      {
+                        type: "bar",
+                        xKey: "name",
+                        yKey: "rating",
+                        yName: "Average Rating",
+                        fill: "#4caf50",
+                        tooltip: {
+                          renderer: ({
+                            datum,
+                          }: {
+                            datum: { name: string; rating: number };
+                          }) => ({
+                            content: `${datum.name}: ${datum.rating.toFixed(2)}`,
+                          }),
+                        },
+                      },
+                    ],
+                    axes: [
+                      {
+                        type: "category",
+                        position: "bottom",
+                        title: {
+                          text: "Staff Member",
+                          fontSize: 12,
+                          fontWeight: 500,
+                        },
+                        label: {
+                          rotation: -30,
+                        },
+                      },
+                      {
+                        type: "number",
+                        position: "left",
+                        title: {
+                          text: "Average Rating",
+                          fontSize: 12,
+                          fontWeight: 500,
+                        },
+                        min: 0,
+                        max: 10,
+                      },
+                    ],
+                  }}
+                  noData={!topStaff || topStaff.length === 0}
+                />
+
+                {/* Top 5 Feedback Breakdown */}
+                <AgChartComponent
+                  flex="1"
+                  title="Top 5 Staff By Count"
+                  chartOptions={{
+                    type: "bar",
+                    data: topStaffByCount.map((staff) => ({
+                      name: staff.staffName,
+                      positive: staff.positiveCount,
+                      neutral: staff.neutralCount,
+                      negative: staff.negativeCount,
+                    })),
+                    series: [
+                      {
+                        type: "bar",
+                        xKey: "name",
+                        yKey: "positive",
+                        yName: "Positive",
+                        stacked: true,
+                        fill: "#4caf50",
+                      },
+                      {
+                        type: "bar",
+                        xKey: "name",
+                        yKey: "neutral",
+                        yName: "Neutral",
+                        stacked: true,
+                        fill: "#ffeb3b",
+                      },
+                      {
+                        type: "bar",
+                        xKey: "name",
+                        yKey: "negative",
+                        yName: "Negative",
+                        stacked: true,
+                        fill: "#f44336",
+                      },
+                    ],
+                    axes: [
+                      {
+                        type: "category",
+                        position: "bottom",
+                        title: {
+                          text: "Staff Member",
+                          fontSize: 12,
+                          fontWeight: 500,
+                        },
+                        label: {
+                          rotation: -30,
+                        },
+                      },
+                      {
+                        type: "number",
+                        position: "left",
+                        title: {
+                          text: "Feedback Count",
+                          fontSize: 12,
+                          fontWeight: 500,
+                        },
+                      },
+                    ],
+                  }}
+                  noData={!topStaff || topStaff.length === 0}
+                />
+              </Flex>
+            </>
+          )}
+        </Flex>
+      </VStack>
+
+      <DataGridComponentLight
+        data={staffCommentsGridData}
+        loading={isLoading}
+        initialFields={staffCommentsColumnDefs}
+        showTopBar={false}
+        onGridReady={handleGridReady}
+        refreshData={getData}
+        enableAutoRefresh={true}
+        title="Score and Comments"
+        groupDisplayType="groupRows"
+      />
+
+      <DataGridComponentLight
+        data={serviceCommentsGridData}
+        loading={isLoading}
+        initialFields={serviceCommentsColumnDefs}
+        showTopBar={false}
+        onGridReady={handleGridReady}
+        refreshData={getData}
+        enableAutoRefresh={true}
+        title="Service Comments"
+        groupDisplayType="groupRows"
+      />
+    </>
+  );
+};
 
 export default ClientSatisfactionDashboard;
