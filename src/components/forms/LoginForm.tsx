@@ -18,8 +18,8 @@ import { InputField } from "./InputField";
 import { useRouter, useSearchParams } from "next/navigation";
 import { emailValidation } from "./validationSchema/validationSchema";
 import { useFetchClient } from "@/hooks/useFetchClient";
-import { useEffect, useState } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useEffect } from "react";
+import { signIn, signOut } from "next-auth/react";
 import { getSession } from "next-auth/react";
 import Link from "next/link";
 import { NextResponse } from "next/server";
@@ -28,6 +28,7 @@ import { DefaultSession } from "next-auth";
 import CryptoJS from "crypto-js";
 import LinkOffIcon from "@mui/icons-material/LinkOff";
 import LinkOnIcon from "@mui/icons-material/Link";
+import { useThemeContext } from "@/providers/ChakraThemeProvider";
 
 declare module "next-auth" {
   interface Session {
@@ -48,7 +49,6 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const secureLink = searchParams.get("l");
   type ButtonId = "email" | "microsoft" | "google" | "apple";
-  const { data: session, status } = useSession();
   const linkAppleAccountSub = searchParams.get("link-apple-account-sub") ?? "";
   const appleAccountLinked = searchParams.get("appleAccountLinked");
 
@@ -112,14 +112,15 @@ export function LoginForm() {
           successMessage: "Successfully logged in!",
           errorMessage: "Incorrect user or password",
           redirectOnError: false,
-        },
+        }
       );
       if (result) {
+        // await getUserTheme();
         router.push(result.redirectUrl);
       }
     } else {
       const appleSub = String(
-        await decryptData(decodeURIComponent(linkAppleAccountSub)),
+        await decryptData(decodeURIComponent(linkAppleAccountSub))
       );
 
       const appleLinkingResult: {
@@ -138,7 +139,7 @@ export function LoginForm() {
             sub: appleSub,
           },
           suppressError: true,
-        },
+        }
       );
       if (appleLinkingResult !== null) {
         if (appleLinkingResult.redirectUrl) {
@@ -214,7 +215,7 @@ export function LoginForm() {
                   if (secretKey !== undefined) {
                     const encryptedToken = CryptoJS.AES.encrypt(
                       result.sub,
-                      secretKey,
+                      secretKey
                     ).toString();
                     const appleAccountSubRedirectUrl = secureLink
                       ? `/login/?link-apple-account-sub=${encodeURIComponent(encryptedToken)}&l=${secureLink}`
@@ -261,7 +262,7 @@ export function LoginForm() {
                       : null,
                 },
                 suppressError: true,
-              },
+              }
             );
 
             if (result) {

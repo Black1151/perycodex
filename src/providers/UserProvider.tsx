@@ -57,6 +57,7 @@ export interface UserContextProps {
   teamManagerCount?: number;
   parentCustImageUrl?: string;
   groupNames: string[] | null;
+  userThemeId?: number | null;
 }
 
 interface UserProviderProps {
@@ -67,7 +68,6 @@ interface UserProviderProps {
 
 const UserContext = createContext<UserProviderProps | undefined>(undefined);
 
-// Custom hook to use the user context
 export const useUser = () => {
   const context = useContext(UserContext);
   if (!context) {
@@ -76,7 +76,6 @@ export const useUser = () => {
   return context;
 };
 
-// Provider component to wrap the layout and pages
 export const UserProvider: React.FC<{
   value?: UserContextProps;
   children: ReactNode;

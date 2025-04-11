@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { HStack, Box, useTheme } from "@chakra-ui/react";
+import { HStack, Box, useTheme, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
@@ -88,7 +88,6 @@ const NavBar: React.FC<NavBarProps> = ({
         gap={[5, 20]}
         px={[3, 3, 5]}
         width="100%"
-        fontSize={[20, 40]}
         justifyContent="space-between"
         alignItems="center"
         height="60px"
@@ -129,6 +128,7 @@ const NavBar: React.FC<NavBarProps> = ({
             menuItems={menuItems}
             unread={unread}
             themeDropdownOptions={themeDropdownOptions}
+            handleLogout={handleLogout}
           />
         </MotionHStack>
       </HStack>

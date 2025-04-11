@@ -1,17 +1,19 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { ChakraProvider, Center, Spinner } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import { themeRegistry, ThemeName } from "@/theme/themes/themeRegistry";
 
 interface IThemeContext {
-  themeId: ThemeName;
+  themeId: ThemeName | null;
   setThemeId: (theme: ThemeName) => void;
+  getUserTheme: () => Promise<void>;
 }
 
 const ThemeContext = createContext<IThemeContext>({
-  themeId: 2,
+  themeId: null,
   setThemeId: () => {},
+  getUserTheme: () => Promise.resolve(),
 });
 
 export const useThemeContext = () => useContext(ThemeContext);
@@ -23,36 +25,42 @@ interface CustomThemeProviderProps {
 export const ChakraThemeProvider: React.FC<CustomThemeProviderProps> = ({
   children,
 }) => {
-  const [themeId, setThemeId] = useState<ThemeName | null>(null);
+  const [userThemeId, setUserThemeId] = useState<ThemeName | null>(null);
+  const [loadingTheme, setLoadingTheme] = useState(true);
 
-  useEffect(() => {
-    const getUserTheme = async () => {
-      try {
-        const response = await fetch("/api/user/getUserMetadata");
-        if (!response.ok) {
-          throw new Error("Failed to fetch user metadata");
-        }
-        const data = await response.json();
-        setThemeId(data.userThemeId ?? 2);
-      } catch (error) {
-        console.error("Error fetching user theme:", error);
-        setThemeId(2);
+  const getUserTheme = async () => {
+    setLoadingTheme(true);
+
+    try {
+      const response = await fetch("/api/user/getUserMetadata");
+      if (!response.ok) {
+        throw new Error("Failed to fetch user metadata");
       }
-    };
-    getUserTheme();
-  }, []);
+
+      const data = await response.json();
+
+      if (data.userThemeId !== undefined && data.userThemeId !== null) {
+        setUserThemeId(data.userThemeId);
+      }
+    } catch (error) {
+      console.error("Error fetching user theme:", error);
+    } finally {
+      setLoadingTheme(false);
+    }
+  };
 
   useEffect(() => {
-    if (themeId === null) return;
+    if (userThemeId === null) {
+      return;
+    }
 
     const updateUserTheme = async () => {
       try {
         const response = await fetch("/api/user/updateUserDetails", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userThemeId: themeId }),
+          body: JSON.stringify({ userThemeId }),
         });
-
         if (!response.ok) {
           throw new Error("Failed to update theme preference");
         }
@@ -60,21 +68,21 @@ export const ChakraThemeProvider: React.FC<CustomThemeProviderProps> = ({
         console.error("Error updating theme:", error);
       }
     };
+
     updateUserTheme();
-  }, [themeId]);
+  }, [userThemeId]);
 
-  if (themeId === null) {
-    return (
-      <Center height="100vh">
-        <Spinner />
-      </Center>
-    );
-  }
+  const themeId = userThemeId ?? 1;
 
-  const activeTheme = themeRegistry[themeId];
   return (
-    <ThemeContext.Provider value={{ themeId, setThemeId }}>
-      <ChakraProvider theme={activeTheme}>{children}</ChakraProvider>
+    <ThemeContext.Provider
+      value={{
+        themeId,
+        setThemeId: setUserThemeId,
+        getUserTheme,
+      }}
+    >
+      <ChakraProvider theme={themeRegistry[themeId]}>{children}</ChakraProvider>
     </ThemeContext.Provider>
   );
 };
