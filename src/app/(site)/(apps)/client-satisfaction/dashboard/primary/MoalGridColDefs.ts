@@ -8,34 +8,6 @@ export const ModalGridColumnDefs: ColDef[] = [
         field: "clientName",
         headerName: "Client Name",
         filter: "agMultiColumnFilter",
-        chartDataType: "category",
-        // cellRenderer: UserRenderer,
-        // cellRendererParams: {
-        //     nameField: "clientName",
-        //   },
-    },
-    {
-        headerName: "Staff Name",
-        field: "staffName",
-        sortable: true,
-        filter: true,
-        resizable: true,
-        // cellRenderer: UserRenderer,
-        // cellRendererParams: {
-        //     nameField: "staffName",
-        //   },
-    },
-    {
-        field: "monthYear",
-        headerName: "Date",
-        filter: true,
-        valueFormatter: (params) => dateValueFormatter(params.value),
-    },
-    {
-        field: "siteName",
-        headerName: "Site",
-        filter: true,
-        chartDataType: "category",
     },
     {
         field: "rating",
