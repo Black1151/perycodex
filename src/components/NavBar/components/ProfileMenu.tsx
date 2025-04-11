@@ -1,4 +1,3 @@
-// components/NavBar/ProfileMenu.tsx
 import React from "react";
 import {
   Box,
@@ -10,8 +9,6 @@ import {
   Flex,
   Text,
   useTheme,
-  MenuDivider,
-  MenuGroup,
   useBreakpointValue,
   Select,
   HStack,
@@ -45,7 +42,8 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
   const pulsatingIconSize = useBreakpointValue({ base: 20, md: 25 });
 
   return (
-    <Menu>
+    // Prevent auto-closing while interacting with the Select
+    <Menu closeOnSelect={false}>
       <Box position="relative">
         <MenuButton
           as={Box}
@@ -97,9 +95,15 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
           />
         )}
       </Box>
+
       <MenuList bg="elementBG" color={theme.colors.themeTextColor} px={2}>
+        {/* Example: for your dynamic items, you could manually close the menu
+            by calling onClose in the onClick handler, or simply set closeOnSelect
+            to `true` on each MenuItem if you prefer it closed automatically */}
         {menuItems.map((item) => (
           <MenuItem
+            // Let this item close the menu automatically
+            closeOnSelect
             key={item.label}
             fontSize={[14, 16, 18]}
             display="flex"
@@ -120,11 +124,9 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
             </Text>
           </MenuItem>
         ))}
-        <HStack maxHeight="40px" overflow="none">
-          <Box pl={3}>
-            <Palette />
-          </Box>
 
+        <HStack px={3} py={2}>
+          <Palette />
           <Select
             fontSize={16}
             value={themeId!}
@@ -132,10 +134,6 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
             bg="elementBG"
             borderColor={theme.colors.primary}
             maxWidth="210px"
-            p={0}
-            pb={5}
-            px={1}
-            mt={0}
             sx={{
               fontSize: 16,
               option: {
@@ -143,15 +141,17 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
               },
             }}
           >
-            {themeDropdownOptions.map((theme) => (
-              <option key={theme.value} value={theme.value}>
-                {theme.label}
+            {themeDropdownOptions.map((themeOption) => (
+              <option key={themeOption.value} value={themeOption.value}>
+                {themeOption.label}
               </option>
             ))}
           </Select>
         </HStack>
+
         <MenuItem
-          key={"logout"}
+          closeOnSelect
+          key="logout"
           fontSize={[14, 16, 18]}
           display="flex"
           alignItems="center"
