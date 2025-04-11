@@ -90,7 +90,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
 
   // Handle Sidebar state
   const [drawerState, setDrawerState] = useState<DrawerStateOptions>(
-    sidebarProps.drawerState,
+    sidebarProps.drawerState
   );
   const canHalf = true;
   const canFull = true;
@@ -102,7 +102,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
 
   const onToggle = () => {
     setDrawerState((curr) =>
-      curr === "half-open" ? "fully-open" : "half-open",
+      curr === "half-open" ? "fully-open" : "half-open"
     );
   };
 
@@ -159,7 +159,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
       }
 
       const hasAccess = stage.userAccessGroupNames.some(
-        (groupName) => user?.groupNames?.includes(groupName) ?? false,
+        (groupName) => user?.groupNames?.includes(groupName) ?? false
       );
 
       if (!hasAccess) {
@@ -201,7 +201,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
       }
 
       return stage.userAccessGroupNames.some((groupName) =>
-        user?.groupNames?.includes(groupName),
+        user?.groupNames?.includes(groupName)
       );
     }
 
@@ -215,7 +215,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
       canClick: canClickStage(stage),
       canShow: canShowStage(stage),
       active: stage.bpInstId === currentStage?.bpInstId,
-    })),
+    }))
   );
 
   useEffect(() => {
@@ -225,7 +225,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
         canClick: canClickStage(stage),
         canShow: canShowStage(stage),
         active: stage.bpInstId === currentStage?.bpInstId,
-      })),
+      }))
     );
   }, [workflowStages, currentStage?.bpInstId]);
 
@@ -237,12 +237,12 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
 
   const isStageStatus = (value: string): value is StageStatus => {
     return ["Next", "Complete", "Locked", "Pending", "In Progress"].includes(
-      value,
+      value
     );
   };
 
   const getIconForStage = (stage: EnhancedWorkflowStage, full: boolean) => {
-    const boxSize = stage.active && full ? 6 : 4;
+    const boxSize = 6;
 
     if (user?.role !== "CA") {
       if (stage.stageStatus === "Pending") {
@@ -351,9 +351,9 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
             p={3}
             gap={2}
             border={stage.active ? "3px solid" : "1px solid"}
-            borderColor={stage.active ? "green.500" : "black"}
+            borderColor={stage.active ? "green.500" : "primaryTextColor"}
             bg={"transparent"}
-            color={"black"}
+            color={"primaryTextColor"}
             alignItems="center"
             flexDirection={"column"}
             position="relative"
@@ -418,9 +418,9 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
               p={2}
               gap={2}
               border={stage.active ? "3px solid" : "1px solid"}
-              borderColor={stage.active ? "green.500" : "black"}
+              borderColor={stage.active ? "green.500" : "primaryTextColor"}
               bg={"transparent"}
-              color={"black"}
+              color={"primaryTextColor"}
               borderRadius="md"
               cursor={stage.canClick ? "pointer" : "not-allowed"}
               _hover={{
@@ -444,9 +444,9 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
                 top={0}
                 right={0}
                 transform="translate(30%,-30%)"
-                bg="white"
+                bg="elementBG"
                 borderRadius="full"
-                border={"0.5px solid black"}
+                border={"1px solid primaryTextColor"}
                 boxSize="24px"
                 display="flex"
                 alignItems="center"
@@ -489,7 +489,7 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
             border={"1px solid"}
             borderColor={stage.active ? "green.500" : "gray"}
             bg={stage.active ? "green.500" : "transparent"}
-            color={stage.active ? "white" : "black"}
+            color={stage.active ? "white" : "primaryTextColor"}
             borderRadius="md"
             cursor={stage.canClick ? "pointer" : "not-allowed"}
             display="flex"
@@ -520,9 +520,9 @@ const WorkflowSidebar: React.FC<WorkflowSidebarProps> = ({
                 top={2}
                 right={0}
                 transform="translate(30%,-30%)"
-                bg="white"
+                bg="elementBG"
                 borderRadius="full"
-                border={"0.5px solid black"}
+                border={"0.5px solid primaryTextColor"}
                 boxSize="24px"
                 display="flex"
                 alignItems="center"
