@@ -30,6 +30,7 @@ export const servicesCommentsColumnDefs: ColDef[] = [
         chartDataType: "category",
         cellRenderer: UserRenderer,
         cellRendererParams: {
+            uniqueIdField: "clientId",
             nameField: "clientName",
           },
     },
