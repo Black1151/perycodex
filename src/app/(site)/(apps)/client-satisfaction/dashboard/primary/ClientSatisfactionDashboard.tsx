@@ -36,6 +36,7 @@ import {
 } from "@chakra-ui/react";
 import { ModalGridColumnDefs } from "./MoalGridColDefs";
 import FilterSidebar from "@/components/Sidebars/Dashboards Filter/FilterSidebar";
+import useColor from "@/hooks/useColor";
 
 interface filterModel {
   monthYear: string;
@@ -47,6 +48,7 @@ const ClientSatisfactionDashboard = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [kpiData, setKpiData] = useState<kpiData>();
   const [npsData, setNpsData] = useState<npsData>();
+  const { getColor } = useColor();
   const [companyComments, setCompanyComments] = useState<
     companyComment[] | null
   >(null);
@@ -69,8 +71,6 @@ const ClientSatisfactionDashboard = () => {
   >([]);
   const [modalGridData, setModalGridData] = useState<Record<string, any>[]>([]);
   const [feedbackCount, setFeedbackCount] = useState<number>(0);
-  const [feedbackCountChangePercent, setFeedbackCountChangePercent] =
-    useState<number>(0);
   const [gridApi, setGridApi] = useState<GridApi | null>(null);
   const [filterModel, setFilterModel] = useState<filterModel>({
     monthYear: "",
@@ -505,8 +505,25 @@ const ClientSatisfactionDashboard = () => {
                       type: "line",
                       xKey: "x",
                       yKey: "y",
+                      stroke: theme.colors.primary,
+                      interpolation: {
+                        type: "smooth",
+                      },
                       tooltip: {
-                        renderer: ScoreTooltipRenderer,
+                        renderer: ScoreTooltipRenderer(theme.colors),
+                      },
+                      marker: {
+                        enabled: true,
+                        itemStyler: (params: any) => {
+                          const { datum, yKey } = params;
+                          const score = datum[yKey];
+                          const fillColor = getColor(score);
+
+                          return {
+                            fill: fillColor,
+                            size: 10,
+                          };
+                        },
                       },
                     },
                   ],
@@ -524,7 +541,7 @@ const ClientSatisfactionDashboard = () => {
                       title: {
                         text: "NPS Score",
                       },
-                      min: 0, // 👈 Set Y-axis minimum here
+                      min: 0,
                     },
                   ],
                 }}
@@ -555,6 +572,13 @@ const ClientSatisfactionDashboard = () => {
                       yKey: "detractors",
                       yName: "Detractors",
                       fill: "red",
+                      shadow: {
+                        enabled: true,
+                        color: "#191919",
+                        xOffset: 1,
+                        yOffset: 1,
+                        blur: 4,
+                      },
                     },
                     {
                       type: "bar",
@@ -562,7 +586,14 @@ const ClientSatisfactionDashboard = () => {
                       xKey: "month",
                       yKey: "passives",
                       yName: "Passives",
-                      fill: "orange",
+                      fill: theme.colors.yellow,
+                      shadow: {
+                        enabled: true,
+                        color: "#191919",
+                        xOffset: 1,
+                        yOffset: 1,
+                        blur: 4,
+                      },
                     },
                     {
                       type: "bar",
@@ -570,7 +601,14 @@ const ClientSatisfactionDashboard = () => {
                       xKey: "month",
                       yKey: "promoters",
                       yName: "Promoters",
-                      fill: "green",
+                      fill: theme.colors.seduloGreen,
+                      shadow: {
+                        enabled: true,
+                        color: "#191919",
+                        xOffset: 1,
+                        yOffset: 1,
+                        blur: 4,
+                      },
                     },
                   ],
                   listeners: {
@@ -695,7 +733,15 @@ const ClientSatisfactionDashboard = () => {
                             xKey: "name",
                             yKey: "rating",
                             yName: "Average Rating",
-                            fill: "#4caf50",
+                            fill: theme.colors.seduloGreen,
+                            cornerRadius: 10,
+                            shadow: {
+                              enabled: true,
+                              color: "#191919",
+                              xOffset: 1,
+                              yOffset: 1,
+                              blur: 4,
+                            },
                             tooltip: {
                               renderer: ({
                                 datum,
@@ -755,7 +801,15 @@ const ClientSatisfactionDashboard = () => {
                             yKey: "positive",
                             yName: "Positive",
                             stacked: true,
-                            fill: "#4caf50",
+                            fill: theme.colors.seduloGreen,
+                            cornerRadius: 10,
+                            shadow: {
+                              enabled: true,
+                              color: "#191919",
+                              xOffset: 1,
+                              yOffset: 1,
+                              blur: 4,
+                            },
                           },
                           {
                             type: "bar",
@@ -763,7 +817,15 @@ const ClientSatisfactionDashboard = () => {
                             yKey: "neutral",
                             yName: "Neutral",
                             stacked: true,
-                            fill: "#ffeb3b",
+                            fill: theme.colors.yellow,
+                            cornerRadius: 10,
+                            shadow: {
+                              enabled: true,
+                              color: "#191919",
+                              xOffset: 1,
+                              yOffset: 1,
+                              blur: 4,
+                            },
                           },
                           {
                             type: "bar",
@@ -772,6 +834,14 @@ const ClientSatisfactionDashboard = () => {
                             yName: "Negative",
                             stacked: true,
                             fill: "#f44336",
+                            cornerRadius: 10,
+                            shadow: {
+                              enabled: true,
+                              color: "#191919",
+                              xOffset: 1,
+                              yOffset: 1,
+                              blur: 4,
+                            },
                           },
                         ],
                         axes: [
