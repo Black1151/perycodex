@@ -18,6 +18,7 @@ interface serviceComment {
 }
 
 interface serviceStat {
+    monthYear: string;
     serviceName: string;
     avgRating: number;
     totalResponses: number;
