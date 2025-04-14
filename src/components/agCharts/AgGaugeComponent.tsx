@@ -30,7 +30,7 @@ const AgChartComponent = ({
   href,
 }: AgChartComponentProps) => {
   const content = (
-    <Box flex={flex} minWidth="300px" height={height}>
+    <Box flex={flex} minWidth="300px" height={"100%"}>
       {title && (
         <Flex width="100%" justifyContent="center" align="center" mb={4}>
           <SectionHeader>{title}</SectionHeader>
