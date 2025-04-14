@@ -708,6 +708,7 @@ const ClientSatisfactionDashboard = () => {
             </Flex>
           </VStack>
 
+          {/* Staff Ratings and Feedback Breakdown Bar Charts */}
           <VStack align="stretch" spacing={6} w="full" py={4}>
             <Flex w="100%" gap={6} flexWrap="wrap">
               {/* Combine topStaff and bottomStaff */}
@@ -877,29 +878,32 @@ const ClientSatisfactionDashboard = () => {
             </Flex>
           </VStack>
 
-          <DataGridComponentLight
-            data={staffCommentsGridData}
-            loading={isLoading}
-            initialFields={staffCommentsColumnDefs}
-            showTopBar={false}
-            onGridReady={handleGridReady}
-            refreshData={getData}
-            enableAutoRefresh={true}
-            title="Score and Comments"
-            groupDisplayType="groupRows"
-          />
+          {/* Staff and Service Comments Grids */}
+          <VStack align="stretch" spacing={6} w="full" py={4}>
+            <DataGridComponentLight
+              data={staffCommentsGridData}
+              loading={isLoading}
+              initialFields={staffCommentsColumnDefs}
+              showTopBar={false}
+              onGridReady={handleGridReady}
+              refreshData={getData}
+              enableAutoRefresh={true}
+              title="Staff Comments"
+              groupDisplayType="groupRows"
+            />
 
-          <DataGridComponentLight
-            data={serviceCommentsGridData}
-            loading={isLoading}
-            initialFields={serviceCommentsColumnDefs}
-            showTopBar={false}
-            onGridReady={handleGridReady}
-            refreshData={getData}
-            enableAutoRefresh={true}
-            title="Service Comments"
-            groupDisplayType="groupRows"
-          />
+            <DataGridComponentLight
+              data={serviceCommentsGridData}
+              loading={isLoading}
+              initialFields={serviceCommentsColumnDefs}
+              showTopBar={false}
+              onGridReady={handleGridReady}
+              refreshData={getData}
+              enableAutoRefresh={true}
+              title="Service Comments"
+              groupDisplayType="groupRows"
+            />
+          </VStack>
         </>
       )}
     </>
