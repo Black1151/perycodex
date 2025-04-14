@@ -46,7 +46,8 @@ const CommentsCellRenderer: React.FC<CommentsCellRendererProps> = ({
           borderRadius="md"
           cursor="pointer"
         >
-          {comment}
+          {comment? comment : <i>No comment left</i>}
+          
         </Box>
       </Tooltip>
 
