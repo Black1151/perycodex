@@ -1,36 +1,40 @@
-interface ServiceDashboardProps {
+export interface ServiceDashboardProps {
     resource: {
-        serviceComments: serviceComment[];
-        serviceStats: serviceStat[];
-        highestRatedService: serviceStat[];
-        highestResponseService: serviceStat[];
-        histogramDataSet: histogramData[];
-    }
-}
-
-interface serviceComment {
-    serviceName: string;
-    date: string;
-    site: string;
-    rating: number;
+      services: Service[];
+      highestRatedServices: number[];
+      lowestRatedServices: number[];
+      histogramDataSet: HistogramDataPoint[];
+    };
+  }
+  
+  export interface Service {
+    serviceId: number | null;
+    serviceName: string | null;
+    avgServiceRating: string | null; // API provides this as a string
+    total: number;
+    serviceResponse: ServiceResponse[] | null;
+    serviceNPS: ServiceNps[];
+  }
+  
+  export interface ServiceResponse {
     comment: string;
-    clientName: string;  
-}
-
-interface serviceStat {
-    monthYear: string;
-    serviceName: string;
-    avgRating: number;
-    totalResponses: number;
-    nps: number;
-    detractors: number;
-    passives: number;
+    date: string;        // e.g. "2023-07-13 00:00:00"
+    rating: number;      // numeric rating
+    clientName: string;
+    clientId: string;
+  }
+  
+  export interface ServiceNps {
+    monthYear: string;   // e.g. "2023-07"
+    score: number;
     promoters: number;
-}
-
-interface histogramData {
-    value: number; // 0-10 x axis
-    count: number // y axis
-}
-
-export type { ServiceDashboardProps, serviceComment, serviceStat, histogramData };
+    passives: number;
+    detractors: number;
+    totalResponses: number;
+  }
+  
+  export interface HistogramDataPoint {
+    value: number;       // rating value (0, 1, 2, etc.)
+    count: number;       // how many times this rating occurs
+  }
+  

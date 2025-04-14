@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
 import { verifySession } from "@/lib/dal";
-import ServicesDashboard from "./ServicesDashboard";
+// import ServicesDashboard from "./ServicesDashboard";
 
 export default async function Home({
   searchParams,
@@ -24,7 +24,8 @@ export default async function Home({
 
   return (
     <WorkflowEngine toolId={toolId} workflowId={workflowId}>
-      <ServicesDashboard />    
+      {/* <ServicesDashboard />     */}
+      <></>
     </WorkflowEngine>
   );
 }
