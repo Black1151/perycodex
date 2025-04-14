@@ -10,6 +10,12 @@ export const ModalGridColumnDefs: ColDef[] = [
         filter: "agMultiColumnFilter",
     },
     {
+        field: "date",
+        headerName: "Date",
+        filter: "agDateColumnFilter",
+        valueFormatter: (params) => dateValueFormatter(params.value),
+    },
+    {
         field: "rating",
         headerName: "Rating",
         chartDataType: "category",
