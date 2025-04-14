@@ -79,6 +79,12 @@ const ClientSatisfactionDashboard = () => {
   const { toolId, workflowId } = useWorkflow();
   const [isBarModalOpen, setIsBarModalOpen] = useState(false);
   const [barModalTitle, setBarModalTitle] = useState("");
+  const [isAllCommentsModalOpen, setIsAllCommentsModalOpen] =
+    useState(false);
+  const [allCommentsModalTitle, setAllCommentsModalTitle] = useState("");
+  const [allCommentsGridData, setAllCommentsGridData] = useState<companyComment[]>([]);
+  const [isUserModalOpen, setUserModalOpen] = useState(false);
+  const [userModalTitle, setUserModalTitle] = useState("");
 
   const handleGridReady = (params: FirstDataRenderedEvent) => {
     setGridApi(params.api);
@@ -350,6 +356,17 @@ const ClientSatisfactionDashboard = () => {
     }
   }, [isBarModalOpen, filterModel, companyComments]);
 
+  const handleResponsesKPIClick = () => {
+    setAllCommentsModalTitle("All Client Responses - Company Comments");
+    setAllCommentsGridData(companyComments || []);
+    setIsAllCommentsModalOpen(true);
+  }
+
+  const handleUserModalClick = () => {
+    setUserModalTitle("User X Data");
+    setUserModalOpen(true);
+  }
+
   return (
     <>
       <FilterSidebar
@@ -402,23 +419,81 @@ const ClientSatisfactionDashboard = () => {
             </ModalContent>
           </Modal>
 
+          {/* All Comments Modal */}
+          <Modal
+            isOpen={isAllCommentsModalOpen}
+            onClose={() => setIsAllCommentsModalOpen(false)}
+            size="5xl"
+          >
+            <ModalOverlay />
+            <ModalContent bgGradient={theme.gradients.primaryGradient}>
+              <ModalHeader color="white">{barModalTitle}</ModalHeader>
+              <ModalCloseButton color="white" />
+              <ModalBody pb={10}>
+                <VStack minHeight={520}>
+                  <Box
+                    className="ag-theme-alpine"
+                    w="100%"
+                    p={1}
+                    pb="7px"
+                    borderRadius="xl"
+                    boxShadow="md"
+                    bgColor="white"
+                  >
+                    <DataGridComponentLight
+                      data={allCommentsGridData}
+                      initialFields={ModalGridColumnDefs}
+                      showTopBar={false}
+                      filterModel={filterModel}
+                    />
+                  </Box>
+                </VStack>
+              </ModalBody>
+            </ModalContent>
+          </Modal>
+
+          {/* Client Modal */}
+          <Modal
+            isOpen={isUserModalOpen}
+            onClose={() => setUserModalOpen(false)}
+            size="5xl"
+          >
+            <ModalOverlay />
+            <ModalContent bgGradient={theme.gradients.primaryGradient}>
+              <ModalHeader color="white">{userModalTitle}</ModalHeader>
+              <ModalCloseButton color="white" />
+              <ModalBody pb={10}>
+                <VStack minHeight={520}>
+                  <Box
+                    className="ag-theme-alpine"
+                    w="100%"
+                    p={1}
+                    pb="7px"
+                    borderRadius="xl"
+                    boxShadow="md"
+                    bgColor="white"
+                  >
+                    User Data Here
+                  </Box>
+                </VStack>
+              </ModalBody>
+            </ModalContent>
+          </Modal>
+
           {/* KPI Cards */}
           <VStack align="stretch" spacing={6} w="full" py={4}>
             <Flex w="100%" gap={6} direction={{ base: "column", lg: "row" }}>
               {/* Left column (Gauge) */}
               <Flex w={{ base: "100%", lg: "40%" }} gap={6} direction="column">
                 <Box flex="1" height="300px">
-                  <GaugeLinkWrapper href="/dashboard/nps">
                     <Box height={{ base: "300px", lg: "100%" }}>
                       <AgGaugeComponent
                         flex="1"
                         chartOptions={kpiGuagesOptions[3]}
                         noData={!kpiData}
                         height="100%"
-                        href="/dashboard/primary"
                       />
                     </Box>
-                  </GaugeLinkWrapper>
                 </Box>
               </Flex>
 
@@ -431,25 +506,21 @@ const ClientSatisfactionDashboard = () => {
                   direction={{ base: "column", md: "row" }}
                 >
                   <Box flex="1" height="300px">
-                    <GaugeLinkWrapper href="/dashboard/primary">
                       <AgGaugeComponent
                         flex="1"
                         chartOptions={kpiGuagesOptions[2]}
                         noData={!kpiData}
                         height="300px"
                       />
-                    </GaugeLinkWrapper>
                   </Box>
 
                   <Box flex="1" height="300px">
-                    <GaugeLinkWrapper href="/dashboard/service">
                       <AgGaugeComponent
                         flex="1"
                         chartOptions={kpiGuagesOptions[0]}
                         noData={!kpiData}
                         height="300px"
                       />
-                    </GaugeLinkWrapper>
                   </Box>
                 </Flex>
 
@@ -460,17 +531,15 @@ const ClientSatisfactionDashboard = () => {
                   direction={{ base: "column", md: "row" }}
                 >
                   <Box flex="1" height="300px">
-                    <GaugeLinkWrapper href="/dashboard/staff">
                       <AgGaugeComponent
                         flex="1"
                         chartOptions={kpiGuagesOptions[1]}
                         noData={!kpiData}
                         height="300px"
                       />
-                    </GaugeLinkWrapper>
                   </Box>
 
-                  <Box flex="1" minWidth="300px" height="300px">
+                  <Box flex="1" minWidth="300px" height="300px" onClick={handleResponsesKPIClick} cursor="pointer">
                     <PerygonCard height="100%">
                       <Flex
                         align="center"
@@ -481,6 +550,7 @@ const ClientSatisfactionDashboard = () => {
                       >
                         <Text fontSize="6xl">{feedbackCount}</Text>
                         <Text fontSize="xl">Total Client Responses</Text>
+                        <Text fontSize="md"><i>Click to view</i></Text>
                       </Flex>
                     </PerygonCard>
                   </Box>
