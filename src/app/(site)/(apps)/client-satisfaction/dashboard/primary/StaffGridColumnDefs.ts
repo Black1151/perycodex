@@ -3,7 +3,6 @@ import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
 import ScoreRenderer from "@/components/agGrids/CellRenderers/ClientSatisfaction/ScoreRenderer";
 import { dateValueFormatter } from "@/components/agGrids/ValueFormatters/dateValueFormatter";
 import CommentsCellRenderer from "@/components/agGrids/CellRenderers/CommentsCellRenderer";
-import { uniqueId } from "lodash";
 
 export const staffCommentsColumnDefs: ColDef[] = [
     {
@@ -15,6 +14,7 @@ export const staffCommentsColumnDefs: ColDef[] = [
         rowGroup: true,
         cellRenderer: UserRenderer,
         cellRendererParams: {
+            imageUrlField: "staffImgUrl",
             nameField: "staffName",
             uniqueIdField: "staffId",
           },
