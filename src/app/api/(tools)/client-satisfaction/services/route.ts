@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import apiClient from "@/lib/apiClient";
 import {
     ServiceDashboardProps, serviceComment, serviceStat, histogramData
-} from "@/app/(site)/(apps)/client-satisfaction/dashboard/service/types";
+} from "@/app/(site)/(apps)/client-satisfaction/dashboard/service/typesOLD";
 
 export async function POST(req: NextRequest) {
 
@@ -17,8 +17,6 @@ export async function POST(req: NextRequest) {
                 method: 'POST',
                 body: JSON.stringify(body),
             })
-
-        console.log(response);
 
         if (!response.ok) {
             throw new Error("Failed to fetch client satisfaction service data");
