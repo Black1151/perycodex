@@ -250,9 +250,17 @@ const StaffDashboard = () => {
           fill: getRatingColor(datum.value),
         }),
         tooltip: {
-          renderer: ({ datum }: { datum: histogramData }) => ({
-            content: `Rating ${datum.value}: ${datum.count} response${datum.count !== 1 ? "s" : ""}`,
-          }),
+          renderer: (params: any) => {
+            const { datum } = params;
+            return {
+              content: `
+                <div style="padding: 8px;">
+                  <strong>Rating:</strong> ${datum.value}<br/>
+                  <strong>Count:</strong> ${datum.count}
+                </div>
+              `,
+            };
+          },
         },
       },
     ],
@@ -260,7 +268,7 @@ const StaffDashboard = () => {
       {
         type: "category",
         position: "bottom",
-        title: { text: "Average Rating" },
+        title: { text: "Rating" },
       },
       {
         type: "number",
