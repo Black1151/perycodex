@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { AgNodeClickEvent } from "ag-charts-community";
 import { GridApi, FirstDataRenderedEvent } from "ag-grid-community";
+import { dateRangeOptions } from "@/components/Sidebars/Dashboards Filter/dateRangeUtils";
 import {
   Flex,
   Modal,
@@ -41,6 +42,7 @@ const ServicesDashboard = () => {
       serviceName: "",
     });
   const theme = useTheme();
+  const [filterOptions, setFilterOptions] = useState<Record<string, any>>({});
 
   interface commentsfilterModel {
     serviceName: string;
@@ -50,11 +52,8 @@ const ServicesDashboard = () => {
     setGridApi(params.api);
   };
 
-  const onApplyFilters = async (postBody: {
-    startDate?: Date;
-    endDate?: Date;
-    departmentIds?: string[];
-  }) => {
+  const onFilterChange = (postBody: Record<string, any>) => {
+    setFilterOptions(postBody);
     getData(postBody);
   };
 
@@ -103,6 +102,29 @@ const ServicesDashboard = () => {
       setIsLoading(false);
     }
   };
+
+  const dateRangeOption = "monthly";
+  const defaultDateFilterOption = "last6Months";
+
+  useEffect(() => {
+      if (!toolId || !workflowId) {
+        return;
+      }
+      const monthlyOption = dateRangeOptions[dateRangeOption].find(
+        (opt) => opt.value === defaultDateFilterOption
+      );
+  
+      if (monthlyOption) {
+        const [startDate, endDate] = monthlyOption.getRange();
+        getData({ startDate, endDate });
+      } else {
+        // Provide a default date range, or do nothing
+        const fallbackStart = new Date();
+        const fallbackEnd = new Date();
+        getData({ startDate: fallbackStart, endDate: fallbackEnd });
+      }
+      
+    }, [toolId, workflowId]);
 
   const flattenedRows = useMemo(() => {
     if (!gridData?.resource.services) return [];
@@ -390,14 +412,14 @@ const ServicesDashboard = () => {
   return (
     <>
       <FilterSidebar
-        onApplyFilters={onApplyFilters}
+        onApplyFilters={onFilterChange}
         filterOptions={{
           showDateFilter: true,
           showSitesFilter: false,
           showDepartmentsFilter: true,
         }}
-        dateFilterMode="monthly"
-        defaultDateFilter="currentMonth"
+        dateFilterMode={dateRangeOption}
+        defaultDateFilter={defaultDateFilterOption}
       />
 
       {/* All Comments Modal */}
