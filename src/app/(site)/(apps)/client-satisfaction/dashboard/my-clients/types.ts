@@ -1,45 +1,43 @@
 interface MyClientsDashboardProps {
     resource: {
-        myComments: staffComment[];
-        myStats: staffStats;
-        myCompanyStats: companyStat[];
-        histogramDataSet: histogramData[];
+        officeId: string;
+        officeName: string;
+        serviceId: string;
+        serviceName: string;
+        myRatings: staffRating[];
+        myStats: myStats[];
+        myOfficeStats: stats[];
+        myServiceStats: stats[];
+        myCompanyStats: stats[];
     }
 }
 
-interface staffComment {
+interface staffRating {
     clientId: string;
     clientName: string;  
     clientImgUrl: string;
+    // companyName: string;
+    // companyId: string;
+    // companyImgUrl: string;
     date: string;
     rating: number;
     comment: string;
 }
 
-interface staffStats {
+interface stats {
+    monthYear: string;
     avgRating: number;
     totalResponses: number;
-    nps: npsScore;
 }
 
-interface npsScore {
-    score: number;
+interface myStats {
+    monthYear: string;
+    avgRating: number;
+    nps: number;
     detractors: number;
     passives: number;
     promoters: number;
+    totalResponses: number;
 }
 
-interface companyStat {
-    monthYear: string;
-    serviceRating: number;
-    officeRating: number;
-    companyRating: number;
-    myRating: number;
-}
-
-interface histogramData {
-    value: number; // 0-10 x axis
-    count: number // y axis
-}
-
-export type { MyClientsDashboardProps, staffComment, staffStats, npsScore, companyStat, histogramData }
+export type { MyClientsDashboardProps, staffRating }
