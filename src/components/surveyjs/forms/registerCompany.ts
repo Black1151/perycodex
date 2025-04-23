@@ -1,124 +1,138 @@
 export const registerCustomerJson = {
   pages: [
     /* ─────────────────────────────  1 ▸ COMPANY DETAILS  ───────────────────────────── */
-    // {
-    //   name: "company-details",
-    //   title: "Company Details",
-    //   elements: [
-    //     {
-    //       type: "text",
-    //       name: "name",
-    //       width: "66%",
-    //       title: "Company Name",
-    //       titleLocation: "top",
-    //       isRequired: true,
-    //       placeholder: "Enter the name of your company",
-    //     },
+    {
+      name: "company-details",
+      title: "Company Details",
+      elements: [
+        {
+          type: "text",
+          name: "userEmail",
+          title: "Your Email",
+          titleLocation: "top",
+          readOnly: true,
+          startWithNewLine: false,
+          isRequired: true,
+        },
+        {
+          type: "text",
+          name: "userUniqueId",
+          readOnly: true,
+        },
+        {
+          type: "text",
+          name: "name",
+          width: "66%",
+          title: "Company Name",
+          titleLocation: "top",
+          isRequired: true,
+          placeholder: "Enter the name of your company",
+        },
 
-    //     {
-    //       type: "text",
-    //       name: "telephone", // NEW ① tel field
-    //       title: "Telephone",
-    //       inputType: "tel",
-    //       minWidth: "256px",
-    //       placeholder: "+44 20 7946 0018",
-    //       // Simple UK‑style number pattern – tweak as needed
-    //       validators: [
-    //         {
-    //           type: "regex",
-    //           regex: "^\\+?[0-9\\s()\\-]{7,15}$",
-    //           text: "Please enter a valid phone number",
-    //         },
-    //       ],
-    //     },
+        {
+          type: "text",
+          name: "telephone", // NEW ① tel field
+          title: "Telephone",
+          inputType: "tel",
+          minWidth: "256px",
+          placeholder: "+44 20 7946 0018",
+          // Simple UK‑style number pattern – tweak as needed
+          validators: [
+            {
+              type: "regex",
+              regex: "^\\+?[0-9\\s()\\-]{7,15}$",
+              text: "Please enter a valid phone number",
+            },
+          ],
+        },
 
-    //     {
-    //       type: "dropdown",
-    //       name: "sectorId",
-    //       title: "Sector",
-    //       titleLocation: "top",
-    //       minWidth: "192px",
-    //       isRequired: true,
-    //       placeholder:
-    //         "Select the primary sector in which this business operates",
-    //       allowClear: true,
-    //       choicesByUrl: {
-    //         url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=sector`,
-    //         path: "sector",
-    //         valueName: "value",
-    //         titleName: "label",
-    //       },
-    //     },
-    //     {
-    //       type: "dropdown",
-    //       name: "regionId",
-    //       minWidth: "192px",
-    //       title: "Region",
-    //       titleLocation: "top",
-    //       isRequired: true,
-    //       startWithNewLine: false,
-    //       searchEnabled: false,
-    //       placeholder: "Select the region in which this business operates",
-    //       allowClear: true,
-    //       choicesByUrl: {
-    //         url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=region`,
-    //         path: "region",
-    //         valueName: "value",
-    //         titleName: "label",
-    //       },
-    //     },
-    //     {
-    //       type: "dropdown",
-    //       name: "companySizeId",
-    //       minWidth: "256px",
-    //       title: "Company Size",
-    //       titleLocation: "top",
-    //       isRequired: true,
-    //       allowClear: true,
-    //       placeholder: "Select Company Size",
-    //       choicesByUrl: {
-    //         url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=company_size`,
-    //         path: "company_size",
-    //         valueName: "value",
-    //         titleName: "label",
-    //       },
-    //     },
-    //     {
-    //       type: "text",
-    //       name: "numberOfEmployees",
-    //       minWidth: "256px",
-    //       startWithNewLine: false,
-    //       title: "Number of Employees",
-    //       titleLocation: "top",
-    //       isRequired: true,
-    //       inputType: "number",
-    //       min: 1,
-    //       step: 1,
-    //       validators: [
-    //         {
-    //           type: "expression",
-    //           text: "Not within the selected Company Size employee range",
-    //           /* unchanged expression */
-    //           expression:
-    //             "({companySizeId} = 51 and {numberOfEmployees} <= 10) or ({companySizeId} = 52 and {numberOfEmployees} > 10 and {numberOfEmployees} <= 50) or ({companySizeId} = 53 and {numberOfEmployees} > 51 and {numberOfEmployees} <= 250) or ({companySizeId} = 54 and {numberOfEmployees} > 250)",
-    //         },
-    //       ],
-    //       placeholder: "Enter the number of current Employees",
-    //     },
+        {
+          type: "dropdown",
+          name: "sectorId",
+          title: "Sector",
+          titleLocation: "top",
+          minWidth: "192px",
+          isRequired: true,
+          placeholder:
+            "Select the primary sector in which this business operates",
+          allowClear: true,
+          choicesByUrl: {
+            url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=sector`,
+            path: "sector",
+            valueName: "value",
+            titleName: "label",
+          },
+        },
+        {
+          type: "dropdown",
+          name: "regionId",
+          minWidth: "192px",
+          title: "Region",
+          titleLocation: "top",
+          isRequired: true,
+          startWithNewLine: false,
+          searchEnabled: false,
+          placeholder: "Select the region in which this business operates",
+          allowClear: true,
+          choicesByUrl: {
+            url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=region`,
+            path: "region",
+            valueName: "value",
+            titleName: "label",
+          },
+        },
+        {
+          type: "dropdown",
+          name: "companySizeId",
+          minWidth: "256px",
+          title: "Company Size",
+          titleLocation: "top",
+          isRequired: true,
+          allowClear: true,
+          placeholder: "Select Company Size",
+          choicesByUrl: {
+            url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=company_size`,
+            path: "company_size",
+            valueName: "value",
+            titleName: "label",
+          },
+        },
+        {
+          type: "text",
+          name: "numberOfEmployees",
+          minWidth: "256px",
+          startWithNewLine: false,
+          title: "Number of Employees",
+          titleLocation: "top",
+          isRequired: true,
+          inputType: "number",
+          min: 1,
+          step: 1,
+          validators: [
+            {
+              type: "expression",
+              text: "Not within the selected Company Size employee range",
+              /* unchanged expression */
+              expression:
+                "({companySizeId} = 51 and {numberOfEmployees} <= 10) or ({companySizeId} = 52 and {numberOfEmployees} > 10 and {numberOfEmployees} <= 50) or ({companySizeId} = 53 and {numberOfEmployees} > 51 and {numberOfEmployees} <= 250) or ({companySizeId} = 54 and {numberOfEmployees} > 250)",
+            },
+          ],
+          placeholder: "Enter the number of current Employees",
+        },
 
-    //     /* ───────── NEW: Company logo upload ──────── */
-    //     {
-    //       type: "file", // NEW ② logo upload
-    //       name: "companyLogo",
-    //       title: "Company Logo",
-    //       acceptedTypes: "image/*",
-    //       storeDataAsText: false, // keep as file object (base64) in result
-    //       maxSize: 5242880, // 5 MB
-    //       showPreview: true,
-    //       placeholder: "Upload a JPG, PNG or SVG (max 5 MB)",
-    //     },
-    //   ],
-    // },
+        /* ───────── NEW: Company logo upload ──────── */
+        {
+          type: "file", // NEW ② logo upload
+          name: "companyLogo",
+          title: "Company Logo",
+          acceptedTypes: "image/*",
+          storeDataAsText: false, // keep as file object (base64) in result
+          maxSize: 5242880, // 5 MB
+          showPreview: true,
+          placeholder: "Upload a JPG, PNG or SVG (max 5 MB)",
+        },
+      ],
+    },
 
     // /* ─────────────────────────────  2 ▸ COMPANY SITES  ───────────────────────────── */
     // {
