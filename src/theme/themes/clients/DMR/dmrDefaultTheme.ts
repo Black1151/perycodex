@@ -31,7 +31,8 @@ export const dmrDefaultTheme = extendTheme(baseTheme, {
     recognitionCard: {
       elementBG: "primary",
       textColor: "white",
-      secondaryTextColor: "white",
+      primaryTextColor: "white",
+      secondaryTextColor: colorPalette.dmrSecondary,
     },
   },
 

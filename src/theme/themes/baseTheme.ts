@@ -17,9 +17,7 @@ export const baseTheme = extendTheme({
     primary: "blue",
     secondary: "#fff",
     elementBG: "white",
-
     primaryButton: "#fff",
-    // perygonBlueTransparent: "rgba(13, 0, 61, 0.85)",
     seduloRed: "#B4213D",
     yellow: "#EFC718",
     lightGreen: "#92C01F",
@@ -74,7 +72,6 @@ export const baseTheme = extendTheme({
     Button: {
       variants: {
         primary: {
-          mt: 5,
           w: "full",
           height: 12,
           backgroundColor: "primary",

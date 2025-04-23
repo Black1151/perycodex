@@ -1,7 +1,6 @@
 "use client";
 
-import { Box, Heading, HStack, IconButton, useTheme } from "@chakra-ui/react";
-import AddButton from "@/components/Buttons/AddButton";
+import { Box, Button, Heading, HStack, useTheme } from "@chakra-ui/react";
 import BackButton from "@/components/BackButton";
 import { Celebration } from "@mui/icons-material";
 
@@ -17,7 +16,13 @@ const RecognitionHeader: React.FC<RecognitionHeaderProps> = ({
   const theme = useTheme();
 
   return (
-    <HStack alignItems="center" justifyContent="space-between" w="full" my={2}>
+    <HStack
+      alignItems="center"
+      justifyContent="space-between"
+      w="full"
+      my={2}
+      width="100%"
+    >
       <HStack>
         <BackButton />
         <Heading
@@ -33,15 +38,14 @@ const RecognitionHeader: React.FC<RecognitionHeaderProps> = ({
         </Heading>
       </HStack>
       <Box>
-        <AddButton
-          label="Recognise Someone!"
-          toolId={"0"}
-          workflowId={"0"}
-          redirectUrl={"/big-up"}
-          onAddButtonClick={onAddButtonClick}
-          AddIcon={Celebration}
-          workflow={false}
-        />
+        <Button
+          aria-label="Recognise Someone!"
+          leftIcon={<Celebration />}
+          onClick={onAddButtonClick}
+          variant="primary"
+        >
+          Recognise Someone!
+        </Button>
       </Box>
     </HStack>
   );

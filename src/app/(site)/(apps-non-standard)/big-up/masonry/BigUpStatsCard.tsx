@@ -69,7 +69,7 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
             </Text>
             <Text
               fontSize={["sm", "md", "xl"]}
-              color="primaryTextColor"
+              color={theme.fringeCases.recognitionCard.primaryTextColor}
               fontWeight="bold"
             >
               {location}
@@ -105,7 +105,10 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
           </Flex>
         </Flex>
         <Flex align="center">
-          <Text color="primaryTextColor" fontWeight="bold">
+          <Text
+            color={theme.fringeCases.recognitionCard.primaryTextColor}
+            fontWeight="bold"
+          >
             Your score is:
           </Text>
           <Text
@@ -119,18 +122,34 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
         </Flex>
         <Divider mb={3} />
         <Flex justify="space-between">
-          <Text color="primaryTextColor" fontSize="sm" fontWeight="bold">
+          <Text
+            color={theme.fringeCases.recognitionCard.primaryTextColor}
+            fontSize="sm"
+            fontWeight="bold"
+          >
             Received:
           </Text>
-          <Text color="primaryTextColor" fontWeight="bold" fontSize="lg">
+          <Text
+            color={theme.fringeCases.recognitionCard.primaryTextColor}
+            fontWeight="bold"
+            fontSize="lg"
+          >
             {received.toLocaleString()}
           </Text>
         </Flex>
         <Flex justify="space-between" mt={1}>
-          <Text color="primaryTextColor" fontSize="sm" fontWeight="bold">
+          <Text
+            color={theme.fringeCases.recognitionCard.primaryTextColor}
+            fontSize="sm"
+            fontWeight="bold"
+          >
             Given:
           </Text>
-          <Text color="primaryTextColor" fontWeight="bold" fontSize="lg">
+          <Text
+            color={theme.fringeCases.recognitionCard.primaryTextColor}
+            fontWeight="bold"
+            fontSize="lg"
+          >
             {given.toLocaleString()}
           </Text>
         </Flex>
