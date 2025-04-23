@@ -25,7 +25,7 @@ interface CustomThemeProviderProps {
 export const ChakraThemeProvider: React.FC<CustomThemeProviderProps> = ({
   children,
 }) => {
-  const [userThemeId, setUserThemeId] = useState<ThemeId | null>(6);
+  const [userThemeId, setUserThemeId] = useState<ThemeId | null>(null);
   const [loadingTheme, setLoadingTheme] = useState(true);
 
   const getUserTheme = async () => {
@@ -74,9 +74,9 @@ export const ChakraThemeProvider: React.FC<CustomThemeProviderProps> = ({
 
   const themeId = userThemeId ?? 1;
 
-  useEffect(() => {
-    setUserThemeId(6);
-  }, [themeId]);
+  // useEffect(() => {
+  //   setUserThemeId(1);
+  // }, [themeId]);
 
   return (
     <ThemeContext.Provider

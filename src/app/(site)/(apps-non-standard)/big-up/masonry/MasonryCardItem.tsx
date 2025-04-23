@@ -29,7 +29,7 @@ export const MasonryCard: React.FC<MasonryCardProps> = ({ title, content }) => {
         <Text
           fontSize={["sm", null, null, "md"]}
           fontWeight="bold"
-          color="primaryTextColor"
+          color={theme.fringeCases.recognitionCard.primaryTextColor}
         >
           {title}
         </Text>
