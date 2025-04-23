@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Flex, Heading, useTheme } from "@chakra-ui/react";
+import { Box, Heading, HStack, IconButton, useTheme } from "@chakra-ui/react";
 import AddButton from "@/components/Buttons/AddButton";
 import BackButton from "@/components/BackButton";
 import { Celebration } from "@mui/icons-material";
@@ -17,31 +17,22 @@ const RecognitionHeader: React.FC<RecognitionHeaderProps> = ({
   const theme = useTheme();
 
   return (
-    <Flex
-      align="center"
-      justify="flex-start"
-      w="full"
-      gap={4}
-      lineHeight={0}
-      my={2}
-    >
-      <BackButton />
-
-      {/* Heading */}
-      <Heading
-        as="h1"
-        fontWeight={100}
-        color={theme.fringeCases.recognitionCard.secondaryTextColor}
-        fontSize={{ base: "2xl", md: "4xl" }}
-        fontFamily="Bonfire"
-        textAlign="center"
-        mt={2}
-      >
-        {headingText}
-      </Heading>
-
-      {/* AddButton */}
-      <Box ml="auto">
+    <HStack alignItems="center" justifyContent="space-between" w="full" my={2}>
+      <HStack>
+        <BackButton />
+        <Heading
+          as="h1"
+          fontWeight={100}
+          color={theme.fringeCases.recognitionCard.secondaryTextColor}
+          fontSize={{ base: "2xl", md: "4xl" }}
+          fontFamily="Bonfire"
+          textAlign="center"
+          mt={2}
+        >
+          {headingText}
+        </Heading>
+      </HStack>
+      <Box>
         <AddButton
           label="Recognise Someone!"
           toolId={"0"}
@@ -52,7 +43,7 @@ const RecognitionHeader: React.FC<RecognitionHeaderProps> = ({
           workflow={false}
         />
       </Box>
-    </Flex>
+    </HStack>
   );
 };
 

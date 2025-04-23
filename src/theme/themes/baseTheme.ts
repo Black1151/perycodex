@@ -25,6 +25,9 @@ export const baseTheme = extendTheme({
     lightGreen: "#92C01F",
     seduloGreen: "#008000",
     darkGray: "#4A4A4A",
+    primaryTextColor: "rgb(0, 0, 0)",
+    secondaryTextColor: "rgb(83, 83, 83)",
+    themeTextColor: "rgba(201, 9, 9, 0.85)",
 
     happinessScale: {
       1: "#b22200",
@@ -87,6 +90,18 @@ export const baseTheme = extendTheme({
             color: "primary",
             cursor: "not-allowed",
             opacity: 0.6,
+          },
+        },
+
+        solid: {
+          backgroundColor: "primary",
+          color: "primaryTextColor",
+          border: "1px solid",
+          borderColor: "secondary",
+          _hover: {
+            backgroundColor: "elementBG",
+            color: "primary",
+            borderColor: "primary",
           },
         },
 
