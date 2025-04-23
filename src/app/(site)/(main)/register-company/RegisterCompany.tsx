@@ -3,18 +3,53 @@
 import { Flex, VStack } from "@chakra-ui/react";
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
 import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
-import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 import { registerCustomerJson } from "@/components/surveyjs/forms/registerCompany";
+import { useUser } from "@/providers/UserProvider";
+import { useEffect, useState } from "react";
+import dynamic from 'next/dynamic';
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-export const fetchCache = "force-no-store";
+const AdminFormWrapper = dynamic(
+  () => import('@/components/surveyjs/AdminFormWrapper'),
+  { ssr: false }
+);
+// export const revalidate = 0;
+// export const fetchCache = "force-no-store";
 
 export default function RegisterCompany() {
-  const handleSurveySuccess = (surveyData: any) => {
-    console.log("Survey submitted successfully!");
-    console.log("Survey Data:", surveyData);
+
+  const { user } = useUser();
+  if (!user) {
+    return null; // or a loading state, or redirect to login
   }
+
+  const userEmail = user.email;
+  console.log("User email:", userEmail); // Log the user email to the console
+
+  const userUniqueId = user.userUniqueId;
+  console.log("User unique ID:", userUniqueId); // Log the user unique ID to the console
+
+  // Clone the JSON so we don’t mutate the original
+  const surveyJson = JSON.parse(JSON.stringify(registerCustomerJson));
+
+  // Insert an uneditable “Email” field at the top of page 1 and a hidden “Unique ID” field
+  surveyJson.pages[0].elements.unshift(
+    {
+      type: "text",
+      name: "primaryEmail",
+      title: "Your Email",
+      titleLocation: "top",
+      readOnly: true,
+      defaultValue: userEmail,
+      startWithNewLine: false,
+      isRequired: true,
+    },
+    {
+      type: "text",
+      name: "userUniqueId",
+      readOnly: true,
+      defaultValue: userUniqueId,
+    }
+  );
 
   return (
     <PerygonContainer>
@@ -35,7 +70,7 @@ export default function RegisterCompany() {
           px={4}
         >
           <AdminFormWrapper
-            formJson={registerCustomerJson}
+            formJson={surveyJson}
             data={null}
             layoutConfig={{ layoutKey: "company-registration", layoutProps: {} }}
             globalVariables={[]}

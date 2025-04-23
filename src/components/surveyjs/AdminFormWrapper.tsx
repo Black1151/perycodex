@@ -1,7 +1,7 @@
 "use client";
 
 // React
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // Survey JS
 // import "survey-core/defaultV2.css";
@@ -55,7 +55,7 @@ const AdminFormWrapper: React.FC<AdminFormWrapperProps> = ({
   onSurveyFailure,
 }) => {
   const [surveyJSModel] = useState(
-    new Model({ ...formJson, ...adminSurveyOptions }),
+    new Model({ ...formJson, ...adminSurveyOptions })
   );
   const [canEdit, setCanEdit] = useState<boolean>(isAllowedToEdit);
 
@@ -63,7 +63,7 @@ const AdminFormWrapper: React.FC<AdminFormWrapperProps> = ({
     surveyJSModel.mode = "display";
   }
 
-  useInitialiseForm({
+  const isInitialised = useInitialiseForm({
     surveyJSModel,
     data,
     globalVariables,
@@ -72,6 +72,10 @@ const AdminFormWrapper: React.FC<AdminFormWrapperProps> = ({
     jsImport,
     isNew,
   });
+
+  useEffect(() => {
+    console.log("isInitialised state changed:", isInitialised);
+  }, [isInitialised]);
 
   const formNavigation = useFormNavigation({ surveyJSModel, data, canEdit });
 
@@ -90,12 +94,14 @@ const AdminFormWrapper: React.FC<AdminFormWrapperProps> = ({
 
   return (
     <>
-      <FormComponent
-        surveyJSModel={surveyJSModel}
-        layoutKey={layoutConfig.layoutKey}
-        layoutProps={layoutConfig.layoutProps}
-        formNavigation={formNavigation}
-      />
+      {isInitialised && (
+        <FormComponent
+          surveyJSModel={surveyJSModel}
+          layoutKey={layoutConfig.layoutKey}
+          layoutProps={layoutConfig.layoutProps}
+          formNavigation={formNavigation}
+        />
+      )}
     </>
   );
 };
