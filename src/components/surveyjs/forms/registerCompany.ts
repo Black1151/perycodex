@@ -18,11 +18,17 @@ export const registerCustomerJson = {
           type: "text",
           name: "userUniqueId",
           readOnly: true,
+          visible: false,
+        },
+        {
+          type: "text",
+          name: "userId",
+          readOnly: true,
+          visible: false,
         },
         {
           type: "text",
           name: "name",
-          width: "66%",
           title: "Company Name",
           titleLocation: "top",
           isRequired: true,
@@ -34,6 +40,7 @@ export const registerCustomerJson = {
           name: "telephone", // NEW ① tel field
           title: "Telephone",
           inputType: "tel",
+          startWithNewLine: false,
           minWidth: "256px",
           placeholder: "+44 20 7946 0018",
           // Simple UK‑style number pattern – tweak as needed
@@ -45,7 +52,6 @@ export const registerCustomerJson = {
             },
           ],
         },
-
         {
           type: "dropdown",
           name: "sectorId",
@@ -70,7 +76,6 @@ export const registerCustomerJson = {
           title: "Region",
           titleLocation: "top",
           isRequired: true,
-          startWithNewLine: false,
           searchEnabled: false,
           placeholder: "Select the region in which this business operates",
           allowClear: true,
@@ -80,6 +85,42 @@ export const registerCustomerJson = {
             valueName: "value",
             titleName: "label",
           },
+        },
+        {
+          type: "dropdown",
+          name: "businessTypeId",
+          title: "Business Type",
+          titleLocation: "top",
+          minWidth: "192px",
+          isRequired: true,
+          placeholder: "Select the business type of this business",
+          allowClear: true,
+          choicesByUrl: {
+            url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=business_type`,
+            path: "business_type",
+            valueName: "value",
+            titleName: "label",
+          },
+        },
+        {
+          type: "text",
+          name: "companyNumber",
+          title: "Company Number",
+          titleLocation: "top",
+          defaultValue: "10101010",
+          startWithNewLine: false,
+          visibleIf: "{businessTypeId} = 3",
+          placeholder: "Not required right now if you are unsure",
+        },
+        {
+          type: "text",
+          name: "sicCode",
+          title: "SIC Code",
+          titleLocation: "top",
+          defaultValue: "10101",
+          startWithNewLine: false,
+          visibleIf: "{businessTypeId} = 3",
+          placeholder: "Not required right now if you are unsure",
         },
         {
           type: "dropdown",
@@ -119,232 +160,239 @@ export const registerCustomerJson = {
           ],
           placeholder: "Enter the number of current Employees",
         },
+      ],
+    },
 
-        /* ───────── NEW: Company logo upload ──────── */
+    /* ─────────────────────────────  2 ▸ COMPANY SITES  ───────────────────────────── */
+    {
+      name: "customer-sites",
+      title: "Company Sites",
+      elements: [
         {
-          type: "file", // NEW ② logo upload
-          name: "companyLogo",
-          title: "Company Logo",
-          acceptedTypes: "image/*",
-          storeDataAsText: false, // keep as file object (base64) in result
-          maxSize: 5242880, // 5 MB
-          showPreview: true,
-          placeholder: "Upload a JPG, PNG or SVG (max 5 MB)",
+          type: "paneldynamic",
+          name: "customerSites",
+          title:
+            "Enter your company locations below. (First being the primary location of your organisation)",
+          panelCount: 1,
+          maxPanelCount: 3,
+
+          // ←–– Enforce unique siteName across all panels
+          keyName: "siteName",
+          keyDuplicationError: "Each site name must be unique",
+
+          templateElements: [
+            /* ───────── always shown ───────── */
+            {
+              type: "text",
+              name: "siteName",
+              title: "Site Name",
+              isRequired: true,
+              placeholder: "e.g. Head Office",
+            },
+            {
+              type: "dropdown",
+              name: "siteTypeId",
+              startWithNewLine: false,
+              title: "Site Type",
+              titleLocation: "top",
+              isRequired: true,
+              renderAs1: "select",
+              placeholder: "What type of site is this",
+              allowClear: true,
+              choicesByUrl: {
+                url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=site_type`,
+                path: "site_type",
+                valueName: "value",
+                titleName: "label",
+              },
+            },
+            {
+              type: "text",
+              name: "address1",
+              title: "No. / Name & Street",
+              minWidth: "256px",
+              isRequired: true,
+              placeholder: "No. / Name & Street",
+            },
+            {
+              type: "text",
+              name: "postcode",
+              title: "Postcode",
+              minWidth: "256px",
+              isRequired: true,
+              placeholder: "Postcode",
+            },
+            {
+              type: "dropdown",
+              name: "country",
+              title: "Country",
+              minWidth: "256px",
+              startWithNewLine: false,
+              allowClear: true,
+              choicesOrder: "asc",
+              isRequired: true,
+              choicesByUrl: {
+                url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=country`,
+                path: "country",
+                valueName: "value",
+                titleName: "label",
+              },
+            },
+          ],
         },
       ],
     },
 
-    // /* ─────────────────────────────  2 ▸ COMPANY SITES  ───────────────────────────── */
-    // {
-    //   name: "customer-sites",
-    //   title: "Company Sites",
-    //   elements: [
-    //     {
-    //       type: "paneldynamic",
-    //       name: "customerSites",
-    //       title:
-    //         "Enter your company locations below. (First being the primary location)",
-    //       panelCount: 1,
-    //       maxPanelCount: 3,
+    /* ─────────────────────────────  3 ▸ COMPANY DEPARTMENTS  ─────────────────────── */
+    {
+      name: "company-departments",
+      title: "Company Departments",
+      elements: [
+        {
+          type: "paneldynamic",
+          name: "departments",
+          title: "Add your additional departments inside the organisation. We have added one main departnent for you (which you will be a part of).",
+          panelCount: 0,
+          minPanelCount: 0,
+          renderMode: "list",
 
-    //       templateElements: [
-    //         /* ───────── always shown ───────── */
-    //         {
-    //           type: "text",
-    //           name: "siteName",
-    //           title: "Site Name",
-    //           isRequired: true,
-    //           placeholder: "e.g. Head Office",
-    //         },
-    //         {
-    //           type: "text",
-    //           name: "address1",
-    //           title: "No. / Name & Street",
-    //           minWidth: "256px",
-    //           isRequired: true,
-    //           placeholder: "No. / Name & Street",
-    //         },
-    //         {
-    //           type: "text",
-    //           name: "postcode",
-    //           title: "Postcode",
-    //           minWidth: "256px",
-    //           isRequired: true,
-    //           placeholder: "Postcode",
-    //         },
-    //         {
-    //           type: "dropdown",
-    //           name: "country",
-    //           title: "Country",
-    //           minWidth: "256px",
-    //           startWithNewLine: false,
-    //           allowClear: true,
-    //           choicesOrder: "asc",
-    //           isRequired: true,
-    //           choicesByUrl: {
-    //             url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=country`,
-    //             path: "country",
-    //             valueName: "value",
-    //             titleName: "label",
-    //           },
-    //         },
-    //       ],
-    //     },
-    //   ],
-    // },
+          // ←–– Enforce unique departmentName across panels
+          keyName: "departmentName",
+          keyDuplicationError: "Each department name must be unique",
 
-    // /* ─────────────────────────────  3 ▸ COMPANY DEPARTMENTS  ─────────────────────── */
-    // {
-    //   name: "company-departments",
-    //   title: "Company Departments",
-    //   elements: [
-    //     {
-    //       type: "paneldynamic",
-    //       name: "departments",
-    //       title: "Add your departments",
-    //       panelCount: 1,
-    //       minPanelCount: 1,
-    //       renderMode: "list",
-    //       templateElements: [
-    //         {
-    //           type: "text",
-    //           name: "departmentName",
-    //           title: "Department Name",
-    //           isRequired: true,
-    //           placeholder: "e.g. Sales",
-    //         },
-    //         {
-    //           type: "comment",
-    //           name: "departmentDescription",
-    //           title: "Description",
-    //           placeholder: "What does this department do?",
-    //         },
-    //         /* hidden flag required by backend */
-    //         {
-    //           type: "boolean",
-    //           name: "isDepartment",
-    //           defaultValue: true,
-    //           visible: false,
-    //         },
-    //       ],
-    //     },
-    //   ],
-    // },
+          templateElements: [
+            {
+              type: "text",
+              name: "departmentName",
+              title: "Department Name",
+              isRequired: true,
+              placeholder: "e.g. Sales",
+            },
+            {
+              type: "comment",
+              name: "departmentDescription",
+              title: "Description",
+              placeholder: "What does this department do?",
+            },
+            /* hidden flag required by backend */
+            {
+              type: "boolean",
+              name: "isDepartment",
+              defaultValue: true,
+              visible: false,
+            },
+          ],
+        },
+      ],
+    },
 
-    // /* ─────────────────────────────  4 ▸ COMPANY STAFF  ───────────────────────────── */
-    // {
-    //   name: "company-staff",
-    //   title: "Company Staff",
-    //   elements: [
-    //     {
-    //       type: "paneldynamic",
-    //       name: "companyStaff",
-    //       title: "Enter up to five staff email addresses",
-    //       panelCount: 1,
-    //       maxPanelCount: 5,
-    //       renderMode: "list",
-    //       templateElements: [
-    //         {
-    //           type: "text",
-    //           name: "staffEmail",
-    //           title: "Staff Email",
-    //           inputType: "email",
-    //           isRequired: true,
-    //           placeholder: "name@example.com",
-    //           validators: [
-    //             { type: "email", text: "Please enter a valid email address" },
-    //           ],
-    //         },
-    //       ],
-    //     },
-    //   ],
-    // },
+    /* ─────────────────────────────  4 ▸ COMPANY STAFF  ───────────────────────────── */
+    {
+      name: "company-staff",
+      title: "Company Staff",
+      elements: [
+        {
+          type: "paneldynamic",
+          name: "companyStaff",
+          title: "Enter up to five staff email addresses",
+          panelCount: 1,
+          maxPanelCount: 5,
+          renderMode: "list",
 
+          // ←–– NEW: treat “staffEmail” as the unique key across all panels
+          keyName: "staffEmail",
+          // ←–– OPTIONAL: override the default duplicate-key error text
+          keyDuplicationError: "Each email address must be unique",
+
+          templateElements: [
+            {
+              type: "text",
+              name: "staffEmail",
+              title: "Staff Email",
+              inputType: "email",
+              isRequired: true,
+              placeholder: "name@example.com",
+              validators: [
+                { type: "email", text: "Please enter a valid email address" },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+
+    // Tool selection -- no longer used in the form, but kept here for reference
     /* ─────────────────────────────  5 ▸ TOOL SELECTION  ──────────────────────────── */
     // {
     //   name: "tool-selection",
     //   title: "Tool Selection",
+    //   width: "100%",
     //   elements: [
     //     {
-    //       type: "checkbox",
-    //       name: "selectedTools",
+    //       type: "boolean",
+    //       name: "x",
+    //       title: "Do you want to add staff members?",
+    //     },
+    //     {
+    //       type: "paneldynamic",
+    //       name: "toolPanels",
     //       title: "Select the tools you'd like to use",
-    //       isRequired: true,
-    //       valuePropertyName: "id",
-    //       hideNumber: true,
+    //       width: "100%",
 
-    //       // ── Fetch choices from your endpoint
-    //       choicesByUrl: {
-    //         url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/toolConfig/allBy`,
-    //         path: "resource",
-    //         valueName: "id",
-    //         titleName: "displayName",
-    //         // if you have imageLinkName / descriptionName fields:
-    //         imageLinkName: "imageUrl",
-    //         descriptionName: "description",
-    //       },
-
-    //       // ── Only show those choices whose `isTrialable` flag is true
-    //       choicesVisibleIf: "{isTrialable} = true",
-
-    //       // ── Tell the question to render those images & descriptions:
-    //       showImage: true,
-    //       showDescription: true,
+    //       setValueIf: "{x}=true",
+    //       isrequired: true,
+    //       setValueExpression:
+    //       "perygonApiRequest('/toolConfig/allBy', 'showInSeeMoreList=true', 'displayName:displayName|iconImageUrl:iconImageUrl|previewText:previewText|isTrialable:isTrialable')",
+    //       templateElements: [
+    //         {
+    //           type: "text",
+    //           name: "displayName",
+    //           title: "Tool Name",
+    //           titleLocation: "hidden",
+    //           width: "80%",
+    //         },
+    //         {
+    //           type: "image",
+    //           width: "20%",
+    //           minWidth: "224px",
+    //           imageLink: "{panel.iconImageUrl}",
+    //           imageFit: "cover",
+    //           imageHeight: "175px",
+    //           autoGrow: true,
+    //         },
+    //         {
+    //           type: "comment",
+    //           name: "previewText",
+    //           title: "About this tool",
+    //           titleLocation: "hidden",
+    //           width: "80%",
+    //           height: "200px",
+    //           allowResize: false,
+    //           autoGrow: true,
+    //           startWithNewLine: false,
+    //         },
+    //         {
+    //           type: "boolean",
+    //           name: "useTool",
+    //           title: "Use this tool?",
+    //           labelTrue: "Yes",
+    //           labelFalse: "No",
+    //           defaultValue: false,
+    //           enableIf: "{panel.isTrialable} = true",
+    //         },
+    //         {
+    //           type: "html",
+    //           name: "unavailableMsg",
+    //           html: "<em>This tool is unavailable on your current plan.</em>",
+    //           visibleIf: "{panel.isTrialable} = false",
+    //           allowResize: false,
+    //           autoGrow: true,
+    //         },
+    //       ],
+    //       allowAddPanel: false,
+    //       allowRemovePanel: false,
     //     },
     //   ],
-    // },
-
-    {
-      name: 'tool-selection',
-      title: 'Tool Selection',
-      elements: [
-        {
-          type: 'paneldynamic',
-          name: 'toolPanels',
-          title: 'Select the tools you\'d like to use',
-          isRequired: true,
-    
-          // ▶─ only fetch when the array is empty (length === 0)
-          setValueIf: '1=1',
-    
-          // ▶─ your helper returns an array of tool objects
-          setValueExpression:
-            "perygonApiRequest('/toolConfig/allBy', '', 'displayName:displayName|iconImageUrl:imageUrl|previewText:previewText|isTrialable:isTrialable')",
-    
-          // ▶─ zero panels until your data arrives
-          // panelCount: '{toolPanels.length}',
-    
-          // ▶─ show a spinner or text while loading
-          // emptyPanelText: 'Loading tools…',
-    
-          templateElements: [
-            {
-              type: "text",
-              name: "displayName",
-              title: "Tool Name",
-            },
-            {
-              type: 'comment',
-              name: 'previewText',
-              title: 'About this tool',
-            },
-            {
-              type: 'boolean',
-              name: 'isTrialable',
-              title: 'Use this tool?',
-              labelTrue: 'Yes',
-              labelFalse: 'No',
-              defaultValue: false
-            }
-          ],
-    
-          allowAddPanel: false,
-          allowRemovePanel: false,
-        }
-      ]
-    }
-    
-    
-    
+    // }
   ],
 };

@@ -65,14 +65,26 @@ const CompanyRegistrationLayout: React.FC<ClientSatisfactionLayoutProps> = ({
           {/* Optional helper blurb */}
           {currentStage?.headerText && (
             <PerygonCard bg={theme.colors.elementBG} borderRadius="md">
-              <Text color={theme.colors.primaryTextColor} fontFamily="Metropolis">
+              <Text
+                color={theme.colors.primaryTextColor}
+                fontFamily="Metropolis"
+              >
                 {currentStage.headerText}
               </Text>
             </PerygonCard>
           )}
 
           {/* Breadcrumb / page number display */}
-          <TopNavigation {...formNavigation} />
+          <Flex
+            as="nav"
+            position="sticky"
+            top="0"
+            zIndex="docked" // or a number like 1000
+            width="100%"
+            pb={2}
+          >
+            <TopNavigation {...formNavigation} />
+          </Flex>
 
           {/* SurveyJS block – grows to use remaining height if parent allows */}
           <Box h="min" w="full">
