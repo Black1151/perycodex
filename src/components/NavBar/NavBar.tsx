@@ -96,7 +96,7 @@ const NavBar: React.FC<NavBarProps> = ({
         left={0}
         right={0}
         zIndex={100}
-        bgGradient={theme.gradients.primaryGradient}
+        bgGradient={theme.fringeCases.navBar.bgGradient}
         borderBottom="white 1px solid"
       >
         <MotionBox

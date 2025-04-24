@@ -22,7 +22,6 @@ export const dmrDefaultTheme = extendTheme(baseTheme, {
 
   gradients: {
     ...baseTheme.gradients,
-    // primaryGradient: "linear(to-br, primary 100%, primary 100%)",
     primaryGradient: `linear-gradient(to bottom right, ${colorPalette.dmrPrimary}, ${colorPalette.dmrPrimary})`,
     secondaryGradient: `linear-gradient(to bottom right, ${colorPalette.dmrPrimary}, ${colorPalette.dmrPrimary})`,
     secondaryGradientTransparent: `linear-gradient(to bottom right, hsla(205, 31%, 26%, 0.7) 50%, hsla( 72, 98%, 64%, 0.7) 100%)`,

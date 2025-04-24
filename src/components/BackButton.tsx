@@ -8,11 +8,13 @@ import { useRouter } from "next/navigation";
 interface BackButtonProps extends FlexProps {
   prevRoute?: string;
   iconSize?: "inherit" | "small" | "medium" | "large";
+  color?: string;
 }
 
 export default function BackButton({
   prevRoute,
   iconSize,
+  color,
   ...chakraStyles
 }: BackButtonProps) {
   const router = useRouter();
@@ -34,9 +36,9 @@ export default function BackButton({
       justifyContent="center"
       cursor="pointer"
       h="full"
-      color="white"
+      color={color || "gray.300"}
       _hover={{
-        color: "gray.300",
+        color: color || "gray.300",
         transform: "translateX(-5px)",
       }}
       _active={{ color: "gray.500" }}

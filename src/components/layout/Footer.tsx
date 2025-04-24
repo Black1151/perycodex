@@ -15,7 +15,7 @@ export const Footer = () => {
       alignItems="center"
       borderTop="white 1px solid"
       display={["none", "flex"]}
-      bgGradient={theme.gradients.primaryGradient}
+      bgGradient={theme.fringeCases.navBar.bgGradient}
       zIndex={3}
     >
       <HStack color="white" px={5} fontSize={18}>

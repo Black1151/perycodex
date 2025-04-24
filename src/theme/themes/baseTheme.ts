@@ -47,6 +47,12 @@ export const baseTheme = extendTheme({
       textColor: "primaryTextColor",
       secondaryTextColor: "themeTextColor",
     },
+    navBar: {
+      bgGradient: "primaryGradient",
+    },
+    dashboardHeader: {
+      color: "white",
+    },
   },
 
   fonts: {

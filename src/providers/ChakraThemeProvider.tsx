@@ -40,7 +40,7 @@ export const ChakraThemeProvider: React.FC<CustomThemeProviderProps> = ({
       const data = await response.json();
 
       if (data.userThemeId !== undefined && data.userThemeId !== null) {
-        // setUserThemeId(data.userThemeId);
+        setUserThemeId(data.userThemeId);
       }
     } catch (error) {
       console.error("Error fetching user theme:", error);
@@ -74,10 +74,6 @@ export const ChakraThemeProvider: React.FC<CustomThemeProviderProps> = ({
 
   const themeId = userThemeId ?? 1;
 
-  // useEffect(() => {
-  //   setUserThemeId(1);
-  // }, [themeId]);
-
   return (
     <ThemeContext.Provider
       value={{
@@ -86,7 +82,6 @@ export const ChakraThemeProvider: React.FC<CustomThemeProviderProps> = ({
         getUserTheme,
       }}
     >
-      {/* <ChakraProvider theme={themeRegistry[5]}>{children}</ChakraProvider> */}
       <ChakraProvider theme={themeRegistry[themeId]}>{children}</ChakraProvider>
     </ThemeContext.Provider>
   );
