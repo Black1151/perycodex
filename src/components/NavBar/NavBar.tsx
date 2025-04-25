@@ -70,10 +70,12 @@ const NavBar: React.FC<NavBarProps> = ({
     });
     const data = await response.json();
 
-    const dropdownOptions = data.resource.map((theme: any) => ({
-      label: theme.themename,
-      value: theme.id,
-    }));
+    const dropdownOptions = Array.isArray(data.resource)
+      ? data.resource.map((theme: any) => ({
+          label: theme.themename,
+          value: theme.id,
+        }))
+      : [];
 
     setThemeDropdownOptions(dropdownOptions);
   };
