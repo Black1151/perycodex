@@ -1,4 +1,5 @@
 export const registerCustomerJson = {
+  checkErrorsMode: "onValueChanged",
   pages: [
     /* ─────────────────────────────  1 ▸ COMPANY DETAILS  ───────────────────────────── */
     {
@@ -251,9 +252,11 @@ export const registerCustomerJson = {
         {
           type: "paneldynamic",
           name: "departments",
-          title: "Add your additional departments inside the organisation. We have added one main departnent for you (which you will be a part of).",
+          title:
+            "Add up to 2 additional departments inside the organisation. We have added one main departnent for you (which you will be a part of).",
           panelCount: 0,
           minPanelCount: 0,
+          maxPanelCount: 2,
           renderMode: "list",
 
           // ←–– Enforce unique departmentName across panels
@@ -288,20 +291,43 @@ export const registerCustomerJson = {
 
     /* ─────────────────────────────  4 ▸ COMPANY STAFF  ───────────────────────────── */
     {
-      name: "company-staff",
-      title: "Company Staff",
+      name: "company-staff-section",
+      title: "Invite Your Company Staff",
       elements: [
+        {
+          type: "boolean",
+          name: "inviteStaff",
+          title: "Would you like to invite your staff to join the platform?",
+          labelTrue: "Yes",
+          labelFalse: "Not right now",
+          defaultValue: true,
+          isRequired: true,
+        },
+        {
+          type: "boolean",
+          name: "useBulkEntry",
+          title: "How would you like to add your staff’s email addresses?",
+          labelTrue: "Paste all at once",
+          labelFalse: "Enter individually",
+          visibleIf: "{inviteStaff} = true",
+          defaultValue: false,
+          description:
+            "Choose “Enter individually” to type or paste one email at a time (up to 19). " +
+            "Or choose “Paste all at once” to drop in a comma-separated list.",
+        },
         {
           type: "paneldynamic",
           name: "companyStaff",
-          title: "Enter up to five staff email addresses",
+          title:
+            "Enter up to 19 of your staff. They will be invited to join the platform.",
           panelCount: 1,
-          maxPanelCount: 5,
+          maxPanelCount: 19,
           renderMode: "list",
+          visibleIf: "{useBulkEntry} = false and {inviteStaff} = true",
+          minPanelCount: 0,
+          isRequired: true,
 
-          // ←–– NEW: treat “staffEmail” as the unique key across all panels
           keyName: "staffEmail",
-          // ←–– OPTIONAL: override the default duplicate-key error text
           keyDuplicationError: "Each email address must be unique",
 
           templateElements: [
@@ -317,6 +343,35 @@ export const registerCustomerJson = {
               ],
             },
           ],
+        },
+        {
+          type: "text",
+          name: "companyStaffBulk",
+          title: "Paste up to 19 emails, separated by commas",
+          visibleIf: "{useBulkEntry} = true and {inviteStaff} = true",
+          inputType: "textarea",
+          textUpdateMode: "onTyping",
+          autoGrow: true,
+          minRows: 3,
+          minHeight: "200px",
+          isRequired: true,
+          placeholder:
+            "e.g. alice@example.com, bob@example.com, charlie@example.com",
+            validators: [
+              // 1) FORMAT CHECK: each chunk must look like an email
+              {
+                type: "regex",
+                regex:
+                  "^(?:\\s*[^,\\s]+@[^,\\s]+\\.[^,\\s]+\\s*)(?:,\\s*[^,\\s]+@[^,\\s]+\\.[^,\\s]+\\s*)*$",
+                text: "Please enter valid email addresses, separated by commas."
+              },
+              // 2) COUNT CHECK: disallow 20th comma (i.e. max 18 commas → 19 items)
+              {
+                type: "regex",
+                regex: "^(?!(?:.*?,){19}).*$",
+                text: "You can only paste up to 19 email addresses."
+              }
+            ]
         },
       ],
     },

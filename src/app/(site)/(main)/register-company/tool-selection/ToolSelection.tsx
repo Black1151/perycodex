@@ -8,13 +8,16 @@ import {
   Spinner,
   Box,
   useTheme,
+  HStack,
+  SimpleGrid,
+  Skeleton,
+  Select,
 } from "@chakra-ui/react";
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
 import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
 import { useUser } from "@/providers/UserProvider";
 import { useEffect, useState, useCallback } from "react";
 import { useFetchClient } from "@/hooks/useFetchClient";
-import { set } from "lodash";
 
 interface ToolSelectionPageResponse {
   resource: ToolResource[];
@@ -30,74 +33,70 @@ interface ToolResource {
   isTrialable: boolean;
 }
 
-// Component for individual tool card
-function ToolCard({
-  tool,
-  isPremium,
-}: {
-  tool: ToolResource;
-  isPremium: boolean;
-}) {
+// ── FreeToolCard ──────────────────────────────────────────────────────────────
+export function FreeToolCard({ tool }: { tool: ToolResource }) {
   const theme = useTheme();
   const cardBg = theme.colors.darkGray;
   const textColor = "white";
-  const bannerBg = theme.colors.primary[500];
+  const freeBannerBg = theme.colors.green[500];
+  const rightBg = `${theme.colors.gray[600]}80`; // slightly transparent grey
 
   return (
     <Box
       position="relative"
-      w={{ base: "100%", md: "45%" }}
-      border={"1px solid"}
-      borderColor={"white"}
-      borderRadius={"md"}
-      h={"min"}
+      w="100%"
+      border="1px solid"
+      borderColor="white"
+      borderRadius="md"
+      overflow="hidden"
     >
-      {/* Free banner for trialable tools */}
-      {!isPremium && (
-        <Box
-          position="absolute"
-          top={2}
-          right={2}
-          bg={bannerBg}
-          px={2}
-          py={1}
-          borderRadius="md"
-          fontSize="xs"
-          fontWeight="bold"
-          color={textColor}
-          zIndex={1}
-        >
-          FREE
-        </Box>
-      )}
-      <VStack
-        spacing={3}
-        align="start"
-        p={4}
-        bg={cardBg}
+      {/* Rotated FREE banner in corner */}
+      <Box
+        position="absolute"
+        top="65px"
+        right="-20px"
+        width={"120px"}
+        bg={freeBannerBg}
+        px={4}
+        py={1}
+        transform="rotate(45deg)"
+        transformOrigin="100% 0"
+        fontSize="sm"
+        fontWeight="bold"
         color={textColor}
-        borderRadius="md"
-        boxShadow="sm"
+        zIndex={1}
+        alignContent={"center"}
+        textAlign={"center"}
       >
-        <Box
-          h="60px"
-          w="100%"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
+        FREE
+      </Box>
+
+      <HStack spacing={0} align="stretch">
+        {/* Left side: logo, description, button */}
+        <VStack
+          align="start"
+          spacing={4}
+          p={4}
+          bg={cardBg}
+          color={textColor}
+          flex="2"
         >
-          <img
-            src={tool.logoImageUrl}
-            alt={tool.displayName}
-            style={{ maxHeight: "60px", objectFit: "contain" }}
-          />
-        </Box>
+          <Box
+            h="85px"
+            w="100%"
+            display="flex"
+            alignItems="left"
+            justifyContent="left"
+          >
+            <img
+              src={tool.logoImageUrl}
+              alt={tool.displayName}
+              style={{ maxHeight: "85px", objectFit: "contain" }}
+            />
+          </Box>
 
-        <Text fontSize="sm" color={textColor}>
-          {tool.previewText}
-        </Text>
+          <Text fontSize="sm">{tool.previewText}</Text>
 
-        {!isPremium && (
           <Button
             size="sm"
             variant="outline"
@@ -106,7 +105,131 @@ function ToolCard({
           >
             Launch Tool
           </Button>
-        )}
+        </VStack>
+
+        {/* Right side: title, email & schedule setup */}
+        <VStack
+          align="start"
+          spacing={3}
+          p={4}
+          bg={rightBg}
+          color={textColor}
+          flex="3"
+        >
+          <Text fontSize="lg" fontWeight="bold">
+            Setup your email schedule
+          </Text>
+          <Text fontSize="sm">
+            Select the time of the week you would like your employees to receive
+            the happiness score forms via email.
+          </Text>
+          {/* Day and time selectors: responsive layout */}
+          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={3} w="100%">
+            <Select
+              placeholder="Select a day"
+              size="sm"
+              bg="white"
+              color="black"
+              borderRadius="sm"
+            >
+              {[
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday",
+              ].map((day) => (
+                <option key={day} value={day}>
+                  {day}
+                </option>
+              ))}
+            </Select>
+            <Select
+              placeholder="Select time of day"
+              size="sm"
+              bg="white"
+              color="black"
+              borderRadius="sm"
+            >
+              <option value="morning">Morning</option>
+              <option value="afternoon">Afternoon</option>
+              <option value="evening">Evening</option>
+            </Select>
+          </SimpleGrid>
+        </VStack>
+      </HStack>
+    </Box>
+  );
+}
+
+// ── PremiumToolCard ───────────────────────────────────────────────────────────
+export function PremiumToolCard({ tool }: { tool: ToolResource }) {
+  const theme = useTheme();
+  const cardBg = theme.colors.darkGray;
+  const textColor = "white";
+  const premiumBannerBg =
+    theme.colors.secondary?.[500] || theme.colors.purple[500];
+
+  return (
+    <Box
+      position="relative"
+      w="100%"
+      border="1px solid"
+      borderColor="white"
+      borderRadius="md"
+      overflow="hidden"
+      h="100%"
+      display="flex"
+      flexDirection="column"
+    >
+      {/* Rotated PREMIUM banner in corner */}
+      <Box
+        position="absolute"
+        top="65px"
+        right="-20px"
+        width={"120px"}
+        bg={premiumBannerBg}
+        px={4}
+        py={1}
+        transform="rotate(45deg)"
+        transformOrigin="100% 0"
+        fontSize="sm"
+        fontWeight="bold"
+        color={textColor}
+        zIndex={1}
+        alignContent={"center"}
+        textAlign={"center"}
+      >
+        PREMIUM
+      </Box>
+
+      <VStack
+        spacing={4}
+        align="start"
+        p={4}
+        bg={cardBg}
+        color={textColor}
+        borderRadius="md"
+        boxShadow="sm"
+        flex="1"
+      >
+        <Box
+          h="80px"
+          w="100%"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <img
+            src={tool.logoImageUrl}
+            alt={tool.displayName}
+            style={{ maxHeight: "80px", objectFit: "contain", width: "auto" }}
+          />
+        </Box>
+
+        <Text fontSize="sm">{tool.previewText}</Text>
       </VStack>
     </Box>
   );
@@ -181,7 +304,7 @@ export default function ToolSelection() {
   const premiumTools = visibleTools.filter((t) => !t.isTrialable);
 
   return (
-    <PerygonContainer>
+    <VStack minH="100svh" width="100%" flex={1}>
       <Flex
         direction="column"
         flex={1}
@@ -222,30 +345,83 @@ export default function ToolSelection() {
           </Text>
 
           {loading ? (
-            <Spinner size="lg" color={theme.colors.primary[500]} />
-          ) : (
-            <Flex direction="column" w="full" gap={10}>
-              <Text fontSize="lg" fontWeight="bold" color={theme.colors.white}>
-                Your Trial Tools
-              </Text>
-              <Flex wrap="wrap" justify="start" gap={6}>
-                {trialTools.map((tool) => (
-                  <ToolCard key={tool.id} tool={tool} isPremium={false} />
-                ))}
+            <VStack spacing={12} w="full">
+              {/* Trial Tools Skeletons */}
+              <Flex wrap="wrap" justify="start" gap={6} w="full">
+                {Array(2)
+                  .fill(0)
+                  .map((_, i) => (
+                    <Skeleton
+                      key={i}
+                      borderRadius="md"
+                      height="200px"
+                      flex="1 1 calc(45% - 24px)"
+                      minW="300px"
+                    />
+                  ))}
               </Flex>
 
-              <Text fontSize="lg" fontWeight="bold" color={theme.colors.white}>
-                Premium Tools
-              </Text>
-              <Flex wrap="wrap" justify="start" gap={6}>
-                {premiumTools.map((tool) => (
-                  <ToolCard key={tool.id} tool={tool} isPremium={true} />
-                ))}
+              {/* Premium Tools Skeletons */}
+              <SimpleGrid
+                columns={{ base: 1, md: 2 }}
+                spacing={8}
+                w="full"
+                alignItems="stretch"
+                gridAutoRows="1fr"
+              >
+                {Array(4)
+                  .fill(0)
+                  .map((_, i) => (
+                    <Skeleton key={i} borderRadius="md" height="250px" />
+                  ))}
+              </SimpleGrid>
+            </VStack>
+          ) : (
+            <Flex direction="column" w="full" gap={10}>
+              <Flex direction="column" w="full" gap={2}>
+                <Text
+                  fontSize={30}
+                  fontWeight="medium"
+                  lineHeight="base"
+                  color={theme.colors.white}
+                  fontFamily="bonfire"
+                  pb={0}
+                >
+                  Your Trial Tools
+                </Text>
+                <Flex wrap="wrap" justify="start" gap={6}>
+                  {trialTools.map((tool) => (
+                    <FreeToolCard key={tool.id} tool={tool} />
+                  ))}
+                </Flex>
+              </Flex>
+
+              <Flex direction="column" w="full" gap={2}>
+                <Text
+                  fontSize={30}
+                  fontWeight="medium"
+                  lineHeight="base"
+                  color={theme.colors.white}
+                  fontFamily="bonfire"
+                  pb={0}
+                >
+                  Premium Tools
+                </Text>
+                <SimpleGrid
+                  columns={{ base: 1, md: 2 }}
+                  spacing={8}
+                  w="full"
+                  alignItems="stretch"
+                >
+                  {premiumTools.map((tool) => (
+                    <PremiumToolCard key={tool.id} tool={tool} />
+                  ))}
+                </SimpleGrid>
               </Flex>
             </Flex>
           )}
         </Flex>
       </Flex>
-    </PerygonContainer>
+    </VStack>
   );
 }

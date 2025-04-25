@@ -18,6 +18,7 @@ interface CompanyData {
   companyStaff: {
     staffEmail: string;
   }[];
+  companyStaffBulk: string | null;
 }
 
 interface Site {
@@ -45,8 +46,8 @@ export async function POST(req: Request) {
     const companyPayload = {
       isActive: true,
       multiSite: hasMultipleSites,
-      country: "GB",      //TODO: Primary site is currently in number, need to change to country code
-      siteCountry: "GB",  //TODO: Primary site is currently in number, need to change to country code
+      country: "GB", //TODO: Primary site is currently in number, need to change to country code
+      siteCountry: "GB", //TODO: Primary site is currently in number, need to change to country code
       name: data.name,
       businessTypeId: data.businessTypeId,
       sectorId: data.sectorId,
@@ -78,8 +79,6 @@ export async function POST(req: Request) {
 
     const responseBody = await companyRes.json();
 
-    console.log("Company created successfully:", responseBody);
-
     // Get the company ID from the response for use in the next calls
     const companyId = responseBody.resource.id;
 
@@ -106,19 +105,34 @@ export async function POST(req: Request) {
     //3. Before we add the additional departments, we need to get the uid of the dept which was just created with the company
     //   This is the primary department, which the logged in user will be associated with
 
-    const defaultDeptRes = await apiClient('/userTeam?customerId=' + companyId, {
-      method: "GET",
-    });
-
+    // 3. Fetch the “default” department created with the company
+    const defaultDeptRes = await apiClient(
+      `/userTeam/findBy?customerId=${companyId}`,
+      { method: "GET" }
+    );
     if (!defaultDeptRes.ok) {
       const errorData = await defaultDeptRes.json();
-      console.error("Error details:", errorData);
+      console.error("Default-dept error body:", errorData);
       throw new Error("Failed to get default department");
     }
+
     const defaultDeptBody = await defaultDeptRes.json();
+
+    // Drill into the structure you expect
+    if (
+      !defaultDeptBody.resource ||
+      typeof defaultDeptBody.resource.id !== "number"
+    ) {
+      console.error(
+        "Unexpected defaultDeptBody.resource:",
+        defaultDeptBody.resource
+      );
+      throw new Error("Default department payload shape is wrong");
+    }
+
     const defaultDeptId = defaultDeptBody.resource.id;
 
-    // 4. Now we have companyId, we can create the other payloads...
+    // 4. Prepare site & department payloads
     const sitePayloads = data.customerSites.map((site) => ({
       ...site,
       customerId: companyId,
@@ -126,18 +140,33 @@ export async function POST(req: Request) {
       siteEmail: data.primaryEmail,
     }));
 
-    const departmentPayloads = data.departments.map((dept) => ({
-      name: dept.departmentName,
-      description: dept.departmentDescription || null,
-      customerId: companyId,
-      isDepartment: true,
-      isActive: true,
-    }));
+    let departmentPayloads: { name: string; customerId: number }[] = [];
 
-    const staffInvitePayloads = data.companyStaff.map((staff) => ({
-      email: staff.staffEmail,
-      customerId: companyId,
-    }));
+    if (data.departments == null || data.departments.length == 0) {
+      departmentPayloads = [];
+    } else {
+      departmentPayloads = data.departments.map((dept) => ({
+        name: dept.departmentName,
+        description: dept.departmentDescription || null,
+        customerId: companyId,
+        isDepartment: true,
+        isActive: true,
+      }));
+    }
+    // Depedning on the data structure, we need to handle the staff invites differently. user may have used bulk or indivual invites.
+    let staffInvitePayloads: { email: string; customerId: number }[] = [];
+
+    if (data.companyStaffBulk != null) {
+      staffInvitePayloads = data.companyStaffBulk.split(",").map((email) => ({
+        email: email.trim(),
+        customerId: companyId,
+      }));
+    } else {
+      staffInvitePayloads = data.companyStaff.map((staff) => ({
+        email: staff.staffEmail,
+        customerId: companyId,
+      }));
+    }
 
     const toolPayload = {
       customerId: companyId,
@@ -224,7 +253,7 @@ export async function POST(req: Request) {
     await Promise.all(invitePromises);
 
     //7. once all the above is done and successful, we add the company id to their record so they
-    //   get redirected to home. 
+    //   get redirected to home.
     //   ALSO associate the user with the primary site and department
 
     const userSuccessPayload = {
