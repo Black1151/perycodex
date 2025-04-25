@@ -16,37 +16,29 @@ export default function RegisterCompany() {
   const [loading, setLoading] = useState(true);
   const [hasLogo, setHasLogo] = useState(false);
 
-  // 1️⃣ When the component mounts (and user is known), fetch customer
+  // 1️⃣ Fetch your customer once user is known
   useEffect(() => {
     if (!user) return;
     if (user.customerUniqueId == null) {
       setLoading(false);
-      return
+      return;
     }
 
-    fetch(`/api/customer/allBy?uniqueId=${user.customerUniqueId}`, {
-      method: "GET",
-    })
+    fetch(`/api/customer/allBy?uniqueId=${user.customerUniqueId}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load customer");
         return res.json();
       })
-      .then((json) => {
-        setCustomerData(json.resource);
-      })
-      .catch((err) => {
-        console.error(err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-
-    if (customerData && customerData.custImageUrl) {
-      setHasLogo(true);
-    }
+      .then((json) => setCustomerData(json.resource))
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, [user]);
 
-  // 2️⃣ If there's no user yet, or we're still loading, return early
+  // 2️⃣ Whenever customerData changes, update hasLogo
+  useEffect(() => {
+    setHasLogo(Boolean(customerData?.custImageUrl));
+  }, [customerData]);
+
   if (!user) return null;
   if (loading) {
     return (
@@ -56,7 +48,6 @@ export default function RegisterCompany() {
     );
   }
 
-  // 3️⃣ If customerData exists, show the “registered” screen + upload
   if (customerData) {
     return (
       <VStack minH="100svh" width="100%" flex={1}>
@@ -67,20 +58,25 @@ export default function RegisterCompany() {
           justify="center"
           gap={4}
         >
-          <Text fontFamily="bonfire" fontSize={42} color="white">
+          <Text fontFamily="bonfire" fontSize={46} color="white">
             Your company has been registered successfully!
           </Text>
           <Text color="white" fontSize={20}>
-            Last Step... Upload your company logo
+            Last Step... Upload your company logo (optional)
           </Text>
-          <LogoUpload />
+          <LogoUpload
+            onUploadComplete={(url) => {
+              setHasLogo(true);
+              setCustomerData((old: any) => ({ ...old, custImageUrl: url }));
+            }}
+          />
           <Button
             mt={8}
             onClick={() =>
               (window.location.href = "/register-company/tool-selection")
             }
           >
-            {hasLogo ? "View Your Tools" : "Continue without logo"}
+            Continue...
           </Button>
         </Flex>
       </VStack>

@@ -11,85 +11,84 @@ import {
   Button,
   useColorModeValue,
 } from "@chakra-ui/react";
-import AddAPhotoOutlinedIcon from "@mui/icons-material/AddAPhotoOutlined";
-import { BusinessOutlined } from "@mui/icons-material";
 import { useUser } from "@/providers/UserProvider";
 import { useMediaUploader } from "@/hooks/useMediaUploader";
 
-export default function LogoUpload() {
+interface LogoUploadProps {
+  /** Called with the final URL once the upload completes */
+  onUploadComplete?: (url: string) => void;
+}
+
+export default function LogoUpload({ onUploadComplete }: LogoUploadProps) {
   const { user } = useUser();
   if (!user) return null;
 
   const customerUId = user.customerUniqueId!;
   const customerName = user.customerName!;
+  const [customerImgUrl, setCustomerImgUrl] = useState(user.custImageUrl || "");
 
-  // Local preview URL
-  const [customerImgUrl, setCustomerImgUrl] = useState(
-    user.custImageUrl || ""
-  );
-
-  // Pull out only the upload fn & loading state
+  // pull out only the upload fn & loading state; we’ll handle callback ourselves
   const { isUploading, uploadMediaFile } = useMediaUploader(
     `/api/customer/uploadPhoto/${customerUId}`,
     "imageUrl",
-    () => {}             // noop, we handle preview ourselves
+    () => {} // noop
   );
 
   const inputRef = useRef<HTMLInputElement>(null);
   const borderColor = useColorModeValue("gray.400", "gray.600");
   const hoverBorderColor = useColorModeValue("gray.200", "gray.400");
 
-  // Helper: given the API response, pick the new URL
-  const extractUrl = (data: any): string => {
-    // adjust these to match your API shape!
-    return (
-      data.imageUrl ||
-      data.url ||
-      data.resource?.imageUrl ||
-      customerImgUrl
-    );
+  // Helper to extract the URL from your API response
+  const extractUrl = (data: any): string =>
+    data.imageUrl || data.url || data.resource?.imageUrl || customerImgUrl;
+
+  // Shared post-upload logic
+  const handleUploadSuccess = (newUrl: string) => {
+    setCustomerImgUrl(newUrl);
+    onUploadComplete?.(newUrl);
   };
 
-  // When you click “Browse files”
+  // File‐picker handler
   const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-  
-    // 1️⃣ Immediately preview the local file
+
     const localUrl = URL.createObjectURL(file);
     setCustomerImgUrl(localUrl);
-  
+
     try {
-      // 2️⃣ Upload to server
       const data = await uploadMediaFile(file);
-      // 3️⃣ Then replace the preview with your server's URL
       const newUrl = extractUrl(data);
-      setCustomerImgUrl(newUrl);
+      handleUploadSuccess(newUrl);
     } catch {
-      // hook already toasted
+      // error toast already shown by hook
     }
     e.target.value = "";
   };
-  
+
   // Drag & drop handlers
   const onDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
   }, []);
+
   const onDrop = useCallback(
     async (e: React.DragEvent) => {
       e.preventDefault();
       const file = e.dataTransfer.files?.[0];
-      if (file) {
-        try {
-          const data = await uploadMediaFile(file);
-          const newUrl = extractUrl(data);
-          setCustomerImgUrl(newUrl);
-        } catch {
-          // error toast already shown
-        }
+      if (!file) return;
+
+      const localUrl = URL.createObjectURL(file);
+      setCustomerImgUrl(localUrl);
+
+      try {
+        const data = await uploadMediaFile(file);
+        const newUrl = extractUrl(data);
+        handleUploadSuccess(newUrl);
+      } catch {
+        // error toast already shown by hook
       }
     },
-    [uploadMediaFile]
+    [uploadMediaFile, onUploadComplete]
   );
 
   return (
@@ -99,7 +98,7 @@ export default function LogoUpload() {
         maxW="400px"
         p={6}
         border="2px dashed"
-        background={"rgba(255, 255, 255, 0.1)"}
+        background="rgba(255, 255, 255, 0.1)"
         borderColor={borderColor}
         borderRadius="md"
         textAlign="center"
@@ -110,7 +109,6 @@ export default function LogoUpload() {
         onDragOver={onDragOver}
         onDrop={onDrop}
       >
-        {/* Spinner overlay */}
         {isUploading && (
           <Flex
             position="absolute"
@@ -125,37 +123,34 @@ export default function LogoUpload() {
           </Flex>
         )}
 
-        {/* Preview or placeholder */}
         <Box mb={4}>
-            {customerImgUrl && (
+          {customerImgUrl ? (
             <Image
               src={customerImgUrl}
               alt={customerName}
               maxH="100px"
               mx="auto"
             />
-            )}
+          ) : (
+            <Text color="white" fontSize={18}>
+              Drag & drop your logo here
+            </Text>
+          )}
         </Box>
 
-        {/* Instructions */}
-        <Text color="white" fontSize={18}>
-            Drag & drop your logo here.
-          </Text>
-
-        {/* Browse files button */}
         <Button
           size="sm"
           colorScheme="blue"
-          mt={4}
+          mt={customerImgUrl ? 0 : 4}
           onClick={(e) => {
             e.stopPropagation();
             inputRef.current?.click();
           }}
+          disabled={isUploading}
         >
-          or, Browse files
+          {customerImgUrl ? "Change Logo" : "Browse files"}
         </Button>
 
-        {/* Hidden file input */}
         <input
           ref={inputRef}
           type="file"
