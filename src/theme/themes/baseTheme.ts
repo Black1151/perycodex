@@ -10,6 +10,12 @@ const config: ThemeConfig = {
   useSystemColorMode: false,
 };
 
+const gradients = {
+  primaryGradient: "linear(to-br, secondary 60%, primary 100%)",
+  secondaryGradient: `linear-gradient(to bottom right, rgba(255, 0, 0, 0.6), rgba(255, 192, 203, 0.6))`,
+  secondaryGradientTransparent: `linear-gradient(to bottom right, rgba(255, 0, 0, 0.3), rgba(255, 192, 203, 0.3))`,
+};
+
 export const baseTheme = extendTheme({
   config,
 
@@ -24,8 +30,14 @@ export const baseTheme = extendTheme({
     seduloGreen: "#008000",
     darkGray: "#4A4A4A",
     primaryTextColor: "rgb(0, 0, 0)",
+    // primaryTextColor: "red",
     secondaryTextColor: "rgb(83, 83, 83)",
     themeTextColor: "rgba(201, 9, 9, 0.85)",
+
+    // Fringe cases
+    recognitionCardBG: "elementBG",
+    recognitionCardTextColor: "primaryTextColor",
+    recognitionCardSecondaryTextColor: "themeTextColor",
 
     happinessScale: {
       1: "#b22200",
@@ -44,14 +56,17 @@ export const baseTheme = extendTheme({
   fringeCases: {
     recognitionCard: {
       elementBG: "elementBG",
-      textColor: "primaryTextColor",
+      primaryTextColor: "primaryTextColor",
       secondaryTextColor: "themeTextColor",
     },
     navBar: {
-      bgGradient: "primaryGradient",
+      bgGradient: gradients.primaryGradient,
     },
     dashboardHeader: {
-      color: "white",
+      textcolor: "white",
+    },
+    happinessScoreForm: {
+      textColor: "white",
     },
   },
 
@@ -210,11 +225,7 @@ export const baseTheme = extendTheme({
     },
   },
 
-  gradients: {
-    primaryGradient: "linear(to-br, secondary 60%, primary 100%)",
-    secondaryGradient: `linear-gradient(to bottom right, rgba(255, 0, 0, 0.6), rgba(255, 192, 203, 0.6))`,
-    secondaryGradientTransparent: `linear-gradient(to bottom right, rgba(255, 0, 0, 0.3), rgba(255, 192, 203, 0.3))`,
-  },
+  gradients,
 
   // shadows: {
   //   primaryShadow: "0 0 10px 2px var(--chakra-colors-primary)",

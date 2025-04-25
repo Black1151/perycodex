@@ -40,8 +40,11 @@ export const prByWhitneyDefaultTheme = extendTheme(baseTheme, {
       bgGradient: `linear-gradient(to bottom right, black, black)`,
       textColor: "primaryTextColor",
     },
-    dashbBoardHeader: {
+    dashboardHeader: {
       textcolor: "black",
+    },
+    happinessScoreForm: {
+      textColor: "black",
     },
   },
 

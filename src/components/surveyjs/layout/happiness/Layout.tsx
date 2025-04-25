@@ -1,15 +1,19 @@
+"use client";
+
 import React from "react";
 import { Survey } from "survey-react-ui";
 import { Button, Flex, Heading, Image } from "@chakra-ui/react";
 import { HappinessLayoutProps } from "@/types/form";
 import SurveyNavigationGuard from "@/components/surveyjs/SurveyNavigationGuard";
 import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
-
+import { useTheme } from "@chakra-ui/react";
 const HappinessLayout: React.FC<HappinessLayoutProps> = ({
   surveyJSModel,
   formNavigation,
   showTitle = false,
 }) => {
+  const theme = useTheme();
+
   return (
     <>
       <SurveyNavigationGuard
@@ -36,7 +40,7 @@ const HappinessLayout: React.FC<HappinessLayoutProps> = ({
             fontFamily="Metropolis"
             fontWeight={300}
             fontSize={[18, 18, 36]}
-            color={"white"}
+            color={theme.fringeCases.happinessScoreForm.textColor}
             textAlign={"center"}
           >
             How happy are{" "}
@@ -45,6 +49,7 @@ const HappinessLayout: React.FC<HappinessLayoutProps> = ({
               fontSize={36}
               duration={0.5}
               fontWeight={400}
+              color={theme.fringeCases.happinessScoreForm.textColor}
             >
               YOU
             </LetterFlyIn>{" "}

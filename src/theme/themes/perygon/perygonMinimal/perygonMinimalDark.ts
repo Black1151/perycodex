@@ -1,4 +1,3 @@
-// perygonLightTheme.ts
 import { extendTheme } from "@chakra-ui/react";
 
 import { baseTheme } from "../../baseTheme";
