@@ -2,7 +2,7 @@
 
 import { Tabs, TabList, Tab, useTheme } from "@chakra-ui/react";
 import BusinessIcon from '@mui/icons-material/Business';
-import PersonIcon from '@mui/icons-material/Person';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 interface SignUpTypeSelectorProps {
   signUpType: "individual" | "company";
@@ -31,11 +31,11 @@ export const SignUpTypeSelector = ({
         gap={2}
       >
         <Tab flex={1} borderRadius="lg" _selected={{ bg: theme.colors.primary, color: "white" }} _focus={{ boxShadow: "none" }} background={"white"}>
-          <BusinessIcon style={{ marginRight: "4px" }} />
+          <PersonAddIcon style={{ marginRight: "4px" }} />
           Join existing company
         </Tab>
         <Tab flex={1} borderRadius="lg" _selected={{ bg: theme.colors.primary, color: "white" }} _focus={{ boxShadow: "none" }} background={"white"}>
-          <PersonIcon style={{ marginRight: "4px" }} />
+          <BusinessIcon style={{ marginRight: "4px" }} />
           Register new company
         </Tab>
       </TabList>
