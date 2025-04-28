@@ -19,7 +19,7 @@ interface SignUpFormProps {
   };
 }
 
-export function SignUpForm({ onSubmit, isSubmitting }: SignUpFormProps) {
+export function CompanySignUpForm({ onSubmit, isSubmitting }: SignUpFormProps) {
   const theme = useTheme();
   const router = useRouter();
   const {
@@ -38,7 +38,7 @@ export function SignUpForm({ onSubmit, isSubmitting }: SignUpFormProps) {
       style={{ width: "100%", maxWidth: "sm" }}
     >
       <VStack spacing={0} w="100%">
-        <VStack spacing={0} w={"100%"} gap={2}>
+        <VStack w="full" h="100%" >
           <InputField
             name="email"
             placeholder="Email"
@@ -55,7 +55,8 @@ export function SignUpForm({ onSubmit, isSubmitting }: SignUpFormProps) {
             register={() => register("email", emailValidation)}
             focusBorderColor={theme.colors.primary}
           />
-          <Flex w="100%" justifyContent="flex-end" pb={[0, 0]}>
+
+          <Flex w="100%" justifyContent="flex-end">
             <Text
               fontSize={["16px", "12px"]}
               cursor="pointer"
@@ -66,10 +67,12 @@ export function SignUpForm({ onSubmit, isSubmitting }: SignUpFormProps) {
               &laquo; Go back to login
             </Text>
           </Flex>
+
           <Button
             type="submit"
             variant="primary"
             isLoading={isSubmitting}
+            w="100%"
           >
             Sign Up
           </Button>

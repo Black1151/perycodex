@@ -1,7 +1,5 @@
 "use client";
 
-//UNUSED?
-
 import { FieldError, SubmitHandler, useForm } from "react-hook-form";
 import { Button, useTheme, VStack } from "@chakra-ui/react";
 import { InputField } from "@/components/forms/InputField";
@@ -22,7 +20,7 @@ interface SignUpFormProps {
   };
 }
 
-export const SignUpForm = ({
+export const CompanySignUpForm = ({
   onSubmit,
   isSubmitting,
   errors,
@@ -35,12 +33,37 @@ export const SignUpForm = ({
       <VStack spacing={4} w="full">
         <InputField
           name="email"
-          placeholder="Email"
+          placeholder="Admin Email"
           type="email"
           error={errors.email}
           register={() => register("email", { required: "Email is required" })}
           focusBorderColor={theme.colors.primary}
         />
+
+        <InputField
+          name="password"
+          placeholder="Password"
+          type="password"
+          error={errors.password}
+          register={() =>
+            register("password", { required: "Password is required" })
+          }
+          focusBorderColor={theme.colors.primary}
+        />
+
+        <InputField
+          name="confirmPassword"
+          placeholder="Confirm Password"
+          type="password"
+          error={errors.confirmPassword}
+          register={() =>
+            register("confirmPassword", {
+              required: "Please confirm your password",
+            })
+          }
+          focusBorderColor={theme.colors.primary}
+        />
+
         <Button isLoading={isSubmitting} width="full" colorScheme="pink">
           Sign Up
         </Button>
