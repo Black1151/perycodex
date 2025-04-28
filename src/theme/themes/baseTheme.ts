@@ -92,6 +92,23 @@ export const baseTheme = extendTheme({
   components: {
     Button: {
       variants: {
+        workflowStart: {
+          height: 12,
+          backgroundColor: "green.500",
+          color: "white",
+          _hover: {
+            color: "green",
+            border: "1px solid",
+            borderColor: "primary",
+            backgroundColor: "white",
+          },
+          _disabled: {
+            backgroundColor: "gray.100",
+            color: "gray",
+            cursor: "not-allowed",
+            opacity: 0.6,
+          },
+        },
         primary: {
           w: "full",
           height: 12,

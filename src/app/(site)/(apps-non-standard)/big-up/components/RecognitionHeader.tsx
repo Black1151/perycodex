@@ -1,7 +1,16 @@
 "use client";
 
-import { Box, Button, Heading, HStack, useTheme } from "@chakra-ui/react";
+import React from "react";
+import {
+  Box,
+  HStack,
+  Heading,
+  useTheme,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import BackButton from "@/components/BackButton";
+import AddButtonMobile from "@/components/Buttons/AddButtonMobile";
+import AddButtonDesktop from "@/components/Buttons/AddButtonDesktop";
 import { Celebration } from "@mui/icons-material";
 
 interface RecognitionHeaderProps {
@@ -11,18 +20,13 @@ interface RecognitionHeaderProps {
 
 const RecognitionHeader: React.FC<RecognitionHeaderProps> = ({
   headingText,
-  onAddButtonClick,
+  onAddButtonClick = () => {},
 }) => {
   const theme = useTheme();
+  const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
 
   return (
-    <HStack
-      alignItems="center"
-      justifyContent="space-between"
-      w="full"
-      my={2}
-      width="100%"
-    >
+    <HStack alignItems="center" justifyContent="space-between" w="full" my={2}>
       <HStack>
         <BackButton />
         <Heading
@@ -37,15 +41,21 @@ const RecognitionHeader: React.FC<RecognitionHeaderProps> = ({
           {headingText}
         </Heading>
       </HStack>
+
       <Box>
-        <Button
-          aria-label="Recognise Someone!"
-          leftIcon={<Celebration />}
-          onClick={onAddButtonClick}
-          variant="primary"
-        >
-          Recognise Someone!
-        </Button>
+        {isMobile ? (
+          <AddButtonMobile
+            onAddButtonClick={onAddButtonClick}
+            IconComponent={Celebration}
+            workflow={false}
+          />
+        ) : (
+          <AddButtonDesktop
+            label="Recognise Someone!"
+            onAddButtonClick={onAddButtonClick}
+            IconComponent={Celebration}
+          />
+        )}
       </Box>
     </HStack>
   );
