@@ -1,12 +1,19 @@
 // perygonDarkTheme.ts
 import { extendTheme } from "@chakra-ui/react";
-import { baseTheme } from "../../baseTheme";
+import { baseTheme } from "../../base-theme/baseTheme";
 
 const colorPalette = {
   prByWhitneyPrimary: "black",
   prByWhitneySecondary: "white",
   prByWhitneyPebble: "rgb(243, 243, 243)",
   prByWhitneyHighlight: "rgb(239, 114, 39)",
+};
+
+const gradients = {
+  // ...baseTheme.gradients,
+  primaryGradient: `linear-gradient(to bottom right, ${colorPalette.prByWhitneyPebble}, ${colorPalette.prByWhitneyPebble})`,
+  secondaryGradient: `linear-gradient(to bottom right, ${colorPalette.prByWhitneyPrimary}, ${colorPalette.prByWhitneyPrimary})`,
+  secondaryGradientTransparent: `linear-gradient(to bottom right, hsla(23, 86%, 55%, 0.7) 100%, rgb(253, 204, 174, 0.7) 50%)`,
 };
 
 export const prByWhitneyDefaultTheme = extendTheme(baseTheme, {
@@ -22,12 +29,12 @@ export const prByWhitneyDefaultTheme = extendTheme(baseTheme, {
     themeTextColor: colorPalette.prByWhitneyHighlight,
   },
 
-  gradients: {
-    ...baseTheme.gradients,
-    primaryGradient: `linear-gradient(to bottom right, ${colorPalette.prByWhitneyPebble}, ${colorPalette.prByWhitneyPebble})`,
-    secondaryGradient: `linear-gradient(to bottom right, ${colorPalette.prByWhitneyPrimary}, ${colorPalette.prByWhitneyPrimary})`,
-    secondaryGradientTransparent: `linear-gradient(to bottom right, hsla(23, 86%, 55%, 0.7) 100%, rgb(253, 204, 174, 0.7) 50%)`,
-  },
+  // gradients: {
+  //   // ...baseTheme.gradients,
+  //   primaryGradient: `linear-gradient(to bottom right, ${colorPalette.prByWhitneyPebble}, ${colorPalette.prByWhitneyPebble})`,
+  //   secondaryGradient: `linear-gradient(to bottom right, ${colorPalette.prByWhitneyPrimary}, ${colorPalette.prByWhitneyPrimary})`,
+  //   secondaryGradientTransparent: `linear-gradient(to bottom right, hsla(23, 86%, 55%, 0.7) 100%, rgb(253, 204, 174, 0.7) 50%)`,
+  // },
 
   fringeCases: {
     recognitionCard: {
@@ -50,6 +57,21 @@ export const prByWhitneyDefaultTheme = extendTheme(baseTheme, {
 
   components: {
     ...baseTheme.components,
+    navBar: {
+      baseStyle: {
+        bgGradient: `linear-gradient(to bottom right, black, black)`,
+      },
+    },
+    footer: {
+      baseStyle: {
+        bgGradient: `linear-gradient(to bottom right, black, black)`,
+      },
+    },
+    perygonContainer: {
+      baseStyle: {
+        bgGradient: `linear-gradient(to bottom right, white, white)`,
+      },
+    },
     Button: {
       variants: {
         primary: {

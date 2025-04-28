@@ -1,10 +1,16 @@
 // perygonDarkTheme.ts
 import { extendTheme } from "@chakra-ui/react";
-import { baseTheme } from "../../baseTheme";
+import { baseTheme } from "../../base-theme/baseTheme";
 
 const colorPalette = {
   dmrPrimary: "hsla(205, 31%, 26%, 1)",
   dmrSecondary: "hsla( 72, 98%, 64%, 1)",
+};
+
+const gradients = {
+  primaryGradient: `linear-gradient(to bottom right, ${colorPalette.dmrPrimary}, ${colorPalette.dmrPrimary})`,
+  secondaryGradient: `linear-gradient(to bottom right, ${colorPalette.dmrPrimary}, ${colorPalette.dmrPrimary})`,
+  secondaryGradientTransparent: `linear-gradient(to bottom right, hsla(205, 31%, 26%, 0.7) 50%, hsla( 72, 98%, 64%, 0.7) 100%)`,
 };
 
 export const dmrDefaultTheme = extendTheme(baseTheme, {
@@ -20,12 +26,12 @@ export const dmrDefaultTheme = extendTheme(baseTheme, {
     themeTextColor: colorPalette.dmrPrimary,
   },
 
-  gradients: {
-    ...baseTheme.gradients,
-    primaryGradient: `linear-gradient(to bottom right, primary, primary)`,
-    secondaryGradient: `linear-gradient(to bottom right, ${colorPalette.dmrPrimary}, ${colorPalette.dmrPrimary})`,
-    secondaryGradientTransparent: `linear-gradient(to bottom right, hsla(205, 31%, 26%, 0.7) 50%, hsla( 72, 98%, 64%, 0.7) 100%)`,
-  },
+  // gradients: {
+  //   ...baseTheme.gradients,
+  //   primaryGradient: `linear-gradient(to bottom right, primary, primary)`,
+  //   secondaryGradient: `linear-gradient(to bottom right, ${colorPalette.dmrPrimary}, ${colorPalette.dmrPrimary})`,
+  //   secondaryGradientTransparent: `linear-gradient(to bottom right, hsla(205, 31%, 26%, 0.7) 50%, hsla( 72, 98%, 64%, 0.7) 100%)`,
+  // },
 
   fringeCases: {
     recognitionCard: {
@@ -34,9 +40,9 @@ export const dmrDefaultTheme = extendTheme(baseTheme, {
       primaryTextColor: "white",
       secondaryTextColor: colorPalette.dmrSecondary,
     },
-    navBar: {
-      bgGradient: `linear-gradient(to bottom right, primary, primary)`,
-    },
+    // navBar: {
+    //   bgGradient: `linear-gradient(to bottom right, primary, primary)`,
+    // },
     dashboardHeader: {
       color: "white",
     },
@@ -44,6 +50,21 @@ export const dmrDefaultTheme = extendTheme(baseTheme, {
 
   components: {
     ...baseTheme.components,
+    navBar: {
+      baseStyle: {
+        bgGradient: `linear-gradient(to bottom right, primary, primary)`,
+      },
+    },
+    footer: {
+      baseStyle: {
+        bgGradient: `linear-gradient(to bottom right, primary, primary)`,
+      },
+    },
+    perygonContainer: {
+      baseStyle: {
+        bgGradient: `linear-gradient(to bottom right, primary, primary)`,
+      },
+    },
     Button: {
       variants: {
         primary: {

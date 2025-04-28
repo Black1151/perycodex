@@ -1,7 +1,14 @@
 // perygonDarkTheme.ts
 import { extendTheme } from "@chakra-ui/react";
 import { colorPalette } from "./colorPalette";
-import { baseTheme } from "../../baseTheme";
+import { baseTheme } from "../../base-theme/baseTheme";
+
+export const gradients = {
+  ...baseTheme.gradients,
+  primaryGradient: "linear(to-br, rgb(20, 26, 85) 60%, primary 100%)",
+  secondaryGradient: `linear-gradient(to bottom right, rgb(0, 6, 125), rgb(60, 51, 232))`,
+  secondaryGradientTransparent: `linear-gradient(to bottom right, rgba(0, 6, 125, 0.8), rgba(60, 51, 232,0.8))`,
+};
 
 export const perygonThemeBlue = extendTheme(baseTheme, {
   colors: {
@@ -16,13 +23,6 @@ export const perygonThemeBlue = extendTheme(baseTheme, {
     themeTextColor: colorPalette.perygonBlue,
   },
 
-  gradients: {
-    ...baseTheme.gradients,
-    primaryGradient: "linear(to-br, rgb(20, 26, 85) 60%, primary 100%)",
-    secondaryGradient: `linear-gradient(to bottom right, rgb(0, 6, 125), rgb(60, 51, 232))`,
-    secondaryGradientTransparent: `linear-gradient(to bottom right, rgba(0, 6, 125, 0.8), rgba(60, 51, 232,0.8))`,
-  },
-
   fringeCases: {
     recognitionCard: {
       elementBG: "rgb(78, 116, 227)",
@@ -33,6 +33,21 @@ export const perygonThemeBlue = extendTheme(baseTheme, {
 
   components: {
     ...baseTheme.components,
+    navBar: {
+      baseStyle: {
+        bgGradient: gradients.primaryGradient,
+      },
+    },
+    footer: {
+      baseStyle: {
+        bgGradient: gradients.primaryGradient,
+      },
+    },
+    perygonContainer: {
+      baseStyle: {
+        bgGradient: gradients.primaryGradient,
+      },
+    },
     Button: {
       variants: {
         primary: {

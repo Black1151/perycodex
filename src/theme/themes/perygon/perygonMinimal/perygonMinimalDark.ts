@@ -1,6 +1,6 @@
 import { extendTheme } from "@chakra-ui/react";
 
-import { baseTheme } from "../../baseTheme";
+import { baseTheme } from "../../base-theme/baseTheme";
 import { colorPalette } from "./colorPalette";
 
 export const MinimalDark = extendTheme(baseTheme, {

@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { HStack, Box, useTheme, Text } from "@chakra-ui/react";
+import {
+  HStack,
+  Box,
+  useTheme,
+  Text,
+  useMultiStyleConfig,
+  useStyleConfig,
+} from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
@@ -96,7 +103,7 @@ const NavBar: React.FC<NavBarProps> = ({
         left={0}
         right={0}
         zIndex={100}
-        bgGradient={theme.fringeCases.navBar.bgGradient}
+        bgGradient={theme.components.navBar.baseStyle.bgGradient}
         borderBottom="white 1px solid"
       >
         <MotionBox

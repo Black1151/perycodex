@@ -2,7 +2,7 @@
 import { extendTheme } from "@chakra-ui/react";
 
 import { colorPalette } from "./colorPalette";
-import { baseTheme } from "../../baseTheme";
+import { baseTheme } from "../../base-theme/baseTheme";
 
 export const perygonTheme = extendTheme(baseTheme, {
   colors: {

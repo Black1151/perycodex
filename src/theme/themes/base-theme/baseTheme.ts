@@ -3,7 +3,7 @@ import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
 
 import { scrollBarThemes } from "@/theme/scrollBarThemes";
 import { agChartStyles } from "@/theme/agChartStyles";
-import { agGridStyles } from "../agGridStyles";
+import { agGridStyles } from "../../agGridStyles";
 
 const config: ThemeConfig = {
   initialColorMode: "light",
@@ -18,7 +18,6 @@ const gradients = {
 
 export const baseTheme = extendTheme({
   config,
-
   colors: {
     primary: "blue",
     secondary: "#fff",
@@ -59,9 +58,9 @@ export const baseTheme = extendTheme({
       primaryTextColor: "primaryTextColor",
       secondaryTextColor: "themeTextColor",
     },
-    navBar: {
-      bgGradient: gradients.primaryGradient,
-    },
+    // navBar: {
+    //   bgGradient: gradients.primaryGradient,
+    // },
     dashboardHeader: {
       textcolor: "white",
     },
@@ -90,6 +89,21 @@ export const baseTheme = extendTheme({
   },
 
   components: {
+    navBar: {
+      baseStyle: {
+        bgGradient: gradients.primaryGradient,
+      },
+    },
+    footer: {
+      baseStyle: {
+        bgGradient: gradients.primaryGradient,
+      },
+    },
+    perygonContainer: {
+      baseStyle: {
+        bgGradient: gradients.primaryGradient,
+      },
+    },
     Button: {
       variants: {
         workflowStart: {
