@@ -10,7 +10,6 @@ import {
   useTheme,
   HStack,
   SimpleGrid,
-  Skeleton,
   Select,
 } from "@chakra-ui/react";
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
@@ -18,6 +17,7 @@ import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
 import { useUser } from "@/providers/UserProvider";
 import { useEffect, useState, useCallback } from "react";
 import { useFetchClient } from "@/hooks/useFetchClient";
+import { Lock } from "@mui/icons-material";
 
 interface ToolSelectionPageResponse {
   resource: ToolResource[];
@@ -53,13 +53,13 @@ export function FreeToolCard({ tool }: { tool: ToolResource }) {
       {/* Rotated FREE banner in corner */}
       <Box
         position="absolute"
-        top="65px"
-        right="-20px"
+        top="-20px"
+        left="-60px"
         width={"120px"}
         bg={freeBannerBg}
         px={4}
         py={1}
-        transform="rotate(45deg)"
+        transform="rotate(-45deg)"
         transformOrigin="100% 0"
         fontSize="sm"
         fontWeight="bold"
@@ -75,11 +75,12 @@ export function FreeToolCard({ tool }: { tool: ToolResource }) {
         {/* Left side: logo, description, button */}
         <VStack
           align="start"
+          justify="space-between"
           spacing={4}
           p={4}
           bg={cardBg}
           color={textColor}
-          flex="2"
+          flex={{base: "4", md: "1"}}
         >
           <Box
             h="85px"
@@ -114,17 +115,17 @@ export function FreeToolCard({ tool }: { tool: ToolResource }) {
           p={4}
           bg={rightBg}
           color={textColor}
-          flex="3"
+          flex={{base: "4", md: "1"}}
         >
           <Text fontSize="lg" fontWeight="bold">
-            Setup your email schedule
+            Setup your email schedule (Optional)
           </Text>
           <Text fontSize="sm">
             Select the time of the week you would like your employees to receive
             the happiness score forms via email.
           </Text>
           {/* Day and time selectors: responsive layout */}
-          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={3} w="100%">
+          <SimpleGrid columns={1} spacing={3} w="100%">
             <Select
               placeholder="Select a day"
               size="sm"
@@ -157,6 +158,9 @@ export function FreeToolCard({ tool }: { tool: ToolResource }) {
               <option value="afternoon">Afternoon</option>
               <option value="evening">Evening</option>
             </Select>
+            <Button fontSize="sm" w="100%" font-weight="normal">
+              Submit
+            </Button>
           </SimpleGrid>
         </VStack>
       </HStack>
@@ -205,6 +209,20 @@ export function PremiumToolCard({ tool }: { tool: ToolResource }) {
         PREMIUM
       </Box>
 
+      <Box
+        position="absolute"
+        px={3}
+        py={3}
+        fontSize="sm"
+        fontWeight="bold"
+        color={textColor}
+        zIndex={1}
+        alignContent={"center"}
+        textAlign={"center"}
+      >
+        <Lock fontSize="small" sx={{ color: textColor }} />
+      </Box>
+
       <VStack
         spacing={4}
         align="start"
@@ -238,7 +256,7 @@ export function PremiumToolCard({ tool }: { tool: ToolResource }) {
 export default function ToolSelection() {
   const { user } = useUser();
   const { fetchClient } = useFetchClient();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [tools, setTools] = useState<ToolResource[]>([]);
   const theme = useTheme();
   const [formattedEndDate, setFormattedEndDate] = useState<string | null>(null);
@@ -247,7 +265,6 @@ export default function ToolSelection() {
   const userName = user.firstName;
 
   const getTools = useCallback(async () => {
-    setLoading(true);
     try {
       const data = await fetchClient<ToolSelectionPageResponse>(
         "/api/toolConfig/allBy",
@@ -261,7 +278,6 @@ export default function ToolSelection() {
 
   // Hardcoded way of calculating the end date -- this should be replaced with a more robust solution in the future
   const getEndDate = useCallback(async () => {
-    setLoading(true);
     try {
       const response = await fetchClient<{ resource: any[] }>(
         `/api/toolCustomer/allBy?customerId=${user.customerId}`,
@@ -284,16 +300,23 @@ export default function ToolSelection() {
       setFormattedEndDate(formatted);
     } catch (error) {
       console.error("Error fetching end date:", error);
-    } finally {
-      setLoading(false);
     }
   }, [user.customerId, fetchClient]);
 
   useEffect(() => {
-    setLoading(true);
-    getTools();
-    getEndDate();
-    setLoading(false);
+    const fetchAll = async () => {
+      setLoading(true);
+      try {
+        await getTools();
+        await getEndDate();
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAll();
   }, []);
 
   // Filter and split tools
@@ -338,57 +361,20 @@ export default function ToolSelection() {
           gap={8}
           w="full"
         >
-          <Text color={theme.colors.white}>
-            Your free Happiness Score Tool is now live. You can use it until{" "}
-            {formattedEndDate} to get a better understanding of your team’s
-            happiness and well-being.
-          </Text>
-
           {loading ? (
-            <VStack spacing={12} w="full">
-              {/* Trial Tools Skeletons */}
-              <Flex wrap="wrap" justify="start" gap={6} w="full">
-                {Array(2)
-                  .fill(0)
-                  .map((_, i) => (
-                    <Skeleton
-                      key={i}
-                      borderRadius="md"
-                      height="200px"
-                      flex="1 1 calc(45% - 24px)"
-                      minW="300px"
-                    />
-                  ))}
-              </Flex>
-
-              {/* Premium Tools Skeletons */}
-              <SimpleGrid
-                columns={{ base: 1, md: 2 }}
-                spacing={8}
-                w="full"
-                alignItems="stretch"
-                gridAutoRows="1fr"
-              >
-                {Array(4)
-                  .fill(0)
-                  .map((_, i) => (
-                    <Skeleton key={i} borderRadius="md" height="250px" />
-                  ))}
-              </SimpleGrid>
-            </VStack>
+            <Flex direction="column" align="center" gap={4}>
+              <Spinner size="lg" color="white" />
+              <Text color={theme.colors.white}>Loading tools...</Text>
+            </Flex>
           ) : (
             <Flex direction="column" w="full" gap={10}>
+              <Text color={theme.colors.white}>
+                Your free Happiness Score Tool is now live. You can use it until{" "}
+                {formattedEndDate} to get a better understanding of your team’s
+                happiness and well-being.
+              </Text>
+
               <Flex direction="column" w="full" gap={2}>
-                <Text
-                  fontSize={30}
-                  fontWeight="medium"
-                  lineHeight="base"
-                  color={theme.colors.white}
-                  fontFamily="bonfire"
-                  pb={0}
-                >
-                  Your Trial Tools
-                </Text>
                 <Flex wrap="wrap" justify="start" gap={6}>
                   {trialTools.map((tool) => (
                     <FreeToolCard key={tool.id} tool={tool} />
@@ -397,16 +383,6 @@ export default function ToolSelection() {
               </Flex>
 
               <Flex direction="column" w="full" gap={2}>
-                <Text
-                  fontSize={30}
-                  fontWeight="medium"
-                  lineHeight="base"
-                  color={theme.colors.white}
-                  fontFamily="bonfire"
-                  pb={0}
-                >
-                  Premium Tools
-                </Text>
                 <SimpleGrid
                   columns={{ base: 1, md: 2 }}
                   spacing={8}
