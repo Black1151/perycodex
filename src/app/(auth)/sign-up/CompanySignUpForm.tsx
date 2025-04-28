@@ -40,30 +40,6 @@ export const CompanySignUpForm = ({
           focusBorderColor={theme.colors.primary}
         />
 
-        <InputField
-          name="password"
-          placeholder="Password"
-          type="password"
-          error={errors.password}
-          register={() =>
-            register("password", { required: "Password is required" })
-          }
-          focusBorderColor={theme.colors.primary}
-        />
-
-        <InputField
-          name="confirmPassword"
-          placeholder="Confirm Password"
-          type="password"
-          error={errors.confirmPassword}
-          register={() =>
-            register("confirmPassword", {
-              required: "Please confirm your password",
-            })
-          }
-          focusBorderColor={theme.colors.primary}
-        />
-
         <Button isLoading={isSubmitting} width="full" colorScheme="pink">
           Sign Up
         </Button>

@@ -86,7 +86,7 @@ export const SignUpTypeSelector = ({
         alignItems="left"
         justifyContent="center"
         gap={4}
-        onClick={() => setSignUpType("individual")}
+        onClick={() => setSignUpType("company")}
         cursor="pointer"
         role="group"
         transition="background-color 0.3s ease" 

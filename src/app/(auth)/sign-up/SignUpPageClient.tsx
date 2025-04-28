@@ -41,19 +41,28 @@ export const SignUpPageClient = () => {
     }
   }, [initialType]);
 
-  const onSubmit: SubmitHandler<SignUpFormInputs> = async (data) => {
-    const endpoint =
-      signUpType === "company"
-        ? "/api/auth/company-sign-up" //TODO: Update this endpoint to the correct one once its ready
-        : "/api/auth/sign-up";
+  const onEmployeeSubmit: SubmitHandler<SignUpFormInputs> = async (data) => {
+    const endpoint ="/api/auth/sign-up"
 
     const result = await fetchClient(endpoint, {
       method: "POST",
       body: data,
-      errorMessage:
-        signUpType === "company"
-          ? "Admin email already in use"
-          : "Email already in use",
+      errorMessage: "Email already in use",
+      redirectOnError: false,
+    });
+
+    if (result) {
+      onOpen();
+    }
+  };
+
+  const onCompanySubmit: SubmitHandler<SignUpFormInputs> = async (data) => {
+    const endpoint ="/api/auth/sign-up-company"
+
+    const result = await fetchClient(endpoint, {
+      method: "POST",
+      body: data,
+      errorMessage: "Admin email already in use",
       redirectOnError: false,
     });
 
@@ -80,7 +89,7 @@ export const SignUpPageClient = () => {
             transition={{ duration: 0.3 }}
           >
             <IndividualSignUpForm
-              onSubmit={onSubmit}
+              onSubmit={onEmployeeSubmit}
               isSubmitting={loading}
               errors={{}}
             />
@@ -95,7 +104,7 @@ export const SignUpPageClient = () => {
             transition={{ duration: 0.3 }}
           >
             <CompanySignUpForm
-              onSubmit={onSubmit}
+              onSubmit={onCompanySubmit}
               isSubmitting={loading}
               errors={{}}
             />
