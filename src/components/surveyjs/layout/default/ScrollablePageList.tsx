@@ -100,6 +100,7 @@ const ScrollablePageList: React.FC<ScrollablePageListProps> = ({
         left="0"
         zIndex="1"
         bg="transparent"
+        border="none"
         height="auto"
         _hover={{ bg: "transparent" }}
         onClick={() => scroll("left")}
@@ -209,6 +210,7 @@ const ScrollablePageList: React.FC<ScrollablePageListProps> = ({
         zIndex="1"
         bg="transparent"
         height="auto"
+        border="none"
         _hover={{ bg: "transparent" }}
         onClick={() => scroll("right")}
       />
