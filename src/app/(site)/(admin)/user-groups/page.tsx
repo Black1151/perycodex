@@ -16,6 +16,10 @@ export default async function UserGroupsPage() {
     return redirect("/error");
   }
 
+  if (user.customerIsFree) {
+    return redirect("/error");
+  }
+
   const userGroups = await res.json();
   const userGroupData = userGroups.resource || [];
 

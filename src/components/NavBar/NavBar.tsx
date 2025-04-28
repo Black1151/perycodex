@@ -62,7 +62,6 @@ const NavBar: React.FC<NavBarProps> = ({
   };
 
   const menuItems = useNavMenuItems(userRole, handleLogout, openResetModal);
-  console.log("user:", JSON.stringify(user));
   const isFree = user?.customerIsFree || false;
 
   const buildThemeDropdownOptions = async () => {

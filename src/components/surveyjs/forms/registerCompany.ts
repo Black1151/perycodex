@@ -1,4 +1,6 @@
-import { render } from "react-dom";
+import { subscriptionLimits } from "@/utils/constants/subscriptionLimits";
+
+const maxEmails = (subscriptionLimits.free.maxUsers ?? 0) - 2; // -2 as one less than amount of commas and -1 for the user themselves
 
 export const registerCustomerJson = {
   checkErrorsMode: "onValueChanged",
@@ -177,9 +179,9 @@ export const registerCustomerJson = {
           renderMode: "tab",
           templateTabTitle: "Site {panelIndex}: {panel.siteName}",
           title:
-            "Enter your company locations below. (First being the primary location of your organisation)",
+            `Enter your company locations below. (First being the primary location of your organisation) You can add up to ${subscriptionLimits.free.maxSites} sites. `,
           panelCount: 1,
-          maxPanelCount: 3,
+          maxPanelCount: `${subscriptionLimits.free.maxSites}`,
 
           // ←–– Enforce unique siteName across all panels
           keyName: "siteName",
@@ -257,10 +259,10 @@ export const registerCustomerJson = {
           type: "paneldynamic",
           name: "departments",
           title:
-            "Add up to 2 additional departments inside the organisation. We have added one main departnent for you (which you will be a part of).",
+            `Add up to ${subscriptionLimits.free.maxTeams - 1} additional departments inside the organisation. We have added one main departnent for you (which you will be a part of).`,
           panelCount: 0,
           minPanelCount: 0,
-          maxPanelCount: 2,
+          maxPanelCount: `${subscriptionLimits.free.maxTeams - 1}`,
           renderMode: "tab",
           templateTabTitle: "Department {panelIndex}: {panel.departmentName}",
 
@@ -318,16 +320,16 @@ export const registerCustomerJson = {
           visibleIf: "{inviteStaff} = true",
           defaultValue: false,
           description:
-            "Choose “Enter individually” to type or paste one email at a time (up to 19). " +
+            `Choose “Enter individually” to type or paste one email at a time (up to ${subscriptionLimits.free.maxUsers -1}). ` +
             "Or choose “Paste all at once” to drop in a comma-separated list.",
         },
         {
           type: "paneldynamic",
           name: "companyStaff",
           title:
-            "Enter up to 19 of your staff. They will be invited to join the platform.",
+            `Enter up to ${subscriptionLimits.free.maxUsers - 1} of your staff. They will be invited to join the platform.`,
           panelCount: 1,
-          maxPanelCount: 19,
+          maxPanelCount: `${subscriptionLimits.free.maxUsers - 1}`,
           renderMode: "list",
           visibleIf: "{useBulkEntry} = false and {inviteStaff} = true",
           minPanelCount: 0,
@@ -353,7 +355,7 @@ export const registerCustomerJson = {
         {
           type: "text",
           name: "companyStaffBulk",
-          title: "Paste up to 19 emails, separated by commas",
+          title: `Paste up to ${subscriptionLimits.free.maxUsers - 1} emails, separated by commas`,
           visibleIf: "{useBulkEntry} = true and {inviteStaff} = true",
           inputType: "textarea",
           textUpdateMode: "onTyping",
@@ -361,23 +363,21 @@ export const registerCustomerJson = {
           minRows: 3,
           minHeight: "200px",
           isRequired: true,
-          placeholder:
-            "e.g. alice@example.com, bob@example.com, charlie@example.com",
-            validators: [
-              // 1) FORMAT CHECK: each chunk must look like an email
-              {
-                type: "regex",
-                regex:
-                  "^(?:\\s*[^,\\s]+@[^,\\s]+\\.[^,\\s]+\\s*)(?:,\\s*[^,\\s]+@[^,\\s]+\\.[^,\\s]+\\s*)*$",
-                text: "Please enter valid email addresses, separated by commas."
-              },
-              // 2) COUNT CHECK: disallow 20th comma (i.e. max 18 commas → 19 items)
-              {
-                type: "regex",
-                regex: "^(?!(?:.*?,){19}).*$",
-                text: "You can only paste up to 19 email addresses."
-              }
-            ]
+          placeholder: "e.g. alice@example.com, bob@example.com, charlie@example.com",
+          validators: [
+            // 1) FORMAT CHECK: each must be a valid-looking email
+            {
+              type: "regex",
+              regex: "^(?:\\s*[^,\\s]+@[^,\\s]+\\.[^,\\s]+\\s*)(?:,\\s*[^,\\s]+@[^,\\s]+\\.[^,\\s]+\\s*)*$",
+              text: "Please enter valid email addresses, separated by commas.",
+            },
+            // 2) COUNT CHECK: dynamic based on limit
+            {
+              type: "regex",
+              regex: `^(?!(?:.*?,){${maxEmails}}).*$`,
+              text: `You can only paste up to ${subscriptionLimits.free.maxUsers - 1} email addresses.`,
+            },
+          ],
         },
       ],
     },

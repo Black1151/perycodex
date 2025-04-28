@@ -3,7 +3,10 @@ import { userFields } from "@/components/agGrids/dataFields/userFields";
 import AdminHeader from "@/components/AdminHeader";
 import InviteNewUserModalForPA from "@/app/(site)/(admin)/users/InviteUser";
 import apiClient from "@/lib/apiClient";
+import { redirect } from "next/navigation";
 import { checkUserRole, getUser } from "@/lib/dal";
+import InviteNewUserLimitReached from "./InviteUserLimitReached";
+import { subscriptionLimits } from "@/utils/constants/subscriptionLimits";
 
 interface SearchParams {
   userType?: string;
@@ -15,10 +18,6 @@ export default async function UsersPage({
   searchParams: SearchParams;
 }) {
   const user = await getUser();
-
-  if (user.role === "CA") {
-
-  }
 
   await checkUserRole("/users");
 
@@ -38,6 +37,10 @@ export default async function UsersPage({
         userTypeParam && ["internal", "external"].includes(userTypeParam)
           ? userTypeParam
           : "internal";
+
+        if (userType === "external" && user.customerIsFree) {
+          redirect("/error")
+        }
 
       switch (userType) {
         case "internal":
@@ -76,6 +79,13 @@ export default async function UsersPage({
 
   const userCount = userData.length;
 
+  const freeLimits = subscriptionLimits.free
+  let isAtLimit
+
+  if (user.customerIsFree && userCount >= freeLimits.maxUsers) {
+    isAtLimit = true;
+  }
+
   return (
     <>
       <AdminHeader headingText={headerTitle ?? "Users"} dataCount={userCount} />
@@ -93,7 +103,7 @@ export default async function UsersPage({
           user.role === "PA" ||
           (user.role === "CA" && userTypeParam === "internal")
         }
-        openModalComponent={InviteNewUserModalForPA}
+        openModalComponent={isAtLimit ? (InviteNewUserLimitReached) : (InviteNewUserModalForPA) }
       />
     </>
   );

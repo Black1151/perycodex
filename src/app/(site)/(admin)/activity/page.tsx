@@ -40,6 +40,9 @@ export interface ActivityResponse {
 
 export default async function ActivityPage() {
   const user = await getUser(); // Awaiting user data
+  if (user.customerIsFree) {
+    return redirect("/error"); // Redirect if the user is free
+  }
   const userRole = user.role; // Fetch the user's role
   const isManagerofDepts =
     user.teamManagerCount === 1 || user.teamManagerCount === 3;

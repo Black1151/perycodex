@@ -1,12 +1,16 @@
 import { customerJson } from "@/components/surveyjs/forms/customer";
 import AdminHeader from "@/components/AdminHeader";
-
+import { redirect } from "next/navigation";
 import { checkUserRole, getUser } from "@/lib/dal";
 import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function CustomersCreatePage() {
   const user = await getUser();
   await checkUserRole(`/customers/create`);
+
+  if (user.customerIsFree) {
+    return redirect("/error"); // Redirect if the user is free
+  }
 
   let headerTitle = "Create Customer";
 
