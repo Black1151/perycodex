@@ -1,3 +1,5 @@
+import { render } from "react-dom";
+
 export const registerCustomerJson = {
   checkErrorsMode: "onValueChanged",
   pages: [
@@ -172,6 +174,8 @@ export const registerCustomerJson = {
         {
           type: "paneldynamic",
           name: "customerSites",
+          renderMode: "tab",
+          templateTabTitle: "Site {panelIndex}: {panel.siteName}",
           title:
             "Enter your company locations below. (First being the primary location of your organisation)",
           panelCount: 1,
@@ -257,7 +261,9 @@ export const registerCustomerJson = {
           panelCount: 0,
           minPanelCount: 0,
           maxPanelCount: 2,
-          renderMode: "list",
+          renderMode: "tab",
+          templateTabTitle: "Department {panelIndex}: {panel.departmentName}",
+
 
           // ←–– Enforce unique departmentName across panels
           keyName: "departmentName",
