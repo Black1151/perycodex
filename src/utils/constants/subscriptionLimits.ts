@@ -1,7 +1,8 @@
 export const subscriptionLimits = {
   free: {
-    maxUsers: 9,
+    maxUsers: 20,
     maxTeams: 3,
     maxSites: 3,
+    trialDays: 45,
   },
 };
