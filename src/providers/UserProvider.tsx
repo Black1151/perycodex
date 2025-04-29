@@ -58,6 +58,7 @@ export interface UserContextProps {
   parentCustImageUrl?: string;
   groupNames: string[] | null;
   userThemeId?: number | null;
+  customerDefaultThemeId: number;
 }
 
 interface UserProviderProps {

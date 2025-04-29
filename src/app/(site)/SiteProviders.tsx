@@ -20,6 +20,8 @@ export default function SiteProviders({
   useEffect(() => {
     if (userMetadata.userThemeId) {
       setThemeId(userMetadata.userThemeId);
+    } else {
+      setThemeId(userMetadata.customerDefaultThemeId);
     }
   }, [userMetadata]);
 

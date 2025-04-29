@@ -65,7 +65,7 @@ export const prByWhitneyDefaultTheme = extendTheme(baseTheme, {
     },
     perygonContainer: {
       baseStyle: {
-        bgGradient: `linear-gradient(to bottom right, white, white)`,
+        bgGradient: `linear-gradient(to bottom right, gray.500, white)`,
       },
     },
     ////// big up app styles
