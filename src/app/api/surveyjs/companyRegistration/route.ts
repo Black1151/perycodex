@@ -15,6 +15,7 @@ interface CompanyData {
   companyLogo: string | null;
   customerSites: Site[];
   departments: Department[];
+  useBulkEntry: boolean;
   companyStaff: {
     staffEmail: string;
   }[];
@@ -156,12 +157,14 @@ export async function POST(req: Request) {
     // Depedning on the data structure, we need to handle the staff invites differently. user may have used bulk or indivual invites.
     let staffInvitePayloads: { email: string; customerId: number }[] = [];
 
-    if (data.companyStaffBulk != null) {
+    if (data.useBulkEntry && data.companyStaffBulk) {
+      // If bulk entry is used, split the string by commas and trim whitespace
       staffInvitePayloads = data.companyStaffBulk.split(",").map((email) => ({
         email: email.trim(),
         customerId: companyId,
       }));
     } else {
+      // If not bulk entry, use the individual staff emails
       staffInvitePayloads = data.companyStaff.map((staff) => ({
         email: staff.staffEmail,
         customerId: companyId,
