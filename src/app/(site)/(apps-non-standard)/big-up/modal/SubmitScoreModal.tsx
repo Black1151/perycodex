@@ -68,10 +68,12 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
     >
       <ModalOverlay />
       <ModalContent>
-        <PerygonCard bg={theme.fringeCases.recognitionCard.elementBG}>
+        <PerygonCard bg={theme.components.submitScoreModal.baseStyle.elementBG}>
           <ModalHeader
             fontSize="2xl"
-            color={theme.fringeCases.recognitionCard.secondaryTextColor}
+            color={
+              theme.components.submitScoreModal.baseStyle.secondaryTextColor
+            }
           >
             Give Recognition
           </ModalHeader>
@@ -80,7 +82,9 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
             <ModalBody>
               <FormControl mb={4} isRequired>
                 <FormLabel
-                  color={theme.fringeCases.recognitionCard.primaryTextColor}
+                  color={
+                    theme.components.submitScoreModal.baseStyle.primaryTextColor
+                  }
                 >
                   Team Member
                 </FormLabel>
@@ -101,7 +105,9 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
               </FormControl>
               <FormControl mb={4} isRequired>
                 <FormLabel
-                  color={theme.fringeCases.recognitionCard.primaryTextColor}
+                  color={
+                    theme.components.submitScoreModal.baseStyle.primaryTextColor
+                  }
                 >
                   Category
                 </FormLabel>
@@ -139,7 +145,9 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
               </FormControl>
               <FormControl mb={4} isRequired>
                 <FormLabel
-                  color={theme.fringeCases.recognitionCard.primaryTextColor}
+                  color={
+                    theme.components.submitScoreModal.baseStyle.primaryTextColor
+                  }
                 >
                   Message
                 </FormLabel>
@@ -161,7 +169,8 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                       <Text
                         fontSize="sm"
                         color={
-                          theme.fringeCases.recognitionCard.primaryTextColor
+                          theme.components.submitScoreModal.baseStyle
+                            .primaryTextColor
                         }
                       >
                         {message.length}/{maxLength} characters

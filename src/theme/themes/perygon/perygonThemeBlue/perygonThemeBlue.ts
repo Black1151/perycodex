@@ -21,14 +21,7 @@ export const perygonThemeBlue = extendTheme(baseTheme, {
     primaryTextColor: "rgb(0, 0, 0)",
     secondaryTextColor: "rgb(83, 83, 83)",
     themeTextColor: colorPalette.perygonBlue,
-  },
-
-  fringeCases: {
-    recognitionCard: {
-      elementBG: "rgb(78, 116, 227)",
-      textColor: "black",
-      secondaryTextColor: "white",
-    },
+    bigUpElementBG: "rgb(16, 70, 231)",
   },
 
   components: {
@@ -46,6 +39,33 @@ export const perygonThemeBlue = extendTheme(baseTheme, {
     perygonContainer: {
       baseStyle: {
         bgGradient: gradients.primaryGradient,
+      },
+    },
+    ////// big up app styles
+    bigUpStatsCard: {
+      baseStyle: {
+        elementBG: "bigUpElementBG",
+        primaryTextColor: "white",
+        secondaryTextColor: "white",
+      },
+    },
+    recognitionHeader: {
+      baseStyle: {
+        textcolor: "white",
+      },
+    },
+    masonryCardItem: {
+      baseStyle: {
+        elementBG: "bigUpElementBG",
+        primaryTextColor: "white",
+        secondaryTextColor: "white",
+      },
+    },
+    submitScoreModal: {
+      baseStyle: {
+        elementBG: "bigUpElementBG",
+        primaryTextColor: "primaryTextColor",
+        secondaryTextColor: "themeTextColor",
       },
     },
     Button: {

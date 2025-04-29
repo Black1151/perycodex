@@ -32,7 +32,7 @@ const RecognitionHeader: React.FC<RecognitionHeaderProps> = ({
         <Heading
           as="h1"
           fontWeight={100}
-          color={theme.fringeCases.recognitionCard.secondaryTextColor}
+          color={theme.components.recognitionHeader.baseStyle.textcolor}
           fontSize={{ base: "2xl", md: "4xl" }}
           fontFamily="Bonfire"
           textAlign="center"

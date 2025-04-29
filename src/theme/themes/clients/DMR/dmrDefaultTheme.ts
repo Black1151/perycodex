@@ -26,13 +26,6 @@ export const dmrDefaultTheme = extendTheme(baseTheme, {
     themeTextColor: colorPalette.dmrPrimary,
   },
 
-  // gradients: {
-  //   ...baseTheme.gradients,
-  //   primaryGradient: `linear-gradient(to bottom right, primary, primary)`,
-  //   secondaryGradient: `linear-gradient(to bottom right, ${colorPalette.dmrPrimary}, ${colorPalette.dmrPrimary})`,
-  //   secondaryGradientTransparent: `linear-gradient(to bottom right, hsla(205, 31%, 26%, 0.7) 50%, hsla( 72, 98%, 64%, 0.7) 100%)`,
-  // },
-
   fringeCases: {
     recognitionCard: {
       elementBG: "primary",
@@ -40,9 +33,6 @@ export const dmrDefaultTheme = extendTheme(baseTheme, {
       primaryTextColor: "white",
       secondaryTextColor: colorPalette.dmrSecondary,
     },
-    // navBar: {
-    //   bgGradient: `linear-gradient(to bottom right, primary, primary)`,
-    // },
     dashboardHeader: {
       color: "white",
     },
@@ -50,6 +40,7 @@ export const dmrDefaultTheme = extendTheme(baseTheme, {
 
   components: {
     ...baseTheme.components,
+    //// layout styles
     navBar: {
       baseStyle: {
         bgGradient: `linear-gradient(to bottom right, primary, primary)`,
@@ -63,6 +54,33 @@ export const dmrDefaultTheme = extendTheme(baseTheme, {
     perygonContainer: {
       baseStyle: {
         bgGradient: `linear-gradient(to bottom right, primary, primary)`,
+      },
+    },
+    ////// big up app styles
+    bigUpStatsCard: {
+      baseStyle: {
+        elementBG: "primary",
+        primaryTextColor: "white",
+        secondaryTextColor: "white",
+      },
+    },
+    recognitionHeader: {
+      baseStyle: {
+        textcolor: "white",
+      },
+    },
+    masonryCardItem: {
+      baseStyle: {
+        elementBG: "primary",
+        primaryTextColor: "white",
+        secondaryTextColor: "secondary",
+      },
+    },
+    submitScoreModal: {
+      baseStyle: {
+        elementBG: "primary",
+        primaryTextColor: "primaryTextColor",
+        secondaryTextColor: "themeTextColor",
       },
     },
     Button: {

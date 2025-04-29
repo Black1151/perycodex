@@ -53,13 +53,18 @@ export const baseTheme = extendTheme({
   },
 
   fringeCases: {
-    recognitionCard: {
-      elementBG: "elementBG",
-      primaryTextColor: "primaryTextColor",
-      secondaryTextColor: "themeTextColor",
-    },
+    // recognitionCard: {
+    //   elementBG: "elementBG",
+    //   primaryTextColor: "primaryTextColor",
+    //   secondaryTextColor: "themeTextColor",
+    // },
     // navBar: {
     //   bgGradient: gradients.primaryGradient,
+    // },
+    // bigUpStatsCard: {
+    //   elementBG: "elementBG",
+    //   primaryTextColor: "primaryTextColor",
+    //   secondaryTextColor: "themeTextColor",
     // },
     dashboardHeader: {
       textcolor: "white",
@@ -104,6 +109,34 @@ export const baseTheme = extendTheme({
         bgGradient: gradients.primaryGradient,
       },
     },
+    //// big up app styles
+    bigUpStatsCard: {
+      baseStyle: {
+        elementBG: "elementBG",
+        primaryTextColor: "primaryTextColor",
+        secondaryTextColor: "themeTextColor",
+      },
+    },
+    recognitionHeader: {
+      baseStyle: {
+        textcolor: "primaryTextColor",
+      },
+    },
+    masonryCardItem: {
+      baseStyle: {
+        elementBG: "elementBG",
+        primaryTextColor: "primaryTextColor",
+        secondaryTextColor: "themeTextColor",
+      },
+    },
+    submitScoreModal: {
+      baseStyle: {
+        elementBG: "elementBG",
+        primaryTextColor: "primaryTextColor",
+        secondaryTextColor: "themeTextColor",
+      },
+    },
+
     Button: {
       variants: {
         workflowStart: {
