@@ -28,6 +28,7 @@ export const prByWhitneyDefaultTheme = extendTheme(baseTheme, {
     secondaryTextColor: "rgb(83, 83, 83)",
     themeTextColor: colorPalette.prByWhitneyHighlight,
     bigUpElementTextHighlight: colorPalette.prByWhitneyHighlight,
+    iconColor: "black",
   },
 
   fringeCases: {
@@ -93,6 +94,13 @@ export const prByWhitneyDefaultTheme = extendTheme(baseTheme, {
         secondaryTextColor: "themeTextColor",
       },
     },
+    //// tables
+    dataGridComponentLight: {
+      baseStyle: {
+        alternateRowBG: "secondary",
+        alternateRowTextColor: "prByWhitneySecondary",
+      },
+    },
     Button: {
       variants: {
         primary: {
@@ -128,7 +136,6 @@ export const prByWhitneyDefaultTheme = extendTheme(baseTheme, {
   },
 
   borders: {
-    // primaryBorder: "1px solid var(--chakra-colors-primary)",
     primaryBorder: "none",
   },
 

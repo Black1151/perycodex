@@ -29,9 +29,9 @@ export const baseTheme = extendTheme({
     seduloGreen: "#008000",
     darkGray: "#4A4A4A",
     primaryTextColor: "rgb(0, 0, 0)",
-    // primaryTextColor: "red",
     secondaryTextColor: "rgb(83, 83, 83)",
     themeTextColor: "rgba(201, 9, 9, 0.85)",
+    iconColor: "white",
 
     // Fringe cases
     recognitionCardBG: "elementBG",
@@ -53,19 +53,6 @@ export const baseTheme = extendTheme({
   },
 
   fringeCases: {
-    // recognitionCard: {
-    //   elementBG: "elementBG",
-    //   primaryTextColor: "primaryTextColor",
-    //   secondaryTextColor: "themeTextColor",
-    // },
-    // navBar: {
-    //   bgGradient: gradients.primaryGradient,
-    // },
-    // bigUpStatsCard: {
-    //   elementBG: "elementBG",
-    //   primaryTextColor: "primaryTextColor",
-    //   secondaryTextColor: "themeTextColor",
-    // },
     dashboardHeader: {
       textcolor: "white",
     },
@@ -134,6 +121,12 @@ export const baseTheme = extendTheme({
         elementBG: "elementBG",
         primaryTextColor: "primaryTextColor",
         secondaryTextColor: "themeTextColor",
+      },
+    },
+    dataGridComponentLight: {
+      baseStyle: {
+        alternateRowBG: "elementBG2",
+        alternateRowTextColor: "primaryTextColor",
       },
     },
 
