@@ -2,11 +2,11 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
-import { themeRegistry, ThemeName } from "@/theme/themes/themeRegistry";
+import { themeRegistry, ThemeId } from "@/theme/themes/themeRegistry";
 
 interface IThemeContext {
-  themeId: ThemeName | null;
-  setThemeId: (theme: ThemeName) => void;
+  themeId: ThemeId | null;
+  setThemeId: (theme: ThemeId) => void;
   getUserTheme: () => Promise<void>;
 }
 
@@ -25,7 +25,7 @@ interface CustomThemeProviderProps {
 export const ChakraThemeProvider: React.FC<CustomThemeProviderProps> = ({
   children,
 }) => {
-  const [userThemeId, setUserThemeId] = useState<ThemeName | null>(null);
+  const [userThemeId, setUserThemeId] = useState<ThemeId | null>(null);
   const [loadingTheme, setLoadingTheme] = useState(true);
 
   const getUserTheme = async () => {

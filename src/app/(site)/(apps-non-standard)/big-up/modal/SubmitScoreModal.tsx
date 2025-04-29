@@ -70,7 +70,6 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
       <ModalContent>
         <PerygonCard bg={theme.fringeCases.recognitionCard.elementBG}>
           <ModalHeader
-            // color="primary"
             fontSize="2xl"
             color={theme.fringeCases.recognitionCard.secondaryTextColor}
           >
@@ -80,7 +79,11 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
           <form onSubmit={handleSubmit(handleFormSubmit)}>
             <ModalBody>
               <FormControl mb={4} isRequired>
-                <FormLabel color="primaryTextColor">Team Member</FormLabel>
+                <FormLabel
+                  color={theme.fringeCases.recognitionCard.primaryTextColor}
+                >
+                  Team Member
+                </FormLabel>
                 <Controller
                   name="teamMember"
                   control={control}
@@ -97,7 +100,11 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                 />
               </FormControl>
               <FormControl mb={4} isRequired>
-                <FormLabel color="primaryTextColor">Category</FormLabel>
+                <FormLabel
+                  color={theme.fringeCases.recognitionCard.primaryTextColor}
+                >
+                  Category
+                </FormLabel>
                 <Controller
                   name="category"
                   control={control}
@@ -107,17 +114,17 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                       placeholder="Choose a category..."
                       {...field}
                       bg="elementBG"
-                      color="primary"
+                      color="primaryTextColor"
                       borderColor="primary"
                       _hover={{ borderColor: "primary" }}
                       _focus={{
                         bg: "elementBG",
-                        color: "primary",
+                        color: "primaryTextColor",
                       }}
                       sx={{
                         option: {
                           backgroundColor: "elementBG",
-                          color: "primary",
+                          color: "primaryTextColor",
                         },
                       }}
                     >
@@ -131,7 +138,11 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                 />
               </FormControl>
               <FormControl mb={4} isRequired>
-                <FormLabel color="primaryTextColor">Message</FormLabel>
+                <FormLabel
+                  color={theme.fringeCases.recognitionCard.primaryTextColor}
+                >
+                  Message
+                </FormLabel>
                 <Controller
                   name="message"
                   control={control}
@@ -147,7 +158,12 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                         borderColor="primary"
                         _hover={{ borderColor: "primary" }}
                       />
-                      <Text fontSize="sm" color="primary">
+                      <Text
+                        fontSize="sm"
+                        color={
+                          theme.fringeCases.recognitionCard.primaryTextColor
+                        }
+                      >
                         {message.length}/{maxLength} characters
                       </Text>
                     </>
