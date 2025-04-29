@@ -11,6 +11,7 @@ import {
   Input,
   Spinner,
   Text,
+  useTheme,
   VStack,
 } from "@chakra-ui/react";
 import Fun from "@/components/a/b/c/d/Fun";
@@ -43,6 +44,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
   const router = useRouter();
   const { tags, setRecordDetails, setTags } = useTags();
   const [developerCount, setDeveloperCount] = useState<number>(0);
+  const theme = useTheme();
 
   const handleAbstractedCountClick = () => {
     if (user?.email === "oliver.hannam@sedulo.co.uk") {
@@ -80,7 +82,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
     "imageUrl",
     () => {
       router.refresh();
-    },
+    }
   );
 
   useEffect(() => {
@@ -94,7 +96,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
               "Content-Type": "application/json",
               Accept: "application/json",
             },
-          },
+          }
         );
 
         if (!response.ok) {
@@ -115,7 +117,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
         recordId: surveyUser.id.toString(),
         recordParentId: surveyUser.customerId?.toString() || "",
       },
-      "2",
+      "2"
     );
   }, []);
 
@@ -126,7 +128,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
         p={[0, 0, 4]}
         pt={0}
         borderRadius={8}
-        color={"white"}
+        color={theme.colors.adminBannerColor}
         overflow={"hidden"}
         gap={2}
       >

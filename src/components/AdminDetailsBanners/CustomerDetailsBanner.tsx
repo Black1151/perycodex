@@ -11,6 +11,7 @@ import {
   Input,
   Spinner,
   Text,
+  useTheme,
   VStack,
 } from "@chakra-ui/react";
 import AddAPhotoOutlinedIcon from "@mui/icons-material/AddAPhotoOutlined";
@@ -70,6 +71,7 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
 }) => {
   const { user } = useUser();
   const router = useRouter();
+  const theme = useTheme();
 
   const { tags, setRecordDetails, setTags } = useTags();
 
@@ -127,7 +129,7 @@ export const CustomerDetailsBanner: React.FC<CustomerDetailsBannerProps> = ({
         mb={4}
         p={[0, 0, 4]}
         borderRadius={8}
-        color={"white"}
+        color={theme.colors.adminBannerColor}
         overflow={"hidden"}
         align={"flex-start"}
         gap={2}

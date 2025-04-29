@@ -7,6 +7,8 @@ import {
   FormControl,
   Heading,
   Text,
+  theme,
+  useTheme,
   VStack,
 } from "@chakra-ui/react";
 import moment from "moment";
@@ -38,8 +40,14 @@ interface EmailTemplateDetailsBannerProps {
 export const EmailTemplateDetailsBanner: React.FC<
   EmailTemplateDetailsBannerProps
 > = ({ emailTemplate }) => {
+  const theme = useTheme();
   return (
-    <Flex p={4} color={"white"} overflow={"hidden"} gap={2}>
+    <Flex
+      p={4}
+      color={theme.colors.adminBannerColor}
+      overflow={"hidden"}
+      gap={2}
+    >
       <BackButton />
       {/* Form Status */}
       <FormControl

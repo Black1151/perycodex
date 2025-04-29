@@ -8,6 +8,7 @@ import {
   Heading,
   Image,
   Text,
+  useTheme,
   VStack,
 } from "@chakra-ui/react";
 import moment from "moment";
@@ -39,8 +40,15 @@ interface TagDetailsBannerProps {
 }
 
 export const TagDetailsBanner: React.FC<TagDetailsBannerProps> = ({ tag }) => {
+  const theme = useTheme();
   return (
-    <Flex mb={4} p={[0, 0, 4]} color={"white"} overflow={"hidden"} gap={2}>
+    <Flex
+      mb={4}
+      p={[0, 0, 4]}
+      color={theme.colors.adminBannerColor}
+      overflow={"hidden"}
+      gap={2}
+    >
       <BackButton />
       <FormControl
         w={["50px", "125px"]}

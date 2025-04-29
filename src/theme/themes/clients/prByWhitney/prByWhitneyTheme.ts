@@ -29,6 +29,7 @@ export const prByWhitneyDefaultTheme = extendTheme(baseTheme, {
     themeTextColor: colorPalette.prByWhitneyHighlight,
     bigUpElementTextHighlight: colorPalette.prByWhitneyHighlight,
     iconColor: "black",
+    adminBannerColor: "black",
   },
 
   fringeCases: {

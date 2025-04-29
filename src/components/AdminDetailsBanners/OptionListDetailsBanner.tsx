@@ -7,6 +7,7 @@ import {
   FormControl,
   Heading,
   Text,
+  useTheme,
   VStack,
 } from "@chakra-ui/react";
 import moment from "moment";
@@ -33,8 +34,14 @@ interface OptionListDetailsBannerProps {
 export const OptionListDetailsBanner: React.FC<
   OptionListDetailsBannerProps
 > = ({ optionList }) => {
+  const theme = useTheme();
   return (
-    <Flex p={4} color={"white"} overflow={"hidden"} gap={2}>
+    <Flex
+      p={4}
+      color={theme.colors.adminBannerColor}
+      overflow={"hidden"}
+      gap={2}
+    >
       <BackButton />
       {/* OptionList Icon and Name */}
       {/* Site Icon and Name */}

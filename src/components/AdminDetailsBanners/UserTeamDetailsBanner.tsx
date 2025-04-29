@@ -8,6 +8,7 @@ import {
   FormControl,
   Heading,
   Text,
+  useTheme,
   VStack,
 } from "@chakra-ui/react";
 import { People } from "@mui/icons-material";
@@ -42,9 +43,16 @@ export const UserTeamDetailsBanner: React.FC<UserTeamDetailsBannerProps> = ({
 }) => {
   // Determine if it's a department or team
   const isDepartment = team.parentTeamId === null;
+  const theme = useTheme();
 
   return (
-    <Flex mb={4} p={[0, 0, 4]} color={"white"} overflow={"hidden"} gap={2}>
+    <Flex
+      mb={4}
+      p={[0, 0, 4]}
+      color={theme.colors.adminBannerColor}
+      overflow={"hidden"}
+      gap={2}
+    >
       <BackButton />
       {/* Team/Department Icon and Name */}
       <FormControl

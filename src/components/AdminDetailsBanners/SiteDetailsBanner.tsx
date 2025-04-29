@@ -7,6 +7,7 @@ import {
   FormControl,
   Heading,
   Text,
+  useTheme,
   VStack,
 } from "@chakra-ui/react";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
@@ -32,6 +33,7 @@ export const SiteDetailsBanner: React.FC<SiteDetailsBannerProps> = ({
 }) => {
   const router = useRouter();
   const { tags, setRecordDetails, setTags } = useTags();
+  const theme = useTheme();
 
   useEffect(() => {
     const fetchTags = async () => {
@@ -71,7 +73,13 @@ export const SiteDetailsBanner: React.FC<SiteDetailsBannerProps> = ({
 
   return (
     <VStack w={"100%"} flex={1} align={"stretch"}>
-      <Flex mb={4} p={[0, 0, 4]} color={"white"} overflow={"hidden"} gap={2}>
+      <Flex
+        mb={4}
+        p={[0, 0, 4]}
+        color={theme.colors.adminBannerColor}
+        overflow={"hidden"}
+        gap={2}
+      >
         <BackButton />
         {/* Site Icon and Name */}
         <FormControl

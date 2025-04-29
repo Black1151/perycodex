@@ -32,6 +32,7 @@ export const baseTheme = extendTheme({
     secondaryTextColor: "rgb(83, 83, 83)",
     themeTextColor: "rgba(201, 9, 9, 0.85)",
     iconColor: "white",
+    adminBannerColor: "white",
 
     // Fringe cases
     recognitionCardBG: "elementBG",
