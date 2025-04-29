@@ -83,6 +83,12 @@ export const dmrDefaultTheme = extendTheme(baseTheme, {
         secondaryTextColor: "themeTextColor",
       },
     },
+    // modals
+    StaffHappinessDetailModal: {
+      baseStyle: {
+        bgGradient: `linear-gradient(to bottom right, primary, primary)`,
+      },
+    },
     Button: {
       variants: {
         primary: {

@@ -65,7 +65,13 @@ const StaffHappinessDetailModal: React.FC<StaffHappinessDetailModalProps> = ({
       returnFocusOnClose={false}
     >
       <ModalOverlay />
-      <ModalContent mx={0} px={0} bgGradient={theme.gradients.primaryGradient}>
+      <ModalContent
+        mx={0}
+        px={0}
+        bgGradient={
+          theme.components.StaffHappinessDetailModal.baseStyle.bgGradient
+        }
+      >
         <ModalHeader color="white">{`${firstname}'s Happiness`}</ModalHeader>
         <ModalCloseButton color="white" />
         <ModalBody mx={0} px={0}>

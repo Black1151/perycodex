@@ -97,6 +97,7 @@ export const baseTheme = extendTheme({
         bgGradient: gradients.primaryGradient,
       },
     },
+
     //// big up app styles
     bigUpStatsCard: {
       baseStyle: {
@@ -128,6 +129,12 @@ export const baseTheme = extendTheme({
       baseStyle: {
         alternateRowBG: "elementBG2",
         alternateRowTextColor: "primaryTextColor",
+      },
+    },
+    // modals
+    StaffHappinessDetailModal: {
+      baseStyle: {
+        bgGradient: gradients.primaryGradient,
       },
     },
 

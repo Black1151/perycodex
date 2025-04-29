@@ -102,6 +102,12 @@ export const prByWhitneyDefaultTheme = extendTheme(baseTheme, {
         alternateRowTextColor: "prByWhitneySecondary",
       },
     },
+    /// modals
+    StaffHappinessDetailModal: {
+      baseStyle: {
+        bgGradient: `linear-gradient(to bottom right, black, black)`,
+      },
+    },
     Button: {
       variants: {
         primary: {
