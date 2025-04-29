@@ -1,6 +1,6 @@
 "use client";
 
-import { Spinner, useDisclosure, VStack } from "@chakra-ui/react";
+import { Spinner, useDisclosure, VStack, Button } from "@chakra-ui/react";
 import { SubmitHandler } from "react-hook-form";
 import {
   SignUpForm as IndividualSignUpForm,
@@ -13,6 +13,8 @@ import { useFetchClient } from "@/hooks/useFetchClient";
 import { SignUpTypeSelector } from "./SignUpTypeSelector";
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { usePanel } from "@/components/login/SignUpCard";
+import { ArrowBack, Business, PersonAdd } from "@mui/icons-material";
 
 const variants = {
   initial: { opacity: 0, y: 20 },
@@ -24,6 +26,7 @@ export const SignUpPageClient = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
   const { fetchClient, loading } = useFetchClient();
+  const { setTitle, setDescription, setActions } = usePanel();
 
   const searchParams = useSearchParams();
   const initialType = searchParams.get("signUpType");
@@ -76,8 +79,33 @@ export const SignUpPageClient = () => {
     router.push("/login");
   };
 
+  useEffect(() => {
+    if (signUpType === null) {
+      setTitle("Choose your sign up type");
+      setDescription("Select whether you are signing up as an individual or a company.");
+      setActions([
+        { label: "Back To Login", href: "/login", icon: <ArrowBack /> },
+      ]);
+    } else if (signUpType === "individual") {
+      setTitle("Join an existing company");
+      setDescription("Is your company already using perygon? Please fill in the form to join your collegues. Please use your work email.");
+      setActions([
+        { label: "Sign Up as a Company", href: "/sign-up?signUpType=company", icon: <Business /> },
+        { label: "Back To Login", href: "/login", icon: <ArrowBack />},
+      ]);
+    }
+    else if (signUpType === "company") {
+      setTitle("Sign up your company");
+      setDescription("Please fill in the form below to sign up as a company. Please use your work email.");
+      setActions([
+        { label: "Join an exisiting company", href: "/sign-up?signUpType=individual", icon: <PersonAdd /> },
+        { label: "Back To Login", href: "/login", icon: <ArrowBack /> },
+      ]);
+    }
+  }, [signUpType, setActions, setDescription, setTitle]);
+
   return (
-    <VStack spacing={0} w="100%" h="100%" align="stretch" justify="space-between">
+    <VStack spacing={0} w="full" h="100%" align="stretch" justify="space-between" id="testing2">
       <AnimatePresence mode="wait">
         {signUpType === "individual" ? (
           <motion.div
@@ -122,18 +150,19 @@ export const SignUpPageClient = () => {
           </motion.div>
         ) : (
           <motion.div
+            id="testing"
             key="selector"
             variants={variants}
             initial="initial"
             animate="animate"
             exit="exit"
             transition={{ duration: 0.3 }}
+            style={{ width: "100%" }}
           >
             <SignUpTypeSelector signUpType={null} setSignUpType={setSignUpType} />
           </motion.div>
         )}
       </AnimatePresence>
-
       <SignUpSuccessModal isOpen={isOpen} onClose={handleClose} />
     </VStack>
   );

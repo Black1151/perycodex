@@ -1,20 +1,21 @@
 "use client";
 
 import { useState, useEffect, use } from "react";
-import { Flex, VStack, Text, Button, Spinner } from "@chakra-ui/react";
+import { Flex, VStack, Text, Button, Spinner, HStack } from "@chakra-ui/react";
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
 import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
 import { registerCustomerJson } from "@/components/surveyjs/forms/registerCompany";
 import { useUser } from "@/providers/UserProvider";
 import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 import LogoUpload from "./LogoUpload";
-import { cookies } from "next/headers";
+import { useTheme } from "@chakra-ui/react";
 
 export default function RegisterCompany() {
   const { user } = useUser();
   const [customerData, setCustomerData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [hasLogo, setHasLogo] = useState(false);
+  const theme = useTheme();
 
   // 1️⃣ Fetch your customer once user is known
   useEffect(() => {
@@ -87,13 +88,45 @@ export default function RegisterCompany() {
   return (
     <PerygonContainer>
       <Flex direction="column" flex={1}>
-        <VStack pt="50px" pb={8} spacing={4} align="center">
-          <LetterFlyIn fontSize={28}>Welcome to...</LetterFlyIn>
-          <LetterFlyIn fontSize={90}>Perygon</LetterFlyIn>
-          <LetterFlyIn fontSize={38}>
+        <Flex
+          direction={["column", "row", "row"]}
+          flex={1}
+          gap={[3, 4, 8]}
+          align={["center", "flex-end"]}
+          pb={[2, 4]}
+          justify={["center", "start"]}
+          flexWrap="wrap"
+          px={8}
+        >
+          <VStack
+            pt={["10px", "30px", "50px"]}
+            spacing={[1, 3, 4]}
+            align={["center", "start"]}
+            textAlign={["center", "left"]}
+          >
+            <Text fontSize={[28, 28, 32]} fontFamily={"bonfire"} color="white">
+              Welcome to...
+            </Text>
+            <Text
+              fontSize={[62, 70, 90]}
+              lineHeight={1}
+              fontFamily={"bonfire"}
+              color="white"
+            >
+              Perygon
+            </Text>
+          </VStack>
+          <Text
+            fontSize={[28, 28, 32]}
+            lineHeight={[1, 2]}
+            fontFamily={"bonfire"}
+            color="white"
+            textAlign={["center", "left"]}
+            mt={[1, 0]}
+          >
             Let’s set up your organisation
-          </LetterFlyIn>
-        </VStack>
+          </Text>
+        </Flex>
         <Flex flex="1" w="100%" justify="center" align="flex-start" pb={8}>
           <AdminFormWrapper
             formJson={registerCustomerJson}

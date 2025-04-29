@@ -27,7 +27,7 @@ export const SignUpTypeSelector = ({
   const theme = useTheme();
 
   return (
-    <VStack>
+    <VStack w="100%" spacing={4}>
       <Card
         width="100%"
         padding={4}
@@ -46,7 +46,7 @@ export const SignUpTypeSelector = ({
         _hover={{ backgroundColor: theme.colors.primary }}
         _focus={{ boxShadow: "none" }}
       >
-        <HStack>
+        <HStack w="full">
           <HStack
             color={theme.colors.primaryTextColor}
             _groupHover={{ color: "white" }}
@@ -71,7 +71,7 @@ export const SignUpTypeSelector = ({
           _groupHover={{ color: "white" }}
           transition="color 0.2s ease"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquet tempor metus, a volutpat metus facilisis hendrerit. Maecenas non est libero. Mauris sed tortor sed augue semper pulvinar. 
+          Is your company already using perygon? Join your collegues by signing up with your work email.
         </Text>
       </Card>
 
@@ -93,7 +93,7 @@ export const SignUpTypeSelector = ({
         _hover={{ backgroundColor: theme.colors.primary }}
         _focus={{ boxShadow: "none" }}
       >
-        <HStack>
+        <HStack w="full">
           <HStack
             color={theme.colors.primaryTextColor}
             _groupHover={{ color: "white" }}
@@ -118,7 +118,7 @@ export const SignUpTypeSelector = ({
           _groupHover={{ color: "white" }}
           transition="color 0.2s ease"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquet tempor metus, a volutpat metus facilisis hendrerit. Maecenas non est libero. Mauris sed tortor sed augue semper pulvinar. 
+          Join perygon and create a new company on a free trial. Invite your team members and get set up now.
         </Text>
       </Card>
     </VStack>

@@ -87,12 +87,12 @@ const CompanyRegistrationLayout: React.FC<ClientSatisfactionLayoutProps> = ({
           </Flex>
 
           {/* SurveyJS block – grows to use remaining height if parent allows */}
-          <Box h="min" w="full">
-            <Survey model={surveyJSModel} />
+          <Box h="min" w="full" borderRadius="md" overflow="hidden">
+            <Survey model={surveyJSModel}/>
           </Box>
 
           {/* Bottom navigation row */}
-          <Flex w="full" justify="space-between" wrap="wrap" gap={2}>
+          <Flex w="full" justify="space-between" wrap="wrap" gap={2} position="sticky" bottom={0} p={2} bg="white" borderRadius={"md"} boxShadow="md">
             {/* Prev / Next */}
             <Flex gap={2}>
               {!formNavigation.isFirstPage && (
