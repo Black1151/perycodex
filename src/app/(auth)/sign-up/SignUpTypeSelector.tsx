@@ -39,53 +39,6 @@ export const SignUpTypeSelector = ({
         alignItems="left"
         justifyContent="center"
         gap={4}
-        onClick={() => setSignUpType("individual")}
-        cursor="pointer"
-        role="group"
-        transition="background-color 0.3s ease" 
-        _hover={{ backgroundColor: theme.colors.primary }}
-        _focus={{ boxShadow: "none" }}
-      >
-        <HStack w="full">
-          <HStack
-            color={theme.colors.primaryTextColor}
-            _groupHover={{ color: "white" }}
-            transition="color 0.2s ease"
-          >
-            <PersonAddIcon style={{ marginRight: "4px" }} />
-          </HStack>
-          <Text
-            fontWeight={600}
-            fontSize={20}
-            color={theme.colors.primaryTextColor}
-            _groupHover={{ color: "white" }}
-            transition="color 0.2s ease"
-          >
-            Join existing company
-          </Text>
-        </HStack>
-
-        <Text
-          fontSize={14}
-          color={theme.colors.secondaryTextColor}
-          _groupHover={{ color: "white" }}
-          transition="color 0.2s ease"
-        >
-          Is your company already using perygon? Join your collegues by signing up with your work email.
-        </Text>
-      </Card>
-
-      <Card
-        width="100%"
-        padding={4}
-        backgroundColor={theme.colors.elementBG}
-        borderRadius="lg"
-        boxShadow="md"
-        display="flex"
-        flexDirection="column"
-        alignItems="left"
-        justifyContent="center"
-        gap={4}
         onClick={() => setSignUpType("company")}
         cursor="pointer"
         role="group"
@@ -119,6 +72,53 @@ export const SignUpTypeSelector = ({
           transition="color 0.2s ease"
         >
           Join perygon and create a new company on a free trial. Invite your team members and get set up now.
+        </Text>
+      </Card>
+      
+      <Card
+        width="100%"
+        padding={4}
+        backgroundColor={theme.colors.elementBG}
+        borderRadius="lg"
+        boxShadow="md"
+        display="flex"
+        flexDirection="column"
+        alignItems="left"
+        justifyContent="center"
+        gap={4}
+        onClick={() => setSignUpType("individual")}
+        cursor="pointer"
+        role="group"
+        transition="background-color 0.3s ease" 
+        _hover={{ backgroundColor: theme.colors.primary }}
+        _focus={{ boxShadow: "none" }}
+      >
+        <HStack w="full">
+          <HStack
+            color={theme.colors.primaryTextColor}
+            _groupHover={{ color: "white" }}
+            transition="color 0.2s ease"
+          >
+            <PersonAddIcon style={{ marginRight: "4px" }} />
+          </HStack>
+          <Text
+            fontWeight={600}
+            fontSize={20}
+            color={theme.colors.primaryTextColor}
+            _groupHover={{ color: "white" }}
+            transition="color 0.2s ease"
+          >
+            Join existing company
+          </Text>
+        </HStack>
+
+        <Text
+          fontSize={14}
+          color={theme.colors.secondaryTextColor}
+          _groupHover={{ color: "white" }}
+          transition="color 0.2s ease"
+        >
+          Is your company already using perygon? Join your collegues by signing up with your work email.
         </Text>
       </Card>
     </VStack>
