@@ -1,5 +1,5 @@
 .sd-dropdown__filter-string-input {
-  color: #ff0070;
+  color: var(--chakra-colors-primary); 
 }
 
 .sd-input:focus {
@@ -30,7 +30,7 @@
   .sv-list__item.sv-list__item--selected.sv-list__item--focused
   > .sv-list__item-body,
 li:focus .sv-list__item.sv-list__item--selected > .sv-list__item-body {
-  background-color: #ff0070;
+  background-color: var(--chakra-colors-primary);
   color: #f9f9f9;
   font-weight: 400;
 }
