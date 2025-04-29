@@ -1,5 +1,6 @@
 import apiClient from "@/lib/apiClient";
 import { NextResponse } from "next/server";
+import { subscriptionLimits } from "@/utils/constants/subscriptionLimits";
 
 interface CompanyData {
   name: string;
@@ -62,8 +63,10 @@ export async function POST(req: Request) {
       address4: "", //Address4 is not provided in the data, leave empty
       postcode: primarySite.postcode,
       isFree: true,
+      isFreeUntilDate: new Date(
+        Date.now() + subscriptionLimits.free.trialDays * 24 * 60 * 60 * 1000
+      ).toISOString(),
       parentId: null,
-      //TODO: add is free until
     };
 
     // 1. Send company payload and get the new company ID
