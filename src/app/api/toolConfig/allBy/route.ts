@@ -34,6 +34,8 @@ export async function GET(req: NextRequest) {
 
     const data = await response.json();
 
+    console.log("Response from backend:", data);
+
     // Return the response data
     return NextResponse.json({ resource: data.resource });
   } catch (error: any) {

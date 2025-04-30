@@ -31,6 +31,8 @@ interface ToolResource {
   logoImageUrl: string;
   appUrl: string;
   isTrialable: boolean;
+  annualPriceId: string;
+  monthlyPriceId: string;
 }
 
 // ── FreeToolCard ──────────────────────────────────────────────────────────────
