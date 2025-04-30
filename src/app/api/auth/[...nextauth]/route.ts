@@ -75,7 +75,6 @@ const handler = NextAuth({
   pages: {
     signIn: "auth/sign-in",
     signOut: "auth/sign-out",
-    error: '/not-found'
   },
   callbacks: {
     async redirect({ url, baseUrl }) {
