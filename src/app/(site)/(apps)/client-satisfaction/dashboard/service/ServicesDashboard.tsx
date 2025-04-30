@@ -107,24 +107,23 @@ const ServicesDashboard = () => {
   const defaultDateFilterOption = "last6Months";
 
   useEffect(() => {
-      if (!toolId || !workflowId) {
-        return;
-      }
-      const monthlyOption = dateRangeOptions[dateRangeOption].find(
-        (opt) => opt.value === defaultDateFilterOption
-      );
-  
-      if (monthlyOption) {
-        const [startDate, endDate] = monthlyOption.getRange();
-        getData({ startDate, endDate });
-      } else {
-        // Provide a default date range, or do nothing
-        const fallbackStart = new Date();
-        const fallbackEnd = new Date();
-        getData({ startDate: fallbackStart, endDate: fallbackEnd });
-      }
-      
-    }, [toolId, workflowId]);
+    if (!toolId || !workflowId) {
+      return;
+    }
+    const monthlyOption = dateRangeOptions[dateRangeOption].find(
+      (opt) => opt.value === defaultDateFilterOption
+    );
+
+    if (monthlyOption) {
+      const [startDate, endDate] = monthlyOption.getRange();
+      getData({ startDate, endDate });
+    } else {
+      // Provide a default date range, or do nothing
+      const fallbackStart = new Date();
+      const fallbackEnd = new Date();
+      getData({ startDate: fallbackStart, endDate: fallbackEnd });
+    }
+  }, [toolId, workflowId]);
 
   const flattenedRows = useMemo(() => {
     if (!gridData?.resource.services) return [];
@@ -253,12 +252,12 @@ const ServicesDashboard = () => {
 
   const npsLineChartOptions = {
     autoSize: true,
-  
+
     series: (gridData?.resource.services || []).map((service) => {
       const sortedNps = [...service.serviceNPS].sort((a, b) =>
         a.monthYear.localeCompare(b.monthYear)
       );
-    
+
       return {
         type: "line",
         // Convert each NPS entry to { date, score, ... }
@@ -266,10 +265,10 @@ const ServicesDashboard = () => {
           const [year, month] = nps.monthYear.split("-").map(Number);
           // month is 0-based in JS, so subtract 1
           const date = new Date(year, month - 1, 1);
-    
+
           return {
-            date,                
-            score: nps.score,     
+            date,
+            score: nps.score,
             promoters: nps.promoters,
             passives: nps.passives,
             detractors: nps.detractors,
@@ -277,8 +276,8 @@ const ServicesDashboard = () => {
             serviceName: service.serviceName ?? "Unknown",
           };
         }),
-        xKey: "date",   
-        yKey: "score",  
+        xKey: "date",
+        yKey: "score",
         title: service.serviceName,
         marker: {
           enabled: true,
@@ -288,11 +287,12 @@ const ServicesDashboard = () => {
           renderer: (params: any) => {
             const { datum } = params;
             // Format the date however you like:
-            const dateStr = datum.date?.toLocaleDateString("default", {
-              year: "numeric",
-              month: "short",
-            }) || "";
-    
+            const dateStr =
+              datum.date?.toLocaleDateString("default", {
+                year: "numeric",
+                month: "short",
+              }) || "";
+
             return {
               title: `${datum.serviceName} (${dateStr})`,
               content: `
@@ -307,8 +307,8 @@ const ServicesDashboard = () => {
           },
         },
       };
-    }),    
-  
+    }),
+
     axes: [
       {
         type: "time",
@@ -323,12 +323,12 @@ const ServicesDashboard = () => {
         max: 100,
       },
     ],
-  
+
     legend: {
       enabled: true,
     },
   };
-  
+
   //for histogram
   const binnedData = useMemo(() => {
     // Prepare 11 bins, one for each integer rating 0..10
@@ -429,7 +429,7 @@ const ServicesDashboard = () => {
         size="5xl"
       >
         <ModalOverlay />
-        <ModalContent bgGradient={theme.gradients.primaryGradient}>
+        <ModalContent bgGradient={theme.gradients.modalBGGradient}>
           <ModalHeader color="white">{commentsModalTitle}</ModalHeader>
           <ModalCloseButton color="white" />
           <ModalBody pb={10}>

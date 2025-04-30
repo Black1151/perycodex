@@ -526,7 +526,7 @@ const ScoresCommentsDashboard: React.FC = () => {
         size="5xl"
       >
         <ModalOverlay />
-        <ModalContent bgGradient={theme.gradients.primaryGradient}>
+        <ModalContent bgGradient={theme.gradients.modalBGGradient}>
           <ModalHeader color="white">{barModalTitle}</ModalHeader>
           <ModalCloseButton color="white" />
           <ModalBody pb={10}>

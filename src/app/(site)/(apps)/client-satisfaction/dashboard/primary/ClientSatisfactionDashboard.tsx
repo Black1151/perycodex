@@ -79,10 +79,11 @@ const ClientSatisfactionDashboard = () => {
   const { toolId, workflowId } = useWorkflow();
   const [isBarModalOpen, setIsBarModalOpen] = useState(false);
   const [barModalTitle, setBarModalTitle] = useState("");
-  const [isAllCommentsModalOpen, setIsAllCommentsModalOpen] =
-    useState(false);
+  const [isAllCommentsModalOpen, setIsAllCommentsModalOpen] = useState(false);
   const [allCommentsModalTitle, setAllCommentsModalTitle] = useState("");
-  const [allCommentsGridData, setAllCommentsGridData] = useState<companyComment[]>([]);
+  const [allCommentsGridData, setAllCommentsGridData] = useState<
+    companyComment[]
+  >([]);
   const [isUserModalOpen, setUserModalOpen] = useState(false);
   const [userModalTitle, setUserModalTitle] = useState("");
 
@@ -360,12 +361,12 @@ const ClientSatisfactionDashboard = () => {
     setAllCommentsModalTitle("All Client Responses - Company Comments");
     setAllCommentsGridData(companyComments || []);
     setIsAllCommentsModalOpen(true);
-  }
+  };
 
   const handleUserModalClick = () => {
     setUserModalTitle("User X Data");
     setUserModalOpen(true);
-  }
+  };
 
   return (
     <>
@@ -393,7 +394,7 @@ const ClientSatisfactionDashboard = () => {
             size="5xl"
           >
             <ModalOverlay />
-            <ModalContent bgGradient={theme.gradients.primaryGradient}>
+            <ModalContent bgGradient={theme.gradients.modalBGGradient}>
               <ModalHeader color="white">{barModalTitle}</ModalHeader>
               <ModalCloseButton color="white" />
               <ModalBody pb={10}>
@@ -426,7 +427,7 @@ const ClientSatisfactionDashboard = () => {
             size="5xl"
           >
             <ModalOverlay />
-            <ModalContent bgGradient={theme.gradients.primaryGradient}>
+            <ModalContent bgGradient={theme.gradients.modalBGGradient}>
               <ModalHeader color="white">{barModalTitle}</ModalHeader>
               <ModalCloseButton color="white" />
               <ModalBody pb={10}>
@@ -459,7 +460,7 @@ const ClientSatisfactionDashboard = () => {
             size="5xl"
           >
             <ModalOverlay />
-            <ModalContent bgGradient={theme.gradients.primaryGradient}>
+            <ModalContent bgGradient={theme.gradients.modalBGGradient}>
               <ModalHeader color="white">{userModalTitle}</ModalHeader>
               <ModalCloseButton color="white" />
               <ModalBody pb={10}>
@@ -486,14 +487,14 @@ const ClientSatisfactionDashboard = () => {
               {/* Left column (Gauge) */}
               <Flex w={{ base: "100%", lg: "40%" }} gap={6} direction="column">
                 <Box flex="1" height="300px">
-                    <Box height={{ base: "300px", lg: "100%" }}>
-                      <AgGaugeComponent
-                        flex="1"
-                        chartOptions={kpiGuagesOptions[3]}
-                        noData={!kpiData}
-                        height="100%"
-                      />
-                    </Box>
+                  <Box height={{ base: "300px", lg: "100%" }}>
+                    <AgGaugeComponent
+                      flex="1"
+                      chartOptions={kpiGuagesOptions[3]}
+                      noData={!kpiData}
+                      height="100%"
+                    />
+                  </Box>
                 </Box>
               </Flex>
 
@@ -506,21 +507,21 @@ const ClientSatisfactionDashboard = () => {
                   direction={{ base: "column", md: "row" }}
                 >
                   <Box flex="1" height="300px">
-                      <AgGaugeComponent
-                        flex="1"
-                        chartOptions={kpiGuagesOptions[2]}
-                        noData={!kpiData}
-                        height="300px"
-                      />
+                    <AgGaugeComponent
+                      flex="1"
+                      chartOptions={kpiGuagesOptions[2]}
+                      noData={!kpiData}
+                      height="300px"
+                    />
                   </Box>
 
                   <Box flex="1" height="300px">
-                      <AgGaugeComponent
-                        flex="1"
-                        chartOptions={kpiGuagesOptions[0]}
-                        noData={!kpiData}
-                        height="300px"
-                      />
+                    <AgGaugeComponent
+                      flex="1"
+                      chartOptions={kpiGuagesOptions[0]}
+                      noData={!kpiData}
+                      height="300px"
+                    />
                   </Box>
                 </Flex>
 
@@ -531,15 +532,21 @@ const ClientSatisfactionDashboard = () => {
                   direction={{ base: "column", md: "row" }}
                 >
                   <Box flex="1" height="300px">
-                      <AgGaugeComponent
-                        flex="1"
-                        chartOptions={kpiGuagesOptions[1]}
-                        noData={!kpiData}
-                        height="300px"
-                      />
+                    <AgGaugeComponent
+                      flex="1"
+                      chartOptions={kpiGuagesOptions[1]}
+                      noData={!kpiData}
+                      height="300px"
+                    />
                   </Box>
 
-                  <Box flex="1" minWidth="300px" height="300px" onClick={handleResponsesKPIClick} cursor="pointer">
+                  <Box
+                    flex="1"
+                    minWidth="300px"
+                    height="300px"
+                    onClick={handleResponsesKPIClick}
+                    cursor="pointer"
+                  >
                     <PerygonCard height="100%">
                       <Flex
                         align="center"
@@ -550,7 +557,9 @@ const ClientSatisfactionDashboard = () => {
                       >
                         <Text fontSize="6xl">{feedbackCount}</Text>
                         <Text fontSize="xl">Total Client Responses</Text>
-                        <Text fontSize="md"><i>Click to view</i></Text>
+                        <Text fontSize="md">
+                          <i>Click to view</i>
+                        </Text>
                       </Flex>
                     </PerygonCard>
                   </Box>

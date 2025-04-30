@@ -11,6 +11,7 @@ const gradients = {
   primaryGradient: `linear-gradient(to bottom right, ${colorPalette.dmrPrimary}, ${colorPalette.dmrPrimary})`,
   secondaryGradient: `linear-gradient(to bottom right, ${colorPalette.dmrPrimary}, ${colorPalette.dmrPrimary})`,
   secondaryGradientTransparent: `linear-gradient(to bottom right, hsla(205, 31%, 26%, 0.7) 50%, hsla( 72, 98%, 64%, 0.7) 100%)`,
+  modalBGGradient: `linear-gradient(to bottom right, ${colorPalette.dmrPrimary}, ${colorPalette.dmrPrimary})`,
 };
 
 export const dmrDefaultTheme = extendTheme(baseTheme, {
@@ -25,6 +26,7 @@ export const dmrDefaultTheme = extendTheme(baseTheme, {
     secondaryTextColor: "rgb(83, 83, 83)",
     themeTextColor: colorPalette.dmrPrimary,
   },
+  gradients: gradients,
 
   fringeCases: {
     recognitionCard: {
@@ -86,7 +88,12 @@ export const dmrDefaultTheme = extendTheme(baseTheme, {
     // modals
     StaffHappinessDetailModal: {
       baseStyle: {
-        bgGradient: `linear-gradient(to bottom right, primary, primary)`,
+        bgGradient: gradients.modalBGGradient,
+      },
+    },
+    HappinessScoreManagerDashbaordModal: {
+      baseStyle: {
+        bgGradient: gradients.modalBGGradient,
       },
     },
     Button: {

@@ -14,6 +14,7 @@ const gradients = {
   primaryGradient: "linear(to-br, secondary 60%, primary 100%)",
   secondaryGradient: `linear-gradient(to bottom right, rgba(255, 0, 0, 0.6), rgba(255, 192, 203, 0.6))`,
   secondaryGradientTransparent: `linear-gradient(to bottom right, rgba(255, 0, 0, 0.3), rgba(255, 192, 203, 0.3))`,
+  modalBGGradient: "linear(to-br, secondary 60%, primary 100%)",
 };
 
 export const baseTheme = extendTheme({
@@ -133,6 +134,12 @@ export const baseTheme = extendTheme({
     },
     // modals
     StaffHappinessDetailModal: {
+      baseStyle: {
+        bgGradient: gradients.primaryGradient,
+      },
+    },
+
+    HappinessScoreManagerDashbaordModal: {
       baseStyle: {
         bgGradient: gradients.primaryGradient,
       },
