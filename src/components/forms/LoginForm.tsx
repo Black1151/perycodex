@@ -2,13 +2,11 @@
 
 import { SubmitHandler, useForm } from "react-hook-form";
 import {
-  Box,
   Button,
   Flex,
   HStack,
   Image,
   Text,
-  useBreakpointValue,
   useTheme,
   VStack,
 } from "@chakra-ui/react";
@@ -28,7 +26,6 @@ import { DefaultSession } from "next-auth";
 import CryptoJS from "crypto-js";
 import LinkOffIcon from "@mui/icons-material/LinkOff";
 import LinkOnIcon from "@mui/icons-material/Link";
-import { useThemeContext } from "@/providers/ChakraThemeProvider";
 
 declare module "next-auth" {
   interface Session {
@@ -535,7 +532,7 @@ export function LoginForm() {
           align={"center"}
         >
           <Text p="0" pt="10px" fontSize={["10px", "12px"]} color="gray">
-            Copyright &copy; 2024 Sedulo Accountants Limited (v1.2.0)
+            Sedulo Accountants Limited © 2024 (V1.2.0)
           </Text>
           <Link href={"/privacy-policy"}>
             <Text p="0" pt="10px" fontSize={["10px", "12px"]} color="gray">
