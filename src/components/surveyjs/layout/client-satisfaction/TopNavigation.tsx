@@ -42,7 +42,7 @@ const TopNavigation: React.FC<FormNavigationProps> = ({
   const totalItemSize = useMemo(() => itemSize + gapSize, [itemSize, gapSize]);
   const totalBarSize = useMemo(
     () => pagesAllowed * totalItemSize,
-    [pagesAllowed, totalItemSize],
+    [pagesAllowed, totalItemSize]
   );
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -120,6 +120,7 @@ const TopNavigation: React.FC<FormNavigationProps> = ({
           color={!isFirstPage ? "primary" : "transparent"}
           isDisabled={isFirstPage}
           size={["xs", "sm"]}
+          border="none"
         />
 
         <Box maxW={`${totalBarSize}px`} overflow={"hidden"} ref={containerRef}>
@@ -234,6 +235,7 @@ const TopNavigation: React.FC<FormNavigationProps> = ({
           onClick={nextPage}
           isDisabled={isLastPage}
           size={["xs", "sm"]}
+          border="none"
         />
         {/*Not Required Go To LAST */}
         {/*<IconButton*/}
