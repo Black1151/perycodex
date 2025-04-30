@@ -16,6 +16,10 @@ export const Moonlight = extendTheme(baseTheme, {
     primaryTextColor: "rgb(212, 212, 212)",
     secondaryTextColor: "rgb(230, 230, 230)",
     themeTextColor: "rgb(155, 155, 155)",
+
+    tooltipHeaderTextColor: "white",
+    tooltipHeaderBGColor: "primary",
+    tooltipBodyTextColor: "white",
   },
 
   gradients: {

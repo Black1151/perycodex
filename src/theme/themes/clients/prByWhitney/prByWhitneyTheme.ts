@@ -11,9 +11,6 @@ const colorPalette = {
 
 const gradients = {
   ...baseTheme.gradients,
-  // primaryGradient: `linear-gradient(to bottom right, ${colorPalette.prByWhitneyPebble}, ${colorPalette.prByWhitneyPebble})`,
-  // secondaryGradient: `linear-gradient(to bottom right, ${colorPalette.prByWhitneyPrimary}, ${colorPalette.prByWhitneyPrimary})`,
-  // secondaryGradientTransparent: `linear-gradient(to bottom right, hsla(23, 86%, 55%, 0.7) 100%, rgb(253, 204, 174, 0.7) 50%)`,
   modalBGGradient: `linear-gradient(to bottom right, ${colorPalette.prByWhitneyPrimary}, ${colorPalette.prByWhitneyPrimary})`,
 };
 
@@ -31,6 +28,10 @@ export const prByWhitneyDefaultTheme = extendTheme(baseTheme, {
     bigUpElementTextHighlight: colorPalette.prByWhitneyHighlight,
     iconColor: "black",
     adminBannerColor: "black",
+    // tooltips
+    tooltipHeaderTextColor: "white",
+    tooltipHeaderBGColor: "black",
+    tooltipBodyTextColor: "black",
   },
   gradients: gradients,
 
@@ -102,17 +103,6 @@ export const prByWhitneyDefaultTheme = extendTheme(baseTheme, {
       baseStyle: {
         alternateRowBG: "secondary",
         alternateRowTextColor: "prByWhitneySecondary",
-      },
-    },
-    /// modals
-    StaffHappinessDetailModal: {
-      baseStyle: {
-        bgGradient: gradients.modalBGGradient,
-      },
-    },
-    HappinessScoreManagerDashbaordModal: {
-      baseStyle: {
-        bgGradient: gradients.modalBGGradient,
       },
     },
 

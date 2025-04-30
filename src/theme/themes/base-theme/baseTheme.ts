@@ -34,11 +34,11 @@ export const baseTheme = extendTheme({
     themeTextColor: "rgba(201, 9, 9, 0.85)",
     iconColor: "white",
     adminBannerColor: "white",
-
-    // Fringe cases
-    recognitionCardBG: "elementBG",
-    recognitionCardTextColor: "primaryTextColor",
-    recognitionCardSecondaryTextColor: "themeTextColor",
+    // tooltips
+    tooltipHeaderTextColor: "primaryTextColor",
+    tooltipHeaderBGColor: "primary",
+    tooltipBodyTextColor: "primaryTextColor",
+    tooltipBodyBGColor: "white",
 
     happinessScale: {
       1: "#b22200",
@@ -130,18 +130,6 @@ export const baseTheme = extendTheme({
       baseStyle: {
         alternateRowBG: "elementBG2",
         alternateRowTextColor: "primaryTextColor",
-      },
-    },
-    // modals
-    StaffHappinessDetailModal: {
-      baseStyle: {
-        bgGradient: gradients.primaryGradient,
-      },
-    },
-
-    HappinessScoreManagerDashbaordModal: {
-      baseStyle: {
-        bgGradient: gradients.primaryGradient,
       },
     },
 

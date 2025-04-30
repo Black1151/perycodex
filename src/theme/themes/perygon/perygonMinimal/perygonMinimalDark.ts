@@ -15,6 +15,10 @@ export const MinimalDark = extendTheme(baseTheme, {
     primaryTextColor: "rgb(255, 255, 255)",
     secondaryTextColor: "rgb(255, 255, 255)",
     themeTextColor: "rgb(255, 255, 255)",
+
+    tooltipHeaderTextColor: "white",
+    tooltipHeaderBGColor: "primary",
+    tooltipBodyTextColor: "white",
   },
 
   gradients: {
