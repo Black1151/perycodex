@@ -100,12 +100,12 @@ const Sidebar: React.FC<SidebarProps> = ({
         ]}
         alignItems="center"
         justifyContent="center"
-        color={"rgba(248,248,248,0.8)"}
+        color={theme.colors.iconColor}
         borderRadius="full"
         w={["30px", "30px", "36px"]}
         h={["30px", "30px", "36px"]}
         backgroundColor={"rgba(255,255,255,0.2)"}
-        border="1px solid white"
+        border={`1px solid ${theme.colors.iconColor}`}
         p={1}
         transform="scale(1)"
         transition="transform 0.2s ease-in-out"

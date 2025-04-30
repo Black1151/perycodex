@@ -7,6 +7,8 @@ import NoDashboardsModal from "@/app/(site)/(apps)/NoDashboardModal";
 import { ToolLandingPage } from "@/app/(site)/(apps)/ToolLandingPageInner";
 import { EnpsSplashScreen } from "./EnpsSplashScreen";
 
+export const revalidate = 0;
+
 interface WorkflowInstanceResponse {
   resource: {
     new_wfinstid: string;

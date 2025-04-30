@@ -1,7 +1,8 @@
 import AdminHeader from "@/components/AdminHeader";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import { emailTemplateJson } from "@/components/surveyjs/forms/emailTemplate";
 import { checkUserRole } from "@/lib/dal";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function EmailTemplateCreatePage() {
   await checkUserRole("/email-template/create");
@@ -9,14 +10,26 @@ export default async function EmailTemplateCreatePage() {
   return (
     <>
       <AdminHeader headingText="Create Email Template" />
-      <SurveyComponent
-        surveyJson={emailTemplateJson}
+      <AdminFormWrapper
+        formJson={emailTemplateJson}
+        data={null}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
+        excludeKeys={[]}
         endpoint={"/emailTemplate"}
-        isNew={true}
-        layout={"default"}
+        formSuccessMessage={null}
+        reloadPageOnSuccess={false}
         redirectUrl={"/email-template"}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        isNew={true}
+        isAllowedToEdit={true}
       />
     </>
   );

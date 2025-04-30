@@ -3,28 +3,42 @@ import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
 
 import { scrollBarThemes } from "@/theme/scrollBarThemes";
 import { agChartStyles } from "@/theme/agChartStyles";
-import { agGridStyles } from "../agGridStyles";
+import { agGridStyles } from "../../agGridStyles";
 
 const config: ThemeConfig = {
   initialColorMode: "light",
   useSystemColorMode: false,
 };
 
+const gradients = {
+  primaryGradient: "linear(to-br, secondary 60%, primary 100%)",
+  secondaryGradient: `linear-gradient(to bottom right, rgba(255, 0, 0, 0.6), rgba(255, 192, 203, 0.6))`,
+  secondaryGradientTransparent: `linear-gradient(to bottom right, rgba(255, 0, 0, 0.3), rgba(255, 192, 203, 0.3))`,
+  modalBGGradient: "linear(to-br, secondary 60%, primary 100%)",
+};
+
 export const baseTheme = extendTheme({
   config,
-
   colors: {
     primary: "blue",
     secondary: "#fff",
     elementBG: "white",
-
     primaryButton: "#fff",
-    // perygonBlueTransparent: "rgba(13, 0, 61, 0.85)",
     seduloRed: "#B4213D",
     yellow: "#EFC718",
     lightGreen: "#92C01F",
     seduloGreen: "#008000",
     darkGray: "#4A4A4A",
+    primaryTextColor: "rgb(0, 0, 0)",
+    secondaryTextColor: "rgb(83, 83, 83)",
+    themeTextColor: "rgba(201, 9, 9, 0.85)",
+    iconColor: "white",
+    adminBannerColor: "white",
+    // tooltips
+    tooltipHeaderTextColor: "primaryTextColor",
+    tooltipHeaderBGColor: "primary",
+    tooltipBodyTextColor: "primaryTextColor",
+    tooltipBodyBGColor: "white",
 
     happinessScale: {
       1: "#b22200",
@@ -41,10 +55,11 @@ export const baseTheme = extendTheme({
   },
 
   fringeCases: {
-    recognitionCard: {
-      elementBG: "elementBG",
-      textColor: "primaryTextColor",
-      secondaryTextColor: "themeTextColor",
+    dashboardHeader: {
+      textcolor: "white",
+    },
+    happinessScoreForm: {
+      textColor: "white",
     },
   },
 
@@ -68,10 +83,76 @@ export const baseTheme = extendTheme({
   },
 
   components: {
+    navBar: {
+      baseStyle: {
+        bgGradient: gradients.primaryGradient,
+      },
+    },
+    footer: {
+      baseStyle: {
+        bgGradient: gradients.primaryGradient,
+      },
+    },
+    perygonContainer: {
+      baseStyle: {
+        bgGradient: gradients.primaryGradient,
+      },
+    },
+
+    //// big up app styles
+    bigUpStatsCard: {
+      baseStyle: {
+        elementBG: "elementBG",
+        primaryTextColor: "primaryTextColor",
+        secondaryTextColor: "themeTextColor",
+      },
+    },
+    recognitionHeader: {
+      baseStyle: {
+        textcolor: "primaryTextColor",
+      },
+    },
+    masonryCardItem: {
+      baseStyle: {
+        elementBG: "elementBG",
+        primaryTextColor: "primaryTextColor",
+        secondaryTextColor: "themeTextColor",
+      },
+    },
+    submitScoreModal: {
+      baseStyle: {
+        elementBG: "elementBG",
+        primaryTextColor: "primaryTextColor",
+        secondaryTextColor: "themeTextColor",
+      },
+    },
+    dataGridComponentLight: {
+      baseStyle: {
+        alternateRowBG: "elementBG2",
+        alternateRowTextColor: "primaryTextColor",
+      },
+    },
+
     Button: {
       variants: {
+        workflowStart: {
+          height: 12,
+          backgroundColor: "green.500",
+          color: "white",
+          _hover: {
+            color: "green",
+            border: "1px solid",
+            borderColor: "primary",
+            backgroundColor: "white",
+          },
+          _disabled: {
+            backgroundColor: "gray.100",
+            color: "gray",
+            cursor: "not-allowed",
+            opacity: 0.6,
+          },
+        },
         primary: {
-          mt: 5,
           w: "full",
           height: 12,
           backgroundColor: "primary",
@@ -87,6 +168,18 @@ export const baseTheme = extendTheme({
             color: "primary",
             cursor: "not-allowed",
             opacity: 0.6,
+          },
+        },
+
+        solid: {
+          backgroundColor: "primary",
+          color: "primaryTextColor",
+          border: "1px solid",
+          borderColor: "secondary",
+          _hover: {
+            backgroundColor: "elementBG",
+            color: "primary",
+            borderColor: "primary",
           },
         },
 
@@ -192,11 +285,7 @@ export const baseTheme = extendTheme({
     },
   },
 
-  gradients: {
-    primaryGradient: "linear(to-br, secondary 60%, primary 100%)",
-    secondaryGradient: `linear-gradient(to bottom right, rgba(255, 0, 0, 0.6), rgba(255, 192, 203, 0.6))`,
-    secondaryGradientTransparent: `linear-gradient(to bottom right, rgba(255, 0, 0, 0.3), rgba(255, 192, 203, 0.3))`,
-  },
+  gradients,
 
   // shadows: {
   //   primaryShadow: "0 0 10px 2px var(--chakra-colors-primary)",

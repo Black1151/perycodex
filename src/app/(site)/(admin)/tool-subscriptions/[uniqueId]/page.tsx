@@ -1,9 +1,10 @@
 import apiClient from "@/lib/apiClient";
 import { redirect } from "next/navigation";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import { toolSubscriptionsJson } from "@/components/surveyjs/forms/toolSubscriptions";
 import { ToolSubscriptionDetailsBanner } from "@/components/AdminDetailsBanners/ToolSubscriptionDetailsBanner";
 import { checkUserRole } from "@/lib/dal";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function ToolSubscriptionsDetailPage({
   params,
@@ -24,15 +25,26 @@ export default async function ToolSubscriptionsDetailPage({
   return (
     <>
       <ToolSubscriptionDetailsBanner toolSubscription={toolSubscriptionData} />
-      <SurveyComponent
-        surveyJson={toolSubscriptionsJson}
+      <AdminFormWrapper
+        formJson={toolSubscriptionsJson}
+        data={toolSubscriptionData}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
+        excludeKeys={[]}
         endpoint={`/toolCustomer/${params.uniqueId}`}
-        isNew={false}
-        dataset={toolSubscriptionData}
-        layout={"default"}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        formSuccessMessage={null}
         reloadPageOnSuccess={true}
+        redirectUrl={null}
+        isNew={false}
+        isAllowedToEdit={true}
       />
     </>
   );

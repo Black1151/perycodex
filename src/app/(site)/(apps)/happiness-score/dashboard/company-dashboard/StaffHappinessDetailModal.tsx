@@ -14,9 +14,10 @@ import {
   ModalOverlay,
   Text,
   useBreakpointValue,
+  useTheme,
   VStack,
 } from "@chakra-ui/react";
-import { perygonTheme } from "@/theme/themes/perygon/perygonTheme/perygonTheme";
+
 import Link from "next/link";
 
 interface StaffHappinessDetailModalProps {
@@ -44,6 +45,8 @@ const StaffHappinessDetailModal: React.FC<StaffHappinessDetailModalProps> = ({
 }) => {
   const graphHeight = useBreakpointValue({ base: 150, md: 300 });
 
+  const theme = useTheme();
+
   let parsedRecords = [];
   try {
     parsedRecords = JSON.parse(historicrecords).map((record: any) => ({
@@ -62,11 +65,7 @@ const StaffHappinessDetailModal: React.FC<StaffHappinessDetailModalProps> = ({
       returnFocusOnClose={false}
     >
       <ModalOverlay />
-      <ModalContent
-        mx={0}
-        px={0}
-        bgGradient={perygonTheme.gradients.primaryGradient}
-      >
+      <ModalContent mx={0} px={0} bgGradient={theme.gradients.modalBGGradient}>
         <ModalHeader color="white">{`${firstname}'s Happiness`}</ModalHeader>
         <ModalCloseButton color="white" />
         <ModalBody mx={0} px={0}>

@@ -1,9 +1,10 @@
 import apiClient from "@/lib/apiClient";
 import { redirect } from "next/navigation";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import { selectItemsJson } from "@/components/surveyjs/forms/selectItems";
 import { SelectItemDetailsBanner } from "@/components/AdminDetailsBanners/SelectItemDetailsBanner";
 import { checkUserRole } from "@/lib/dal";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function SelectItemsDetailPage({
   params,
@@ -24,15 +25,26 @@ export default async function SelectItemsDetailPage({
   return (
     <>
       <SelectItemDetailsBanner selectItem={selectItemData} />
-      <SurveyComponent
-        surveyJson={selectItemsJson}
+      <AdminFormWrapper
+        formJson={selectItemsJson}
+        data={selectItemData}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
+        excludeKeys={[]}
         endpoint={`/selectItem/${params.uniqueId}`}
-        isNew={false}
-        layout={"default"}
-        dataset={selectItemData}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        formSuccessMessage={null}
         reloadPageOnSuccess={true}
+        redirectUrl={null}
+        isNew={false}
+        isAllowedToEdit={true}
       />
     </>
   );

@@ -11,8 +11,10 @@ import {
   Input,
   Spinner,
   Text,
+  useTheme,
   VStack,
 } from "@chakra-ui/react";
+import Fun from "@/components/a/b/c/d/Fun";
 import AddAPhotoOutlinedIcon from "@mui/icons-material/AddAPhotoOutlined";
 import DomainIcon from "@mui/icons-material/Domain";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
@@ -38,9 +40,17 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
   surveyUser,
 }) => {
   const { user, showDeveloperBoard, updateShowDeveloperBoard } = useUser();
+  const [abstractedCount, setAbstractedCount] = useState<number>(0);
   const router = useRouter();
   const { tags, setRecordDetails, setTags } = useTags();
   const [developerCount, setDeveloperCount] = useState<number>(0);
+  const theme = useTheme();
+
+  const handleAbstractedCountClick = () => {
+    if (user?.email === "oliver.hannam@sedulo.co.uk") {
+      setAbstractedCount((prev) => prev + 1);
+    }
+  };
 
   const updateCount = () => {
     if (showDeveloperBoard) return;
@@ -118,7 +128,7 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
         p={[0, 0, 4]}
         pt={0}
         borderRadius={8}
-        color={"white"}
+        color={theme.colors.adminBannerColor}
         overflow={"hidden"}
         gap={2}
       >
@@ -298,7 +308,11 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
           justifyContent={"flex-start"}
           display={["none", "none", "flex"]}
         >
-          <Heading size={["md", "md", "lg"]} fontWeight={100}>
+          <Heading
+            size={["md", "md", "lg"]}
+            fontWeight={100}
+            onClick={handleAbstractedCountClick}
+          >
             ID: {surveyUser.id}
           </Heading>
           <Flex direction="row" justify="center" align="center" gap={2}>
@@ -318,6 +332,10 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
       <Flex px={4}>
         <TagsDisplay tags={tags} />
       </Flex>
+      <Fun
+        isOpen={abstractedCount >= 10}
+        onClose={() => setAbstractedCount(0)}
+      />
     </VStack>
   );
 };

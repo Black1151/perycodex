@@ -1,7 +1,6 @@
-// perygonLightTheme.ts
 import { extendTheme } from "@chakra-ui/react";
 
-import { baseTheme } from "../../baseTheme";
+import { baseTheme } from "../../base-theme/baseTheme";
 import { colorPalette } from "./colorPalette";
 
 export const MinimalDark = extendTheme(baseTheme, {
@@ -16,6 +15,10 @@ export const MinimalDark = extendTheme(baseTheme, {
     primaryTextColor: "rgb(255, 255, 255)",
     secondaryTextColor: "rgb(255, 255, 255)",
     themeTextColor: "rgb(255, 255, 255)",
+
+    tooltipHeaderTextColor: "white",
+    tooltipHeaderBGColor: "primary",
+    tooltipBodyTextColor: "white",
   },
 
   gradients: {

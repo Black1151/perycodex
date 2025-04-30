@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { Box, Flex } from "@chakra-ui/react";
+import PerygonPageContainer from "@/components/layout/PerygonPageContainer";
 
 interface LayoutProps {
   children: ReactNode;

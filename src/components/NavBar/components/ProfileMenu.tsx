@@ -1,4 +1,3 @@
-// components/NavBar/ProfileMenu.tsx
 import React from "react";
 import {
   Box,
@@ -10,42 +9,41 @@ import {
   Flex,
   Text,
   useTheme,
-  MenuDivider,
-  MenuGroup,
   useBreakpointValue,
+  Select,
+  HStack,
 } from "@chakra-ui/react";
 import PersonIcon from "@mui/icons-material/Person";
-import { Celebration } from "@mui/icons-material";
+import { Celebration, ExitToApp, Palette } from "@mui/icons-material";
 
 import PulsatingIcon from "./PulsatingIcon";
 import { MenuItemProps } from "./types";
 import { useThemeContext } from "@/providers/ChakraThemeProvider";
-import { ThemeName, themeRegistry } from "@/theme/themes/themeRegistry";
+import { ThemeDropdownOption } from "../NavBar";
 
 interface ProfileMenuProps {
   userImageUrl: string;
   menuItems: MenuItemProps[];
   unread: boolean;
+  themeDropdownOptions: ThemeDropdownOption[];
+  handleLogout: () => void;
 }
 
 const ProfileMenu: React.FC<ProfileMenuProps> = ({
   userImageUrl,
   menuItems,
   unread,
+  themeDropdownOptions,
+  handleLogout,
 }) => {
-  // Current active theme from Chakra (useTheme) - primarily used for any styling references
   const theme = useTheme();
-
-  // Access the theme-switching logic from your Theme Context
-  const { setThemeName } = useThemeContext();
-
-  // List of all possible theme options
-  const allThemes = Object.keys(themeRegistry) as ThemeName[];
+  const { setThemeId, themeId } = useThemeContext();
 
   const pulsatingIconSize = useBreakpointValue({ base: 20, md: 25 });
 
   return (
-    <Menu>
+    // Prevent auto-closing while interacting with the Select
+    <Menu closeOnSelect={false}>
       <Box position="relative">
         <MenuButton
           as={Box}
@@ -98,11 +96,14 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
         )}
       </Box>
 
-      {/* The main menu content */}
       <MenuList bg="elementBG" color={theme.colors.themeTextColor} px={2}>
-        {/* Render your existing menu items */}
+        {/* Example: for your dynamic items, you could manually close the menu
+            by calling onClose in the onClick handler, or simply set closeOnSelect
+            to `true` on each MenuItem if you prefer it closed automatically */}
         {menuItems.map((item) => (
           <MenuItem
+            // Let this item close the menu automatically
+            closeOnSelect
             key={item.label}
             fontSize={[14, 16, 18]}
             display="flex"
@@ -124,23 +125,53 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
           </MenuItem>
         ))}
 
-        <MenuDivider />
-
-        <MenuGroup title="Switch Theme">
-          {allThemes.map((tName) => (
-            <MenuItem
-              key={tName}
-              onClick={() => setThemeName(tName)}
-              fontSize={[14, 16, 18]}
-              _hover={{
-                backgroundColor: theme.colors.primary,
-                color: "white",
+        {themeDropdownOptions[0] && (
+          <HStack px={3} py={2}>
+            <Palette />
+            <Select
+              fontSize={16}
+              value={themeId!}
+              onChange={(e) => setThemeId(Number(e.target.value))}
+              bg="elementBG"
+              borderColor={theme.colors.primary}
+              maxWidth="210px"
+              sx={{
+                fontSize: [14, 16, 18],
+                option: {
+                  backgroundColor: theme.colors.elementBG,
+                },
               }}
             >
-              {tName}
-            </MenuItem>
-          ))}
-        </MenuGroup>
+              {themeDropdownOptions.map((themeOption) => (
+                <option key={themeOption.value} value={themeOption.value}>
+                  {themeOption.label}
+                </option>
+              ))}
+            </Select>
+          </HStack>
+        )}
+
+        <MenuItem
+          closeOnSelect
+          key="logout"
+          fontSize={[14, 16, 18]}
+          display="flex"
+          alignItems="center"
+          position="relative"
+          overflow="hidden"
+          bg="elementBG"
+          borderRadius="md"
+          _hover={{
+            backgroundColor: theme.colors.primary,
+            color: "white",
+          }}
+          onClick={handleLogout}
+        >
+          <ExitToApp />
+          <Text flex={1} zIndex={2} ml={2}>
+            Logout
+          </Text>
+        </MenuItem>
       </MenuList>
     </Menu>
   );

@@ -1,6 +1,6 @@
 import React from "react";
-import { Flex, keyframes, Text, VStack } from "@chakra-ui/react";
-
+import { Flex, Text, VStack } from "@chakra-ui/react";
+import { keyframes } from "@emotion/react";
 // Define the pulsing animation using Chakra UI's keyframes utility
 const pulse = keyframes`
     0% {

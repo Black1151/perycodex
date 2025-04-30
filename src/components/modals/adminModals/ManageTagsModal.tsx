@@ -29,7 +29,7 @@ export const ManageTagsModal = forwardRef(
         }
       />
     );
-  },
+  }
 );
 
 ManageTagsModal.displayName = "ManageTagsModal";

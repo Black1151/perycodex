@@ -41,7 +41,7 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
       width="100%"
       height="100%"
       justifyContent="space-between"
-      bg={theme.fringeCases.recognitionCard.elementBG}
+      bg={theme.components.bigUpStatsCard.baseStyle.elementBG}
     >
       <Flex flexDirection="column" justifyContent="space-between" height="100%">
         <Flex align="center" mb={3} gap={5}>
@@ -63,13 +63,13 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
             <Text
               fontWeight="bold"
               fontSize={["sm", "md", "xl"]}
-              color={theme.fringeCases.recognitionCard.secondaryTextColor}
+              color={theme.components.bigUpStatsCard.baseStyle.primaryTextColor}
             >
               {name}
             </Text>
             <Text
               fontSize={["sm", "md", "xl"]}
-              color="primaryTextColor"
+              color={theme.components.bigUpStatsCard.baseStyle.primaryTextColor}
               fontWeight="bold"
             >
               {location}
@@ -86,7 +86,9 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
                 )}
                 <Text
                   fontWeight="bold"
-                  color={theme.fringeCases.recognitionCard.secondaryTextColor}
+                  color={
+                    theme.components.bigUpStatsCard.baseStyle.secondaryTextColor
+                  }
                   fontSize={["sm", "lg"]}
                 >
                   {!medalColor && "Rank: "}
@@ -105,13 +107,16 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
           </Flex>
         </Flex>
         <Flex align="center">
-          <Text color="primaryTextColor" fontWeight="bold">
+          <Text
+            color={theme.components.bigUpStatsCard.baseStyle.primaryTextColor}
+            fontWeight="bold"
+          >
             Your score is:
           </Text>
           <Text
             ml="auto"
             fontWeight="bold"
-            color={theme.fringeCases.recognitionCard.secondaryTextColor}
+            color={theme.components.bigUpStatsCard.baseStyle.secondaryTextColor}
             fontSize={["xl", null, null, "2xl", null, "4xl"]}
           >
             {score.toLocaleString()}
@@ -119,18 +124,34 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
         </Flex>
         <Divider mb={3} />
         <Flex justify="space-between">
-          <Text color="primaryTextColor" fontSize="sm" fontWeight="bold">
+          <Text
+            color={theme.components.bigUpStatsCard.baseStyle.primaryTextColor}
+            fontSize="sm"
+            fontWeight="bold"
+          >
             Received:
           </Text>
-          <Text color="primaryTextColor" fontWeight="bold" fontSize="lg">
+          <Text
+            color={theme.components.bigUpStatsCard.baseStyle.primaryTextColor}
+            fontWeight="bold"
+            fontSize="lg"
+          >
             {received.toLocaleString()}
           </Text>
         </Flex>
         <Flex justify="space-between" mt={1}>
-          <Text color="primaryTextColor" fontSize="sm" fontWeight="bold">
+          <Text
+            color={theme.components.bigUpStatsCard.baseStyle.primaryTextColor}
+            fontSize="sm"
+            fontWeight="bold"
+          >
             Given:
           </Text>
-          <Text color="primaryTextColor" fontWeight="bold" fontSize="lg">
+          <Text
+            color={theme.components.bigUpStatsCard.baseStyle.primaryTextColor}
+            fontWeight="bold"
+            fontSize="lg"
+          >
             {given.toLocaleString()}
           </Text>
         </Flex>

@@ -87,7 +87,6 @@ const ScoresCommentsDashboard: React.FC = () => {
   const { fetchClient } = useFetchClient();
   const { user } = useUser();
   const { getColor } = useColor();
-  const { themeName } = useThemeContext();
 
   const [gridApi, setGridApi] = useState<GridApi | null>(null);
 
@@ -480,7 +479,7 @@ const ScoresCommentsDashboard: React.FC = () => {
         chartRefs.current.push(chartRef as ChartRef);
       }
     });
-  }, [gridApi, gridData, theme, themeName, getColor]);
+  }, [gridApi, gridData, theme, getColor]);
 
   const handleGridReady = (params: FirstDataRenderedEvent) => {
     setGridApi(params.api);
@@ -527,7 +526,7 @@ const ScoresCommentsDashboard: React.FC = () => {
         size="5xl"
       >
         <ModalOverlay />
-        <ModalContent bgGradient={theme.gradients.primaryGradient}>
+        <ModalContent bgGradient={theme.gradients.modalBGGradient}>
           <ModalHeader color="white">{barModalTitle}</ModalHeader>
           <ModalCloseButton color="white" />
           <ModalBody pb={10}>

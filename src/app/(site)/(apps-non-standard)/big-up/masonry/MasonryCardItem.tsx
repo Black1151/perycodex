@@ -17,7 +17,7 @@ export const MasonryCard: React.FC<MasonryCardProps> = ({ title, content }) => {
       width="100%"
       p={4}
       flex="1"
-      bg={theme.fringeCases.recognitionCard.elementBG}
+      bg={theme.components.masonryCardItem.baseStyle.elementBG}
     >
       <Flex
         direction="column"
@@ -29,13 +29,15 @@ export const MasonryCard: React.FC<MasonryCardProps> = ({ title, content }) => {
         <Text
           fontSize={["sm", null, null, "md"]}
           fontWeight="bold"
-          color="primaryTextColor"
+          color={theme.components.masonryCardItem.baseStyle.primaryTextColor}
         >
           {title}
         </Text>
         <Center flex={1} py={4}>
           <Text
-            color={theme.fringeCases.recognitionCard.secondaryTextColor}
+            color={
+              theme.components.masonryCardItem.baseStyle.secondaryTextColor
+            }
             fontSize={["2xl", null, null, "2xl", null, null, "4xl"]}
           >
             {content}

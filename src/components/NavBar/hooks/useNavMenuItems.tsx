@@ -1,4 +1,3 @@
-// hooks/useNavMenuItems.ts
 import { useRouter } from "next/navigation";
 import { MenuItemProps } from "@/components/NavBar/components/types";
 import {
@@ -6,6 +5,7 @@ import {
   Person as PersonIcon,
   Business as BusinessIcon,
   Timeline,
+  ViewTimeline,
   Celebration,
   Lock as LockIcon,
   ExitToApp as ExitToAppIcon,
@@ -29,7 +29,25 @@ const useNavMenuItems = (
     ];
   }
 
-  const commonMenuItems: MenuItemProps[] = [
+  if (userRole === "PA") {
+    return [
+      {
+        label: "Admin",
+        icon: <SettingsIcon />,
+        onClick: () => router.push("/customers"),
+      },
+    ];
+  }
+
+  const commonMenuItems: MenuItemProps[] = [];
+  if (userRole === "CA") {
+    commonMenuItems.push({
+      label: "Admin Tools",
+      icon: <SettingsIcon />,
+      onClick: () => router.push("/users?userType=internal"),
+    });
+  }
+  commonMenuItems.push(
     {
       label: "My Tools",
       icon: <HomeIcon />,
@@ -49,7 +67,16 @@ const useNavMenuItems = (
       label: "Activity",
       icon: <Timeline />,
       onClick: () => router.push("/activity"),
-    },
+    }
+  );
+  if (["CS", "CL", "CA"].includes(userRole)) {
+    commonMenuItems.push({
+      label: "Client Activity",
+      icon: <ViewTimeline />,
+      onClick: () => router.push("/client-activity"),
+    });
+  }
+  commonMenuItems.push(
     {
       label: "Recognition Hub",
       icon: <Celebration />,
@@ -59,35 +86,9 @@ const useNavMenuItems = (
       label: "Reset Password",
       icon: <LockIcon />,
       onClick: openResetModal,
-    },
-    {
-      label: "Logout",
-      icon: <ExitToAppIcon />,
-      onClick: handleLogout,
-    },
-  ];
-
-  if (userRole === "PA") {
-    return [
-      {
-        label: "Admin",
-        icon: <SettingsIcon />,
-        onClick: () => router.push("/customers"),
-      },
-      ...commonMenuItems,
-    ];
-  } else if (userRole === "CA") {
-    return [
-      {
-        label: "Admin Tools",
-        icon: <SettingsIcon />,
-        onClick: () => router.push("/users?userType=internal"),
-      },
-      ...commonMenuItems,
-    ];
-  } else {
-    return commonMenuItems;
-  }
+    }
+  );
+  return commonMenuItems;
 };
 
 export default useNavMenuItems;

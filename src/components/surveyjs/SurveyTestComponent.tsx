@@ -16,8 +16,8 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import SurveyComponent from "./SurveyComponent";
-import { SurveyLayoutType } from "@/types/surveyJs";
+import { LayoutKeys } from "@/types/form";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 interface SurveyTestComponentProps {
   cssFiles: string[];
@@ -33,13 +33,13 @@ const SurveyTestComponent: React.FC<SurveyTestComponentProps> = ({
   const [isBuildingScreen, setIsBuildingScreen] = useState(true);
   const [surveyJson, setSurveyJson] = useState("");
   const [datasetJson, setDatasetJson] = useState("{}");
-  const [layout, setLayout] = useState<SurveyLayoutType>("default");
+  const [layout, setLayout] = useState<LayoutKeys>("default");
   const [endpoint, setEndpoint] = useState("/test");
   const [cssPath, setCssPath] = useState(
-    cssFiles.includes("admin") ? "admin" : ""
+    cssFiles.includes("admin") ? "admin" : "",
   );
   const [sjsPath, setSjsPath] = useState(
-    sjsFiles.includes("admin") ? "admin" : ""
+    sjsFiles.includes("admin") ? "admin" : "",
   );
   const [jsPath, setJsPath] = useState("");
   const [jsonError, setJsonError] = useState(false);
@@ -62,7 +62,7 @@ const SurveyTestComponent: React.FC<SurveyTestComponentProps> = ({
           if (element.choicesByUrl?.url) {
             element.choicesByUrl.url = element.choicesByUrl.url.replace(
               "NEXT_PUBLIC_BASE_URL",
-              baseUrl
+              baseUrl,
             );
           }
         });
@@ -95,7 +95,7 @@ const SurveyTestComponent: React.FC<SurveyTestComponentProps> = ({
           });
           return acc;
         },
-        {}
+        {},
       );
       setDatasetJson(JSON.stringify(datasetTemplate, null, 2));
       toast({
@@ -176,7 +176,7 @@ const SurveyTestComponent: React.FC<SurveyTestComponentProps> = ({
               <Select
                 placeholder="Select Layout"
                 value={layout}
-                onChange={(e) => setLayout(e.target.value as SurveyLayoutType)}
+                onChange={(e) => setLayout(e.target.value as LayoutKeys)}
                 variant="filled"
                 sx={{
                   option: {
@@ -187,6 +187,7 @@ const SurveyTestComponent: React.FC<SurveyTestComponentProps> = ({
                 <option value="default">Default</option>
                 <option value="happiness">Happiness</option>
                 <option value="enps">eNPS</option>
+                <option value="client-satisfaction">Client Satisfaction</option>
               </Select>
             </FormControl>
 
@@ -290,15 +291,25 @@ const SurveyTestComponent: React.FC<SurveyTestComponentProps> = ({
             >
               Back to Builder
             </Button>
-            <SurveyComponent
-              surveyJson={JSON.parse(surveyJson)}
-              dataset={JSON.parse(datasetJson)}
-              layout={layout}
-              endpoint={endpoint}
+            <AdminFormWrapper
               isNew={datasetJson === "{}"}
-              cssPath={cssPath ?? null}
-              sjsPath={sjsPath ?? null}
-              jsPath={jsPath ?? null}
+              reloadPageOnSuccess={false}
+              formJson={JSON.parse(surveyJson)}
+              data={JSON.parse(datasetJson)}
+              layoutConfig={{
+                layoutKey: layout,
+                layoutProps: {},
+              }}
+              stylingConfig={{
+                cssFilePath: cssPath ?? null,
+                sjsFilePath: sjsPath ?? null,
+              }}
+              jsImport={jsPath ?? null}
+              excludeKeys={[]}
+              formSuccessMessage={null}
+              endpoint={endpoint}
+              redirectUrl={null}
+              isAllowedToEdit={true}
               onSurveySuccess={() => {
                 toast({
                   title: "Survey submitted successfully!",

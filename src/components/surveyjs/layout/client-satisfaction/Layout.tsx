@@ -9,8 +9,7 @@ import {
   Image,
   Text,
 } from "@chakra-ui/react";
-import useSurveyNavigation from "@/components/surveyjs/useSurveyNavigation";
-import { ClientSatisfactionLayoutProps } from "@/types/surveyJs";
+import { ClientSatisfactionLayoutProps } from "@/types/form";
 import SurveyNavigationGuard from "@/components/surveyjs/SurveyNavigationGuard";
 import { useUser } from "@/providers/UserProvider";
 import { useWorkflow } from "@/providers/WorkflowProvider";
@@ -22,33 +21,19 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DoneIcon from "@mui/icons-material/Done";
 import PublishIcon from "@mui/icons-material/Publish";
 import PerygonCard from "@/components/layout/PerygonCard";
+import PerygonPageContainer from "@/components/layout/PerygonPageContainer";
+import BackButton from "@/components/BackButton";
 
 const MotionButton = motion(Button);
 
 const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
-  model,
-  dataset,
-  canEdit,
+  surveyJSModel,
+  formNavigation,
   saveAllowed,
   allowAlwaysEdit,
 }) => {
-  const {
-    currentPage,
-    nextPage,
-    prevPage,
-    jumpToPage,
-    submitSurvey,
-    saveSurvey,
-    switchToDisplayMode,
-    switchToEditMode,
-    pageListOptions,
-    isFirstPage,
-    isLastPage,
-    isEditing,
-  } = useSurveyNavigation(model, dataset);
-
   const { user } = useUser();
-  const { currentStage } = useWorkflow();
+  const { currentStage, toolPath } = useWorkflow();
   const theme = useTheme();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
@@ -86,9 +71,9 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
 
   return (
     <SurveyNavigationGuard
-      isEditing={isEditing}
-      setToDisplayMode={switchToDisplayMode}
-      setToEditMode={switchToEditMode}
+      isEditing={formNavigation.isEditMode}
+      setToDisplayMode={formNavigation.switchToDisplayMode}
+      setToEditMode={formNavigation.switchToEditMode}
     >
       <Flex
         direction="row"
@@ -98,6 +83,7 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
         w={"full"}
         gap={2}
         mt={2}
+        maxHeight={["100%", null, "80vh"]}
       >
         <Box flex={1} height={["10svh", "10svh", "100svh"]}>
           <Flex
@@ -115,7 +101,18 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
               align={"center"}
               px={"20px"}
               gap={2}
+              w={"full"}
+              position={"relative"}
             >
+              <Flex
+                position={"absolute"}
+                left={0}
+                top={0}
+                justify={"center"}
+                align={"center"}
+              >
+                <BackButton prevRoute={toolPath ?? undefined} />
+              </Flex>
               <LetterFlyIn fontSize={isMobile ? 30 : 32}>
                 {currentStage?.bpName}
               </LetterFlyIn>
@@ -151,20 +148,16 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
           py={[2, 3]}
           boxShadow="md"
           minWidth={["full", "45%"]}
+          height="100%"
         >
-          <TopNavigation
-            pages={pageListOptions}
-            currentPage={currentPage}
-            isFirstPage={isFirstPage}
-            isLastPage={isLastPage}
-            jumpToPage={jumpToPage}
-            prevPage={prevPage}
-            nextPage={nextPage}
-          />
-          <Survey model={model} />
+          <TopNavigation {...formNavigation} />
+          <Flex flex={1} height={["100%", null, "65vh"]} width="100%">
+            <Survey model={surveyJSModel} />
+          </Flex>
+
           <Flex justify={"space-between"}>
             <Flex gap={2}>
-              {!isFirstPage && (
+              {!formNavigation.isFirstPage && (
                 <MotionButton
                   borderRadius="full"
                   size={isMobile ? "sm" : "md"}
@@ -180,17 +173,17 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
                   alignItems="center"
                   gap={[0, 0, 2]}
                   lineHeight={0}
-                  onClick={prevPage}
+                  onClick={formNavigation.prevPage}
                 >
                   <ArrowBackIcon />
                   {isMobile ? "" : "Previous"}
                 </MotionButton>
               )}
-              {!isLastPage && (
+              {!formNavigation.isLastPage && (
                 <MotionButton
                   borderRadius="full"
                   size={isMobile ? "sm" : "md"}
-                  onClick={nextPage}
+                  onClick={formNavigation.nextPage}
                   bgColor="darkGray"
                   w={["2rem", "full"]}
                   h={["2rem", "3rem"]}
@@ -206,11 +199,11 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
               )}
             </Flex>
             <Flex gap={2}>
-              {isEditing && canSave() && (
+              {formNavigation.isEditMode && canSave() && (
                 <MotionButton
                   borderRadius="full"
                   size={isMobile ? "sm" : "md"}
-                  onClick={saveSurvey}
+                  onClick={formNavigation.saveSurvey}
                   bgColor="green"
                   border="1px solid lightGray"
                   w={["2rem", "full"]}
@@ -224,11 +217,11 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
                   {isMobile ? "" : "Save"}
                 </MotionButton>
               )}
-              {isEditing && (
+              {formNavigation.isEditMode && (
                 <MotionButton
                   borderRadius="full"
                   size={isMobile ? "sm" : "md"}
-                  onClick={submitSurvey}
+                  onClick={formNavigation.submitSurvey}
                   bgColor="green"
                   border="1px solid lightGray"
                   w={["2rem", "full"]}

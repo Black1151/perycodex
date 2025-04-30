@@ -1,8 +1,16 @@
 "use client";
 
-import { Box, Flex, Heading, useTheme } from "@chakra-ui/react";
-import AddButton from "@/components/Buttons/AddButton";
+import React from "react";
+import {
+  Box,
+  HStack,
+  Heading,
+  useTheme,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import BackButton from "@/components/BackButton";
+import AddButtonMobile from "@/components/Buttons/AddButtonMobile";
+import AddButtonDesktop from "@/components/Buttons/AddButtonDesktop";
 import { Celebration } from "@mui/icons-material";
 
 interface RecognitionHeaderProps {
@@ -12,47 +20,44 @@ interface RecognitionHeaderProps {
 
 const RecognitionHeader: React.FC<RecognitionHeaderProps> = ({
   headingText,
-  onAddButtonClick,
+  onAddButtonClick = () => {},
 }) => {
   const theme = useTheme();
+  const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
 
   return (
-    <Flex
-      align="center"
-      justify="flex-start"
-      w="full"
-      gap={4}
-      lineHeight={0}
-      my={2}
-    >
-      <BackButton />
+    <HStack alignItems="center" justifyContent="space-between" w="full" my={2}>
+      <HStack>
+        <BackButton />
+        <Heading
+          as="h1"
+          fontWeight={100}
+          color={theme.components.recognitionHeader.baseStyle.textcolor}
+          fontSize={{ base: "2xl", md: "4xl" }}
+          fontFamily="Bonfire"
+          textAlign="center"
+          mt={2}
+        >
+          {headingText}
+        </Heading>
+      </HStack>
 
-      {/* Heading */}
-      <Heading
-        as="h1"
-        fontWeight={100}
-        color={theme.fringeCases.recognitionCard.secondaryTextColor}
-        fontSize={{ base: "2xl", md: "4xl" }}
-        fontFamily="Bonfire"
-        textAlign="center"
-        mt={2}
-      >
-        {headingText}
-      </Heading>
-
-      {/* AddButton */}
-      <Box ml="auto">
-        <AddButton
-          label="Recognise Someone!"
-          toolId={"0"}
-          workflowId={"0"}
-          redirectUrl={"/big-up"}
-          onAddButtonClick={onAddButtonClick}
-          AddIcon={Celebration}
-          workflow={false}
-        />
+      <Box>
+        {isMobile ? (
+          <AddButtonMobile
+            onAddButtonClick={onAddButtonClick}
+            IconComponent={Celebration}
+            workflow={false}
+          />
+        ) : (
+          <AddButtonDesktop
+            label="Recognise Someone!"
+            onAddButtonClick={onAddButtonClick}
+            IconComponent={Celebration}
+          />
+        )}
       </Box>
-    </Flex>
+    </HStack>
   );
 };
 

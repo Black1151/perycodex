@@ -30,11 +30,10 @@ export async function perygonApiRequest(params) {
     if (mappings) {
       data = applyKeyMappings(data, mappings);
     }
-
-    // Return the result through the appropriate method
+    // Return the function result via the callback
     return this.returnResult(data);
   } catch (error) {
-    return []; // Return an empty array in case of error
+    return this.returnResult([]);
   }
 }
 

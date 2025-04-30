@@ -1,9 +1,10 @@
 import { UserDetailsBanner } from "@/components/AdminDetailsBanners/UserDetailsBanner";
 import { userJson } from "@/components/surveyjs/forms/user";
 import { redirect } from "next/navigation";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import apiClient from "@/lib/apiClient";
 import { checkUserRole, getUser } from "@/lib/dal";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function MyProfilePage() {
   const user = await getUser();
@@ -23,16 +24,26 @@ export default async function MyProfilePage() {
   return (
     <>
       <UserDetailsBanner surveyUser={pageUserData} />
-      <SurveyComponent
-        surveyJson={userJson}
-        layout={"default"}
-        endpoint={`/user/${userUniqueId}`}
-        isNew={false}
+      <AdminFormWrapper
+        formJson={userJson}
+        data={pageUserData}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
         excludeKeys={["imageUrl"]}
-        dataset={pageUserData}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        endpoint={`/user/${userUniqueId}`}
+        formSuccessMessage={null}
         reloadPageOnSuccess={true}
+        redirectUrl={null}
+        isNew={false}
+        isAllowedToEdit={true}
       />
     </>
   );

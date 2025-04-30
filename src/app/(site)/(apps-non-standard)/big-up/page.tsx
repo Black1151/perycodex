@@ -156,7 +156,7 @@ export default function BigUpPage() {
         p={2}
         pr={6}
         alignItems="center"
-        bg={theme.fringeCases.recognitionCard.elementBG}
+        bg={theme.components.bigUpStatsCard.baseStyle.elementBG}
       >
         <RecognitionHeader
           headingText="Recognition Hub"

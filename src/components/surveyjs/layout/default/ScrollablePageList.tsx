@@ -8,20 +8,16 @@ import {
 } from "@chakra-ui/react";
 import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { motion } from "framer-motion";
+import { PageListOption } from "@/types/form";
+import { PageModel } from "survey-core";
 
 // Create a motion.div to animate the filling of the progress bar
 const MotionBox = motion(Box);
 
-interface PageOption {
-  index: number;
-  title: string;
-  page: number;
-}
-
 interface ScrollablePageListProps {
-  pageListOptions: PageOption[];
-  currentPage: number;
-  jumpToPage: (page: number) => void;
+  pageListOptions: PageListOption[];
+  pageNo: number;
+  jumpToPage: (page: PageModel) => void;
   animationDuration: number;
   previousPageNo: React.MutableRefObject<number>;
   width?: string | number; // Width of the toggle switch
@@ -29,7 +25,7 @@ interface ScrollablePageListProps {
 
 const ScrollablePageList: React.FC<ScrollablePageListProps> = ({
   pageListOptions,
-  currentPage,
+  pageNo,
   jumpToPage,
   animationDuration,
   previousPageNo,
@@ -104,6 +100,7 @@ const ScrollablePageList: React.FC<ScrollablePageListProps> = ({
         left="0"
         zIndex="1"
         bg="transparent"
+        border="none"
         height="auto"
         _hover={{ bg: "transparent" }}
         onClick={() => scroll("left")}
@@ -122,9 +119,9 @@ const ScrollablePageList: React.FC<ScrollablePageListProps> = ({
         }}
       >
         {pageListOptions.map((pageOption) => {
-          const isFilled = currentPage >= pageOption.index;
-          const isGoingForward = currentPage > previousPageNo.current;
-          const isGoingBackward = currentPage < previousPageNo.current;
+          const isFilled = pageNo >= pageOption.index;
+          const isGoingForward = pageNo > previousPageNo.current;
+          const isGoingBackward = pageNo < previousPageNo.current;
 
           const forwardDelay = pageOption.index * animationDuration;
           const backwardDelay =
@@ -191,14 +188,10 @@ const ScrollablePageList: React.FC<ScrollablePageListProps> = ({
 
               {/* Text Below Progress Bar */}
               <Text
-                color={
-                  currentPage === pageOption.index ? "primary" : "gray.500"
-                }
-                fontWeight={
-                  currentPage === pageOption.index ? "bold" : "normal"
-                }
+                color={pageNo === pageOption.index ? "primary" : "gray.500"}
+                fontWeight={pageNo === pageOption.index ? "bold" : "normal"}
                 fontSize={
-                  currentPage === pageOption.index ? ["xs", "xs", "md"] : "xs"
+                  pageNo === pageOption.index ? ["xs", "xs", "md"] : "xs"
                 }
               >
                 {pageOption.title}
@@ -217,6 +210,7 @@ const ScrollablePageList: React.FC<ScrollablePageListProps> = ({
         zIndex="1"
         bg="transparent"
         height="auto"
+        border="none"
         _hover={{ bg: "transparent" }}
         onClick={() => scroll("right")}
       />

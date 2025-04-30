@@ -154,7 +154,9 @@ export const themeJson = {
     // Font Editor
     "--sjs-font-editorfont-color": "var(--chakra-colors-primaryTextColor)",
     "--sjs-font-questiontitle-color": "var(--chakra-colors-primaryTextColor)",
-    "--sjs-font-editorfont-placeholdercolor": "#191919cc",
+    // "--sjs-font-editorfont-placeholdercolor": "#191919cc",
+    "--sjs-font-editorfont-placeholdercolor":
+      "var(--chakra-colors-primaryTextColor)",
 
     // Special colours
     // Red

@@ -1,67 +1,45 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { Survey } from "survey-react-ui";
 import TopNavigation from "@/components/surveyjs/layout/default/TopNavigation";
 import { Box, Flex } from "@chakra-ui/react";
-import { motion } from "framer-motion";
-import useSurveyNavigation from "@/components/surveyjs/useSurveyNavigation";
 import BottomNavigation from "@/components/surveyjs/layout/default/BottomNavigation";
-import { DefaultLayoutProps } from "@/types/surveyJs";
+import { DefaultLayoutProps } from "@/types/form";
 import SurveyNavigationGuard from "@/components/surveyjs/SurveyNavigationGuard";
+import { motion } from "framer-motion";
 
-const MotionBox = motion(Box); // Create a motion-wrapped Box for animations
+const MotionBox = motion(Box);
 
 const DefaultLayout: React.FC<DefaultLayoutProps> = ({
-  model,
-  dataset,
-  canEdit,
+  surveyJSModel,
+  formNavigation,
   showTopNavigation = true,
   showBottomNavigation = true,
 }) => {
-  const {
-    currentPage,
-    setCurrentPage,
-    nextPage,
-    prevPage,
-    jumpToPage,
-    submitSurvey,
-    saveSurvey,
-    cancelSurvey,
-    switchToDisplayMode,
-    switchToEditMode,
-    pageListOptions,
-    isFirstPage,
-    isLastPage,
-    isEditing,
-    isSubmitting,
-  } = useSurveyNavigation(model, dataset);
-
-  const [direction, setDirection] = useState(1); // 1 for next page, -1 for previous page
+  const [direction, setDirection] = useState(1);
 
   useEffect(() => {
-    // Listen for SurveyJS page change event
     const handlePageChange = () => {
-      // Set the direction based on whether the user is going to the next or previous page
-      if (model.currentPageNo > currentPage) {
-        setDirection(1); // Slide from right for next page
+      if (surveyJSModel.currentPageNo > formNavigation.pageNo) {
+        setDirection(1);
       } else {
-        setDirection(-1); // Slide from left for previous page
+        setDirection(-1);
       }
     };
 
-    // Attach event to the model
-    model.onCurrentPageChanged.add(handlePageChange);
+    surveyJSModel.onCurrentPageChanged.add(handlePageChange);
 
-    // Cleanup on unmount
     return () => {
-      model.onCurrentPageChanged.remove(handlePageChange);
+      surveyJSModel.onCurrentPageChanged.remove(handlePageChange);
     };
-  }, [model, currentPage]);
+  }, [surveyJSModel, formNavigation.pageNo]);
 
   return (
     <SurveyNavigationGuard
-      isEditing={isEditing}
-      setToDisplayMode={switchToDisplayMode}
-      setToEditMode={switchToEditMode}
+      isEditing={formNavigation.isEditMode}
+      setToDisplayMode={formNavigation.switchToDisplayMode}
+      setToEditMode={formNavigation.switchToEditMode}
     >
       <Flex
         w="full"
@@ -74,32 +52,12 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({
         direction="column"
         bgColor="transparent"
       >
-        {/* Navigation Component */}
-        {showTopNavigation && (
-          <TopNavigation
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            nextPage={nextPage}
-            prevPage={prevPage}
-            jumpToPage={jumpToPage}
-            submitSurvey={submitSurvey}
-            cancelSurvey={cancelSurvey}
-            canEdit={canEdit}
-            switchToDisplayMode={switchToDisplayMode}
-            switchToEditMode={switchToEditMode}
-            pageListOptions={pageListOptions}
-            isFirstPage={isFirstPage}
-            isLastPage={isLastPage}
-            isEditing={isEditing}
-            isSubmitting={isSubmitting}
-          />
-        )}
+        {showTopNavigation && <TopNavigation {...formNavigation} />}
         <Box w="100%" overflow="hidden" bg={"elementBG"}>
-          {/* Motion-animated Survey component with slide transition */}
           <MotionBox
-            key={currentPage} // Ensure re-rendering when page changes
+            key={formNavigation.pageNo}
             initial={{
-              x: direction === 1 ? 1000 : -1000, // Slide from right if next, from left if previous
+              x: direction === 1 ? 1000 : -1000,
               opacity: 0,
             }}
             animate={{
@@ -107,36 +65,17 @@ const DefaultLayout: React.FC<DefaultLayoutProps> = ({
               opacity: 1,
             }}
             exit={{
-              x: direction === 1 ? -1000 : 1000, // Exit to left if next, to right if previous
+              x: direction === 1 ? -1000 : 1000,
               opacity: 0,
             }}
-            transition={{ duration: 0.5 }} // Duration for slide and fade-in/out
+            transition={{ duration: 0.5 }}
             bgColor="elementBG"
           >
             <Box bgColor="elementBG">
-              <Survey model={model} />
+              <Survey model={surveyJSModel} />
             </Box>
           </MotionBox>
-
-          {/*    Bottom Navigation*/}
-          {showBottomNavigation && (
-            <BottomNavigation
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-              nextPage={nextPage}
-              prevPage={prevPage}
-              jumpToPage={jumpToPage}
-              submitSurvey={submitSurvey}
-              cancelSurvey={cancelSurvey}
-              switchToDisplayMode={switchToDisplayMode}
-              switchToEditMode={switchToEditMode}
-              pageListOptions={pageListOptions}
-              isFirstPage={isFirstPage}
-              isLastPage={isLastPage}
-              isEditing={isEditing}
-              isSubmitting={isSubmitting}
-            />
-          )}
+          {showBottomNavigation && <BottomNavigation {...formNavigation} />}
         </Box>
       </Flex>
     </SurveyNavigationGuard>

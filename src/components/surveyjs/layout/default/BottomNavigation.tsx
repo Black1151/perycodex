@@ -1,29 +1,23 @@
 import React from "react";
 import { Box, Button, Flex, Stack, useBreakpointValue } from "@chakra-ui/react";
-import { NavigationProps } from "@/types/surveyJs";
 import { motion } from "framer-motion";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import DoneIcon from "@mui/icons-material/Done";
+import {
+  ArrowBack as ArrowBackIcon,
+  ArrowForward as ArrowForwardIcon,
+  Done as DoneIcon,
+} from "@mui/icons-material";
+import { FormNavigationProps } from "@/types/form";
 
-// Create a motion.div to animate the filling of the progress bar
 const MotionButton = motion(Button);
 
-const BottomNavigation: React.FC<NavigationProps> = ({
-  currentPage,
-  setCurrentPage,
+const BottomNavigation: React.FC<FormNavigationProps> = ({
   nextPage,
   prevPage,
-  jumpToPage,
   submitSurvey,
-  cancelSurvey,
-  switchToDisplayMode,
-  switchToEditMode,
   pageListOptions,
   isFirstPage,
   isLastPage,
-  isEditing,
-  isSubmitting,
+  isEditMode,
 }) => {
   // Responsive value for the button text; hides text on mobile
   const buttonText = useBreakpointValue({ base: "", md: "Previous" });
@@ -83,7 +77,7 @@ const BottomNavigation: React.FC<NavigationProps> = ({
 
         {/* Right section: Submit button */}
         <Stack direction="row" spacing={4}>
-          {isEditing && (
+          {isEditMode && (
             <MotionButton
               size={isMobile ? "sm" : "md"}
               onClick={submitSurvey}

@@ -13,7 +13,7 @@ import {
   useBreakpointValue,
   useTheme,
 } from "@chakra-ui/react";
-import { perygonTheme } from "@/theme/themes/perygon/perygonTheme/perygonTheme";
+
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import { AgCharts } from "ag-charts-react";
 import { useRouter } from "next/navigation";
@@ -206,7 +206,7 @@ const HappinessRagHistogramModal: React.FC<HappinessRagBubbleModal> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="6xl">
       <ModalOverlay />
-      <ModalContent bgGradient={perygonTheme.gradients.primaryGradient} pb={3}>
+      <ModalContent bgGradient={theme.gradients.modalBGGradient} pb={3}>
         <ModalHeader color="white" fontWeight="bold">
           Happiness Punch Card
         </ModalHeader>

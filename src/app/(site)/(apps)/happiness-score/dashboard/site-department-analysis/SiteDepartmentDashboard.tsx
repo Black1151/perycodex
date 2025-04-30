@@ -97,7 +97,7 @@ const SiteDepartmentDashboard: React.FC = () => {
     {
       field: "comments",
       headerName: "Comments",
-      cellRenderer: CommentsCellRenderer,
+      //cellRenderer: CommentsCellRenderer,
     },
   ];
 

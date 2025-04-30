@@ -1,7 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { HStack, Box, useTheme } from "@chakra-ui/react";
+import {
+  HStack,
+  Box,
+  useTheme,
+  Text,
+  useMultiStyleConfig,
+  useStyleConfig,
+} from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
@@ -21,6 +28,11 @@ import { useUnread } from "../contexts/UnreadRecognitionContext";
 const MotionBox = motion(Box);
 const MotionHStack = motion(HStack);
 
+export interface ThemeDropdownOption {
+  label: string;
+  value: string;
+}
+
 export interface NavBarProps {
   userFirstName: string;
   userImageUrl: string;
@@ -35,10 +47,12 @@ const NavBar: React.FC<NavBarProps> = ({
   const router = useRouter();
   const { user } = useUser();
   const theme = useTheme();
-
   const { toolLogo, toolPath } = useWorkflow();
   const { unread, checkUnread } = useUnread();
   const [passwordResetModalOpen, setPasswordResetModalOpen] = useState(false);
+  const [themeDropdownOptions, setThemeDropdownOptions] = useState<
+    ThemeDropdownOption[]
+  >([]);
 
   // Call checkUnread on mount so unread updates on load
   useEffect(() => {
@@ -56,13 +70,31 @@ const NavBar: React.FC<NavBarProps> = ({
 
   const menuItems = useNavMenuItems(userRole, handleLogout, openResetModal);
 
+  const buildThemeDropdownOptions = async () => {
+    const response = await fetch("/api/theme/getThemesForCustomer", {
+      method: "POST",
+      body: JSON.stringify({ customerUuid: user?.customerUniqueId }),
+    });
+    const data = await response.json();
+
+    const dropdownOptions = data.resource.map((theme: any) => ({
+      label: theme.themename,
+      value: theme.id,
+    }));
+
+    setThemeDropdownOptions(dropdownOptions);
+  };
+
+  useEffect(() => {
+    buildThemeDropdownOptions();
+  }, []);
+
   return (
     <>
       <HStack
         gap={[5, 20]}
         px={[3, 3, 5]}
         width="100%"
-        fontSize={[20, 40]}
         justifyContent="space-between"
         alignItems="center"
         height="60px"
@@ -71,7 +103,7 @@ const NavBar: React.FC<NavBarProps> = ({
         left={0}
         right={0}
         zIndex={100}
-        bgGradient={theme.gradients.primaryGradient}
+        bgGradient={theme.components.navBar.baseStyle.bgGradient}
         borderBottom="white 1px solid"
       >
         <MotionBox
@@ -102,6 +134,8 @@ const NavBar: React.FC<NavBarProps> = ({
             userImageUrl={userImageUrl}
             menuItems={menuItems}
             unread={unread}
+            themeDropdownOptions={themeDropdownOptions}
+            handleLogout={handleLogout}
           />
         </MotionHStack>
       </HStack>

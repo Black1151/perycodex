@@ -247,7 +247,6 @@ const DataGridComponent = <T,>({
       w={"full"}
       borderRadius={"xl"}
       overflow={"hidden"}
-      outline={"auto"}
     >
       {showTopBar && (
         <Flex w={"full"} justify={"flex-start"} align={"center"} my={4} gap={2}>

@@ -2,6 +2,9 @@ export interface ThemeColors {
   primaryTextColor: string;
   primary: string;
   elementBG: string;
+  tooltipHeaderBGColor: string;
+  tooltipHeaderTextColor: string;
+  tooltipBodyTextColor: string;
 }
 
 interface TooltipData {
@@ -17,12 +20,11 @@ export function createTooltipRenderer<TParams>(
   return (params: TParams & { color?: string }): string => {
     const { title, body, topBarColor } = getTooltipData(params);
     const actualTopBarColor =
-      topBarColor || params.color || themeColors.primary;
+      topBarColor || params.color || themeColors.tooltipHeaderBGColor;
 
     return `
       <div style="
         position: relative; /* allows absolutely positioned arrow inside */
-        color: ${themeColors.primaryTextColor};
         border: 4px solid ${actualTopBarColor};
         overflow: visible; /* ensures the arrow can extend beyond the container */
         border-radius: 8px;
@@ -36,6 +38,7 @@ export function createTooltipRenderer<TParams>(
           display: flex;
           align-items: center;
           justify-content: center;
+          color: ${themeColors.tooltipHeaderTextColor};
         ">
           <strong>${title}</strong>
         </div>
@@ -47,6 +50,7 @@ export function createTooltipRenderer<TParams>(
           align-items: center;
           justify-content: center;
           border-radius: 0 0 8px 8px;
+          color: ${themeColors.tooltipBodyTextColor};
         ">
           ${body}
         </div>

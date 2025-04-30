@@ -9,12 +9,12 @@ import {
   Tabs,
   useDisclosure,
 } from "@chakra-ui/react";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import DraggableGridsComponent from "@/components/agGrids/DraggableGridsComponent";
 import { userGroupJson } from "@/components/surveyjs/forms/userGroup";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import { userFieldDefs } from "./userFields";
 import { teamFieldDefs } from "./teamFields";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 interface UserGroupsTabsProps {
   userGroupId: string;
@@ -114,15 +114,26 @@ const UserGroupsTabs: React.FC<UserGroupsTabsProps> = ({
         </TabList>
         <TabPanels>
           <TabPanel p={0}>
-            <SurveyComponent
-              surveyJson={userGroupJson}
+            <AdminFormWrapper
+              formJson={userGroupJson}
+              data={userGroupData}
+              layoutConfig={{
+                layoutKey: "default",
+                layoutProps: {},
+              }}
+              globalVariables={[]}
+              stylingConfig={{
+                sjsFilePath: "admin",
+                cssFilePath: "admin",
+              }}
+              jsImport={""}
+              excludeKeys={[]}
               endpoint={`/userGroup/${userGroupId}`}
-              isNew={false}
-              layout={"default"}
-              dataset={userGroupData}
-              sjsPath="admin"
-              cssPath={"admin"}
+              formSuccessMessage={null}
               reloadPageOnSuccess={true}
+              redirectUrl={"/business-processes"}
+              isNew={false}
+              isAllowedToEdit={true}
             />
           </TabPanel>
           <TabPanel p={0}>

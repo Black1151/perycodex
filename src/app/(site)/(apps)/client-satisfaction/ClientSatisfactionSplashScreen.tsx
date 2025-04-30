@@ -1,8 +1,9 @@
 "use client";
 
 import LoadingBar from "@/components/LoadingBar/LoadingBar";
-import { Box, Center, Flex, Image, keyframes, VStack } from "@chakra-ui/react";
+import { Box, Center, Image, VStack } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+import { keyframes } from "@emotion/react";
 
 const swirlIn = keyframes`
   0% {

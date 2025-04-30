@@ -7,6 +7,7 @@ import {
   FormControl,
   Heading,
   Text,
+  useTheme,
   VStack,
 } from "@chakra-ui/react";
 import { Groups } from "@mui/icons-material";
@@ -35,8 +36,15 @@ interface UserGroupDetailsBannerProps {
 export const UserGroupDetailsBanner: React.FC<UserGroupDetailsBannerProps> = ({
   userGroup,
 }) => {
+  const theme = useTheme();
   return (
-    <Flex mb={4} p={[0, 0, 4]} color={"white"} overflow={"hidden"} gap={2}>
+    <Flex
+      mb={4}
+      p={[0, 0, 4]}
+      color={theme.colors.adminBannerColor}
+      overflow={"hidden"}
+      gap={2}
+    >
       <BackButton />
       {/* User Group Icon and Name */}
       <FormControl

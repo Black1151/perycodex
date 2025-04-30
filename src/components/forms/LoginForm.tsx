@@ -2,13 +2,11 @@
 
 import { SubmitHandler, useForm } from "react-hook-form";
 import {
-  Box,
   Button,
   Flex,
   HStack,
   Image,
   Text,
-  useBreakpointValue,
   useTheme,
   VStack,
 } from "@chakra-ui/react";
@@ -18,8 +16,8 @@ import { InputField } from "./InputField";
 import { useRouter, useSearchParams } from "next/navigation";
 import { emailValidation } from "./validationSchema/validationSchema";
 import { useFetchClient } from "@/hooks/useFetchClient";
-import { useEffect, useState } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useEffect } from "react";
+import { signIn, signOut } from "next-auth/react";
 import { getSession } from "next-auth/react";
 import Link from "next/link";
 import { NextResponse } from "next/server";
@@ -48,7 +46,6 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const secureLink = searchParams.get("l");
   type ButtonId = "email" | "microsoft" | "google" | "apple";
-  const { data: session, status } = useSession();
   const linkAppleAccountSub = searchParams.get("link-apple-account-sub") ?? "";
   const appleAccountLinked = searchParams.get("appleAccountLinked");
 
@@ -115,6 +112,7 @@ export function LoginForm() {
         }
       );
       if (result) {
+        // await getUserTheme();
         router.push(result.redirectUrl);
       }
     } else {
@@ -534,7 +532,7 @@ export function LoginForm() {
           align={"center"}
         >
           <Text p="0" pt="10px" fontSize={["10px", "12px"]} color="gray">
-            Copyright &copy; 2024 Sedulo Limited (v1.1.5)
+            Sedulo Accountants Limited © 2024 (V1.2.0)
           </Text>
           <Link href={"/privacy-policy"}>
             <Text p="0" pt="10px" fontSize={["10px", "12px"]} color="gray">

@@ -1,7 +1,8 @@
 import AdminHeader from "@/components/AdminHeader";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import { selectItemsJson } from "@/components/surveyjs/forms/selectItems";
 import { checkUserRole } from "@/lib/dal";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function OptionListsCreatePage() {
   await checkUserRole("/select-items/create");
@@ -9,14 +10,26 @@ export default async function OptionListsCreatePage() {
   return (
     <>
       <AdminHeader headingText="Create Select Item" />
-      <SurveyComponent
-        surveyJson={selectItemsJson}
+      <AdminFormWrapper
+        formJson={selectItemsJson}
+        data={null}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
+        excludeKeys={[]}
         endpoint={"/selectItem"}
-        isNew={true}
-        layout={"default"}
+        formSuccessMessage={null}
+        reloadPageOnSuccess={false}
         redirectUrl={"/select-items"}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        isNew={true}
+        isAllowedToEdit={true}
       />
     </>
   );

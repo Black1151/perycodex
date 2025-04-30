@@ -1,5 +1,5 @@
 export const colorPalette = {
-  perygonDarkside: "rgba(164, 16, 16, 0.85)",
+  perygonDarkside: "rgba(188, 17, 17, 0.85)",
   perygonBlack: "#000000",
   perygonBlueTransparent: "rgba(13, 0, 61, 0.85)",
   seduloRed: "#B4213D",

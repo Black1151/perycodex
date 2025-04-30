@@ -83,6 +83,7 @@ export const WorkflowProvider: React.FC<{ children: ReactNode }> = ({
       setWorkflowId(null);
       setToolLogo(null);
       setToolPath(null);
+      setCurrentStage(null);
     }
   }, [pathname]);
 

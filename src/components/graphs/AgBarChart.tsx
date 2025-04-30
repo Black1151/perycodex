@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { Box, Flex, useTheme } from "@chakra-ui/react";
+import { Flex, useTheme } from "@chakra-ui/react";
 import { AgCharts } from "ag-charts-react";
 import useColor from "@/hooks/useColor";
 
@@ -44,7 +44,7 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
   const validData = useMemo(
     () =>
       Array.isArray(data) ? [...data].sort((a, b) => a.value - b.value) : [],
-    [data]
+    [data],
   );
 
   const chartOptions: AgCartesianChartOptions = useMemo(
@@ -133,7 +133,7 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
         enabled: !isMobile,
       },
     }),
-    [validData, getColor, onBarClick, theme.colors.primary, isMobile]
+    [validData, getColor, onBarClick, theme.colors.primary, isMobile],
   );
 
   if (loading) {

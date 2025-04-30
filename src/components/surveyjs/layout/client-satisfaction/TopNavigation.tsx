@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   Box,
   Flex,
@@ -11,27 +11,12 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { Check, ChevronLeft, ChevronRight } from "@mui/icons-material";
-import { PageModel } from "survey-core";
 import { useWorkflow } from "@/providers/WorkflowProvider";
+import { FormNavigationProps } from "@/types/form";
 
-interface PageInfo {
-  page: PageModel;
-  title: string;
-}
-
-interface TopNavigationProps {
-  pages: PageInfo[];
-  currentPage: number;
-  isFirstPage: boolean;
-  isLastPage: boolean;
-  jumpToPage: (page: PageModel) => void;
-  prevPage: () => void;
-  nextPage: () => void;
-}
-
-const TopNavigation: React.FC<TopNavigationProps> = ({
-  pages,
-  currentPage,
+const TopNavigation: React.FC<FormNavigationProps> = ({
+  pageListOptions,
+  pageNo,
   isFirstPage,
   isLastPage,
   jumpToPage,
@@ -39,22 +24,26 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
   nextPage,
 }) => {
   const theme = useTheme();
-  const [maxPage, setMaxPage] = useState(currentPage);
+  const [maxPage, setMaxPage] = useState(pageNo);
   const { currentStage } = useWorkflow();
 
-  const pagesAllowed = 5;
+  const pagesAllowed = useBreakpointValue({ base: 3, md: 5 }) ?? 5;
+  const [totalPages, setTotalPages] = useState(pageListOptions.length);
 
-  const totalPages = pages.length;
+  useEffect(() => {
+    setTotalPages(pageListOptions.length);
+  }, [pageListOptions]);
 
   // Used if you uncomment the arrows below in return
-  const handleFirst = () => jumpToPage(pages[0].page);
-  const handleLast = () => jumpToPage(pages[totalPages - 1].page);
-
+  const handleFirst = () => jumpToPage(pageListOptions[0].page);
+  const handleLast = () => jumpToPage(pageListOptions[totalPages - 1].page);
   const itemSize = useBreakpointValue({ base: 70, md: 100 }) ?? 100;
   const gapSize = useBreakpointValue({ base: 0, md: 8 }) ?? 8;
-  const totalItemSize = itemSize + gapSize;
-  const totalBarSize = pagesAllowed * totalItemSize;
-
+  const totalItemSize = useMemo(() => itemSize + gapSize, [itemSize, gapSize]);
+  const totalBarSize = useMemo(
+    () => pagesAllowed * totalItemSize,
+    [pagesAllowed, totalItemSize]
+  );
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [containerWidth, setContainerWidth] = useState(0);
   const [offSet, setOffset] = useState<number>(0);
@@ -71,33 +60,33 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [pageListOptions]);
 
   useEffect(() => {
     if (!containerWidth) return;
 
-    const centerOfCurrentItem = currentPage * totalItemSize + itemSize / 2;
+    const centerOfCurrentItem = pageNo * totalItemSize + itemSize / 2;
     let newOffset = centerOfCurrentItem - containerWidth / 2;
 
-    const maxOffset = pages.length * totalItemSize - containerWidth;
+    const maxOffset = pageListOptions.length * totalItemSize - containerWidth;
     if (newOffset < 0) newOffset = 0;
     if (newOffset > maxOffset) newOffset = maxOffset;
 
     setOffset(newOffset);
   }, [
-    currentPage,
+    pageNo,
     containerWidth,
     itemSize,
     gapSize,
     totalItemSize,
-    pages.length,
+    pageListOptions.length,
   ]);
 
   useEffect(() => {
-    if (currentPage > maxPage) {
-      setMaxPage(currentPage);
+    if (pageNo > maxPage) {
+      setMaxPage(pageNo);
     }
-  }, [currentPage]);
+  }, [pageNo]);
 
   return (
     <Box
@@ -131,6 +120,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
           color={!isFirstPage ? "primary" : "transparent"}
           isDisabled={isFirstPage}
           size={["xs", "sm"]}
+          border="none"
         />
 
         <Box maxW={`${totalBarSize}px`} overflow={"hidden"} ref={containerRef}>
@@ -143,10 +133,10 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
             transition={"transform 0.3s ease-out"}
             py={2}
           >
-            {pages.map(({ page, title }, index) => {
+            {pageListOptions.map(({ page, title }, index) => {
               const isCompleted = index < maxPage;
-              const isCurrent = index === currentPage;
-              const isNotStarted = index > currentPage;
+              const isCurrent = index === pageNo;
+              const isNotStarted = index > pageNo;
 
               // Circle background color:
               let circleBg = "gray.200";
@@ -172,7 +162,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
                 circleContent = <Check fontSize="small" />;
               }
 
-              const distanceFromCurrent = Math.abs(index - currentPage);
+              const distanceFromCurrent = Math.abs(index - pageNo);
               let scaleValue = 1;
               if (distanceFromCurrent === 1) {
                 scaleValue = 0.9;
@@ -245,6 +235,7 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
           onClick={nextPage}
           isDisabled={isLastPage}
           size={["xs", "sm"]}
+          border="none"
         />
         {/*Not Required Go To LAST */}
         {/*<IconButton*/}
@@ -265,9 +256,9 @@ const TopNavigation: React.FC<TopNavigationProps> = ({
           align="center"
           gap="4px" // space between small circles
         >
-          {pages.map((_, i) => {
+          {pageListOptions.map((_, i) => {
             const isCompleted = i < maxPage;
-            const isCurrent = i === currentPage;
+            const isCurrent = i === pageNo;
             const isNotStarted = i > maxPage;
 
             let miniCircleBg = "gray.400";

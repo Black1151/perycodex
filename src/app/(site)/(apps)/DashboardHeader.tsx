@@ -1,10 +1,19 @@
 "use client";
 
-import { Box, Flex, Heading } from "@chakra-ui/react";
-import AddButton from "@/components/Buttons/AddButton";
+import React, { useEffect, useState, useCallback } from "react";
+import {
+  Box,
+  Flex,
+  Heading,
+  useTheme,
+  useBreakpointValue,
+} from "@chakra-ui/react";
+import AddButtonMobile from "@/components/Buttons/AddButtonMobile";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import BackButton from "@/components/BackButton";
-import { useEffect, useState } from "react";
+import { useFetchClient } from "@/hooks/useFetchClient";
+import { useRouter } from "next/navigation";
+import AddButtonDesktop from "@/components/Buttons/AddButtonDesktop";
 
 interface DashboardHeaderProps {
   headingText: string;
@@ -18,23 +27,56 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   toolUrl,
 }) => {
   const { toolId, workflowId } = useWorkflow();
-  const [ableToStart, setAbleToStart] = useState<boolean>(
-    !!toolId && !!workflowId && canStartWorkflow,
+  const [ableToStart, setAbleToStart] = useState(
+    !!toolId && !!workflowId && canStartWorkflow
   );
+
+  // Chakra hook to detect mobile vs desktop
+  const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
+
+  // Bring fetch + routing logic up here
+  const { fetchClient, loading } = useFetchClient();
+  const router = useRouter();
+
+  const handleStartClick = useCallback(async () => {
+    if (!toolId || !workflowId) return;
+    try {
+      const response = await fetchClient<{ new_wfinstid: string }>(
+        "/api/workflows/startWorkflow",
+        {
+          method: "POST",
+          body: {
+            p_toolid: toolId,
+            p_wfid: workflowId,
+          },
+          redirectOnError: false,
+        }
+      );
+      if (response?.new_wfinstid) {
+        router.push(`${toolUrl}/workflow/${response.new_wfinstid}`);
+      }
+    } catch (err) {
+      console.error("Error starting workflow:", err);
+    }
+  }, [fetchClient, router, toolId, workflowId, toolUrl]);
 
   useEffect(() => {
     setAbleToStart(!!toolId && !!workflowId && canStartWorkflow);
   }, [toolId, workflowId, canStartWorkflow]);
 
+  const theme = useTheme();
+
   return (
     <Flex align="center" justify="flex-start" w="full" gap={4} lineHeight={0}>
-      <BackButton prevRoute={"/"} />
+      <BackButton
+        color={theme.fringeCases.dashboardHeader.textcolor}
+        prevRoute="/"
+      />
 
-      {/* Heading */}
       <Heading
         as="h1"
         fontWeight={100}
-        color="white"
+        color={theme.fringeCases.dashboardHeader.textcolor}
         fontSize={{ base: "2xl", md: "4xl" }}
         fontFamily="Bonfire"
         textAlign="center"
@@ -43,15 +85,16 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         {headingText}
       </Heading>
 
-      {/* AddButton */}
-      {ableToStart && toolId && workflowId && (
+      {ableToStart && (
         <Box ml="auto">
-          <AddButton
-            label="Start"
-            toolId={toolId}
-            workflowId={workflowId}
-            redirectUrl={toolUrl}
-          />
+          {isMobile ? (
+            <AddButtonMobile onAddButtonClick={handleStartClick} />
+          ) : (
+            <AddButtonDesktop
+              label="Start"
+              onAddButtonClick={handleStartClick}
+            />
+          )}
         </Box>
       )}
     </Flex>

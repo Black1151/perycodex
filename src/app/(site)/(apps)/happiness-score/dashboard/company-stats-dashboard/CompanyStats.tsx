@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import {
-  Avatar,
   Box,
   Flex,
   IconButton,
@@ -127,7 +126,7 @@ const CompanyStats: React.FC = () => {
   const getData = async () => {
     if (!toolId || !workflowId || !user?.customerId) {
       console.warn(
-        "Required data (toolId, workflowId, or customerId) is missing",
+        "Required data (toolId, workflowId, or customerId) is missing"
       );
       return; // Prevent fetching if values are not ready
     }
@@ -144,7 +143,7 @@ const CompanyStats: React.FC = () => {
             workflowId: workflowId,
             customerId: user.customerId,
           },
-        },
+        }
       );
 
       if (response) {

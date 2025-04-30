@@ -1,7 +1,7 @@
 // perygonLightTheme.ts
 import { extendTheme } from "@chakra-ui/react";
 
-import { baseTheme } from "../../baseTheme";
+import { baseTheme } from "../../base-theme/baseTheme";
 import { colorPalette } from "./colorPalette";
 
 export const NeonSedulo = extendTheme(baseTheme, {
@@ -15,7 +15,7 @@ export const NeonSedulo = extendTheme(baseTheme, {
     shadowColor: "red",
     primaryTextColor: "rgb(165, 165, 165)",
     secondaryTextColor: "rgb(145, 145, 145)",
-    themeTextColor: "rgba(201, 9, 9, 0.85)",
+    themeTextColor: "rgba(255, 0, 0, 0.85)",
   },
 
   gradients: {

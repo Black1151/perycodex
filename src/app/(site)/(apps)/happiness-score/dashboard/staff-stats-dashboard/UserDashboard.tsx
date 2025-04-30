@@ -194,7 +194,7 @@ const UserDashboard: React.FC = () => {
             ...postBody,
           },
           redirectOnError: false,
-        }
+        },
       );
 
       if (response && response.resource) {
@@ -211,7 +211,7 @@ const UserDashboard: React.FC = () => {
         setUserDistribution(parseData<UserDistributionItem>(userDistribution));
         setComparativeData(parseData<ComparativeItem>(comparativeData));
         setMonthlyComparativeData(
-          parseData<MonthlyComparativeItem>(monthlyComparativeData || [])
+          parseData<MonthlyComparativeItem>(monthlyComparativeData || []),
         );
       } else {
         // Handle empty or error response if needed
@@ -232,7 +232,7 @@ const UserDashboard: React.FC = () => {
     }
 
     const monthlyOption = dateRangeOptions[dateRangeOption].find(
-      (opt) => opt.value === defaultDateFilterOption
+      (opt) => opt.value === defaultDateFilterOption,
     );
 
     if (monthlyOption) {

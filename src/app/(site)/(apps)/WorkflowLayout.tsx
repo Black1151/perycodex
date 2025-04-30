@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import { Flex, Icon, Spinner, Text } from "@chakra-ui/react";
 import { WorkflowStage } from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
 import { useFetchClient } from "@/hooks/useFetchClient";
@@ -11,57 +10,16 @@ import { UserContextProps, useUser } from "@/providers/UserProvider";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import { useRouter } from "next/navigation";
 import WorkflowSidebar from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
-import { SubmissionResponse, SurveyLayoutType } from "@/types/surveyJs";
+import { SubmissionResponse, LayoutKeys } from "@/types/form";
 import { signOut } from "next-auth/react";
 import LockIcon from "@mui/icons-material/Lock";
-
-interface WorkflowLayoutProps {
-  stages: WorkflowStage[];
-  layout: SurveyLayoutType;
-  workflowInstanceId: string | null;
-}
-
-interface Form {
-  id: number;
-  name: string;
-  description: string;
-  jsonFile: string | Record<string, any>;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-  createdBy: number;
-  updatedBy: number;
-}
-
-interface FormDataResponse {
-  id: number;
-  businessProcessId: number;
-  workflowInstanceId: number;
-  customerId: number;
-  currentStartByDefaultState: boolean;
-  startDate?: string;
-  completeDate?: string;
-  stepName?: string;
-  jsonResponse?: Record<string, any>;
-  statusId?: number;
-  saveAllowed?: boolean;
-  uniqueId: string;
-  startedBy?: number;
-  createdAt: string;
-  updatedAt: string;
-  createdBy: number;
-  updatedBy: number;
-  statusName: string;
-}
-
-interface Variables {
-  workflowInstanceId: number;
-  businessProcessInstanceId: number;
-  fieldName: string;
-  fieldValue: string;
-  dataType: string;
-  createdAt: string;
-}
+import WorkflowFormWrapper from "@/components/surveyjs/WorkflowFormWrapper";
+import {
+  Form,
+  FormDataResponse,
+  Variables,
+  WorkflowLayoutProps,
+} from "@/types/workflowEngine";
 
 const REDIRECT_PATHS: Record<string, string> = {
   happiness: "/happiness-score",
@@ -80,12 +38,14 @@ const isEUAndComplete = (user: UserContextProps, stages: WorkflowStage[]) => {
   );
 };
 
-export default function WorkflowLayout({
+const WorkflowLayout = ({
   stages,
   layout,
   workflowInstanceId,
-}: WorkflowLayoutProps) {
+}: WorkflowLayoutProps) => {
   const { user } = useUser();
+  const { fetchClient } = useFetchClient();
+  const router = useRouter();
   const {
     toolId,
     setToolId,
@@ -97,28 +57,21 @@ export default function WorkflowLayout({
     setCurrentStage,
   } = useWorkflow();
 
-  const redirectPath = REDIRECT_PATHS[layout] || REDIRECT_PATHS.default;
-  const redirectUrl = `${redirectPath}?wfId=${workflowId}&toolId=${toolId}`;
-
-  const router = useRouter();
-  const { fetchClient } = useFetchClient();
-
+  const [formData, setFormData] = useState<any | null>(null);
+  const [currentForm, setCurrentForm] = useState<Form | null>(null);
+  const [workflowVariables, setWorkflowVariables] = useState<
+    Array<{ [key: string]: { [nestedKey: string]: any } }> | undefined
+  >(undefined);
+  const [isNew, setIsNew] = useState<boolean>(false);
+  const [isAuthorised, setIsAuthorised] = useState<boolean>(false);
+  const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
   const [lastSubmissionResponse, setLastSubmissionResponse] =
     useState<SubmissionResponse | null>(null);
-  const [isAuthorised, setIsAuthorised] = useState<boolean>(false);
-  const [currentForm, setCurrentForm] = useState<Form | null>(null);
-  const [formData, setFormData] = useState<any | null>(null);
-  const [isNew, setIsNew] = useState<boolean>(false);
   const [isReady, setIsReady] = useState<boolean>(false);
-  const [isCompleteModalOpen, setIsCompleteModalOpen] = useState(false);
   const [isNotAuthorisedModalOpen, setIsNotAuthorisedModalOpen] =
     useState(false);
-  const [workflowVariables, setWorkflowVariables] = useState<
-    | Array<{
-        [key: string]: { [nestedKey: string]: any };
-      }>
-    | undefined
-  >(undefined);
+
+  const redirectUrl = `${REDIRECT_PATHS[layout] || REDIRECT_PATHS.default}?wfId=${workflowId}&toolId=${toolId}`;
 
   const handleLogout = async () => {
     await fetch("/api/auth/sign-out", { method: "POST" });
@@ -126,15 +79,16 @@ export default function WorkflowLayout({
     router.push("/login");
   };
 
-  const handleStageChange = useCallback(async (newStage: WorkflowStage) => {
+  const handleStageChange = (newStage: WorkflowStage) => {
     setCurrentStage(newStage);
-  }, []);
+  };
+
+  useEffect(() => {
+    fetchStageData();
+  }, [currentStage]);
 
   const fetchStageData = async () => {
-    if (!user) {
-      return;
-    }
-    if (!currentStage) return;
+    if (!user || !currentStage) return;
 
     setIsReady(false);
     setCurrentBusinessProcessInstanceId(String(currentStage.bpInstId));
@@ -214,7 +168,7 @@ export default function WorkflowLayout({
           } catch (error) {
             console.error(
               `Error parsing value for ${variable.fieldName}:`,
-              error,
+              error
             );
             parsedValue = variable.fieldValue;
           }
@@ -296,7 +250,7 @@ export default function WorkflowLayout({
             }
 
             const hasAccess = currentStage.userAccessGroupNames.some(
-              (groupName) => user?.groupNames?.includes(groupName) ?? false,
+              (groupName) => user?.groupNames?.includes(groupName) ?? false
             );
 
             if (!hasAccess) {
@@ -336,37 +290,31 @@ export default function WorkflowLayout({
   };
 
   useEffect(() => {
-    setCurrentWorkflowInstanceId(workflowInstanceId);
+    if (!user || !stages) return;
 
-    return () => {
-      setCurrentWorkflowInstanceId(null);
-      setCurrentBusinessProcessInstanceId(null);
-    };
-  }, [workflowInstanceId]);
-
-  useEffect(() => {
-    if (!user) {
+    if (isEUAndComplete(user, stages)) {
+      setCurrentStage(null);
       return;
     }
 
-    if (isEUAndComplete(user, stages)) return;
-
     if (stages.length === 1) {
       setCurrentStage(stages[0]);
-    } else if (stages.length > 1) {
+    }
+
+    if (stages.length > 1) {
       const orderedStages = stages.sort((a, b) => a.bpOrder - b.bpOrder);
       setCurrentStage(
         orderedStages.find((stage) => stage.stageStatus === "Next") ||
           orderedStages.find((stage) => stage.stageStatus === "In Progress") ||
-          orderedStages[0],
+          orderedStages[0]
       );
     }
   }, [stages, user]);
 
   useEffect(() => {
-    const code = lastSubmissionResponse?.data?.code;
-
     if (!user) return;
+
+    const code = lastSubmissionResponse?.data?.code;
 
     if (code > 1 && user.role === "EU") {
       fetchStageData();
@@ -384,8 +332,12 @@ export default function WorkflowLayout({
     }
 
     // BP Instance is now complete
-    if (code === 3) {
-      // do nothing really... already affected by it going to the next stage
+    if (code === 3 || (stages.length === 1 && code === 4)) {
+      if (stages.length > 1) {
+        router.refresh();
+      } else {
+        router.push(redirectUrl);
+      }
     }
 
     // BP is already complete and can't be completed again
@@ -397,19 +349,16 @@ export default function WorkflowLayout({
     if (code === -1 || code === 1) {
       // maybe: show an error or warning
     }
-  }, [lastSubmissionResponse, stages, user]);
+  }, [lastSubmissionResponse]);
 
   useEffect(() => {
-    fetchStageData();
-  }, [currentStage]);
+    setCurrentWorkflowInstanceId(workflowInstanceId);
 
-  const onSuccess = () => {
-    if (stages.length > 1) {
-      router.refresh();
-    } else {
-      router.push(redirectUrl);
-    }
-  };
+    return () => {
+      setCurrentWorkflowInstanceId(null);
+      setCurrentBusinessProcessInstanceId(null);
+    };
+  }, [workflowInstanceId]);
 
   return (
     <>
@@ -517,30 +466,42 @@ export default function WorkflowLayout({
         isAuthorised &&
         currentStage &&
         currentForm && (
-          <SurveyComponent
-            surveyJson={
-              typeof currentForm.jsonFile === "string"
-                ? JSON.parse(currentForm.jsonFile)
-                : currentForm.jsonFile
-            }
-            endpoint={`/api/workflows/saveWorkflow/${currentStage.bpInstId}`}
-            isNew={isNew}
-            dataset={formData}
-            formSubmission="workflow"
-            onSurveySuccess={onSuccess}
-            layout={currentStage.layout ?? layout}
-            jsPath={currentStage.jsAdditionalFileUrl}
-            cssPath={currentStage.cssThemeFileUrl}
-            sjsPath={currentStage.sjsThemeFileUrl}
-            layoutOptions={{
-              showTitle: true,
-              saveAllowed: currentStage.saveAllowed,
-              allowAlwaysEdit: currentStage.allowAlwaysEdit,
-            }}
-            includeVariables={workflowVariables}
-            onSubmissionResponse={setLastSubmissionResponse}
-          />
+          <>
+            <WorkflowFormWrapper
+              formJson={
+                typeof currentForm.jsonFile === "string"
+                  ? JSON.parse(currentForm.jsonFile)
+                  : currentForm.jsonFile
+              }
+              layoutConfig={{
+                layoutKey: currentStage.layout ?? layout,
+                layoutProps: {
+                  showTitle: true,
+                  saveAllowed: currentStage.saveAllowed,
+                  allowAlwaysEdit: currentStage.allowAlwaysEdit,
+                },
+              }}
+              data={formData}
+              excludeKeys={[]}
+              formSuccessMessage={""}
+              redirectUrl={null}
+              isAllowedToEdit={
+                user?.role === "CA" || currentStage.bpInstStatus !== 3
+              }
+              globalVariables={workflowVariables}
+              endpoint={`/api/workflows/saveWorkflow/${currentStage.bpInstId}`}
+              jsImport={currentStage.jsAdditionalFileUrl}
+              stylingConfig={{
+                cssFilePath: currentStage.cssThemeFileUrl,
+                sjsFilePath: currentStage.sjsThemeFileUrl,
+              }}
+              onSubmissionResponse={setLastSubmissionResponse}
+              isNew={isNew}
+            />
+          </>
         )}
     </>
   );
-}
+};
+
+export default WorkflowLayout;
