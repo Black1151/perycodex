@@ -36,8 +36,7 @@ export const themeJson = {
 
     "--sjs-primary-forecolor-light": "rgba(255, 255, 255, 0.25)", //white
 
-    "--sjs-font-editorfont-placeholdercolor":
-      "var(--sjs-primary-forecolor, var(--primary-foreground, #fff))",
+    "--sjs-font-editorfont-placeholdercolor": "var(--sjs-general-forecolor",
 
     "--sjs-shadow-small":
       "0px 0px 0px 0px rgba(228, 228, 228, 1), 0px 0px 0px 1px rgba(228, 228, 228, 1)",
