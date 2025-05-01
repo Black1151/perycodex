@@ -1,3 +1,7 @@
+/* Workflow SurveyJS Theme File for Tools using our Theme Variables */
+/* Rocco Volpe 01/05/2025 */
+/* V1.0 */
+
 export const themeJson = {
   themeName: "client-satisfaction-light",
   colorPalette: "light",
@@ -9,11 +13,36 @@ export const themeJson = {
   cssVariables: {
     "--sjs-corner-radius": "8px",
     "--sjs-base-unit": "7px",
+    "--sjs-font-family": "Metropolis",
+    "--sjs-font-size": "12px",
+
+    "--sjs-general-backcolor-dim": "var(--chakra-colors-elementBG)", //elementBG
+
+    "--sjs-general-dim-forecolor": "var(--chakra-colors-themeTextColor)", //themeTextColor
+
+    "--sjs-font-questiondescription-color":
+      "var(--chakra-colors-primaryTextColor)", //primaryTextColor
+
+    "--sjs-general-dim-forecolor-light":
+      "var(--chakra-colors-primaryTextColor)", //primaryTextColor
+
+    "--sjs-general-forecolor": "var(--chakra-colors-primary)", //primary
+
+    "--sjs-general-forecolor-light": "rgba(0, 0, 0, 0.45)", //black
+
+    "--sjs-primary-backcolor": "var(--chakra-colors-primary)", //primary
+
+    "--sjs-primary-forecolor": "rgba(255, 255, 255, 255)", // white
+
+    "--sjs-primary-forecolor-light": "rgba(255, 255, 255, 0.25)", //white
+
+    "--sjs-font-editorfont-placeholdercolor":
+      "var(--sjs-primary-forecolor, var(--primary-foreground, #fff))",
 
     "--sjs-shadow-small":
       "0px 0px 0px 0px rgba(228, 228, 228, 1), 0px 0px 0px 1px rgba(228, 228, 228, 1)",
     "--sjs-shadow-inner":
-      "0px 0px 0px 0px rgba(228, 228, 228, 1), 0px 0px 0px 1px rgba(228, 228, 228, 1)",
+      "0px 0px 0px 0px rgba(228, 228, 228, 1), 0px 0px 0px 1px rgba(288, 228, 228, 1)",
 
     "--sjs-border-default": "rgba(0, 0, 0, 0.08)",
     "--sjs-border-light": "rgba(0, 0, 0, 0.08)",
@@ -21,10 +50,7 @@ export const themeJson = {
     "--sjs-general-backcolor-dark": "rgba(242, 242, 242, 1)",
     "--sjs-general-backcolor-dim-light": "rgba(255, 255, 255, 1)",
     "--sjs-general-backcolor-dim-dark": "rgba(242, 242, 242, 1)",
-    "--sjs-general-forecolor": "rgba(0, 0, 0, 0.91)",
-    "--sjs-general-forecolor-light": "rgba(0, 0, 0, 0.45)",
-    "--sjs-general-dim-forecolor": "rgba(0, 0, 0, 0.91)",
-    "--sjs-general-dim-forecolor-light": "rgba(0, 0, 0, 0.45)",
+
     "--sjs-secondary-backcolor": "rgba(255, 152, 20, 1)",
     "--sjs-secondary-backcolor-light": "rgba(255, 152, 20, 0.1)",
     "--sjs-secondary-backcolor-semi-light": "rgba(255, 152, 20, 0.25)",
@@ -48,9 +74,6 @@ export const themeJson = {
     "--sjs-special-yellow": "rgba(255, 152, 20, 1)",
     "--sjs-special-yellow-light": "rgba(255, 152, 20, 0.1)",
     "--sjs-special-yellow-forecolor": "rgba(255, 255, 255, 1)",
-
-    "--sjs-font-family": "Metropolis",
-    "--sjs-font-size": "12px",
 
     "--sjs-article-font-xx-large-textDecoration": "none",
     "--sjs-article-font-xx-large-fontWeight": "700",
@@ -93,13 +116,9 @@ export const themeJson = {
     "--sjs-article-font-default-paragraphIndent": "0px",
     "--sjs-article-font-default-textCase": "none",
 
-    "--sjs-general-backcolor-dim": "rgba(227, 13, 93, 0)",
-
-    "--sjs-primary-backcolor": "rgba(217, 74, 100, 1)",
     "--sjs-primary-backcolor-dark": "rgba(189, 61, 84, 1)",
     "--sjs-primary-backcolor-light": "rgba(217, 74, 100, 0.1)",
-    "--sjs-primary-forecolor": "rgba(15, 15, 15, 1)",
-    "--sjs-primary-forecolor-light": "rgba(255, 255, 255, 0.25)",
+
     "--sjs-special-red": "rgba(229, 10, 62, 1)",
     "--sjs-special-red-light": "rgba(229, 10, 62, 0.1)",
   },

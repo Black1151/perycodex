@@ -41,7 +41,6 @@
 }
 
 .sd-rating__item.sd-rating__item--selected.sd-rating__item--fixed-size
-  &
   .sd-rating__item-smiley--readonly.sd-rating__item-smiley--selected {
   border-color: black !important;
   color: black !important;
