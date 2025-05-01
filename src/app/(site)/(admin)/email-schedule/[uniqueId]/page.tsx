@@ -1,10 +1,11 @@
 import apiClient from "@/lib/apiClient";
 import { redirect } from "next/navigation";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import { EmailScheduleDetailsBanner } from "@/components/AdminDetailsBanners/EmailScheduleDetailsBanner";
 import { emailScheduleJson } from "@/components/surveyjs/forms/emailSchedule";
 import { checkUserRole, getUser } from "@/lib/dal";
 import { caEmailScheduleJson } from "@/components/surveyjs/forms/caEmailSchedule";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function EmailTemplatesDetailPage({
   params,
@@ -32,21 +33,30 @@ export default async function EmailTemplatesDetailPage({
   return (
     <>
       <EmailScheduleDetailsBanner emailSchedule={emailScheduleData} />
-      <SurveyComponent
-        surveyJson={
-          user.role === "PA" ? emailScheduleJson : caEmailScheduleJson
-        }
+      <AdminFormWrapper
+        formJson={user.role === "PA" ? emailScheduleJson : caEmailScheduleJson}
+        data={emailScheduleData}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
+        excludeKeys={["imageUrl"]}
         endpoint={
           user.role === "PA"
             ? `/emailSchedule/${params.uniqueId}`
             : `/emailScheduleCustomerOpt/${params.uniqueId}`
         }
-        isNew={false}
-        dataset={emailScheduleData}
-        layout={"default"}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        formSuccessMessage={null}
         reloadPageOnSuccess={true}
+        redirectUrl={null}
+        isNew={false}
+        isAllowedToEdit={true}
       />
     </>
   );

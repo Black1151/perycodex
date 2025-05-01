@@ -51,7 +51,7 @@ const BusinessProcessRenderer: React.FC<BusinessProcessRendererProps> = ({
         bg={"gray.100"}
         justifyContent="center"
       >
-        <Schema sx={{ color: "var(--chakra-colors-perygonPink)" }} />
+        <Schema sx={{ color: "var(--chakra-colors-primary)" }} />
       </Box>
       <Text
         fontSize={"13px"}

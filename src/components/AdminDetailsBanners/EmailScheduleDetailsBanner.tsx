@@ -7,6 +7,7 @@ import {
   FormControl,
   Heading,
   Text,
+  useTheme,
   VStack,
 } from "@chakra-ui/react";
 import moment from "moment";
@@ -39,8 +40,15 @@ interface EmailScheduleDetailsBannerProps {
 export const EmailScheduleDetailsBanner: React.FC<
   EmailScheduleDetailsBannerProps
 > = ({ emailSchedule }) => {
+  const theme = useTheme();
   return (
-      <Flex mb={4} p={[0, 0, 4]} color={"white"} overflow={"hidden"} gap={2}>
+    <Flex
+      mb={4}
+      p={[0, 0, 4]}
+      color={theme.colors.adminBannerColor}
+      overflow={"hidden"}
+      gap={2}
+    >
       <BackButton />
       {/* Form Status */}
       <FormControl
@@ -61,7 +69,7 @@ export const EmailScheduleDetailsBanner: React.FC<
         >
           <ScheduleSend
             fontSize="large"
-            sx={{ color: "var(--chakra-colors-perygonPink)" }}
+            sx={{ color: "var(--chakra-colors-primary)" }}
           />
         </Box>
       </FormControl>

@@ -1,17 +1,18 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { Box, Flex, useTheme } from "@chakra-ui/react";
+import { Flex, useTheme } from "@chakra-ui/react";
 import { AgCharts } from "ag-charts-react";
 import useColor from "@/hooks/useColor";
 
 import {
   AgBarSeriesItemStylerParams,
   AgCartesianChartOptions,
-  AgCartesianSeriesTooltipRendererParams,
 } from "ag-charts-enterprise";
 import { NoDataOverlayPink } from "../agGrids/DataGrid/DataGridComponentLight";
 import LoadingOverlayPink from "../agGrids/LoadingOverlayPink";
+import PerygonCard from "../layout/PerygonCard";
+import { SubmissionsTooltipRenderer } from "../agCharts/tooltips/SubmissionsTooltipRenderer";
 
 interface DataPoint {
   title: string;
@@ -43,23 +44,15 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
   const validData = useMemo(
     () =>
       Array.isArray(data) ? [...data].sort((a, b) => a.value - b.value) : [],
-    [data]
+    [data],
   );
-
-  const tooltipRenderer = (params: AgCartesianSeriesTooltipRendererParams) => {
-    const datum = params.datum as DataPoint;
-    return `<div class="ag-chart-tooltip-title" style="background-color:${params.color}; border: 1px solid white; border-radius: 8px 8px 0 0;">
-        ${datum.title}
-      </div>
-      <div class="ag-chart-tooltip-content" style=" border: 1px solid white; border-radius: 0 0 8px 8px;">
-        Score: ${datum.value.toFixed(1)}<br/>
-        Count: ${datum.count}
-      </div>`;
-  };
 
   const chartOptions: AgCartesianChartOptions = useMemo(
     () => ({
       data: validData,
+      background: {
+        fill: theme.colors.elementBG,
+      },
       padding: {
         top: 40,
         left: 10,
@@ -91,9 +84,9 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
               fillOpacity: 1,
             },
           },
-          label: undefined, // Removed logic for showing score on small screens
+          label: undefined,
           tooltip: {
-            renderer: tooltipRenderer,
+            renderer: SubmissionsTooltipRenderer(theme.colors),
           },
           listeners: {
             nodeClick: (event: any) => {
@@ -111,13 +104,17 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
           label: {
             fontSize: 12,
             rotation: -65,
-            color: theme.colors.perygonPink,
+            color: theme.colors.primaryTextColor,
             formatter: ({ value }: { value: string }) => value,
           },
         },
         {
           type: "number",
           position: "left",
+          label: {
+            fontSize: 12,
+            color: theme.colors.primaryTextColor,
+          },
           interval: { step: 2 },
           min: 0,
           max: 10,
@@ -136,12 +133,17 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
         enabled: !isMobile,
       },
     }),
-    [validData, getColor, onBarClick, theme.colors.perygonPink, isMobile]
+    [validData, getColor, onBarClick, theme.colors.primary, isMobile],
   );
 
   if (loading) {
     return (
-      <Flex justifyContent="center" alignItems="center" height="100%">
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        height="100%"
+        dropShadow="primaryShadow"
+      >
         <LoadingOverlayPink />
       </Flex>
     );
@@ -149,28 +151,14 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
 
   if (!data || data.length === 0) {
     return (
-      <Flex
-        borderRadius="2xl"
-        shadow="xl"
-        overflow="hidden"
-        width="100%"
-        height="100%"
-        bg="white"
-      >
+      <PerygonCard display="flex" width="100%" height="100%">
         <NoDataOverlayPink />
-      </Flex>
+      </PerygonCard>
     );
   }
 
   return (
-    <Flex
-      borderRadius="2xl"
-      shadow="xl"
-      overflow="hidden"
-      width="100%"
-      height="100%"
-      flex={1}
-    >
+    <PerygonCard display="flex" width="100%" height="100%">
       <style jsx global>{`
         .ag-charts-container rect:hover {
           transition: filter 0.3s ease-in-out;
@@ -183,7 +171,7 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
         }
         .ag-chart-tooltip-content {
           padding: 4px 8px;
-          background: #fff;
+          background: var(--chakra-colors-elementBG);
           color: #000;
         }
       `}</style>
@@ -191,6 +179,6 @@ export const AgBarChart: React.FC<AgBarChartProps> = ({
         options={chartOptions as any}
         style={{ width: "100%", height: "600px" }}
       />
-    </Flex>
+    </PerygonCard>
   );
 };

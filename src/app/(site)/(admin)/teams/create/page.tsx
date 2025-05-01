@@ -1,8 +1,9 @@
 import { userTeamJson } from "@/components/surveyjs/forms/userTeam";
 import AdminHeader from "@/components/AdminHeader";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import { checkUserRole, getUser } from "@/lib/dal";
 import { redirect } from "next/navigation";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function TeamsCreatePage() {
   const user = await getUser();
@@ -15,14 +16,26 @@ export default async function TeamsCreatePage() {
   return (
     <>
       <AdminHeader headingText={"Create Department / Team"} />
-      <SurveyComponent
-        surveyJson={userTeamJson}
+      <AdminFormWrapper
+        formJson={userTeamJson}
+        data={null}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
+        excludeKeys={[]}
         endpoint={"/userTeam"}
-        isNew={true}
-        layout={"default"}
+        formSuccessMessage={null}
+        reloadPageOnSuccess={false}
         redirectUrl={"/teams"}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        isNew={true}
+        isAllowedToEdit={true}
       />
     </>
   );

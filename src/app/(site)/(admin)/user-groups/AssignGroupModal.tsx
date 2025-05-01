@@ -8,9 +8,10 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import React from "react";
 import { assignGroupJson } from "@/components/surveyjs/forms/assignGroup";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 interface AssignGroupModalProps {
   isOpen: boolean; // Controls modal visibility
@@ -37,21 +38,31 @@ const AssignGroupModal = ({ isOpen, onClose }: AssignGroupModalProps) => {
           </Flex>
         </ModalHeader>
         <ModalBody>
-          <SurveyComponent
-            surveyJson={assignGroupJson}
-            endpoint={"/assignUserGroups"}
-            isNew={true}
-            layout={"default"}
-            sjsPath={"admin"}
-            cssPath={"admin"}
-            onSurveySuccess={handleSurveySuccess}
-            surveySuccessMessage={"Groups assigned successfully"}
-            onSurveyFailure={handleSurveyFailure}
-            layoutOptions={{
-              showTopNavigation: false,
-              showBottomNavigation: true,
+          <AdminFormWrapper
+            formJson={assignGroupJson}
+            data={null}
+            layoutConfig={{
+              layoutKey: "default",
+              layoutProps: {
+                showTopNavigation: false,
+                showBottomNavigation: true,
+              },
             }}
-            reloadPageOnSuccess={true} // Reload page after success if required
+            globalVariables={[]}
+            stylingConfig={{
+              sjsFilePath: "admin",
+              cssFilePath: "admin",
+            }}
+            jsImport={""}
+            excludeKeys={[]}
+            endpoint={"/assignUserGroups"}
+            formSuccessMessage={"Groups assigned successfully"}
+            reloadPageOnSuccess={true}
+            redirectUrl={null}
+            isNew={true}
+            isAllowedToEdit={true}
+            onSurveySuccess={handleSurveySuccess}
+            onSurveyFailure={handleSurveyFailure}
           />
         </ModalBody>
       </ModalContent>

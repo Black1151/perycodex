@@ -17,7 +17,6 @@ import { useFetchClient } from "@/hooks/useFetchClient";
 import { Clear, FilterAlt } from "@mui/icons-material";
 import DateFilter from "@/components/Sidebars/Dashboards Filter/DateFilterComponent";
 import { format, parseISO } from "date-fns";
-import { values } from "lodash";
 import { DrawerStateOptions } from "@/components/Sidebars/useDrawerState";
 
 interface FilterSidebarProps {
@@ -163,7 +162,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   };
 
   const fullBarMenu = (
-    <Flex flexDirection="column" pb={[24, 6]} gap={3}>
+    <Flex flexDirection="column" pb={[24, 6]} gap={3} bg="elementBG">
       {/* Date Filter (only if enabled) */}
       {filterOptions.showDateFilter && (
         <Box px={2}>
@@ -191,21 +190,23 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
       )}
 
       <Box px={2} fontSize={"sm"} w={"full"}>
-        <Text fontWeight="bold">Selected Date Range:</Text>
+        <Text color={theme.colors.primaryTextColor} fontWeight="bold">
+          Selected Date Range:
+        </Text>
         <Flex justify={"space-between"} w={"full"}>
-          <Text>
-            <strong>Start</strong>:
+          <Text color={theme.colors.primaryTextColor} fontWeight="bold">
+            Start:
           </Text>
-          <Text>
+          <Text color={theme.colors.primaryTextColor}>
             {dateRange &&
               format(parseISO(dateRange.startDate), "EE, dd-MM-yyyy")}
           </Text>
         </Flex>
         <Flex justify={"space-between"} w={"full"}>
-          <Text>
-            <strong>End</strong>:
+          <Text color={theme.colors.primaryTextColor} fontWeight="bold">
+            End
           </Text>
-          <Text>
+          <Text color={theme.colors.primaryTextColor}>
             {dateRange && format(parseISO(dateRange.endDate), "EE, dd-MM-yyyy")}
           </Text>
         </Flex>
@@ -228,7 +229,6 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         minH={"40px"}
         variant="green"
         onClick={handleApplyFilters}
-        _hover={{ bg: theme.colors.perygonPinkDark }}
       >
         Apply Filters
       </Button>
@@ -237,7 +237,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
       {filterOptions.showSitesFilter && (
         <Box
           border="1px solid"
-          borderColor={theme.colors.perygonPink}
+          borderColor={theme.colors.primary}
           borderRadius="md"
           p={2}
           fontSize={["14px", "16px"]}
@@ -247,7 +247,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <Text
               fontWeight="bold"
               mb={2}
-              bg={theme.colors.perygonPink}
+              bg={theme.colors.primary}
               color="white"
               width="100%"
               p={2}
@@ -265,7 +265,9 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 isChecked={selectedSites.includes(site.id)}
                 onChange={() => handleSiteChange(site.id)}
               >
-                {site.siteName}
+                <Text color={theme.colors.primaryTextColor}>
+                  {site.siteName}
+                </Text>
               </Checkbox>
             ))}
           </VStack>
@@ -276,7 +278,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
       {filterOptions.showDepartmentsFilter && (
         <Box
           border="1px solid"
-          borderColor={theme.colors.perygonPink}
+          borderColor={theme.colors.primary}
           borderRadius="md"
           p={2}
           fontSize={["14px", "16px"]}
@@ -286,7 +288,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             <Text
               fontWeight="bold"
               mb={2}
-              bg={theme.colors.perygonPink}
+              bg={theme.colors.primary}
               color="white"
               width="100%"
               p={2}
@@ -304,7 +306,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
                 isChecked={selectedDepartments.includes(dept.id)}
                 onChange={() => handleDepartmentChange(dept.id)}
               >
-                {dept.name}
+                <Text color={theme.colors.primaryTextColor}>{dept.name}</Text>
               </Checkbox>
             ))}
           </VStack>

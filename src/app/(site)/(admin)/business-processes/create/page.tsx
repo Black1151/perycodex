@@ -1,7 +1,8 @@
 import AdminHeader from "@/components/AdminHeader";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import { businessProcessJson } from "@/components/surveyjs/forms/businessProcess";
 import { checkUserRole } from "@/lib/dal";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function BusinessProcessCreatePage() {
   await checkUserRole("/business-processes/create");
@@ -9,14 +10,26 @@ export default async function BusinessProcessCreatePage() {
   return (
     <>
       <AdminHeader headingText="Create Business Process" />
-      <SurveyComponent
-        surveyJson={businessProcessJson}
+      <AdminFormWrapper
+        formJson={businessProcessJson}
+        data={null}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
+        excludeKeys={[]}
         endpoint={"/businessProcess"}
-        isNew={true}
-        layout={"default"}
+        formSuccessMessage={null}
+        reloadPageOnSuccess={false}
         redirectUrl={"/business-processes"}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        isNew={true}
+        isAllowedToEdit={true}
       />
     </>
   );

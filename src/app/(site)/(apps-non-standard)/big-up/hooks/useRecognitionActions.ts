@@ -23,9 +23,7 @@ export function useRecognitionActions(fetchDashboardData: () => void) {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
-    } catch (error) {
-      console.error("An error occurred while marking as read:", error);
-    }
+    } catch (error) {}
   }, []);
 
   const handleSubmitRecognition = useCallback(
@@ -55,7 +53,7 @@ export function useRecognitionActions(fetchDashboardData: () => void) {
         console.error("Error submitting BigUp:", error);
       }
     },
-    [user, router, fetchDashboardData]
+    [user, router, fetchDashboardData],
   );
 
   return {

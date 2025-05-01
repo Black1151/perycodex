@@ -50,9 +50,7 @@ const OptionListsRenderer: React.FC<OptionListsRendererProps> = ({
         bg={"gray.100"}
         justifyContent="center"
       >
-        <FormatListNumbered
-          sx={{ color: "var(--chakra-colors-perygonPink)" }}
-        />
+        <FormatListNumbered sx={{ color: "var(--chakra-colors-primary)" }} />
       </Box>
       <Text
         fontSize={"13px"}

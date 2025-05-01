@@ -14,10 +14,11 @@ import {
   Select,
   Textarea,
   Text,
+  useTheme,
 } from "@chakra-ui/react";
 import { BigUpTeamMember } from "../types";
 import TeamMemberAutocomplete from "../components/TeamMemberAutocomplete";
-import { BigUpModalContent } from "./components/BigUpModalContent";
+import PerygonCard from "@/components/layout/PerygonCard";
 
 interface SubmitScoreModalProps {
   isOpen: boolean;
@@ -56,6 +57,8 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
     onClose();
   };
 
+  const theme = useTheme();
+
   return (
     <Modal
       isOpen={isOpen}
@@ -64,111 +67,142 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
       returnFocusOnClose={false}
     >
       <ModalOverlay />
-      <BigUpModalContent>
-        <ModalHeader color="perygonPink" fontSize="2xl">
-          Give Recognition
-        </ModalHeader>
-        <ModalCloseButton color="white" />
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <ModalBody>
-            <FormControl mb={4} isRequired>
-              <FormLabel color="white">Team Member</FormLabel>
-              <Controller
-                name="teamMember"
-                control={control}
-                rules={{ required: "Team Member is required" }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TeamMemberAutocomplete
-                    value={value}
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    teamMembers={teamMembers}
-                    placeholder="Start typing to search..."
-                  />
-                )}
-              />
-            </FormControl>
-            <FormControl mb={4} isRequired>
-              <FormLabel color="white">Category</FormLabel>
-              <Controller
-                name="category"
-                control={control}
-                rules={{ required: "Category is required" }}
-                render={({ field }) => (
-                  <Select
-                    placeholder="Choose a category..."
-                    {...field}
-                    bg="perygonBlueTransparent"
-                    color="perygonPink"
-                    borderColor="perygonPink"
-                    _hover={{ borderColor: "perygonPink" }}
-                    _focus={{
-                      bg: "perygonBlueTransparent",
-                      color: "perygonPink",
-                    }}
-                    sx={{
-                      option: {
-                        backgroundColor: "perygonBlueTransparent",
-                        color: "perygonPink",
-                      },
-                    }}
-                  >
-                    {categories.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </Select>
-                )}
-              />
-            </FormControl>
-            <FormControl mb={4} isRequired>
-              <FormLabel color="white">Message</FormLabel>
-              <Controller
-                name="message"
-                control={control}
-                rules={{ required: "Message is required" }}
-                render={({ field }) => (
-                  <>
-                    <Textarea
-                      placeholder="Enter your message here..."
-                      maxLength={maxLength}
-                      {...field}
-                      bg="perygonBlueTransparent"
-                      color="white"
-                      borderColor="perygonPink"
-                      _hover={{ borderColor: "perygonPink" }}
+      <ModalContent>
+        <PerygonCard bg={theme.components.submitScoreModal.baseStyle.elementBG}>
+          <ModalHeader
+            fontSize="2xl"
+            color={
+              theme.components.submitScoreModal.baseStyle.secondaryTextColor
+            }
+          >
+            Give Recognition
+          </ModalHeader>
+          <ModalCloseButton color="white" />
+          <form onSubmit={handleSubmit(handleFormSubmit)}>
+            <ModalBody>
+              <FormControl mb={4} isRequired>
+                <FormLabel
+                  color={
+                    theme.components.submitScoreModal.baseStyle.primaryTextColor
+                  }
+                >
+                  Team Member
+                </FormLabel>
+                <Controller
+                  name="teamMember"
+                  control={control}
+                  rules={{ required: "Team Member is required" }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TeamMemberAutocomplete
+                      value={value}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      teamMembers={teamMembers}
+                      placeholder="Start typing to search..."
                     />
-                    <Text fontSize="sm" color="perygonPink">
-                      {message.length}/{maxLength} characters
-                    </Text>
-                  </>
-                )}
-              />
-            </FormControl>
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              bg="perygonPink"
-              color="white"
-              mr={3}
-              type="submit"
-              _hover={{ bg: "white", color: "perygonPink" }}
-            >
-              Submit
-            </Button>
-            <Button
-              onClick={handleClose}
-              variant="outline"
-              borderColor="perygonPink"
-              color="perygonPink"
-              _hover={{ bg: "rgba(255, 20, 147, 0.1)" }}
-            >
-              Cancel
-            </Button>
-          </ModalFooter>
-        </form>
-      </BigUpModalContent>
+                  )}
+                />
+              </FormControl>
+              <FormControl mb={4} isRequired>
+                <FormLabel
+                  color={
+                    theme.components.submitScoreModal.baseStyle.primaryTextColor
+                  }
+                >
+                  Category
+                </FormLabel>
+                <Controller
+                  name="category"
+                  control={control}
+                  rules={{ required: "Category is required" }}
+                  render={({ field }) => (
+                    <Select
+                      placeholder="Choose a category..."
+                      {...field}
+                      bg="elementBG"
+                      color="primaryTextColor"
+                      borderColor="primary"
+                      _hover={{ borderColor: "primary" }}
+                      _focus={{
+                        bg: "elementBG",
+                        color: "primaryTextColor",
+                      }}
+                      sx={{
+                        option: {
+                          backgroundColor: "elementBG",
+                          color: "primaryTextColor",
+                        },
+                      }}
+                    >
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </Select>
+                  )}
+                />
+              </FormControl>
+              <FormControl mb={4} isRequired>
+                <FormLabel
+                  color={
+                    theme.components.submitScoreModal.baseStyle.primaryTextColor
+                  }
+                >
+                  Message
+                </FormLabel>
+                <Controller
+                  name="message"
+                  control={control}
+                  rules={{ required: "Message is required" }}
+                  render={({ field }) => (
+                    <>
+                      <Textarea
+                        placeholder="Enter your message here..."
+                        maxLength={maxLength}
+                        {...field}
+                        bg="elementBG"
+                        color={theme.colors.primaryTextColor}
+                        borderColor="primary"
+                        _hover={{ borderColor: "primary" }}
+                      />
+                      <Text
+                        fontSize="sm"
+                        color={
+                          theme.components.submitScoreModal.baseStyle
+                            .primaryTextColor
+                        }
+                      >
+                        {message.length}/{maxLength} characters
+                      </Text>
+                    </>
+                  )}
+                />
+              </FormControl>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                bg="primary"
+                color="white"
+                mr={3}
+                type="submit"
+                _hover={{ bg: "white", color: "primary" }}
+              >
+                Submit
+              </Button>
+              <Button
+                onClick={handleClose}
+                variant="outline"
+                borderColor="primary"
+                color="white"
+                _hover={{ bg: "rgba(255, 20, 147, 0.1)", borderColor: "white" }}
+              >
+                Cancel
+              </Button>
+            </ModalFooter>
+          </form>
+        </PerygonCard>
+      </ModalContent>
     </Modal>
   );
 };

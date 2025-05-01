@@ -23,7 +23,6 @@ export const BigUpMasonry: React.FC<BigUpMasonryProps> = ({
       w="100%"
       templateColumns={["1fr", "repeat(2, 1fr)"]}
       gap={[3, null, null, 5]}
-      height="100%"
     >
       <GridItem colSpan={[1, 2]}>
         <SpringScale

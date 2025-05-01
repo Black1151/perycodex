@@ -1,70 +1,75 @@
 import WorkflowEngine from "@/app/(site)/(apps)/WorkflowEngine";
-import {redirect} from "next/navigation";
-import {getFilteredDashboards} from "@/lib/dashboardUtils";
+import { redirect } from "next/navigation";
+import { getFilteredDashboards } from "@/lib/dashboardUtils";
 import apiClient from "@/lib/apiClient";
-import {getUser, verifySession} from "@/lib/dal";
+import { getUser } from "@/lib/dal";
 import NoDashboardsModal from "@/app/(site)/(apps)/NoDashboardModal";
-import {ToolLandingPage} from "@/app/(site)/(apps)/ToolLandingPageInner";
-import {EnpsSplashScreen} from "./EnpsSplashScreen";
-import {ClientSatisfactionSplashScreen} from "@/app/(site)/(apps)/client-satisfaction/ClientSatisfactionSplashScreen";
+import { ToolLandingPage } from "@/app/(site)/(apps)/ToolLandingPageInner";
+import { EnpsSplashScreen } from "./EnpsSplashScreen";
+
+export const revalidate = 0;
 
 interface WorkflowInstanceResponse {
-    resource: {
-        new_wfinstid: string;
-    };
+  resource: {
+    new_wfinstid: string;
+  };
 }
 
 export default async function Home({
-                                       searchParams,
-                                   }: {
-    searchParams: { [key: string]: string | string[] | undefined };
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
-    const user = await getUser();
+  const user = await getUser();
 
-    const toolId = searchParams.toolId as string;
-    const workflowId = searchParams.wfId as string;
-    const action = searchParams.a as string;
+  const toolId = searchParams.toolId as string;
+  const workflowId = searchParams.wfId as string;
+  const action = searchParams.a as string;
 
-    if (!workflowId || !toolId) {
-        return redirect("/");
+  if (!workflowId || !toolId) {
+    return redirect("/");
+  }
+
+  let redirectUrl: string | null = null;
+
+  if (action && parseInt(action) === 1) {
+    const response = await apiClient(`/startWorkflow`, {
+      method: "POST",
+      body: JSON.stringify({
+        p_wfid: workflowId,
+        p_toolid: toolId,
+      }),
+    });
+
+    if (response.ok) {
+      const responseData: WorkflowInstanceResponse = await response.json();
+      if (responseData?.resource.new_wfinstid) {
+        redirectUrl = `/enps/workflow/${responseData.resource.new_wfinstid}`;
+      }
     }
+  }
 
-    let redirectUrl: string | null = null;
+  const { filteredDashboards } = await getFilteredDashboards(
+    toolId,
+    workflowId,
+    "/enps",
+  );
 
-    if (action && parseInt(action) === 1) {
-        const response = await apiClient(`/startWorkflow`, {
-            method: "POST",
-            body: JSON.stringify({
-                p_wfid: workflowId,
-                p_toolid: toolId,
-            }),
-        });
+  if (!redirectUrl && filteredDashboards.length > 0) {
+    const singleDashboard = filteredDashboards[0];
+    redirectUrl = `${singleDashboard.dashboardUrl}?toolId=${toolId}&wfId=${workflowId}`;
+  }
 
-        if (response.ok) {
-            const responseData: WorkflowInstanceResponse = await response.json();
-            if (responseData?.resource.new_wfinstid) {
-                redirectUrl = `/enps/workflow/${responseData.resource.new_wfinstid}`;
-            }
-        }
-    }
-
-    const {filteredDashboards} = await getFilteredDashboards(
-        toolId,
-        workflowId,
-        "/enps"
-    );
-
-    if (!redirectUrl && filteredDashboards.length > 0) {
-        const singleDashboard = filteredDashboards[0];
-        redirectUrl = `${singleDashboard.dashboardUrl}?toolId=${toolId}&wfId=${workflowId}`;
-    }
-
-    return (
-        <WorkflowEngine toolId={toolId} workflowId={workflowId}>
-            {user.role === "EU" || filteredDashboards.length > 0 ?
-                <ToolLandingPage redirectUrl={redirectUrl} splashScreen={<EnpsSplashScreen/>}/> :
-                <NoDashboardsModal/>
-            }
-        </WorkflowEngine>
-    );
+  return (
+    <WorkflowEngine toolId={toolId} workflowId={workflowId}>
+      {user.role === "EU" || filteredDashboards.length > 0 ? (
+        <ToolLandingPage
+          redirectUrl={redirectUrl}
+          splashScreen={<EnpsSplashScreen />}
+        />
+      ) : (
+        <NoDashboardsModal />
+      )}
+    </WorkflowEngine>
+  );
 }

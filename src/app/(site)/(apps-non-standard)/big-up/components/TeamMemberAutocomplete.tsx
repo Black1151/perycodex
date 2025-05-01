@@ -72,11 +72,11 @@ const TeamMemberAutocomplete: FC<TeamMemberAutocompleteProps> = ({
         onChange={handleInputChange}
         onBlur={onBlur}
         onFocus={() => setShowDropdown(true)}
-        bg="perygonBlueTransparent"
-        color="perygonPink"
-        borderColor="perygonPink"
-        _hover={{ borderColor: "perygonPink" }}
-        _focus={{ bg: "black", color: "perygonPink" }}
+        bg="elementBG"
+        color="primary"
+        borderColor="primary"
+        _hover={{ borderColor: "primary" }}
+        _focus={{ color: "primary" }}
       />
 
       {showDropdown && filteredMembers.length > 0 && (
@@ -85,9 +85,9 @@ const TeamMemberAutocomplete: FC<TeamMemberAutocompleteProps> = ({
           top="100%"
           left={0}
           right={0}
-          bg="perygonBlueTransparent"
+          bg="elementBG"
           border="1px solid"
-          borderColor="perygonPink"
+          borderColor="primary"
           borderTop="none"
           zIndex={999}
           maxHeight={300}
@@ -109,7 +109,7 @@ const TeamMemberAutocomplete: FC<TeamMemberAutocompleteProps> = ({
                       src={member.imageUrl}
                       size="sm"
                     />
-                    <Text color="perygonPink" ml={2}>
+                    <Text color="primary" ml={2}>
                       {member.fullName}
                     </Text>
                   </HStack>

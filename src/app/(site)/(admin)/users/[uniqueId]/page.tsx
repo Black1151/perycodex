@@ -1,15 +1,18 @@
 import { UserDetailsBanner } from "@/components/AdminDetailsBanners/UserDetailsBanner";
 import { userJson } from "@/components/surveyjs/forms/user";
 import { redirect } from "next/navigation";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import apiClient from "@/lib/apiClient";
-import { checkUserRole } from "@/lib/dal";
+import { checkUserRole, getUser } from "@/lib/dal";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
+import { checkUserRoleAccess } from "@/components/surveyjs/lib/utils";
 
 export default async function UsersDetailPage({
   params,
 }: {
   params: { uniqueId: string };
 }) {
+  const user = await getUser();
   await checkUserRole(`/users/${params.uniqueId}`);
 
   const res = await apiClient(`/user/findBy?uniqueId=${params.uniqueId}`);
@@ -24,17 +27,26 @@ export default async function UsersDetailPage({
   return (
     <>
       <UserDetailsBanner surveyUser={pageUserData} />
-      <SurveyComponent
-        surveyJson={userJson}
-        endpoint={`/user/${params.uniqueId}`}
-        layout={"default"}
-        isNew={false}
-        rolesCanEdit={["PA", "CA"]}
-        dataset={pageUserData}
+      <AdminFormWrapper
+        formJson={userJson}
+        data={pageUserData}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
         excludeKeys={["imageUrl"]}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        endpoint={`/user/${params.uniqueId}`}
+        formSuccessMessage={null}
         reloadPageOnSuccess={true}
+        redirectUrl={null}
+        isNew={false}
+        isAllowedToEdit={checkUserRoleAccess(user.role, ["PA", "CA"])}
       />
     </>
   );

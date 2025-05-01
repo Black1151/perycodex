@@ -3,16 +3,16 @@ import {
   Box,
   Flex,
   HStack,
-  keyframes,
   Text,
   Tooltip,
   useMediaQuery,
   useTheme,
   VStack,
 } from "@chakra-ui/react";
+import { keyframes } from "@emotion/react";
 import { motion } from "framer-motion";
 import useColor from "@/hooks/useColor";
-import { perygonTheme } from "@/theme/theme";
+import { perygonTheme } from "@/theme/themes/perygon/perygonTheme/perygonTheme";
 
 interface DataPoint {
   value: number;
@@ -163,10 +163,10 @@ const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({
   };
 
   return (
-    <Flex flex={1} width="100%" pb={50} bg="white" borderRadius="2xl">
+    <Flex flex={1} width="100%" pb={50} bg="elementBG" borderRadius="2xl">
       <VStack
         key={animationKey}
-        bg="white"
+        bg="elementBG"
         width="100%"
         flex={1}
         borderRadius="2xl"
@@ -202,7 +202,7 @@ const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({
                     </Text>
                   </VStack>
                 }
-                bgColor={perygonTheme.colors.perygonPink}
+                bgColor={perygonTheme.colors.primary}
                 color="white"
                 placement="top"
                 isOpen={isTouchDevice ? activeTooltip === index : undefined}
@@ -235,7 +235,7 @@ const AnimatedBarChart: React.FC<AnimatedBarChartProps> = ({
                       textAlign="center"
                       transform="rotate(-45deg)"
                       whiteSpace="nowrap"
-                      color="perygonPink"
+                      color="primary"
                     >
                       {dataPoint.title.length > 10
                         ? dataPoint.title.slice(0, 10) + "..."

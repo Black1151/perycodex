@@ -50,7 +50,7 @@ const WorkflowRenderer: React.FC<WorkflowRendererProps> = ({
         bg={"gray.100"}
         justifyContent="center"
       >
-        <AccountTree sx={{ color: "var(--chakra-colors-perygonPink)" }} />
+        <AccountTree sx={{ color: "var(--chakra-colors-primary)" }} />
       </Box>
       <Text
         fontSize={"13px"}

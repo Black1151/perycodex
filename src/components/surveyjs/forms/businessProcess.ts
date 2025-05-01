@@ -22,6 +22,15 @@ export const businessProcessJson = {
           startWithNewLine: false,
         },
         {
+          type: "boolean",
+          name: "isExternalBusinessProcess",
+          title: "Is this for EU roles to complete?",
+          labelTrue: "Yes",
+          labelFalse: "No",
+          defaultValue: false,
+          startWithNewLine: false,
+        },
+        {
           type: "comment",
           name: "description",
           title: "Description",
@@ -106,32 +115,12 @@ export const businessProcessJson = {
           title: "BP Start Trigger Operator",
           placeholder: "Enter trigger operator",
           startWithNewLine: false,
-          choices: [
-            {
-              title: "=",
-              value: "=",
-            },
-            {
-              title: ">=",
-              value: ">=",
-            },
-            {
-              title: "<=",
-              value: "<=",
-            },
-            {
-              title: "!=",
-              value: "!=",
-            },
-            {
-              title: ">",
-              value: ">",
-            },
-            {
-              title: "<",
-              value: "<",
-            },
-          ],
+          choicesByUrl: {
+            url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=operators`,
+            path: "operators",
+            valueName: "name",
+            titleName: "label",
+          },
         },
         {
           type: "text",
@@ -174,20 +163,24 @@ export const businessProcessJson = {
           type: "matrixdynamic",
           name: "globalVariables",
           title: "Global Variables",
-          rowCount: 0,
-          allowRowsDragAndDrop: false,
-          detailPanelShowOnAdding: false,
-          detailPanelMode: "underRowSingle",
-          allowRemoveRows: true,
-          addRowText: "Add another global variable item",
           columns: [
             {
+              name: "globalVariables",
+              title: "Name",
               cellType: "text",
-              name: "value",
-              title: "GV Name",
               isRequired: true,
+              placeholder: "Enter Global Variable...",
             },
           ],
+          rowCount: 0,
+          confirmDelete: true,
+          confirmDeleteText:
+            "Are you sure you want to delete this global variable?",
+          addRowText: "Add a global variable",
+          removeRowText: "Delete this global variables",
+          hideColumnsIfEmpty: true,
+          emptyRowsText:
+            "No GV's entered yet.\nClick 'Add a global variable' to add a new one.\nClick the delete icon to remove an existing entry.",
         },
         {
           type: "comment",

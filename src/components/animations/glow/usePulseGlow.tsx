@@ -1,5 +1,5 @@
-import { keyframes, SystemStyleObject } from "@chakra-ui/react";
-
+import { SystemStyleObject } from "@chakra-ui/react";
+import { keyframes } from "@emotion/react";
 export function usePulseGlow({
   color = "rgba(255, 20, 147, 0.8)",
   duration = 4,

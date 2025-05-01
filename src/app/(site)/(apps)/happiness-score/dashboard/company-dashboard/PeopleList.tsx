@@ -15,6 +15,7 @@ import {
   Thead,
   Tr,
   useBreakpointValue,
+  useTheme,
   VStack,
 } from "@chakra-ui/react";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
@@ -106,7 +107,7 @@ const PeopleList: React.FC<PeopleListProps> = ({
   };
 
   const handleItemsPerPageChange = (
-    event: React.ChangeEvent<HTMLSelectElement>,
+    event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     onItemsPerPageChange(Number(event.target.value));
     onPageChange(1);
@@ -178,8 +179,8 @@ const PeopleList: React.FC<PeopleListProps> = ({
     new Set(
       [5, 10, 25, 50, 100, 200, 500]
         .filter((option) => option <= people.length)
-        .concat(people.length),
-    ),
+        .concat(people.length)
+    )
   )
     .sort((a, b) => a - b) // Ensure options are sorted numerically
     .map((option) => (
@@ -194,6 +195,8 @@ const PeopleList: React.FC<PeopleListProps> = ({
       : `Page ${currentPage} of ${totalPages}`;
     setPaginationText(text);
   }, [isMobile, currentPage, totalPages]);
+
+  const theme = useTheme();
 
   return (
     <VStack
@@ -307,6 +310,11 @@ const PeopleList: React.FC<PeopleListProps> = ({
             onChange={handleItemsPerPageChange}
             size="sm"
             width="auto"
+            sx={{
+              option: {
+                backgroundColor: theme.colors.elementBG,
+              },
+            }}
           >
             {paginationNumbers}
           </Select>

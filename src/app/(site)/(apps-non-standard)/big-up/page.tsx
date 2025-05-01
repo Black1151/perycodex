@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Flex, Grid, VStack } from "@chakra-ui/react";
+import { Flex, Grid, useTheme, VStack } from "@chakra-ui/react";
 import { BigUpMasonry } from "./masonry/BigUpMasonry";
 import { PerygonTabs } from "./tabs/PerygonTabs";
 import { useRouter } from "next/navigation";
@@ -19,9 +19,11 @@ import SubmitScoreModal from "./modal/SubmitScoreModal";
 import { RecognitionList } from "./tabs/OtherTabs/RecognitionCardList";
 import { useUnread } from "@/components/contexts/UnreadRecognitionContext";
 import { hideScrollbar } from "@/utils/style/style-utils";
+import PerygonCard from "@/components/layout/PerygonCard";
 
 export default function BigUpPage() {
   const router = useRouter();
+  const theme = useTheme();
 
   const { dashboardData, fetchDashboardData, loading } = useBigUpDashboard();
   const { userStats, fetchUserStats } = useBigUpUserStats();
@@ -148,19 +150,19 @@ export default function BigUpPage() {
         },
       }}
     >
-      <Flex
-        bg="perygonBlueTransparent"
-        w="full"
-        alignItems="center"
-        borderRadius="lg"
+      <PerygonCard
+        display="flex"
+        width="100%"
         p={2}
         pr={6}
+        alignItems="center"
+        bg={theme.components.bigUpStatsCard.baseStyle.elementBG}
       >
         <RecognitionHeader
           headingText="Recognition Hub"
           onAddButtonClick={() => setIsSubmitModalOpen(true)}
         />
-      </Flex>
+      </PerygonCard>
 
       <Grid
         width={["100%"]}

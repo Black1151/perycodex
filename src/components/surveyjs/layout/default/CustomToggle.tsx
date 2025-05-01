@@ -28,7 +28,7 @@ const CustomToggle: React.FC<CustomToggleProps> = ({
   canEdit,
 }) => {
   const bgColor = useColorModeValue("gray.200", "gray.700");
-  const activeColor = useColorModeValue("perygonPink", "blue.300");
+  const activeColor = useColorModeValue("primary", "blue.300");
 
   // Use responsive values for width and height with Chakra breakpoints
   const toggleWidth = useBreakpointValue({

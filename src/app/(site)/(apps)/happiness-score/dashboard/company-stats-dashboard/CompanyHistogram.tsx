@@ -1,128 +1,126 @@
 "use client";
 
-import React, {useState} from "react";
-import {Box, useTheme} from "@chakra-ui/react";
-import {AgCharts} from "ag-charts-react";
+import React from "react";
+import { useTheme } from "@chakra-ui/react";
+import { AgCharts } from "ag-charts-react";
 import useColor from "@/hooks/useColor";
 
 import {
-    AgBarSeriesItemStylerParams,
-    AgCartesianChartOptions,
+  AgBarSeriesItemStylerParams,
+  AgCartesianChartOptions,
 } from "ag-charts-enterprise";
-import BubbleScoresTooltipRenderer from "@/components/agCharts/BubbleScoresTooltipRenderer";
-import SubmissionsTooltipRenderer from "@/components/agCharts/SubmissionsTooltipRenderer";
+import { SubmissionsTooltipRenderer } from "@/components/agCharts/tooltips/SubmissionsTooltipRenderer";
 
 interface ScoreDistribution {
-    score: number;
-    count: number;
+  score: number;
+  count: number;
 }
 
 interface CompanyHistogramProps {
-    scoreDistribution?: ScoreDistribution[];
+  scoreDistribution?: ScoreDistribution[] | string;
 }
 
 export const CompanyHistogram: React.FC<CompanyHistogramProps> = ({
-                                                                      scoreDistribution,
-                                                                  }) => {
-    const theme = useTheme();
-    const {getColor} = useColor();
+  scoreDistribution,
+}) => {
+  const theme = useTheme();
+  const { getColor } = useColor();
 
-    // Parse the scores array safely and add `yKey` with a default value of 5
-    const validScoresArray = (() => {
-        try {
-            const parsedData = Array.isArray(scoreDistribution)
-                ? scoreDistribution
-                : JSON.parse(scoreDistribution || "[]");
-            return parsedData.sort(
-                (a: ScoreDistribution, b: ScoreDistribution) => a.score - b.score,
-            );
-        } catch (error) {
-            return [];
-        }
-    })();
+  // Prepare the score data in a sorted array
+  const validScoresArray = (() => {
+    try {
+      const parsedData = Array.isArray(scoreDistribution)
+        ? scoreDistribution
+        : JSON.parse(scoreDistribution || "[]");
+      return parsedData.sort(
+        (a: ScoreDistribution, b: ScoreDistribution) => a.score - b.score
+      );
+    } catch (error) {
+      return [];
+    }
+  })();
 
-    const [options, setOptions] = useState<AgCartesianChartOptions>({
-        data: validScoresArray,
-        padding: {
-            top: 20,
-            left: 20,
-            right: 20,
-            bottom: 20,
+  const options: AgCartesianChartOptions = {
+    data: validScoresArray,
+    padding: {
+      top: 20,
+      left: 20,
+      right: 20,
+      bottom: 20,
+    },
+    background: {
+      fill: theme.colors.elementBG,
+    },
+    series: [
+      {
+        type: "bar",
+        xKey: "score",
+        yKey: "count",
+        xName: "Score",
+        yName: "Count",
+        cornerRadius: 10,
+        shadow: {
+          enabled: true,
+          color: "#191919",
+          xOffset: 1,
+          yOffset: 1,
+          blur: 4,
         },
-        series: [
-            {
-                type: "bar",
-                xKey: "score",
-                yKey: "count",
-                xName: "Score",
-                yName: "Count",
-                cornerRadius: 10,
-                shadow: {
-                    enabled: true,
-                    color: "#191919",
-                    xOffset: 1,
-                    yOffset: 1,
-                    blur: 4,
-                },
-                tooltip: {
-                    renderer: SubmissionsTooltipRenderer
-                },
-                itemStyler: (params: AgBarSeriesItemStylerParams<any>) => {
-                    const {datum, xKey} = params;
-                    const score = parseInt(datum[xKey], 10); // Retrieve the score value
-                    return {fill: getColor(score)}; // Color based on score
-                },
-            },
-        ],
-        axes: [
-            {
-                type: "category",
-                position: "bottom",
-                title: {
-                    text: "Score",
-                    fontSize: 12,
-                    fontFamily: "Metropolis",
-                    color: "black",
-                },
-                label: {
-                    fontSize: 12,
-                    fontFamily: "Metropolis",
-                    color: theme.colors.perygonPink,
-                },
-                gridLine: {
-                    width: 0,
-                },
-            },
-            {
-                type: "number",
-                position: "left",
-                title: {
-                    text: "Number of times",
-                    fontSize: 12,
-                    fontFamily: "Metropolis",
-                    color: "black",
-                },
-                label: {
-                    fontSize: 12,
-                    fontFamily: "Metropolis",
-                    color: theme.colors.perygonPink,
-                },
-            },
-        ],
-        legend: {
-            enabled: false,
+        tooltip: {
+          renderer: SubmissionsTooltipRenderer(theme.colors),
         },
-        zoom: {
-            enabled: false,
+        itemStyler: (params: AgBarSeriesItemStylerParams<any>) => {
+          const { datum, xKey } = params;
+          const score = parseInt(datum[xKey], 10);
+          return { fill: getColor(score) };
         },
-        navigator: {
-            enabled: false,
+      },
+    ],
+    axes: [
+      {
+        type: "category",
+        position: "bottom",
+        title: {
+          text: "Score",
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: theme.colors.primaryTextColor,
         },
-    });
+        label: {
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: theme.colors.primaryTextColor,
+        },
+        gridLine: {
+          width: 0,
+        },
+      },
+      {
+        type: "number",
+        position: "left",
+        title: {
+          text: "Number of times",
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: theme.colors.primaryTextColor,
+        },
+        label: {
+          fontSize: 12,
+          fontFamily: "Metropolis",
+          color: theme.colors.primaryTextColor,
+        },
+      },
+    ],
+    legend: {
+      enabled: false,
+    },
+    zoom: {
+      enabled: false,
+    },
+    navigator: {
+      enabled: false,
+    },
+  };
 
-    return (
-        <Box borderRadius={"2xl"} shadow={"xl"} overflow={"hidden"}>
-            <AgCharts options={options as any}/>
-        </Box>
-    );
+  return <AgCharts options={options} />;
 };

@@ -100,12 +100,12 @@ const Sidebar: React.FC<SidebarProps> = ({
         ]}
         alignItems="center"
         justifyContent="center"
-        color={"rgba(248,248,248,0.8)"}
+        color={theme.colors.iconColor}
         borderRadius="full"
         w={["30px", "30px", "36px"]}
         h={["30px", "30px", "36px"]}
         backgroundColor={"rgba(255,255,255,0.2)"}
-        border="1px solid white"
+        border={`1px solid ${theme.colors.iconColor}`}
         p={1}
         transform="scale(1)"
         transition="transform 0.2s ease-in-out"
@@ -149,7 +149,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           bottom={0}
           width={drawerState === "fully-open" ? 225 : 61}
           zIndex={98}
-          bg="white"
+          bg="elementBG"
           boxShadow="xl"
           gap={0}
         >
@@ -163,7 +163,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             <HStack
               alignItems="center"
               justify={"space-between"}
-              background={"white"}
+              background={"elementBG"}
               py={1}
               px={2}
               zIndex={100}
@@ -173,7 +173,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 <Heading
                   as={"h2"}
                   fontSize={"16px"}
-                  style={{ color: theme.colors.perygonPink }}
+                  style={{ color: theme.colors.primaryTextColor }}
                 >
                   {title}
                 </Heading>
@@ -191,7 +191,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               >
                 {drawerState === "fully-open" && canHalf && (
                   <Box
-                    color={theme.colors.perygonPink}
+                    color={theme.colors.primary}
                     onClick={onToggle}
                     m={0}
                     p={0}
@@ -202,7 +202,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 )}
                 {drawerState === "half-open" && canFull && (
                   <Box
-                    color={theme.colors.perygonPink}
+                    color={theme.colors.primary}
                     onClick={onToggle}
                     m={0}
                     p={0}
@@ -214,7 +214,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 {((drawerState === "half-open" && canFull === false) ||
                   drawerState === "fully-open") && (
                   <Box
-                    color={theme.colors.perygonPink}
+                    color={theme.colors.primary}
                     onClick={onClose}
                     m={0}
                     p={0}
@@ -236,10 +236,11 @@ const Sidebar: React.FC<SidebarProps> = ({
               flex={1}
               w={"full"}
               overflowY={"auto"}
+              overflowX={"hidden"}
               css={{
                 "@media (max-width: 768px)": {
                   scrollbarWidth: "none",
-                  "-ms-overflow-style": "none",
+                  msOverflowStyle: "none",
                   "&::-webkit-scrollbar": {
                     display: "none",
                   },
@@ -248,7 +249,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             >
               {loading ? (
                 <Center h="100%">
-                  <Spinner size="lg" color={theme.colors.perygonPink} />
+                  <Spinner size="lg" color={theme.colors.primary} />
                 </Center>
               ) : (
                 <>
