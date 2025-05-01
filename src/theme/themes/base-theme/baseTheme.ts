@@ -35,10 +35,10 @@ export const baseTheme = extendTheme({
     iconColor: "white",
     adminBannerColor: "white",
     // tooltips
-    tooltipHeaderTextColor: "primaryTextColor",
+    tooltipHeaderTextColor: "white",
     tooltipHeaderBGColor: "primary",
     tooltipBodyTextColor: "primaryTextColor",
-    tooltipBodyBGColor: "white",
+    // tooltipBodyBGColor: "white",
 
     happinessScale: {
       1: "#b22200",

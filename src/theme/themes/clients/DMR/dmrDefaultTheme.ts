@@ -25,6 +25,10 @@ export const dmrDefaultTheme = extendTheme(baseTheme, {
     primaryTextColor: "rgb(0, 0, 0)",
     secondaryTextColor: "rgb(83, 83, 83)",
     themeTextColor: colorPalette.dmrPrimary,
+
+    tooltipHeaderTextColor: "white",
+    tooltipHeaderBGColor: "black",
+    tooltipBodyTextColor: "black",
   },
   gradients: gradients,
 
