@@ -137,6 +137,44 @@ export const emailSecureLinkJson = {
             titleName: "email",
           },
         },
+        {
+          type: "text",
+          name: "directPath",
+          title: "Direct Path",
+          isRequired: false,
+        },
+        {
+          type: "boolean",
+          name: "oneTimeLink",
+          minWidth: "256px",
+          title: "One Time Link?",
+          titleLocation: "top",
+          isRequired: false,
+          labelTrue: "Yes",
+          labelFalse: "No",
+          swapOrder: true,
+        },
+        {
+          type: "dropdown",
+          name: "loginLink",
+          title: "Login Link",
+          titleLocation: "top",
+          isRequired: false,
+          choices: [
+            {
+              value: "no",
+              text: "No",
+            },
+            {
+              value: "user",
+              text: "User",
+            },
+            {
+              value: "anonymous",
+              text: "Anonymous",
+            }
+          ],
+        },
       ],
     },
   ],

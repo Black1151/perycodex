@@ -1,9 +1,10 @@
 import apiClient from "@/lib/apiClient";
 import { redirect } from "next/navigation";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import { ToolDetailsBanner } from "@/components/AdminDetailsBanners/ToolDetailsBanner";
 import { toolsJson } from "@/components/surveyjs/forms/tools";
 import { checkUserRole } from "@/lib/dal";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function ToolsDetailPage({
   params,
@@ -24,15 +25,26 @@ export default async function ToolsDetailPage({
   return (
     <>
       <ToolDetailsBanner tool={toolData} />
-      <SurveyComponent
-        surveyJson={toolsJson}
+      <AdminFormWrapper
+        formJson={toolsJson}
+        data={toolData}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
+        excludeKeys={[]}
         endpoint={`/toolConfig/${params.uniqueId}`}
-        isNew={false}
-        dataset={toolData}
-        layout={"default"}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        formSuccessMessage={null}
         reloadPageOnSuccess={true}
+        redirectUrl={null}
+        isNew={false}
+        isAllowedToEdit={true}
       />
     </>
   );

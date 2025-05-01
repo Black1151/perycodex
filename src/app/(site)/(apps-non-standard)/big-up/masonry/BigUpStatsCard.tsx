@@ -1,12 +1,11 @@
 import React from "react";
-import { Flex, Avatar, Text, Divider } from "@chakra-ui/react";
-import Card from "../components/Card";
+import { Flex, Avatar, Text, Divider, useTheme } from "@chakra-ui/react";
 import {
   getMedalColor,
   getOrdinalSuffix,
 } from "@/app/(site)/(apps-non-standard)/big-up/tabs/LeaderBoardTab/LeaderBoardTabContent";
 import { EmojiEvents } from "@mui/icons-material";
-import Link from "next/link";
+import PerygonCard from "@/components/layout/PerygonCard";
 
 export interface BigUpStatsCardProps {
   name: string;
@@ -35,12 +34,14 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
 
   const rankOrdinal = ranking && getOrdinalSuffix(ranking);
 
+  const theme = useTheme();
+
   return (
-    <Card
+    <PerygonCard
       width="100%"
       height="100%"
-      bg="perygonBlueTransparent"
       justifyContent="space-between"
+      bg={theme.components.bigUpStatsCard.baseStyle.elementBG}
     >
       <Flex flexDirection="column" justifyContent="space-between" height="100%">
         <Flex align="center" mb={3} gap={5}>
@@ -62,11 +63,15 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
             <Text
               fontWeight="bold"
               fontSize={["sm", "md", "xl"]}
-              color="perygonPink"
+              color={theme.components.bigUpStatsCard.baseStyle.primaryTextColor}
             >
               {name}
             </Text>
-            <Text fontSize={["sm", "md", "xl"]} color="white" fontWeight="bold">
+            <Text
+              fontSize={["sm", "md", "xl"]}
+              color={theme.components.bigUpStatsCard.baseStyle.primaryTextColor}
+              fontWeight="bold"
+            >
               {location}
             </Text>
           </Flex>
@@ -81,7 +86,9 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
                 )}
                 <Text
                   fontWeight="bold"
-                  color="perygonPink"
+                  color={
+                    theme.components.bigUpStatsCard.baseStyle.secondaryTextColor
+                  }
                   fontSize={["sm", "lg"]}
                 >
                   {!medalColor && "Rank: "}
@@ -91,7 +98,7 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
             ) : (
               <Text
                 fontWeight="bold"
-                color="perygonPink"
+                color="themeTextColor"
                 fontSize={["sm", "lg"]}
               >
                 No Ranking
@@ -99,14 +106,17 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
             )}
           </Flex>
         </Flex>
-        <Flex>
-          <Text color="white" fontWeight="bold">
+        <Flex align="center">
+          <Text
+            color={theme.components.bigUpStatsCard.baseStyle.primaryTextColor}
+            fontWeight="bold"
+          >
             Your score is:
           </Text>
           <Text
             ml="auto"
             fontWeight="bold"
-            color="perygonPink"
+            color={theme.components.bigUpStatsCard.baseStyle.secondaryTextColor}
             fontSize={["xl", null, null, "2xl", null, "4xl"]}
           >
             {score.toLocaleString()}
@@ -114,22 +124,38 @@ export const BigUpStatsCard: React.FC<BigUpStatsCardProps> = ({
         </Flex>
         <Divider mb={3} />
         <Flex justify="space-between">
-          <Text fontSize="sm" fontWeight="bold" color="white">
+          <Text
+            color={theme.components.bigUpStatsCard.baseStyle.primaryTextColor}
+            fontSize="sm"
+            fontWeight="bold"
+          >
             Received:
           </Text>
-          <Text fontWeight="bold" fontSize="lg" color="perygonPink">
+          <Text
+            color={theme.components.bigUpStatsCard.baseStyle.primaryTextColor}
+            fontWeight="bold"
+            fontSize="lg"
+          >
             {received.toLocaleString()}
           </Text>
         </Flex>
         <Flex justify="space-between" mt={1}>
-          <Text fontSize="sm" fontWeight="bold" color="white">
+          <Text
+            color={theme.components.bigUpStatsCard.baseStyle.primaryTextColor}
+            fontSize="sm"
+            fontWeight="bold"
+          >
             Given:
           </Text>
-          <Text fontWeight="bold" fontSize="lg" color="perygonPink">
+          <Text
+            color={theme.components.bigUpStatsCard.baseStyle.primaryTextColor}
+            fontWeight="bold"
+            fontSize="lg"
+          >
             {given.toLocaleString()}
           </Text>
         </Flex>
       </Flex>
-    </Card>
+    </PerygonCard>
   );
 };

@@ -15,7 +15,6 @@ export const UserStatsModal: React.FC<UserStatsModalProps> = ({
   userStats,
   handleProfilePicClick,
 }) => {
-  console.log(userStats);
   return (
     <Modal
       size="2xl"

@@ -8,12 +8,13 @@ import {
   useState,
 } from "react";
 import { useFetchClient } from "@/hooks/useFetchClient";
+import { Role } from "@/types/user";
 
 export interface UserContextProps {
   userId: number;
   userUniqueId: string;
   email: string;
-  role: string;
+  role: Role;
   firstName?: string;
   lastName?: string;
   fullName?: string;
@@ -55,6 +56,9 @@ export interface UserContextProps {
   customerUniqueId?: string;
   teamManagerCount?: number;
   parentCustImageUrl?: string;
+  groupNames: string[] | null;
+  userThemeId?: number | null;
+  customerDefaultThemeId: number;
 }
 
 interface UserProviderProps {
@@ -65,7 +69,6 @@ interface UserProviderProps {
 
 const UserContext = createContext<UserProviderProps | undefined>(undefined);
 
-// Custom hook to use the user context
 export const useUser = () => {
   const context = useContext(UserContext);
   if (!context) {
@@ -74,7 +77,6 @@ export const useUser = () => {
   return context;
 };
 
-// Provider component to wrap the layout and pages
 export const UserProvider: React.FC<{
   value?: UserContextProps;
   children: ReactNode;

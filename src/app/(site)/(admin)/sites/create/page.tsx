@@ -1,8 +1,9 @@
 import { siteJson } from "@/components/surveyjs/forms/site";
 import AdminHeader from "@/components/AdminHeader";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import { checkUserRole, getUser } from "@/lib/dal";
 import { redirect } from "next/navigation";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 interface SearchParams {
   siteType?: string;
@@ -47,15 +48,28 @@ export default async function SitesCreatePage({
   return (
     <>
       <AdminHeader headingText={headerTitle} />
-      <SurveyComponent
-        surveyJson={siteJson}
+      <AdminFormWrapper
+        formJson={siteJson}
+        data={null}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={surveyVariables}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
+        excludeKeys={[]}
         endpoint={"/site"}
+        formSuccessMessage={null}
+        reloadPageOnSuccess={false}
+        redirectUrl={
+          user.role === "PA" ? "/sites" : `/sites?siteType=${siteTypeParam}`
+        }
         isNew={true}
-        layout={"default"}
-        includeVariables={surveyVariables}
-        redirectUrl={"/sites"}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        isAllowedToEdit={true}
       />
     </>
   );

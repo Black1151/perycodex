@@ -24,14 +24,14 @@ const UserAvatar: React.FC<UserAvatarProps> = ({ user, userRole }) => {
     return (
       <Flex
         bg="white"
-        border="1px solid perygonPink"
+        border="1px solid primary"
         align="center"
         justify="center"
         borderRadius="full"
         minH="40px"
         aspectRatio={1}
       >
-        <Text fontSize="md" fontWeight="bold" color="perygonPink">
+        <Text fontSize="md" fontWeight="bold" color="primary">
           {user?.customerName?.charAt(0)?.toUpperCase() || ""}
         </Text>
       </Flex>
@@ -52,14 +52,14 @@ const UserAvatar: React.FC<UserAvatarProps> = ({ user, userRole }) => {
     return (
       <Flex
         bg="white"
-        border="1px solid perygonPink"
+        border="1px solid primary"
         align="center"
         justify="center"
         borderRadius="full"
         minH="40px"
         aspectRatio={1}
       >
-        <Text fontSize="md" fontWeight="bold" color="perygonPink">
+        <Text fontSize="md" fontWeight="bold" color="primary">
           {user?.customerName?.charAt(0)?.toUpperCase() || ""}
         </Text>
       </Flex>

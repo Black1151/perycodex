@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Select } from "@chakra-ui/react";
+import { Select, useTheme } from "@chakra-ui/react";
 import { format } from "date-fns";
 import {
   DateRangeMode,
@@ -20,12 +20,13 @@ const DateFilter = <T extends DateRangeMode>({
   defaultDateFilter,
   clearSignal,
 }: DateFilterProps<T>) => {
+  const theme = useTheme();
   const [dateFilterMode, setDateFilterMode] =
     useState<DateRangeMode>(filterMode);
 
   const handleDateChange = (value: string) => {
     const selectedRange = dateRangeOptions[filterMode].find(
-      (range) => range.value === value,
+      (range) => range.value === value
     );
 
     if (selectedRange) {
@@ -33,7 +34,7 @@ const DateFilter = <T extends DateRangeMode>({
       onDateChange(
         format(startDate, "yyyy-MM-dd"),
         format(endDate, "yyyy-MM-dd"),
-        value,
+        value
       );
     } else {
       if (defaultDateFilter) {
@@ -65,9 +66,19 @@ const DateFilter = <T extends DateRangeMode>({
       placeholder="All"
       value={defaultDateFilter}
       onChange={(e) => handleDateChange(e.target.value)}
+      color={theme.colors.primaryTextColor}
+      sx={{
+        option: {
+          backgroundColor: theme.colors.elementBG,
+        },
+      }}
     >
       {dateRangeOptions[dateFilterMode].map((range) => (
-        <option key={range.value} value={range.value}>
+        <option
+          key={range.value}
+          value={range.value}
+          color={theme.colors.primaryTextColor}
+        >
           {range.name}
         </option>
       ))}

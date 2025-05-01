@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { Box, useTheme } from "@chakra-ui/react";
+import React from "react";
+import { useTheme } from "@chakra-ui/react";
 import { AgCharts } from "ag-charts-react";
 import useColor from "@/hooks/useColor";
 
@@ -10,8 +10,7 @@ import {
   AgCartesianSeriesOptions,
   BubbleSeriesItemStylerParams,
 } from "ag-charts-enterprise";
-
-import BubbleScoresTooltipRenderer from "@/components/agCharts/BubbleScoresTooltipRenderer";
+import { BubbleScoresTooltipRenderer } from "../../../../../../components/agCharts/tooltips/BubbleScoresTooltipRenderer";
 
 interface UserScores {
   score: number;
@@ -47,22 +46,19 @@ export const CompanyBubble: React.FC<CompanyBubble> = ({ scores }) => {
   ];
 
   const globalMaxCount = Math.max(
-    ...validScoresArray.map((d: UserScores) => d.countOfScore),
+    ...validScoresArray.map((d: UserScores) => d.countOfScore)
   );
 
   const series: AgCartesianSeriesOptions[] = days.map((day) => {
-    // Filter the scores for the current day
     const dayData = validScoresArray.filter(
-      (d: UserScores) => d.dayOfSubmission === day,
+      (d: UserScores) => d.dayOfSubmission === day
     );
 
-    // Find the maximum countOfScore for the current day's data
     const localMaxCount = Math.max(
       ...dayData.map((d: UserScores) => d.countOfScore),
-      0,
-    ); // Default to 0 if dayData is empty
+      0
+    );
 
-    // Calculate the maxSize for this day based on the global maximum
     const maxSize = (localMaxCount / globalMaxCount) * 100;
 
     return {
@@ -77,7 +73,7 @@ export const CompanyBubble: React.FC<CompanyBubble> = ({ scores }) => {
       size: 0,
       maxSize: maxSize,
       tooltip: {
-        renderer: BubbleScoresTooltipRenderer
+        renderer: BubbleScoresTooltipRenderer(theme.colors),
       },
       itemStyler: (params: BubbleSeriesItemStylerParams<any>) => {
         const { datum, xKey } = params;
@@ -87,7 +83,7 @@ export const CompanyBubble: React.FC<CompanyBubble> = ({ scores }) => {
     };
   });
 
-  const [options, setOptions] = useState<AgCartesianChartOptions>({
+  const options: AgCartesianChartOptions = {
     data: validScoresArray,
     seriesArea: {
       padding: {
@@ -96,6 +92,9 @@ export const CompanyBubble: React.FC<CompanyBubble> = ({ scores }) => {
       },
     },
     series: series,
+    background: {
+      fill: theme.colors.elementBG,
+    },
     axes: [
       {
         type: "category",
@@ -104,13 +103,13 @@ export const CompanyBubble: React.FC<CompanyBubble> = ({ scores }) => {
           fontSize: 12,
           fontFamily: "Metropolis",
           fontWeight: "bold",
-          color: theme.colors.perygonPink,
+          color: theme.colors.primaryTextColor,
         },
         title: {
           text: "Score",
           fontSize: 12,
           fontFamily: "Metropolis",
-          color: "black",
+          color: theme.colors.primaryTextColor,
         },
       },
       {
@@ -120,7 +119,7 @@ export const CompanyBubble: React.FC<CompanyBubble> = ({ scores }) => {
           fontSize: 10,
           fontFamily: "Metropolis",
           padding: 0,
-          color: theme.colors.perygonPink,
+          color: theme.colors.primaryTextColor,
         },
       },
     ],
@@ -136,19 +135,12 @@ export const CompanyBubble: React.FC<CompanyBubble> = ({ scores }) => {
     annotations: {
       enabled: false,
     },
-  });
+  };
 
   return (
-    <Box
-      borderRadius={"2xl"}
-      shadow={"xl"}
-      overflow={"hidden"}
-      height={"500px"}
-    >
-      <AgCharts
-        options={options as any}
-        style={{ width: "100%", height: "100%" }}
-      />
-    </Box>
+    <AgCharts
+      options={options as any}
+      style={{ width: "100%", height: "100%" }}
+    />
   );
 };

@@ -2,32 +2,25 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import {
-  Analytics,
-  BarChart,
-  BubbleChart,
-  Insights,
-  Timeline,
-} from "@mui/icons-material";
 import DashboardHeader from "@/app/(site)/(apps)/DashboardHeader";
 import { Dashboard } from "@/lib/dashboardUtils";
 import NavigationSidebar from "@/components/Sidebars/NavigationSidebar/NavigationSidebar";
 import NavigationBottombar from "@/components/Bottombar/NavigationBottombar/NavigationBottombar";
+import { getMuiIconByName } from "@/utils/muiIconMapper";
+import { Icon } from "@chakra-ui/react";
 
 interface DashboardAPIResponse {
   filteredDashboards: Dashboard[];
   toolData?: { startInUi: boolean };
 }
 
-const iconMapper: Record<string, React.ReactElement> = {
-  analytics: <Analytics sx={{ height: "100%", width: "100%" }} />,
-  insights: <Insights sx={{ height: "100%", width: "100%" }} />,
-  timeline: <Timeline sx={{ height: "100%", width: "100%" }} />,
-  bubble: <BubbleChart sx={{ height: "100%", width: "100%" }} />,
-  default: <BarChart sx={{ height: "100%", width: "100%" }} />,
-};
+interface ToolDashboardLayoutProps {
+  toolUrl: string;
+}
 
-const ToolDashboardLayout: React.FC = () => {
+const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
+  toolUrl,
+}) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -76,8 +69,8 @@ const ToolDashboardLayout: React.FC = () => {
   }, [pathname, dashboardList]);
 
   const menuItems = dashboardList.map((dashboard) => {
-    const iconKey = dashboard.smallIconImageUrl || "default";
-    const icon = iconMapper[iconKey] || iconMapper.default;
+    const iconKey = dashboard.smallIconImageUrl || "BarChart";
+    const icon = <Icon as={getMuiIconByName(iconKey)} />;
 
     return {
       label: dashboard.dashboardName,
@@ -92,7 +85,13 @@ const ToolDashboardLayout: React.FC = () => {
   });
 
   if (menuItems.length === 1) {
-    return null;
+    return (
+      <DashboardHeader
+        headingText={activeDashboardName ?? ""}
+        canStartWorkflow={toolData?.startInUi ?? false}
+        toolUrl={toolUrl}
+      />
+    );
   }
 
   return (
@@ -107,7 +106,7 @@ const ToolDashboardLayout: React.FC = () => {
       <DashboardHeader
         headingText={activeDashboardName ?? ""}
         canStartWorkflow={toolData?.startInUi ?? false}
-        toolUrl={"/happiness-score"}
+        toolUrl={toolUrl}
       />
     </>
   );

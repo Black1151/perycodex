@@ -1,9 +1,10 @@
 import apiClient from "@/lib/apiClient";
 import { redirect } from "next/navigation";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import { optionListItemsJson } from "@/components/surveyjs/forms/optionListItems";
 import { OptionListItemDetailsBanner } from "@/components/AdminDetailsBanners/OptionListItemDetailsBanner";
 import { checkUserRole } from "@/lib/dal";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function OptionListItemsDetailPage({
   params,
@@ -24,15 +25,26 @@ export default async function OptionListItemsDetailPage({
   return (
     <>
       <OptionListItemDetailsBanner optionListItem={optionListItemData} />
-      <SurveyComponent
-        surveyJson={optionListItemsJson}
+      <AdminFormWrapper
+        formJson={optionListItemsJson}
+        data={optionListItemData}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
+        excludeKeys={[]}
         endpoint={`/optionListItem/${params.uniqueId}`}
-        isNew={false}
-        layout={"default"}
-        dataset={optionListItemData}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        formSuccessMessage={null}
         reloadPageOnSuccess={true}
+        redirectUrl={null}
+        isNew={false}
+        isAllowedToEdit={true}
       />
     </>
   );

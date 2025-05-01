@@ -52,6 +52,11 @@ export const teamFields: ColDef[] | any = [
     cellRenderer: TeamCellRenderer,
   },
   {
+    field: "isService",
+    headerName: "Service?",
+    filter: "agMultiColumnFilter",
+  },
+  {
     field: "managerFullName",
     headerName: "Manager",
     cellDataType: "text",

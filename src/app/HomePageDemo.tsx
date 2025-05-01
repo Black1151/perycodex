@@ -16,7 +16,6 @@ import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import BarGraph from "@/components/graphs/BarGraph";
 import LineGraph from "@/components/graphs/LineGraph";
 
 export default function Home() {
@@ -52,7 +51,7 @@ export default function Home() {
       width="100%"
       overflowX="hidden"
       flex={1}
-      bgGradient={`linear(to-br, ${theme.colors.seduloRed}, ${theme.colors.perygonPink})`}
+      bgGradient={`linear(to-br, ${theme.colors.secondary}, ${theme.colors.primary})`}
     >
       {isLoading ? (
         // <SplashScreen />

@@ -50,7 +50,7 @@ const SelectItemRenderer: React.FC<SelectItemRendererProps> = ({
         bg={"gray.100"}
         justifyContent="center"
       >
-        <Checklist sx={{ color: "var(--chakra-colors-perygonPink)" }} />
+        <Checklist sx={{ color: "var(--chakra-colors-primary)" }} />
       </Box>
       <Text
         fontSize={"13px"}

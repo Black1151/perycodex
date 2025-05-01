@@ -50,7 +50,7 @@ const EmailScheduleRenderer: React.FC<EmailScheduleRendererProps> = ({
         bg={"gray.100"}
         justifyContent="center"
       >
-        <ScheduleSend sx={{ color: "var(--chakra-colors-perygonPink)" }} />
+        <ScheduleSend sx={{ color: "var(--chakra-colors-primary)" }} />
       </Box>
       <Text
         fontSize={"13px"}

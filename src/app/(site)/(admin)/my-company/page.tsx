@@ -1,9 +1,11 @@
 import { CustomerDetailsBanner } from "@/components/AdminDetailsBanners/CustomerDetailsBanner";
 import { customerJson } from "@/components/surveyjs/forms/customer";
 import { redirect } from "next/navigation";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import apiClient from "@/lib/apiClient";
 import { checkUserRole, getUser } from "@/lib/dal";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
+import { checkUserRoleAccess } from "@/components/surveyjs/lib/utils";
 
 export default async function MyCustomerPage() {
   const user = await getUser();
@@ -23,17 +25,26 @@ export default async function MyCustomerPage() {
   return (
     <>
       <CustomerDetailsBanner customer={customerData} />
-      <SurveyComponent
-        surveyJson={customerJson}
-        layout={"default"}
-        endpoint={`/customer/${customerUniqueId}`}
-        rolesCanEdit={["CA", "PA"]}
-        isNew={false}
-        dataset={customerData}
+      <AdminFormWrapper
+        formJson={customerJson}
+        data={customerData}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
         excludeKeys={["imageUrl"]}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        endpoint={`/customer/${customerUniqueId}`}
+        formSuccessMessage={null}
         reloadPageOnSuccess={true}
+        redirectUrl={null}
+        isNew={false}
+        isAllowedToEdit={checkUserRoleAccess(user.role, ["CA", "PA"])}
       />
     </>
   );

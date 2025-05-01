@@ -25,7 +25,7 @@ interface RightHandNavigationDrawerProps {
   handleCheckboxChange: (
     groupIndex: number,
     optionIndex: number,
-    isChecked: boolean,
+    isChecked: boolean
   ) => void;
   filterOptions: FilterOptionGroup[];
   clearAllFilters: () => void;
@@ -98,13 +98,13 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
           display={["flex"]}
           alignItems="center"
           justifyContent="center"
-          color={"rgba(248,248,248,0.8)"}
+          color={theme.colors.iconColor}
           borderRadius="full"
           aspectRatio={1}
           w={["30px", "30px", "36px"]}
           h={["30px", "30px", "36px"]}
           backgroundColor={"rgba(255,255,255,0.2)"}
-          border="1px solid white"
+          border={`1px solid ${theme.colors.iconColor}`}
           p={1}
           transform="scale(1)"
           transition="transform 0.2s ease-in-out"
@@ -139,7 +139,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
         bottom={0}
         width={225}
         zIndex={98}
-        bg="white"
+        bg="elementBG"
         boxShadow="xl"
         transform={
           drawerState === "fully-open" ? "translateX(0)" : "translateX(100%)"
@@ -157,10 +157,10 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
             position={"absolute"}
             right={0}
             zIndex={2}
-            background={"white"}
+            background={"elementBG"}
             w={"full"}
             pl={5}
-            color={theme.colors.perygonPink}
+            color={theme.colors.primaryTextColor}
             fontWeight={"bold"}
             fontSize={"1.2rem"}
           >
@@ -169,13 +169,16 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
               <Close
                 style={{
                   cursor: "pointer",
+                  color: theme.colors.primary,
                 }}
               />
             </Box>
           </Box>
           {drawerState === "fully-open" && title && (
             <Box px={4}>
-              <Text style={{ color: theme.colors.perygonPink }}>{title}</Text>
+              <Text style={{ color: theme.colors.primaryTextColor }}>
+                {title}
+              </Text>
             </Box>
           )}
 
@@ -187,12 +190,19 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                   value={selectedWeek || ""}
                   onChange={(e) => onWeekChange(e.target.value)}
                   isDisabled={isUpdating}
+                  color={theme.colors.primaryTextColor}
+                  sx={{
+                    option: {
+                      backgroundColor: theme.colors.elementBG,
+                    },
+                  }}
                 >
                   {weekOptions.map((week) => (
                     <option
                       key={week}
                       value={week}
                       style={{ paddingLeft: "10px" }}
+                      color={theme.colors.themeTextColor}
                     >
                       {week}
                     </option>
@@ -243,7 +253,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                         <Box
                           key={group.label}
                           border="1px solid"
-                          borderColor={theme.colors.perygonPink}
+                          borderColor={theme.colors.primary}
                           borderRadius="md"
                           p={2}
                           fontSize={["14px", "16px"]}
@@ -257,7 +267,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                             <Text
                               fontWeight="bold"
                               mb={2}
-                              bg={theme.colors.perygonPink}
+                              bg={theme.colors.primary}
                               color="white"
                               width="100%"
                               p={2}
@@ -281,11 +291,13 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
                                   handleCheckboxChange(
                                     groupIndex,
                                     optionIndex,
-                                    e.target.checked,
+                                    e.target.checked
                                   )
                                 }
                               >
-                                {option.label}
+                                <Text color={theme.colors.primaryTextColor}>
+                                  {option.label}
+                                </Text>
                               </Checkbox>
                             ))}
                           </VStack>

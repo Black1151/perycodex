@@ -11,13 +11,13 @@ import {
   AgPieSeriesOptions,
 } from "ag-charts-types";
 import AgGaugeComponent from "@/components/agCharts/AgGaugeComponent";
-import PieChartToolTipRenderer from "@/components/agCharts/PieChartTooltipRenderer";
-import SubmissionsTooltipRenderer from "@/components/agCharts/SubmissionsTooltipRenderer";
-import ScoreTooltipRenderer from "@/components/agCharts/ScoreTooltipRenderer";
+
 import { useFetchClient } from "@/hooks/useFetchClient";
 import useColor from "@/hooks/useColor";
 import { dateRangeOptions } from "@/components/Sidebars/Dashboards Filter/dateRangeUtils";
-import NoDataOverlay from "@/components/agGrids/NoDataOverlay";
+import { ScoreTooltipRenderer } from "@/components/agCharts/tooltips/ScoreTooltipRenderer";
+import { SubmissionsTooltipRenderer } from "@/components/agCharts/tooltips/SubmissionsTooltipRenderer";
+import { PieChartTooltipRenderer } from "@/components/agCharts/tooltips/PieChartTooltipRenderer";
 
 interface enpsMainDashboardResponse {
   resource: {
@@ -68,6 +68,9 @@ const AllEnpsDashboard = () => {
   const [pieChartData, setPieChartData] = useState<PieChartDataRecord[]>();
 
   const gaugeOptions: AgRadialGaugeOptions = {
+    background: {
+      fill: theme.colors.elementBG,
+    },
     type: "radial-gauge",
     value: gaugeData.value,
     scale: {
@@ -99,6 +102,9 @@ const AllEnpsDashboard = () => {
   };
 
   const histogramOptions: AgChartOptions = {
+    background: {
+      fill: theme.colors.elementBG,
+    },
     series: [
       {
         type: "bar",
@@ -132,7 +138,7 @@ const AllEnpsDashboard = () => {
           };
         },
         tooltip: {
-          renderer: SubmissionsTooltipRenderer,
+          renderer: SubmissionsTooltipRenderer(theme.colors),
         },
       },
     ],
@@ -142,7 +148,7 @@ const AllEnpsDashboard = () => {
         position: "bottom",
         label: {
           fontSize: 12,
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
         gridLine: {
           width: 0,
@@ -153,7 +159,7 @@ const AllEnpsDashboard = () => {
         position: "left",
         label: {
           fontSize: 12,
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
       },
     ],
@@ -161,6 +167,9 @@ const AllEnpsDashboard = () => {
   };
 
   const lineChartOptions: AgChartOptions = {
+    background: {
+      fill: theme.colors.elementBG,
+    },
     data: lineChartData,
     series: [
       {
@@ -168,12 +177,12 @@ const AllEnpsDashboard = () => {
         yKey: "value",
 
         xKey: "monthYear",
-        stroke: theme.colors.perygonPink,
+        stroke: theme.colors.primary,
         interpolation: {
           type: "smooth",
         },
         tooltip: {
-          renderer: ScoreTooltipRenderer,
+          renderer: ScoreTooltipRenderer(theme.colors),
         },
         marker: {
           enabled: true,
@@ -197,7 +206,7 @@ const AllEnpsDashboard = () => {
         label: {
           rotation: 300,
           fontSize: 12,
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
         gridLine: {
           width: 0,
@@ -211,11 +220,11 @@ const AllEnpsDashboard = () => {
         title: {
           text: "eNPS Score",
           fontSize: 12,
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
         label: {
           fontSize: 12,
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
       },
     ],
@@ -230,7 +239,7 @@ const AllEnpsDashboard = () => {
     angleKey: "value",
     calloutLabelKey: "category",
     calloutLabel: {
-      color: theme.colors.perygonPink,
+      color: theme.colors.primary,
       fontSize: 12,
     },
     sectorLabelKey: "value",
@@ -251,11 +260,14 @@ const AllEnpsDashboard = () => {
     },
     tooltip: {
       enabled: true,
-      renderer: PieChartToolTipRenderer,
+      renderer: PieChartTooltipRenderer(theme.colors),
     },
   };
 
   const pieChartOptions: AgPolarChartOptions = {
+    background: {
+      fill: theme.colors.elementBG,
+    },
     data: pieChartData,
     series: [pieChartSeries],
   };
@@ -264,7 +276,6 @@ const AllEnpsDashboard = () => {
     try {
       return JSON.parse(str);
     } catch (err) {
-      console.error("Could not parse JSON:", err);
       return null; // or some default fallback
     }
   }
@@ -278,7 +289,7 @@ const AllEnpsDashboard = () => {
           method: "POST",
           body: postBody,
           redirectOnError: false,
-        },
+        }
       );
 
       if (response && response.resource) {
@@ -287,10 +298,8 @@ const AllEnpsDashboard = () => {
         setLineChartData(safeJsonParse(response.resource.monthlyLineChart));
         setPieChartData(safeJsonParse(response.resource.pieChart));
       } else {
-        console.error("Invalid response:", response);
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
     } finally {
       setIsLoading(false);
     }
@@ -306,7 +315,7 @@ const AllEnpsDashboard = () => {
 
   useEffect(() => {
     const monthlyOption = dateRangeOptions[dateRangeOption].find(
-      (opt) => opt.value === defaultDateFilterOption,
+      (opt) => opt.value === defaultDateFilterOption
     );
 
     if (monthlyOption) {

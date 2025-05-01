@@ -27,7 +27,7 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
   const [activeLabel, setActiveLabel] = useState<string | null>(null);
 
   const [drawerState, setDrawerState] = useState<DrawerStateOptions>(
-    sidebarProps.drawerState ?? "closed",
+    sidebarProps.drawerState ?? "closed"
   );
   const canHalf = true;
   const canFull = true;
@@ -38,7 +38,7 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
   };
   const onToggle = () => {
     setDrawerState((curr) =>
-      curr === "half-open" ? "fully-open" : "half-open",
+      curr === "half-open" ? "fully-open" : "half-open"
     );
   };
   const onClose = () => {
@@ -62,7 +62,7 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
       acc[cat].push(item);
       return acc;
     },
-    {} as Record<string, MenuItem[]>,
+    {} as Record<string, MenuItem[]>
   );
 
   const halfBarMenu = (
@@ -82,7 +82,7 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
               />
               {i < items.length - 1 && (
                 <Divider
-                  borderColor={theme.colors.perygonPink}
+                  borderColor={theme.colors.primary}
                   opacity={0.2}
                   my={2}
                 />
@@ -90,11 +90,7 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
             </React.Fragment>
           ))}
           {catIdx < Object.keys(groupedItems).length - 1 && (
-            <Divider
-              borderColor={theme.colors.perygonPink}
-              opacity={0.8}
-              my={6}
-            />
+            <Divider borderColor={theme.colors.primary} opacity={0.8} my={6} />
           )}
         </React.Fragment>
       ))}
@@ -115,7 +111,7 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
               >
                 {category}
               </Text>
-              <Divider borderColor={theme.colors.perygonPink} opacity={0.5} />
+              <Divider borderColor={theme.colors.primary} opacity={0.5} />
             </Box>
           )}
           {items.map((item, i) => (
@@ -131,7 +127,7 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
               />
               {i < items.length - 1 && (
                 <Divider
-                  borderColor={theme.colors.perygonPink}
+                  borderColor={theme.colors.primary}
                   opacity={0.2}
                   my={2}
                 />
@@ -139,11 +135,7 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
             </React.Fragment>
           ))}
           {catIdx < Object.keys(groupedItems).length - 1 && (
-            <Divider
-              borderColor={theme.colors.perygonPink}
-              opacity={0.8}
-              my={6}
-            />
+            <Divider borderColor={theme.colors.primary} opacity={0.8} my={6} />
           )}
         </React.Fragment>
       ))}

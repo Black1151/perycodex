@@ -13,12 +13,11 @@ import {
   useBreakpointValue,
   useTheme,
 } from "@chakra-ui/react";
-import { perygonTheme } from "@/theme/theme";
+
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import { AgCharts } from "ag-charts-react";
 import { useRouter } from "next/navigation";
 import useColor from "@/hooks/useColor";
-import BubbleScoresTooltipRenderer from "@/components/agCharts/BubbleScoresTooltipRenderer";
 
 import {
   AgBubbleSeriesTooltipRendererParams,
@@ -26,6 +25,7 @@ import {
   AgCartesianSeriesOptions,
   BubbleSeriesItemStylerParams,
 } from "ag-charts-enterprise";
+import { BubbleScoresTooltipRenderer } from "@/components/agCharts/tooltips/BubbleScoresTooltipRenderer";
 
 interface UserScores {
   score: number;
@@ -114,19 +114,19 @@ const HappinessRagHistogramModal: React.FC<HappinessRagBubbleModal> = ({
   ];
 
   const globalMaxCount = Math.max(
-    ...validScoresArray.map((d: UserScores) => d.countOfScore),
+    ...validScoresArray.map((d: UserScores) => d.countOfScore)
   );
 
   const series: AgCartesianSeriesOptions[] = days.map((day) => {
     // Filter the scores for the current day
     const dayData = validScoresArray.filter(
-      (d: UserScores) => d.dayOfSubmission === day,
+      (d: UserScores) => d.dayOfSubmission === day
     );
 
     // Find the maximum countOfScore for the current day's data
     const localMaxCount = Math.max(
       ...dayData.map((d: UserScores) => d.countOfScore),
-      0,
+      0
     ); // Default to 0 if dayData is empty
 
     // Calculate the maxSize for this day based on the global maximum
@@ -143,7 +143,7 @@ const HappinessRagHistogramModal: React.FC<HappinessRagBubbleModal> = ({
       sizeName: "Submissions",
       size: 0,
       maxSize: maxSize,
-      tooltip: { renderer: BubbleScoresTooltipRenderer },
+      tooltip: { renderer: BubbleScoresTooltipRenderer(theme.colors) },
       itemStyler: (params: BubbleSeriesItemStylerParams<any>) => {
         const { datum, xKey } = params;
         const score = parseInt(datum[xKey], 10); // Retrieve the score value
@@ -169,7 +169,7 @@ const HappinessRagHistogramModal: React.FC<HappinessRagBubbleModal> = ({
           fontSize: 12,
           fontFamily: "Metropolis",
           fontWeight: "bold",
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
         title: {
           text: "Score",
@@ -185,7 +185,7 @@ const HappinessRagHistogramModal: React.FC<HappinessRagBubbleModal> = ({
           fontSize: 10,
           fontFamily: "Metropolis",
           padding: 0,
-          color: theme.colors.perygonPink,
+          color: theme.colors.primary,
         },
       },
     ],
@@ -206,10 +206,7 @@ const HappinessRagHistogramModal: React.FC<HappinessRagBubbleModal> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="6xl">
       <ModalOverlay />
-      <ModalContent
-        bgGradient={perygonTheme.gradients.perygonBackground}
-        pb={3}
-      >
+      <ModalContent bgGradient={theme.gradients.modalBGGradient} pb={3}>
         <ModalHeader color="white" fontWeight="bold">
           Happiness Punch Card
         </ModalHeader>

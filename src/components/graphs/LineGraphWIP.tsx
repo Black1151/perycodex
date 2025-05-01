@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Box, Text, useBreakpointValue } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { perygonTheme } from "@/theme/theme";
+import { perygonTheme } from "@/theme/themes/perygon/perygonTheme/perygonTheme";
 import { YAxis } from "./BarGraph";
 
 interface DataPoint {

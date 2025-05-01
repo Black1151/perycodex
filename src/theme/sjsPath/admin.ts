@@ -90,7 +90,7 @@ export const themeJson = {
     // Background of SurveyJS colors
     "--sjs-general-backcolor": "#E5E5E500", // Unsure what this one is doing
     "--sjs-general-backcolor-dark": "#FFFFFF00", // Unsure what this one is doing
-    "--sjs-general-backcolor-dim": "#FFFFFF", // Background of SurveyJS if no image / Also used for background of the dropdown selections
+    "--sjs-general-backcolor-dim": "var(--chakra-colors-elementBG)", // Background of SurveyJS if no image / Also used for background of the dropdown selections
     "--sjs-general-backcolor-dim-light": "#FFFFFF00", // Unsure what this one is doing
     "--sjs-general-backcolor-dim-dark": "#FFFFFF00", // Unsure what this one is doing
 
@@ -101,7 +101,7 @@ export const themeJson = {
     "--sjs-general-dim-forecolor-light": "#000000",
 
     // Primary Backcolour
-    "--sjs-primary-backcolor": "var(--chakra-colors-perygonPink)", // Main Accent Colour of things
+    "--sjs-primary-backcolor": "var(--chakra-colors-primary)", // Main Accent Colour of things
     "--sjs-primary-backcolor-light": "#3182CE1A",
     "--sjs-primary-backcolor-dark": "#3182CE1A",
     "--sjs-primary-forecolor": "#E5E5E5",
@@ -131,17 +131,14 @@ export const themeJson = {
     "--sjs-question-background": "#a2ffc6", // Unsure what this one does
 
     // Page Title
-    "--sjs-font-pagetitle-color": "var(--chakra-colors-perygonPink)",
+    "--sjs-font-pagetitle-color": "var(--chakra-colors-primary)",
 
     // Panels
     "--sjs-questionpanel-backcolor": "#FFFFFF",
     "--sjs-questionpanel-hovercolor": "rgba(235, 235, 235, 0.50)",
 
-    // Question Titles
-    "--sjs-font-questiontitle-color": "rgba(0, 0, 0, 1)",
-
     // Question Description
-    "--sjs-font-questiondescription-color": "var(--chakra-colors-perygonPink)",
+    "--sjs-font-questiondescription-color": "var(--chakra-colors-primary)",
 
     // Header Title
     "--sjs-font-headertitle-color": "rgba(255, 255, 255, 1)",
@@ -155,8 +152,11 @@ export const themeJson = {
     "--sjs-editorpanel-hovercolor": "#E5E5E5", // Hover over boolean switch
 
     // Font Editor
-    "--sjs-font-editorfont-color": "#191919",
-    "--sjs-font-editorfont-placeholdercolor": "#191919cc",
+    "--sjs-font-editorfont-color": "var(--chakra-colors-primaryTextColor)",
+    "--sjs-font-questiontitle-color": "var(--chakra-colors-primaryTextColor)",
+    // "--sjs-font-editorfont-placeholdercolor": "#191919cc",
+    "--sjs-font-editorfont-placeholdercolor":
+      "var(--chakra-colors-primaryTextColor)",
 
     // Special colours
     // Red

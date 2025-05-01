@@ -52,8 +52,6 @@ export const LeaderBoardTabContent: React.FC<LeaderBoardTabContentProps> = ({
         {items?.map((item, index) => {
           const rank = index + 1;
 
-          console.log(item);
-
           return (
             <AnimatedListItem delay={0.5} key={index} index={index}>
               <LeaderboardCard

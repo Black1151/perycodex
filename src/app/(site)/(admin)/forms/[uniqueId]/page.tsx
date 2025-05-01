@@ -1,9 +1,9 @@
 import apiClient from "@/lib/apiClient";
 import { redirect } from "next/navigation";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
 import { FormDetailsBanner } from "@/components/AdminDetailsBanners/FormDetailsBanner";
 import { formsJson } from "@/components/surveyjs/forms/forms";
 import { checkUserRole } from "@/lib/dal";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function FormsDetailPage({
   params,
@@ -24,15 +24,26 @@ export default async function FormsDetailPage({
   return (
     <>
       <FormDetailsBanner form={formData} />
-      <SurveyComponent
-        surveyJson={formsJson}
+      <AdminFormWrapper
+        formJson={formsJson}
+        data={formData}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
+        excludeKeys={[]}
         endpoint={`/form/${params.uniqueId}`}
-        isNew={false}
-        dataset={formData}
-        layout={"default"}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        formSuccessMessage={null}
         reloadPageOnSuccess={true}
+        redirectUrl={null}
+        isNew={false}
+        isAllowedToEdit={true}
       />
     </>
   );

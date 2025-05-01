@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Box, Progress, keyframes } from "@chakra-ui/react";
-import { css } from "@emotion/react";
+import { Box, Progress } from "@chakra-ui/react";
+import { css, keyframes } from "@emotion/react";
 
 const pulse = keyframes`
   0% { background-color: #ff6699; }

@@ -46,7 +46,7 @@ export function PasswordResetForm({ token }: ActivateAccountFormProps) {
   } = useForm<ActivateAccountFormInputs>();
 
   const handleFormSubmit: SubmitHandler<ActivateAccountFormInputs> = async (
-    data,
+    data
   ) => {
     const result = await fetchClient("/api/auth/password-reset", {
       method: "POST",
@@ -67,7 +67,7 @@ export function PasswordResetForm({ token }: ActivateAccountFormProps) {
     <>
       <form
         onSubmit={handleSubmit(handleFormSubmit)}
-        style={{ width: "100%", maxWidth: "sm"}}
+        style={{ width: "100%", maxWidth: "sm" }}
       >
         <VStack spacing={0} w="100%">
           <VStack spacing={0} w={300}>
@@ -85,7 +85,7 @@ export function PasswordResetForm({ token }: ActivateAccountFormProps) {
                 />
               }
               register={() => register("password", passwordValidation)}
-              focusBorderColor={theme.colors.perygonPink}
+              focusBorderColor={theme.colors.primary}
             />
             <InputField
               name="repeatPassword"
@@ -107,19 +107,19 @@ export function PasswordResetForm({ token }: ActivateAccountFormProps) {
                     value === watch("password") || "Passwords do not match",
                 })
               }
-              focusBorderColor={theme.colors.perygonPink}
+              focusBorderColor={theme.colors.primary}
             />
             <Button
               mt={0}
-              backgroundColor={theme.colors.perygonPink}
+              backgroundColor={theme.colors.primary}
               type="submit"
               w="full"
               isLoading={loading}
               height={12}
               color="white"
               _hover={{
-                color: theme.colors.perygonPink,
-                border: `1px solid ${theme.colors.perygonPink}`,
+                color: theme.colors.primary,
+                border: `1px solid ${theme.colors.primary}`,
                 backgroundColor: "white",
               }}
             >

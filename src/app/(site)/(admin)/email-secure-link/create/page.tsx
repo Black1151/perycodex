@@ -1,7 +1,8 @@
 import AdminHeader from "@/components/AdminHeader";
-import SurveyComponent from "@/components/surveyjs/SurveyComponent";
+
 import { emailSecureLinkJson } from "@/components/surveyjs/forms/emailSecureLink";
 import { checkUserRole } from "@/lib/dal";
+import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function EmailSecureLinkCreatePage() {
   await checkUserRole("/email-secure-link/create");
@@ -9,14 +10,26 @@ export default async function EmailSecureLinkCreatePage() {
   return (
     <>
       <AdminHeader headingText="Create Email Secure Link" />
-      <SurveyComponent
-        surveyJson={emailSecureLinkJson}
+      <AdminFormWrapper
+        formJson={emailSecureLinkJson}
+        data={null}
+        layoutConfig={{
+          layoutKey: "default",
+          layoutProps: {},
+        }}
+        globalVariables={[]}
+        stylingConfig={{
+          sjsFilePath: "admin",
+          cssFilePath: "admin",
+        }}
+        jsImport={""}
+        excludeKeys={[]}
         endpoint={"/emailSecureLink"}
-        isNew={true}
-        layout={"default"}
+        formSuccessMessage={null}
+        reloadPageOnSuccess={false}
         redirectUrl={"/email-secure-link"}
-        sjsPath={"admin"}
-        cssPath={"admin"}
+        isNew={true}
+        isAllowedToEdit={true}
       />
     </>
   );

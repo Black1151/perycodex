@@ -21,7 +21,7 @@ const Confetti: React.FC<ConfettiProps> = ({ show }) => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const colors = ["#FF0000", "#FFC0CB", "#000000", "#FFFFFF"];
+    const colors = ["primary", "secondary", "#000000", "#FFFFFF"];
 
     class ConfettiParticle {
       x: number;

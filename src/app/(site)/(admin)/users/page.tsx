@@ -17,7 +17,6 @@ export default async function UsersPage({
   const user = await getUser();
 
   if (user.role === "CA") {
-
   }
 
   await checkUserRole("/users");

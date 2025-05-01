@@ -38,7 +38,7 @@ const Counter: React.FC<CounterProps> = ({ value, ...rest }) => {
     >
       <AnimatePresence initial={false}>
         <motion.div
-          key={previousValue}
+          key={`previous-${previousValue}`}
           initial={{ opacity: 1, y: "0%", scale: 1 }}
           animate={{ opacity: 0, y: "110%", scale: 0 }}
           exit={{ opacity: 0, y: "110%", scale: 0 }}
@@ -49,11 +49,11 @@ const Counter: React.FC<CounterProps> = ({ value, ...rest }) => {
             textAlign: "center",
           }}
         >
-          {previousValue}
+          {previousValue.toString()}
         </motion.div>
 
         <motion.div
-          key={displayValue}
+          key={`current-${displayValue}`}
           initial={{ opacity: 0, y: "-110%", scale: 0 }}
           animate={{ opacity: 1, y: "0%", scale: 1 }}
           exit={{ opacity: 0, y: "110%", scale: 0 }}
@@ -64,7 +64,7 @@ const Counter: React.FC<CounterProps> = ({ value, ...rest }) => {
             textAlign: "center",
           }}
         >
-          {displayValue}
+          {displayValue.toString()}
         </motion.div>
       </AnimatePresence>
     </Box>

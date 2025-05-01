@@ -1,7 +1,7 @@
 import React from "react";
 import { Flex, Avatar, Text, Divider, BoxProps } from "@chakra-ui/react";
-import Card from "../../components/Card";
 import { EmojiEvents } from "@mui/icons-material";
+import PerygonCard from "@/components/layout/PerygonCard";
 
 export interface LeaderboardCardProps extends BoxProps {
   name: string;
@@ -30,12 +30,7 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
   ...props
 }) => {
   return (
-    <Card
-      width="100%"
-      bg="perygonBlueTransparent"
-      boxShadow="0 0 10px 2px rgba(192, 192, 192, 0.8)"
-      {...props}
-    >
+    <PerygonCard width="100%" boxShadow="primaryShadow" {...props}>
       <Flex align="center" mb={3}>
         <Avatar
           size="lg"
@@ -45,10 +40,10 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
           _hover={{ cursor: "pointer" }}
         />
         <Flex direction="column" ml={4} flex="1">
-          <Text fontWeight="bold" fontSize="xl" color="perygonPink">
+          <Text color="themeTextColor" fontWeight="bold" fontSize="xl">
             {name}
           </Text>
-          <Text fontSize="sm" color="white">
+          <Text color="primaryTextColor" fontSize="sm">
             {location}
           </Text>
         </Flex>
@@ -66,12 +61,12 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
             fontSize="large"
           />
         )}
-        <Text fontWeight="bold" color="perygonPink" fontSize="lg" mr={2}>
+        <Text fontWeight="bold" color="themeTextColor" fontSize="lg" mr={2}>
           {rank}
         </Text>
         <Text
           fontWeight="bold"
-          color="perygonPink"
+          color="themeTextColor"
           fontSize="lg"
           whiteSpace="nowrap"
         >
@@ -81,21 +76,21 @@ export const LeaderboardCard: React.FC<LeaderboardCardProps> = ({
 
       <Divider mb={3} />
       <Flex justify="space-between">
-        <Text fontSize="sm" fontWeight="bold" color="white">
+        <Text color="primaryTextColor" fontSize="sm" fontWeight="bold">
           Received:
         </Text>
-        <Text fontWeight="bold" fontSize="lg" color="perygonPink">
+        <Text color="primaryTextColor" fontWeight="bold" fontSize="lg">
           {received.toLocaleString()}
         </Text>
       </Flex>
       <Flex justify="space-between" mt={1}>
-        <Text fontSize="sm" fontWeight="bold" color="white">
+        <Text color="primaryTextColor" fontSize="sm" fontWeight="bold">
           Given:
         </Text>
-        <Text fontWeight="bold" fontSize="lg" color="perygonPink">
+        <Text color="primaryTextColor" fontWeight="bold" fontSize="lg">
           {given.toLocaleString()}
         </Text>
       </Flex>
-    </Card>
+    </PerygonCard>
   );
 };

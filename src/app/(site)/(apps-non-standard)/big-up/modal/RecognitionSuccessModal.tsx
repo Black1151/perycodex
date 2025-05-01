@@ -29,7 +29,7 @@ export function RecognitionSuccessModal({
     >
       <ModalOverlay />
       <ModalContent
-        bg="pink.500"
+        bg="primary"
         color="white"
         borderRadius="lg"
         textAlign="center"

@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
+import PerygonCard from "@/components/layout/PerygonCard";
 
 interface ModalProps {
   isOpen: boolean;
@@ -21,7 +22,7 @@ interface ModalProps {
     close: boolean;
     confirm: boolean;
   };
-  title?: string;
+  title?: string | React.ReactNode;
   titleProps?: ModalHeaderProps;
   bodyContent?: string | React.ReactNode;
   confirmLabel?: string;
@@ -46,48 +47,57 @@ const SurveyModal: React.FC<ModalProps> = ({
     <Modal isOpen={isOpen} onClose={onClose} returnFocusOnClose={false}>
       {" "}
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader {...titleProps}>
-          <Flex justifyContent={"center"} alignItems={"center"} width={"100%"}>
-            {title}
-          </Flex>
-        </ModalHeader>
-        <ModalBody>{bodyContent}</ModalBody>
-        <ModalFooter>
-          {showButtons.close && (
-            <Button
-              mr={3}
-              onClick={onClose}
-              bgColor="darkGray"
-              border="1px solid darkGray"
-              color="white"
-              _hover={{ color: "darkGray", backgroundColor: "white" }}
-              display="flex"
-              alignItems="center"
-              gap={[0, 0, 2]}
-              lineHeight={0}
+      <ModalContent bgColor="elementBG">
+        <PerygonCard>
+          <ModalHeader {...titleProps}>
+            <Flex
+              justifyContent={"center"}
+              alignItems={"center"}
+              width={"100%"}
+              color="primaryTextColor"
             >
-              <CloseIcon />
-              {cancelLabel}
-            </Button>
-          )}
-          {showButtons.confirm && (
-            <Button
-              bgColor="green"
-              border="1px solid lightGray"
-              color="white"
-              _hover={{ color: "green", backgroundColor: "white" }}
-              onClick={onConfirm}
-              display="flex"
-              alignItems="center"
-              gap={[0, 0, 2]}
-              lineHeight={0}
-            >
-              <DoneIcon />
-              {confirmLabel}
-            </Button>
-          )}
-        </ModalFooter>
+              {title}
+            </Flex>
+          </ModalHeader>
+
+          <ModalBody color="primaryTextColor">{bodyContent}</ModalBody>
+
+          <ModalFooter>
+            {showButtons.close && (
+              <Button
+                mr={3}
+                onClick={onClose}
+                bgColor="darkGray"
+                border="1px solid darkGray"
+                color="white"
+                _hover={{ color: "white", backgroundColor: "red.600" }}
+                display="flex"
+                alignItems="center"
+                gap={[0, 0, 2]}
+                lineHeight={0}
+              >
+                <CloseIcon />
+                {cancelLabel}
+              </Button>
+            )}
+            {showButtons.confirm && (
+              <Button
+                bgColor="darkGray"
+                border="1px solid lightGray"
+                color="white"
+                _hover={{ color: "white", backgroundColor: "green.600" }}
+                onClick={onConfirm}
+                display="flex"
+                alignItems="center"
+                gap={[0, 0, 2]}
+                lineHeight={0}
+              >
+                <DoneIcon />
+                {confirmLabel}
+              </Button>
+            )}
+          </ModalFooter>
+        </PerygonCard>
       </ModalContent>
     </Modal>
   );
