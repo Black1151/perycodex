@@ -298,7 +298,6 @@ export default function ToolSelection() {
       const endDate = new Date(startDate);
       endDate.setDate(startDate.getDate() + 45);
       const formatted = `${endDate.getDate().toString().padStart(2, "0")}-${(endDate.getMonth() + 1).toString().padStart(2, "0")}-${endDate.getFullYear()}`;
-      console.log("End date calculated:", formatted);
       setFormattedEndDate(formatted);
     } catch (error) {
       console.error("Error fetching end date:", error);

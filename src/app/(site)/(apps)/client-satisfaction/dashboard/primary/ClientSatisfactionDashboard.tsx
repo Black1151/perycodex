@@ -165,7 +165,7 @@ const ClientSatisfactionDashboard = () => {
       } else {
       }
     } catch (error) {
-      console.log("Error fetching data:", error);
+      console.error("Error fetching data:", error);
     } finally {
       setIsLoading(false);
     }
@@ -684,8 +684,6 @@ const ClientSatisfactionDashboard = () => {
                   ],
                   listeners: {
                     seriesNodeClick: (params: AgNodeClickEvent<any, any>) => {
-                      console.log("Node clicked:", params);
-
                       const { xKey, yKey, datum } = params;
 
                       if (datum && xKey && yKey) {

@@ -88,8 +88,6 @@ const ToolStore: React.FC<ToolSelectionPageResponse> = () => {
           });
           const customerTools = custRes?.resource ?? [];
 
-          console.log("User tools response:", customerTools);
-
           // 3) match by id and setUsersTools
           const userIds = customerTools.map((tc) => tc.toolConfigId);
           const owned = toolsToShow.filter((t) => userIds.includes(t.id));

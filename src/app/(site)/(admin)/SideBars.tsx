@@ -346,7 +346,6 @@ export default function SideBars() {
   useEffect(() => {
     const newItems = generateLeftSidebarItemsDrawer(user?.role, user?.customerIsFree ?? true);
     const hasAnyActive = newItems.some((item) => item.active);
-    console.log("customerIsFree", user?.customerIsFree);
 
     if (leftMenuItems.length === 0) {
       setLeftMenuItems(newItems);
