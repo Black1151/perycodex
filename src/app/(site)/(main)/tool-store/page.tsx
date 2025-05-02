@@ -1,12 +1,13 @@
-import React from 'react';
-import ToolStore from './ToolStore';
+import React from "react";
+import ToolStore from "./ToolStore";
+import { BasketProvider } from "./BasketContext";
 
 const ToolStorePage = () => {
-    return (
-        <div>
-            <ToolStore />
-        </div>
-    );
+  return (
+    <BasketProvider>
+      <ToolStore resource={[]} />
+    </BasketProvider>
+  );
 };
 
 export default ToolStorePage;

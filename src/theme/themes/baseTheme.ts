@@ -1,5 +1,5 @@
 // baseTheme.ts
-import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
+import { background, extendTheme, Tabs, type ThemeConfig } from "@chakra-ui/react";
 
 import { scrollBarThemes } from "@/theme/scrollBarThemes";
 import { agChartStyles } from "@/theme/agChartStyles";
@@ -219,6 +219,26 @@ export const baseTheme = extendTheme({
           },
           thumb: {
             bg: "white",
+          },
+        },
+      },
+    },
+
+    Tabs: {
+      variants: {
+        line: {
+          tab: {
+            color: "primaryTextColor",
+            fontSize: "16px",
+            fontWeight: "bold",
+            _selected: {
+              color: "primary",
+              borderBottomColor: "primary",
+            },
+          },
+          tablist: {
+            backgroundColor: "elementBG",
+            borderBottomColor: "rgba(255, 255, 255, 0.80)",
           },
         },
       },
