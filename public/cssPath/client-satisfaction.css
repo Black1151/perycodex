@@ -2,6 +2,11 @@
   height: auto;
 }
 
+.sd-title.sd-element__title {
+  font-weight: var(--sjs-font-questiontitle-weight, 400);
+  color: var(--sjs-general-dim-forecolor);
+}
+
 /* This bit of css centers rating questions */
 
 .sd-rating {
@@ -49,7 +54,7 @@
 
 .sd-rating__item.sd-rating__item--readonly.sd-rating__item--fixed-size
   .sd-rating__item-text {
-  color: white !important; /*centre number colour was white******/
+  color: var(--sjs-general-dim-forecolor) !important; /*centre number colour*/
 }
 
 .sd-rating__item.sd-rating__item--selected.sd-rating__item--readonly.sd-rating__item--fixed-size {
