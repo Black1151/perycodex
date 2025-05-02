@@ -1,5 +1,15 @@
 // // app/api/checkout/route.ts
 
+// Example for a POST route in Next.js 13+ app router
+import { NextResponse } from 'next/server'
+
+export async function POST(request: Request) {
+  const body = await request.json()
+  //Placeholder for the actual logic
+  return NextResponse.json({ success: true })
+}
+
+
 // import { NextResponse } from 'next/server';
 // import Stripe from 'stripe';
 
