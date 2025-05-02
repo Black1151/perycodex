@@ -26,12 +26,6 @@ export interface Action {
  * Props passed into SignUpCard
  */
 interface SignUpCardProps {
-  /** Initial title for the left panel */
-  title: string;
-  /** Initial description for the left panel */
-  description: string;
-  /** Initial array of links (e.g. social icons) */
-  actions: Action[];
   /** Render-prop children receive panel controls */
   children: ReactNode;
 }
@@ -62,15 +56,12 @@ export const usePanel = (): PanelContextType => {
  * SignUpCard wraps two panels and exposes setters via context
  */
 const SignUpCard: React.FC<SignUpCardProps> = ({
-  title: initialTitle,
-  description: initialDescription,
-  actions: initialActions,
   children,
 }) => {
   // maintain dynamic state for panel
-  const [title, setTitle] = useState(initialTitle);
-  const [description, setDescription] = useState(initialDescription);
-  const [actions, setActions] = useState<Action[]>(initialActions);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [actions, setActions] = useState<Action[]>([]);
   const router = useRouter();
   const theme = useTheme();
 
@@ -122,7 +113,7 @@ const SignUpCard: React.FC<SignUpCardProps> = ({
             </VStack>
             <VStack spacing={4} mt={8} align={"start"} w={"full"}>
               {actions.map(({ label, href, icon }) => (
-                <HStack gap={1}>
+                <HStack gap={1} key={label}>
                   {icon}
                   <Text
                     as="span"

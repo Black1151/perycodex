@@ -22,7 +22,7 @@ const variants = {
   exit: { opacity: 0, y: -20 },
 };
 
-export const SignUpPageClient = () => {
+const SignUpPageClient = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
   const { fetchClient, loading } = useFetchClient();
@@ -167,3 +167,5 @@ export const SignUpPageClient = () => {
     </VStack>
   );
 };
+
+export default SignUpPageClient;

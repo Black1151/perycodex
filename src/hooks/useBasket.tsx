@@ -12,7 +12,7 @@ export function useBasket() {
     const [ownedTools, setOwnedTools] = useState<ToolResource[]>([])
     const [unownedTools, setUnownedTools] = useState<ToolResource[]>([])
     const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly')
-
+    const [currentActiveLicenses, setCurrentActiveLicenses] = useState<number>(0) //TODO: Call API for this value
     const [currentLicenses, setCurrentLicenses] = useState<number>(0)
     const [additionalLicenses, setAdditionalLicenses] = useState<number>(0)
 
@@ -115,6 +115,7 @@ export function useBasket() {
         setCurrentLicenses,
         additionalLicenses,
         setAdditionalLicenses,
+        currentActiveLicenses,
 
         // pricing
         getCheckoutProducts,

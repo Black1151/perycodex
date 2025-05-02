@@ -27,19 +27,14 @@ export function LicensesModal({
   isOpen,
   onClose,
 }: LicensesModalProps) {
-  const theme = useTheme()
-  const PRICE_PER_LICENSE = 10
   const {
     currentLicenses,
     currentActiveLicenses,
-    decreaseCurrentLicenses,
-    increaseCurrentLicenses,
     additionalLicenses,
   } = useBasketContext()
 
   const currentlyAvailableLicenses = currentLicenses - currentActiveLicenses
   const newLicenses = currentLicenses + additionalLicenses
-  const newAvailable = newLicenses - currentActiveLicenses
   const [tempAmount, setTempAmount] = useState<number>(currentLicenses)
 
   useEffect(() => {

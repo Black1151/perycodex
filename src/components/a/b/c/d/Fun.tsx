@@ -1,6 +1,5 @@
 "use client";
 
-import { PerygonModal } from "@/components/modals/PerygonModal";
 import React from "react";
 import { Image } from "@chakra-ui/react";
 
@@ -12,14 +11,7 @@ export const Fun = ({
   onClose: () => void;
 }) => {
   return (
-    <PerygonModal
-      isOpen={isOpen}
-      onClose={onClose}
-      title="One last fun surprise from Oliver!"
-      body={
         <Image src="/images/marketing/img.png" alt="Fun image" maxW="100%" />
-      }
-    />
   );
 };
 

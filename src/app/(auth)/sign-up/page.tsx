@@ -3,11 +3,10 @@
 import { Center, VStack, Flex } from "@chakra-ui/react";
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
 import { LoginCard } from "@/components/login/LoginCard";
+import dynamic from "next/dynamic";
 import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
-import { SignUpPageClient } from "./SignUpPageClient";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import SignUpCard, { Action } from "@/components/login/SignUpCard";
-import { FaFacebookF, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 import {
   Box,
   Button,
@@ -15,14 +14,16 @@ import {
   FormLabel,
   HStack,
   Input,
-  Select,
+  Select, 
   Stack,
+  Spinner
 } from "@chakra-ui/react";
 import { useTheme } from "@chakra-ui/react";
 
-const actions: Action[] = [
-  { label: "Go To Login...", href: "https://facebook.com" },
-];
+const SignUpPageClient = dynamic(
+  () => import("./SignUpPageClient"),
+  { ssr: false }
+);
 
 export default function SignUpPage() {
   const [title, setTitle] = useState("Sign up");
@@ -38,14 +39,18 @@ export default function SignUpPage() {
       p={4}
       bgGradient={theme.gradients.primaryGradient}
     >
-      <SignUpCard
-        title="Sign up"
-        description="Want to keep up to date with all our latest news and information? Enter your email below to be added to our mailing list."
-        actions={actions}
-      >
+      <SignUpCard>
+      <Suspense
+          fallback={
+            <Center h="200px">
+              <Spinner size="xl" />
+            </Center>
+          }
+        >
         <Box width="full" maxW="md">
           <SignUpPageClient />
         </Box>
+        </Suspense>
       </SignUpCard>
     </Flex>
   );

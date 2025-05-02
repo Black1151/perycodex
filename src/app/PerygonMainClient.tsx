@@ -46,11 +46,6 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
     }
   }, [newCompanyRegistration, router]);
 
-  // Nothing should be rendered while we’re about to redirect.
-  if (newCompanyRegistration) {
-    return null;
-  }
-
   // Client‑only clean‑up once the component actually mounts
   useEffect(() => {
     localStorage.removeItem("toolId");
@@ -58,6 +53,11 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
     localStorage.removeItem("currentBusinessProcessInstanceId");
     localStorage.removeItem("currentWorkflowInstanceId");
   }, []);
+
+  // Nothing should be rendered while we’re about to redirect.
+  if (newCompanyRegistration) {
+    return null;
+  }
 
   const logoutUser = async () => {
     try {

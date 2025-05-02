@@ -64,10 +64,9 @@ const ToolStore: React.FC<ToolSelectionPageResponse> = () => {
     additionalLicenses,
   } = useBasketContext();
 
-  if (!user) return null;
-
   useEffect(() => {
     const fetchToolData = async () => {
+      if (!user) return null;
       setLoading(true);
       try {
         // 1) grab all tools first
@@ -103,10 +102,11 @@ const ToolStore: React.FC<ToolSelectionPageResponse> = () => {
     };
 
     fetchToolData();
-  }, [user.customerId]);
+  }, [user?.customerId]);
 
   //get teh amount of liscened users the customer has
   const getCurrentLicenses = useCallback(() => {
+    if (!user) return null;
     setLicensesLoading(true);
     if (user.customerId) {
       fetchClient<{ resource: any }>(
@@ -123,11 +123,11 @@ const ToolStore: React.FC<ToolSelectionPageResponse> = () => {
       });
     }
     setLicensesLoading(false);
-  }, [user.customerId]);
+  }, [user?.customerId]);
 
   useEffect(() => {
     getCurrentLicenses();
-  }, [user.customerId]);
+  }, [user?.customerId]);
 
   const cardBg = transparentize(theme.colors.darkGray[500], 0.65)(theme);
   const skeletonBg1 = transparentize(theme.colors.darkGray[500], 0.2)(theme);
@@ -248,10 +248,7 @@ const ToolStore: React.FC<ToolSelectionPageResponse> = () => {
                     />
                   ))
                 : allTools.map((tool) => (
-                    <PremiumToolCard
-                      key={tool.id}
-                      tool={tool}
-                    />
+                    <PremiumToolCard key={tool.id} tool={tool} />
                   ))}
             </SimpleGrid>
           </TabPanel>
@@ -276,10 +273,7 @@ const ToolStore: React.FC<ToolSelectionPageResponse> = () => {
                 ))
               ) : ownedTools.length > 0 ? (
                 ownedTools.map((tool) => (
-                  <PremiumToolCard
-                    key={tool.id}
-                    tool={tool}
-                  />
+                  <PremiumToolCard key={tool.id} tool={tool} />
                 ))
               ) : (
                 <Text>You have no active tools</Text>
@@ -307,10 +301,7 @@ const ToolStore: React.FC<ToolSelectionPageResponse> = () => {
                 ))
               ) : unownedTools.length > 0 ? (
                 unownedTools.map((tool) => (
-                  <PremiumToolCard
-                    key={tool.id}
-                    tool={tool}
-                  />
+                  <PremiumToolCard key={tool.id} tool={tool} />
                 ))
               ) : (
                 <Text>No locked tools</Text>

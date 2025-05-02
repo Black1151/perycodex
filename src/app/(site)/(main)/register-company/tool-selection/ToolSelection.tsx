@@ -41,7 +41,7 @@ export function FreeToolCard({ tool }: { tool: ToolResource }) {
   const cardBg = theme.colors.darkGray;
   const textColor = "white";
   const freeBannerBg = theme.colors.green[500];
-  const rightBg = `${theme.colors.gray[600]}80`; // slightly transparent grey
+  const rightBg = `${theme.colors.gray[600]}80`;
 
   return (
     <Box
@@ -82,7 +82,7 @@ export function FreeToolCard({ tool }: { tool: ToolResource }) {
           p={4}
           bg={cardBg}
           color={textColor}
-          flex={{base: "4", md: "1"}}
+          flex={{ base: "4", md: "1" }}
         >
           <Box
             h="85px"
@@ -117,7 +117,7 @@ export function FreeToolCard({ tool }: { tool: ToolResource }) {
           p={4}
           bg={rightBg}
           color={textColor}
-          flex={{base: "4", md: "1"}}
+          flex={{ base: "4", md: "1" }}
         >
           <Text fontSize="lg" fontWeight="bold">
             Setup your email schedule (Optional)
@@ -160,7 +160,7 @@ export function FreeToolCard({ tool }: { tool: ToolResource }) {
               <option value="afternoon">Afternoon</option>
               <option value="evening">Evening</option>
             </Select>
-            <Button fontSize="sm" w="100%" font-weight="normal">
+            <Button fontSize="sm" w="100%" fontWeight="normal">
               Submit
             </Button>
           </SimpleGrid>
@@ -219,8 +219,8 @@ export function PremiumToolCard({ tool }: { tool: ToolResource }) {
         fontWeight="bold"
         color={textColor}
         zIndex={1}
-        alignContent={"center"}
-        textAlign={"center"}
+        alignContent="center"
+        textAlign="center"
       >
         <Lock fontSize="small" sx={{ color: textColor }} />
       </Box>
@@ -263,10 +263,9 @@ export default function ToolSelection() {
   const theme = useTheme();
   const [formattedEndDate, setFormattedEndDate] = useState<string | null>(null);
 
-  if (!user) return null;
-  const userName = user.firstName;
-
+  // Define callbacks unconditionally
   const getTools = useCallback(async () => {
+    if (!user) return;
     try {
       const data = await fetchClient<ToolSelectionPageResponse>(
         "/api/toolConfig/allBy",
@@ -276,10 +275,10 @@ export default function ToolSelection() {
     } catch (error) {
       console.error("Error fetching tools:", error);
     }
-  }, [fetchClient]);
+  }, [fetchClient, user]);
 
-  // Hardcoded way of calculating the end date -- this should be replaced with a more robust solution in the future
   const getEndDate = useCallback(async () => {
+    if (!user) return;
     try {
       const response = await fetchClient<{ resource: any[] }>(
         `/api/toolCustomer/allBy?customerId=${user.customerId}`,
@@ -289,7 +288,6 @@ export default function ToolSelection() {
         throw new Error("Failed to fetch resources");
       }
       const { resource } = response;
-      // pick the first (or only) subscription:
       const sub = resource[0];
       if (!sub?.subStartDate) {
         throw new Error("No subscription start date found");
@@ -297,28 +295,31 @@ export default function ToolSelection() {
       const startDate = new Date(sub.subStartDate);
       const endDate = new Date(startDate);
       endDate.setDate(startDate.getDate() + 45);
-      const formatted = `${endDate.getDate().toString().padStart(2, "0")}-${(endDate.getMonth() + 1).toString().padStart(2, "0")}-${endDate.getFullYear()}`;
+      const formatted = `${endDate.getDate().toString().padStart(2, "0")}-${
+        (endDate.getMonth() + 1)
+          .toString()
+          .padStart(2, "0")
+      }-${endDate.getFullYear()}`;
       setFormattedEndDate(formatted);
     } catch (error) {
       console.error("Error fetching end date:", error);
     }
-  }, [user.customerId, fetchClient]);
+  }, [fetchClient, user]);
 
+  // Effect runs in the same order every render
   useEffect(() => {
+    if (!user) return;
+    setLoading(true);
     const fetchAll = async () => {
-      setLoading(true);
-      try {
-        await getTools();
-        await getEndDate();
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
+      await getTools();
+      await getEndDate();
+      setLoading(false);
     };
-
     fetchAll();
-  }, []);
+  }, [user, getTools, getEndDate]);
+
+  if (!user) return null;
+  const userName = user.firstName;
 
   // Filter and split tools
   const visibleTools = tools.filter(
@@ -351,7 +352,12 @@ export default function ToolSelection() {
           >
             Congratulations, {userName}!
           </Text>
-          <Text fontSize={{ base: 48, sm: 56, md: 64 }} color={theme.colors.white} fontFamily={"bonfire"} textAlign={"center"}>
+          <Text
+            fontSize={{ base: 48, sm: 56, md: 64 }}
+            color={theme.colors.white}
+            fontFamily={"bonfire"}
+            textAlign={"center"}
+          >
             Perygon Is ready for you.
           </Text>
         </VStack>
@@ -371,8 +377,7 @@ export default function ToolSelection() {
           ) : (
             <Flex direction="column" w="full" gap={{ base: 6, md: 10 }}>
               <Text color={theme.colors.white} textAlign="center">
-                Your free Happiness Score Tool is now live. You can use it until{" "}
-                {formattedEndDate} to get a better understanding of your team’s
+                Your free Happiness Score Tool is now live. You can use it until {formattedEndDate} to get a better understanding of your team’s
                 happiness and well-being.
               </Text>
 

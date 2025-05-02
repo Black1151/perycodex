@@ -22,10 +22,9 @@ export function PerygonModal({
   body,
   isOpen,
   onClose,
-  ...rest
 }: PerygonModalProps) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} {...rest}>
+    <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent borderRadius="md" bg="elementBG">
         <PerygonCard>

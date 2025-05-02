@@ -5,8 +5,7 @@ import {
   Modal, ModalOverlay, ModalContent,
   ModalHeader, ModalCloseButton, ModalBody,
   ModalFooter, Button, VStack, Box,
-  Text, HStack, Divider, Image,
-  useColorModeValue, useTheme,
+  Text, HStack, Divider, Image, useTheme,
   useRadio, useRadioGroup,
 } from "@chakra-ui/react";
 import { useBasketContext } from "./BasketContext";
@@ -21,8 +20,8 @@ interface CheckoutModalProps {
 const CardRadio = (props: any) => {
   const { getInputProps, getRadioProps } = useRadio(props);
   const input = getInputProps(), checkbox = getRadioProps();
-  const cardBg = useColorModeValue("white", "gray.800");
-  const cardBorder = useColorModeValue("blue.500", "blue.300");
+  const cardBg = "grey";
+  const cardBorder = "white";
   
   return (
     <Box as="label" flex="1">
@@ -47,7 +46,7 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
   const { getCheckoutProducts } = useBasketContext();
   const products = getCheckoutProducts();
   const theme = useTheme();
-  const cardBg = useColorModeValue("gray.50", "gray.700");
+  const cardBg = "grey";
 
   // billing cycle toggle
   const { getRootProps, getRadioProps } = useRadioGroup({
@@ -113,7 +112,7 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                 <Box
                   key={p.id}
                   p={4}
-                  bg={useColorModeValue("white","gray.800")}
+                  bg = "grey"
                   borderRadius="md"
                   boxShadow="sm"
                 >
@@ -145,7 +144,7 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
 
         <Divider/>
 
-        <ModalFooter px={6} py={4} bg={useColorModeValue("gray.100","gray.900")}>
+        <ModalFooter px={6} py={4} bg="gray.100">
           <VStack flex="1" align="start" spacing={1}>
             <HStack justify="space-between" w="full">
               <Text fontWeight="medium">Subtotal</Text>

@@ -21,24 +21,25 @@ interface LogoUploadProps {
 
 export default function LogoUpload({ onUploadComplete }: LogoUploadProps) {
   const { user } = useUser();
-  if (!user) return null;
 
-  const customerUId = user.customerUniqueId!;
-  const customerName = user.customerName!;
-  const [customerImgUrl, setCustomerImgUrl] = useState(user.custImageUrl || "");
+  // Always call hooks before any early return
+  const [customerImgUrl, setCustomerImgUrl] = useState(
+    () => user?.custImageUrl || ""
+  );
+  const customerUId = user?.customerUniqueId || "";
+  const customerName = user?.customerName || "";
 
-  // pull out only the upload fn & loading state; we’ll handle callback ourselves
   const { isUploading, uploadMediaFile } = useMediaUploader(
     `/api/customer/uploadPhoto/${customerUId}`,
     "imageUrl",
-    () => {} // noop
+    () => {}
   );
 
   const inputRef = useRef<HTMLInputElement>(null);
   const borderColor = useColorModeValue("gray.400", "gray.600");
   const hoverBorderColor = useColorModeValue("gray.200", "gray.400");
 
-  // Helper to extract the URL from your API response
+  // Helper to extract the URL from API response
   const extractUrl = (data: any): string =>
     data.imageUrl || data.url || data.resource?.imageUrl || customerImgUrl;
 
@@ -46,24 +47,6 @@ export default function LogoUpload({ onUploadComplete }: LogoUploadProps) {
   const handleUploadSuccess = (newUrl: string) => {
     setCustomerImgUrl(newUrl);
     onUploadComplete?.(newUrl);
-  };
-
-  // File‐picker handler
-  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const localUrl = URL.createObjectURL(file);
-    setCustomerImgUrl(localUrl);
-
-    try {
-      const data = await uploadMediaFile(file);
-      const newUrl = extractUrl(data);
-      handleUploadSuccess(newUrl);
-    } catch {
-      // error toast already shown by hook
-    }
-    e.target.value = "";
   };
 
   // Drag & drop handlers
@@ -74,6 +57,7 @@ export default function LogoUpload({ onUploadComplete }: LogoUploadProps) {
   const onDrop = useCallback(
     async (e: React.DragEvent) => {
       e.preventDefault();
+      if (!user) return;
       const file = e.dataTransfer.files?.[0];
       if (!file) return;
 
@@ -88,8 +72,31 @@ export default function LogoUpload({ onUploadComplete }: LogoUploadProps) {
         // error toast already shown by hook
       }
     },
-    [uploadMediaFile, onUploadComplete]
+    [uploadMediaFile, user, onUploadComplete]
   );
+
+  // File-picker handler
+  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!user) return;
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const localUrl = URL.createObjectURL(file);
+    setCustomerImgUrl(localUrl);
+
+    try {
+      const data = await uploadMediaFile(file);
+      const newUrl = extractUrl(data);
+      handleUploadSuccess(newUrl);
+    } catch {
+      // error toast already shown by hook
+    }
+
+    e.target.value = "";
+  };
+
+  // Early return if no user
+  if (!user) return null;
 
   return (
     <VStack w="100%" align="center" spacing={4}>
