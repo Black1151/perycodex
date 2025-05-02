@@ -30,8 +30,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.log(responseData);
-
     const resource = responseData.access;
 
     // Respond with the resource data

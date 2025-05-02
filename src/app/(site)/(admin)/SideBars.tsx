@@ -46,10 +46,10 @@ export default function SideBars() {
 
   const { recordId, recordParentId, recordCustomerId } = recordIds || {};
 
-  const generateLeftSidebarItemsDrawer = (userRole: string | undefined) => {
+  const generateLeftSidebarItemsDrawer = (userRole: string | undefined, isFree: boolean) => {
     const items = [];
 
-    if (userRole === "CA") {
+    if (userRole === "CA" && !isFree) {
       items.push(
         {
           label: "My Company",
@@ -110,6 +110,33 @@ export default function SideBars() {
           icon: <LocationOn sx={{ height: "100%", width: "100%" }} />,
           url: "/sites?siteType=external",
           category: "Clients",
+        },
+      );
+    } else if (isFree) {
+      items.push(
+        {
+          label: "My Company",
+          icon: <Domain sx={{ height: "100%", width: "100%" }} />,
+          url: "/my-company",
+          category: "Company",
+        },
+        {
+          label: "Company Users",
+          icon: <Person sx={{ height: "100%", width: "100%" }} />,
+          url: "/users?userType=internal",
+          category: "Company",
+        },
+        {
+          label: "Company Sites",
+          icon: <LocationOn sx={{ height: "100%", width: "100%" }} />,
+          url: "/sites?siteType=internal",
+          category: "Company",
+        },
+        {
+          label: "Teams",
+          icon: <People sx={{ height: "100%", width: "100%" }} />,
+          url: "/teams",
+          category: "Company",
         },
       );
     } else if (userRole === "PA") {
@@ -317,7 +344,7 @@ export default function SideBars() {
   };
 
   useEffect(() => {
-    const newItems = generateLeftSidebarItemsDrawer(user?.role);
+    const newItems = generateLeftSidebarItemsDrawer(user?.role, user?.customerIsFree ?? true);
     const hasAnyActive = newItems.some((item) => item.active);
 
     if (leftMenuItems.length === 0) {
