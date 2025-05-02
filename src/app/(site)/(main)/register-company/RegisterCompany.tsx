@@ -58,6 +58,8 @@ export default function RegisterCompany() {
           align="center"
           justify="center"
           gap={4}
+          p={[4,4,0]}
+          textAlign={"center"}
         >
           <Text fontFamily="bonfire" fontSize={46} color="white">
             Your company has been registered successfully!

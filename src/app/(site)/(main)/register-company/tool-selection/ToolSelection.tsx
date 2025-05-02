@@ -336,8 +336,8 @@ export default function ToolSelection() {
         pt={12}
         pb={16}
         alignItems="center"
-        w={{ base: "100%", md: "80vw" }}
-        px={{ base: 8, md: 0 }}
+        w="100%"
+        px={{ base: 4, sm: 6, md: 8 }}
       >
         <VStack pt="50px" pb={8} spacing={4} align="center" w="100%">
           <Text
@@ -346,21 +346,22 @@ export default function ToolSelection() {
             color={theme.colors.elementBG}
             fontFamily="bonfire"
             whiteSpace="nowrap"
-            fontSize={38}
+            fontSize={{ base: 28, sm: 32, md: 38 }}
             lineHeight={1}
+            textAlign="center"
           >
             Congratulations, {userName}!
           </Text>
-          <LetterFlyIn fontSize={64} color={theme.colors.white}>
+          <Text fontSize={{ base: 48, sm: 56, md: 64 }} color={theme.colors.white} fontFamily={"bonfire"} textAlign={"center"}>
             Perygon Is ready for you.
-          </LetterFlyIn>
+          </Text>
         </VStack>
 
         <Flex
           direction="column"
           align="center"
           justify="center"
-          gap={8}
+          gap={{ base: 6, md: 8 }}
           w="full"
         >
           {loading ? (
@@ -369,25 +370,25 @@ export default function ToolSelection() {
               <Text color={theme.colors.white}>Loading tools...</Text>
             </Flex>
           ) : (
-            <Flex direction="column" w="full" gap={10}>
-              <Text color={theme.colors.white}>
+            <Flex direction="column" w="full" gap={{ base: 6, md: 10 }}>
+              <Text color={theme.colors.white} textAlign="center">
                 Your free Happiness Score Tool is now live. You can use it until{" "}
                 {formattedEndDate} to get a better understanding of your team’s
                 happiness and well-being.
               </Text>
 
-              <Flex direction="column" w="full" gap={2}>
-                <Flex wrap="wrap" justify="start" gap={6}>
+              <Flex direction="column" w="full" gap={4}>
+                <Flex wrap="wrap" justify={{ base: "center", md: "start" }} gap={6}>
                   {trialTools.map((tool) => (
                     <FreeToolCard key={tool.id} tool={tool} />
                   ))}
                 </Flex>
               </Flex>
 
-              <Flex direction="column" w="full" gap={2}>
+              <Flex direction="column" w="full" gap={4}>
                 <SimpleGrid
-                  columns={{ base: 1, md: 2 }}
-                  spacing={8}
+                  columns={{ base: 1, sm: 2, md: 2 }}
+                  spacing={6}
                   w="full"
                   alignItems="stretch"
                 >
