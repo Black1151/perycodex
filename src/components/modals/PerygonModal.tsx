@@ -6,10 +6,11 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  ModalProps,
 } from "@chakra-ui/react";
 import PerygonCard from "../layout/PerygonCard";
 
-interface PerygonModalProps {
+interface PerygonModalProps extends ModalProps {
   title: string;
   body: ReactNode;
   isOpen: boolean;
@@ -21,9 +22,10 @@ export function PerygonModal({
   body,
   isOpen,
   onClose,
+  ...rest
 }: PerygonModalProps) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} {...rest}>
       <ModalOverlay />
       <ModalContent borderRadius="md" bg="elementBG">
         <PerygonCard>
