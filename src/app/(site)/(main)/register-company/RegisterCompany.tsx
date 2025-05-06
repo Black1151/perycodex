@@ -6,7 +6,6 @@ import {
   VStack,
   Text,
   Button,
-  Spinner,
   useTheme,
 } from "@chakra-ui/react";
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
@@ -16,53 +15,26 @@ import LogoUpload from "./LogoUpload";
 
 interface RegisterCompanyProps {
   registerCustomerJson: any;
+  initialCustomerData: any;
 }
 
 export default function RegisterCompany({
   registerCustomerJson,
+  initialCustomerData,
 }: RegisterCompanyProps) {
   const { user } = useUser();
-  const [customerData, setCustomerData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [hasLogo, setHasLogo] = useState(false);
+
+  const [customerData, setCustomerData] = useState<any>(initialCustomerData);
+  const [hasLogo, setHasLogo] = useState<boolean>(Boolean(initialCustomerData?.custImageUrl));
   const theme = useTheme();
 
-  // 1️⃣ Fetch your customer once user is known
-  useEffect(() => {
-    if (!user) return;
-    if (!user.customerUniqueId) {
-      setLoading(false);
-      return;
-    }
-
-    fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/customer/allBy?uniqueId=${user.customerUniqueId}`
-    )
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to load customer");
-        return res.json();
-      })
-      .then((json) => setCustomerData(json.resource))
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, [user]);
-
-  // 2️⃣ Whenever customerData changes, update hasLogo
   useEffect(() => {
     setHasLogo(Boolean(customerData?.custImageUrl));
   }, [customerData]);
 
-  // 3️⃣ Loading & guard
   if (!user) return null;
-  if (loading) {
-    return (
-      <Flex flex={1} align="center" justify="center" minH="100vh">
-        <Spinner size="xl" />
-      </Flex>
-    );
-  }
 
-  // 4️⃣ If they’ve already registered…
+  // If already registered, skip the form
   if (customerData) {
     return (
       <VStack minH="100svh" width="100%" flex={1}>
@@ -103,7 +75,7 @@ export default function RegisterCompany({
     );
   }
 
-  // 5️⃣ Otherwise, show the registration form
+  // Otherwise, show the registration form
   return (
     <PerygonContainer>
       <Flex direction="column" flex={1}>
