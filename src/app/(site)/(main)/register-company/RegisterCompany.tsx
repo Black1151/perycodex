@@ -1,16 +1,26 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
-import { Flex, VStack, Text, Button, Spinner, HStack } from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import {
+  Flex,
+  VStack,
+  Text,
+  Button,
+  Spinner,
+  useTheme,
+} from "@chakra-ui/react";
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
-import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
-import { registerCustomerJson } from "@/components/surveyjs/forms/registerCompany";
 import { useUser } from "@/providers/UserProvider";
 import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 import LogoUpload from "./LogoUpload";
-import { useTheme } from "@chakra-ui/react";
 
-export default function RegisterCompany() {
+interface RegisterCompanyProps {
+  registerCustomerJson: any;
+}
+
+export default function RegisterCompany({
+  registerCustomerJson,
+}: RegisterCompanyProps) {
   const { user } = useUser();
   const [customerData, setCustomerData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -20,16 +30,14 @@ export default function RegisterCompany() {
   // 1️⃣ Fetch your customer once user is known
   useEffect(() => {
     if (!user) return;
-    if (user.customerUniqueId == null) {
+    if (!user.customerUniqueId) {
       setLoading(false);
       return;
     }
 
-    console.log(`1. ${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=sector`);
-    console.log(`2. ${process.env.NEXT_PUBLIC_BASE_URL}`)
-    console.log(`3. ${JSON.stringify(registerCustomerJson)}`)
-
-    fetch(`/api/customer/allBy?uniqueId=${user.customerUniqueId}`)
+    fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/customer/allBy?uniqueId=${user.customerUniqueId}`
+    )
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load customer");
         return res.json();
@@ -44,6 +52,7 @@ export default function RegisterCompany() {
     setHasLogo(Boolean(customerData?.custImageUrl));
   }, [customerData]);
 
+  // 3️⃣ Loading & guard
   if (!user) return null;
   if (loading) {
     return (
@@ -53,6 +62,7 @@ export default function RegisterCompany() {
     );
   }
 
+  // 4️⃣ If they’ve already registered…
   if (customerData) {
     return (
       <VStack minH="100svh" width="100%" flex={1}>
@@ -62,8 +72,8 @@ export default function RegisterCompany() {
           align="center"
           justify="center"
           gap={4}
-          p={[4,4,0]}
-          textAlign={"center"}
+          p={[4, 4, 0]}
+          textAlign="center"
         >
           <Text fontFamily="bonfire" fontSize={46} color="white">
             Your company has been registered successfully!
@@ -74,7 +84,10 @@ export default function RegisterCompany() {
           <LogoUpload
             onUploadComplete={(url) => {
               setHasLogo(true);
-              setCustomerData((old: any) => ({ ...old, custImageUrl: url }));
+              setCustomerData((old: any) => ({
+                ...old,
+                custImageUrl: url,
+              }));
             }}
           />
           <Button
@@ -90,7 +103,7 @@ export default function RegisterCompany() {
     );
   }
 
-  // 4️⃣ Otherwise, show the registration form
+  // 5️⃣ Otherwise, show the registration form
   return (
     <PerygonContainer>
       <Flex direction="column" flex={1}>
@@ -110,13 +123,13 @@ export default function RegisterCompany() {
             align={["center", "start"]}
             textAlign={["center", "left"]}
           >
-            <Text fontSize={[28, 28, 32]} fontFamily={"bonfire"} color="white">
+            <Text fontSize={[28, 28, 32]} fontFamily="bonfire" color="white">
               Welcome to...
             </Text>
             <Text
               fontSize={[62, 70, 90]}
               lineHeight={1}
-              fontFamily={"bonfire"}
+              fontFamily="bonfire"
               color="white"
             >
               Perygon
@@ -125,7 +138,7 @@ export default function RegisterCompany() {
           <Text
             fontSize={[28, 28, 32]}
             lineHeight={[1, 2]}
-            fontFamily={"bonfire"}
+            fontFamily="bonfire"
             color="white"
             textAlign={["center", "left"]}
             mt={[1, 0]}
@@ -133,6 +146,7 @@ export default function RegisterCompany() {
             Let’s set up your organisation
           </Text>
         </Flex>
+
         <Flex flex="1" w="100%" justify="center" align="flex-start" pb={8}>
           <AdminFormWrapper
             formJson={registerCustomerJson}

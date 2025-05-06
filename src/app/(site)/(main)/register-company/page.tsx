@@ -1,12 +1,22 @@
-import React from 'react';
-import RegisterCompany from './RegisterCompany';
+import React from "react";
+import RegisterCompany from "./RegisterCompany";
+import { registerCustomerJson } from "@/components/surveyjs/forms/registerCompany";
+import { getUser, checkUserRole } from "@/lib/dal";
+import apiClient from "@/lib/apiClient";
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
-const RegisterCompanyPage = () => {
-    return (
-        <div>
-            <RegisterCompany />
-        </div>
-    );
-};
+export default async function RegisterCompanyPage({
+  params,
+}: {
+  params: { uniqueId: string };
+}) {
 
-export default RegisterCompanyPage;
+  return (
+    <div>
+      <RegisterCompany
+        registerCustomerJson={registerCustomerJson}
+      />
+    </div>
+  );
+}
