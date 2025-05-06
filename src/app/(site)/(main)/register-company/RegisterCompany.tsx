@@ -25,6 +25,10 @@ export default function RegisterCompany() {
       return;
     }
 
+    console.log(`1. ${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=sector`);
+    console.log(`2. ${process.env.NEXT_PUBLIC_BASE_URL}`)
+    console.log(`3. ${JSON.stringify(registerCustomerJson)}`)
+
     fetch(`/api/customer/allBy?uniqueId=${user.customerUniqueId}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load customer");
