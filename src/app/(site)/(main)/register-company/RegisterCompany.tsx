@@ -65,7 +65,7 @@ export default function RegisterCompany({
           <Button
             mt={8}
             onClick={() =>
-              (window.location.href = "/register-company/tool-selection")
+              (window.location.href = "/tool-store")
             }
           >
             Continue...
