@@ -39,21 +39,19 @@ export const registerCustomerJson = {
           isRequired: true,
           placeholder: "Enter the name of your company",
         },
-
         {
           type: "text",
-          name: "telephone", // NEW ① tel field
-          title: "Telephone",
+          name: "telephone",
+          title: "Telephone (with country code)",
           inputType: "tel",
           startWithNewLine: false,
           minWidth: "256px",
-          placeholder: "+44 20 7946 0018",
-          // Simple UK‑style number pattern – tweak as needed
+          placeholder: "Enter the telephone number of your company",
           validators: [
             {
               type: "regex",
-              regex: "^\\+?[0-9\\s()\\-]{7,15}$",
-              text: "Please enter a valid phone number",
+              regex: "^\\+(?:[0-9][\\s-]?){6,14}[0-9]$",
+              text: "Please enter a valid international phone number, starting with + and country code",
             },
           ],
         },
@@ -178,8 +176,7 @@ export const registerCustomerJson = {
           name: "customerSites",
           renderMode: "tab",
           templateTabTitle: "Site {panelIndex}: {panel.siteName}",
-          title:
-            `Enter your company locations below. (First being the primary location of your organisation) You can add up to ${subscriptionLimits.free.maxSites} sites. `,
+          title: `Enter your company locations below. (First being the primary location of your organisation) You can add up to ${subscriptionLimits.free.maxSites} sites. `,
           panelCount: 1,
           maxPanelCount: `${subscriptionLimits.free.maxSites}`,
 
@@ -238,7 +235,7 @@ export const registerCustomerJson = {
               allowClear: true,
               choicesOrder: "asc",
               isRequired: true,
-              defaultValue: "UK",
+              defaultValue: 336,
               choicesByUrl: {
                 url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=country`,
                 path: "country",
@@ -259,14 +256,12 @@ export const registerCustomerJson = {
         {
           type: "paneldynamic",
           name: "departments",
-          title:
-            `Add up to ${subscriptionLimits.free.maxTeams - 1} additional departments inside the organisation. We have added one main departnent for you (which you will be a part of).`,
+          title: `Add up to ${subscriptionLimits.free.maxTeams - 1} additional departments inside the organisation. We have added one main departnent for you (which you will be a part of).`,
           panelCount: 0,
           minPanelCount: 0,
           maxPanelCount: `${subscriptionLimits.free.maxTeams - 1}`,
           renderMode: "tab",
           templateTabTitle: "Department {panelIndex}: {panel.departmentName}",
-
 
           // ←–– Enforce unique departmentName across panels
           keyName: "departmentName",
@@ -316,19 +311,18 @@ export const registerCustomerJson = {
           type: "boolean",
           name: "useBulkEntry",
           title: "How would you like to add your staff’s email addresses?",
-          labelTrue: "Paste all at once",
-          labelFalse: "Enter individually",
+          labelTrue: "Paste all",
+          labelFalse: "Individual",
           visibleIf: "{inviteStaff} = true",
           defaultValue: false,
           description:
-            `Choose “Enter individually” to type or paste one email at a time (up to ${subscriptionLimits.free.maxUsers -1}). ` +
-            "Or choose “Paste all at once” to drop in a comma-separated list.",
+            `Choose “Individual” to type one email at a time (up to ${subscriptionLimits.free.maxUsers - 1}). ` +
+            "Or choose “Paste all” to drop in a comma-separated list.",
         },
         {
           type: "paneldynamic",
           name: "companyStaff",
-          title:
-            `Enter up to ${subscriptionLimits.free.maxUsers - 1} of your staff. They will be invited to join the platform.`,
+          title: `Enter up to ${subscriptionLimits.free.maxUsers - 1} of your staff. They will be invited to join the platform.`,
           panelCount: 1,
           maxPanelCount: `${subscriptionLimits.free.maxUsers - 1}`,
           renderMode: "list",
@@ -364,12 +358,14 @@ export const registerCustomerJson = {
           minRows: 3,
           minHeight: "200px",
           isRequired: true,
-          placeholder: "e.g. alice@example.com, bob@example.com, charlie@example.com",
+          placeholder:
+            "e.g. alice@example.com, bob@example.com, charlie@example.com",
           validators: [
             // 1) FORMAT CHECK: each must be a valid-looking email
             {
               type: "regex",
-              regex: "^(?:\\s*[^,\\s]+@[^,\\s]+\\.[^,\\s]+\\s*)(?:,\\s*[^,\\s]+@[^,\\s]+\\.[^,\\s]+\\s*)*$",
+              regex:
+                "^(?:\\s*[^,\\s]+@[^,\\s]+\\.[^,\\s]+\\s*)(?:,\\s*[^,\\s]+@[^,\\s]+\\.[^,\\s]+\\s*)*$",
               text: "Please enter valid email addresses, separated by commas.",
             },
             // 2) COUNT CHECK: dynamic based on limit

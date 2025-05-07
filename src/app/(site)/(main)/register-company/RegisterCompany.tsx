@@ -78,7 +78,7 @@ export default function RegisterCompany({
   // Otherwise, show the registration form
   return (
     <PerygonContainer>
-      <Flex direction="column" flex={1}>
+      <Flex direction="column" flex={1} maxW={1200}>
         <Flex
           direction={["column", "row", "row"]}
           flex={1}

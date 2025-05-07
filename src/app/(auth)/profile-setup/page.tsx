@@ -112,14 +112,14 @@ export default async function ProfileSetup() {
       <PerygonContainer>
       <Center flex={1}>
         <LoginCard
-          height={800}
-          imageOffset={-900}
+          height={1125}
+          imageOffset={-750}
           titleComponent={
             <VStack position="absolute" top="50px">
               <LetterFlyIn fontSize={90}>Perygon</LetterFlyIn>
               <LetterFlyIn fontSize={38}>Please set up</LetterFlyIn>
               <LetterFlyIn fontSize={38}>your profile</LetterFlyIn>
-              <LetterFlyIn fontSize={22}>Then you are all done!</LetterFlyIn>
+              <LetterFlyIn fontSize={22}>Then company setup...</LetterFlyIn>
             </VStack>
           }
         >

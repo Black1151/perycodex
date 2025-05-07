@@ -29,7 +29,7 @@ export default async function RegisterCompanyPage({
   return (
     <RegisterCompany
       registerCustomerJson={registerCustomerJson}
-      initialCustomerData={apiRes.response ?? null}
+      initialCustomerData={apiRes.response}
     />
   );
 }
