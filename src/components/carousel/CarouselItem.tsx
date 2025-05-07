@@ -36,13 +36,13 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
 }) => {
   const theme = useTheme();
   return (
-    <VStack flex={1} mx={[0, 2]} height={60}>
+    <VStack flex={1} height={[30, 180, 130, null, 170]}>
       <Box
         backgroundPosition="center"
         backgroundRepeat="no-repeat"
         backgroundSize="contain"
         transition="height 0.5s ease-in-out"
-        position="relative" // Make sure this is relative
+        position="relative"
       >
         {/* Lock Icon */}
         {isUAGLocked && (
@@ -83,30 +83,11 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
         >
           <Image
             src={thumbNailImage}
-            fallback={
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                height={
-                  isSelected ? ["100px", null, "150px"] : ["50px", null, "75px"]
-                }
-                bg="gray.100"
-                aspectRatio={1}
-                borderRadius="full"
-                transition="height 0.3s ease-in-out"
-              >
-                <Construction
-                  sx={{
-                    color: "var(--chakra-colors-primary)",
-                    fontSize: "2rem",
-                  }}
-                />
-              </Box>
-            }
             alt={alt}
             height={
-              isSelected ? ["100px", null, "300px"] : ["50px", null, "250px"]
+              isSelected
+                ? ["100px", "150px", "200px", null, "225px"]
+                : ["75px", "112px", "125px", null, "175px"]
             }
             transition="height 0.3s ease-in-out"
           />
@@ -115,8 +96,8 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
         {/* “Let’s go!” Button */}
         <Box
           position="absolute"
-          top={-50}
-          right={-200}
+          top={[null, null, -39, null, -25]}
+          right={[null, null, -140, null, -125]}
           transform={
             isSelected
               ? "translate(-50%, -10%) scale(1) rotate(20deg)"
@@ -125,55 +106,25 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
           opacity={isSelected ? 1 : 0}
           transition="all 0.5s ease-in-out"
           zIndex={3}
+          display={["none", "none", "block"]}
         >
           <Button
-            colorScheme="teal" // choose your color scheme
+            colorScheme="teal"
             boxShadow="md"
-            padding={10}
-            pt={12}
+            padding={[2, 4, 8]}
+            color="white"
             bgColor={theme.colors.primary}
             _hover={{
               bgColor: "white",
               color: theme.colors.primary,
             }}
           >
-            <Text fontFamily="bonfire" fontSize={40}>
-              Let's go!
+            <Text fontFamily="Metropolis" fontSize={[10, 14, 30]}>
+              Start!
             </Text>
           </Button>
         </Box>
       </Box>
-
-      {/*
-        If you still want to show the name or text, you can re-insert this
-        block (below) or place it wherever you wish.
-        
-        <Flex
-          bg={isSelected ? theme.colors.primary : "white"}
-          p={[1, null, 2]}
-          borderRadius={5}
-          alignItems="center"
-          justifyContent="center"
-          textAlign="center"
-          px={[0, 3]}
-          flex={1}
-          width={[20, 110]}
-          maxHeight={["50px", "75px"]}
-          minHeight={["50px", "75px"]}
-          transition="background-color 0.5s ease-in-out, box-shadow 0.5s ease-in-out, filter 0.3s ease-in-out"
-          filter={isUAGLocked ? "brightness(0.35)" : undefined}
-        >
-          <Text
-            fontWeight="bold"
-            color={isSelected ? "white" : "primary"}
-            fontSize={[10, null, 14]}
-            whiteSpace="pre-wrap"
-            transition="color 0.5s ease-in-out"
-          >
-            {name.split(" ").join("\n")}
-          </Text>
-        </Flex>
-      */}
     </VStack>
   );
 };
