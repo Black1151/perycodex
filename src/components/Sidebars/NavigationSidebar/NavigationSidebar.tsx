@@ -50,10 +50,7 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
     clicked.onClick?.();
   };
 
-  const internalItems = menuItems.map((item) => ({
-    ...item,
-    active: item.label === activeLabel,
-  }));
+  const internalItems = menuItems;
 
   const groupedItems = internalItems.reduce(
     (acc, item) => {
