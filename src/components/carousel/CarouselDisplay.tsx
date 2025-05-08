@@ -22,6 +22,7 @@ export interface CarouselDisplayProps {
 
 const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
   const fallbackImage = "/assets/apps/invoicePro/invoiceProBG.png";
+
   const [layers, setLayers] = useState([
     {
       id: 0,
@@ -29,7 +30,6 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
       opacity: 1,
     },
   ]);
-
   const [nextLayerId, setNextLayerId] = useState(1);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showInfoBox, setShowInfoBox] = useState(true);
@@ -39,20 +39,27 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
   const theme = useTheme();
 
   // ---------------------------------------------------------------- helpers
-  const currentItem = carouselItems[currentIndex] ?? {
+  const currentItem: CarouselItemProps & {
+    isUAGLocked?: boolean;
+  } = carouselItems[currentIndex] ?? {
     description: "",
     logoImage: "",
     alt: "",
     appUrl: "#",
     toolId: "",
     toolWfId: "",
+    isUAGLocked: false,
   };
 
   const handleStartClick = () => {
-    if (!currentItem.appUrl) return;
+    if (!currentItem.appUrl || currentItem.isUAGLocked) return;
+
     setToolId(currentItem.toolId);
     setWorkflowId(currentItem.toolWfId);
-    router.push(currentItem.appUrl);
+
+    router.push(
+      `${currentItem.appUrl}?toolId=${currentItem.toolId}&wfId=${currentItem.toolWfId}`
+    );
   };
 
   // ----------------------------------------------------------- index change
@@ -151,9 +158,12 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
           outline: "none",
           boxShadow: `0 0 0 2px ${theme.colors.whiteAlpha[500]}`,
         }}
-        cursor={currentItem.appUrl ? "pointer" : "default"}
+        cursor={
+          currentItem.appUrl && !currentItem.isUAGLocked ? "pointer" : "default"
+        }
         color="white"
         textAlign="center"
+        onClick={handleStartClick}
       >
         {currentItem.logoImage && (
           <Image
@@ -167,21 +177,23 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
         <Text fontSize="lg" noOfLines={[4, 5]}>
           {currentItem.description}
         </Text>
-        <Button
-          boxShadow="md"
-          padding={[6, 8]}
-          color="white"
-          bgColor={theme.colors.primary}
-          _hover={{
-            bgColor: "white",
-            color: theme.colors.primary,
-          }}
-          onClick={handleStartClick}
-        >
-          <Text fontFamily="Metropolis" fontSize={[25, 30]}>
-            Start!
-          </Text>
-        </Button>
+        {!currentItem.isUAGLocked && (
+          <Button
+            boxShadow="md"
+            padding={[6, 8]}
+            color="white"
+            bgColor={theme.colors.primary}
+            _hover={{
+              bgColor: "white",
+              color: theme.colors.primary,
+            }}
+            onClick={handleStartClick}
+          >
+            <Text fontFamily="Metropolis" fontSize={[25, 30]}>
+              Start!
+            </Text>
+          </Button>
+        )}
       </Flex>
 
       {/* carousel thumbnails / controls */}
