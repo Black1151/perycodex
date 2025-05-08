@@ -1,16 +1,6 @@
 import React from "react";
-import {
-  Box,
-  Flex,
-  Icon,
-  Image,
-  Text,
-  useTheme,
-  VStack,
-  Tooltip,
-  Button,
-} from "@chakra-ui/react";
-import { Construction, Lock } from "@mui/icons-material";
+import { Box, Flex, Icon, Image, VStack, Tooltip } from "@chakra-ui/react";
+import { Lock } from "@mui/icons-material";
 
 export interface CarouselItemProps {
   thumbNailImage: string;
@@ -30,13 +20,11 @@ export interface CarouselItemProps {
 const CarouselItem: React.FC<CarouselItemProps> = ({
   thumbNailImage,
   alt,
-  name,
   isSelected,
   isUAGLocked,
 }) => {
-  const theme = useTheme();
   return (
-    <VStack flex={1} height={[30, 180, 130, null, 170]}>
+    <VStack flex={1} height={[50, 120, 130, 150, 195]}>
       <Box
         backgroundPosition="center"
         backgroundRepeat="no-repeat"
@@ -86,15 +74,15 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
             alt={alt}
             height={
               isSelected
-                ? ["100px", "150px", "200px", null, "225px"]
-                : ["75px", "112px", "125px", null, "175px"]
+                ? ["120px", "150px", "180px", "200px", "250px"]
+                : ["90px", "112px", "120px", "160px", "180px"]
             }
             transition="height 0.3s ease-in-out"
           />
         </Box>
 
         {/* “Let’s go!” Button */}
-        <Box
+        {/* <Box
           position="absolute"
           top={[null, null, -39, null, -25]}
           right={[null, null, -140, null, -125]}
@@ -123,7 +111,7 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
               Start!
             </Text>
           </Button>
-        </Box>
+        </Box> */}
       </Box>
     </VStack>
   );

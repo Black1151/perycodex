@@ -91,11 +91,11 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
   return (
     <VStack
       position="relative"
-      mt={[20, 30]}
+      mt={[10, 30]}
       flex={1}
       justifyContent="flex-end"
       p={[5, 10]}
-      pb={[20]}
+      pb={20}
       overflow="hidden"
     >
       {/* background layers */}
@@ -134,7 +134,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
         flexDirection="column"
         gap={6}
         position="absolute"
-        top={showInfoBox ? "100px" : "-350px"}
+        top={showInfoBox ? "100px" : "-450px"}
         left="50%"
         transform="translateX(-50%)"
         width={infoBoxWidth}
@@ -164,23 +164,21 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
             objectFit="contain"
           />
         )}
-        <Text fontSize="md" noOfLines={[4, 5]}>
+        <Text fontSize="lg" noOfLines={[4, 5]}>
           {currentItem.description}
         </Text>
         <Button
-          // colorScheme="teal"
           boxShadow="md"
-          padding={8}
+          padding={[6, 8]}
           color="white"
           bgColor={theme.colors.primary}
           _hover={{
             bgColor: "white",
             color: theme.colors.primary,
           }}
-          display={["flex", null, "none"]}
           onClick={handleStartClick}
         >
-          <Text fontFamily="Metropolis" fontSize={30}>
+          <Text fontFamily="Metropolis" fontSize={[25, 30]}>
             Start!
           </Text>
         </Button>

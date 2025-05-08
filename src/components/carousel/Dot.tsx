@@ -10,8 +10,8 @@ const Dot: React.FC<DotProps> = ({ isActive, onClick }) => {
 
   return (
     <Box
-      w={6}
-      h={6}
+      w={[3, null, 4, 5, 6]}
+      h={[3, null, 4, 5, 6]}
       borderRadius="full"
       bg={isActive ? theme.colors.primary : "white"}
       cursor="pointer"
