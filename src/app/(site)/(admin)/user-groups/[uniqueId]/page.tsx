@@ -69,10 +69,13 @@ export default async function UserGroupsDetailPage({
 }) {
   const user = await getUser();
   await checkUserRole(`/user-groups/${params.uniqueId}`);
+  if (user?.customerIsFree) {
+    return redirect("/error");
+  }
 
   // Fetch user group details
   const userGroupRes = await apiClient(
-    `/userGroup/findBy?uniqueId=${params.uniqueId}`,
+    `/userGroup/findBy?uniqueId=${params.uniqueId}`
   );
 
   if (!userGroupRes.ok) {
@@ -131,14 +134,14 @@ export default async function UserGroupsDetailPage({
 
   const userPopulationData = (await userPopulationRes.json()).resource;
   const activeUserPopulationData = userPopulationData.filter(
-    (user: UserInGroup) => user.isActive,
+    (user: UserInGroup) => user.isActive
   );
 
   const userSampleData = (await userSampleRes.json()).resource;
   const teamPopulationData = (await teamPopulationRes.json()).resource;
 
   const activeTeamPopulationData = teamPopulationData.filter(
-    (team: TeamInGroup) => team.isActive,
+    (team: TeamInGroup) => team.isActive
   );
 
   const teamSampleData = (await teamSampleRes.json()).resource;

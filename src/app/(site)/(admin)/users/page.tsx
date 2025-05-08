@@ -3,7 +3,10 @@ import { userFields } from "@/components/agGrids/dataFields/userFields";
 import AdminHeader from "@/components/AdminHeader";
 import InviteNewUserModalForPA from "@/app/(site)/(admin)/users/InviteUser";
 import apiClient from "@/lib/apiClient";
+import { redirect } from "next/navigation";
 import { checkUserRole, getUser } from "@/lib/dal";
+import InviteNewUserLimitReached from "./InviteUserLimitReached";
+import { subscriptionLimits } from "@/utils/constants/subscriptionLimits";
 
 interface SearchParams {
   userType?: string;
@@ -16,12 +19,9 @@ export default async function UsersPage({
 }) {
   const user = await getUser();
 
-  if (user.role === "CA") {
-  }
-
   await checkUserRole("/users");
 
-  let url = `/getAllView?view=vwUsersList&selectColumns=id,userUniqueId,email,role,fullName,jobTitle,imageUrl,customerId,custName,custUniqueId,custImageUrl,custParentId,siteName,siteUniqueId,isActive`;
+  let url = `/getAllView?view=vwUsersList&selectColumns=id,userUniqueId,email,role,fullName,jobTitle,imageUrl,customerId,custName,custUniqueId,custImageUrl,custParentId,siteName,siteUniqueId,isActive,isVerified`;
   let headerTitle = "Users";
   let userTypeParam = searchParams.userType;
   let createNewUrl = "/users/create";
@@ -37,6 +37,10 @@ export default async function UsersPage({
         userTypeParam && ["internal", "external"].includes(userTypeParam)
           ? userTypeParam
           : "internal";
+
+        if (userType === "external" && user.customerIsFree) {
+          redirect("/error")
+        }
 
       switch (userType) {
         case "internal":
@@ -72,8 +76,16 @@ export default async function UsersPage({
 
   const users = await res.json();
   const userData = users.resource;
+  console.log("userData", userData);
 
   const userCount = userData.length;
+
+  const freeLimits = subscriptionLimits.free
+  let isAtLimit
+
+  if (user.customerIsFree && userCount >= freeLimits.maxUsers) {
+    isAtLimit = true;
+  }
 
   return (
     <>
@@ -92,7 +104,7 @@ export default async function UsersPage({
           user.role === "PA" ||
           (user.role === "CA" && userTypeParam === "internal")
         }
-        openModalComponent={InviteNewUserModalForPA}
+        openModalComponent={isAtLimit ? (InviteNewUserLimitReached) : (InviteNewUserModalForPA) }
       />
     </>
   );

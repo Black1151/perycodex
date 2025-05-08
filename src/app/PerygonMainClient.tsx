@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import CarouselDisplay from "@/components/carousel/CarouselDisplay";
 import { CarouselItemProps } from "@/components/carousel/CarouselItem";
 import {
@@ -11,6 +11,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  Button,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/providers/UserProvider";
@@ -26,14 +27,26 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
 }) => {
   const { user } = useUser();
   const router = useRouter();
-  const [countdown, setCountdown] = useState(5);
 
-  useEffect(() => {
-    if (user?.role === "EU") {
-      logoutUser();
+  /**
+   * IMPORTANT: CA users with no parentId are users who need to set up a company.
+   */
+  const newCompanyRegistration =
+    user?.role === "CA" && user.customerId === null;
+
+  /**
+   * Perform the navigation in an effect so we don’t mutate router state during
+   * the render phase (which triggers React’s setState‑in‑render warning).
+   *
+   * useLayoutEffect fires before the browser paints, eliminating any flicker.
+   */
+  useLayoutEffect(() => {
+    if (newCompanyRegistration) {
+      router.replace("/register-company");
     }
-  }, [user]);
+  }, [newCompanyRegistration, router]);
 
+  // Client‑only clean‑up once the component actually mounts
   useEffect(() => {
     localStorage.removeItem("toolId");
     localStorage.removeItem("workflowId");
@@ -41,22 +54,24 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
     localStorage.removeItem("currentWorkflowInstanceId");
   }, []);
 
-  useEffect(() => {
-    if (showNoToolsModal) {
-      const timer = setInterval(() => {
-        setCountdown((prevCount) => (prevCount > 0 ? prevCount - 1 : 0));
-      }, 1000);
+  // Nothing should be rendered while we’re about to redirect.
+  if (newCompanyRegistration) {
+    return null;
+  }
 
-      return () => clearInterval(timer);
+  const logoutUser = async () => {
+    try {
+      const response = await fetch("/api/auth/sign-out", { method: "POST" });
+      if (response.ok) {
+        router.push("/login");
+        router.refresh();
+      } else {
+        console.error("Logout failed");
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
     }
-  }, [showNoToolsModal]);
-
-  useEffect(() => {
-    if (countdown === -5) {
-      logoutUser();
-    }
-  }, [countdown]);
-
+  };
   const logoutUser = async () => {
     try {
       const response = await fetch("/api/auth/sign-out", { method: "POST" });
@@ -74,6 +89,7 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
   return (
     <Flex flex={1} overflow="hidden" width="100%">
       {!showNoToolsModal && <CarouselDisplay carouselItems={carouselItems} />}
+
       <Modal
         isOpen={showNoToolsModal}
         onClose={() => {}}
@@ -88,7 +104,14 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
               You are not currently subscribed to any tools, please contact
               sales.
             </Text>
-            <Text mt={4}>Seconds until logout: {countdown}</Text>
+            <Button
+              mt={4}
+              onClick={logoutUser}
+              width="100%"
+              loadingText="Logging out..."
+            >
+              Logout
+            </Button>
           </ModalBody>
         </ModalContent>
       </Modal>

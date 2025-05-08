@@ -46,10 +46,13 @@ export default function SideBars() {
 
   const { recordId, recordParentId, recordCustomerId } = recordIds || {};
 
-  const generateLeftSidebarItemsDrawer = (userRole: string | undefined) => {
+  const generateLeftSidebarItemsDrawer = (
+    userRole: string | undefined,
+    isFree: boolean
+  ) => {
     const items = [];
 
-    if (userRole === "CA") {
+    if (userRole === "CA" && !isFree) {
       items.push(
         {
           label: "My Company",
@@ -110,7 +113,7 @@ export default function SideBars() {
           icon: <LocationOn sx={{ height: "100%", width: "100%" }} />,
           url: "/sites?siteType=external",
           category: "Clients",
-        },
+        }
       );
     } else if (userRole === "PA") {
       items.push(
@@ -227,7 +230,76 @@ export default function SideBars() {
           icon: <Grid4x4 sx={{ height: "100%", width: "100%" }} />,
           url: "/grid-test",
           category: "Test",
+        }
+      );
+    } else if (isFree) {
+      items.push(
+        {
+          label: "My Company",
+          icon: <Domain sx={{ height: "100%", width: "100%" }} />,
+          url: "/my-company",
+          category: "Company",
         },
+        {
+          label: "Company Users",
+          icon: <Person sx={{ height: "100%", width: "100%" }} />,
+          url: "/users?userType=internal",
+          category: "Company",
+        },
+        {
+          label: "Company Sites",
+          icon: <LocationOn sx={{ height: "100%", width: "100%" }} />,
+          url: "/sites?siteType=internal",
+          category: "Company",
+        },
+        {
+          label: "Teams",
+          icon: <People sx={{ height: "100%", width: "100%" }} />,
+          url: "/teams",
+          category: "Company",
+        },
+        {
+          label: "User Groups",
+          icon: <Groups sx={{ height: "100%", width: "100%" }} />,
+          url: "/user-groups",
+          category: "Company",
+          locked: true,
+        },
+        {
+          label: "Tags",
+          icon: <Sell sx={{ height: "100%", width: "100%" }} />,
+          url: "/tags",
+          category: "Company",
+          locked: true,
+        },
+        {
+          label: "Email Schedules",
+          icon: <ScheduleSend sx={{ height: "100%", width: "100%" }} />,
+          url: "/email-schedule",
+          category: "Company",
+          locked: true,
+        },
+        {
+          label: "Our Clients",
+          icon: <Domain sx={{ height: "100%", width: "100%" }} />,
+          url: "/customers?customerType=external",
+          category: "Clients",
+          locked: true,
+        },
+        {
+          label: "Clients Users",
+          icon: <Person sx={{ height: "100%", width: "100%" }} />,
+          url: "/users?userType=external",
+          category: "Clients",
+          locked: true,
+        },
+        {
+          label: "Clients Sites",
+          icon: <LocationOn sx={{ height: "100%", width: "100%" }} />,
+          url: "/sites?siteType=external",
+          category: "Clients",
+          locked: true,
+        }
       );
     } else if (userRole === "CU") {
       items.push(
@@ -248,7 +320,7 @@ export default function SideBars() {
           icon: <People sx={{ height: "100%", width: "100%" }} />,
           url: "/teams",
           category: "My Company",
-        },
+        }
       );
     } else if (userRole === "CS") {
       items.push(
@@ -275,7 +347,7 @@ export default function SideBars() {
           icon: <Domain sx={{ height: "100%", width: "100%" }} />,
           url: "/customers?customerType=external",
           category: "My Company",
-        },
+        }
       );
     } else if (userRole === "CL") {
       items.push(
@@ -302,7 +374,7 @@ export default function SideBars() {
           icon: <Domain sx={{ height: "100%", width: "100%" }} />,
           url: "/customers?customerType=external",
           category: "My Company",
-        },
+        }
       );
     }
 
@@ -317,7 +389,10 @@ export default function SideBars() {
   };
 
   useEffect(() => {
-    const newItems = generateLeftSidebarItemsDrawer(user?.role);
+    const newItems = generateLeftSidebarItemsDrawer(
+      user?.role,
+      user?.customerIsFree ?? true
+    );
     const hasAnyActive = newItems.some((item) => item.active);
 
     if (leftMenuItems.length === 0) {

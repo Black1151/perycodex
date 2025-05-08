@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Flex, Text, Tooltip, useTheme } from "@chakra-ui/react";
+import { Lock } from "@mui/icons-material";
 
 interface SideBarMenuItemProps {
   label: string;
@@ -10,6 +11,7 @@ interface SideBarMenuItemProps {
   hoverStyles?: React.CSSProperties;
   isLeft?: boolean;
   active?: boolean;
+  locked?: boolean;
 }
 
 const SideBarMenuItem: React.FC<SideBarMenuItemProps> = ({
@@ -21,36 +23,59 @@ const SideBarMenuItem: React.FC<SideBarMenuItemProps> = ({
   hoverStyles,
   isLeft = false,
   active = false,
+  locked = false,
 }) => {
   const theme = useTheme();
 
   return (
     <Flex
+      pos="relative"
       fontSize={16}
       flexDirection={isLeft ? "column" : "row"}
       alignItems="center"
-      position="relative"
       overflow="hidden"
-      color={active ? "white" : theme.colors.primary}
+      width="100%"
+      py={2}
+      color={
+        locked
+          ? theme.colors.gray[400]
+          : active
+          ? "white"
+          : theme.colors.primary
+      }
       bg={
-        active
+        locked
+          ? theme.colors.gray[100]
+          : active
           ? `linear-gradient(45deg, ${theme.colors.primary}, ${theme.colors.secondary})`
           : "transparent"
       }
       borderRadius="md"
-      border={active ? "1px solid white" : "1px solid transparent"}
-      _hover={{
-        ...hoverStyles,
-        cursor: "pointer",
-        border: `1px solid ${theme.colors.primary}`,
-        color: active ? "white" : hoverStyles?.color || theme.colors.primary,
+      border={
+        active
+          ? "1px solid white"
+          : locked
+          ? "1px solid" + theme.colors.gray[300]
+          : "1px solid transparent"
+      }
+      _hover={
+        locked
+          ? undefined
+          : {
+              ...hoverStyles,
+              cursor: "pointer",
+              border: `1px solid ${theme.colors.primary}`,
+              color: active ? "white" : hoverStyles?.color || theme.colors.primary,
+            }
+      }
+      onClick={() => {
+        if (!locked) onClick();
       }}
-      onClick={onClick}
-      width="100%"
-      py={2}
+      pointerEvents={locked ? "none" : "auto"}
+      cursor={locked ? "not-allowed" : "pointer"}
     >
       {showIconOnly ? (
-        <Tooltip label={label} hasArrow placement={"right"}>
+        <Tooltip label={label} hasArrow placement="right">
           <Box
             boxSize={iconSize}
             display="flex"
@@ -70,10 +95,30 @@ const SideBarMenuItem: React.FC<SideBarMenuItemProps> = ({
           {icon}
         </Box>
       )}
+
       {!showIconOnly && (
-        <Text flex={1} zIndex={2} textAlign={"center"}>
+        <Text flex={1} zIndex={2} textAlign="center">
           {label}
         </Text>
+      )}
+
+      {locked && !showIconOnly && (
+        <Box
+          pos="absolute"
+          top={2}
+          right={2}
+          zIndex={3}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Lock
+            style={{
+              fontSize: theme.sizes[4],
+              color: theme.colors.gray[500],
+            }}
+          />
+        </Box>
       )}
     </Flex>
   );

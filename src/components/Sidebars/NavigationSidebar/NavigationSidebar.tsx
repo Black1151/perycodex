@@ -12,6 +12,7 @@ export interface MenuItem {
   onClick: () => void;
   category?: string;
   active?: boolean;
+  locked?: boolean;
 }
 
 interface NavigationSidebarProps extends SidebarProps {
@@ -79,6 +80,7 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
                 isLeft={true}
                 active={item.active}
                 onClick={() => handleItemClick(item)}
+                locked={item.locked}
               />
               {i < items.length - 1 && (
                 <Divider
@@ -124,6 +126,7 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
                 isLeft={true}
                 active={item.active}
                 onClick={() => handleItemClick(item)}
+                locked={item.locked}
               />
               {i < items.length - 1 && (
                 <Divider

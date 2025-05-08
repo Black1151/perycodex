@@ -14,7 +14,6 @@ import {
   useTheme,
   VStack,
 } from "@chakra-ui/react";
-import Fun from "@/components/a/b/c/d/Fun";
 import AddAPhotoOutlinedIcon from "@mui/icons-material/AddAPhotoOutlined";
 import DomainIcon from "@mui/icons-material/Domain";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
@@ -332,10 +331,6 @@ export const UserDetailsBanner: React.FC<UserDetailsBannerProps> = ({
       <Flex px={4}>
         <TagsDisplay tags={tags} />
       </Flex>
-      <Fun
-        isOpen={abstractedCount >= 10}
-        onClose={() => setAbstractedCount(0)}
-      />
     </VStack>
   );
 };

@@ -1,27 +1,57 @@
-// SignUpPage.tsx (Server Component)
+"use client";
 
-import { Center, VStack } from "@chakra-ui/react";
+import { Center, VStack, Flex } from "@chakra-ui/react";
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
 import { LoginCard } from "@/components/login/LoginCard";
+import dynamic from "next/dynamic";
 import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
-import { SignUpPageClient } from "./SignUpPageClient";
+import { useEffect, useState, Suspense } from "react";
+import SignUpCard, { Action } from "@/components/login/SignUpCard";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  HStack,
+  Input,
+  Select, 
+  Stack,
+  Spinner
+} from "@chakra-ui/react";
+import { useTheme } from "@chakra-ui/react";
+
+const SignUpPageClient = dynamic(
+  () => import("./SignUpPageClient"),
+  { ssr: false }
+);
 
 export default function SignUpPage() {
+  const [title, setTitle] = useState("Sign up");
+  const [description, setDescription] = useState("");
+  const theme = useTheme();
+
   return (
-    <PerygonContainer>
-        <Center flex={1} maxW={["100%"]}>
-        <LoginCard
-          titleComponent={
-            <VStack position="absolute" top="60px">
-              <LetterFlyIn fontSize={90}>Perygon</LetterFlyIn>
-              <LetterFlyIn fontSize={50}>Create</LetterFlyIn>
-              <LetterFlyIn fontSize={50}>Account</LetterFlyIn>
-            </VStack>
+    <Flex
+      minH="100vh"
+      bg="gray.100"
+      align="center"
+      justify="center"
+      p={4}
+      bgGradient={theme.gradients.primaryGradient}
+    >
+      <SignUpCard>
+      <Suspense
+          fallback={
+            <Center h="200px">
+              <Spinner size="xl" />
+            </Center>
           }
         >
+        <Box width="full" maxW="md">
           <SignUpPageClient />
-        </LoginCard>
-      </Center>
-    </PerygonContainer>
+        </Box>
+        </Suspense>
+      </SignUpCard>
+    </Flex>
   );
 }

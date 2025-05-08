@@ -19,6 +19,10 @@ export default async function CustomersPage({
   const user = await getUser();
   await checkUserRole("/customers");
 
+  if (user.customerIsFree) {
+    return redirect("/error"); // Redirect if the user is free
+  }
+
   let url = `/getAllView?view=vwCustomersList&selectColumns=id,name,custId,customerCode,imageUrl,isActive,noOfUsers,noOfSites,sectorName,regionName,customerType`;
   let headerTitle = "Customers";
   let customerTypeParam = searchParams.customerType;

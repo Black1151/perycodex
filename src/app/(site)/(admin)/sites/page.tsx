@@ -4,6 +4,8 @@ import { siteFields } from "@/components/agGrids/dataFields/siteFields";
 import AdminHeader from "@/components/AdminHeader";
 import apiClient from "@/lib/apiClient";
 import { checkUserRole, getUser } from "@/lib/dal";
+import SiteLimitReached from "./SiteLimitReached";
+import { subscriptionLimits } from "@/utils/constants/subscriptionLimits";
 
 interface SearchParams {
   siteType?: string;
@@ -33,6 +35,10 @@ export default async function SitesPage({
         siteTypeParam && ["internal", "external"].includes(siteTypeParam)
           ? siteTypeParam
           : "internal";
+
+      if (siteType === "external" && user.customerIsFree) {
+        redirect("/error");
+      }
 
       if (siteType === "internal") {
         headerTitle = "My Company Sites";
@@ -66,6 +72,13 @@ export default async function SitesPage({
 
   const siteCount = siteData.length;
 
+  const freeLimits = subscriptionLimits.free;
+  let isAtLimit
+
+  if (user.customerIsFree && siteCount >= freeLimits.maxSites) {
+    isAtLimit = true;
+  }
+
   return (
     <>
       <AdminHeader headingText={headerTitle} dataCount={siteCount} />
@@ -73,6 +86,8 @@ export default async function SitesPage({
         data={siteData}
         initialFields={siteFields}
         createNewUrl={createNewUrl}
+        isModalEnabled={isAtLimit}
+        openModalComponent={SiteLimitReached}
       />
     </>
   );

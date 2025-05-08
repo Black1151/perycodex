@@ -1,4 +1,8 @@
-const themeJson = {
+/* Workflow SurveyJS Theme File for Tools using our Theme Variables */
+/* Rocco Volpe 01/05/2025 */
+/* V1.0 */
+
+export const themeJson = {
   themeName: "client-satisfaction-light",
   colorPalette: "light",
   isPanelless: true,
@@ -11,6 +15,7 @@ const themeJson = {
     "--sjs-base-unit": "7px",
     "--sjs-font-family": "Metropolis",
     "--sjs-font-size": "12px",
+    "--sjs-font-questiontitle-weight": 600,
 
     "--sjs-general-backcolor-dim": "var(--chakra-colors-elementBG)", //elementBG
 
@@ -32,12 +37,10 @@ const themeJson = {
 
     "--sjs-primary-forecolor-light": "rgba(255, 255, 255, 0.25)", //white
 
-    "--sjs-font-editorfont-placeholdercolor":
-      "var(--sjs-primary-forecolor, var(--primary-foreground, #fff));",
+    "--sjs-font-editorfont-placeholdercolor": "var(--sjs-general-forecolor",
 
     "--sjs-shadow-small":
       "0px 0px 0px 0px rgba(228, 228, 228, 1), 0px 0px 0px 1px rgba(228, 228, 228, 1)",
-
     "--sjs-shadow-inner":
       "0px 0px 0px 0px rgba(228, 228, 228, 1), 0px 0px 0px 1px rgba(288, 228, 228, 1)",
 
