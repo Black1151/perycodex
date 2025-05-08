@@ -28,25 +28,15 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
   const { user } = useUser();
   const router = useRouter();
 
-  /**
-   * IMPORTANT: CA users with no parentId are users who need to set up a company.
-   */
   const newCompanyRegistration =
     user?.role === "CA" && user.customerId === null;
 
-  /**
-   * Perform the navigation in an effect so we don’t mutate router state during
-   * the render phase (which triggers React’s setState‑in‑render warning).
-   *
-   * useLayoutEffect fires before the browser paints, eliminating any flicker.
-   */
   useLayoutEffect(() => {
     if (newCompanyRegistration) {
       router.replace("/register-company");
     }
   }, [newCompanyRegistration, router]);
 
-  // Client‑only clean‑up once the component actually mounts
   useEffect(() => {
     localStorage.removeItem("toolId");
     localStorage.removeItem("workflowId");
@@ -54,24 +44,10 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
     localStorage.removeItem("currentWorkflowInstanceId");
   }, []);
 
-  // Nothing should be rendered while we’re about to redirect.
   if (newCompanyRegistration) {
     return null;
   }
 
-  const logoutUser = async () => {
-    try {
-      const response = await fetch("/api/auth/sign-out", { method: "POST" });
-      if (response.ok) {
-        router.push("/login");
-        router.refresh();
-      } else {
-        console.error("Logout failed");
-      }
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
   const logoutUser = async () => {
     try {
       const response = await fetch("/api/auth/sign-out", { method: "POST" });
