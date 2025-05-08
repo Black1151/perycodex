@@ -29,6 +29,7 @@ export const baseTheme = extendTheme({
     lightGreen: "#92C01F",
     seduloGreen: "#008000",
     darkGray: "#4A4A4A",
+    darkElementBG: "rgb(41, 41, 41, 0.85)",
     primaryTextColor: "rgb(0, 0, 0)",
     secondaryTextColor: "rgb(83, 83, 83)",
     themeTextColor: "rgba(201, 9, 9, 0.85)",
@@ -98,7 +99,13 @@ export const baseTheme = extendTheme({
         bgGradient: gradients.primaryGradient,
       },
     },
-
+    companySignUpCard: {
+      baseStyle: {
+        cardPanel: "darkElementBG",
+      },
+    },
+    
+    
     //// big up app styles
     bigUpStatsCard: {
       baseStyle: {

@@ -38,22 +38,21 @@ export const registerCustomerJson = {
           titleLocation: "top",
           isRequired: true,
           placeholder: "Enter the name of your company",
+          requiredErrorText: "Please enter the name of your company",
         },
-
         {
           type: "text",
-          name: "telephone", // NEW ① tel field
-          title: "Telephone",
+          name: "telephone",
+          title: "Telephone (with country code)",
           inputType: "tel",
           startWithNewLine: false,
           minWidth: "256px",
-          placeholder: "+44 20 7946 0018",
-          // Simple UK‑style number pattern – tweak as needed
+          placeholder: "Enter the telephone number of your company",
           validators: [
             {
               type: "regex",
-              regex: "^\\+?[0-9\\s()\\-]{7,15}$",
-              text: "Please enter a valid phone number",
+              regex: "^\\+(?:[0-9][\\s-]?){6,14}[0-9]$",
+              text: "Please enter a valid international phone number, starting with + and country code",
             },
           ],
         },
@@ -73,6 +72,7 @@ export const registerCustomerJson = {
             valueName: "value",
             titleName: "label",
           },
+          requiredErrorText: "Please select your primary sector",
         },
         {
           type: "dropdown",
@@ -90,6 +90,7 @@ export const registerCustomerJson = {
             valueName: "value",
             titleName: "label",
           },
+          requiredErrorText: "Please select your primary region",
         },
         {
           type: "dropdown",
@@ -106,6 +107,7 @@ export const registerCustomerJson = {
             valueName: "value",
             titleName: "label",
           },
+          requiredErrorText: "Please select your business type",
         },
         {
           type: "text",
@@ -113,19 +115,37 @@ export const registerCustomerJson = {
           title: "Company Number",
           titleLocation: "top",
           defaultValue: "10101010",
+          minLength: 9,
+          maxLength: 9,
           startWithNewLine: false,
           visibleIf: "{businessTypeId} = 3",
           placeholder: "Not required right now if you are unsure",
+          validators: [
+            {
+              type: "regex",
+              regex: "^\\d{9}$",
+              text: "Please enter a valid company number (9 characters)",
+            },
+          ],
         },
         {
           type: "text",
           name: "sicCode",
           title: "SIC Code",
           titleLocation: "top",
+          minLength: 5,
+          maxLength: 5,
           defaultValue: "10101",
           startWithNewLine: false,
           visibleIf: "{businessTypeId} = 3",
           placeholder: "Not required right now if you are unsure",
+          validators: [
+            {
+              type: "regex",
+              regex: "^\\d{5}$",
+              text: "Please enter a valid SIC code (5 characters)",
+            },
+          ],
         },
         {
           type: "dropdown",
@@ -142,6 +162,7 @@ export const registerCustomerJson = {
             valueName: "value",
             titleName: "label",
           },
+          requiredErrorText: "Please select your company size",
         },
         {
           type: "text",
@@ -164,6 +185,7 @@ export const registerCustomerJson = {
             },
           ],
           placeholder: "Enter the number of current Employees",
+          requiredErrorText: "Please enter the number of employees",
         },
       ],
     },
@@ -178,8 +200,7 @@ export const registerCustomerJson = {
           name: "customerSites",
           renderMode: "tab",
           templateTabTitle: "Site {panelIndex}: {panel.siteName}",
-          title:
-            `Enter your company locations below. (First being the primary location of your organisation) You can add up to ${subscriptionLimits.free.maxSites} sites. `,
+          title: `Enter your company locations below. (First being the primary location of your organisation) You can add up to ${subscriptionLimits.free.maxSites} sites. `,
           panelCount: 1,
           maxPanelCount: `${subscriptionLimits.free.maxSites}`,
 
@@ -195,6 +216,7 @@ export const registerCustomerJson = {
               title: "Site Name",
               isRequired: true,
               placeholder: "e.g. Head Office",
+              requiredErrorText: "Please enter the name of this site",
             },
             {
               type: "dropdown",
@@ -212,6 +234,7 @@ export const registerCustomerJson = {
                 valueName: "value",
                 titleName: "label",
               },
+              requiredErrorText: "Please select the type of this site",
             },
             {
               type: "text",
@@ -220,6 +243,7 @@ export const registerCustomerJson = {
               minWidth: "256px",
               isRequired: true,
               placeholder: "No. / Name & Street",
+              requiredErrorText: "Please enter the address of this site",
             },
             {
               type: "text",
@@ -228,6 +252,7 @@ export const registerCustomerJson = {
               minWidth: "256px",
               isRequired: true,
               placeholder: "Postcode",
+              requiredErrorText: "Please enter the postcode of this site",
             },
             {
               type: "dropdown",
@@ -238,13 +263,14 @@ export const registerCustomerJson = {
               allowClear: true,
               choicesOrder: "asc",
               isRequired: true,
-              defaultValue: "UK",
+              defaultValue: 336,
               choicesByUrl: {
                 url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=country`,
                 path: "country",
                 valueName: "value",
                 titleName: "label",
               },
+              requiredErrorText: "Please select the country of this site",
             },
           ],
         },
@@ -259,14 +285,12 @@ export const registerCustomerJson = {
         {
           type: "paneldynamic",
           name: "departments",
-          title:
-            `Add up to ${subscriptionLimits.free.maxTeams - 1} additional departments inside the organisation. We have added one main departnent for you (which you will be a part of).`,
+          title: `Add up to ${subscriptionLimits.free.maxTeams - 1} additional departments inside the organisation. We have added one main departnent for you (which you will be a part of).`,
           panelCount: 0,
           minPanelCount: 0,
           maxPanelCount: `${subscriptionLimits.free.maxTeams - 1}`,
           renderMode: "tab",
           templateTabTitle: "Department {panelIndex}: {panel.departmentName}",
-
 
           // ←–– Enforce unique departmentName across panels
           keyName: "departmentName",
@@ -279,6 +303,7 @@ export const registerCustomerJson = {
               title: "Department Name",
               isRequired: true,
               placeholder: "e.g. Sales",
+              requiredErrorText: "Please enter the name of this department",
             },
             {
               type: "comment",
@@ -311,24 +336,24 @@ export const registerCustomerJson = {
           labelFalse: "Not right now",
           defaultValue: true,
           isRequired: true,
+          requiredErrorText: "Please select whether to invite your staff",
         },
         {
           type: "boolean",
           name: "useBulkEntry",
           title: "How would you like to add your staff’s email addresses?",
-          labelTrue: "Paste all at once",
-          labelFalse: "Enter individually",
+          labelTrue: "Paste all",
+          labelFalse: "Individual",
           visibleIf: "{inviteStaff} = true",
           defaultValue: false,
           description:
-            `Choose “Enter individually” to type or paste one email at a time (up to ${subscriptionLimits.free.maxUsers -1}). ` +
-            "Or choose “Paste all at once” to drop in a comma-separated list.",
+            `Choose “Individual” to type one email at a time (up to ${subscriptionLimits.free.maxUsers - 1}). ` +
+            "Or choose “Paste all” to drop in a comma-separated list.",
         },
         {
           type: "paneldynamic",
           name: "companyStaff",
-          title:
-            `Enter up to ${subscriptionLimits.free.maxUsers - 1} of your staff. They will be invited to join the platform.`,
+          title: `Enter up to ${subscriptionLimits.free.maxUsers - 1} of your staff. They will be invited to join the platform.`,
           panelCount: 1,
           maxPanelCount: `${subscriptionLimits.free.maxUsers - 1}`,
           renderMode: "list",
@@ -350,11 +375,12 @@ export const registerCustomerJson = {
               validators: [
                 { type: "email", text: "Please enter a valid email address" },
               ],
+              requiredErrorText: "Please enter the email address of this staff member",
             },
           ],
         },
         {
-          type: "text",
+          type: "comment",
           name: "companyStaffBulk",
           title: `Paste up to ${subscriptionLimits.free.maxUsers - 1} emails, separated by commas`,
           visibleIf: "{useBulkEntry} = true and {inviteStaff} = true",
@@ -364,12 +390,14 @@ export const registerCustomerJson = {
           minRows: 3,
           minHeight: "200px",
           isRequired: true,
-          placeholder: "e.g. alice@example.com, bob@example.com, charlie@example.com",
+          placeholder:
+            "e.g. alice@example.com, bob@example.com, charlie@example.com",
           validators: [
             // 1) FORMAT CHECK: each must be a valid-looking email
             {
               type: "regex",
-              regex: "^(?:\\s*[^,\\s]+@[^,\\s]+\\.[^,\\s]+\\s*)(?:,\\s*[^,\\s]+@[^,\\s]+\\.[^,\\s]+\\s*)*$",
+              regex:
+                "^(?:\\s*[^,\\s]+@[^,\\s]+\\.[^,\\s]+\\s*)(?:,\\s*[^,\\s]+@[^,\\s]+\\.[^,\\s]+\\s*)*$",
               text: "Please enter valid email addresses, separated by commas.",
             },
             // 2) COUNT CHECK: dynamic based on limit
@@ -379,6 +407,7 @@ export const registerCustomerJson = {
               text: `You can only paste up to ${subscriptionLimits.free.maxUsers - 1} email addresses.`,
             },
           ],
+          requiredErrorText: `Please enter the email addresses of your staff members`,
         },
       ],
     },

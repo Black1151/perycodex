@@ -81,14 +81,14 @@ const SignUpPageClient = () => {
 
   useEffect(() => {
     if (signUpType === null) {
-      setTitle("Choose your sign up type");
+      setTitle("Choose sign up type");
       setDescription("Select whether you are signing up as an individual or a company.");
       setActions([
         { label: "Back To Login", href: "/login", icon: <ArrowBack /> },
       ]);
     } else if (signUpType === "individual") {
       setTitle("Join an existing company");
-      setDescription("Is your company already using perygon? Please fill in the form to join your collegues. Please use your work email.");
+      setDescription("Is your company already using Perygon? Please fill in the form to join your collegues. Please use your work email.");
       setActions([
         { label: "Sign Up as a Company", href: "/sign-up?signUpType=company", icon: <Business /> },
         { label: "Back To Login", href: "/login", icon: <ArrowBack />},

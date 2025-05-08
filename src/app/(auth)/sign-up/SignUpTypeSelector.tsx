@@ -23,7 +23,6 @@ export const SignUpTypeSelector = ({
   setSignUpType,
 }: SignUpTypeSelectorProps) => {
   // Map your signUpType to a 0|1 index
-  const tabIndex = signUpType === "company" ? 1 : 0;
   const theme = useTheme();
 
   return (
@@ -71,7 +70,7 @@ export const SignUpTypeSelector = ({
           _groupHover={{ color: "white" }}
           transition="color 0.2s ease"
         >
-          Join perygon and create a new company on a free trial. Invite your team members and get set up now.
+          Join Perygon and create a new company on a free trial. Invite your team members and get set up now.
         </Text>
       </Card>
       
@@ -118,7 +117,7 @@ export const SignUpTypeSelector = ({
           _groupHover={{ color: "white" }}
           transition="color 0.2s ease"
         >
-          Is your company already using perygon? Join your collegues by signing up with your work email.
+          Is your company already using Perygon with auto-signup? Join your collegues by signing up with your work email.
         </Text>
       </Card>
     </VStack>

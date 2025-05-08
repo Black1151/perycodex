@@ -13,26 +13,16 @@ import {
 import { useRouter } from "next/navigation";
 import { useTheme } from "@chakra-ui/react";
 
-/**
- * Action link shape
- */
 export interface Action {
   label: string;
   href: string;
   icon?: React.ReactNode;
 }
 
-/**
- * Props passed into SignUpCard
- */
 interface SignUpCardProps {
-  /** Render-prop children receive panel controls */
   children: ReactNode;
 }
 
-/**
- * Context shape exposing setters to child components
- */
 interface PanelContextType {
   setTitle: (title: string) => void;
   setDescription: (desc: string) => void;
@@ -64,6 +54,7 @@ const SignUpCard: React.FC<SignUpCardProps> = ({
   const [actions, setActions] = useState<Action[]>([]);
   const router = useRouter();
   const theme = useTheme();
+  const bgtest = "#000";
 
   const handleActionClick = (action: Action) => {
     router.push(action.href); // Example: navigate to the action's href
@@ -91,7 +82,7 @@ const SignUpCard: React.FC<SignUpCardProps> = ({
         >
           <Box
             w={{ base: "full", md: "40%" }}
-            bg="gray.700"
+            bg={theme.components.companySignUpCard.baseStyle.cardPanel}
             color="white"
             p={8}
             display="flex"
@@ -101,7 +92,7 @@ const SignUpCard: React.FC<SignUpCardProps> = ({
             <VStack spacing={4} align="start" w={"full"}>
               <Heading
                 as="h2"
-                fontSize={38}
+                fontSize={[30, 32, 38]}
                 fontFamily={"bonfire"}
                 fontWeight="400"
               >
