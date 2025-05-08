@@ -8,6 +8,7 @@ import NavigationSidebar from "@/components/Sidebars/NavigationSidebar/Navigatio
 import NavigationBottombar from "@/components/Bottombar/NavigationBottombar/NavigationBottombar";
 import { getMuiIconByName } from "@/utils/muiIconMapper";
 import { Icon } from "@chakra-ui/react";
+import { useUser } from "@/providers/UserProvider";
 
 interface DashboardAPIResponse {
   filteredDashboards: Dashboard[];
@@ -24,6 +25,8 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const { user } = useUser();
+  const isFree = user?.customerIsFree ?? false;
 
   const toolId = searchParams.get("toolId");
   const workflowId = searchParams.get("wfId");
@@ -81,7 +84,7 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
         ),
       category: "Dashboards",
       active: pathname.includes(dashboard.dashboardUrl),
-      locked: dashboard.disableIfFree,
+      locked: isFree ? dashboard.disableIfFree : false,
     };
   });
 
