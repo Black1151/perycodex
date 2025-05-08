@@ -51,7 +51,7 @@ export default function RegisterCompany({
               Your company has been registered successfully!
             </Text>
             <Text fontFamily="bonfire" fontSize={32} fontWeight={100} color="white">
-              We're so excited to have you on board 🎉
+              We are so excited to have you on board 🎉
             </Text>
           </VStack>
           <Text color="white" fontSize={20}>
@@ -123,7 +123,7 @@ export default function RegisterCompany({
             textAlign={["center", "left"]}
             mt={[1, 0]}
           >
-            Let’s set up your organisation
+            Set up your organisation
           </Text>
         </Flex>
 
