@@ -15,6 +15,7 @@ export const themeJson = {
     "--sjs-base-unit": "7px",
     "--sjs-font-family": "Metropolis",
     "--sjs-font-size": "12px",
+    "--sjs-internal-font-editorfont-size": "12px",
     "--sjs-font-questiontitle-weight": 600,
 
     "--sjs-general-backcolor-dim": "var(--chakra-colors-elementBG)", //elementBG
