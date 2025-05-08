@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useCallback, useRef, useState } from "react";
 import { Box, HStack, useBreakpointValue, VStack } from "@chakra-ui/react";
 import CarouselNavigationButton from "./CarouselNavigationButton";
@@ -22,6 +24,7 @@ const Carousel: React.FC<CarouselProps> = ({
   const touchStartX = useRef(0);
   const touchStartTime = useRef(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
   const itemsToShow =
     useBreakpointValue({
       base: 3,
@@ -81,13 +84,15 @@ const Carousel: React.FC<CarouselProps> = ({
         side={["-30px", "-40px"]}
       />
 
-      {/* Future self, or other entity reading this - do not remove this box element or change it to a flex as it will break the layout */}
+      {/* Carousel track container */}
       <Box width="100%">
         <HStack
-          justifyContent="space-between"
+          spacing={0}
+          justifyContent="flex-start"
+          position="relative"
           width={`${(carouselItems.length * 100) / itemsToShow}%`}
           transform={`translateX(-${
-            (currentIndex - Math.floor(itemsToShow / 2)) *
+            (currentIndex - (itemsToShow - 1) / 2) *
             (100 / carouselItems.length)
           }%)`}
           transition="transform 0.5s ease-in-out"
@@ -97,7 +102,6 @@ const Carousel: React.FC<CarouselProps> = ({
             let opacity = 1;
             let pointerEvents: "auto" | "none" = "auto";
             const distance = Math.abs(currentIndex - index);
-
             if (
               [0, 1].includes(currentIndex) &&
               itemsToShow === 5 &&
@@ -129,6 +133,8 @@ const Carousel: React.FC<CarouselProps> = ({
                     : "default"
                 }
                 pointerEvents={pointerEvents}
+                width={`${100 / carouselItems.length}%`}
+                flex="0 0 auto"
               >
                 <CarouselItem {...item} isSelected={index === currentIndex} />
               </HStack>
