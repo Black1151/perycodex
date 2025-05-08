@@ -1,17 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import {
-  Flex,
-  VStack,
-  Text,
-  Button,
-  useTheme,
-} from "@chakra-ui/react";
+import { Flex, VStack, Text, Button, useTheme } from "@chakra-ui/react";
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
 import { useUser } from "@/providers/UserProvider";
 import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 import LogoUpload from "./LogoUpload";
+import ConfettiAlt from "@/components/animations/confetti/ConfettiAlt";
+import { Check } from "@mui/icons-material";
 
 interface RegisterCompanyProps {
   registerCustomerJson: any;
@@ -25,7 +21,9 @@ export default function RegisterCompany({
   const { user } = useUser();
 
   const [customerData, setCustomerData] = useState<any>(initialCustomerData);
-  const [hasLogo, setHasLogo] = useState<boolean>(Boolean(initialCustomerData?.custImageUrl));
+  const [hasLogo, setHasLogo] = useState<boolean>(
+    Boolean(initialCustomerData?.custImageUrl)
+  );
   const theme = useTheme();
 
   useEffect(() => {
@@ -43,13 +41,19 @@ export default function RegisterCompany({
           flex={1}
           align="center"
           justify="center"
-          gap={4}
+          gap={8}
           p={[4, 4, 0]}
           textAlign="center"
         >
-          <Text fontFamily="bonfire" fontSize={46} color="white">
-            Your company has been registered successfully!
-          </Text>
+          <ConfettiAlt show={true} />
+          <VStack spacing={1} align="center" textAlign="center">
+            <Text fontFamily="bonfire" fontSize={46} color="white">
+              Your company has been registered successfully!
+            </Text>
+            <Text fontFamily="bonfire" fontSize={32} fontWeight={100} color="white">
+              We're so excited to have you on board 🎉
+            </Text>
+          </VStack>
           <Text color="white" fontSize={20}>
             Last Step... Upload your company logo (optional)
           </Text>
@@ -63,12 +67,16 @@ export default function RegisterCompany({
             }}
           />
           <Button
+            size={"lg"}
+            bg={theme.colors.seduloGreen}
+            px={6}
+            color={"white"}
             mt={8}
-            onClick={() =>
-              (window.location.href = "/tool-store")
-            }
+            gap={2}
+            onClick={() => (window.location.href = "/tool-store")}
           >
-            Continue...
+            Finish
+            <Check />
           </Button>
         </Flex>
       </VStack>

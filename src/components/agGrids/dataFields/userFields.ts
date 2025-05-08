@@ -3,6 +3,7 @@ import ActionButtonRenderer from "@/components/agGrids/CellRenderers/ActionButto
 import UserRenderer from "@/components/agGrids/CellRenderers/UserRenderer";
 import CustomerRenderer from "@/components/agGrids/CellRenderers/CustomerRenderer";
 import SiteLinkRenderer from "@/components/agGrids/CellRenderers/SiteLinkRenderer";
+import UserVerifiedRenderer from "../CellRenderers/UserVerifiedRenderer";
 
 // Updated AgGrids fields
 export const userFields: ColDef[] | any = [
@@ -59,6 +60,12 @@ export const userFields: ColDef[] | any = [
       nameField: "siteName",
       uniqueIdField: "siteUniqueId",
     },
+  },
+  {
+    field: "isVerified",
+    headerName: "Verified",
+    filter: "agMultiColumnFilter",
+    cellRenderer: UserVerifiedRenderer,
   },
   {
     field: "isActive",

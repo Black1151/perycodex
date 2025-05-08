@@ -38,6 +38,7 @@ export const registerCustomerJson = {
           titleLocation: "top",
           isRequired: true,
           placeholder: "Enter the name of your company",
+          requiredErrorText: "Please enter the name of your company",
         },
         {
           type: "text",
@@ -71,6 +72,7 @@ export const registerCustomerJson = {
             valueName: "value",
             titleName: "label",
           },
+          requiredErrorText: "Please select your primary sector",
         },
         {
           type: "dropdown",
@@ -88,6 +90,7 @@ export const registerCustomerJson = {
             valueName: "value",
             titleName: "label",
           },
+          requiredErrorText: "Please select your primary region",
         },
         {
           type: "dropdown",
@@ -104,6 +107,7 @@ export const registerCustomerJson = {
             valueName: "value",
             titleName: "label",
           },
+          requiredErrorText: "Please select your business type",
         },
         {
           type: "text",
@@ -111,19 +115,37 @@ export const registerCustomerJson = {
           title: "Company Number",
           titleLocation: "top",
           defaultValue: "10101010",
+          minLength: 9,
+          maxLength: 9,
           startWithNewLine: false,
           visibleIf: "{businessTypeId} = 3",
           placeholder: "Not required right now if you are unsure",
+          validators: [
+            {
+              type: "regex",
+              regex: "^\\d{9}$",
+              text: "Please enter a valid company number (9 characters)",
+            },
+          ],
         },
         {
           type: "text",
           name: "sicCode",
           title: "SIC Code",
           titleLocation: "top",
+          minLength: 5,
+          maxLength: 5,
           defaultValue: "10101",
           startWithNewLine: false,
           visibleIf: "{businessTypeId} = 3",
           placeholder: "Not required right now if you are unsure",
+          validators: [
+            {
+              type: "regex",
+              regex: "^\\d{5}$",
+              text: "Please enter a valid SIC code (5 characters)",
+            },
+          ],
         },
         {
           type: "dropdown",
@@ -140,6 +162,7 @@ export const registerCustomerJson = {
             valueName: "value",
             titleName: "label",
           },
+          requiredErrorText: "Please select your company size",
         },
         {
           type: "text",
@@ -162,6 +185,7 @@ export const registerCustomerJson = {
             },
           ],
           placeholder: "Enter the number of current Employees",
+          requiredErrorText: "Please enter the number of employees",
         },
       ],
     },
@@ -192,6 +216,7 @@ export const registerCustomerJson = {
               title: "Site Name",
               isRequired: true,
               placeholder: "e.g. Head Office",
+              requiredErrorText: "Please enter the name of this site",
             },
             {
               type: "dropdown",
@@ -209,6 +234,7 @@ export const registerCustomerJson = {
                 valueName: "value",
                 titleName: "label",
               },
+              requiredErrorText: "Please select the type of this site",
             },
             {
               type: "text",
@@ -217,6 +243,7 @@ export const registerCustomerJson = {
               minWidth: "256px",
               isRequired: true,
               placeholder: "No. / Name & Street",
+              requiredErrorText: "Please enter the address of this site",
             },
             {
               type: "text",
@@ -225,6 +252,7 @@ export const registerCustomerJson = {
               minWidth: "256px",
               isRequired: true,
               placeholder: "Postcode",
+              requiredErrorText: "Please enter the postcode of this site",
             },
             {
               type: "dropdown",
@@ -242,6 +270,7 @@ export const registerCustomerJson = {
                 valueName: "value",
                 titleName: "label",
               },
+              requiredErrorText: "Please select the country of this site",
             },
           ],
         },
@@ -274,6 +303,7 @@ export const registerCustomerJson = {
               title: "Department Name",
               isRequired: true,
               placeholder: "e.g. Sales",
+              requiredErrorText: "Please enter the name of this department",
             },
             {
               type: "comment",
@@ -306,6 +336,7 @@ export const registerCustomerJson = {
           labelFalse: "Not right now",
           defaultValue: true,
           isRequired: true,
+          requiredErrorText: "Please select whether to invite your staff",
         },
         {
           type: "boolean",
@@ -344,11 +375,12 @@ export const registerCustomerJson = {
               validators: [
                 { type: "email", text: "Please enter a valid email address" },
               ],
+              requiredErrorText: "Please enter the email address of this staff member",
             },
           ],
         },
         {
-          type: "text",
+          type: "comment",
           name: "companyStaffBulk",
           title: `Paste up to ${subscriptionLimits.free.maxUsers - 1} emails, separated by commas`,
           visibleIf: "{useBulkEntry} = true and {inviteStaff} = true",
@@ -375,6 +407,7 @@ export const registerCustomerJson = {
               text: `You can only paste up to ${subscriptionLimits.free.maxUsers - 1} email addresses.`,
             },
           ],
+          requiredErrorText: `Please enter the email addresses of your staff members`,
         },
       ],
     },
