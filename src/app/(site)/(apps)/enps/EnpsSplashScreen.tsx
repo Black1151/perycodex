@@ -59,18 +59,15 @@ export const EnpsSplashScreen = () => {
           h="100px"
           animation={`${swirlIn} 1.2s ease-in-out`}
         >
-          <Flex position="relative" left="36px" top="10px" w="48px">
+          <Flex position="relative" left="35px" top="7px" w="48px">
             <Box
               animation={`${bounceSpin} 2s ease-in-out 1.2s`}
               position="absolute"
-              w="44px"
+              w="50px"
               left={110}
               top={-2}
             >
-              <Image
-                src="/assets/splash-screens/enps-score/enpsLogoInner.png"
-                w="48px"
-              />
+              <Image src="/assets/splash-screens/enps-score/enps-logo.webp" />
             </Box>
           </Flex>
         </Box>
