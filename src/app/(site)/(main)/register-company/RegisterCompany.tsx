@@ -123,7 +123,7 @@ export default function RegisterCompany({
             textAlign={["center", "left"]}
             mt={[1, 0]}
           >
-            Let’s set up your organisation
+            Let's set up your organisation
           </Text>
         </Flex>
 
