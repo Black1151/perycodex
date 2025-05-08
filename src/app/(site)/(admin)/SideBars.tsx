@@ -138,6 +138,48 @@ export default function SideBars() {
           url: "/teams",
           category: "Company",
         },
+        {
+          label: "User Groups",
+          icon: <Groups sx={{ height: "100%", width: "100%" }} />,
+          url: "/user-groups",
+          category: "Company",
+          locked: true,
+        },
+        {
+          label: "Tags",
+          icon: <Sell sx={{ height: "100%", width: "100%" }} />,
+          url: "/tags",
+          category: "Company",
+          locked: true,
+        },
+        {
+          label: "Email Schedules",
+          icon: <ScheduleSend sx={{ height: "100%", width: "100%" }} />,
+          url: "/email-schedule",
+          category: "Company",
+          locked: true,
+        },
+        {
+          label: "Our Clients",
+          icon: <Domain sx={{ height: "100%", width: "100%" }} />,
+          url: "/customers?customerType=external",
+          category: "Clients",
+          locked: true,
+        },
+        {
+          label: "Clients Users",
+          icon: <Person sx={{ height: "100%", width: "100%" }} />,
+          url: "/users?userType=external",
+          category: "Clients",
+          locked: true,
+        },
+        {
+          label: "Clients Sites",
+          icon: <LocationOn sx={{ height: "100%", width: "100%" }} />,
+          url: "/sites?siteType=external",
+          category: "Clients",
+          locked: true,
+        },
       );
     } else if (userRole === "PA") {
       items.push(

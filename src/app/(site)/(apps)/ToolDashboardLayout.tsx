@@ -81,6 +81,7 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
         ),
       category: "Dashboards",
       active: pathname.includes(dashboard.dashboardUrl),
+      locked: dashboard.disableIfFree,
     };
   });
 
