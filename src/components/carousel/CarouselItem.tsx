@@ -24,7 +24,7 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
   isUAGLocked,
 }) => {
   return (
-    <VStack flex={1} height={[50, 120, 130, 150, 195]}>
+    <VStack flex={1} height={[120, 150, 170, 200, 220]}>
       <Box
         backgroundPosition="center"
         backgroundRepeat="no-repeat"
@@ -74,44 +74,12 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
             alt={alt}
             height={
               isSelected
-                ? ["120px", "150px", "180px", "200px", "250px"]
-                : ["90px", "112px", "120px", "160px", "180px"]
+                ? ["120px", "150px", "180px", "200px", "200px"]
+                : ["90px", "112px", "120px", "160px", "160px"]
             }
             transition="height 0.3s ease-in-out"
           />
         </Box>
-
-        {/* “Let’s go!” Button */}
-        {/* <Box
-          position="absolute"
-          top={[null, null, -39, null, -25]}
-          right={[null, null, -140, null, -125]}
-          transform={
-            isSelected
-              ? "translate(-50%, -10%) scale(1) rotate(20deg)"
-              : "translate(-50%, -100%) scale(0.5) rotate(90deg)"
-          }
-          opacity={isSelected ? 1 : 0}
-          transition="all 0.5s ease-in-out"
-          zIndex={3}
-          display={["none", "none", "block"]}
-        >
-          <Button
-            colorScheme="teal"
-            boxShadow="md"
-            padding={[2, 4, 8]}
-            color="white"
-            bgColor={theme.colors.primary}
-            _hover={{
-              bgColor: "white",
-              color: theme.colors.primary,
-            }}
-          >
-            <Text fontFamily="Metropolis" fontSize={[10, 14, 30]}>
-              Start!
-            </Text>
-          </Button>
-        </Box> */}
       </Box>
     </VStack>
   );

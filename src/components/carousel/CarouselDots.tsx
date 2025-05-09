@@ -14,13 +14,13 @@ const CarouselDots: React.FC<CarouselDotsProps> = ({
   onDotClick,
 }) => (
   <HStack
-    pt={10}
+    pb={4}
     spacing={[2, 8]}
     justifyContent="center"
     alignItems="center"
     width="full"
     display={["none", null, "flex"]}
-    mt={4}
+    // mt={4}
   >
     {Array.from({ length: itemsCount }).map((_, index) => (
       <Dot

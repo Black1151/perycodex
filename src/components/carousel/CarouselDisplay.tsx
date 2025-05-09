@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useState } from "react";
 import {
   Box,
@@ -92,19 +90,15 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
 
   useEffect(() => setShowInfoBox(true), []);
 
-  const infoBoxWidth = useBreakpointValue({ base: "90%", md: "600px" });
+  const infoBoxWidth = useBreakpointValue({
+    base: "95%",
+    md: "700px",
+    lg: "800px",
+  });
 
   // ---------------------------------------------------------------- render
   return (
-    <VStack
-      position="relative"
-      mt={[10, 30]}
-      flex={1}
-      justifyContent="flex-end"
-      p={[5, 10]}
-      pb={20}
-      overflow="hidden"
-    >
+    <VStack position="relative" mt={[10, 30]} flex={1} overflow="hidden">
       {/* background layers */}
       {layers.map((layer) => (
         <Box
@@ -136,70 +130,84 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
         zIndex={1}
       />
 
-      {/* INFO BOX (logo + description) */}
-      <Flex
-        flexDirection="column"
-        gap={6}
-        position="absolute"
-        top={showInfoBox ? "100px" : "-450px"}
-        left="50%"
-        transform="translateX(-50%)"
-        width={infoBoxWidth}
-        maxW="600px"
-        minH="220px"
-        px={[5, 8]}
-        py={[6, 8]}
-        bg="rgba(0, 0, 0, 0.75)"
-        transition="top 0.5s ease-in-out"
-        zIndex={3}
-        borderRadius="lg"
-        _hover={{ bg: "rgba(0, 0, 0, 0.85)" }}
-        _focus={{
-          outline: "none",
-          boxShadow: `0 0 0 2px ${theme.colors.whiteAlpha[500]}`,
-        }}
-        cursor={
-          currentItem.appUrl && !currentItem.isUAGLocked ? "pointer" : "default"
-        }
-        color="white"
-        textAlign="center"
-        onClick={handleStartClick}
-      >
-        {currentItem.logoImage && (
-          <Image
-            src={currentItem.logoImage}
-            alt={currentItem.alt}
-            h="100px"
-            mx="auto"
-            objectFit="contain"
-          />
-        )}
-        <Text fontSize="lg" noOfLines={[4, 5]}>
-          {currentItem.description}
-        </Text>
-        {!currentItem.isUAGLocked && (
-          <Button
-            boxShadow="md"
-            padding={[6, 8]}
+      {/* Content area */}
+      <Flex direction="column" flex={1} w="full" zIndex={2}>
+        {/* Centering wrapper */}
+        <Flex
+          flex={1}
+          align="center"
+          justify="center"
+          w="full"
+          pointerEvents="none"
+        >
+          {/* Info box */}
+          <Flex
+            flexDirection="column"
+            gap={[4, 6]}
+            width={infoBoxWidth}
+            maxW="800px"
+            px={[5, 8]}
+            py={[6, 8]}
+            bg="rgba(0, 0, 0, 0.75)"
+            borderRadius="lg"
             color="white"
-            bgColor={theme.colors.primary}
-            _hover={{
-              bgColor: "white",
-              color: theme.colors.primary,
-            }}
-            onClick={handleStartClick}
+            textAlign={["center", "left"]}
+            opacity={showInfoBox ? 1 : 0}
+            transform={showInfoBox ? "translateY(0)" : "translateY(-30px)"}
+            transition="opacity 0.5s ease-in-out, transform 0.5s ease-in-out"
+            pointerEvents="auto"
           >
-            <Text fontFamily="Metropolis" fontSize={[25, 30]}>
-              Start!
-            </Text>
-          </Button>
-        )}
-      </Flex>
+            {/* Logo & Text Row */}
+            <Flex
+              w="full"
+              flexDirection={["column", "row"]}
+              alignItems="center"
+              gap={[4, 8]}
+            >
+              {currentItem.logoImage && (
+                <Image
+                  src={currentItem.logoImage}
+                  alt={currentItem.alt}
+                  h={["70px", "100px"]}
+                  objectFit="contain"
+                  flex={["none", "0 0 33%"]}
+                  maxW={["100%", "33%"]}
+                />
+              )}
+              <Text
+                flex={["none", "0 0 67%"]}
+                w={["full", "67%"]}
+                fontSize={[11, 13, 15, null]}
+                noOfLines={[4, 5]}
+              >
+                {currentItem.description}
+              </Text>
+            </Flex>
 
-      {/* carousel thumbnails / controls */}
-      <VStack zIndex={2} w="100%">
-        <Carousel carouselItems={carouselItems} setParentIndex={setIndex} />
-      </VStack>
+            {/* Start Button Row */}
+            {!currentItem.isUAGLocked && (
+              <Button
+                boxShadow="md"
+                padding={[3, 4]}
+                color="white"
+                bgColor={theme.colors.primary}
+                _hover={{ bgColor: "white", color: theme.colors.primary }}
+                onClick={handleStartClick}
+                w="full"
+              >
+                <Text fontFamily="Metropolis" fontSize={[18, 24]}>
+                  Start!
+                </Text>
+              </Button>
+            )}
+          </Flex>
+        </Flex>
+
+        {/* carousel thumbnails / controls */}
+        <VStack zIndex={2} w="100%" pb={[4, 6]}>
+          <Carousel carouselItems={carouselItems} setParentIndex={setIndex} />
+        </VStack>
+      </Flex>
     </VStack>
   );
 };
