@@ -90,12 +90,6 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
 
   useEffect(() => setShowInfoBox(true), []);
 
-  const infoBoxWidth = useBreakpointValue({
-    base: "95%",
-    md: "700px",
-    lg: "800px",
-  });
-
   // ---------------------------------------------------------------- render
   return (
     <VStack position="relative" mt={[10, 30]} flex={1} overflow="hidden">
@@ -144,7 +138,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
           <Flex
             flexDirection="column"
             gap={[4, 6]}
-            width={infoBoxWidth}
+            width={["95%", "95%", "700px", "800px", "900px"]}
             maxW="800px"
             px={[5, 8]}
             py={[6, 8]}
