@@ -187,7 +187,8 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
                 bgColor={theme.colors.primary}
                 _hover={{ bgColor: "white", color: theme.colors.primary }}
                 onClick={handleStartClick}
-                w="full"
+                w="50%" // ⬅️ half the width of the info-box
+                alignSelf="center" // ⬅️ centres the button horizontally
               >
                 <Text fontFamily="Metropolis" fontSize={[18, 24]}>
                   Start!
