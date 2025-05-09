@@ -154,7 +154,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
             {/* Logo & Text Row */}
             <Flex
               w="full"
-              flexDirection={["column", "row"]}
+              flexDirection={["column", null, "row"]}
               alignItems="center"
               gap={[4, 8]}
             >
@@ -162,15 +162,15 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
                 <Image
                   src={currentItem.logoImage}
                   alt={currentItem.alt}
-                  h={["70px", "100px"]}
+                  // h={["70px", "100px"]}
                   objectFit="contain"
                   flex={["none", "0 0 33%"]}
-                  maxW={["100%", "33%"]}
+                  maxW={["100%", null, "33%"]}
                 />
               )}
               <Text
                 flex={["none", "0 0 67%"]}
-                w={["full", "67%"]}
+                w={["full", null, "67%"]}
                 fontSize={[11, 13, 15, null]}
                 noOfLines={[4, 5]}
               >
