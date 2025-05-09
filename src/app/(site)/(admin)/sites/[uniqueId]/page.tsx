@@ -13,9 +13,6 @@ export default async function SitesDetailPage({
   params: { uniqueId: string };
 }) {
   const user = await getUser();
-  if (user.customerIsFree) {
-    return redirect("/error");
-  }
   
   await checkUserRole(`/sites/${params.uniqueId}`);
 

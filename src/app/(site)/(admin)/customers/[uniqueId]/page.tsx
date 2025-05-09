@@ -14,9 +14,6 @@ export default async function CustomersDetailsPage({
 }) {
   const user = await getUser();
   await checkUserRole(`/customers/${params.uniqueId}`);
-  if (user.customerIsFree) {
-    return redirect("/error"); // Redirect if the user is free
-  }
 
   const res = await apiClient(`/customer/findBy?uniqueId=${params.uniqueId}`);
 
