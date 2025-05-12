@@ -74,7 +74,7 @@ export const ClientSatisfactionSplashScreen = () => {
       >
         <Box w="250px" h="100px" position="relative">
           <Box
-            bgImage="url('/assets/splash-screens/client-satisfaction/client-satisfaction-logo-bg.png')"
+            bgImage="url('/assets/splash-screens/client-satisfaction/client-satisfaction-logo-text.png')"
             bgSize="contain"
             bgRepeat="no-repeat"
             bgPosition="center"

@@ -51,7 +51,7 @@ export const EnpsSplashScreen = () => {
         position="relative"
       >
         <Box
-          bgImage="url('/assets/splash-screens/enps-score/enpsLogoBG.png')"
+          bgImage="url('/assets/splash-screens/enps-score/enps-logo-text.png')"
           bgSize="contain"
           bgRepeat="no-repeat"
           bgPosition="center"

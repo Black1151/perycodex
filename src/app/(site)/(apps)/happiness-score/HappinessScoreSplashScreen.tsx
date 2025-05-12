@@ -61,7 +61,7 @@ export const HappinessScoreSplashScreen = () => {
         transition={{ delay: 3.5, duration: 1, ease: "easeInOut" }}
       >
         <Box
-          bgImage="url('/assets/splash-screens/happiness-score/logoBG.png')"
+          bgImage="url('/assets/splash-screens/happiness-score/happiness-score-logo-text.png')"
           bgSize="contain"
           bgRepeat="no-repeat"
           bgPosition="center"
