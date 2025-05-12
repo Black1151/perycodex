@@ -38,23 +38,19 @@ const CarouselNavigationButton: React.FC<CarouselNavigationButtonProps> = ({
       onMouseUp={handleMouseUp}
       onTouchStart={handleMouseDown}
       onTouchEnd={handleMouseUp}
-      display={["none", "flex"]}
+      display={["none", null, "flex"]}
       alignItems="center"
       justifyContent="center"
       width="40px"
-      height="40px"
+      height="80px"
       borderRadius="full"
-      backgroundColor="rgba(0, 0, 0, 0.5)"
+      backgroundColor="primary"
       transition="background-color 0.3s, transform 0.3s"
       transform="translateY(-25%)"
       cursor="pointer"
-      _hover={{
-        backgroundColor: "black",
-      }}
+      color="white"
     >
-      <IconComponent
-        style={{ color: "white", fontSize: "24px", transition: "color 0.3s" }}
-      />
+      <IconComponent style={{ fontSize: "48px", transition: "color 0.3s" }} />
     </Box>
   );
 };

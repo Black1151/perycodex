@@ -50,7 +50,7 @@ export default async function PerygonMain() {
             {
               method: "GET",
               cache: "no-store",
-            },
+            }
           ),
           apiClient(`/getAllView?view=vwToolsCarouselList`, {
             method: "GET",
@@ -90,7 +90,7 @@ export default async function PerygonMain() {
 
   if (carouselItems.length === 1) {
     return redirect(
-      `${carouselItems[0].appUrl}?toolId=${carouselItems[0].toolId}&wfId=${carouselItems[0].toolWfId}`,
+      `${carouselItems[0].appUrl}?toolId=${carouselItems[0].toolId}&wfId=${carouselItems[0].toolWfId}`
     );
   }
 

@@ -69,6 +69,8 @@ const ClientSatisfactionLayout: React.FC<ClientSatisfactionLayoutProps> = ({
     return false;
   };
 
+  // delete me
+
   return (
     <SurveyNavigationGuard
       isEditing={formNavigation.isEditMode}
