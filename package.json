@@ -43,8 +43,8 @@
     "react-slick": "^0.30.3",
     "sass": "^1.83.4",
     "slick-carousel": "^1.8.1",
-    "survey-core": "^2.0.8",
-    "survey-react-ui": "^2.0.8"
+    "survey-core": "^2.0.3",
+    "survey-react-ui": "^2.0.3"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.2.2",
