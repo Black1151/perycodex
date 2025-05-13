@@ -61,7 +61,7 @@ export const HappinessScoreSplashScreen = () => {
         transition={{ delay: 3.5, duration: 1, ease: "easeInOut" }}
       >
         <Box
-          bgImage="url('/assets/splash-screens/happiness-score/logoBG.png')"
+          bgImage="url('/assets/splash-screens/happiness-score/happiness-score-logo-text.png')"
           bgSize="contain"
           bgRepeat="no-repeat"
           bgPosition="center"
@@ -71,17 +71,14 @@ export const HappinessScoreSplashScreen = () => {
         >
           <Flex
             position="relative"
-            left="36px"
-            top="10px"
+            left="23px"
+            top="5px"
             animation={`${enlargeRotate} 1.2s ease-in-out`}
             transformOrigin="center"
-            w={"48px"}
+            w={"70px"}
           >
             <Box animation={`${pulsate} 2s ease-in-out 1.2s`}>
-              <Image
-                src="/assets/splash-screens/happiness-score/logoFace.png"
-                w="48px"
-              />
+              <Image src="/assets/splash-screens/happiness-score/logoFace.webp" />
             </Box>
           </Flex>
         </Box>
