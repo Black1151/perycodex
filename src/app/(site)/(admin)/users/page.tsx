@@ -76,7 +76,6 @@ export default async function UsersPage({
 
   const users = await res.json();
   const userData = users.resource;
-  console.log("userData", userData);
 
   const userCount = userData.length;
 
