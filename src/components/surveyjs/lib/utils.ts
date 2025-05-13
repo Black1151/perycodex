@@ -25,10 +25,8 @@ interface SJSThemeModule {
 
 export const handleGlobalSettings = () => {
   settings.web.onBeforeRequestChoices = (sender, options) => {
-    if (options?.request) {
-      options.request.withCredentials = true;
-    }
-    options?.request?.setRequestHeader("Accept", "application/json");
+    options.request.withCredentials = true;
+    options.request.setRequestHeader("Accept", "application/json");
   };
 
   // Allow ChoicesByUrl answers to be empty
