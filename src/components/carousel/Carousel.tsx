@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useCallback, useRef, useState } from "react";
 import { Box, HStack, useBreakpointValue, VStack } from "@chakra-ui/react";
 import CarouselNavigationButton from "./CarouselNavigationButton";
@@ -18,13 +16,12 @@ const Carousel: React.FC<CarouselProps> = ({
 }) => {
   const { currentIndex, prevSlide, nextSlide, updateIndex } = useCarousel(
     carouselItems.length,
-    setParentIndex
+    setParentIndex,
   );
 
   const touchStartX = useRef(0);
   const touchStartTime = useRef(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-
   const itemsToShow =
     useBreakpointValue({
       base: 3,
@@ -38,7 +35,7 @@ const Carousel: React.FC<CarouselProps> = ({
         action();
       }
     },
-    [isTransitioning]
+    [isTransitioning],
   );
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -63,9 +60,11 @@ const Carousel: React.FC<CarouselProps> = ({
 
   return (
     <VStack
-      width="100%"
-      maxWidth={["100%", 450, 650, 800, 1000]}
+      width={carouselItems.length < 5 ? "70%" : "90%"}
+      maxWidth={1200}
       spacing={4}
+      height={["150px", "240px"]}
+      mx={30}
       mb={[0, 10]}
       position="relative"
       onTouchStart={handleTouchStart}
@@ -84,15 +83,14 @@ const Carousel: React.FC<CarouselProps> = ({
         side={["-30px", "-40px"]}
       />
 
-      {/* Carousel track container */}
       <Box width="100%">
         <HStack
-          spacing={0}
-          justifyContent="flex-start"
-          position="relative"
+          spacing={4}
+          justifyContent="space-between"
+          alignItems="center"
           width={`${(carouselItems.length * 100) / itemsToShow}%`}
           transform={`translateX(-${
-            (currentIndex - (itemsToShow - 1) / 2) *
+            (currentIndex - Math.floor(itemsToShow / 2)) *
             (100 / carouselItems.length)
           }%)`}
           transition="transform 0.5s ease-in-out"
@@ -102,6 +100,7 @@ const Carousel: React.FC<CarouselProps> = ({
             let opacity = 1;
             let pointerEvents: "auto" | "none" = "auto";
             const distance = Math.abs(currentIndex - index);
+
             if (
               [0, 1].includes(currentIndex) &&
               itemsToShow === 5 &&
@@ -119,6 +118,7 @@ const Carousel: React.FC<CarouselProps> = ({
             }
             return (
               <HStack
+                gap={4}
                 key={index}
                 onClick={() =>
                   currentIndex === index
@@ -126,6 +126,7 @@ const Carousel: React.FC<CarouselProps> = ({
                     : debouncedSlide(() => updateIndex(index))
                 }
                 transition="opacity 0.5s ease-in-out, pointer-events 0.5s ease-in-out"
+                width={`${100 / carouselItems.length}%`}
                 opacity={opacity}
                 cursor={
                   distance <= Math.floor(itemsToShow / 2)
@@ -133,8 +134,6 @@ const Carousel: React.FC<CarouselProps> = ({
                     : "default"
                 }
                 pointerEvents={pointerEvents}
-                width={`${100 / carouselItems.length}%`}
-                flex="0 0 auto"
               >
                 <CarouselItem {...item} isSelected={index === currentIndex} />
               </HStack>
