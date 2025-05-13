@@ -14,6 +14,9 @@ export default async function EmailTemplatesDetailPage({
 }) {
   const user = await getUser();
   await checkUserRole(`/email-schedule/${params.uniqueId}`);
+  if (user.customerIsFree) {
+    return redirect("/error"); // Redirect if the user is free
+  }
 
   // Determine the correct URL based on the user's role
   const apiUrl =

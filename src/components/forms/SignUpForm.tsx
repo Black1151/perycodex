@@ -1,7 +1,8 @@
 "use client";
 
 import { FieldError, SubmitHandler, useForm } from "react-hook-form";
-import { Button, Flex, Text, useTheme, VStack } from "@chakra-ui/react";
+import { Button, Flex, Text, useTheme, VStack, HStack } from "@chakra-ui/react";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import EmailIcon from "@mui/icons-material/Email";
 import { InputField } from "./InputField";
 import { emailValidation } from "./validationSchema/validationSchema";
@@ -32,13 +33,19 @@ export function SignUpForm({ onSubmit, isSubmitting }: SignUpFormProps) {
     onSubmit(data);
   };
 
+  const handleSwitch = () => {
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set("signUpType", "company");
+    router.push(`/sign-up?${searchParams.toString()}`);
+  };
+
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
       style={{ width: "100%", maxWidth: "sm" }}
     >
       <VStack spacing={0} w="100%">
-        <VStack spacing={0} w={300} gap={2}>
+        <VStack spacing={0} w={"100%"} gap={2}>
           <InputField
             name="email"
             placeholder="Email"
@@ -55,23 +62,7 @@ export function SignUpForm({ onSubmit, isSubmitting }: SignUpFormProps) {
             register={() => register("email", emailValidation)}
             focusBorderColor={theme.colors.primary}
           />
-          <Flex w="100%" justifyContent="flex-end" pb={[0, 0]}>
-            <Text
-              fontSize={["16px", "12px"]}
-              cursor="pointer"
-              color={theme.colors.primary}
-              _hover={{ cursor: "pointer" }}
-              onClick={() => router.push("/login")}
-            >
-              &laquo; Go back to login
-            </Text>
-          </Flex>
-          <Button
-            type="submit"
-            variant="primary"
-            mt="90px"
-            isLoading={isSubmitting}
-          >
+          <Button type="submit" variant="primary" isLoading={isSubmitting}>
             Sign Up
           </Button>
         </VStack>
