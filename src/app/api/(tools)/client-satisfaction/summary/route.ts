@@ -13,8 +13,12 @@ import {
 } from "@/app/(site)/(apps)/client-satisfaction/dashboard/primary/types";
 
 export async function POST(req: NextRequest) {
+    console.log("Client Satisfaction Dashboard API called");
+
     try {
         const body = await req.json();
+
+        console.log(body);
 
         const response = await apiClient(
             '/dashboards/clientSatisfaction/getSummary',
@@ -22,6 +26,8 @@ export async function POST(req: NextRequest) {
                 method: 'POST',
                 body: JSON.stringify(body),
             })
+
+            console.log(response);
 
         if (!response.ok) {
             throw new Error("Failed to fetch client satisfaction summary data");

@@ -1,96 +1,101 @@
 "use client";
 
-import { useEffect, useLayoutEffect } from "react";
+import {useEffect, useState} from "react";
 import CarouselDisplay from "@/components/carousel/CarouselDisplay";
-import { CarouselItemProps } from "@/components/carousel/CarouselItem";
+import {CarouselItemProps} from "@/components/carousel/CarouselItem";
 import {
-  Flex,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  Text,
-  Button,
+    Flex,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalHeader,
+    ModalOverlay,
+    Text,
 } from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
-import { useUser } from "@/providers/UserProvider";
+import {useRouter} from "next/navigation";
+import {useUser} from "@/providers/UserProvider";
 
 interface PerygonMainClientProps {
-  carouselItems: CarouselItemProps[];
-  showNoToolsModal: boolean;
+    carouselItems: CarouselItemProps[];
+    showNoToolsModal: boolean;
 }
 
 export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
-  carouselItems,
-  showNoToolsModal,
-}) => {
-  const { user } = useUser();
-  const router = useRouter();
+                                                                        carouselItems,
+                                                                        showNoToolsModal,
+                                                                    }) => {
 
-  const newCompanyRegistration =
-    user?.role === "CA" && user.customerId === null;
+    const { user } = useUser();
+    const router = useRouter();
+    const [countdown, setCountdown] = useState(5);
 
-  useLayoutEffect(() => {
-    if (newCompanyRegistration) {
-      router.replace("/register-company");
-    }
-  }, [newCompanyRegistration, router]);
+    useEffect(() => {
+        if (user?.role === "EU") {
+            logoutUser();
+        }
+    }, [user]);
 
-  useEffect(() => {
-    localStorage.removeItem("toolId");
-    localStorage.removeItem("workflowId");
-    localStorage.removeItem("currentBusinessProcessInstanceId");
-    localStorage.removeItem("currentWorkflowInstanceId");
-  }, []);
 
-  if (newCompanyRegistration) {
-    return null;
-  }
+    useEffect(() => {
+        localStorage.removeItem("toolId");
+        localStorage.removeItem("workflowId");
+        localStorage.removeItem("currentBusinessProcessInstanceId");
+        localStorage.removeItem("currentWorkflowInstanceId");
+    }, [])
 
-  const logoutUser = async () => {
-    try {
-      const response = await fetch("/api/auth/sign-out", { method: "POST" });
-      if (response.ok) {
-        router.push("/login");
-        router.refresh();
-      } else {
-        console.error("Logout failed");
-      }
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
 
-  return (
-    <Flex flex={1} overflow="hidden" width="100%">
-      {!showNoToolsModal && <CarouselDisplay carouselItems={carouselItems} />}
+    useEffect(() => {
+        if (showNoToolsModal) {
+            const timer = setInterval(() => {
+                setCountdown((prevCount) => prevCount > 0 ? prevCount - 1 : 0);
+            }, 1000);
 
-      <Modal
-        isOpen={showNoToolsModal}
-        onClose={() => {}}
-        closeOnOverlayClick={false}
-        closeOnEsc={false}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>No Tools Subscribed</ModalHeader>
-          <ModalBody>
-            <Text>
-              You are not currently subscribed to any tools, please contact
-              sales.
-            </Text>
-            <Button
-              mt={4}
-              onClick={logoutUser}
-              width="100%"
-              loadingText="Logging out..."
+            return () => clearInterval(timer);
+        }
+    }, [showNoToolsModal]);
+
+    useEffect(() => {
+        if (countdown === -5) {
+            logoutUser();
+        }
+    }, [countdown]);
+
+    const logoutUser = async () => {
+        try {
+            const response = await fetch("/api/auth/sign-out", {method: "POST"});
+            if (response.ok) {
+                router.push("/login");
+                router.refresh();
+            } else {
+                console.error("Logout failed");
+            }
+        } catch (error) {
+            console.error("Error during logout:", error);
+        }
+    };
+
+    return (
+        <Flex flex={1} overflow="hidden" width="100%">
+            {!showNoToolsModal && <CarouselDisplay carouselItems={carouselItems}/>}
+            <Modal
+                isOpen={showNoToolsModal}
+                onClose={() => {
+                }}
+                closeOnOverlayClick={false}
+                closeOnEsc={false}
             >
-              Logout
-            </Button>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </Flex>
-  );
+                <ModalOverlay/>
+                <ModalContent>
+                    <ModalHeader>No Tools Subscribed</ModalHeader>
+                    <ModalBody>
+                        <Text>
+                            You are not currently subscribed to any tools, please contact
+                            sales.
+                        </Text>
+                        <Text mt={4}>Seconds until logout: {countdown}</Text>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
+        </Flex>
+    );
 };

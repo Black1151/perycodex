@@ -51,7 +51,6 @@ interface User {
   custImageUrl?: string;
   teamManagerCount: number;
   parentCustImageUrl?: string;
-  customerIsFree?: boolean;
 }
 
 const roleBasedRoutes: { [key: string]: string[] } = {

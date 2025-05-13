@@ -1,15 +1,11 @@
 import AdminHeader from "@/components/AdminHeader";
-import { redirect } from "next/navigation";
+
 import { businessProcessJson } from "@/components/surveyjs/forms/businessProcess";
-import { checkUserRole, getUser } from "@/lib/dal";
+import { checkUserRole } from "@/lib/dal";
 import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function BusinessProcessCreatePage() {
   await checkUserRole("/business-processes/create");
-  const user = await getUser();
-  if (user.customerIsFree) {
-    return redirect("/error"); // Redirect if the user is free
-  }
 
   return (
     <>

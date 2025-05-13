@@ -15,7 +15,6 @@ export interface Dashboard {
     teamManagerRequired: boolean;
     deptManagerRequired: boolean;
     customerRestrictionList?: string;
-    disableIfFree?: boolean;
 }
 
 export async function getFilteredDashboards(
@@ -31,7 +30,6 @@ export async function getFilteredDashboards(
     const user = await getUser();
     const userRole = user.role;
     const userCustomerId = user.customerId
-    const isFree = user.customerIsFree;
     const isManagerofDept =
         user.teamManagerCount === 1 || user.teamManagerCount === 3;
     const isManagerofTeam =
@@ -135,17 +133,6 @@ export async function getFilteredDashboards(
     const activeDashboardName = activeDashboard
         ? activeDashboard.dashboardName
         : null;
-
-    if (isFree) {
-        return {
-            filteredDashboards: filteredDashboards.filter(
-                (dashboard) => !dashboard.disableIfFree,
-            ),
-            toolData: toolConfigData.resource,
-            activeDashboardName,
-            redirectPath,
-        };
-    }
 
     return {
         filteredDashboards,

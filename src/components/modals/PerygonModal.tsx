@@ -6,11 +6,10 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  ModalProps,
 } from "@chakra-ui/react";
 import PerygonCard from "../layout/PerygonCard";
 
-interface PerygonModalProps extends ModalProps {
+interface PerygonModalProps {
   title: string;
   body: ReactNode;
   isOpen: boolean;

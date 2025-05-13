@@ -94,6 +94,7 @@ const ServicesDashboard = () => {
       if (!res.ok) throw new Error("Failed to fetch dashboard data");
 
       const data: ServiceDashboardProps = await res.json();
+      console.log("Dashboard data:", data);
       setGridData(data);
     } catch (err) {
       console.error("Error loading service dashboard:", err);
@@ -217,10 +218,13 @@ const ServicesDashboard = () => {
     },
     listeners: {
       seriesNodeClick: (params: any) => {
+        console.log("Node clicked:", params);
+
         const filteredData = flattenedRows.filter(
           (row) => row.serviceName === params.datum.serviceName
         );
 
+        console.log("Filtered data:", filteredData);
         setCommentsGridData(filteredData);
         setCommentsModalTitle(`${params.datum.serviceName} Comments`);
         setCommentsModalFilterModel({

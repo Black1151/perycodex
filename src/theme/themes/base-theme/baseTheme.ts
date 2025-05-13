@@ -1,5 +1,5 @@
 // baseTheme.ts
-import { background, extendTheme, Tabs, type ThemeConfig } from "@chakra-ui/react";
+import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
 
 import { scrollBarThemes } from "@/theme/scrollBarThemes";
 import { agChartStyles } from "@/theme/agChartStyles";
@@ -29,7 +29,6 @@ export const baseTheme = extendTheme({
     lightGreen: "#92C01F",
     seduloGreen: "#008000",
     darkGray: "#4A4A4A",
-    darkElementBG: "rgb(41, 41, 41, 0.85)",
     primaryTextColor: "rgb(0, 0, 0)",
     secondaryTextColor: "rgb(83, 83, 83)",
     themeTextColor: "rgba(201, 9, 9, 0.85)",
@@ -99,13 +98,7 @@ export const baseTheme = extendTheme({
         bgGradient: gradients.primaryGradient,
       },
     },
-    companySignUpCard: {
-      baseStyle: {
-        cardPanel: "darkElementBG",
-      },
-    },
-    
-    
+
     //// big up app styles
     bigUpStatsCard: {
       baseStyle: {
@@ -286,26 +279,6 @@ export const baseTheme = extendTheme({
           },
           thumb: {
             bg: "white",
-          },
-        },
-      },
-    },
-
-    Tabs: {
-      variants: {
-        line: {
-          tab: {
-            color: "primaryTextColor",
-            fontSize: "16px",
-            fontWeight: "bold",
-            _selected: {
-              color: "primary",
-              borderBottomColor: "primary",
-            },
-          },
-          tablist: {
-            backgroundColor: "elementBG",
-            borderBottomColor: "rgba(255, 255, 255, 0.80)",
           },
         },
       },

@@ -26,7 +26,7 @@ const ENPSLayout: React.FC<eNPSLayoutProps> = ({
         gap={2}
       >
         <Image
-          src="/carousel/logos/enps-logo-new.webp"
+          src="/images/eNPS_White-on-pink_800x800.png"
           maxW="150px"
           maxH="150px"
           alt="eNPS Icon"

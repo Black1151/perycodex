@@ -3,14 +3,10 @@ import { redirect } from "next/navigation";
 import AdminHeader from "@/components/AdminHeader";
 import DataGridComponent from "@/components/agGrids/DataGridComponent";
 import { businessProcessFields } from "@/components/agGrids/dataFields/businessProcessFields";
-import { checkUserRole, getUser } from "@/lib/dal";
+import { checkUserRole } from "@/lib/dal";
 
 export default async function WorkflowsPage() {
   await checkUserRole("/business-processes");
-  const user = await getUser();
-  if (user.customerIsFree) {
-    return redirect("/error"); // Redirect if the user is free
-  }
 
   let url = "/getAllView?view=vwBusinessProcessesList";
   let headerTitle = "Business Processes";

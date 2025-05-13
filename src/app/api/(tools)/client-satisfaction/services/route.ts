@@ -9,6 +9,8 @@ export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
 
+        console.log(body);
+
         const response = await apiClient(
             '/dashboards/clientSatisfaction/getServices',
             {

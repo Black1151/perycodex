@@ -69,7 +69,6 @@ const NavBar: React.FC<NavBarProps> = ({
   };
 
   const menuItems = useNavMenuItems(userRole, handleLogout, openResetModal);
-  const isFree = user?.customerIsFree || false;
 
   const buildThemeDropdownOptions = async () => {
     const response = await fetch("/api/theme/getThemesForCustomer", {
@@ -78,24 +77,17 @@ const NavBar: React.FC<NavBarProps> = ({
     });
     const data = await response.json();
 
-    let dropdownOptions = [];
-
-    //Free customers get no theme choices
-    if (!isFree) {
-      dropdownOptions = Array.isArray(data.resource)
-        ? data.resource.map((theme: any) => ({
-            label: theme.themename,
-            value: theme.id,
-          }))
-        : [];
-    }
+    const dropdownOptions = data.resource.map((theme: any) => ({
+      label: theme.themename,
+      value: theme.id,
+    }));
 
     setThemeDropdownOptions(dropdownOptions);
   };
 
   useEffect(() => {
     buildThemeDropdownOptions();
-  }, [isFree]);
+  }, []);
 
   return (
     <>
