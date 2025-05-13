@@ -43,7 +43,6 @@
     "react-slick": "^0.30.3",
     "sass": "^1.83.4",
     "slick-carousel": "^1.8.1",
-    "stripe": "^18.0.0",
     "survey-core": "2.0.3",
     "survey-react-ui": "^2.0.3"
   },
