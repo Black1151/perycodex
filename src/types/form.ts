@@ -7,7 +7,6 @@ export type LayoutMap = {
 
 export type LayoutKeys =
   | "default"
-  | "company-registration"
   | "happiness"
   | "enps"
   | "client-satisfaction"

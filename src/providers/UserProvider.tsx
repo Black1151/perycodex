@@ -58,8 +58,6 @@ export interface UserContextProps {
   parentCustImageUrl?: string;
   groupNames: string[] | null;
   userThemeId?: number | null;
-  customerIsFree?: boolean;
-  customerIsFreeUntilDate?: string | null;
   customerDefaultThemeId: number;
 }
 

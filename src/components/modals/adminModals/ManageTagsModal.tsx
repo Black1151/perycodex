@@ -16,7 +16,6 @@ export const ManageTagsModal = forwardRef(
       openModal: () => setIsOpen(true),
     }));
 
-    //TODO: Dodgy fix. look at this again
     return (
       <PerygonModal
         isOpen={isOpen}
@@ -28,12 +27,7 @@ export const ManageTagsModal = forwardRef(
             onClose={() => setIsOpen(false)}
           />
         }
-      >
-        <ManageTagsModalBody
-          customerId={customerId}
-          onClose={() => setIsOpen(false)}
-        />
-      </PerygonModal>
+      />
     );
   }
 );

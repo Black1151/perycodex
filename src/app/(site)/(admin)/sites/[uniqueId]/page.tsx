@@ -13,7 +13,6 @@ export default async function SitesDetailPage({
   params: { uniqueId: string };
 }) {
   const user = await getUser();
-  
   await checkUserRole(`/sites/${params.uniqueId}`);
 
   const res = await apiClient(`/site/findBy?uniqueId=${params.uniqueId}`);

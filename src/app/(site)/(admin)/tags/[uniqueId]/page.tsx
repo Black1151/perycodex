@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 
 import { TagDetailsBanner } from "@/components/AdminDetailsBanners/TagDetailsBanner";
 import { tagsJson } from "@/components/surveyjs/forms/tags";
-import { checkUserRole, getUser } from "@/lib/dal";
+import { checkUserRole } from "@/lib/dal";
 import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 
 export default async function TagsDetailPage({
@@ -12,10 +12,6 @@ export default async function TagsDetailPage({
   params: { uniqueId: string };
 }) {
   await checkUserRole(`/tags/${params.uniqueId}`);
-  const user = await getUser();
-  if (user?.customerIsFree) {
-    return redirect("/error");
-  }
 
   const res = await apiClient(`/tag/findBy?id=${params.uniqueId}`);
 

@@ -10,10 +10,6 @@ export default async function EmailSchedulePage() {
   const user = await getUser();
   await checkUserRole("/email-schedule");
 
-  if (user.customerIsFree) {
-    return redirect("/error"); // Redirect if the user is free
-  }
-
   let url =
     user.role === "PA"
       ? "/getAllView?view=vwEmailSchedulesList"

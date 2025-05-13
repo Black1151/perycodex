@@ -14,14 +14,12 @@ import DefaultLayout from "@/components/surveyjs/layout/default/Layout";
 import HappinessLayout from "@/components/surveyjs/layout/happiness/Layout";
 import eNPSLayout from "@/components/surveyjs/layout/enps/Layout";
 import ClientSatisfactionLayout from "@/components/surveyjs/layout/client-satisfaction/Layout";
-import CompanyRegistrationLayout from "@/components/surveyjs/layout/companyRegistration/Layout";
 
 // Logic
 import { FormComponentProps, LayoutMap } from "@/types/form";
 
 const layoutMap: LayoutMap = {
   default: DefaultLayout,
-  "company-registration": CompanyRegistrationLayout,
   happiness: HappinessLayout,
   enps: eNPSLayout,
   "client-satisfaction": ClientSatisfactionLayout,

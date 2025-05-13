@@ -4,8 +4,6 @@ import { teamFields } from "@/components/agGrids/dataFields/teamFields";
 import AdminHeader from "@/components/AdminHeader";
 import apiClient from "@/lib/apiClient";
 import { checkUserRole, getUser } from "@/lib/dal";
-import TeamLimitReached from "./TeamLimitReached";
-import { subscriptionLimits } from "@/utils/constants/subscriptionLimits";
 
 export default async function TeamsPage() {
   const user = await getUser();
@@ -33,11 +31,6 @@ export default async function TeamsPage() {
 
   const teamCount = teamData.length;
 
-  let isAtLimit
-  if (user.customerIsFree && teamCount >= subscriptionLimits.free.maxTeams) {
-    isAtLimit = true;
-  }
-  
   return (
     <>
       <AdminHeader headingText={headerTitle} dataCount={teamCount} />
@@ -45,8 +38,6 @@ export default async function TeamsPage() {
         data={teamData}
         initialFields={teamFields}
         createNewUrl={createNewUrl}
-        isModalEnabled={isAtLimit}
-        openModalComponent={TeamLimitReached}
       />
     </>
   );

@@ -10,10 +10,10 @@ const swirlIn = keyframes`
     transform: translateX(100px) scale(0) rotate(0deg);
   }
   40% {
-    transform: translateX(100px) scale(2) rotate(360deg);  
+    transform: translateX(100px) scale(1.5) rotate(360deg);  
   }
   60% {
-    transform: translateX(100px) scale(2) rotate(360deg);
+    transform: translateX(100px) scale(1.5) rotate(360deg);
   }
   75% {
     transform: translateX(200px);
@@ -22,10 +22,10 @@ const swirlIn = keyframes`
     transform: translateX(0px);
   }
   95% {
-    transform: scale(2) translateX(0) rotate(-10deg);
+    transform: scale(1.5) translateX(0) rotate(-10deg);
   }
   100% {
-    transform: scale(1.5) translateX(0);
+    transform: scale(1) translateX(0);
   }
 `;
 
@@ -43,20 +43,6 @@ const backgroundWipe = keyframes`
   }
 `;
 
-const translateLoadingBarUp = keyframes`
-  0% {
-    transform: translateY(50px);
-    opacity: 0;
-  }
-  50% {
-    transform: translateY(50px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(20px);
-    opacity: 1;
-  }
-`;
 const fadeScaleOut = {
   opacity: 0,
   scale: 0.75,
@@ -74,10 +60,11 @@ export const ClientSatisfactionSplashScreen = () => {
       >
         <Box w="250px" h="100px" position="relative">
           <Box
-            bgImage="url('/assets/splash-screens/client-satisfaction/client-satisfaction-logo-text.png')"
+            bgImage="url('/assets/splash-screens/client-satisfaction/client-satisfaction-logo-bg.png')"
             bgSize="contain"
             bgRepeat="no-repeat"
             bgPosition="center"
+            w="250px"
             h="100px"
             animation={`${backgroundWipe} 2.5s ease-in-out forwards`}
           />
@@ -85,23 +72,17 @@ export const ClientSatisfactionSplashScreen = () => {
           <Box
             animation={`${swirlIn} ease-in-out 2.5s`}
             position="absolute"
-            w="80px"
+            w="72px"
             top={2}
             left={-3}
-            zIndex={10}
           >
-            <Image src="/assets/splash-screens/client-satisfaction/client-satisfaction-logo.png" />
-          </Box>
-          <Box
-            animation={`${translateLoadingBarUp} 2.5s ease-in-out forwards`}
-            position="absolute"
-            bottom={0}
-            left={0}
-            right={0}
-          >
-            <LoadingBar />
+            <Image
+              src="/assets/splash-screens/client-satisfaction/client-satisfaction-logo.png"
+              w="100px"
+            />
           </Box>
         </Box>
+        <LoadingBar />
       </MotionVStack>
     </Center>
   );

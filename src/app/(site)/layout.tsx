@@ -37,8 +37,8 @@ export default async function MainLayout({
     userRole: "",
     userCustomerId: "",
   };
-  
-  let userMetadata: UserContextProps | null = null;
+
+  let userMetadata = {};
 
   try {
     const [fetchUserInfo, fetchUserMetadata] = await Promise.all([
@@ -64,17 +64,6 @@ export default async function MainLayout({
     };
 
     userMetadata = userMetadataData.resource;
-
-    if (userMetadata?.role === "CA" && userMetadata?.customerId === null) {  
-      return (
-        <SiteProviders userMetadata={userMetadata as UserContextProps}>
-          <PerygonContainer>
-            {children}
-          </PerygonContainer>
-        </SiteProviders>
-      );
-    }
-
   } catch (error: any) {
     console.error("Error details:", error);
     redirect("/error");

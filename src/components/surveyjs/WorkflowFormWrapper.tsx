@@ -62,10 +62,6 @@ const WorkflowFormWrapper: React.FC<WorkflowFormWrapperProps> = ({
     isNew,
   });
 
-  useEffect(() => {
-      console.log("isInitialised state changed:", isInitialised);
-    }, [isInitialised]);
-
   const formNavigation = useFormNavigation({ surveyJSModel, data, canEdit });
 
   useWorkflowFormSubmission({

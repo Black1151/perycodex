@@ -1,10 +1,9 @@
-import { ChangeEvent, useState, useCallback } from "react";
+import { ChangeEvent, useState } from "react";
 import { useToast } from "@chakra-ui/react";
 
 interface UseMediaUploaderReturn {
   isUploading: boolean;
   handleFileChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  uploadMediaFile: (file: File) => Promise<any>;
 }
 
 export const useMediaUploader = (
@@ -99,21 +98,8 @@ export const useMediaUploader = (
     event.target.value = ""; // Clear the file input after processing
   };
 
-  const uploadMediaFile = useCallback(
-    async (file: File) => {
-      if (!validateFile(file)) {
-        throw new Error("Validation failed");
-      }
-      return await uploadMedia(file);
-    },
-    [validateFile, uploadMedia]
-  );
-
   return {
     isUploading: isUploading,
     handleFileChange,
-    uploadMediaFile
   };
 };
-
-

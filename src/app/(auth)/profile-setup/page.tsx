@@ -7,8 +7,6 @@ import { cookies } from "next/headers";
 import { DropdownOption } from "@/components/forms/InputField";
 import { transformTeams } from "../../api/selectItems/fetchTeamsSelectItems/transformTeams";
 import { redirect } from "next/navigation";
-import { getUser } from "@/lib/dal";
-import { NewCompanyUserProfileCompletionForm } from "@/components/forms/NewCompanyUserProfileCompletionForm";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -20,7 +18,6 @@ export default async function ProfileSetup() {
   const cookieStore = cookies();
   const authToken = cookieStore.get("auth_token")?.value;
   const uniqueId = cookieStore.get("user_uuid")?.value;
-  const user = await getUser();
 
   let dropdowns;
   let departments;
@@ -105,33 +102,6 @@ export default async function ProfileSetup() {
     sites = transformSites(sitesData.resource);
   } catch (error: any) {
     redirect("/error");
-  }
-
-  if (user.role === "CA" && user.customerId === null) {
-    return (
-      <PerygonContainer>
-      <Center flex={1}>
-        <LoginCard
-          height={1125}
-          imageOffset={-750}
-          titleComponent={
-            <VStack position="absolute" top="50px">
-              <LetterFlyIn fontSize={90}>Perygon</LetterFlyIn>
-              <LetterFlyIn fontSize={38}>Please set up</LetterFlyIn>
-              <LetterFlyIn fontSize={38}>your profile</LetterFlyIn>
-              <LetterFlyIn fontSize={22}>Then company setup...</LetterFlyIn>
-            </VStack>
-          }
-        >
-          <NewCompanyUserProfileCompletionForm
-            isSubmitting={false}
-            errors={{}}
-            dropdowns={dropdowns}
-          />
-        </LoginCard>
-      </Center>
-    </PerygonContainer>
-    )
   }
 
   return (
