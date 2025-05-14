@@ -5,7 +5,6 @@ import {
   Text,
   VStack,
   useTheme,
-  useBreakpointValue,
   Button,
   Flex,
 } from "@chakra-ui/react";
@@ -145,7 +144,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
             bg="rgba(0, 0, 0, 0.75)"
             borderRadius="lg"
             color="white"
-            textAlign={["center", "left"]}
+            textAlign={"left"}
             opacity={showInfoBox ? 1 : 0}
             transform={showInfoBox ? "translateY(0)" : "translateY(-30px)"}
             transition="opacity 0.5s ease-in-out, transform 0.5s ease-in-out"
@@ -157,12 +156,12 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
               flexDirection={["column", null, "row"]}
               alignItems="center"
               gap={[4, 8]}
+              px={[2, 4, 8]}
             >
               {currentItem.logoImage && (
                 <Image
                   src={currentItem.logoImage}
                   alt={currentItem.alt}
-                  // h={["70px", "100px"]}
                   objectFit="contain"
                   flex={["none", "0 0 33%"]}
                   maxW={["100%", null, "33%"]}
@@ -171,8 +170,8 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
               <Text
                 flex={["none", "0 0 67%"]}
                 w={["full", null, "67%"]}
-                fontSize={[11, 13, 15, null]}
-                noOfLines={[4, 5]}
+                fontSize={[12, 13, 15, null]}
+                wordBreak="break-word"
               >
                 {currentItem.description}
               </Text>
@@ -187,8 +186,8 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
                 bgColor={theme.colors.primary}
                 _hover={{ bgColor: "white", color: theme.colors.primary }}
                 onClick={handleStartClick}
-                w="50%" // ⬅️ half the width of the info-box
-                alignSelf="center" // ⬅️ centres the button horizontally
+                w="50%"
+                alignSelf="center"
               >
                 <Text fontFamily="Metropolis" fontSize={[18, 24]}>
                   Start!
