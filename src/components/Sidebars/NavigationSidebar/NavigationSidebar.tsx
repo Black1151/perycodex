@@ -13,6 +13,7 @@ export interface MenuItem {
   category?: string;
   active?: boolean;
   locked?: boolean;
+  badgeNumber?: number;
 }
 
 interface NavigationSidebarProps extends SidebarProps {
@@ -78,6 +79,7 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
                 active={item.active}
                 onClick={() => handleItemClick(item)}
                 locked={item.locked}
+                badgeNumber={item.badgeNumber}
               />
               {i < items.length - 1 && (
                 <Divider
@@ -124,6 +126,7 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
                 active={item.active}
                 onClick={() => handleItemClick(item)}
                 locked={item.locked}
+                badgeNumber={item.badgeNumber}
               />
               {i < items.length - 1 && (
                 <Divider

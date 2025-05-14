@@ -10,6 +10,7 @@ import {
   Lock as LockIcon,
   ExitToApp as ExitToAppIcon,
   Settings as SettingsIcon,
+  Storefront as StorefrontIcon,
 } from "@mui/icons-material";
 
 const useNavMenuItems = (
@@ -36,6 +37,11 @@ const useNavMenuItems = (
         icon: <SettingsIcon />,
         onClick: () => router.push("/customers"),
       },
+      {
+        label: "Tool Store",
+        icon: <StorefrontIcon />,
+        onClick: () => router.push("/tool-store"),
+      }
     ];
   }
 
@@ -45,7 +51,13 @@ const useNavMenuItems = (
       label: "Admin Tools",
       icon: <SettingsIcon />,
       onClick: () => router.push("/users?userType=internal"),
-    });
+    },
+    {
+      label: "Tool Store",
+      icon: <StorefrontIcon />,
+      onClick: () => router.push("/tool-store"),
+    }
+  );
   }
   commonMenuItems.push(
     {
@@ -70,11 +82,18 @@ const useNavMenuItems = (
     }
   );
   if (["CS", "CL", "CA"].includes(userRole)) {
-    commonMenuItems.push({
+    commonMenuItems.push(
+    {
       label: "Client Activity",
       icon: <ViewTimeline />,
       onClick: () => router.push("/client-activity"),
-    });
+    },
+    {
+      label: "Tool Store",
+      icon: <StorefrontIcon />,
+      onClick: () => router.push("/tool-store"),
+    }
+  );
   }
   commonMenuItems.push(
     {
