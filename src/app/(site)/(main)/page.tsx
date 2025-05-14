@@ -96,10 +96,9 @@ export default async function PerygonMain() {
   }
 
   return (
-    // <PerygonMainClient
-    //   carouselItems={carouselItems}
-    //   showNoToolsModal={carouselItems.length === 0}
-    // />
-    <BusinessScoreSplashScreen />
+    <PerygonMainClient
+      carouselItems={carouselItems}
+      showNoToolsModal={carouselItems.length === 0}
+    />
   );
 }
