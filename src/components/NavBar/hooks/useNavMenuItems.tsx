@@ -52,11 +52,6 @@ const useNavMenuItems = (
       icon: <SettingsIcon />,
       onClick: () => router.push("/users?userType=internal"),
     },
-    {
-      label: "Tool Store",
-      icon: <StorefrontIcon />,
-      onClick: () => router.push("/tool-store"),
-    }
   );
   }
   commonMenuItems.push(
