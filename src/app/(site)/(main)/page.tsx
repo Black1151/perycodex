@@ -5,6 +5,7 @@ import { PerygonMainClient } from "../../PerygonMainClient";
 import { redirect } from "next/navigation";
 import { verifySession } from "@/lib/dal";
 import ExternalUserMainClient from "./ExternalUserMainClient";
+import { BusinessScoreSplashScreen } from "../(apps)/business-score/BusinessScoreSplashScreen";
 
 export const dynamic = "force-dynamic";
 
@@ -95,9 +96,10 @@ export default async function PerygonMain() {
   }
 
   return (
-    <PerygonMainClient
-      carouselItems={carouselItems}
-      showNoToolsModal={carouselItems.length === 0}
-    />
+    // <PerygonMainClient
+    //   carouselItems={carouselItems}
+    //   showNoToolsModal={carouselItems.length === 0}
+    // />
+    <BusinessScoreSplashScreen />
   );
 }
