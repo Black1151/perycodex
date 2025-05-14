@@ -1,36 +1,31 @@
 "use client";
 
-import LoadingBar from "@/components/LoadingBar/LoadingBar";
 import { Box, Center, Flex, Image, VStack } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { keyframes } from "@emotion/react";
 
-// // === Keyframes ===
-// const swirlIn = keyframes`
-//   0% {
-//     transform: scale(0) rotate(0deg);
-//     opacity: 0;
-//   }
-//   100% {
-//     transform: scale(1) rotate(720deg);
-//     opacity: 1;
-//   }
-// `;
+const logoTextBgAnimation = keyframes`
+  0% { opacity: 0; }
+  40% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 1; }
+`;
 
-// const gaugePop = keyframes`
-//   0% {
-//     transform: scale(0);
-//     opacity: 0;
-//   }
-//   70% {
-//     transform: scale(1.15);
-//     opacity: 1;
-//   }
-//   100% {
-//     transform: scale(1);
-//     opacity: 1;
-//   }
-// `;
+const gaugeAnimation = keyframes`
+  0%   { transform: rotate(-180deg); opacity: 0; }
+  10%  { opacity: 1; }
+  20% { transform: rotate(0deg); }
+  80% { transform: rotate(0deg); }   /* settle exactly at 0° */
+  100% { transform: rotate(0deg); }
+`;
+
+const dialAnimation = keyframes`
+  0%   { transform: translateX(-50%) rotate(-180deg) scale(0); opacity: 0;  }
+  10%  { opacity: 1; transform: translateX(-50%) rotate(0deg) scale(2)}
+  50%  { transform: translateX(-50%) rotate(0deg) scale(2)}
+  55%  { transform: translateX(-50%) rotate(0deg) scale(1)}
+  100% { transform: translateX(-50%) rotate(0deg) scale(1); }
+`;
 
 // === Component ===
 export const BusinessScoreSplashScreen = () => {
@@ -46,22 +41,26 @@ export const BusinessScoreSplashScreen = () => {
         position="relative"
       >
         {/* Background text */}
-        <Box
-          bgImage="url('/assets/splash-screens/business-score/business-score-logo-text.png')"
-          bgSize="contain"
-          bgRepeat="no-repeat"
-          bgPosition="center"
-          minW={["300px", "400px"]}
-          h={["120px", "160px"]}
-          //   animation={`${swirlIn} 1.2s ease-in-out`}
-        >
+        <Box minW={["300px", "400px"]} h={["120px", "160px"]}>
+          <Image
+            src={
+              "/assets/splash-screens/business-score/business-score-logo-text.png"
+            }
+            position="absolute"
+            top={0}
+            left={0}
+            w="100%"
+            animation={`${logoTextBgAnimation} 5s ease-in-out`}
+            minW={["300px", "400px"]}
+            h={["120px", "160px"]}
+          />
           {/* Dial */}
           <Flex
             position="relative"
             left="50%"
             top={"40%"}
             transform="translateX(-50%)"
-            // top={["4px", "8px"]}
+            animation={`${dialAnimation} 5s ease-out 0s`}
             w={["70px", "105px"]}
             h={["70px", "105px"]}
           >
@@ -72,6 +71,7 @@ export const BusinessScoreSplashScreen = () => {
               w="100%"
               top={0}
               left={0}
+              zIndex={2}
             />
 
             {/* Coloured gauge */}
@@ -81,7 +81,7 @@ export const BusinessScoreSplashScreen = () => {
               w="100%"
               top={0}
               left={0}
-              //   animation={`${gaugePop} 0.8s ease-out 0.3s`}
+              animation={`${gaugeAnimation} 5s ease-out 0s`}
             />
 
             {/* Rotating needle */}
@@ -94,11 +94,9 @@ export const BusinessScoreSplashScreen = () => {
               initial={{ rotate: -120 }}
               animate={{ rotate: [-120, 30, 0] }}
               transition={{
-                delay: 1.2,
-                duration: 2.5,
+                delay: 0.8,
+                duration: 1,
                 ease: "easeInOut",
-                repeat: Infinity,
-                repeatDelay: 0.5,
               }}
             />
 
@@ -110,13 +108,9 @@ export const BusinessScoreSplashScreen = () => {
               top="50%"
               left="50%"
               style={{ x: "-50%", y: "-50%" }}
-              //   animation={`${gaugePop} 0.6s ease-out 0.5s`}
             />
           </Flex>
         </Box>
-
-        {/* Progress bar beneath logo */}
-        <LoadingBar />
       </MotionVStack>
     </Center>
   );
