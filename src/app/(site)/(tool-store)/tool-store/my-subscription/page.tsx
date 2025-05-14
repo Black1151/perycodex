@@ -199,6 +199,7 @@ export default function BasketPage() {
                 variant="outline"
                 onClick={() => changeLicenseCount(20, true)}
                 size="lg"
+                disabled={basket.quantity < (basket.licensedUsers + 20)}
               >
                 –20
               </Button>
