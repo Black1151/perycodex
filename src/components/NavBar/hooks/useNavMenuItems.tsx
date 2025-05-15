@@ -36,11 +36,6 @@ const useNavMenuItems = (
         label: "Admin",
         icon: <SettingsIcon />,
         onClick: () => router.push("/customers"),
-      },
-      {
-        label: "Tool Store",
-        icon: <StorefrontIcon />,
-        onClick: () => router.push("/tool-store"),
       }
     ];
   }
