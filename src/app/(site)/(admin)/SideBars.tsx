@@ -441,6 +441,11 @@ export default function SideBars() {
       }
     }
 
+    // If the user is free, disable tags
+    if (user?.customerIsFree) {
+      shouldShowManageTags = false;
+    }
+
     return shouldShowManageTags
       ? [
           {
