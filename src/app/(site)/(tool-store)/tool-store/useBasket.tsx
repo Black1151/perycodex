@@ -176,7 +176,7 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
     setError(null);
 
     const defaultPayload = {
-      quantity: 1,
+      quantity: 0,
       subscriptions: ["626b1c62-a5cd-4478-aa88-5935bf8023df"],
       isAnnual: true,
     };

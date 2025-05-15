@@ -52,6 +52,11 @@ const useNavMenuItems = (
       icon: <SettingsIcon />,
       onClick: () => router.push("/users?userType=internal"),
     },
+    {
+      label: "Tool Store",
+      icon: <StorefrontIcon />,
+      onClick: () => router.push("/tool-store"),  
+    }
   );
   }
   commonMenuItems.push(
@@ -83,11 +88,6 @@ const useNavMenuItems = (
       icon: <ViewTimeline />,
       onClick: () => router.push("/client-activity"),
     },
-    {
-      label: "Tool Store",
-      icon: <StorefrontIcon />,
-      onClick: () => router.push("/tool-store"),
-    }
   );
   }
   commonMenuItems.push(

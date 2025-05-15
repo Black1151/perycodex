@@ -25,8 +25,15 @@ import BillingCycleToggle from "../BillingCyleToggle";
 import AnimatedTillNumber from "@/components/animations/AnimatedTillNumber";
 
 export default function BasketPage() {
-  const { basket, clearBasket, updateBasket, removeItemFromBasket, changeLicenseCount } =
-    useBasket();
+  const {
+    basket,
+    clearBasket,
+    updateBasket,
+    removeItemFromBasket,
+    changeLicenseCount,
+    getBasket,
+    newBasket,
+  } = useBasket();
   const router = useRouter();
   const toast = useToast();
   const [loading, setLoading] = useState(false);
@@ -66,6 +73,9 @@ export default function BasketPage() {
   useEffect(() => {
     if (basket) {
       setLoading(false);
+    } else {
+      newBasket();
+      getBasket();
     }
   }, [basket]);
 
@@ -190,18 +200,18 @@ export default function BasketPage() {
             <HStack align="flex-end" spacing={2}>
               <Button
                 variant="outline"
+                onClick={() => changeLicenseCount(20, true)}
+                size="lg"
+                disabled={basket.quantity < basket.licensedUsers + 20}
+              >
+                –20
+              </Button>
+              <Button
+                variant="outline"
                 onClick={() => changeLicenseCount(20, false)}
                 size="lg"
               >
                 +20
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => changeLicenseCount(20, true)}
-                size="lg"
-                disabled={basket.quantity < (basket.licensedUsers + 20)}
-              >
-                –20
               </Button>
             </HStack>
           </Flex>
@@ -228,7 +238,7 @@ export default function BasketPage() {
                         objectFit="contain"
                       />
                     )}
-                    <Box>
+                    <Box p={4}>
                       <Text
                         fontWeight="bold"
                         noOfLines={2}
@@ -250,11 +260,7 @@ export default function BasketPage() {
                     </Box>
                   </HStack>
 
-                  <Button
-                    variant="outline"
-                  >
-                    Launch Tool
-                  </Button>
+                  <Button variant="outline">Launch Tool</Button>
 
                   {/* <VStack align="flex-end" spacing={2}>
                     <HStack spacing={4}>
@@ -373,7 +379,9 @@ export default function BasketPage() {
                         <Text fontWeight="normal" noOfLines={2}>
                           Licenses
                         </Text>
-                        <Badge colorScheme="blue">+{item.quantity} New Licenses</Badge>
+                        <Badge colorScheme="blue">
+                          +{item.quantity} New Licenses
+                        </Badge>
                       </HStack>
                     </Box>
                   </HStack>
