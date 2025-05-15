@@ -18,6 +18,7 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 import { motion } from "framer-motion";
 import AnimatedTillNumber from "@/components/animations/AnimatedTillNumber";
+import { useRouter } from "next/navigation";
 
 export function ToolCard({ tool }: { tool: ToolConfig }) {
   const { basket, updateBasket, getBasket, removeItemFromBasket } = useBasket();
@@ -25,6 +26,7 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
   const toast = useToast();
   const isFree = basket?.isFree;
   const [loading, setLoading] = React.useState(false);
+  const router = useRouter();
 
   const borderColor = "rgb(255, 255, 255, 0.65)";
   const cardBg = theme.colors.elementBG;
@@ -132,10 +134,6 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
     }
   };
 
-  const handleLearnMoreClick = () => {
-    return null;
-  };
-
   return (
     <VStack>
       <Box
@@ -159,7 +157,7 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
           </Box>
         )}
 
-        {isFree && isOwned && (
+        {isOwned && (
         <Box
           position="absolute"
           top={24}
@@ -176,7 +174,7 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
           transformOrigin="top right"
           zIndex={10}
         >
-          FREE TRIAL
+          {isFree ? "FREE TRIAL" : "OWNED"}
         </Box>
         )}
 
@@ -208,8 +206,8 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
+                p={6}
               >
-                {/* motion.img will animate on hover */}
                 <motion.img
                   src={tool.logoImageUrl}
                   alt={tool.displayName}
@@ -297,10 +295,16 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
             )}
 
             {isOwned && (
-              <Button
+                <Button
                 size="sm"
                 variant="outline"
-              >Launch Tool</Button>
+                onClick={() => {
+                  const url = `${tool.appUrl}?toolId=${tool.id}&wfId=${tool.toolWorkflowId}`;
+                  router.push(url);
+                }}
+                >
+                Start Tool
+                </Button>
             )}
           </VStack>
         </VStack>

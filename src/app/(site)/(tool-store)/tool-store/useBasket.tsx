@@ -27,6 +27,7 @@ export interface Basket {
   ownedSubscriptionInfo: SubscriptionInfo[];
   content: (BasketItem | ToolConfig)[];
   totals: Totals;
+  annualDiscountPercent: number | null;
 }
 
 export interface SubscriptionInfo {
@@ -111,6 +112,7 @@ export interface ToolConfig {
   logoImageUrl: string | null;
   isTrialable: boolean;
   uniqueId: string;
+  toolWorkflowId: number;
 
   annualPrice: string;
   monthlyPrice: string;
@@ -149,7 +151,7 @@ type BasketContextType = {
   loading: boolean;
   error: Error | null;
   getBasket: () => Promise<void>;
-  newBasket: () => Promise<void>;
+  //newBasket: () => Promise<void>;
   updateBasket: (basket: UpdateBasketProps) => Promise<void>;
   clearBasket: () => Promise<void>;
   removeItemFromBasket: (itemUId: string) => Promise<void>;
@@ -169,38 +171,38 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
   const [loading, setLoading] = useState(false);
 
   /**
-   * POST /api/basket — create a new basket
+   * POST /api/basket — create a new basket... unused for now
    */
-  const newBasket = async () => {
-    console.log("[Basket] POST /api/basket — creating new basket");
-    setError(null);
+  // const newBasket = async () => {
+  //   console.log("[Basket] POST /api/basket — creating new basket");
+  //   setError(null);
 
-    const defaultPayload = {
-      quantity: 0,
-      subscriptions: ["626b1c62-a5cd-4478-aa88-5935bf8023df"],
-      isAnnual: true,
-    };
+  //   const defaultPayload = {
+  //     quantity: 0,
+  //     subscriptions: ["626b1c62-a5cd-4478-aa88-5935bf8023df"],
+  //     isAnnual: true,
+  //   };
 
-    try {
-      const data = await fetchClient<{ resource: Basket }>("/api/basket", {
-        method: "POST",
-        body: defaultPayload,
-      });
+  //   try {
+  //     const data = await fetchClient<{ resource: Basket }>("/api/basket", {
+  //       method: "POST",
+  //       body: defaultPayload,
+  //     });
 
-      console.log("[Basket] POST response:", data);
+  //     console.log("[Basket] POST response:", data);
 
-      if (data && data.resource) {
-        setBasket(data.resource);
-      } else {
-        const err = new Error("Failed to create basket");
-        console.error("[Basket] POST error:", err);
-        setError(err);
-      }
-    } catch (err: any) {
-      console.error("[Basket] POST exception:", err);
-      setError(err);
-    }
-  };
+  //     if (data && data.resource) {
+  //       setBasket(data.resource);
+  //     } else {
+  //       const err = new Error("Failed to create basket");
+  //       console.error("[Basket] POST error:", err);
+  //       setError(err);
+  //     }
+  //   } catch (err: any) {
+  //     console.error("[Basket] POST exception:", err);
+  //     setError(err);
+  //   }
+  // };
 
   /**
    * GET /api/basket — fetch the current basket
@@ -230,8 +232,7 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
         response?.message && response.message.includes("Couldn't retrieve");
 
       if (isEmptyObject || couldNotRetrieve) {
-        console.warn("[Basket] No active basket found — creating one.");
-        await newBasket();
+        console.error("[Basket] ERROR: No basket found");
         return;
       }
 
@@ -397,7 +398,7 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
 
   return (
     <BasketContext.Provider
-      value={{ basket, loading, error, getBasket, newBasket, updateBasket, clearBasket, removeItemFromBasket, changeLicenseCount }}
+      value={{ basket, loading, error, getBasket, updateBasket, clearBasket, removeItemFromBasket, changeLicenseCount }}
     >
       {children}
     </BasketContext.Provider>

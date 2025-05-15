@@ -73,35 +73,27 @@ const ToolStore: React.FC = () => {
     <VStack spacing={0} align="center" justify="center" w="100%">
       {/* Header */}
       <Flex
-        flexDirection={["column", "column", "row"]}
+        flexDirection={["column", "row", "row"]}
         gap={2}
         w="100%"
-        p={[2, 4]}
+        p={0}
         align="left"
         justify="space-between"
       >
-        <Flex
-          gap={0}
-          width={"100%"}
-          align="space-between"
-          justify={["center", "center", "space-between"]}
-          flexDirection="row"
-        >
           <Text
             fontWeight="400"
             color={theme.colors.elementBG}
             fontFamily="bonfire"
             fontSize={[32, 42]}
           >
-            Perygon Tool Store
+            Tool Store
           </Text>
           <BillingCycleToggle />
-        </Flex>
       </Flex>
 
       {/* All Tools */}
       <SimpleGrid
-        columns={{ base: 1, sm: 2, lg: 3 }}
+        columns={{ base: 1, sm: 2, md: 2, xl: 3 }}
         spacing={4}
         width="100%"
         py={[2, 4, 4]}

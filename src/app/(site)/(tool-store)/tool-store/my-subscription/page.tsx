@@ -3,26 +3,28 @@
 import React, { use, useEffect, useState } from "react";
 import { useBasket, BasketItem, ToolConfig } from "../useBasket";
 import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  HStack,
+  Collapse,
+  useBreakpointValue,
   IconButton,
-  Image,
-  Stack,
-  VStack,
+  Flex,
   Text,
-  Spinner,
-  Badge,
-  useToast,
+  Box,
+  HStack,
+  VStack,
+  Button,
+  Stack,
   useTheme,
+  useToast,
+  Image,
 } from "@chakra-ui/react";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { transparentize } from "@chakra-ui/theme-tools";
 import { FiTrash2 } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import BillingCycleToggle from "../BillingCyleToggle";
 import AnimatedTillNumber from "@/components/animations/AnimatedTillNumber";
+import BasketItemCard from "./BasketItemCard";
 
 export default function BasketPage() {
   const {
@@ -32,23 +34,20 @@ export default function BasketPage() {
     removeItemFromBasket,
     changeLicenseCount,
     getBasket,
-    newBasket,
   } = useBasket();
   const router = useRouter();
   const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [newQuantity, setNewQuantity] = useState<number>(0);
+  const [isSummaryOpen, setSummaryOpen] = useState(false);
+  const isMobile = useBreakpointValue({ base: true, lg: false });
+
   const theme = useTheme();
 
   const borderColor = "rgb(255, 255, 255, 0.65)";
   const cardBg = transparentize(theme.colors.elementBG, 0.95)(theme);
   const cardBgLighter = theme.colors.elementBG;
-  const textColor = theme.colors.primaryTextColor;
-  const addBtnBg = transparentize(theme.colors.seduloGreen, 0.3)(theme);
-  const addBtnHoverBg = transparentize(theme.colors.seduloGreen, 0.5)(theme);
-  const removeBtnBg = "rgb(255, 0, 0, 0.3)";
-  const removeBtnHoverBg = "rgb(255, 0, 0, 0.5)";
 
   // Track IDs of items being removed
   const [removingIds, setRemovingIds] = useState<Set<string>>(new Set());
@@ -74,7 +73,6 @@ export default function BasketPage() {
     if (basket) {
       setLoading(false);
     } else {
-      newBasket();
       getBasket();
     }
   }, [basket]);
@@ -138,39 +136,28 @@ export default function BasketPage() {
     <VStack spacing={0} align="center" justify="center" w="100%">
       {/* Header */}
       <Flex
-        flexDirection={["column", "column", "row"]}
+        flexDirection={["column", "row", "row"]}
         gap={2}
         w="100%"
-        p={[2, 4]}
+        p={0}
         align="left"
         justify="space-between"
+        mb={4}
       >
-        <Flex
-          gap={0}
-          width="100%"
-          justify={["center", "center", "space-between"]}
-          flexDirection="row"
+        <Text
+          fontWeight="400"
+          color={theme.colors.elementBG}
+          fontFamily="bonfire"
+          fontSize={[32, 32, 42]}
         >
-          <Text
-            fontWeight="400"
-            fontFamily="bonfire"
-            fontSize={[32, 42]}
-            color={theme.colors.elementBG}
-          >
-            Your Perygon Subscription
-          </Text>
-          <BillingCycleToggle />
-        </Flex>
+          Manage Subscription
+        </Text>
+        <BillingCycleToggle />
       </Flex>
 
-      <Flex
-        direction={{ base: "column", md: "row" }}
-        gap={8}
-        w="100%"
-        p={[2, 4]}
-      >
+      <Flex direction={{ base: "column-reverse", lg: "row" }} gap={4} w="100%">
         {/* LEFT: product list */}
-        <Stack flex="1" spacing={6}>
+        <Stack flex="1" spacing={4}>
           {/* License block */}
           <Flex
             bg={cardBgLighter}
@@ -182,13 +169,13 @@ export default function BasketPage() {
           >
             <HStack spacing={4}>
               <Box>
-                <HStack spacing={1} fontSize="24">
+                <HStack spacing={2} fontSize={[16, 18, 20, 20]}>
                   <AnimatedTillNumber
                     value={basket.quantity || basket.licensedUsers}
                     fontSize="24"
                     duration={0.65}
                   />
-                  <Text fontWeight="bold" fontSize={24}>
+                  <Text fontWeight="semibold" fontSize={[16, 18, 20, 20]}>
                     Total Licenses
                   </Text>
                 </HStack>
@@ -323,118 +310,14 @@ export default function BasketPage() {
             newItems.map((item) => {
               const removing = removingIds.has(item.uniqueId);
               return (
-                <Flex
-                  key={item.uniqueId || item.id}
-                  borderRadius="md"
-                  boxShadow="sm"
-                  p={4}
-                  align="center"
-                  justify="space-between"
-                  bg={cardBg}
-                >
-                  <HStack spacing={4}>
-                    {item.toolConfig?.iconImageUrl && (
-                      <Image
-                        src={item.toolConfig.iconImageUrl}
-                        boxSize="80px"
-                        objectFit="contain"
-                      />
-                    )}
-                    <Box>
-                      <HStack spacing={1}>
-                        <Text
-                          fontWeight="bold"
-                          noOfLines={2}
-                          fontSize={24}
-                          onClick={() =>
-                            window.open(
-                              `/tool-store/${item.toolConfigUniqueId}`,
-                              "_blank"
-                            )
-                          }
-                          cursor="pointer"
-                        >
-                          {item.toolConfig.displayName}
-                        </Text>
-                        {!basket.ownedSubscriptionInfo?.some(
-                          (ownedItem) =>
-                            ownedItem.uniqueId === item.toolConfigUniqueId
-                        ) && (
-                          <Badge
-                            colorScheme="green"
-                            fontSize="0.8em"
-                            ml={1}
-                            mr={1}
-                          >
-                            New!
-                          </Badge>
-                        )}
-                      </HStack>
-                      <HStack spacing={1} fontSize="md">
-                        <AnimatedTillNumber
-                          value={basket.quantity}
-                          fontSize="md"
-                          duration={0.65}
-                        />
-                        <Text fontWeight="normal" noOfLines={2}>
-                          Licenses
-                        </Text>
-                        <Badge colorScheme="blue">
-                          +{item.quantity} New Licenses
-                        </Badge>
-                      </HStack>
-                    </Box>
-                  </HStack>
-
-                  <VStack align="flex-end" spacing={2}>
-                    <HStack spacing={4}>
-                      <HStack spacing={1} fontSize="24">
-                        <Text
-                          fontSize="sm"
-                          color="gray.500"
-                          textDecoration="line-through"
-                        >
-                          £
-                        </Text>
-                        <AnimatedTillNumber
-                          value={item.itemSubtotal}
-                          fontSize="sm"
-                          duration={0.65}
-                          color="gray.500"
-                          textDecoration="line-through"
-                        />
-                      </HStack>
-                      <HStack spacing={1} fontSize="lg">
-                        <Text fontWeight="bold">£</Text>
-                        <AnimatedTillNumber
-                          value={item.itemGrandTotal}
-                          fontSize="lg"
-                          duration={0.65}
-                        />
-                      </HStack>
-                      <IconButton
-                        aria-label="Remove item"
-                        icon={removing ? <Spinner size="sm" /> : <FiTrash2 />}
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => handleRemove(item.uniqueId)}
-                        isDisabled={removing}
-                      />
-                    </HStack>
-                    <HStack>
-                      {item.discounts.map((discount) => (
-                        <Badge
-                          key={discount.uniqueId}
-                          colorScheme="green"
-                          fontSize="0.8em"
-                          mr={1}
-                        >
-                          {discount.name}
-                        </Badge>
-                      ))}
-                    </HStack>
-                  </VStack>
-                </Flex>
+                <BasketItemCard
+                  key={item.uniqueId}
+                  item={item}
+                  licensedUsers={basket.quantity}
+                  isNew={true}
+                  removingIds={removingIds}
+                  handleRemove={handleRemove}
+                />
               );
             })
           )}
@@ -442,79 +325,112 @@ export default function BasketPage() {
 
         {/* RIGHT: order summary - only shown when there is a totals */}
         {basket.totals && (
-          <Box
-            w={{ base: "100%", md: "320px" }}
-            bg="white"
-            borderRadius="lg"
-            boxShadow="sm"
-            p={6}
-          >
-            <HStack justify="space-between" mb={4}>
-              <Text fontSize="lg">Your Order</Text>
-              <Text color="gray.500">
-                {newItems.length + oldItems.length} items
-              </Text>
-            </HStack>
+          <Box w={{ base: "100%", md: "100%", lg: "400px" }}>
+            {/* mobile header with chevron */}
+            {isMobile && (
+                <Flex
+                align="center"
+                justify="space-between"
+                px={2}
+                bg="white"
+                borderRadius="lg"
+                boxShadow="sm"
+                p={6}
+                mb={isSummaryOpen ? 1 : 0}
+                >
+                <Text fontSize={[16, 18, 20, 22]} fontWeight="semibold">
+                  Subscription Totals
+                </Text>
+                <IconButton
+                  aria-label="Toggle summary"
+                  icon={isSummaryOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                  onClick={() => setSummaryOpen((o) => !o)}
+                  variant="ghost"
+                  size="sm"
+                />
+                </Flex>
+            )}
 
-            <Stack spacing={2} mb={4}>
-              <HStack justify="space-between">
-                <Text>Basket Total</Text>
-                <HStack spacing={1} fontSize="md">
-                  <Text>£</Text>
-                  <AnimatedTillNumber
-                    value={parseFloat(basket.totals.subtotal)}
-                    fontSize="md"
-                    duration={0.65}
-                  />
-                </HStack>
-              </HStack>
-              <HStack justify="space-between">
-                <Text>Total Discount</Text>
-                <HStack spacing={1} fontSize="md">
-                  <Text color="green.500">–£</Text>
-                  <AnimatedTillNumber
-                    value={parseFloat(basket.totals.discountsTotal)}
-                    fontSize="md"
-                    duration={0.65}
-                    color="green.500"
-                  />
-                </HStack>
-              </HStack>
-              <HStack justify="space-between">
-                <Text>Tax</Text>
-                <HStack spacing={1} fontSize="md">
-                  <Text>£</Text>
-                  <AnimatedTillNumber
-                    value={parseFloat(basket.totals.taxTotal)}
-                    fontSize="md"
-                    duration={0.65}
-                  />
-                </HStack>
-              </HStack>
-              <HStack justify="space-between">
-                <Text fontWeight="bold">Total</Text>
-                <HStack spacing={1} fontSize="lg">
-                  <Text fontWeight="bold">£</Text>
-                  <AnimatedTillNumber
-                    value={parseFloat(basket.totals.grandTotal)}
-                    fontSize="lg"
-                    duration={0.65}
-                  />
-                </HStack>
-              </HStack>
-            </Stack>
+            <Collapse in={!isMobile || isSummaryOpen} animateOpacity>
+              <Box
+                bg={isMobile ? "rgba(255,255,255,0.85)" : "white"}
+                borderRadius="lg"
+                boxShadow="sm"
+                p={6}
+              >
+                {/* non-mobile header */}
+                {!isMobile && (
+                  <HStack justify="space-between" mb={4}>
+                    <Text fontSize={[14, 16, 18]} fontWeight="semibold">
+                      Subscription Totals
+                    </Text>
+                  </HStack>
+                )}
 
-            <Button
-              colorScheme="brand"
-              w="full"
-              mb={3}
-              onClick={() => router.push("/checkout")}
-            >
-              Checkout
-            </Button>
-            <Button variant="outline" w="full" onClick={handleClearBasket}>
-              Clear Changes
-            </Button>
+                <Stack spacing={2} mb={4}>
+                  <HStack justify="space-between">
+                    <Text>{basket.isAnnual ? "Yearly" : "Monthly"} Total</Text>
+                    <HStack spacing={1} fontSize="md">
+                      <Text>£</Text>
+                      <AnimatedTillNumber
+                        value={parseFloat(basket.totals.subtotal)}
+                        fontSize="md"
+                        duration={0.65}
+                      />
+                    </HStack>
+                  </HStack>
+                  <HStack justify="space-between">
+                    <Text>Total Discount</Text>
+                    <HStack spacing={1} fontSize="md">
+                      <Text color="green.500">–£</Text>
+                      <AnimatedTillNumber
+                        value={parseFloat(basket.totals.discountsTotal)}
+                        fontSize="md"
+                        duration={0.65}
+                        color="green.500"
+                      />
+                    </HStack>
+                  </HStack>
+                  <HStack justify="space-between">
+                    <Text>Tax</Text>
+                    <HStack spacing={1} fontSize="md">
+                      <Text>£</Text>
+                      <AnimatedTillNumber
+                        value={parseFloat(basket.totals.taxTotal)}
+                        fontSize="md"
+                        duration={0.65}
+                      />
+                    </HStack>
+                  </HStack>
+                  <HStack justify="space-between">
+                    <Text fontWeight="bold">Total</Text>
+                    <HStack spacing={1} fontSize="lg">
+                      <Text fontWeight="bold">£</Text>
+                      <AnimatedTillNumber
+                        value={parseFloat(basket.totals.grandTotal)}
+                        fontSize="lg"
+                        duration={0.65}
+                      />
+                      <Text fontWeight="bold">
+                        {basket.isAnnual ? "/year" : "/mo"}
+                      </Text>
+                    </HStack>
+                  </HStack>
+                </Stack>
+
+                <Button
+                  colorScheme="brand"
+                  w="full"
+                  mb={3}
+                  onClick={() => router.push("/checkout")}
+                >
+                  Checkout
+                </Button>
+                <Button variant="outline" w="full" onClick={handleClearBasket} bg={"white"}>
+                  Clear Changes
+                </Button>
+              </Box>
+            </Collapse>
           </Box>
         )}
       </Flex>

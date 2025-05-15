@@ -2,14 +2,22 @@
 
 import React, { FC, useState } from "react";
 import { useBasket } from "./useBasket";
-import { Tabs, TabList, Tab, Badge, Spinner, Flex } from "@chakra-ui/react";
+import {
+  Tabs,
+  TabList,
+  Tab,
+  Badge,
+  Spinner,
+  Flex,
+  Text,
+} from "@chakra-ui/react";
 import { useUser } from "@/providers/UserProvider";
 
 const BillingCycleToggle: FC = () => {
   const { basket, loading, updateBasket } = useBasket();
   const [isSaving, setIsSaving] = useState(false);
   const user = useUser();
-  const isUserFree = user?.user?.customerIsFree
+  const isUserFree = user?.user?.customerIsFree;
 
   // default to monthly if basket or flag is missing
   const isAnnual = Boolean(basket?.isAnnual);
@@ -35,29 +43,34 @@ const BillingCycleToggle: FC = () => {
       borderRadius={"full"}
     >
       <TabList borderRadius={"full"}>
-        <Tab isDisabled={loading || isSaving || !isUserFree} borderRadius={"full"} borderWidth={1}>
+        <Tab
+          isDisabled={loading || isSaving || !isUserFree}
+          borderRadius={"full"}
+          borderWidth={1}
+        >
           <Flex align="center" justify="center">
-            Monthly
+            <Text fontSize={["xs", "sm", "md"]}>Monthly</Text>
             {isSaving && isAnnual && <Spinner size="xs" ml={2} />}
           </Flex>
         </Tab>
-        <Tab isDisabled={loading || isSaving || !isUserFree} borderRadius={"full"} borderWidth={1}>
+        <Tab
+          isDisabled={loading || isSaving || !isUserFree}
+          borderRadius={"full"}
+          borderWidth={1}
+        >
           <Flex align="center" justify="center">
-            Annual
-            <Badge
-              ml={2}
-              fontSize="xs"
-              colorScheme="green"
-            >
-              SAVE 15%
-            </Badge>
-            {isSaving  && !isAnnual && <Spinner size="xs" ml={2} />}
+            <Text fontSize={["xs", "sm", "md"]}>Annual</Text>
+            {basket?.annualDiscountPercent && (
+              <Badge ml={2} fontSize="xs" colorScheme="green">
+                SAVE {basket?.annualDiscountPercent}%
+              </Badge>
+            )}
+            {isSaving && !isAnnual && <Spinner size="xs" ml={2} />}
           </Flex>
         </Tab>
       </TabList>
     </Tabs>
   );
-
 };
 
 export default BillingCycleToggle;
