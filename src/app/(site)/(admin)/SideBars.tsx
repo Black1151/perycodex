@@ -232,7 +232,7 @@ export default function SideBars() {
           category: "Test",
         }
       );
-    } else if (isFree) {
+    } else if (isFree && userRole === "CA") {
       items.push(
         {
           label: "My Company",
@@ -301,28 +301,7 @@ export default function SideBars() {
           locked: true,
         }
       );
-    } else if (userRole === "CU") {
-      items.push(
-        {
-          label: "Our Staff",
-          icon: <Person sx={{ height: "100%", width: "100%" }} />,
-          url: "/users",
-          category: "My Company",
-        },
-        {
-          label: "Our Sites",
-          icon: <LocationOn sx={{ height: "100%", width: "100%" }} />,
-          url: "/sites",
-          category: "My Company",
-        },
-        {
-          label: "Teams",
-          icon: <People sx={{ height: "100%", width: "100%" }} />,
-          url: "/teams",
-          category: "My Company",
-        }
-      );
-    } else if (userRole === "CS") {
+    } else if (isFree && userRole === "CU") {
       items.push(
         {
           label: "Our Staff",
@@ -346,10 +325,93 @@ export default function SideBars() {
           label: "Our Clients",
           icon: <Domain sx={{ height: "100%", width: "100%" }} />,
           url: "/customers?customerType=external",
-          category: "My Company",
+          category: "Clients",
+          locked: true,
         }
       );
-    } else if (userRole === "CL") {
+    } else if (!isFree && userRole === "CU") {
+      items.push(
+        {
+          label: "Our Staff",
+          icon: <Person sx={{ height: "100%", width: "100%" }} />,
+          url: "/users",
+          category: "My Company",
+        },
+        {
+          label: "Our Sites",
+          icon: <LocationOn sx={{ height: "100%", width: "100%" }} />,
+          url: "/sites",
+          category: "My Company",
+        },
+        {
+          label: "Teams",
+          icon: <People sx={{ height: "100%", width: "100%" }} />,
+          url: "/teams",
+          category: "My Company",
+        },
+        {
+          label: "Our Clients",
+          icon: <Domain sx={{ height: "100%", width: "100%" }} />,
+          url: "/customers?customerType=external",
+          category: "Clients",
+        }
+      );
+    } else if (isFree && userRole === "CS") {
+      items.push(
+        {
+          label: "Our Staff",
+          icon: <Person sx={{ height: "100%", width: "100%" }} />,
+          url: "/users",
+          category: "My Company",
+        },
+        {
+          label: "Our Sites",
+          icon: <LocationOn sx={{ height: "100%", width: "100%" }} />,
+          url: "/sites",
+          category: "My Company",
+        },
+        {
+          label: "Teams",
+          icon: <People sx={{ height: "100%", width: "100%" }} />,
+          url: "/teams",
+          category: "My Company",
+        },
+        {
+          label: "Our Clients",
+          icon: <Domain sx={{ height: "100%", width: "100%" }} />,
+          url: "/customers?customerType=external",
+          category: "Clients",
+          locked: true,
+        }
+      );
+    } else if (!isFree && userRole === "CS") {
+      items.push(
+        {
+          label: "Our Staff",
+          icon: <Person sx={{ height: "100%", width: "100%" }} />,
+          url: "/users",
+          category: "My Company",
+        },
+        {
+          label: "Our Sites",
+          icon: <LocationOn sx={{ height: "100%", width: "100%" }} />,
+          url: "/sites",
+          category: "My Company",
+        },
+        {
+          label: "Teams",
+          icon: <People sx={{ height: "100%", width: "100%" }} />,
+          url: "/teams",
+          category: "My Company",
+        },
+        {
+          label: "Our Clients",
+          icon: <Domain sx={{ height: "100%", width: "100%" }} />,
+          url: "/customers?customerType=external",
+          category: "Clients",
+        }
+      );
+    } else if (isFree && userRole === "CL") {
       items.push(
         {
           label: "Our Staff",
@@ -373,7 +435,35 @@ export default function SideBars() {
           label: "Our Clients",
           icon: <Domain sx={{ height: "100%", width: "100%" }} />,
           url: "/customers?customerType=external",
+          category: "Clients",
+          locked: true,
+        }
+      );
+    } else if (!isFree && userRole === "CL") {
+      items.push(
+        {
+          label: "Our Staff",
+          icon: <Person sx={{ height: "100%", width: "100%" }} />,
+          url: "/users",
           category: "My Company",
+        },
+        {
+          label: "Sites",
+          icon: <LocationOn sx={{ height: "100%", width: "100%" }} />,
+          url: "/sites",
+          category: "My Company",
+        },
+        {
+          label: "Teams",
+          icon: <People sx={{ height: "100%", width: "100%" }} />,
+          url: "/teams",
+          category: "My Company",
+        },
+        {
+          label: "Our Clients",
+          icon: <Domain sx={{ height: "100%", width: "100%" }} />,
+          url: "/customers?customerType=external",
+          category: "Clients",
         }
       );
     }
