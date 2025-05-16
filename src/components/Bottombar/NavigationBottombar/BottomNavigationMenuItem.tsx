@@ -31,6 +31,7 @@ const BottomNavigationMenuItem: React.FC<BottomNavigationMenuItemProps> = ({
       justify="center"
       minWidth={81}
       py={2}
+      px={1}
       h="full"
       bg={
         locked

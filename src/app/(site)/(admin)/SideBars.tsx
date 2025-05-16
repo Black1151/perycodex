@@ -478,11 +478,13 @@ export default function SideBars() {
     }));
   };
 
+
   useEffect(() => {
     const newItems = generateLeftSidebarItemsDrawer(
       user?.role,
       user?.customerIsFree ?? true
     );
+
     const hasAnyActive = newItems.some((item) => item.active);
 
     if (leftMenuItems.length === 0) {
@@ -492,7 +494,7 @@ export default function SideBars() {
     if (hasAnyActive) {
       setLeftMenuItems(newItems);
     }
-  }, [user?.role]);
+  }, [user?.role, pathname]);
 
   /**
    * Determines if we should show right-hand "Add / Remove Tags".
