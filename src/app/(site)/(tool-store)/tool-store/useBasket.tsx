@@ -112,7 +112,7 @@ export interface ToolConfig {
   logoImageUrl: string | null;
   isTrialable: boolean;
   uniqueId: string;
-  toolWorkflowId: number;
+  workflowId: number;
 
   annualPrice: string;
   monthlyPrice: string;

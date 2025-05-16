@@ -299,7 +299,7 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
                 size="sm"
                 variant="outline"
                 onClick={() => {
-                  const url = `${tool.appUrl}?toolId=${tool.id}&wfId=${tool.toolWorkflowId}`;
+                  const url = `${tool.appUrl}?toolId=${tool.id}&wfId=${tool.workflowId}`;
                   router.push(url);
                 }}
                 >
