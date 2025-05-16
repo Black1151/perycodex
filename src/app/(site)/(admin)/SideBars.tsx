@@ -533,11 +533,6 @@ export default function SideBars() {
       }
     }
 
-    // If the user is free, disable tags
-    if (user?.customerIsFree) {
-      shouldShowManageTags = false;
-    }
-
     return shouldShowManageTags
       ? [
           {
@@ -546,6 +541,7 @@ export default function SideBars() {
             onClick: () =>
               // @ts-ignore
               modalRef.current?.openModal(),
+            locked: user?.customerIsFree ? true : false,
           },
         ]
       : [];
