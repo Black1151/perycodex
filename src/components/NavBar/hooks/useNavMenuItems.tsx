@@ -12,6 +12,7 @@ import {
   Settings as SettingsIcon,
   Storefront as StorefrontIcon,
 } from "@mui/icons-material";
+import { useUser } from "@/providers/UserProvider";
 
 const useNavMenuItems = (
   userRole: string,
@@ -19,6 +20,7 @@ const useNavMenuItems = (
   openResetModal: () => void
 ): MenuItemProps[] => {
   const router = useRouter();
+  const user = useUser()
 
   if (userRole === "EU") {
     return [
@@ -70,13 +72,17 @@ const useNavMenuItems = (
       icon: <BusinessIcon />,
       onClick: () => router.push("/my-company"),
     },
-    {
+  );
+  if (!user.user?.customerIsFree) {
+    commonMenuItems.push(
+      {
       label: "Activity",
       icon: <Timeline />,
       onClick: () => router.push("/activity"),
     }
-  );
-  if (["CS", "CL", "CA"].includes(userRole)) {
+    )
+  }
+  if (["CS", "CL", "CA"].includes(userRole) && !user.user?.customerIsFree) {
     commonMenuItems.push(
     {
       label: "Client Activity",
