@@ -9,10 +9,10 @@ const useFormNavigation = ({
 }: useFormNavigationProps): FormNavigationProps => {
   const [pageNo, setPageNo] = useState<number>(0);
   const [isFirstPage, setIsFirstPage] = useState<boolean>(
-    surveyJSModel.isFirstPage,
+    surveyJSModel.isFirstPage
   );
   const [isLastPage, setIsLastPage] = useState<boolean>(
-    surveyJSModel.isLastPage,
+    surveyJSModel.isLastPage
   );
   const [isEditMode, setIsEditMode] = useState<boolean>(canEdit);
   const [pageListOptions, setPageListOptions] = useState<
@@ -97,9 +97,9 @@ const useFormNavigation = ({
         surveyJSModel.autoFocusFirstError;
         return;
       } else {
-        switchToDisplayMode();
         surveyJSModel.clear(false, false);
         surveyJSModel.render();
+        switchToDisplayMode();
       }
     } else {
       // If there are errors, focus on the first page with an error
@@ -121,9 +121,9 @@ const useFormNavigation = ({
         surveyJSModel.autoFocusFirstError;
         return;
       } else {
-        switchToDisplayMode();
         surveyJSModel.clear(false, false);
         surveyJSModel.render();
+        switchToDisplayMode();
       }
     } else {
       // If there are errors, focus on the first page with an error
