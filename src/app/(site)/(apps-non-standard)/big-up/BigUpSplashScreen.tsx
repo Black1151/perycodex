@@ -61,6 +61,7 @@ export const RecognitionHubSplashScreen = () => {
         position="absolute"
         w="300px"
         h="auto"
+        opacity={0}
         animation={`${logoTextFadeIn} 5s ease-in-out`}
         draggable={false}
       />
@@ -71,6 +72,7 @@ export const RecognitionHubSplashScreen = () => {
         left="95px"
         top="-65px"
         w={"110px"}
+        opacity={0}
         animation={`${iconContainerPop} 5s ease-out 0s`}
       >
         {/* 1️⃣  Base shadow/podium */}
