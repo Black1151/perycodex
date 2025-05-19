@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Flex, Text, Tooltip, useTheme } from "@chakra-ui/react";
 import { Lock } from "@mui/icons-material";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface SideBarMenuItemProps {
   label: string;
@@ -12,7 +13,10 @@ interface SideBarMenuItemProps {
   isLeft?: boolean;
   active?: boolean;
   locked?: boolean;
+  badgeNumber?: number | null;
 }
+
+const MotionBox = motion(Box);
 
 const SideBarMenuItem: React.FC<SideBarMenuItemProps> = ({
   label,
@@ -24,16 +28,17 @@ const SideBarMenuItem: React.FC<SideBarMenuItemProps> = ({
   isLeft = false,
   active = false,
   locked = false,
+  badgeNumber = null,
 }) => {
   const theme = useTheme();
 
   return (
     <Flex
       pos="relative"
+      overflow="visible"
       fontSize={16}
       flexDirection={isLeft ? "column" : "row"}
       alignItems="center"
-      overflow="hidden"
       width="100%"
       py={2}
       color={
@@ -55,7 +60,7 @@ const SideBarMenuItem: React.FC<SideBarMenuItemProps> = ({
         active
           ? "1px solid white"
           : locked
-          ? "1px solid" + theme.colors.gray[300]
+          ? "1px solid " + theme.colors.gray[300]
           : "1px solid transparent"
       }
       _hover={
@@ -65,7 +70,9 @@ const SideBarMenuItem: React.FC<SideBarMenuItemProps> = ({
               ...hoverStyles,
               cursor: "pointer",
               border: `1px solid ${theme.colors.primary}`,
-              color: active ? "white" : hoverStyles?.color || theme.colors.primary,
+              color: active
+                ? "white"
+                : hoverStyles?.color || theme.colors.primary,
             }
       }
       onClick={() => {
@@ -120,6 +127,40 @@ const SideBarMenuItem: React.FC<SideBarMenuItemProps> = ({
           />
         </Box>
       )}
+
+      {/* iOS‐style badge with animation */}
+      <AnimatePresence>
+        {badgeNumber != null && badgeNumber > 0 && (
+          <MotionBox
+            key={badgeNumber}
+            pos="absolute"
+            top={0}
+            right={0}
+            zIndex={4}
+            pointerEvents="none"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0 }}
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+          >
+            <Box
+              bg={active ? "white" : theme.colors.secondary}
+              color={active ? "black" : "white"}
+              borderRadius="full"
+              minW="18px"
+              h="18px"
+              fontSize="10px"
+              fontWeight="bold"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              px="3px"
+            >
+              {badgeNumber > 9 ? "9+" : badgeNumber}
+            </Box>
+          </MotionBox>
+        )}
+      </AnimatePresence>
     </Flex>
   );
 };

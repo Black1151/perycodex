@@ -108,38 +108,6 @@ export function NewCompanyUserProfileCompletionForm({
     }
   };
 
-  const handleDepartmentChange = async (departmentId: string | number) => {
-    setValue(
-      "departmentId",
-      typeof departmentId === "string" ? departmentId : departmentId.toString(),
-    );
-    setIsTeamsLoading(true);
-
-    try {
-      const data = await fetchClient("/api/selectItems/fetchTeamsSelectItems", {
-        method: "POST",
-        body: { departmentId },
-        errorMessage: "Failed to fetch teams for the selected department",
-      });
-
-      const transformedTeams = transformTeams(
-        (data as { resource: TeamFromBE[] }).resource || [],
-      );
-
-      setTeamOptions(transformedTeams);
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to fetch teams for the selected department.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    } finally {
-      setIsTeamsLoading(false);
-    }
-  };
-
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit)}

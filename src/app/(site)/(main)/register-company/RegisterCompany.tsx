@@ -32,58 +32,6 @@ export default function RegisterCompany({
 
   if (!user) return null;
 
-  // If already registered, skip the form
-  if (customerData) {
-    return (
-      <VStack minH="100svh" width="100%" flex={1}>
-        <Flex
-          direction="column"
-          flex={1}
-          align="center"
-          justify="center"
-          gap={8}
-          p={[4, 4, 0]}
-          textAlign="center"
-        >
-          <ConfettiAlt show={true} />
-          <VStack spacing={1} align="center" textAlign="center">
-            <Text fontFamily="bonfire" fontSize={46} color="white">
-              Your company has been registered successfully!
-            </Text>
-            <Text fontFamily="bonfire" fontSize={32} fontWeight={100} color="white">
-              We are so excited to have you on board 🎉
-            </Text>
-          </VStack>
-          <Text color="white" fontSize={20}>
-            Last Step... Upload your company logo (optional)
-          </Text>
-          <LogoUpload
-            onUploadComplete={(url) => {
-              setHasLogo(true);
-              setCustomerData((old: any) => ({
-                ...old,
-                custImageUrl: url,
-              }));
-            }}
-          />
-          <Button
-            size={"lg"}
-            bg={theme.colors.seduloGreen}
-            px={6}
-            color={"white"}
-            mt={8}
-            gap={2}
-            onClick={() => (window.location.href = "/tool-store")}
-          >
-            Finish
-            <Check />
-          </Button>
-        </Flex>
-      </VStack>
-    );
-  }
-
-  // Otherwise, show the registration form
   return (
     <PerygonContainer>
       <Flex direction="column" flex={1} maxW={1200}>
@@ -145,8 +93,8 @@ export default function RegisterCompany({
             excludeKeys={["imageUrl"]}
             endpoint="/companyRegistration"
             formSuccessMessage="Your company has been registered successfully!"
-            reloadPageOnSuccess={true}
-            redirectUrl={null}
+            reloadPageOnSuccess={false}
+            redirectUrl={"/register-company/success"}
             isNew
             isAllowedToEdit
           />
