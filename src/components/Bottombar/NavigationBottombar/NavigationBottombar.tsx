@@ -19,17 +19,13 @@ const NavigationBottombar: React.FC<NavigationBottombarProps> = ({menuItems, ...
         clicked.onClick?.();
     };
 
-    const internalItems = menuItems.map((item) => ({
-        ...item,
-        active: item.label === activeLabel,
-    }));
-
     const content = (
         <HStack
-            justify={["flex-start", "space-between"]}
+            justify={"flex-start"}
             alignItems="center"
             overflowX="auto"
-            gap="10px"
+            py={1}
+            gap={2}
             css={{
                 "&::-webkit-scrollbar": {display: "none"},
                 msOverflowStyle: "none",
@@ -37,7 +33,7 @@ const NavigationBottombar: React.FC<NavigationBottombarProps> = ({menuItems, ...
                 minWidth: "100%",
             }}
         >
-            {internalItems.map((item, index) => (
+            {menuItems.map((item, index) => (
                 <Box key={index} minWidth="80px" h={'full'}>
                     {" "}
                     <BottomNavigationMenuItem

@@ -48,7 +48,7 @@ export function CompanySignUpForm({ onSubmit, isSubmitting }: SignUpFormProps) {
       <VStack w="full" h="100%" gap={4}>
         <InputField
           name="email"
-          placeholder="Admin Email"
+          placeholder="Email"
           type="text"
           error={formErrors.email}
           icon={

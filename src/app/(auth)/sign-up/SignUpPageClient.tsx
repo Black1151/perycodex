@@ -65,7 +65,7 @@ const SignUpPageClient = () => {
     const result = await fetchClient(endpoint, {
       method: "POST",
       body: data,
-      errorMessage: "Admin email already in use",
+      errorMessage: "Email already in use",
       redirectOnError: false,
     });
 
@@ -82,7 +82,7 @@ const SignUpPageClient = () => {
   useEffect(() => {
     if (signUpType === null) {
       setTitle("Choose sign up type");
-      setDescription("Select whether you are signing up as an individual or a company.");
+      setDescription("Select whether you are signing up as a new company or an individual.");
       setActions([
         { label: "Back To Login", href: "/login", icon: <ArrowBack /> },
       ]);

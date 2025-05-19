@@ -32,8 +32,7 @@ export const emailScheduleJson = {
                     title: "Tool Config",
                     isRequired: true,
                     choicesByUrl: {
-                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/toolConfig/allBy`,
-                        path: "resource",
+                        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/view?view=vwToolsConfigList`,
                         valueName: "id",
                         titleName: "name",
                     },

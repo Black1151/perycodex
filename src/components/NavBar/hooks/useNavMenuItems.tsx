@@ -10,7 +10,9 @@ import {
   Lock as LockIcon,
   ExitToApp as ExitToAppIcon,
   Settings as SettingsIcon,
+  Storefront as StorefrontIcon,
 } from "@mui/icons-material";
+import { useUser } from "@/providers/UserProvider";
 
 const useNavMenuItems = (
   userRole: string,
@@ -18,6 +20,7 @@ const useNavMenuItems = (
   openResetModal: () => void
 ): MenuItemProps[] => {
   const router = useRouter();
+  const user = useUser()
 
   if (userRole === "EU") {
     return [
@@ -35,7 +38,7 @@ const useNavMenuItems = (
         label: "Admin",
         icon: <SettingsIcon />,
         onClick: () => router.push("/customers"),
-      },
+      }
     ];
   }
 
@@ -45,7 +48,13 @@ const useNavMenuItems = (
       label: "Admin Tools",
       icon: <SettingsIcon />,
       onClick: () => router.push("/users?userType=internal"),
-    });
+    },
+    {
+      label: "Tool Store",
+      icon: <StorefrontIcon />,
+      onClick: () => router.push("/tool-store"),  
+    }
+  );
   }
   commonMenuItems.push(
     {
@@ -63,18 +72,24 @@ const useNavMenuItems = (
       icon: <BusinessIcon />,
       onClick: () => router.push("/my-company"),
     },
-    {
+  );
+  if (!user.user?.customerIsFree) {
+    commonMenuItems.push(
+      {
       label: "Activity",
       icon: <Timeline />,
       onClick: () => router.push("/activity"),
     }
-  );
-  if (["CS", "CL", "CA"].includes(userRole)) {
-    commonMenuItems.push({
+    )
+  }
+  if (["CS", "CL", "CA"].includes(userRole) && !user.user?.customerIsFree) {
+    commonMenuItems.push(
+    {
       label: "Client Activity",
       icon: <ViewTimeline />,
       onClick: () => router.push("/client-activity"),
-    });
+    },
+  );
   }
   commonMenuItems.push(
     {

@@ -263,7 +263,7 @@ export const registerCustomerJson = {
               allowClear: true,
               choicesOrder: "asc",
               isRequired: true,
-              defaultValue: 336,
+              defaultValue: "336",
               choicesByUrl: {
                 url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=country`,
                 path: "country",
