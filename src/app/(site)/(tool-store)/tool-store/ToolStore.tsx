@@ -21,6 +21,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import { ToolCard } from "./ToolCard";
 import { ToolConfig } from "./useBasket";
 import BillingCycleToggle from "./BillingCyleToggle";
+import BackButton from "@/components/BackButton";
 
 interface ToolSelectionPageResponse {
   resource: ToolConfig[];
@@ -80,14 +81,18 @@ const ToolStore: React.FC = () => {
         align="left"
         justify="space-between"
       >
+        <HStack spacing={1} align={"center"}>
+        <BackButton />
           <Text
             fontWeight="400"
             color={theme.colors.elementBG}
             fontFamily="bonfire"
             fontSize={[32, 42]}
+            mb={-3}
           >
             Tool Store
           </Text>
+        </HStack>
           <BillingCycleToggle />
       </Flex>
 

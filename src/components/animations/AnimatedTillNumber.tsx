@@ -40,10 +40,20 @@ export const AnimatedTillNumber: React.FC<AnimatedTillNumberProps> = ({
   const oldStr = String(prevValue).padStart(newStr.length, "0");
 
   // Use duration in the spring transition
-  const transition = { type: "spring", stiffness: 300, damping: 300, duration: 0.8 } as any;
+  const transition = { type: "spring", stiffness: 300, damping: 300, duration } as any;
 
   return (
-    <HStack spacing={0} fontSize={fontSize} fontWeight={fontWeight} overflow="hidden">
+    <HStack
+      spacing={0}
+      fontSize={fontSize}
+      fontWeight={fontWeight}
+      overflow="hidden"
+      /* enable fixed-width (tabular) numerals */
+      sx={{
+        fontVariantNumeric: "tabular-nums",
+        WebkitFontVariantNumeric: "tabular-nums",
+      }}
+    >
       {newStr.split("").map((digit, idx) => {
         const prevDigit = oldStr[idx];
         const hasChanged = digit !== prevDigit;
@@ -55,9 +65,10 @@ export const AnimatedTillNumber: React.FC<AnimatedTillNumberProps> = ({
             position="relative"
             overflow="hidden"
             height="1em"
-            width="0.65em"
-            px="0.2em"
+            width="1ch"
+            px="0.1ch"
             textAlign="center"
+            lineHeight="1"
           >
             <AnimatePresence initial={true} mode="sync">
               {/* old digit */}

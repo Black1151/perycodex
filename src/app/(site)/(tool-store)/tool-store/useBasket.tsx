@@ -61,6 +61,14 @@ export interface SubscriptionInfo {
   monthlyPrice: string;
   guideHtml: string | null;
   guideFilePath: string | null;
+
+  /** per‐item discounts applied */
+  discounts: Discount[];
+
+  /** computed totals after quantity & discounts */
+  itemSubtotal: number;
+  itemDiscountTotal: number;
+  itemGrandTotal: number;
 }
 
 export interface BasketItem {
@@ -73,6 +81,8 @@ export interface BasketItem {
   updatedAt: string;
   createdBy: number;
   updatedBy: number;
+
+  isFree: boolean;
 
   /** these three track the raw line‐item before discounts */
   subTotal: number | null;
@@ -148,6 +158,7 @@ export interface UpdateBasketProps {
 
 type BasketContextType = {
   basket: Basket | null;
+  subscription: Basket | null;
   loading: boolean;
   error: Error | null;
   getBasket: () => Promise<void>;
@@ -156,6 +167,7 @@ type BasketContextType = {
   clearBasket: () => Promise<void>;
   removeItemFromBasket: (itemUId: string) => Promise<void>;
   changeLicenseCount: (delta: number, isNegative: boolean) => Promise<void>;
+  getSubscription: () => Promise<void>;
 };
 
 const BasketContext = createContext<BasketContextType | undefined>(undefined);
@@ -167,6 +179,7 @@ interface BasketProviderProps {
 export const BasketProvider = ({ children }: BasketProviderProps) => {
   const { fetchClient } = useFetchClient();
   const [basket, setBasket] = useState<Basket | null>(null);
+  const [subscription, setSubscription] = useState<Basket | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -250,6 +263,55 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
     } finally {
       setLoading(false);
       console.log("[Basket] GET /api/basket — complete");
+    }
+  };
+
+  /**
+   * GET /api/basket — fetch the current basket
+   */
+  const getSubscription = async () => {
+    console.log("[Subscription] GET /api/basket — start");
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetchClient<{
+        resource: Basket;
+        message?: string;
+      }>("/api/basket/subscription", {
+        method: "GET",
+        redirectOnError: false,
+      });
+
+      console.log("[Subscription] GET response:", response);
+
+      const isEmptyObject =
+        response &&
+        response.resource &&
+        Object.keys(response.resource).length === 0;
+
+      const couldNotRetrieve =
+        response?.message && response.message.includes("Couldn't retrieve");
+
+      if (isEmptyObject || couldNotRetrieve) {
+        console.error("[Subscription] ERROR: No basket found");
+        return;
+      }
+
+      if (response && response.resource) {
+        setSubscription(response.resource);
+        console.log("[Subscription] GET basket:", response.resource);
+      } else {
+        const err = new Error("No basket data returned");
+        console.error("[Subscription] GET error:", err);
+        setError(err);
+      }
+    } catch (err: any) {
+      console.error("[Subscription] GET exception:", err);
+      setError(err);
+    } finally {
+      setLoading(false);
+      console.log("[Subscription] GET /api/basket/subscription — complete");
     }
   };
 
@@ -398,7 +460,7 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
 
   return (
     <BasketContext.Provider
-      value={{ basket, loading, error, getBasket, updateBasket, clearBasket, removeItemFromBasket, changeLicenseCount }}
+      value={{ basket, loading, error, getBasket, updateBasket, clearBasket, removeItemFromBasket, changeLicenseCount, getSubscription, subscription } as BasketContextType}
     >
       {children}
     </BasketContext.Provider>
