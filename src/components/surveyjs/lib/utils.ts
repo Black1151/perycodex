@@ -25,8 +25,10 @@ interface SJSThemeModule {
 
 export const handleGlobalSettings = () => {
   settings.web.onBeforeRequestChoices = (sender, options) => {
-    options.request.withCredentials = true;
-    options.request.setRequestHeader("Accept", "application/json");
+    if (options.request) {
+      options.request.withCredentials = true;
+      options.request.setRequestHeader("Accept", "application/json");
+    }
   };
 
   // Allow ChoicesByUrl answers to be empty
@@ -36,7 +38,7 @@ export const handleGlobalSettings = () => {
 
 export const importJSFile = async (
   surveyJSModel: Model,
-  jsImport: string,
+  jsImport: string
 ): Promise<void> => {
   if (jsImport.length === 0) return;
 
@@ -59,7 +61,7 @@ export const importJSFile = async (
 
 export const importSJSFile = async (
   surveyJSModel: Model,
-  sjsFilePath: string,
+  sjsFilePath: string
 ) => {
   if (!sjsFilePath) return;
 
@@ -78,7 +80,7 @@ export const importSJSFile = async (
 
 const insertGlobalVariables = (
   surveyJSModel: Model,
-  globalVariables: Array<{ [key: string]: { [nestedKey: string]: any } }>,
+  globalVariables: Array<{ [key: string]: { [nestedKey: string]: any } }>
 ) => {
   globalVariables.forEach((variableObject) => {
     Object.keys(variableObject).forEach((key: any) => {
@@ -99,7 +101,7 @@ export const initializeSurvey = async (
     [key: string]: { [nestedKey: string]: any };
   }>,
   data: any,
-  isNew: boolean,
+  isNew: boolean
 ) => {
   surveyJSModel.onOpenDropdownMenu.add((_, options) => {
     options.menuType = "dropdown";
@@ -131,7 +133,7 @@ export const initializeSurvey = async (
 
 export const buildFilteredSurveyData = (
   surveyJSModel: SurveyModel,
-  excludeKeys: string[],
+  excludeKeys: string[]
 ) => {
   const allQuestions = surveyJSModel.getAllQuestions();
   const surveyData = { ...surveyJSModel.data };
@@ -152,7 +154,7 @@ export const buildFilteredSurveyData = (
       }
       return acc;
     },
-    {} as Record<string, any>,
+    {} as Record<string, any>
   );
 };
 

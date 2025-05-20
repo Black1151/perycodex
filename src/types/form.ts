@@ -11,7 +11,8 @@ export type LayoutKeys =
   | "happiness"
   | "enps"
   | "client-satisfaction"
-  | "tester";
+  | "tester"
+  | "business-score";
 
 type StylingConfig = {
   cssFilePath: string;
@@ -81,6 +82,11 @@ export interface HappinessLayoutProps extends BaseLayoutProps {
 export interface eNPSLayoutProps extends BaseLayoutProps {}
 
 export interface ClientSatisfactionLayoutProps extends BaseLayoutProps {
+  saveAllowed?: boolean;
+  allowAlwaysEdit?: boolean;
+}
+
+export interface BusinessScoreLayoutProps extends BaseLayoutProps {
   saveAllowed?: boolean;
   allowAlwaysEdit?: boolean;
 }
