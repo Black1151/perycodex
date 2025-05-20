@@ -78,8 +78,8 @@ export default function StaffDashboardPage() {
   return (
     <Grid
       mb={[16, null, 0]}
-      templateColumns={["1fr", "1fr 1fr"]}
-      gap={6}
+      templateColumns={["1fr", null, "1fr 1fr"]}
+      gap={[12, null, 6]}
       width="100%"
       minH="90vh"
       mt={6}
