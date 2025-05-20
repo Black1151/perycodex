@@ -19,20 +19,17 @@ export const ToolLandingPage = ({
   useEffect(() => {
     if (redirectUrl) {
       if (!splashScreen) {
-        // Immediately redirect if no splash screen is provided
         router.push(redirectUrl);
         return;
       }
-      // Set a timer for redirection if splash screen is provided
       const timer = setTimeout(() => {
         router.push(redirectUrl);
       }, 5000);
 
-      return () => clearTimeout(timer); // Cleanup timer on unmount
+      return () => clearTimeout(timer);
     }
   }, [redirectUrl, splashScreen, router]);
 
-  // Render the splash screen if provided, otherwise render nothing
   return splashScreen ? (
     <Flex height={"100%"} justify={"center"} align={"center"}>
       {splashScreen}
