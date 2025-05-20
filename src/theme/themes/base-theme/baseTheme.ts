@@ -1,5 +1,10 @@
 // baseTheme.ts
-import { background, extendTheme, Tabs, type ThemeConfig } from "@chakra-ui/react";
+import {
+  background,
+  extendTheme,
+  Tabs,
+  type ThemeConfig,
+} from "@chakra-ui/react";
 
 import { scrollBarThemes } from "@/theme/scrollBarThemes";
 import { agChartStyles } from "@/theme/agChartStyles";
@@ -104,8 +109,7 @@ export const baseTheme = extendTheme({
         cardPanel: "darkElementBG",
       },
     },
-    
-    
+
     //// big up app styles
     bigUpStatsCard: {
       baseStyle: {
