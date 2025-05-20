@@ -144,16 +144,19 @@ export default function CurrentSubscriptionPage() {
                 </VStack>
               </HStack>
 
-              {/* Owned‐subscription items don’t have a per‐item total,
-            but you could show their monthly/annual price: */}
-              <HStack spacing={1} align="baseline">
-                <Text fontSize={[16, 18, 20]} fontWeight="semibold">
-                  £{Number(item.itemGrandTotal).toFixed(2)}
+              <VStack spacing={0}>
+                <HStack spacing={1} align="baseline">
+                  <Text fontSize={[16, 18, 20]} fontWeight="semibold">
+                    £{Number(item.itemGrandTotal).toFixed(2)}
+                  </Text>
+                  <Text fontSize={[12, 14, 16]} color="gray.500">
+                    {subscription.isAnnual ? "/year" : "/month"}
+                  </Text>
+                </HStack>
+                <Text fontSize={[14, 16]} color="gray.500">
+                  £{(Number(item.itemGrandTotal) * 1.2).toFixed(2)}(incl. VAT)
                 </Text>
-                <Text fontSize={[12, 14, 16]} color="gray.500">
-                  {subscription.isAnnual ? "/year" : "/month"}
-                </Text>
-              </HStack>
+              </VStack>
             </HStack>
           ))}
         </Stack>
