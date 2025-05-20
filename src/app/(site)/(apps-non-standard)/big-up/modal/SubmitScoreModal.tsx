@@ -11,6 +11,7 @@ import {
   Button,
   FormControl,
   FormLabel,
+  FormErrorMessage,
   Select,
   Textarea,
   Text,
@@ -35,7 +36,13 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
   teamMembers,
   categories,
 }) => {
-  const { handleSubmit, control, watch, reset } = useForm({
+  const {
+    handleSubmit,
+    control,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       teamMember: "",
       category: "",
@@ -71,19 +78,18 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
         <PerygonCard bg={theme.components.submitScoreModal.baseStyle.elementBG}>
           <ModalHeader
             fontSize="2xl"
-            color={
-              theme.components.submitScoreModal.baseStyle.secondaryTextColor
-            }
+            color={theme.components.masonryCardItem.baseStyle.primaryTextColor}
           >
             Give Recognition
           </ModalHeader>
           <ModalCloseButton color="white" />
-          <form onSubmit={handleSubmit(handleFormSubmit)}>
+          <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
             <ModalBody>
-              <FormControl mb={4} isRequired>
+              {/* TEAM MEMBER */}
+              <FormControl mb={4} isRequired isInvalid={!!errors.teamMember}>
                 <FormLabel
                   color={
-                    theme.components.submitScoreModal.baseStyle.primaryTextColor
+                    theme.components.masonryCardItem.baseStyle.primaryTextColor
                   }
                 >
                   Team Member
@@ -102,11 +108,16 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                     />
                   )}
                 />
+                <FormErrorMessage>
+                  {errors.teamMember?.message}
+                </FormErrorMessage>
               </FormControl>
-              <FormControl mb={4} isRequired>
+
+              {/* CATEGORY */}
+              <FormControl mb={4} isRequired isInvalid={!!errors.category}>
                 <FormLabel
                   color={
-                    theme.components.submitScoreModal.baseStyle.primaryTextColor
+                    theme.components.masonryCardItem.baseStyle.primaryTextColor
                   }
                 >
                   Category
@@ -123,10 +134,7 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                       color="primaryTextColor"
                       borderColor="primary"
                       _hover={{ borderColor: "primary" }}
-                      _focus={{
-                        bg: "elementBG",
-                        color: "primaryTextColor",
-                      }}
+                      _focus={{ bg: "elementBG", color: "primaryTextColor" }}
                       sx={{
                         option: {
                           backgroundColor: "elementBG",
@@ -142,11 +150,14 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                     </Select>
                   )}
                 />
+                <FormErrorMessage>{errors.category?.message}</FormErrorMessage>
               </FormControl>
-              <FormControl mb={4} isRequired>
+
+              {/* MESSAGE */}
+              <FormControl mb={4} isRequired isInvalid={!!errors.message}>
                 <FormLabel
                   color={
-                    theme.components.submitScoreModal.baseStyle.primaryTextColor
+                    theme.components.masonryCardItem.baseStyle.primaryTextColor
                   }
                 >
                   Message
@@ -169,7 +180,7 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                       <Text
                         fontSize="sm"
                         color={
-                          theme.components.submitScoreModal.baseStyle
+                          theme.components.masonryCardItem.baseStyle
                             .primaryTextColor
                         }
                       >
@@ -178,6 +189,7 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                     </>
                   )}
                 />
+                <FormErrorMessage>{errors.message?.message}</FormErrorMessage>
               </FormControl>
             </ModalBody>
             <ModalFooter>
