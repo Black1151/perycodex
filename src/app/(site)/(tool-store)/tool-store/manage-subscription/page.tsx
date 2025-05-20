@@ -305,13 +305,18 @@ export default function BasketPage() {
               <HStack align="flex-end" spacing={2}>
                 <Button
                   variant="outline"
-                  onClick={() => changeLicenseCount(20, true)}
-                  size="lg"
-                  disabled={
+                  onClick={() => {
+                  if (
                     basket.quantity == 0 ||
                     basket.licensedUsers == basket.quantity ||
                     basket.quantity == undefined
+                  ) {
+                    setSalesModalOpen(true);
+                  } else {
+                    changeLicenseCount(20, true);
                   }
+                  }}
+                  size="lg"
                 >
                   –20
                 </Button>
