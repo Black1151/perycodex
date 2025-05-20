@@ -38,6 +38,7 @@ const REDIRECT_PATHS: Record<string, string> = {
   "client-satisfaction": "/client-satisfaction",
   default: "/",
   tester: "/tester",
+  businessScore: "/business-score",
 };
 
 interface WorkflowResponse {
@@ -96,7 +97,7 @@ const NewWorkflowLayout = ({
   };
 
   const handleLastSubmissionResponse = (
-    submissionResponse: SubmissionResponse,
+    submissionResponse: SubmissionResponse
   ) => {
     setLastSubmissionResponse(submissionResponse);
   };
@@ -112,7 +113,7 @@ const NewWorkflowLayout = ({
           body: {
             workflowInstanceId,
           },
-        },
+        }
       );
 
       if (response) {
@@ -175,7 +176,7 @@ const NewWorkflowLayout = ({
       setIsAllowedToEdit(
         user?.role === "CA" ||
           currentStage.allowAlwaysEdit ||
-          ![3, 4].includes(currentStage.bpInstStatus),
+          ![3, 4].includes(currentStage.bpInstStatus)
       );
     } finally {
       setIsReady(true);
@@ -184,7 +185,7 @@ const NewWorkflowLayout = ({
 
   const fetchCurrentStageData = async (
     user: UserContextProps,
-    currentStage: WorkflowStage,
+    currentStage: WorkflowStage
   ) => {
     const formResponse = currentStage.formId
       ? fetchClient<Form>(`/api/workflows/getForm`, {
@@ -230,7 +231,7 @@ const NewWorkflowLayout = ({
         requiredWorkflowVariables.map((key) => [
           key,
           currentStage[key as keyof WorkflowStage],
-        ]),
+        ])
       );
       const workflowMetaObject = {
         currentStageMeta: stageMetaPlain,
@@ -246,7 +247,7 @@ const NewWorkflowLayout = ({
       const isAuthorised = checkIsUserAuthorisedForCurrentStage(
         user,
         currentStage,
-        formDataset,
+        formDataset
       );
       setIsAuthorisedToViewPage(isAuthorised);
       if (!isAuthorised) {
@@ -526,7 +527,7 @@ const isEUAndComplete = (user: UserContextProps, stages: WorkflowStage[]) => {
 };
 
 const parseFormVariables = (
-  formVariables: Variables[],
+  formVariables: Variables[]
 ): Array<{ [key: string]: { [nestedKey: string]: any } }> => {
   const processedVariables: Array<{ [key: string]: any }> = [];
 
@@ -581,7 +582,7 @@ const parseFormJson = (form: Form) => {
 const checkIsUserAuthorisedForCurrentStage = (
   user: UserContextProps,
   currentStage: WorkflowStage,
-  formDataset: FormDataResponse,
+  formDataset: FormDataResponse
 ) => {
   // Definitive order of events
 
@@ -630,7 +631,7 @@ const checkIsUserAuthorisedForCurrentStage = (
     }
 
     const hasAccess = currentStage.userAccessGroupNames.some(
-      (groupName) => user?.groupNames?.includes(groupName) ?? false,
+      (groupName) => user?.groupNames?.includes(groupName) ?? false
     );
 
     if (!hasAccess) {

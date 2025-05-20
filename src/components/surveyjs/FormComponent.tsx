@@ -18,6 +18,7 @@ import CompanyRegistrationLayout from "@/components/surveyjs/layout/companyRegis
 
 // Logic
 import { FormComponentProps, LayoutMap } from "@/types/form";
+import BusinessScoreLayout from "./layout/business-score/Layout";
 
 const layoutMap: LayoutMap = {
   default: DefaultLayout,
@@ -26,6 +27,7 @@ const layoutMap: LayoutMap = {
   enps: eNPSLayout,
   "client-satisfaction": ClientSatisfactionLayout,
   tester: ClientSatisfactionLayout,
+  "business-score": BusinessScoreLayout,
 };
 
 export const FormComponent: React.FC<FormComponentProps> = ({
