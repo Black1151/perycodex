@@ -10,9 +10,8 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-
 import PerygonCard from "../layout/PerygonCard";
-
+import { NoDataOverlayPink } from "../agGrids/DataGrid/DataGridComponentLight";
 interface DataPoint {
   value: number;
   title: string;
@@ -25,12 +24,31 @@ interface LineGraphProps {
 
 const LineGraph: React.FC<LineGraphProps> = memo(
   ({ DataPoints = [], graphHeight: graphHeightProp }) => {
+    /**
+     * ------------------------------------------------------------------------------------------------
+     *  Early exit if there's no data at all – show the provided NoDataOverlay component instead.
+     * ------------------------------------------------------------------------------------------------
+     */
+
+    const theme = useTheme();
+
+    if (!DataPoints || DataPoints.length === 0) {
+      return (
+        <PerygonCard width="100%" height="100%" color={theme.colors.primary}>
+          <NoDataOverlayPink />
+        </PerygonCard>
+      );
+    }
+
     const containerRef = useRef<HTMLDivElement>(null);
     const [containerWidth, setContainerWidth] = useState(0);
     const [animationKey, setAnimationKey] = useState(0);
 
-    const theme = useTheme();
-
+    /**
+     * -------------------------------------------------------------------------
+     *  Track container width for responsive calculations
+     * -------------------------------------------------------------------------
+     */
     useEffect(() => {
       if (containerRef.current) {
         setContainerWidth(containerRef.current.offsetWidth);
@@ -46,6 +64,7 @@ const LineGraph: React.FC<LineGraphProps> = memo(
       return () => window.removeEventListener("resize", handleResize);
     }, []);
 
+    // Restart the line‑drawing animation every time the data changes
     useEffect(() => {
       setAnimationKey((prevKey) => prevKey + 1);
     }, [DataPoints]);
@@ -97,6 +116,11 @@ const LineGraph: React.FC<LineGraphProps> = memo(
       ];
     };
 
+    /**
+     * -------------------------------------------------------------------------
+     *  Special‑case: only one data point => nothing meaningful to graph
+     * -------------------------------------------------------------------------
+     */
     if (DataPoints.length === 1) {
       return (
         <Flex
@@ -108,7 +132,6 @@ const LineGraph: React.FC<LineGraphProps> = memo(
           alignItems="center"
           bg="white"
           borderRadius={{ base: "8px", md: "16px" }}
-          // boxShadow="lg"
         >
           <Text color={theme.colors.primary} fontSize="xl" textAlign="center">
             No history to display
@@ -117,6 +140,11 @@ const LineGraph: React.FC<LineGraphProps> = memo(
       );
     }
 
+    /**
+     * -------------------------------------------------------------------------
+     *  Normal render – draw axes, line, points, etc.
+     * -------------------------------------------------------------------------
+     */
     return (
       <PerygonCard width="100%">
         <Flex
@@ -134,7 +162,7 @@ const LineGraph: React.FC<LineGraphProps> = memo(
             overflow="hidden"
             pt={10}
           >
-            {/* Y-axis */}
+            {/* Y‑axis */}
             <VStack
               as={motion.div}
               initial="hidden"
@@ -183,7 +211,7 @@ const LineGraph: React.FC<LineGraphProps> = memo(
               ))}
             </VStack>
 
-            {/* X-axis labels */}
+            {/* X‑axis labels */}
             {DataPoints.map((point, index) => (
               <Text
                 key={index}
