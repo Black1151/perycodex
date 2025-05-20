@@ -56,7 +56,7 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
         align="top"
         justify="space-between"
       >
-        {isNew && !item.isFree && (
+        {isNew && (
           <Box
             position="absolute"
             top={0}
@@ -72,33 +72,10 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
             textAlign="center"
             transform="rotate(-45deg)"
             transformOrigin="top left"
-            zIndex={10}
+            zIndex={1}
             opacity={0.75}
           >
             NEW!
-          </Box>
-        )}
-
-        {item.isFree && (
-          <Box
-            position="absolute"
-            top={0}
-            left={0}
-            bg={"blue.600"}
-            color="white"
-            px={8}
-            mx={-5}
-            my={12}
-            py={1}
-            fontSize="sm"
-            fontWeight="bold"
-            textAlign="center"
-            transform="rotate(-45deg)"
-            transformOrigin="top left"
-            zIndex={10}
-            opacity={0.75}
-          >
-            FREE
           </Box>
         )}
 
@@ -145,7 +122,7 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
               <Text fontWeight="normal" noOfLines={2}>
                 Licenses
               </Text>
-              <Badge colorScheme="blue">+{item.quantity} New Licenses</Badge>
+              <Badge colorScheme="blue">+{item.newLicences} New Licenses</Badge>
             </HStack>
           </VStack>
         </HStack>
@@ -191,7 +168,7 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
       {/* Discounts */}
       <Flex
         direction={{ base: "column", sm: "row" }}
-        align="flex-end"
+        align="center"
         gap={2}
         justify={"flex-end"}
         mt={2}
@@ -202,43 +179,33 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
             {discount.name}
           </Badge>
         ))}
-      </Flex>
-
-      {/* //TODO: Only allow remove when tool is new */}
-      {/* <IconButton
+        {isNew && (
+      <IconButton
+      color={"red.400"}
         aria-label="Remove"
         icon={
           removing ? (
-            <Spinner size="sm" color="red.500" />
+            <Spinner size="sm" color="white" />
           ) : (
-            <DeleteOutline fontSize="small" />
+            <DeleteOutline fontSize="small" color="inherit" />
           )
         }
         colorScheme="red"
         variant="ghost"
-        position="absolute"
-        top={2}
-        right={2}
         onClick={() => handleRemove(item.uniqueId)}
         isLoading={removing}
         _hover={{
-          bg: "red.100",
-        }}
-        _active={{
           bg: "red.200",
-        }}
-        _focus={{
-          boxShadow: "outline",
-        }}
-        _disabled={{
-          cursor: "not-allowed",
-          opacity: 0.5,
         }}
         isDisabled={removing}
         size="sm"
         borderRadius="full"
-        bg={removing ? "red.50" : "white"}
-      /> */}
+        bg={removing ? "red.50" : "red.100"}
+      />
+      )}
+      </Flex>
+
+      
     </Flex>
   );
 };
