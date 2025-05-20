@@ -32,14 +32,6 @@ const LineGraph: React.FC<LineGraphProps> = memo(
 
     const theme = useTheme();
 
-    if (!DataPoints || DataPoints.length === 0) {
-      return (
-        <PerygonCard width="100%" height="100%" color={theme.colors.primary}>
-          <NoDataOverlayPink />
-        </PerygonCard>
-      );
-    }
-
     const containerRef = useRef<HTMLDivElement>(null);
     const [containerWidth, setContainerWidth] = useState(0);
     const [animationKey, setAnimationKey] = useState(0);
@@ -137,6 +129,14 @@ const LineGraph: React.FC<LineGraphProps> = memo(
             No history to display
           </Text>
         </Flex>
+      );
+    }
+
+    if (!DataPoints || DataPoints.length === 0) {
+      return (
+        <PerygonCard width="100%" height="100%" color={theme.colors.primary}>
+          <NoDataOverlayPink />
+        </PerygonCard>
       );
     }
 
