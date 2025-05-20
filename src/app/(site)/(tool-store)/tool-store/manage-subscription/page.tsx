@@ -1,7 +1,12 @@
 "use client";
 
 import React, { use, useEffect, useState } from "react";
-import { useBasket, BasketItem, ToolConfig, SubscriptionInfo } from "../useBasket";
+import {
+  useBasket,
+  BasketItem,
+  ToolConfig,
+  SubscriptionInfo,
+} from "../useBasket";
 import {
   Collapse,
   useBreakpointValue,
@@ -16,6 +21,7 @@ import {
   useTheme,
   useToast,
   Image,
+  Badge,
 } from "@chakra-ui/react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
@@ -26,6 +32,9 @@ import BillingCycleToggle from "../BillingCyleToggle";
 import AnimatedTillNumber from "@/components/animations/AnimatedTillNumber";
 import BasketItemCard from "./BasketItemCard";
 import BackButton from "@/components/BackButton";
+import { Close } from "@mui/icons-material";
+import ToolSelectedIndicators from "./ToolSelectedIndicators";
+import WarningIcon from "@mui/icons-material/Warning";
 
 export default function BasketPage() {
   const {
@@ -36,6 +45,7 @@ export default function BasketPage() {
     changeLicenseCount,
     getBasket,
     error,
+    addVoucher,
   } = useBasket();
   const router = useRouter();
   const toast = useToast();
@@ -44,10 +54,14 @@ export default function BasketPage() {
   const [newQuantity, setNewQuantity] = useState<number>(0);
   const [isSummaryOpen, setSummaryOpen] = useState(false);
   const isMobile = useBreakpointValue({ base: true, lg: false });
+  const [addingVoucher, setAddingVoucher] = useState(false);
 
   const theme = useTheme();
 
-  const borderColor = "rgb(255, 255, 255, 0.65)";
+  const borderColor = transparentize(
+    theme.colors.primaryTextColor,
+    0.25
+  )(theme);
   const cardBg = transparentize(theme.colors.elementBG, 0.95)(theme);
   const cardBgLighter = theme.colors.elementBG;
 
@@ -211,251 +225,512 @@ export default function BasketPage() {
         <BillingCycleToggle />
       </Flex>
 
-      <Flex direction={{ base: "column-reverse", lg: "row" }} gap={4} w="100%">
-        {/* LEFT: product list */}
-        <Stack flex="1" spacing={4}>
-          {/* License block */}
-          <Flex
-            bg={cardBgLighter}
-            borderColor={borderColor}
-            borderRadius="md"
-            p={4}
-            align="center"
-            justify="space-between"
-          >
-            <HStack spacing={4}>
-              <Box>
-                <HStack spacing={2} fontSize={[16, 18, 20, 20]}>
-                  <AnimatedTillNumber
-                    value={basket.quantity || basket.licensedUsers}
-                    fontSize="24"
-                    duration={0.65}
-                  />
-                  <Text fontWeight="semibold" fontSize={[16, 18, 20, 20]}>
-                    Total Licenses
-                  </Text>
-                </HStack>
-                <Text fontSize={15} color="gray.500">
-                  {basket.licensedUsers} Already Purchased Licenses
-                </Text>
-              </Box>
-            </HStack>
-            <HStack align="flex-end" spacing={2}>
-              <Button
-                variant="outline"
-                onClick={() => changeLicenseCount(20, true)}
-                size="lg"
-                disabled={basket.quantity < basket.licensedUsers + 20}
-              >
-                –20
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => changeLicenseCount(20, false)}
-                size="lg"
-              >
-                +20
-              </Button>
-            </HStack>
-          </Flex>
-
-            {/* Old Items Product list */}
-            {oldItems.length > 0 &&
-            oldItems
-              .filter(
-              (item) =>
-                !newItems.some(
-                (newItem) =>
-                  newItem.toolConfigUniqueId === item.uniqueId ||
-                  newItem.id === item.id
-                )
-              )
-              .map((item) => {
-              return (
-                <Flex
-                key={item.uniqueId || item.id}
-                borderRadius="md"
-                boxShadow="sm"
-                p={4}
-                align="center"
-                justify="space-between"
-                bg={cardBg}
-                >
-                <HStack spacing={4}>
-                  {item.iconImageUrl && (
-                  <Image
-                    src={item.iconImageUrl}
-                    boxSize="80px"
-                    objectFit="contain"
-                  />
-                  )}
-                  <Box p={4}>
-                  <Text
-                    fontWeight="bold"
-                    noOfLines={2}
-                    fontSize={24}
-                    cursor="pointer"
-                  >
-                    {item.displayName}
-                  </Text>
-                  <HStack spacing={1} fontSize="md">
+      {basket.totals ? (
+        <Flex
+          direction={{ base: "column-reverse", lg: "row" }}
+          gap={4}
+          w="100%"
+        >
+          {/* LEFT: product list */}
+          <Stack flex="1" spacing={4}>
+            {/* License block */}
+            <Flex
+              bg={cardBgLighter}
+              borderColor={borderColor}
+              borderRadius="md"
+              p={4}
+              align="center"
+              justify="space-between"
+            >
+              <HStack spacing={4}>
+                <Box>
+                  <HStack spacing={2} fontSize={[16, 18, 20, 20]}>
                     <AnimatedTillNumber
-                    value={basket.licensedUsers}
-                    fontSize="md"
-                    duration={0.65}
+                      value={basket.quantity || basket.licensedUsers}
+                      fontSize="24"
+                      duration={0.65}
+                      isCurrency={false}
                     />
-                    <Text fontWeight="normal" noOfLines={2}>
-                    Licenses
+                    <Text fontWeight="semibold" fontSize={[16, 18, 20, 20]}>
+                      Total Licenses
                     </Text>
+                    {basket.quantity - basket.licensedUsers !== 0 &&
+                      basket.totals && (
+                        <Badge colorScheme="green" fontSize="0.8em">
+                          {" "}
+                          + {basket.quantity - basket.licensedUsers}
+                        </Badge>
+                      )}
                   </HStack>
-                  </Box>
-                </HStack>
-
-                <Button variant="outline">{item.itemGrandTotal}</Button>
-                </Flex>
-              );
-              })}
-
-            {/* New/UpdatedQuantity Items Product list */}
-            {newItems.length === 0 ? (
-            <Box p={6} bg={cardBg} borderRadius="md" boxShadow="sm">
-              <Text>You have no changes made to your subscription</Text>
-            </Box>
-            ) : (
-            newItems.map((item) => {
-              const removing = removingIds.has(item.uniqueId);
-              return (
-              <BasketItemCard
-                key={item.uniqueId}
-                item={item}
-                licensedUsers={basket.quantity}
-                isNew={true}
-                removingIds={removingIds}
-                handleRemove={handleRemove}
-              />
-              );
-            })
-            )}
-        </Stack>
-
-        {/* RIGHT: order summary - only shown when there is a totals */}
-        {basket.totals && (
-          <Box w={{ base: "100%", md: "100%", lg: "400px" }}>
-            {/* mobile header with chevron */}
-            {isMobile && (
-              <Flex
-                align="center"
-                justify="space-between"
-                px={2}
-                bg="white"
-                borderRadius="lg"
-                boxShadow="sm"
-                p={6}
-                mb={isSummaryOpen ? 1 : 0}
-              >
-                <Text fontSize={[16, 18, 20, 22]} fontWeight="semibold">
-                  Subscription Totals
-                </Text>
-                <IconButton
-                  aria-label="Toggle summary"
-                  icon={isSummaryOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                  onClick={() => setSummaryOpen((o) => !o)}
-                  variant="ghost"
-                  size="sm"
-                />
-              </Flex>
-            )}
-
-            <Collapse in={!isMobile || isSummaryOpen} animateOpacity>
-              <Box
-                bg={isMobile ? "rgba(255,255,255,0.85)" : "white"}
-                borderRadius="lg"
-                boxShadow="sm"
-                p={6}
-              >
-                {/* non-mobile header */}
-                {!isMobile && (
-                  <HStack justify="space-between" mb={4}>
-                    <Text fontSize={[14, 16, 18]} fontWeight="semibold">
-                      Subscription Totals
-                    </Text>
-                  </HStack>
-                )}
-
-                <Stack spacing={2} mb={4}>
-                  <HStack justify="space-between">
-                    <Text>{basket.isAnnual ? "Yearly" : "Monthly"} Total</Text>
-                    <HStack spacing={1} fontSize="md">
-                      <Text>£</Text>
-                      <AnimatedTillNumber
-                        value={parseFloat(basket.totals.subtotal)}
-                        fontSize="md"
-                        duration={0.65}
-                      />
-                    </HStack>
-                  </HStack>
-                  <HStack justify="space-between">
-                    <Text>Total Discount</Text>
-                    <HStack spacing={1} fontSize="md">
-                      <Text color="green.500">–£</Text>
-                      <AnimatedTillNumber
-                        value={parseFloat(basket.totals.discountsTotal)}
-                        fontSize="md"
-                        duration={0.65}
-                        color="green.500"
-                      />
-                    </HStack>
-                  </HStack>
-                  <HStack justify="space-between">
-                    <Text>Tax</Text>
-                    <HStack spacing={1} fontSize="md">
-                      <Text>£</Text>
-                      <AnimatedTillNumber
-                        value={parseFloat(basket.totals.taxTotal)}
-                        fontSize="md"
-                        duration={0.65}
-                      />
-                    </HStack>
-                  </HStack>
-                  <HStack justify="space-between">
-                    <Text fontWeight="bold">Total</Text>
-                    <HStack spacing={1} fontSize="lg">
-                      <Text fontWeight="bold">£</Text>
-                      <AnimatedTillNumber
-                        value={parseFloat(basket.totals.grandTotal)}
-                        fontSize="lg"
-                        duration={0.65}
-                      />
-                      <Text fontWeight="bold">
-                        {basket.isAnnual ? "/year" : "/mo"}
-                      </Text>
-                    </HStack>
-                  </HStack>
-                </Stack>
-
+                  <Text fontSize={15} color="gray.500">
+                    {basket.licensedUsers} Already Purchased Licenses
+                  </Text>
+                </Box>
+              </HStack>
+              <HStack align="flex-end" spacing={2}>
                 <Button
-                  colorScheme="brand"
-                  w="full"
-                  mb={3}
-                  onClick={async () => {
-                    const result = await handleCheckout();
-                  }}
+                  variant="outline"
+                  onClick={() => changeLicenseCount(20, true)}
+                  size="lg"
+                  disabled={
+                    basket.quantity == 0 ||
+                    basket.licensedUsers == basket.quantity ||
+                    basket.quantity == undefined
+                  }
                 >
-                  Checkout
+                  –20
                 </Button>
                 <Button
                   variant="outline"
-                  w="full"
-                  onClick={handleClearBasket}
-                  bg={"white"}
+                  onClick={() => changeLicenseCount(20, false)}
+                  size="lg"
                 >
-                  Clear Changes
+                  +20
                 </Button>
+              </HStack>
+            </Flex>
+
+            {/* Old Items Product list */}
+            {oldItems.length > 0 &&
+              oldItems
+                .filter(
+                  (item) =>
+                    !newItems.some(
+                      (newItem) =>
+                        newItem.toolConfigUniqueId === item.uniqueId ||
+                        newItem.id === item.id
+                    )
+                )
+                .map((item) => {
+                  return (
+                    <Flex
+                      key={item.uniqueId || item.id}
+                      borderRadius="md"
+                      boxShadow="sm"
+                      p={4}
+                      align="center"
+                      justify="space-between"
+                      bg={cardBg}
+                    >
+                      <HStack spacing={4}>
+                        {item.iconImageUrl && (
+                          <Image
+                            src={item.iconImageUrl}
+                            boxSize="80px"
+                            objectFit="contain"
+                          />
+                        )}
+                        <Box p={4}>
+                          <Text
+                            fontWeight="bold"
+                            noOfLines={2}
+                            fontSize={24}
+                            cursor="pointer"
+                          >
+                            {item.displayName}
+                          </Text>
+                          <HStack spacing={1} fontSize="md">
+                            <AnimatedTillNumber
+                              value={basket.licensedUsers}
+                              fontSize="md"
+                              duration={0.65}
+                            />
+                            <Text fontWeight="normal" noOfLines={2}>
+                              Licenses
+                            </Text>
+                          </HStack>
+                        </Box>
+                      </HStack>
+
+                      <Stack
+                        direction={{ base: "row", sm: "column" }}
+                        align={{ base: "center", sm: "flex-end" }}
+                        spacing={2}
+                        mt={{ base: 4, md: 0 }}
+                        w="100%"
+                        justify={{ base: "center", sm: "center" }}
+                      >
+                        {item.itemGrandTotal != item.itemSubtotal && (
+                          <HStack spacing={1} fontSize="24">
+                            <Text
+                              fontSize="sm"
+                              color="gray.500"
+                              textDecoration="line-through"
+                            >
+                              £
+                            </Text>
+                            <AnimatedTillNumber
+                              value={item.itemSubtotal}
+                              fontSize="sm"
+                              duration={0.65}
+                              color="gray.500"
+                              textDecoration="line-through"
+                            />
+                          </HStack>
+                        )}
+
+                        <HStack spacing={1} fontSize="lg">
+                          <Text fontWeight="bold">£</Text>
+                          <AnimatedTillNumber
+                            value={item.itemGrandTotal}
+                            fontSize="lg"
+                            duration={0.65}
+                          />
+                        </HStack>
+                      </Stack>
+                    </Flex>
+                  );
+                })}
+
+            {/* New/UpdatedQuantity Items Product list */}
+            {newItems.length === 0 ? (
+              <Box p={6} bg={cardBg} borderRadius="md" boxShadow="sm">
+                <Text>You have no changes made to your subscription</Text>
               </Box>
-            </Collapse>
-          </Box>
-        )}
-      </Flex>
+            ) : (
+              newItems.map((item) => {
+                const isNew = !oldItems.some(
+                  (sub) => sub.id === item.toolConfig.id
+                );
+                return (
+                  <BasketItemCard
+                    key={item.uniqueId}
+                    item={item}
+                    licensedUsers={basket.quantity}
+                    isNew={isNew}
+                    removingIds={removingIds}
+                    handleRemove={handleRemove}
+                  />
+                );
+              })
+            )}
+          </Stack>
+
+          {basket.totals && (
+            <Box w={{ base: "100%", md: "100%", lg: "400px" }} gap={4}>
+              {/* mobile header with chevron */}
+              {isMobile && (
+                <Flex
+                  align="center"
+                  justify="space-between"
+                  px={2}
+                  bg="white"
+                  borderRadius="lg"
+                  boxShadow="sm"
+                  p={4}
+                  mb={isSummaryOpen ? 1 : 0}
+                >
+                  <Text fontSize={[16, 18, 20, 22]} fontWeight="semibold">
+                    Subscription Totals
+                  </Text>
+                  <IconButton
+                    aria-label="Toggle summary"
+                    icon={
+                      isSummaryOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />
+                    }
+                    onClick={() => setSummaryOpen((o) => !o)}
+                    variant="ghost"
+                    size="sm"
+                  />
+                </Flex>
+              )}
+
+              <Collapse in={!isMobile || isSummaryOpen} animateOpacity>
+                <Box
+                  bg={isMobile ? "rgba(255,255,255,0.85)" : "white"}
+                  borderRadius="lg"
+                  boxShadow="sm"
+                  p={6}
+                >
+                  {/* non-mobile header */}
+                  {!isMobile && (
+                    <HStack justify="space-between" mb={4}>
+                      <Text fontSize={[14, 16, 18]} fontWeight="semibold">
+                        Subscription Totals
+                      </Text>
+                    </HStack>
+                  )}
+
+                  <Stack spacing={2} mb={4}>
+                    <HStack justify="space-between">
+                      <Text>
+                        {basket.isAnnual ? "Yearly" : "Monthly"} Total
+                      </Text>
+                      <HStack spacing={1} fontSize="md">
+                        <Text>£</Text>
+                        <AnimatedTillNumber
+                          value={parseFloat(basket.totals.subtotal)}
+                          fontSize="md"
+                          duration={0.65}
+                        />
+                      </HStack>
+                    </HStack>
+                    <HStack justify="space-between">
+                      <Text>Total Discount</Text>
+                      <HStack spacing={1} fontSize="md">
+                        <Text color="green.500">–£</Text>
+                        <AnimatedTillNumber
+                          value={parseFloat(basket.totals.discountsTotal)}
+                          fontSize="md"
+                          duration={0.65}
+                          color="green.500"
+                        />
+                      </HStack>
+                    </HStack>
+                    <HStack justify="space-between">
+                      <Text>Tax</Text>
+                      <HStack spacing={1} fontSize="md">
+                        <Text>£</Text>
+                        <AnimatedTillNumber
+                          value={parseFloat(basket.totals.taxTotal)}
+                          fontSize="md"
+                          duration={0.65}
+                        />
+                      </HStack>
+                    </HStack>
+                    <HStack justify="space-between">
+                      <Text fontWeight="bold">Total</Text>
+                      <HStack spacing={1} fontSize="lg">
+                        <Text fontWeight="bold">£</Text>
+                        <AnimatedTillNumber
+                          value={parseFloat(basket.totals.grandTotal)}
+                          fontSize="lg"
+                          duration={0.65}
+                        />
+                        <Text fontWeight="bold">
+                          {basket.isAnnual ? "/year" : "/mo"}
+                        </Text>
+                      </HStack>
+                    </HStack>
+                  </Stack>
+
+                  <Button
+                    colorScheme="brand"
+                    w="full"
+                    mb={3}
+                    onClick={async () => {
+                      const result = await handleCheckout();
+                    }}
+                  >
+                    Checkout
+                  </Button>
+                  <Button
+                    variant="outline"
+                    w="full"
+                    onClick={handleClearBasket}
+                    bg={"white"}
+                    mb={3}
+                  >
+                    Clear Changes
+                  </Button>
+                  <Button
+                    variant={"outline"}
+                    w="full"
+                    onClick={() => setAddingVoucher((prev) => !prev)}
+                  >
+                    Add Voucher Code
+                  </Button>
+                </Box>
+              </Collapse>
+
+              <Collapse in={addingVoucher} animateOpacity>
+                <Box
+                  bg={isMobile ? "rgba(255,255,255,0.85)" : "white"}
+                  borderRadius="lg"
+                  boxShadow="sm"
+                  p={6}
+                  mt={3}
+                >
+                  {/* non-mobile header */}
+                  {!isMobile && (
+                    <HStack justify="space-between" mb={4}>
+                      <Text fontSize={[14, 16, 18]} fontWeight="semibold">
+                        Add Voucher
+                      </Text>
+                      <IconButton
+                        aria-label="Toggle summary"
+                        icon={addingVoucher ? <Close /> : <></>}
+                        onClick={() => setAddingVoucher((o) => !o)}
+                        variant="ghost"
+                        size="sm"
+                      />
+                    </HStack>
+                  )}
+
+                  {/* Add a voucher code from here */}
+                  <form
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      const form = e.target as HTMLFormElement;
+                      const input = form.elements.namedItem(
+                        "voucher"
+                      ) as HTMLInputElement;
+                      const code = input.value.trim();
+                      if (!code) {
+                        toast({
+                          title: "Please enter a voucher code.",
+                          status: "warning",
+                          duration: 2000,
+                          isClosable: true,
+                        });
+                        return;
+                      }
+                      setLoading(true);
+                      try {
+                        addVoucher(code);
+                        toast({
+                          title: "Voucher applied!",
+                          description: "Your voucher code has been applied.",
+                          status: "success",
+                          duration: 3000,
+                          isClosable: true,
+                        });
+                      } catch (error) {
+                        toast({
+                          title: "Error",
+                          description:
+                            error instanceof Error
+                              ? error.message
+                              : "An unexpected error occurred.",
+                          status: "error",
+                          duration: 3000,
+                          isClosable: true,
+                        });
+                      } finally {
+                        setLoading(false);
+                      }
+                    }}
+                  >
+                    <Stack spacing={3} mb={3}>
+                      <Text fontSize="sm" color="gray.600">
+                        Enter your voucher code below:
+                      </Text>
+                      <HStack>
+                        <input
+                          name="voucher"
+                          type="text"
+                          placeholder="Voucher code"
+                          style={{
+                            flex: 1,
+                            padding: "8px 12px",
+                            borderRadius: "4px",
+                            border: "1px solid #CBD5E0",
+                            fontSize: "16px",
+                          }}
+                          disabled={loading}
+                          autoComplete="off"
+                        />
+                        <Button
+                          colorScheme="brand"
+                          type="submit"
+                          isLoading={loading}
+                          disabled={loading}
+                        >
+                          Apply
+                        </Button>
+                      </HStack>
+                    </Stack>
+                  </form>
+                </Box>
+              </Collapse>
+            </Box>
+          )}
+        </Flex>
+      ) : (
+        <VStack spacing={4} w={"100%"}>
+          <VStack
+            spacing={2}
+            align="center"
+            justify="center"
+            w="100%"
+            fontSize={[20, 20, 22, 24]}
+            color={theme.colors.elementBG}
+            pb={8}
+            pt={4}
+          >
+            <WarningIcon color="inherit" fontSize="large" />
+            <Text fontWeight="400">
+              You haven't made any changes to your subscription.
+            </Text>
+            <Text fontWeight="400" fontSize={[14, 14, 16, 18]}>
+              Add some tools or licenses to get started.
+            </Text>
+          </VStack>
+          <Stack
+            spacing={4}
+            align="center"
+            direction={{ base: "column", lg: "row" }}
+            w={"100%"}
+          >
+            <VStack
+              spacing={1}
+              align="center"
+              w="50%"
+              bg={cardBg}
+              borderRadius={"md"}
+              p={4}
+              minH={"300px"}
+              justify={"center"}
+            >
+              <HStack spacing={4}>
+                <Box>
+                  <VStack spacing={2} fontSize={[16, 18, 20, 20]}>
+                    <AnimatedTillNumber
+                      value={basket.licensedUsers}
+                      fontSize="32"
+                      duration={0.65}
+                    />
+                    <Text fontWeight="normal" fontSize={[16, 18, 20, 20]}>
+                      Licenses
+                    </Text>
+                  </VStack>
+                </Box>
+              </HStack>
+              <HStack align="flex-end" spacing={2}>
+                <Button
+                  variant="outline"
+                  onClick={() => changeLicenseCount(20, true)}
+                  size="lg"
+                  disabled={
+                    basket.quantity == 0 ||
+                    basket.licensedUsers == basket.quantity ||
+                    basket.quantity == undefined
+                  }
+                >
+                  –20
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => changeLicenseCount(20, false)}
+                  size="lg"
+                >
+                  +20
+                </Button>
+              </HStack>
+            </VStack>
+            <VStack
+              spacing={2}
+              align="center"
+              w="50%"
+              bg={cardBg}
+              borderRadius={"md"}
+              p={4}
+              minH={"300px"}
+              justify={"center"}
+            >
+              <ToolSelectedIndicators
+                subscriptionInfo={basket.ownedSubscriptionInfo}
+              />
+              <Button
+                colorScheme="brand"
+                onClick={() => router.push("/tool-store")}
+              >
+                Browse Tools
+              </Button>
+            </VStack>
+          </Stack>
+        </VStack>
+      )}
     </VStack>
   );
 }

@@ -35,11 +35,6 @@ const ToolStore: React.FC = () => {
 
   const [loading, setLoading] = useState(true);
   const [allTools, setAllTools] = useState<ToolConfig[]>([]);
-  const [currentLicenses, setCurrentLicenses] = useState<number>(0);
-  const [licensesLoading, setLicensesLoading] = useState(false);
-  const [selected, setSelected] = useState<ToolConfig[]>([]);
-
-  const summary = { count: selected.length };
 
   const skeletonBg1 = transparentize(theme.colors.darkGray[500], 0.2)(theme);
   const skeletonBg2 = transparentize(theme.colors.darkGray[500], 0.4)(theme);

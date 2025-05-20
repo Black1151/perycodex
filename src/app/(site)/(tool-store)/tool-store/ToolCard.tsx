@@ -174,7 +174,7 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
           transformOrigin="top right"
           zIndex={10}
         >
-          {isFree ? "FREE TRIAL" : "OWNED"}
+          {isFree ? "FREE TRIAL" : "SUBSCRIBED"}
         </Box>
         )}
 

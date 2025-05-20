@@ -5,6 +5,7 @@ import React, {
   useState,
   useEffect,
   ReactNode,
+  useRef,
 } from "react";
 import { useFetchClient } from "@/hooks/useFetchClient";
 
@@ -25,7 +26,7 @@ export interface Basket {
   quantity: number;
   licensedUsers: number;
   ownedSubscriptionInfo: SubscriptionInfo[];
-  content: (BasketItem | ToolConfig)[];
+  content: BasketItem[];
   totals: Totals;
   annualDiscountPercent: number | null;
 }
@@ -168,6 +169,7 @@ type BasketContextType = {
   removeItemFromBasket: (itemUId: string) => Promise<void>;
   changeLicenseCount: (delta: number, isNegative: boolean) => Promise<void>;
   getSubscription: () => Promise<void>;
+  addVoucher: (voucher: string) => Promise<void>;
 };
 
 const BasketContext = createContext<BasketContextType | undefined>(undefined);
@@ -453,6 +455,73 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
     }
   };
 
+  /**
+   * PUT /api/basket/voucher — add a voucher to the basket
+   */
+  const addVoucher = async (voucher: string) => {
+    console.log("[Basket] PUT /api/basket/voucher — adding voucher", voucher);
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await fetchClient<{ resource: Basket }>("/api/basket/voucher", {
+        method: "PUT",
+        body: JSON.stringify({ "dicountCode": voucher }),
+      });
+
+      console.log("[Basket] PUT response:", data);
+
+      if (data && data.resource) {
+        setBasket(data.resource);
+      } else {
+        const err = new Error("Failed to update basket");
+        console.error("[Basket] PUT error:", err);
+        setError(err);
+      }
+    } catch (err: any) {
+      console.error("[Basket] PUT exception:", err);
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /**
+   * Check for empty basket states and if is empty, clear the basket
+   */
+  const checkForEmptyBasket = (basket: Basket | null) => {
+  if (!basket?.totals) return false;
+
+  const noNewItems =
+    basket.content.length === basket.ownedSubscriptionInfo.length;
+  const noSeatChange =
+    basket.licensedUsers === basket.quantity;
+
+  if (noNewItems && noSeatChange) {
+    console.log(
+      "[Basket] No new items AND no change in licensed users — clearing basket"
+    );
+    return true;
+  }
+
+  return false;
+};
+
+
+  const prevBasketRef = useRef<Basket | null>(null);
+
+  useEffect(() => {
+    const prev = prevBasketRef.current;
+    const nowEmpty = basket && checkForEmptyBasket(basket);
+    const wasNonEmpty = prev && !checkForEmptyBasket(prev);
+
+    if (nowEmpty && wasNonEmpty) {
+      console.log("[Basket Empty?] Basket is empty, clearing basket");
+      clearBasket();
+    }
+
+    prevBasketRef.current = basket;
+  }, [basket]);
 
   useEffect(() => {
     getBasket();
@@ -460,7 +529,7 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
 
   return (
     <BasketContext.Provider
-      value={{ basket, loading, error, getBasket, updateBasket, clearBasket, removeItemFromBasket, changeLicenseCount, getSubscription, subscription } as BasketContextType}
+      value={{ basket, loading, error, getBasket, updateBasket, clearBasket, removeItemFromBasket, changeLicenseCount, getSubscription, subscription, addVoucher } as BasketContextType}
     >
       {children}
     </BasketContext.Provider>

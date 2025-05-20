@@ -11,6 +11,7 @@ import {
   Spinner,
   useTheme,
   Stack,
+  Icon,
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
 import { FiTrash2 } from "react-icons/fi";
@@ -139,6 +140,7 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
                 value={licensedUsers}
                 fontSize="md"
                 duration={0.65}
+                isCurrency={false}
               />
               <Text fontWeight="normal" noOfLines={2}>
                 Licenses
@@ -201,6 +203,42 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
           </Badge>
         ))}
       </Flex>
+
+      {/* //TODO: Only allow remove when tool is new */}
+      {/* <IconButton
+        aria-label="Remove"
+        icon={
+          removing ? (
+            <Spinner size="sm" color="red.500" />
+          ) : (
+            <DeleteOutline fontSize="small" />
+          )
+        }
+        colorScheme="red"
+        variant="ghost"
+        position="absolute"
+        top={2}
+        right={2}
+        onClick={() => handleRemove(item.uniqueId)}
+        isLoading={removing}
+        _hover={{
+          bg: "red.100",
+        }}
+        _active={{
+          bg: "red.200",
+        }}
+        _focus={{
+          boxShadow: "outline",
+        }}
+        _disabled={{
+          cursor: "not-allowed",
+          opacity: 0.5,
+        }}
+        isDisabled={removing}
+        size="sm"
+        borderRadius="full"
+        bg={removing ? "red.50" : "white"}
+      /> */}
     </Flex>
   );
 };
