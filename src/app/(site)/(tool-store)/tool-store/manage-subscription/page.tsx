@@ -39,6 +39,7 @@ import LicenseAmountIndicator from "./LicenseAmountIndicator";
 import { subscriptionLimits } from "@/utils/constants/subscriptionLimits";
 import { PerygonModal } from "@/components/modals/PerygonModal";
 import { set } from "lodash";
+import ToolInfoCard from "./ToolInfoCard";
 
 export default function BasketPage() {
   const {
@@ -215,10 +216,7 @@ export default function BasketPage() {
             </Text>
             <HStack spacing={2} align="center">
               {/* //TODO: Add a link to the sales team contact page */}
-              <Button
-                mt={4}
-                colorScheme="brand"
-              >
+              <Button mt={4} colorScheme="brand">
                 Contact Sales
               </Button>
               <Button
@@ -306,15 +304,15 @@ export default function BasketPage() {
                 <Button
                   variant="outline"
                   onClick={() => {
-                  if (
-                    basket.quantity == 0 ||
-                    basket.licensedUsers == basket.quantity ||
-                    basket.quantity == undefined
-                  ) {
-                    setSalesModalOpen(true);
-                  } else {
-                    changeLicenseCount(20, true);
-                  }
+                    if (
+                      basket.quantity == 0 ||
+                      basket.licensedUsers == basket.quantity ||
+                      basket.quantity == undefined
+                    ) {
+                      setSalesModalOpen(true);
+                    } else {
+                      changeLicenseCount(20, true);
+                    }
                   }}
                   size="lg"
                 >
@@ -343,82 +341,12 @@ export default function BasketPage() {
                 )
                 .map((item) => {
                   return (
-                    <Flex
-                      key={item.uniqueId || item.id}
-                      borderRadius="md"
-                      boxShadow="sm"
-                      p={4}
-                      align="center"
-                      justify="space-between"
-                      bg={cardBg}
-                    >
-                      <HStack spacing={4}>
-                        {item.iconImageUrl && (
-                          <Image
-                            src={item.iconImageUrl}
-                            boxSize="80px"
-                            objectFit="contain"
-                          />
-                        )}
-                        <Box p={4}>
-                          <Text
-                            fontWeight="bold"
-                            noOfLines={2}
-                            fontSize={24}
-                            cursor="pointer"
-                          >
-                            {item.displayName}
-                          </Text>
-                          <HStack spacing={1} fontSize="md">
-                            <AnimatedTillNumber
-                              value={basket.licensedUsers}
-                              fontSize="md"
-                              duration={0.65}
-                            />
-                            <Text fontWeight="normal" noOfLines={2}>
-                              Licenses
-                            </Text>
-                          </HStack>
-                        </Box>
-                      </HStack>
-
-                      <Stack
-                        direction={{ base: "row", sm: "column" }}
-                        align={{ base: "center", sm: "flex-end" }}
-                        spacing={2}
-                        mt={{ base: 4, md: 0 }}
-                        w="100%"
-                        justify={{ base: "center", sm: "center" }}
-                      >
-                        {item.itemGrandTotal != item.itemSubtotal && (
-                          <HStack spacing={1} fontSize="24">
-                            <Text
-                              fontSize="sm"
-                              color="gray.500"
-                              textDecoration="line-through"
-                            >
-                              £
-                            </Text>
-                            <AnimatedTillNumber
-                              value={item.itemSubtotal}
-                              fontSize="sm"
-                              duration={0.65}
-                              color="gray.500"
-                              textDecoration="line-through"
-                            />
-                          </HStack>
-                        )}
-
-                        <HStack spacing={1} fontSize="lg">
-                          <Text fontWeight="bold">£</Text>
-                          <AnimatedTillNumber
-                            value={item.itemGrandTotal}
-                            fontSize="lg"
-                            duration={0.65}
-                          />
-                        </HStack>
-                      </Stack>
-                    </Flex>
+                    <ToolInfoCard
+                      key={item.uniqueId}
+                      info={item}
+                      licensedUsers={basket.licensedUsers}
+                      isNew={false}
+                    />
                   );
                 })}
 
