@@ -178,6 +178,7 @@ export default function CurrentSubscriptionPage() {
                 label: "Discounts",
                 value: subscription.totals.discountsTotal,
                 isCurrency: true,
+                isNegative: true,
               },
               {
                 label: "VAT",
@@ -189,7 +190,7 @@ export default function CurrentSubscriptionPage() {
                 value: subscription.totals.grandTotal,
                 isCurrency: true,
               },
-            ].map(({ label, value, isCurrency }) => (
+            ].map(({ label, value, isCurrency, isNegative }) => (
               <Box
                 key={label}
                 borderBottom="inset"
@@ -202,7 +203,12 @@ export default function CurrentSubscriptionPage() {
                   {label}
                 </Text>
                 <Flex align="baseline" justify="flex-end">
-                  <Text fontSize={[16, 18, 20]} fontWeight="semibold">
+                  <Text
+                    fontSize={[16, 18, 20]}
+                    fontWeight="semibold"
+                    color={isNegative ? "green.600" : undefined}
+                  >
+                    {isNegative ? "-" : ""}
                     {isCurrency ? "£" : ""}
                     {Number(value).toFixed(2)}
                   </Text>
