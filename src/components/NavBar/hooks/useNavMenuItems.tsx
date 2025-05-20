@@ -20,7 +20,7 @@ const useNavMenuItems = (
   openResetModal: () => void
 ): MenuItemProps[] => {
   const router = useRouter();
-  const user = useUser()
+  const { user } = useUser();
 
   if (userRole === "EU") {
     return [
@@ -38,24 +38,27 @@ const useNavMenuItems = (
         label: "Admin",
         icon: <SettingsIcon />,
         onClick: () => router.push("/customers"),
-      }
+      },
     ];
   }
 
   const commonMenuItems: MenuItemProps[] = [];
+
   if (userRole === "CA") {
-    commonMenuItems.push({
-      label: "Admin Tools",
-      icon: <SettingsIcon />,
-      onClick: () => router.push("/users?userType=internal"),
-    },
-    {
-      label: "Tool Store",
-      icon: <StorefrontIcon />,
-      onClick: () => router.push("/tool-store"),  
-    }
-  );
+    commonMenuItems.push(
+      {
+        label: "Admin Tools",
+        icon: <SettingsIcon />,
+        onClick: () => router.push("/users?userType=internal"),
+      },
+      {
+        label: "Tool Store",
+        icon: <StorefrontIcon />,
+        onClick: () => router.push("/tool-store"),
+      }
+    );
   }
+
   commonMenuItems.push(
     {
       label: "My Tools",
@@ -71,38 +74,38 @@ const useNavMenuItems = (
       label: "My Company",
       icon: <BusinessIcon />,
       onClick: () => router.push("/my-company"),
-    },
+    }
   );
-  if (!user.user?.customerIsFree) {
-    commonMenuItems.push(
-      {
+
+  if (!user?.customerIsFree) {
+    commonMenuItems.push({
       label: "Activity",
       icon: <Timeline />,
       onClick: () => router.push("/activity"),
-    }
-    )
+    });
   }
-  if (["CS", "CL", "CA"].includes(userRole) && !user.user?.customerIsFree) {
-    commonMenuItems.push(
-    {
+
+  if (["CS", "CL", "CA"].includes(userRole) && !user?.customerIsFree) {
+    commonMenuItems.push({
       label: "Client Activity",
       icon: <ViewTimeline />,
       onClick: () => router.push("/client-activity"),
-    },
-  );
+    });
   }
-  commonMenuItems.push(
-    {
+
+  if (user?.subscribedTools?.includes("100")) {
+    commonMenuItems.push({
       label: "Recognition Hub",
       icon: <Celebration />,
       onClick: () => router.push("/big-up"),
-    },
-    {
-      label: "Reset Password",
-      icon: <LockIcon />,
-      onClick: openResetModal,
-    }
-  );
+    });
+  }
+  commonMenuItems.push({
+    label: "Reset Password",
+    icon: <LockIcon />,
+    onClick: openResetModal,
+  });
+
   return commonMenuItems;
 };
 

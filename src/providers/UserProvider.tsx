@@ -61,11 +61,13 @@ export interface UserContextProps {
   customerIsFree?: boolean;
   customerIsFreeUntilDate?: string | null;
   customerDefaultThemeId: number;
+  subscribedTools: string[];
 }
 
 interface UserProviderProps {
   user: UserContextProps | null;
   showDeveloperBoard: boolean;
+  // subscribedTools: string[];
   updateShowDeveloperBoard: (value: boolean) => void;
 }
 
