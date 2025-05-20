@@ -13,6 +13,7 @@ import {
   useTheme,
   Image,
   SimpleGrid,
+  Badge,
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
 import { useRouter } from "next/navigation";
@@ -21,16 +22,6 @@ import AnimatedTillNumber from "@/components/animations/AnimatedTillNumber";
 import { useUser } from "@/providers/UserProvider";
 import WarningIcon from "@mui/icons-material/Warning";
 import BackButton from "@/components/BackButton";
-
-function isBasketItem(item: BasketItem | ToolConfig): item is BasketItem {
-  return (item as BasketItem).basketUniqueId !== undefined;
-}
-function isToolConfig(item: BasketItem | ToolConfig): item is ToolConfig {
-  return (
-    (item as ToolConfig).id !== undefined &&
-    !(item as BasketItem).basketUniqueId
-  );
-}
 
 export default function CurrentSubscriptionPage() {
   const { subscription, getSubscription, basket } = useBasket();
@@ -73,13 +64,15 @@ export default function CurrentSubscriptionPage() {
           You don’t have an active paid subscription.
         </Text>
         <Text fontWeight="400" fontSize={[14, 14, 16, 18]}>
-          Add some tools or licenses to get started.
+          Add some tools or user licenses to get started.
         </Text>
         <HStack spacing={1} fontSize="md" align="center" mt={4}>
           <Button onClick={() => router.push("/tool-store")}>
             Browse Tools
           </Button>
-          <Button onClick={() => router.push("/manage-subscription")}>
+          <Button
+            onClick={() => router.push("/tool-store/manage-subscription")}
+          >
             Add Licenses
           </Button>
         </HStack>
@@ -155,7 +148,7 @@ export default function CurrentSubscriptionPage() {
             but you could show their monthly/annual price: */}
               <HStack spacing={1} align="baseline">
                 <Text fontSize={[16, 18, 20]} fontWeight="semibold">
-                  £{item.itemGrandTotal}
+                  £{Number(item.itemGrandTotal).toFixed(2)}
                 </Text>
                 <Text fontSize={[12, 14, 16]} color="gray.500">
                   {subscription.isAnnual ? "/year" : "/month"}
@@ -173,7 +166,7 @@ export default function CurrentSubscriptionPage() {
           p={6}
           flex="1"
         >
-          {/* 2-column grid for Subtotal, Discounts, Tax, Total */}
+          {/* 2-column grid for Subtotal, Discounts, VAT, Total */}
           <SimpleGrid columns={2} spacingY={4} spacingX={6} mb={6} w="100%">
             {[
               {
@@ -185,9 +178,10 @@ export default function CurrentSubscriptionPage() {
                 label: "Discounts",
                 value: subscription.totals.discountsTotal,
                 isCurrency: true,
+                isNegative: true,
               },
               {
-                label: "Tax",
+                label: "VAT",
                 value: subscription.totals.taxTotal,
                 isCurrency: true,
               },
@@ -196,7 +190,7 @@ export default function CurrentSubscriptionPage() {
                 value: subscription.totals.grandTotal,
                 isCurrency: true,
               },
-            ].map(({ label, value, isCurrency }) => (
+            ].map(({ label, value, isCurrency, isNegative }) => (
               <Box
                 key={label}
                 borderBottom="inset"
@@ -205,18 +199,19 @@ export default function CurrentSubscriptionPage() {
                 display="contents"
               >
                 <Text fontWeight="medium" color="gray.600">
+                  {subscription.isAnnual ? "Annual " : "Monthly "}
                   {label}
                 </Text>
                 <Flex align="baseline" justify="flex-end">
-                  <Text fontSize={[16, 18, 20]} fontWeight="semibold">
+                  <Text
+                    fontSize={[16, 18, 20]}
+                    fontWeight="semibold"
+                    color={isNegative ? "green.600" : undefined}
+                  >
+                    {isNegative ? "-" : ""}
                     {isCurrency ? "£" : ""}
-                    {Number(value)}
+                    {Number(value).toFixed(2)}
                   </Text>
-                  {isCurrency && (
-                    <Text fontSize={[12, 14, 16]} color="gray.500">
-                      {subscription.isAnnual ? "/year" : "/month"}
-                    </Text>
-                  )}
                 </Flex>
               </Box>
             ))}
@@ -224,9 +219,13 @@ export default function CurrentSubscriptionPage() {
 
           {/* Dates & licenses */}
           <Stack spacing={2} mb={6} direction={"row"}>
-            <Text fontSize="sm" color="gray.500">
+            <Badge colorScheme="blue">
+              Start Date:{" "}
               {new Date(subscription.updatedAt).toLocaleDateString("en-GB")}
-            </Text>
+            </Badge>
+            {/* //TODO: Add renewal date in from db when col is made */}
+            <Badge colorScheme="blue">Renewal Date: XX/XX/XXXX</Badge>
+            <Badge colorScheme="blue">Subscription ID: {subscription.id}</Badge>
           </Stack>
 
           {/* Action buttons */}
@@ -235,7 +234,7 @@ export default function CurrentSubscriptionPage() {
               variant="outline"
               colorScheme="blue"
               flex={1}
-              onClick={() => router.push("/manage-subscription")}
+              onClick={() => router.push("/tool-store/manage-subscription")}
             >
               Invoice
             </Button>
@@ -243,7 +242,7 @@ export default function CurrentSubscriptionPage() {
               variant="outline"
               colorScheme="blue"
               flex={1}
-              onClick={() => router.push("/manage-subscription")}
+              onClick={() => router.push("/tool-store/manage-subscription")}
             >
               Manage Subscription
             </Button>
@@ -252,7 +251,7 @@ export default function CurrentSubscriptionPage() {
               disabled
               colorScheme="blue"
               flex={1}
-              onClick={() => router.push("/manage-subscription")}
+              onClick={() => router.push("/tool-store/manage-subscription")}
             >
               Past Subscriptions
             </Button>
@@ -260,7 +259,7 @@ export default function CurrentSubscriptionPage() {
               variant="outline"
               colorScheme="blue"
               flex={1}
-              onClick={() => router.push("/manage-subscription")}
+              onClick={() => router.push("/tool-store/manage-subscription")}
             >
               Contact Sales
             </Button>

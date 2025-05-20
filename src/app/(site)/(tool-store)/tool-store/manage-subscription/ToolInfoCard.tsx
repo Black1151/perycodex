@@ -7,40 +7,30 @@ import {
   Text,
   Badge,
   VStack,
-  IconButton,
-  Spinner,
   useTheme,
   Stack,
-  Icon,
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
-import { FiTrash2 } from "react-icons/fi";
 import AnimatedTillNumber from "@/components/animations/AnimatedTillNumber";
-import { BasketItem } from "../useBasket";
-import { Delete, DeleteOutline } from "@mui/icons-material";
+import { SubscriptionInfo } from "../useBasket"; // adjust the import path as needed
 
-interface BasketItemCardProps {
-  item: BasketItem;
+interface ToolInfoCardProps {
+  info: SubscriptionInfo;
   licensedUsers: number;
   isNew: boolean;
-  removingIds: Set<string>;
-  handleRemove: (uniqueId: string) => Promise<void> | void;
 }
 
-const BasketItemCard: React.FC<BasketItemCardProps> = ({
-  item,
+const ToolInfoCard: React.FC<ToolInfoCardProps> = ({
+  info,
   licensedUsers,
   isNew,
-  removingIds,
-  handleRemove,
 }) => {
   const theme = useTheme();
   const cardBg = transparentize(theme.colors.elementBG, 0.95)(theme);
-  const removing = removingIds.has(item.uniqueId);
 
   return (
     <Flex
-      direction={"column"}
+      direction="column"
       borderRadius="md"
       boxShadow="sm"
       p={4}
@@ -48,7 +38,7 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
       justify="space-between"
       bg={cardBg}
       position="relative"
-      overflow={"hidden"}
+      overflow="hidden"
     >
       <Flex
         direction={{ base: "column", sm: "row" }}
@@ -79,10 +69,10 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
           </Box>
         )}
 
-        <HStack w={"100%"} >
-          {item.toolConfig?.iconImageUrl && (
+        <HStack w="100%">
+          {info.iconImageUrl && (
             <Image
-              src={item.toolConfig.iconImageUrl}
+              src={info.iconImageUrl}
               boxSize="80px"
               objectFit="contain"
             />
@@ -91,25 +81,22 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
           <VStack
             spacing={0}
             align="baseline"
-            w={"100%"}
-            justify={"center"}
-            h={"100%"}
+            w="100%"
+            justify="center"
+            h="100%"
           >
             <HStack spacing={1} mb={2} flexWrap="wrap" w="100%">
               <Text
                 fontWeight="semibold"
-                w={"100%"}
+                w="100%"
                 noOfLines={2}
                 fontSize={[16, 18, 20, 20]}
                 cursor="pointer"
                 onClick={() =>
-                  window.open(
-                    `/tool-store/${item.toolConfigUniqueId}`,
-                    "_blank"
-                  )
+                  window.open(`/tool-store/${info.uniqueId}`, "_blank")
                 }
               >
-                {item.toolConfig.displayName}
+                {info.displayName}
               </Text>
             </HStack>
 
@@ -123,11 +110,6 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
               <Text fontWeight="normal" noOfLines={2}>
                 Licenses
               </Text>
-              {item.newLicences > 0 && (
-                <Badge colorScheme="blue">
-                  +{item.newLicences} New Licenses
-                </Badge>
-              )}
             </HStack>
           </VStack>
         </HStack>
@@ -140,7 +122,7 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
           w="100%"
           justify={{ base: "center", sm: "center" }}
         >
-          {item.itemGrandTotal != item.itemSubtotal && (
+          {info.itemGrandTotal !== info.itemSubtotal && (
             <HStack spacing={1} fontSize="24">
               <Text
                 fontSize="sm"
@@ -150,7 +132,7 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
                 £
               </Text>
               <AnimatedTillNumber
-                value={item.itemSubtotal}
+                value={info.itemSubtotal}
                 fontSize="sm"
                 duration={0.65}
                 color="gray.500"
@@ -162,7 +144,7 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
           <HStack spacing={1} fontSize="lg">
             <Text fontWeight="bold">£</Text>
             <AnimatedTillNumber
-              value={item.itemGrandTotal}
+              value={info.itemGrandTotal}
               fontSize="lg"
               duration={0.65}
             />
@@ -175,42 +157,18 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
         direction={{ base: "column", sm: "row" }}
         align="center"
         gap={2}
-        justify={"flex-end"}
+        justify="flex-end"
         mt={2}
         w="100%"
       >
-        {item.discounts.map((discount) => (
+        {info.discounts.map((discount) => (
           <Badge key={discount.uniqueId} colorScheme="green" fontSize="0.8em">
             {discount.name}
           </Badge>
         ))}
-        {isNew && (
-          <IconButton
-            color={"red.400"}
-            aria-label="Remove"
-            icon={
-              removing ? (
-                <Spinner size="sm" color="white" />
-              ) : (
-                <DeleteOutline fontSize="small" color="inherit" />
-              )
-            }
-            colorScheme="red"
-            variant="ghost"
-            onClick={() => handleRemove(item.uniqueId)}
-            isLoading={removing}
-            _hover={{
-              bg: "red.200",
-            }}
-            isDisabled={removing}
-            size="sm"
-            borderRadius="full"
-            bg={removing ? "red.50" : "red.100"}
-          />
-        )}
       </Flex>
     </Flex>
   );
 };
 
-export default BasketItemCard;
+export default ToolInfoCard;

@@ -82,7 +82,7 @@ export interface BasketItem {
   updatedAt: string;
   createdBy: number;
   updatedBy: number;
-
+  newLicences: number;
   isFree: boolean;
 
   /** these three track the raw line‐item before discounts */

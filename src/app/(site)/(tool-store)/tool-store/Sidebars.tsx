@@ -6,7 +6,7 @@ import NavigationSidebar, {
   MenuItem,
 } from "@/components/Sidebars/NavigationSidebar/NavigationSidebar";
 import NavigationBottombar from "@/components/Bottombar/NavigationBottombar/NavigationBottombar";
-import { useBasket } from "./useBasket";
+import { useBasket, BasketItem, SubscriptionInfo } from "./useBasket";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import BuildIcon from "@mui/icons-material/Build";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -19,7 +19,15 @@ const Sidebars: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const basketCount = basket?.content?.length ?? 0;
+  const basketCount =
+    basket && basket.content && basket.ownedSubscriptionInfo
+      ? basket.content.filter(
+          (item: BasketItem) =>
+            !basket.ownedSubscriptionInfo.some(
+              (owned: SubscriptionInfo) => owned.uniqueId === item.toolConfigUniqueId
+            )
+        ).length
+      : 0;
 
   const navItems = [
     { label: "Tool Store", icon: StorefrontIcon, href: "/tool-store" },
@@ -30,7 +38,7 @@ const Sidebars: React.FC = () => {
       badgeNumber: basketCount,
     },
     {
-      label: "My Subscription",
+      label: "Current Subscription",
       icon: ListAltIcon,
       href: "/tool-store/my-subscription",
     },
