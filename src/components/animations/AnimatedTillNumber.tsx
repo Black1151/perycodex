@@ -4,43 +4,54 @@ import React, { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { HStack, Box, chakra } from "@chakra-ui/react";
 
-// Create a Chakra-wrapped motion.div so Chakra props (like theme colors) work
-const MotionDiv = chakra(motion.div);
+// Use the original motion.div for animation to avoid prop type conflicts
+const MotionDivRaw = motion.div;
 
 interface AnimatedTillNumberProps {
-  /** The number to display/animate */
   value: number;
-  /** How long (in seconds) the flick animation takes */
   duration?: number;
-  /** Digit font size */
   fontSize?: string | number;
-  /** Digit font weight */
   fontWeight?: string | number;
-  /** Digit color (accepts Chakra theme token or CSS color) */
   color?: string;
-  /** Digit text decoration */
   textDecoration?: string;
+  isCurrency?: boolean;
 }
 
-/**
- * Shows each digit in a fixed-size window and scrolls it
- * smoothly when `value` changes, without affecting
- * the overall layout height.
- */
 export const AnimatedTillNumber: React.FC<AnimatedTillNumberProps> = ({
   value,
-  duration = 0.8,
+  duration = 0.05,
   fontSize = "2xl",
   fontWeight = "bold",
   color = "black",
   textDecoration = "none",
+  isCurrency = true,
 }) => {
   const prevValue = usePrevious(value) ?? value;
-  const newStr = String(value);
-  const oldStr = String(prevValue).padStart(newStr.length, "0");
 
-  // Use duration in the spring transition
-  const transition = { type: "spring", stiffness: 300, damping: 300, duration } as any;
+  // Coerce to a numeric JS type before calling toFixed
+  const newNum =
+    typeof value === "number" ? value : parseFloat(String(value)) || 0;
+  const oldNum =
+    typeof prevValue === "number"
+      ? prevValue
+      : parseFloat(String(prevValue)) || 0;
+
+  // Format both old and new values
+  const formattedNew = isCurrency ? newNum.toFixed(2) : String(value);
+  const formattedOld = isCurrency ? oldNum.toFixed(2) : String(prevValue);
+
+  // Pad the shorter one so they're equal length
+  const maxLen = Math.max(formattedNew.length, formattedOld.length);
+  const newStr = formattedNew.padStart(maxLen, " ");
+  const oldStr = formattedOld.padStart(maxLen, " ");
+
+  const transition = {
+    type: "spring",
+    stiffness: 1000,
+    damping: 100,
+    mass: 0.5,
+    duration
+  };
 
   return (
     <HStack
@@ -48,16 +59,31 @@ export const AnimatedTillNumber: React.FC<AnimatedTillNumberProps> = ({
       fontSize={fontSize}
       fontWeight={fontWeight}
       overflow="hidden"
-      /* enable fixed-width (tabular) numerals */
       sx={{
         fontVariantNumeric: "tabular-nums",
         WebkitFontVariantNumeric: "tabular-nums",
       }}
+      color={color}
     >
-      {newStr.split("").map((digit, idx) => {
-        const prevDigit = oldStr[idx];
-        const hasChanged = digit !== prevDigit;
-        const directionUp = +digit > +prevDigit;
+      {newStr.split("").map((char, idx) => {
+        // If it's the decimal point, render it statically
+        if (char === ".") {
+          return (
+            <Box
+              key={`dot-${idx}`}
+              px="0.1ch"
+              textAlign="center"
+              lineHeight="1"
+              color={color}
+            >
+              .
+            </Box>
+          );
+        }
+
+        const prevChar = oldStr[idx];
+        const hasChanged = char !== prevChar;
+        const directionUp = +char > +prevChar;
 
         return (
           <Box
@@ -69,51 +95,56 @@ export const AnimatedTillNumber: React.FC<AnimatedTillNumberProps> = ({
             px="0.1ch"
             textAlign="center"
             lineHeight="1"
+            color={color}
           >
-            <AnimatePresence initial={true} mode="sync">
-              {/* old digit */}
+            <AnimatePresence initial={false}>
               {hasChanged && (
-                <MotionDiv
+                <MotionDivRaw
                   key={`old-${idx}-${prevValue}`}
-                  position="absolute"
-                  top={0}
-                  left={0}
-                  width="100%"
-                  height="100%"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  color={color}
-                  textDecoration={textDecoration}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: color,
+                    textDecoration: textDecoration,
+                  }}
                   initial={{ y: 0 }}
                   animate={{ y: directionUp ? "-100%" : "100%" }}
                   exit={{ y: directionUp ? "-100%" : "100%" }}
                   transition={transition}
                 >
-                  {prevDigit}
-                </MotionDiv>
+                  {prevChar}
+                </MotionDivRaw>
               )}
 
-              {/* new digit */}
-              <MotionDiv
+              <MotionDivRaw
                 key={`new-${idx}-${value}`}
-                position="absolute"
-                top={0}
-                left={0}
-                width="100%"
-                height="100%"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                willChange="transform"
-                color={color}
-                textDecoration={textDecoration}
-                initial={{ y: hasChanged ? (directionUp ? "100%" : "-100%") : 0 }}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  willChange: "transform",
+                  color: color,
+                  textDecoration: textDecoration,
+                }}
+                initial={{
+                  y: hasChanged ? (directionUp ? "100%" : "-100%") : 0,
+                }}
                 animate={{ y: 0 }}
                 transition={transition}
               >
-                {digit}
-              </MotionDiv>
+                {char}
+              </MotionDivRaw>
             </AnimatePresence>
           </Box>
         );
@@ -122,7 +153,6 @@ export const AnimatedTillNumber: React.FC<AnimatedTillNumberProps> = ({
   );
 };
 
-// simple hook to capture previous value
 function usePrevious<T>(value: T): T | undefined {
   const ref = useRef<T>();
   useEffect(() => {

@@ -24,15 +24,15 @@ const Sidebars: React.FC = () => {
   const navItems = [
     { label: "Tool Store", icon: StorefrontIcon, href: "/tool-store" },
     {
-      label: "My Subscription",
-      icon: ListAltIcon,
-      href: "/tool-store/my-subscription",
-    },
-    {
       label: "Manage Subscription",
       icon: ShoppingCartIcon,
       href: "/tool-store/manage-subscription",
       badgeNumber: basketCount,
+    },
+    {
+      label: "My Subscription",
+      icon: ListAltIcon,
+      href: "/tool-store/my-subscription",
     },
   ];
 
