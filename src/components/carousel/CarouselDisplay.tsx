@@ -8,6 +8,8 @@ import {
   Button,
   Flex,
 } from "@chakra-ui/react";
+import { FiShoppingCart } from "react-icons/fi";
+import Link from "next/link";
 import { CarouselItemProps } from "./CarouselItem";
 import { useRouter } from "next/navigation";
 import Carousel from "./Carousel";
@@ -92,6 +94,25 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
   // ---------------------------------------------------------------- render
   return (
     <VStack position="relative" mt={[10, 30]} flex={1} overflow="hidden">
+      {/* Shopping Cart Button */}
+      <Button
+        as={Link}
+        href="/tool-store"
+        leftIcon={<FiShoppingCart size={20} />}
+        position="absolute"
+        top={[2, 4]}
+        right={[2, 4]}
+        zIndex={3}
+        mt={[5, 8]}
+        size="lg"
+        color="white"
+        bgColor={theme.colors.primary}
+        boxShadow="lg"
+        _hover={{ bgColor: "white", color: theme.colors.primary }}
+      >
+        Tool Store
+      </Button>
+
       {/* background layers */}
       {layers.map((layer) => (
         <Box
@@ -198,9 +219,11 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
         </Flex>
 
         {/* carousel thumbnails / controls */}
-        <VStack zIndex={2} w="100%" pb={[4, 6]}>
-          <Carousel carouselItems={carouselItems} setParentIndex={setIndex} />
-        </VStack>
+        {carouselItems.length > 1 && (
+          <VStack zIndex={2} w="100%" pb={[4, 6]}>
+            <Carousel carouselItems={carouselItems} setParentIndex={setIndex} />
+          </VStack>
+        )}
       </Flex>
     </VStack>
   );
