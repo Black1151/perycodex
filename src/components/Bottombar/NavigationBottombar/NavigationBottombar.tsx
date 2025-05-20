@@ -42,6 +42,7 @@ const NavigationBottombar: React.FC<NavigationBottombarProps> = ({menuItems, ...
                         onClick={() => handleItemClick(item)}
                         active={item.active}
                         locked={item.locked}
+                        badgeNumber={item.badgeNumber}
                     />
                 </Box>
             ))}
