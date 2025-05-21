@@ -41,14 +41,12 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
   const newCompanyRegistration =
     user?.role === "CA" && user.customerId === null;
 
-
   useLayoutEffect(() => {
     if (newCompanyRegistration) {
       router.replace("/register-company");
     }
   }, [newCompanyRegistration, router]);
 
-  // Client‑only clean‑up once the component actually mounts
   useEffect(() => {
     localStorage.removeItem("toolId");
     localStorage.removeItem("workflowId");

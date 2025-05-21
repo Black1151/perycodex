@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Tool } from "@/types/types";
-import BusinessScoreSplashScreen from "./BusinessScoreSplashScreen";
+import BusinessScoreSplashScreen from "./BusinessScoreSplashScreenOld";
 
 interface HappinessScoreClientInnerProps {
   toolData: Tool;

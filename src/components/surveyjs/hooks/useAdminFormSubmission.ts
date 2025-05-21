@@ -82,9 +82,10 @@ const useAdminFormSubmission = ({
 
       onSurveySuccess?.();
 
-      if (reloadPageOnSuccess) {
-        router.refresh();
-      }
+      //// commented out for testing purposes
+      // if (reloadPageOnSuccess) {
+      //   router.refresh();
+      // }
 
       if (redirectUrl) {
         setTimeout(() => router.push(redirectUrl), 1000);

@@ -29,10 +29,10 @@ const HappinessLayout: React.FC<HappinessLayoutProps> = ({
         >
           {/*TODO: this could be tool logo instead of hard coded*/}
           <Image
-            src="/images/Perygon_Happiness_score_icon.png"
-            maxW="150px"
-            maxH="150px"
-            mb={8}
+            src="/carousel/logos/happiness-score-logo-new.webp"
+            maxW="200px"
+            maxH="200px"
+            mb={4}
             alt="Happiness Score Icon"
           />
           <Heading

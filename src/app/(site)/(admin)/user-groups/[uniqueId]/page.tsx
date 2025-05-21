@@ -120,6 +120,7 @@ export default async function UserGroupsDetailPage({
     return redirect("/error");
   }
 
+  // TODO: change the logic below to remove duplicated call to /userGroupMember/allBy?userGroupId=${userGroupId}
   const [userPopulationRes, userSampleRes, teamPopulationRes, teamSampleRes] =
     await Promise.all([
       apiClient("/usersGroupManagementList", { method: "POST" }),
