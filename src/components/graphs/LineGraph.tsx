@@ -132,14 +132,6 @@ const LineGraph: React.FC<LineGraphProps> = memo(
       );
     }
 
-    if (!DataPoints || DataPoints.length === 0) {
-      return (
-        <PerygonCard width="100%" height="100%" color={theme.colors.primary}>
-          <NoDataOverlayPink />
-        </PerygonCard>
-      );
-    }
-
     /**
      * -------------------------------------------------------------------------
      *  Normal render – draw axes, line, points, etc.
