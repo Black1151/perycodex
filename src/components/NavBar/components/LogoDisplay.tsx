@@ -16,36 +16,9 @@ const LogoDisplay: React.FC<LogoDisplayProps> = ({
 }) => {
   const logoContent =
     toolLogo && toolLogo.trim() !== "" ? (
-      // <HStack
-      //   spacing={0}
-      //   alignItems="center"
-      //   justifyContent="center"
-      //   ml={3}
-      //   //position="relative"
-      // >
-      //   <Image src={toolLogo} alt="logo" height="50px" objectFit="contain" />
-      //   <Badge
-      //     colorScheme="green"
-      //     h={"min-content"}
-      //     // position={"absolute"}
-      //     // bottom={[0., 0]}
-      //     // left={[0, 0]}
-      //     fontSize={[10, 12]}
-      //     transform={["rotate(45deg)", "rotate(-25deg)"]}
-      //   >
-      //     TRIAL
-      //   </Badge>
-      // </HStack>
-
-              <Image src={toolLogo} alt="logo" height="50px" objectFit="contain" />
-
+      <Image src={toolLogo} alt="logo" height="50px" objectFit="contain" />
     ) : (
-      <HStack
-        spacing={0}
-        alignItems="center"
-        justifyContent="center"
-        //position="relative"
-      >
+      <HStack spacing={0} alignItems="center" justifyContent="center">
         <Text
           fontFamily="bonfire"
           fontSize={[30, 40]}
@@ -57,9 +30,6 @@ const LogoDisplay: React.FC<LogoDisplayProps> = ({
         <Badge
           colorScheme="green"
           h={"min-content"}
-          // position={"absolute"}
-          // bottom={[0, 4]}
-          // right={[0, -5]}
           fontSize={[10, 12]}
           transform={["rotate(45deg)", "rotate(-25deg)"]}
         >
