@@ -88,12 +88,6 @@ export default async function PerygonMain() {
     return redirect("/profile-setup");
   }
 
-  if (carouselItems.length === 1) {
-    return redirect(
-      `${carouselItems[0].appUrl}?toolId=${carouselItems[0].toolId}&wfId=${carouselItems[0].toolWfId}`
-    );
-  }
-
   return (
     <PerygonMainClient
       carouselItems={carouselItems}
