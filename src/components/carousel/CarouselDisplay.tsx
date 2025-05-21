@@ -14,6 +14,7 @@ import { CarouselItemProps } from "./CarouselItem";
 import { useRouter } from "next/navigation";
 import Carousel from "./Carousel";
 import { useWorkflow } from "@/providers/WorkflowProvider";
+import { useUser } from "@/providers/UserProvider";
 
 export interface CarouselDisplayProps {
   carouselItems: CarouselItemProps[];
@@ -36,6 +37,19 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
   const { setToolId, setWorkflowId } = useWorkflow();
   const router = useRouter();
   const theme = useTheme();
+
+  const { user } = useUser();
+
+  // Determine if we should show the Tool Store button
+  const showStoreButton = React.useMemo(() => {
+    if (!user?.role) return false;
+
+    if (Array.isArray(user.role)) {
+      return user.role.some((r) => r === "CA" || r === "CL");
+    }
+
+    return user.role === "CA" || user.role === "CL";
+  }, [user?.role]);
 
   // ---------------------------------------------------------------- helpers
   const currentItem: CarouselItemProps & {
@@ -91,27 +105,31 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
 
   useEffect(() => setShowInfoBox(true), []);
 
+  console.log(user);
+
   // ---------------------------------------------------------------- render
   return (
     <VStack position="relative" mt={[10, 30]} flex={1} overflow="hidden">
       {/* Shopping Cart Button */}
-      <Button
-        as={Link}
-        href="/tool-store"
-        leftIcon={<FiShoppingCart size={20} />}
-        position="absolute"
-        top={[2, 4]}
-        right={[2, 4]}
-        zIndex={3}
-        mt={[5, 8]}
-        size="lg"
-        color="white"
-        bgColor={theme.colors.primary}
-        boxShadow="lg"
-        _hover={{ bgColor: "white", color: theme.colors.primary }}
-      >
-        Tool Store
-      </Button>
+      {showStoreButton && (
+        <Button
+          as={Link}
+          href="/tool-store"
+          leftIcon={<FiShoppingCart size={20} />}
+          position="absolute"
+          top={[2, 4]}
+          right={[2, 4]}
+          zIndex={3}
+          mt={[5, 8]}
+          size="lg"
+          color="white"
+          bgColor={theme.colors.primary}
+          boxShadow="lg"
+          _hover={{ bgColor: "white", color: theme.colors.primary }}
+        >
+          Tool Store
+        </Button>
+      )}
 
       {/* background layers */}
       {layers.map((layer) => (
