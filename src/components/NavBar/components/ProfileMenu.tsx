@@ -97,12 +97,8 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
       </Box>
 
       <MenuList bg="elementBG" color={theme.colors.themeTextColor} px={2}>
-        {/* Example: for your dynamic items, you could manually close the menu
-            by calling onClose in the onClick handler, or simply set closeOnSelect
-            to `true` on each MenuItem if you prefer it closed automatically */}
         {menuItems.map((item) => (
           <MenuItem
-            // Let this item close the menu automatically
             closeOnSelect
             key={item.label}
             fontSize={[14, 16, 18]}
