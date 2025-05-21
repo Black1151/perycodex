@@ -14,6 +14,7 @@ import {
   Image,
   SimpleGrid,
   Badge,
+  Spinner,
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
 import { useRouter } from "next/navigation";
@@ -36,12 +37,13 @@ export default function CurrentSubscriptionPage() {
   const cardBgLighter = theme.colors.elementBG;
 
   useEffect(() => {
-    if (subscription) {
-      setLoading(false);
-    } else {
-      getSubscription();
-    }
-  }, [subscription, basket]);
+    setLoading(true);
+    getSubscription().finally(() => setLoading(false));
+  }, [basket]);
+
+  if (loading) {
+    return (<Spinner/>);
+  }
 
   // don’t render until we know how many licenses we have
   if (subscription && subscription?.licensedUsers === undefined) {

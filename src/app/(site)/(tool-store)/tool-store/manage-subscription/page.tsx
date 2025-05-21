@@ -40,6 +40,9 @@ import { subscriptionLimits } from "@/utils/constants/subscriptionLimits";
 import { PerygonModal } from "@/components/modals/PerygonModal";
 import { set } from "lodash";
 import ToolInfoCard from "./ToolInfoCard";
+import LicensePicker from "../LicensePicker";
+import BillingAddressForm from "./BillingAddressForm";
+import { Spinner } from "@chakra-ui/react";
 
 export default function BasketPage() {
   const {
@@ -55,21 +58,17 @@ export default function BasketPage() {
   const router = useRouter();
   const toast = useToast();
   const [loading, setLoading] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [newQuantity, setNewQuantity] = useState<number>(0);
   const [isSummaryOpen, setSummaryOpen] = useState(false);
   const isMobile = useBreakpointValue({ base: true, lg: false });
   const [addingVoucher, setAddingVoucher] = useState(false);
   const [salesModalOpen, setSalesModalOpen] = useState(false);
+  const [billingAddressLoading, setBillingAddressLoading] = useState(false);
 
   const theme = useTheme();
-
-  const borderColor = transparentize(
-    theme.colors.primaryTextColor,
-    0.25
-  )(theme);
-  const cardBg = transparentize(theme.colors.elementBG, 0.95)(theme);
-  const cardBgLighter = theme.colors.elementBG;
+  const cardBg = transparentize(theme.colors.elementBG, 1)(theme);
 
   const [removingIds, setRemovingIds] = useState<Set<string>>(new Set());
   const newItems: BasketItem[] = React.useMemo(() => {
@@ -165,7 +164,7 @@ export default function BasketPage() {
   };
 
   const handleCheckout = async () => {
-    setLoading(true);
+    setCheckoutLoading(true);
     try {
       const response = await fetch("/api/basket/checkout", {
         method: "POST",
@@ -177,15 +176,18 @@ export default function BasketPage() {
       if (!response.ok) {
         throw new Error(data.error || "Failed to create basket.");
       }
-      toast({
-        title: "Checkout successful",
-        description: "Your checkout was successful.",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-      getBasket();
-      router.push("/tool-store/my-subscription");
+      const redirectUrl = data?.resource?.original?.redirectUrl;
+      if (redirectUrl) {
+        window.open(redirectUrl, "_blank");
+      } else {
+        toast({
+          title: "Error",
+          description: "No redirect URL received from server.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      }
       return data;
     } catch (error) {
       toast({
@@ -199,7 +201,7 @@ export default function BasketPage() {
         isClosable: true,
       });
     } finally {
-      setLoading(false);
+      setCheckoutLoading(false);
     }
   };
 
@@ -264,69 +266,9 @@ export default function BasketPage() {
           gap={4}
           w="100%"
         >
-          {/* LEFT: product list */}
           <Stack flex="1" spacing={4}>
             {/* License block */}
-            <Flex
-              bg={cardBgLighter}
-              borderColor={borderColor}
-              borderRadius="md"
-              p={4}
-              align="center"
-              justify="space-between"
-            >
-              <HStack spacing={4}>
-                <Box>
-                  <HStack spacing={2} fontSize={[16, 18, 20, 20]}>
-                    <AnimatedTillNumber
-                      value={basket.quantity || basket.licensedUsers}
-                      fontSize="24"
-                      duration={0.65}
-                      isCurrency={false}
-                    />
-                    <Text fontWeight="semibold" fontSize={[16, 18, 20, 20]}>
-                      Total User Licenses
-                    </Text>
-                    {basket.quantity - basket.licensedUsers !== 0 &&
-                      basket.totals && (
-                        <Badge colorScheme="blue" fontSize="0.8em">
-                          {" "}
-                          + {basket.quantity - basket.licensedUsers}
-                        </Badge>
-                      )}
-                  </HStack>
-                  <Text fontSize={15} color="gray.500">
-                    {basket.licensedUsers} Licenses Currently Subscribed
-                  </Text>
-                </Box>
-              </HStack>
-              <HStack align="flex-end" spacing={2}>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    if (
-                      basket.quantity == 0 ||
-                      basket.licensedUsers == basket.quantity ||
-                      basket.quantity == undefined
-                    ) {
-                      setSalesModalOpen(true);
-                    } else {
-                      changeLicenseCount(20, true);
-                    }
-                  }}
-                  size="lg"
-                >
-                  –20
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => changeLicenseCount(20, false)}
-                  size="lg"
-                >
-                  +20
-                </Button>
-              </HStack>
-            </Flex>
+            <LicensePicker />
 
             {/* Old Items Product list */}
             {oldItems.length > 0 &&
@@ -350,7 +292,6 @@ export default function BasketPage() {
                   );
                 })}
 
-            {/* New/UpdatedQuantity Items Product list */}
             {newItems.length === 0 ? (
               <Box p={6} bg={cardBg} borderRadius="md" boxShadow="sm">
                 <Text>You have no changes made to your subscription</Text>
@@ -471,10 +412,12 @@ export default function BasketPage() {
                   colorScheme="brand"
                   w="full"
                   mb={3}
-                  onClick={async () => {
-                    const result = await handleCheckout();
-                  }}
+                  onClick={async () => {handleCheckout();}}
                   disabled={basket.quantity === 0}
+                  isLoading={checkoutLoading}
+                  loadingText="Continuing to checkout..."
+                  spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
+                  spinnerPlacement="start"
                 >
                   Checkout
                 </Button>
@@ -495,6 +438,10 @@ export default function BasketPage() {
                   Add Voucher Code
                 </Button>
               </Box>
+            </Collapse>
+
+            <Collapse in={isMobile || !isMobile} animateOpacity>
+            <BillingAddressForm />
             </Collapse>
 
             <Collapse in={addingVoucher} animateOpacity>
@@ -607,45 +554,47 @@ export default function BasketPage() {
             justify="center"
             w="100%"
             fontSize={[20, 20, 22, 24]}
-            color={theme.colors.elementBG}
-            pb={8}
-            pt={4}
+            bg={cardBg}
+            py={8}
+            borderRadius={"md"}
           >
-            <WarningIcon color="inherit" fontSize="large" />
-            <Text fontWeight="400">
+            <Text fontWeight="semibold" textAlign={"center"}>
               You haven't made any changes to your subscription.
             </Text>
-            <Text fontWeight="400" fontSize={[14, 14, 16, 18]}>
+            <Text
+              fontWeight="400"
+              fontSize={[14, 14, 16, 18]}
+              textAlign={"center"}
+            >
               Add some tools or user licenses to get started.
             </Text>
           </VStack>
+
           <Stack
-            spacing={8}
+            spacing={4}
             align="center"
             direction={{ base: "column", lg: "row" }}
             w={"100%"}
           >
             <VStack
-              spacing={8}
+              spacing={4}
               align="center"
-              w="50%"
+              w={["100%", "100%", "100%", "50%"]}
               bg={cardBg}
               borderRadius={"md"}
               p={4}
-              minH={"300px"}
+              pt={6}
+              minH={["", "", "", "300px"]}
               justify={"center"}
+              overflow={"hidden"}
             >
               {basket.licensedUsers === 0 ? (
                 <VStack spacing={2}>
                   {/* Customer is free, show amount of free licenses they have */}
-                  <HStack spacing={4}>
-                    <Box>
-                      <HStack spacing={2} fontSize={[14, 16, 18, 18]}>
-                        <LicenseAmountIndicator
-                          amount={subscriptionLimits.free.maxUsers}
-                        />
-                      </HStack>
-                    </Box>
+                  <HStack spacing={2} fontSize={[14, 16, 18, 18]}>
+                    <LicenseAmountIndicator
+                      amount={subscriptionLimits.free.maxUsers}
+                    />
                   </HStack>
                   <HStack align="flex-end" spacing={2} justify={"center"}>
                     <AnimatedTillNumber
@@ -668,50 +617,24 @@ export default function BasketPage() {
                   </Box>
                 </HStack>
               )}
-              <HStack align="flex-end" spacing={2} justify={"center"}>
-                <Button
-                  variant="outline"
-                  onClick={() => setSalesModalOpen(true)}
-                  size="sm"
-                >
-                  –20
-                </Button>
-                <AnimatedTillNumber
-                  value={basket.licensedUsers}
-                  fontSize="32"
-                  duration={0.65}
-                  isCurrency={false}
-                />
-                <Text fontWeight="normal" fontSize={[14, 16, 18, 18]}>
-                  {basket.licensedUsers === 0 && "Paid "}Licenses
-                </Text>
-                <Button
-                  variant="outline"
-                  onClick={() => changeLicenseCount(20, false)}
-                  size="sm"
-                >
-                  +20
-                </Button>
-              </HStack>
+              <LicensePicker showAlreadySubscribedText={false} />
             </VStack>
 
             <VStack
-              spacing={2}
+              spacing={4}
               align="center"
-              w="50%"
+              w={["100%", "100%", "100%", "50%"]}
               bg={cardBg}
               borderRadius={"md"}
               p={4}
-              minH={"300px"}
+              pt={6}
+              minH={["", "", "", "300px"]}
               justify={"center"}
             >
               <ToolSelectedIndicators
                 subscriptionInfo={basket.ownedSubscriptionInfo}
               />
-              <Button
-                colorScheme="brand"
-                onClick={() => router.push("/tool-store")}
-              >
+              <Button size={"lg"} onClick={() => router.push("/tool-store")}>
                 Browse Tools
               </Button>
             </VStack>
