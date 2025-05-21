@@ -48,8 +48,7 @@ export interface BillingAddressFormHandle {
   getAddress: () => Address;
 }
 
-const BillingAddressForm = forwardRef<BillingAddressFormHandle>(
-  (_props, ref) => {
+const BillingAddressForm = forwardRef<BillingAddressFormHandle>((_props, ref) => {
     const isMobile = useBreakpointValue({ base: true, lg: false });
     const toast = useToast();
     const { fetchClient } = useFetchClient();
@@ -305,5 +304,7 @@ const BillingAddressForm = forwardRef<BillingAddressFormHandle>(
     );
   }
 );
+
+BillingAddressForm.displayName = "BillingAddressForm";
 
 export default BillingAddressForm;
