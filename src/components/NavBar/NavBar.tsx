@@ -1,16 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import {
-  HStack,
-  Box,
-  useTheme,
-  Text,
-  useMultiStyleConfig,
-  useStyleConfig,
-} from "@chakra-ui/react";
+import { HStack, Box, useTheme } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 
 import ResetPasswordModal from "@/app/ResetPasswordModal";
@@ -53,6 +46,8 @@ const NavBar: React.FC<NavBarProps> = ({
   const [themeDropdownOptions, setThemeDropdownOptions] = useState<
     ThemeDropdownOption[]
   >([]);
+
+  const pathname = usePathname();
 
   // Call checkUnread on mount so unread updates on load
   useEffect(() => {
@@ -97,6 +92,12 @@ const NavBar: React.FC<NavBarProps> = ({
     buildThemeDropdownOptions();
   }, [isFree]);
 
+  let resolvedToolLogo = toolLogo;
+
+  if (pathname.includes("big-up")) {
+    resolvedToolLogo = "/app-logos/recognition-hub-logo.png";
+  }
+
   return (
     <>
       <HStack
@@ -123,7 +124,7 @@ const NavBar: React.FC<NavBarProps> = ({
         >
           <LogoDisplay
             userRole={userRole}
-            toolLogo={toolLogo || undefined}
+            toolLogo={resolvedToolLogo || undefined}
             toolPath={toolPath || undefined}
           />
         </MotionBox>
