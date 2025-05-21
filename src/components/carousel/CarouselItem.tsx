@@ -74,8 +74,8 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
             alt={alt}
             height={
               isSelected
-                ? ["120px", "150px", "180px", "200px", "200px"]
-                : ["90px", "112px", "120px", "160px", "160px"]
+                ? ["120px", "150px", "150px", "170px", "190px"]
+                : ["90px", "112px", "120px", "140px", "150px"]
             }
             transition="height 0.3s ease-in-out"
           />

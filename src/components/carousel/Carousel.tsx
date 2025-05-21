@@ -63,8 +63,9 @@ const Carousel: React.FC<CarouselProps> = ({
 
   return (
     <VStack
-      width="100%"
-      maxWidth={["100%", 450, 650, 800, 1000]}
+      // width="100%"
+      maxWidth={1280}
+      width={"90%"}
       spacing={4}
       mb={[0, 10]}
       position="relative"
