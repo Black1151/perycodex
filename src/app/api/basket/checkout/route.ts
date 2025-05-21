@@ -7,7 +7,9 @@ export async function POST(req: NextRequest) {
 
   console.log("[BASKET POST CHECKOUT] Incoming request to checkout basket");
 
-  const backendUrl = `${process.env.BE_URL}/basket/checkout`;
+  const backendUrl = `${process.env.BE_URL}/payment/create`;
+
+  console.log("[BASKET POST CHECKOUT] Backend URL:", backendUrl);
 
   try {
     const response = await fetch(backendUrl, {
