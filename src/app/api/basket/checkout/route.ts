@@ -12,12 +12,17 @@ export async function POST(req: NextRequest) {
   console.log("[BASKET POST CHECKOUT] Backend URL:", backendUrl);
 
   try {
+    const body = await req.json();
+
+    console.log("[BASKET POST CHECKOUT] Request body:", body);
+
     const response = await fetch(backendUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: authToken ? `Bearer ${authToken}` : "",
       },
+      body: body,
     });
 
     const data = await response.json();

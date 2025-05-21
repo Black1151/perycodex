@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import {
   useBasket,
   BasketItem,
@@ -41,7 +41,9 @@ import { PerygonModal } from "@/components/modals/PerygonModal";
 import { set } from "lodash";
 import ToolInfoCard from "./ToolInfoCard";
 import LicensePicker from "../LicensePicker";
-import BillingAddressForm from "./BillingAddressForm";
+import BillingAddressForm, {
+  BillingAddressFormHandle,
+} from "./BillingAddressForm";
 import { Spinner } from "@chakra-ui/react";
 
 export default function BasketPage() {
@@ -65,12 +67,13 @@ export default function BasketPage() {
   const isMobile = useBreakpointValue({ base: true, lg: false });
   const [addingVoucher, setAddingVoucher] = useState(false);
   const [salesModalOpen, setSalesModalOpen] = useState(false);
-  const [billingAddressLoading, setBillingAddressLoading] = useState(false);
+  const billingRef = useRef<BillingAddressFormHandle>(null);
 
   const theme = useTheme();
   const cardBg = transparentize(theme.colors.elementBG, 1)(theme);
 
   const [removingIds, setRemovingIds] = useState<Set<string>>(new Set());
+
   const newItems: BasketItem[] = React.useMemo(() => {
     setLoading(true);
     if (!basket) return [];
@@ -165,17 +168,44 @@ export default function BasketPage() {
 
   const handleCheckout = async () => {
     setCheckoutLoading(true);
+
+    const addr = billingRef.current?.getAddress();
+    if (!addr) {
+      toast({
+        title: "Error",
+        description: "Please fill in your billing address.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      setCheckoutLoading(false);
+      return;
+    }
+
+    const payload = {
+      email: "john@example.com", // hard-coded for now
+      address: {
+        line1: addr.address1,
+        city: addr.city,
+        postal_code: addr.postcode,
+        country: addr.country,
+      },
+    };
+
     try {
       const response = await fetch("/api/basket/checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify(payload),
       });
+
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.error || "Failed to create basket.");
       }
+
       const redirectUrl = data?.resource?.original?.redirectUrl;
       if (redirectUrl) {
         window.open(redirectUrl, "_blank");
@@ -188,6 +218,7 @@ export default function BasketPage() {
           isClosable: true,
         });
       }
+
       return data;
     } catch (error) {
       toast({
@@ -412,7 +443,9 @@ export default function BasketPage() {
                   colorScheme="brand"
                   w="full"
                   mb={3}
-                  onClick={async () => {handleCheckout();}}
+                  onClick={async () => {
+                    handleCheckout();
+                  }}
                   disabled={basket.quantity === 0}
                   isLoading={checkoutLoading}
                   loadingText="Continuing to checkout..."
@@ -441,7 +474,7 @@ export default function BasketPage() {
             </Collapse>
 
             <Collapse in={isMobile || !isMobile} animateOpacity>
-            <BillingAddressForm />
+              <BillingAddressForm ref={billingRef}/>
             </Collapse>
 
             <Collapse in={addingVoucher} animateOpacity>
