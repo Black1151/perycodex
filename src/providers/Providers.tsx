@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import NextAuthProvider from "@/providers/NextAuthProvider";
 import { UnreadProvider } from "@/components/contexts/UnreadRecognitionContext";
 import { ChakraThemeProvider } from "./ChakraThemeProvider";
+import { WorkflowProvider } from "./WorkflowProvider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -12,7 +13,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <NextAuthProvider>
       <ChakraThemeProvider>
-        <UnreadProvider>{children}</UnreadProvider>
+        <WorkflowProvider>
+          <UnreadProvider>{children}</UnreadProvider>
+        </WorkflowProvider>
       </ChakraThemeProvider>
     </NextAuthProvider>
   );
