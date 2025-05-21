@@ -3,6 +3,8 @@
 import { Center, Flex, Image, VStack } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { keyframes } from "@emotion/react";
+import { useUser } from "@/providers/UserProvider";
+import { useRouter } from "next/navigation";
 
 const logoTextFadeIn = keyframes`
   0%   { opacity: 0; transform: translatex(-2000px); }
