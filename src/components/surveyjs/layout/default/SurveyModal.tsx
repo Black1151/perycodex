@@ -27,6 +27,7 @@ interface ModalProps {
   bodyContent?: string | React.ReactNode;
   confirmLabel?: string;
   cancelLabel?: string;
+  icon?: React.ReactNode;
 }
 
 const SurveyModal: React.FC<ModalProps> = ({
@@ -42,6 +43,7 @@ const SurveyModal: React.FC<ModalProps> = ({
   bodyContent = "Are you sure you want to perform this action?",
   confirmLabel = "Confirm",
   cancelLabel = "Cancel",
+  icon,
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} returnFocusOnClose={false}>
@@ -49,6 +51,17 @@ const SurveyModal: React.FC<ModalProps> = ({
       <ModalOverlay />
       <ModalContent bgColor="elementBG">
         <PerygonCard>
+          {icon && (
+            <Flex
+              justifyContent={"center"}
+              alignItems={"center"}
+              width={"100%"}
+              color="primaryTextColor"
+              mb={0}
+            >
+              {icon}
+            </Flex>
+          )}
           <ModalHeader {...titleProps}>
             <Flex
               justifyContent={"center"}
@@ -60,9 +73,9 @@ const SurveyModal: React.FC<ModalProps> = ({
             </Flex>
           </ModalHeader>
 
-          <ModalBody color="primaryTextColor">{bodyContent}</ModalBody>
+          <ModalBody color="primaryTextColor" textAlign={"center"}>{bodyContent}</ModalBody>
 
-          <ModalFooter>
+          <ModalFooter alignContent={"center"} justifyContent={"center"}>
             {showButtons.close && (
               <Button
                 mr={3}
