@@ -7,6 +7,8 @@ import { SpringScale } from "@/components/animations/SpringScale";
 import SpeechBubble from "@/app/(site)/(apps)/happiness-score/SpeechBubble";
 import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import LineGraph from "@/components/graphs/LineGraph";
+import PerygonCard from "@/components/layout/PerygonCard";
+import { NoDataOverlayPink } from "@/components/agGrids/DataGrid/DataGridComponentLight";
 
 export default function StaffDashboardPage() {
   const router = useRouter();
@@ -49,6 +51,10 @@ export default function StaffDashboardPage() {
       }))
     );
   };
+
+  useEffect(() => {
+    console.log("lineGraphData", lineGraphData);
+  }, [lineGraphData]);
 
   useEffect(() => {
     getHappinessData();
@@ -97,7 +103,13 @@ export default function StaffDashboardPage() {
           <Flex pb={4} flex={1} width="100%" justifyContent="center">
             <SectionHeader>Happiness History</SectionHeader>
           </Flex>
-          <LineGraph DataPoints={lineGraphData} />
+          {lineGraphData.length > 0 ? (
+            <LineGraph DataPoints={lineGraphData} />
+          ) : (
+            <PerygonCard width="100%" height={600}>
+              <NoDataOverlayPink />
+            </PerygonCard>
+          )}
         </SpringScale>
       </GridItem>
     </Grid>

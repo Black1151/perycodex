@@ -27,10 +27,8 @@ export default function SiteProviders({
 
   return (
     <UserProvider value={userMetadata}>
-      <WorkflowProvider>
-        {children}
-        <DeveloperBoardOptions userMetadata={userMetadata} />
-      </WorkflowProvider>
+      {children}
+      <DeveloperBoardOptions userMetadata={userMetadata} />
     </UserProvider>
   );
 }
