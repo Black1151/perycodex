@@ -183,11 +183,10 @@ export default function BasketPage() {
     }
 
     const payload = {
-      email: "john@example.com", // hard-coded for now
       address: {
         line1: addr.address1,
         city: addr.city,
-        postal_code: addr.postcode,
+        postalCode: addr.postcode,
         country: addr.country,
       },
     };
