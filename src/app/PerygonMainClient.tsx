@@ -41,12 +41,7 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
   const newCompanyRegistration =
     user?.role === "CA" && user.customerId === null;
 
-  /**
-   * Perform the navigation in an effect so we don’t mutate router state during
-   * the render phase (which triggers React’s setState‑in‑render warning).
-   *
-   * useLayoutEffect fires before the browser paints, eliminating any flicker.
-   */
+
   useLayoutEffect(() => {
     if (newCompanyRegistration) {
       router.replace("/register-company");
@@ -61,7 +56,6 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
     localStorage.removeItem("currentWorkflowInstanceId");
   }, []);
 
-  // Nothing should be rendered while we’re about to redirect.
   if (newCompanyRegistration) {
     return null;
   }
