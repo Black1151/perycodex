@@ -10,7 +10,7 @@ import {
   HStack,
   useToast,
 } from "@chakra-ui/react";
-import { Close, Lock } from "@mui/icons-material";
+import { Add, Close, Lock, Remove } from "@mui/icons-material";
 import { transparentize } from "@chakra-ui/theme-tools";
 import { useBasket } from "./useBasket";
 import type { ToolConfig } from "./useBasket";
@@ -31,10 +31,10 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
   const borderColor = "rgb(255, 255, 255, 0.65)";
   const cardBg = theme.colors.elementBG;
   const textColor = theme.colors.primaryTextColor;
-  const addBtnBg = transparentize(theme.colors.seduloGreen, 0.3)(theme);
-  const addBtnHoverBg = transparentize(theme.colors.seduloGreen, 0.5)(theme);
-  const removeBtnBg = "rgb(255, 0, 0, 0.3)";
-  const removeBtnHoverBg = "rgb(255, 0, 0, 0.5)";
+  const addBtnBg = transparentize(theme.colors.seduloGreen, 0.6)(theme);
+  const addBtnHoverBg = transparentize(theme.colors.seduloGreen, 0.7)(theme);
+  const removeBtnBg = "rgb(255, 0, 0, 0.6)";
+  const removeBtnHoverBg = "rgb(255, 0, 0, 0.7)";
 
   const cardVariants = { hover: {} };
   const logoVariants = {
@@ -158,24 +158,24 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
         )}
 
         {isOwned && (
-        <Box
-          position="absolute"
-          top={24}
-          right={0}
-          bg={theme.colors.seduloGreen}
-          color="white"
-          px={12}
-          mx={-8}
-          py={1}
-          fontSize="sm"
-          fontWeight="bold"
-          textAlign="center"
-          transform="rotate(45deg)"
-          transformOrigin="top right"
-          zIndex={10}
-        >
-          {isFree ? "FREE TRIAL" : "SUBSCRIBED"}
-        </Box>
+          <Box
+            position="absolute"
+            top={24}
+            right={0}
+            bg={theme.colors.seduloGreen}
+            color="white"
+            px={12}
+            mx={-8}
+            py={1}
+            fontSize="sm"
+            fontWeight="bold"
+            textAlign="center"
+            transform="rotate(45deg)"
+            transformOrigin="top right"
+            zIndex={10}
+          >
+            {isFree ? "FREE TRIAL" : "SUBSCRIBED"}
+          </Box>
         )}
 
         <VStack
@@ -245,66 +245,77 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
             <Text fontSize="sm">{tool.previewText}</Text>
 
             {!isOwned && (
-            <HStack spacing={2} align="center" justify="space-between" w="100%">
-              <HStack spacing={1} align="center">
-                <Text fontSize="md" fontWeight="bold">
-                  £
-                </Text>
-
-                <AnimatedTillNumber
-                  value={
-                    basket?.isAnnual
-                      ? Number(tool.annualPrice)
-                      : Number(tool.monthlyPrice)
-                  }
-                  fontSize="md"
-                  duration={0.65}
-                />
-
-                <Text fontSize="md" fontWeight="bold">
-                  /user
-                </Text>
-              </HStack>
-
-              <Button
-                size="sm"
-                variant="outline"
-                border="none"
-                color={"white"}
-                bg={isInBasket ? removeBtnBg : addBtnBg}
-                _hover={{
-                  color: "white",
-                  backgroundColor: isInBasket
-                    ? removeBtnHoverBg
-                    : addBtnHoverBg,
-                }}
-                onClick={handleButtonClick}
-                isLoading={loading}
+              <HStack
+                spacing={2}
+                align="center"
+                justify="space-between"
+                w="100%"
               >
-                {isInBasket ? (
-                  <>
-                    <RemoveShoppingCartIcon fontSize="small" />
-                  </>
-                ) : (
-                  <>
-                    <AddShoppingCartIcon fontSize="small" />
-                  </>
-                )}
-              </Button>
-            </HStack>
+                <HStack spacing={1} align="center">
+                  <Text fontSize="md" fontWeight="bold">
+                    £
+                  </Text>
+
+                  <AnimatedTillNumber
+                    value={
+                      basket?.isAnnual
+                        ? Number(tool.annualPrice)
+                        : Number(tool.monthlyPrice)
+                    }
+                    fontSize="md"
+                    duration={0.65}
+                  />
+
+                  <Text fontSize="md" fontWeight="bold">
+                    /user
+                  </Text>
+                </HStack>
+
+                <Button
+                  size="sm"
+                  variant="outline"
+                  border="none"
+                  color={"white"}
+                  bg={isInBasket ? removeBtnBg : addBtnBg}
+                  _hover={{
+                    color: "white",
+                    backgroundColor: isInBasket
+                      ? removeBtnHoverBg
+                      : addBtnHoverBg,
+                  }}
+                  onClick={handleButtonClick}
+                  isLoading={loading}
+                >
+                  {isInBasket ? (
+                    <HStack spacing={1} align="center" m={0}> 
+                      <Remove fontSize="small"/>
+                      <Text fontSize="sm" color="white">
+                        Remove
+                      </Text>
+                    </HStack>
+                  ) : (
+                    <HStack spacing={1} align="center" m={0}>
+                      <Add fontSize="small"/>
+                      <Text fontSize="sm" color="white">
+                        Add
+                      </Text>
+                    </HStack>
+                  )}
+                </Button>
+              </HStack>
             )}
 
             {isOwned && (
-                <Button
+              <Button
                 size="sm"
                 variant="outline"
                 onClick={() => {
                   const url = `${tool.appUrl}?toolId=${tool.id}&wfId=${tool.workflowId}`;
                   router.push(url);
                 }}
-                >
+              >
                 Start Tool
-                </Button>
+              </Button>
             )}
           </VStack>
         </VStack>
