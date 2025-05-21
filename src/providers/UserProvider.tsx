@@ -61,6 +61,7 @@ export interface UserContextProps {
   customerIsFree?: boolean;
   customerIsFreeUntilDate?: string | null;
   customerDefaultThemeId: number;
+  subscribedTools: string[];
 }
 
 interface UserProviderProps {
