@@ -12,9 +12,11 @@ import {
   ModalOverlay,
   Text,
   Button,
+  HStack,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/providers/UserProvider";
+import { Warning } from "@mui/icons-material";
 
 interface PerygonMainClientProps {
   carouselItems: CarouselItemProps[];
@@ -28,6 +30,14 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
   const { user } = useUser();
   const router = useRouter();
 
+  const showTrialEndedModal =
+    !!user?.customerIsFreeUntilDate &&
+    user.customerIsFree &&
+    new Date(user.customerIsFreeUntilDate) < new Date();
+
+  /**
+   * IMPORTANT: CA users with no parentId are users who need to set up a company.
+   */
   const newCompanyRegistration =
     user?.role === "CA" && user.customerId === null;
 
@@ -64,30 +74,100 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
 
   return (
     <Flex flex={1} overflow="hidden" width="100%">
-      {!showNoToolsModal && <CarouselDisplay carouselItems={carouselItems} />}
+      {!showNoToolsModal && !showTrialEndedModal && <CarouselDisplay carouselItems={carouselItems} />}
 
       <Modal
-        isOpen={showNoToolsModal}
+        isOpen={!!showNoToolsModal}
         onClose={() => {}}
         closeOnOverlayClick={false}
         closeOnEsc={false}
       >
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>No Tools Subscribed</ModalHeader>
-          <ModalBody>
-            <Text>
-              You are not currently subscribed to any tools, please contact
-              sales.
+        <ModalContent alignContent={"center"}>
+          <ModalBody
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            textAlign="center"
+            p={4}
+          >
+            <Warning fontSize="large" style={{ marginBottom: 12 }} />
+            <Text fontSize="2xl" fontWeight="semibold" mb={2}>
+              No Tools Subscribed
             </Text>
-            <Button
-              mt={4}
-              onClick={logoutUser}
-              width="100%"
-              loadingText="Logging out..."
-            >
-              Logout
-            </Button>
+            <Text mb={4}>
+              Your have no tools. Please visit our tool store to
+              continue.
+            </Text>
+            <HStack spacing={2} width="100%" justifyContent="center">
+              <Button
+                onClick={() => router.push("/tool-store")}
+                loadingText="Going to tool store..."
+              >
+                Tool Store
+              </Button>
+              <Button onClick={logoutUser} loadingText="Logging out...">
+                Logout
+              </Button>
+            </HStack>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
+      <Modal
+        isOpen={!!showTrialEndedModal}
+        onClose={() => {}}
+        closeOnOverlayClick={false}
+        closeOnEsc={false}
+      >
+        <ModalOverlay />
+        <ModalContent alignContent={"center"}>
+          <ModalBody
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            textAlign="center"
+            p={4}
+          >
+            <Warning fontSize="large" style={{ marginBottom: 12 }} />
+            <Text fontSize="xl" fontWeight="semibold" mb={2}>
+              Your Trial Ended On{" "}
+              {user?.customerIsFreeUntilDate
+              ? new Date(user.customerIsFreeUntilDate).toLocaleDateString("en-GB", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+                }).replace(
+                /^(\d{1,2})/,
+                (d) =>
+                  d +
+                  (["1", "21", "31"].includes(d)
+                  ? "st"
+                  : ["2", "22"].includes(d)
+                  ? "nd"
+                  : ["3", "23"].includes(d)
+                  ? "rd"
+                  : "th")
+                )
+              : ""}
+            </Text>
+            <Text mb={4}>
+              Your free trial has ended. Please visit our tool store to
+              continue.
+            </Text>
+            <HStack spacing={2} width="100%" justifyContent="center">
+              <Button
+                onClick={() => router.push("/tool-store")}
+                loadingText="Going to tool store..."
+              >
+                Tool Store
+              </Button>
+              <Button onClick={logoutUser} loadingText="Logging out...">
+                Logout
+              </Button>
+            </HStack>
           </ModalBody>
         </ModalContent>
       </Modal>

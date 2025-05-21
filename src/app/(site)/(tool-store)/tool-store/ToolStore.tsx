@@ -22,6 +22,7 @@ import { ToolCard } from "./ToolCard";
 import { ToolConfig } from "./useBasket";
 import BillingCycleToggle from "./BillingCyleToggle";
 import BackButton from "@/components/BackButton";
+import {MoreToolsComingSoonCard} from "./MoreToolsComingSoonCard";
 
 interface ToolSelectionPageResponse {
   resource: ToolConfig[];
@@ -100,15 +101,21 @@ const ToolStore: React.FC = () => {
       >
         {loading
           ? Array.from({ length: 9 }).map((_, i) => (
-              <Skeleton
-                key={i}
-                height="300px"
-                startColor={skeletonBg1}
-                endColor={skeletonBg2}
-                borderRadius="md"
-              />
-            ))
-          : allTools.map((tool) => <ToolCard key={tool.id} tool={tool} />)}
+          <Skeleton
+            key={i}
+            height="300px"
+            startColor={skeletonBg1}
+            endColor={skeletonBg2}
+            borderRadius="md"
+          />
+        ))
+          : (
+          <>
+            {allTools.map((tool) => <ToolCard key={tool.id} tool={tool} />)}
+            <MoreToolsComingSoonCard />
+          </>
+        )
+        }
       </SimpleGrid>
     </VStack>
   );

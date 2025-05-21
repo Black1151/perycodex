@@ -4,6 +4,7 @@ import React from "react";
 import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
 import { useUser } from "@/providers/UserProvider";
 import { useFetchClient } from "@/hooks/useFetchClient";
+import { LockReset, Password } from "@mui/icons-material";
 
 const ResetPasswordModal = ({
   openState,
@@ -43,6 +44,7 @@ const ResetPasswordModal = ({
         bodyContent={`Are you sure you want to reset your password? Click send email to confirm.`}
         confirmLabel={"Send Email"}
         cancelLabel={"Cancel"}
+        icon={<LockReset fontSize="large" />}
       />
     </>
   );
