@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -16,9 +16,17 @@ import {
   Checkbox as ChakraCheckbox,
   HStack,
   Image,
+  IconButton,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  DrawerHeader,
+  DrawerBody,
+  useDisclosure,
 } from "@chakra-ui/react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { Article } from "@mui/icons-material";
+import { Article, Menu, Check } from "@mui/icons-material";
 import { useFetchClient } from "@/hooks/useFetchClient";
 
 type ToolGuideModalProps = {
@@ -47,15 +55,18 @@ export default function ToolGuideModal({
   const [pdfLoading, setPdfLoading] = useState(true);
   const [iconImageUrl, setIconImageUrl] = useState<string | null>(null);
   const { fetchClient } = useFetchClient();
+  const {
+    isOpen: isDrawerOpen,
+    onOpen: openDrawer,
+    onClose: closeDrawer,
+  } = useDisclosure();
 
-  // Reset pdf-loading overlay whenever we pick a new guide
+  // Reset PDF-spinner when guide changes
   useEffect(() => {
-    if (selectedGuide) {
-      setPdfLoading(true);
-    }
+    if (selectedGuide) setPdfLoading(true);
   }, [selectedGuide]);
 
-  // Fetch guides & HTML on open
+  // Fetch config once open
   useEffect(() => {
     if (!isOpen) {
       setGuideList([]);
@@ -66,11 +77,9 @@ export default function ToolGuideModal({
       setLoading(true);
       return;
     }
-
-    const fetchToolConfig = async () => {
+    const fetchConfig = async () => {
       setLoading(true);
       setError(null);
-
       try {
         const data = await fetchClient<{
           resource?: {
@@ -79,220 +88,269 @@ export default function ToolGuideModal({
             guideList: string | Guide[];
             iconImageUrl: string | null;
           };
-        }>(`/api/toolConfig/findBy?id=${toolId}`, {
-          method: "GET",
-        });
-
-        if (!data?.resource) {
-          throw new Error("No resource found in response");
-        }
-
+        }>(`/api/toolConfig/findBy?id=${toolId}`);
+        if (!data?.resource) throw new Error("No resource found");
         const { guideHtml, guideList: raw, iconImageUrl } = data.resource;
-        if (guideHtml) {
-          setGuideHTML(guideHtml);
-        }
-
+        setGuideHTML(guideHtml);
         setIconImageUrl(iconImageUrl || null);
-
-        let parsedList: Guide[] = [];
-        if (raw) {
-          parsedList =
-            typeof raw === "string" ? JSON.parse(raw) : (raw as Guide[]);
-        }
-
-        const sorted = parsedList.slice().sort((a, b) => a.listOrder - b.listOrder);
+        const parsed: Guide[] = raw
+          ? typeof raw === "string"
+            ? JSON.parse(raw)
+            : raw
+          : [];
+        const sorted = parsed.slice().sort((a, b) => a.listOrder - b.listOrder);
         setGuideList(sorted);
-        if (sorted.length) {
-          setSelectedGuide(sorted[0]);
-        }
-      } catch (err: any) {
-        console.error("Failed to load tool config:", err);
-        setError(err.message || "Unable to fetch tool guides.");
+        if (sorted.length) setSelectedGuide(sorted[0]);
+      } catch (e: any) {
+        console.error(e);
+        setError(e.message || "Failed to load guides");
       } finally {
         setLoading(false);
       }
     };
-
-    fetchToolConfig();
+    fetchConfig();
   }, [isOpen, toolId]);
 
   const bg = useColorModeValue("white", "gray.800");
-  const sideWidth = useBreakpointValue({ base: "100%", md: "30%" });
-  const mainWidth = useBreakpointValue({ base: "100%", md: "70%" });
+  const pdfBg = useColorModeValue("white", "gray.50");
+  const sideW = useBreakpointValue({ base: "full", md: "30%" });
+  const mainW = useBreakpointValue({ base: "full", md: "70%" });
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
-  const handlePrev = () => {
-    if (!selectedGuide) return;
-    const idx = guideList.findIndex((g) => g.urlPath === selectedGuide.urlPath);
-    if (idx > 0) setSelectedGuide(guideList[idx - 1]);
-  };
-  const handleNext = () => {
-    if (!selectedGuide) return;
-    const idx = guideList.findIndex((g) => g.urlPath === selectedGuide.urlPath);
-    if (idx < guideList.length - 1) setSelectedGuide(guideList[idx + 1]);
-  };
+  const currentIndex = selectedGuide
+    ? guideList.findIndex((g) => g.urlPath === selectedGuide.urlPath)
+    : -1;
+
+  const handlePrev = useCallback(() => {
+    if (currentIndex > 0) setSelectedGuide(guideList[currentIndex - 1]);
+  }, [currentIndex, guideList]);
+
+  const handleNext = useCallback(() => {
+    if (currentIndex < guideList.length - 1)
+      setSelectedGuide(guideList[currentIndex + 1]);
+  }, [currentIndex, guideList]);
+
+  // Sidebar list (for both DrawerBody & desktop Box)
+  const SidebarList = (
+    <VStack align="stretch" spacing={2}>
+      {guideList.map((g, idx) => (
+        <Button
+          key={g.urlPath}
+          justifyContent="space-between"
+          variant={selectedGuide?.urlPath === g.urlPath ? "solid" : "ghost"}
+          onClick={() => {
+            setSelectedGuide(g);
+            if (isMobile) closeDrawer();
+          }}
+          px={{ base: 2, md: 2 }}
+          py={{ base: 6, md: 2 }}
+          fontSize={{ base: "md", md: "sm" }}
+          _hover={{ bg: "gray.100" }}
+        >
+          <HStack spacing={2} justify={"left"} flex={1} overflow={"hidden"}>
+            {isMobile ? (
+              <Article fontSize="medium" />
+            ) : (
+              <Article fontSize="small" />
+            )}
+            <Text fontSize={[]}>{g.title}</Text>
+          </HStack>
+          {readGuides[g.urlPath] && (
+            <CheckCircleIcon
+              style={{
+                color: "#07ad4c",
+                background:
+                  selectedGuide?.urlPath === g.urlPath ? "#fff" : "transparent",
+                borderRadius: "50%",
+              }}
+            />
+          )}
+        </Button>
+      ))}
+    </VStack>
+  );
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="6xl">
-      <ModalOverlay />
-      <ModalContent height="80vh">
-        <ModalCloseButton />
-        <ModalBody px={0} py={0} borderRadius="xl">
-          <HStack justify="start" p={4} bg={bg}>
-            {!loading && iconImageUrl && (
-              <Image src={iconImageUrl} boxSize="50px" alt="Tool icon" />
-            )}
-            <Text fontSize="2xl" fontWeight="bold">
-              Tool Guide
-            </Text>
-          </HStack>
+    <>
+      {/* Mobile drawer */}
+      {isMobile && (
+        <Drawer
+          isOpen={isDrawerOpen}
+          placement="left"
+          onClose={closeDrawer}
+          size="xs"
+        >
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerBody px={4}>
+              <VStack align={"top"} spacing={0} my={3}>
+                <Text fontSize="xl" fontWeight="bold">
+                    Guide List
+                </Text>
+                <Text
+                  fontSize="sm"
+                  color="gray.500"
+                  mb={4}
+                >
+                  ({Object.values(readGuides).filter(Boolean).length} of{" "}
+                  {guideList.length} guides completed)
+                </Text>
+                {SidebarList}
+              </VStack>
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
+      )}
 
-          {loading ? (
-            <Flex align="center" justify="center" h="100%">
-              <Spinner size="xl" />
-            </Flex>
-          ) : error ? (
-            <Text color="red.500" textAlign="center">
-              {error}
-            </Text>
-          ) : (
-            <Flex h="full" direction={{ base: "column", md: "row" }}>
-              {/* Sidebar */}
-              <Box
-                w={sideWidth}
-                borderRightWidth={{ base: 0, md: "1px" }}
-                borderBottomWidth={{ base: "1px", md: 0 }}
-                borderColor="gray.200"
-                overflowY="auto"
-                px={4}
-                py={2}
-                bg={bg}
+      <Modal isOpen={isOpen} onClose={onClose} size="6xl" isCentered>
+        <ModalOverlay />
+        <ModalContent maxH="90vh" maxW="90vw" minH={"80vh"} minW="80vw">
+          <ModalCloseButton />
+
+          <ModalBody p={0} display="flex" flexDirection="column" bg={bg}>
+            {/* Header */}
+            <HStack
+              px={4}
+              py={3}
+              bg={bg}
+              borderBottom="1px solid"
+              borderColor="gray.200"
+              justify={"left"}
+            >
+              {isMobile && (
+                <IconButton
+                  aria-label="Open guide list"
+                  icon={<Menu />}
+                  onClick={openDrawer}
+                  size="md"
+                  variant="outline"
+                />
+              )}
+              {iconImageUrl && (
+                <Image src={iconImageUrl} boxSize="40px" alt="Tool icon" />
+              )}
+              <Text fontSize="xl" fontWeight="bold">
+                Tool Guide
+              </Text>
+              <Text
+                fontSize="sm"
+                color="gray.500"
+                display={{ base: "none", md: "block" }}
               >
-                <VStack align="stretch" spacing={2}>
-                  {guideHTML && guideList.length === 0 ? (
-                    <Box>
-                      <Text mb={2} fontWeight="bold">
-                        Guide
-                      </Text>
-                      <Box
-                        p={2}
-                        bg={useColorModeValue("gray.50", "gray.700")}
-                        borderRadius="md"
-                        overflowY="auto"
-                        maxH="80vh"
-                        dangerouslySetInnerHTML={{ __html: guideHTML }}
-                      />
-                    </Box>
-                  ) : (
-                    guideList.map((guide) => (
-                      <Button
-                        key={guide.urlPath}
-                        justifyContent="space-between"
-                        variant={
-                          selectedGuide?.urlPath === guide.urlPath
-                            ? "solid"
-                            : "ghost"
-                        }
-                        onClick={() => setSelectedGuide(guide)}
-                      >
-                        <HStack spacing={2}>
-                          <Box
-                            p={
-                              selectedGuide?.urlPath === guide.urlPath
-                                ? 0.5
-                                : 0
-                            }
-                          >
-                            <Article />
-                          </Box>
-                          <Text>{guide.title}</Text>
-                        </HStack>
-                        {readGuides[guide.urlPath] && (
-                          <CheckCircleIcon
-                            style={{
-                              color: "#07ad4c",
-                              background:
-                                selectedGuide?.urlPath === guide.urlPath
-                                  ? "#fff"
-                                  : "transparent",
-                              borderRadius: "50%",
-                            }}
-                          />
-                        )}
-                      </Button>
-                    ))
-                  )}
-                </VStack>
-              </Box>
+                ({Object.values(readGuides).filter(Boolean).length} of{" "}
+                {guideList.length} guides completed)
+              </Text>
+            </HStack>
 
-              {/* Main PDF viewer */}
-              {!guideHTML && selectedGuide && (
-                <Flex direction="column" w={mainWidth} h="full" bg="gray.50">
-                  <Box flex="1" position="relative">
-                    {pdfLoading && (
-                      <Flex
-                        position="absolute"
-                        top="0"
-                        left="0"
-                        right="0"
-                        bottom="0"
-                        align="center"
-                        justify="center"
-                        bg="gray.50"
-                        zIndex="1"
-                      >
-                        <Spinner size="xl" />
-                      </Flex>
-                    )}
-                    <embed
-                      src={`${selectedGuide.urlPath}#toolbar=0&navpanes=0&scrollbar=0`}
-                      type="application/pdf"
-                      width="100%"
-                      height="100%"
-                      onLoad={() => setPdfLoading(false)}
+            <Flex flex="1" overflow="hidden">
+              {/* Desktop sidebar */}
+              {!isMobile && (
+                <Box
+                  w={sideW}
+                  borderRight="1px solid"
+                  borderColor="gray.200"
+                  overflowY="auto"
+                  p={4}
+                >
+                  {SidebarList}
+                </Box>
+              )}
+
+              {/* Main content */}
+              <Box w={mainW} display="flex" flexDirection="column" flex="1">
+                {guideHTML && !guideList.length ? (
+                  <Box p={4} overflowY="auto" flex="1">
+                    <div
+                      dangerouslySetInnerHTML={{ __html: guideHTML || "" }}
                     />
                   </Box>
-                  <Flex p={4} justify="space-between" align="center" bg={bg}>
-                    <Button
-                      onClick={handlePrev}
-                      isDisabled={
-                        guideList[0]?.urlPath === selectedGuide.urlPath
-                      }
+                ) : selectedGuide ? (
+                  <>
+                    {/* PDF scroll container */}
+                    <Box
+                      flex="1"
+                      overflowY="auto"
+                      position="relative"
+                      bg={pdfBg}
                     >
-                      Previous
-                    </Button>
-                    <ChakraCheckbox
-                      isChecked={!!readGuides[selectedGuide.urlPath]}
-                      onChange={(e) =>
-                        setReadGuides((prev) => ({
-                          ...prev,
-                          [selectedGuide.urlPath]: e.target.checked,
-                        }))
-                      }
-                    >
-                      Mark as read
-                    </ChakraCheckbox>
-                    <Button
-                      onClick={handleNext}
-                      isDisabled={
-                        guideList[guideList.length - 1]?.urlPath ===
-                        selectedGuide.urlPath
-                      }
-                    >
-                      Next
-                    </Button>
-                  </Flex>
-                </Flex>
-              )}
+                      {pdfLoading && (
+                        <Flex
+                          position="absolute"
+                          inset="0"
+                          align="center"
+                          justify="center"
+                          bg={pdfBg}
+                          zIndex={1}
+                        >
+                          <Spinner size="lg" />
+                        </Flex>
+                      )}
+                      <embed
+                        src={`${selectedGuide.urlPath}#toolbar=0&navpanes=0&scrollbar=0`}
+                        type="application/pdf"
+                        width="100%"
+                        height="100%"
+                        onLoad={() => setPdfLoading(false)}
+                        aria-label={`Guide PDF: ${selectedGuide.title}`}
+                      />
+                    </Box>
 
-              {!guideHTML && !selectedGuide && (
-                <Flex align="center" justify="center" w={mainWidth}>
-                  <Text>No guide selected.</Text>
-                </Flex>
-              )}
+                    {/* Sticky footer nav */}
+                    <Flex
+                      px={{ base: 4, md: 6 }}
+                      py={{ base: 3, md: 4 }}
+                      bg={bg}
+                      borderTop="1px solid"
+                      borderColor="gray.200"
+                      position="sticky"
+                      bottom={0}
+                      align="center"
+                      justify="space-between"
+                      minH="48px"
+                    >
+                      <Button
+                        onClick={handlePrev}
+                        isDisabled={currentIndex <= 0}
+                        px={{ base: 4, md: 3 }}
+                        py={{ base: 3, md: 2 }}
+                      >
+                        Previous
+                      </Button>
+
+                      <ChakraCheckbox
+                        isChecked={!!readGuides[selectedGuide.urlPath]}
+                        onChange={(e) =>
+                          setReadGuides((p) => ({
+                            ...p,
+                            [selectedGuide.urlPath]: e.target.checked,
+                          }))
+                        }
+                        fontSize={{ base: "md", md: "sm" }}
+                      >
+                        Mark as read
+                      </ChakraCheckbox>
+
+                      <Button
+                        onClick={handleNext}
+                        isDisabled={currentIndex >= guideList.length - 1}
+                        px={{ base: 4, md: 3 }}
+                        py={{ base: 3, md: 2 }}
+                      >
+                        Next
+                      </Button>
+                    </Flex>
+                  </>
+                ) : (
+                  <Flex flex="1" align="center" justify="center">
+                    <Spinner size="lg" />
+                  </Flex>
+                )}
+              </Box>
             </Flex>
-          )}
-        </ModalBody>
-      </ModalContent>
-    </Modal>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   );
 }
