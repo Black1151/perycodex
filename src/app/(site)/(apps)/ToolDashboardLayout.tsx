@@ -9,6 +9,7 @@ import NavigationBottombar from "@/components/Bottombar/NavigationBottombar/Navi
 import { getMuiIconByName } from "@/utils/muiIconMapper";
 import { Icon } from "@chakra-ui/react";
 import { useUser } from "@/providers/UserProvider";
+import ToolGuideModal from "@/components/modals/toolGuideModal/ToolGuideModal";
 
 interface DashboardAPIResponse {
   filteredDashboards: Dashboard[];

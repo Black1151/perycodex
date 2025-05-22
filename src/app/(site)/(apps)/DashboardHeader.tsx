@@ -7,6 +7,8 @@ import {
   Heading,
   useTheme,
   useBreakpointValue,
+  IconButton,
+  Button,
 } from "@chakra-ui/react";
 import AddButtonMobile from "@/components/Buttons/AddButtonMobile";
 import { useWorkflow } from "@/providers/WorkflowProvider";
@@ -14,6 +16,8 @@ import BackButton from "@/components/BackButton";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { useRouter } from "next/navigation";
 import AddButtonDesktop from "@/components/Buttons/AddButtonDesktop";
+import { Help, Info } from "@mui/icons-material";
+import ToolGuideModal from "@/components/modals/toolGuideModal/ToolGuideModal";
 
 interface DashboardHeaderProps {
   headingText: string;
@@ -37,6 +41,8 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   // Bring fetch + routing logic up here
   const { fetchClient, loading } = useFetchClient();
   const router = useRouter();
+
+  const [guideModalOpen, setGuideModalOpen] = useState(false);
 
   const handleStartClick = useCallback(async () => {
     if (!toolId || !workflowId) return;
@@ -85,6 +91,16 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         {headingText}
       </Heading>
 
+      <Button
+        isLoading={loading}
+        variant="outline"
+        color={theme.fringeCases.dashboardHeader.textcolor}
+        p={1}
+        onClick={() => setGuideModalOpen(true)}
+      >
+        <Info />
+      </Button>
+
       {ableToStart && (
         <Box ml="auto">
           {isMobile ? (
@@ -97,6 +113,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           )}
         </Box>
       )}
+      <ToolGuideModal isOpen={guideModalOpen} onClose={() => setGuideModalOpen(false)} toolId={toolId ?? ""} />
     </Flex>
   );
 };
