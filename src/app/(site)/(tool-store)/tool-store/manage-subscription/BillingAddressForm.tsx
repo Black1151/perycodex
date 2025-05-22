@@ -19,6 +19,7 @@ import {
   FormLabel,
   Select,
   Spinner,
+  useTheme,
 } from "@chakra-ui/react";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { useUser } from "@/providers/UserProvider";
@@ -54,6 +55,7 @@ const BillingAddressForm = forwardRef<BillingAddressFormHandle>((_props, ref) =>
     const { fetchClient } = useFetchClient();
     const [loading, setLoading] = useState(false);
     const user = useUser();
+    const theme = useTheme()
 
     const [address, setAddress] = useState<Address>({
       address1: "",
@@ -183,7 +185,7 @@ const BillingAddressForm = forwardRef<BillingAddressFormHandle>((_props, ref) =>
 
     return (
       <Box
-        bg={isMobile ? "rgba(255,255,255,0.85)" : "white"}
+        bg={theme.colors.white}
         borderRadius="lg"
         boxShadow="sm"
         p={6}

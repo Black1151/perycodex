@@ -83,7 +83,7 @@ const ToolStore: React.FC = () => {
             fontWeight="400"
             color={theme.colors.elementBG}
             fontFamily="bonfire"
-            fontSize={[32, 42]}
+            fontSize={[24, 24, 32, 42]}
             mb={-3}
           >
             Tool Store

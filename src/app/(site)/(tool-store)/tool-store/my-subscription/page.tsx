@@ -100,7 +100,7 @@ export default function CurrentSubscriptionPage() {
             fontWeight="400"
             color={theme.colors.elementBG}
             fontFamily="bonfire"
-            fontSize={[32, 42]}
+            fontSize={[24, 24, 32, 42]}
             mb={-3}
           >
             My Current Subscription
@@ -223,7 +223,13 @@ export default function CurrentSubscriptionPage() {
           </SimpleGrid>
 
           {/* Dates & licenses */}
-          <Stack spacing={2} mb={6} direction={"row"}>
+            <Stack
+            spacing={2}
+            mb={6}
+            direction={{ base: "column", md: "row" }}
+            flexWrap="wrap"
+            shouldWrapChildren
+            >
             <Badge colorScheme="blue">
               Start Date:{" "}
               {new Date(subscription.updatedAt).toLocaleDateString("en-GB")}
@@ -231,14 +237,13 @@ export default function CurrentSubscriptionPage() {
             {/* //TODO: Add renewal date in from db when col is made */}
             <Badge colorScheme="blue">Renewal Date: XX/XX/XXXX</Badge>
             <Badge colorScheme="blue">Subscription ID: {subscription.id}</Badge>
-          </Stack>
+            </Stack>
 
           {/* Action buttons */}
           <Stack direction={{ base: "column", md: "row" }} spacing={3}>
             <Button
               variant="outline"
               colorScheme="blue"
-              flex={1}
               onClick={() => router.push("/tool-store/manage-subscription")}
             >
               Invoice
@@ -246,7 +251,6 @@ export default function CurrentSubscriptionPage() {
             <Button
               variant="outline"
               colorScheme="blue"
-              flex={1}
               onClick={() => router.push("/tool-store/manage-subscription")}
             >
               Manage Subscription
@@ -255,7 +259,6 @@ export default function CurrentSubscriptionPage() {
               variant="outline"
               disabled
               colorScheme="blue"
-              flex={1}
               onClick={() => router.push("/tool-store/manage-subscription")}
             >
               Past Subscriptions
@@ -263,7 +266,6 @@ export default function CurrentSubscriptionPage() {
             <Button
               variant="outline"
               colorScheme="blue"
-              flex={1}
               onClick={() => router.push("/tool-store/manage-subscription")}
             >
               Contact Sales
