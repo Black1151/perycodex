@@ -72,6 +72,7 @@ export interface WorkflowStage {
   allowAlwaysEdit: boolean;
   saveAllowed: boolean;
   alwaysShowStageComplete: boolean;
+  headerBackgroundImageUrl: string | null;
 }
 
 export interface EnhancedWorkflowStage extends WorkflowStage {
