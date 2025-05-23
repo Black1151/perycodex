@@ -1,11 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
-import {
-  useBasket,
-  BasketItem,
-  SubscriptionInfo,
-} from "../useBasket";
+import { useBasket, BasketItem, SubscriptionInfo } from "../useBasket";
 import {
   Flex,
   Text,
@@ -25,6 +21,7 @@ import {
   DrawerBody,
   useDisclosure,
   Spinner,
+  Slide,
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
 import { Close } from "@mui/icons-material";
@@ -41,7 +38,7 @@ import LicensePicker from "../LicensePicker";
 import BillingAddressForm, {
   BillingAddressFormHandle,
 } from "./BillingAddressForm";
-import { useRouter} from "next/navigation"
+import { useRouter } from "next/navigation";
 
 export default function BasketPage() {
   const {
@@ -59,7 +56,7 @@ export default function BasketPage() {
   const [addingVoucher, setAddingVoucher] = useState(false);
   const isMobile = useBreakpointValue({ base: true, lg: false });
   const billingRef = useRef<BillingAddressFormHandle>(null);
-  const [removingIds, setRemovingIds] = useState<Set<string>>(new Set())
+  const [removingIds, setRemovingIds] = useState<Set<string>>(new Set());
 
   // Drawers for mobile
   const voucherDrawer = useDisclosure();
@@ -73,7 +70,9 @@ export default function BasketPage() {
     setLoading(true);
     if (!basket) return [];
     return Array.isArray(basket.content)
-      ? basket.content.filter((item): item is BasketItem => "basketUniqueId" in item)
+      ? basket.content.filter(
+          (item): item is BasketItem => "basketUniqueId" in item
+        )
       : [];
   }, [basket]);
 
@@ -81,7 +80,9 @@ export default function BasketPage() {
     setLoading(true);
     if (!basket) return [];
     return Array.isArray(basket.ownedSubscriptionInfo)
-      ? basket.ownedSubscriptionInfo.filter((item): item is SubscriptionInfo => "name" in item)
+      ? basket.ownedSubscriptionInfo.filter(
+          (item): item is SubscriptionInfo => "name" in item
+        )
       : [];
   }, [basket]);
 
@@ -231,7 +232,9 @@ export default function BasketPage() {
         isOpen={false /* salesModal logic unchanged */}
         onClose={() => {}}
         body={<></>}
-      >   </PerygonModal>
+      >
+        {" "}
+      </PerygonModal>
 
       {/* Header */}
       <Flex
@@ -384,10 +387,19 @@ export default function BasketPage() {
 
               {isMobile ? (
                 <>
-                  <Button w="full" mb={2} onClick={voucherDrawer.onOpen} variant={"outline"}>
+                  <Button
+                    w="full"
+                    mb={2}
+                    onClick={voucherDrawer.onOpen}
+                    variant={"outline"}
+                  >
                     Add Voucher Code
                   </Button>
-                  <Button w="full" onClick={billingDrawer.onOpen} variant={"outline"}>
+                  <Button
+                    w="full"
+                    onClick={billingDrawer.onOpen}
+                    variant={"outline"}
+                  >
                     Edit Billing Address
                   </Button>
                 </>
@@ -483,10 +495,7 @@ export default function BasketPage() {
               </Box>
             )}
 
-            {!isMobile && (
-              <BillingAddressForm ref={billingRef} />
-            )}
-
+            {!isMobile && <BillingAddressForm ref={billingRef} />}
           </Box>
         </Flex>
       ) : (
@@ -583,29 +592,38 @@ export default function BasketPage() {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerHeader borderBottomWidth="1px">
-            Add Voucher Code
-          </DrawerHeader>
+          <DrawerHeader borderBottomWidth="1px">Add Voucher Code</DrawerHeader>
           <DrawerBody>
             <form
               onSubmit={async (e) => {
                 e.preventDefault();
-                const code = (e.currentTarget.elements.namedItem(
-                  "voucher"
-                ) as HTMLInputElement).value.trim();
+                const code = (
+                  e.currentTarget.elements.namedItem(
+                    "voucher"
+                  ) as HTMLInputElement
+                ).value.trim();
                 if (!code) {
-                  toast({ title: "Enter a code", status: "warning", duration: 2000 });
+                  toast({
+                    title: "Enter a code",
+                    status: "warning",
+                    duration: 2000,
+                  });
                   return;
                 }
                 setLoading(true);
                 try {
                   await addVoucher(code);
-                  toast({ title: "Voucher applied!", status: "success", duration: 3000 });
+                  toast({
+                    title: "Voucher applied!",
+                    status: "success",
+                    duration: 3000,
+                  });
                   voucherDrawer.onClose();
                 } catch (err) {
                   toast({
                     title: "Error",
-                    description: err instanceof Error ? err.message : "Unexpected",
+                    description:
+                      err instanceof Error ? err.message : "Unexpected",
                     status: "error",
                     duration: 3000,
                   });
@@ -637,26 +655,49 @@ export default function BasketPage() {
         </DrawerContent>
       </Drawer>
 
-      {/* Mobile Billing Drawer */}
-      <Drawer
-        isOpen={billingDrawer.isOpen}
-        placement="right"
-        onClose={billingDrawer.onClose}
-        size="xs"
+      {/* Mobile “drawer” via Slide + backdrop */}
+      {billingDrawer.isOpen && (
+        <Box
+          pos="fixed"
+          inset={0}
+          bg="blackAlpha.600"
+          zIndex="overlay"
+          onClick={billingDrawer.onClose}
+        />
+      )}
+
+      <Slide
+        direction="right"
+        in={billingDrawer.isOpen}
+        unmountOnExit={false}
+        style={{ zIndex: 1400 }}
       >
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerHeader borderBottomWidth="1px">
-            Billing Address
-          </DrawerHeader>
-          <DrawerBody>
-            <BillingAddressForm ref={billingRef} />
-            <Button mt={4} w="full" onClick={billingDrawer.onClose}>
-              Close
-            </Button>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
+        <Box
+          bg="white"
+          w="xs"
+          h="full"
+          pos="fixed"
+          top="0"
+          right="0"
+          shadow="md"
+          p={4}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Flex justify="space-between" align="center" mb={4}>
+            <Text fontSize="lg" fontWeight="semibold">
+              Billing Address
+            </Text>
+            <IconButton
+              aria-label="Close"
+              icon={<Close />}
+              size="sm"
+              onClick={billingDrawer.onClose}
+            />
+          </Flex>
+
+          <BillingAddressForm ref={billingRef} />
+        </Box>
+      </Slide>
     </VStack>
   );
 }
