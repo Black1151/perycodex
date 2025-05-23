@@ -1,51 +1,52 @@
-// // app/api/checkout/route.ts
+import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
-// Example for a POST route in Next.js 13+ app router
-import { NextResponse } from 'next/server'
+export async function POST(req: NextRequest) {
+  const cookieStore = cookies();
+  const authToken = cookieStore.get("auth_token")?.value;
 
-export async function POST(request: Request) {
-  const body = await request.json()
-  //Placeholder for the actual logic
-  return NextResponse.json({ success: true })
+  console.log(
+    "[BASKET POST FINAL CHECKOUT] Incoming request to checkout basket - post payment"
+  );
+
+  const backendUrl = `${process.env.BE_URL}/basket/checkout/`;
+
+  console.log("[BASKET POST FINAL CHECKOUT] Backend URL:", backendUrl);
+
+  try {
+    const body = await req.json();
+
+    console.log("[BASKET POST FINAL CHECKOUT] Request body:", body);
+
+    const response = await fetch(`${backendUrl}${body.id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authToken ? `Bearer ${authToken}` : "",
+      },
+    });
+
+    const data = await response.json();
+    console.log("[BASKET POST FINAL CHECKOUT] Backend response:", data);
+
+    if (!response.ok) {
+      console.error("[BASKET POST FINAL CHECKOUT] Backend error:", data);
+      return NextResponse.json(
+        { error: data?.error || data?.message || "Failed to create basket." },
+        { status: response.status }
+      );
+    }
+
+    return NextResponse.json(data);
+  } catch (error: any) {
+    console.error("[BASKET POST FINAL CHECKOUT] Exception caught:", error);
+    return NextResponse.json(
+      {
+        error:
+          error.message ||
+          "An error occurred while checking out basket post payment.",
+      },
+      { status: 500 }
+    );
+  }
 }
-
-
-// import { NextResponse } from 'next/server';
-// import Stripe from 'stripe';
-
-// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
-// export async function POST(req: Request) {
-//     const body = await req.json();
-
-//     const { switch1, switch2, switch3, switch4, qty } = body;
-
-//     let lineItems = [];
-
-//     if (switch1) {
-//         lineItems.push({ price: "price_1RIuJ0GatrULTQpyBGvc5qzK", quantity: qty });
-//     }
-//     if (switch2) {
-//         lineItems.push({ price: "price_1RIsc9GatrULTQpyFbOhpEBD", quantity: qty });
-//     }
-//     if (switch3) {
-//         lineItems.push({ price: "price_1RIsndGatrULTQpyTwX8SP0u", quantity: qty });
-//     }
-//     if (switch4) {
-//         lineItems.push({ price: "price_1RIs8eGatrULTQpy4zC9yf0j", quantity: qty });
-//     }
-
-//     if (lineItems.length === 0) {
-//         return NextResponse.json({ error: 'No products selected' }, { status: 400 });
-//     }
-
-//     const session = await stripe.checkout.sessions.create({
-//         mode: 'subscription',
-//         payment_method_types: ['card'],
-//         line_items: lineItems,
-//         success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success`,
-//         cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
-//     });
-
-//     return NextResponse.json({ url: session.url });
-// }

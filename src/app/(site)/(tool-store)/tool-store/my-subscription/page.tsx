@@ -23,6 +23,8 @@ import AnimatedTillNumber from "@/components/animations/AnimatedTillNumber";
 import { useUser } from "@/providers/UserProvider";
 import WarningIcon from "@mui/icons-material/Warning";
 import BackButton from "@/components/BackButton";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { Call } from "@mui/icons-material";
 
 export default function CurrentSubscriptionPage() {
   const { subscription, getSubscription, basket } = useBasket();
@@ -243,14 +245,13 @@ export default function CurrentSubscriptionPage() {
           <Stack direction={{ base: "column", md: "row" }} spacing={3}>
             <Button
               variant="outline"
-              colorScheme="blue"
               onClick={() => router.push("/tool-store/manage-subscription")}
+              rightIcon={<OpenInNewIcon fontSize="small"/>}
             >
               Invoice
             </Button>
             <Button
               variant="outline"
-              colorScheme="blue"
               onClick={() => router.push("/tool-store/manage-subscription")}
             >
               Manage Subscription
@@ -258,15 +259,14 @@ export default function CurrentSubscriptionPage() {
             <Button
               variant="outline"
               disabled
-              colorScheme="blue"
               onClick={() => router.push("/tool-store/manage-subscription")}
             >
               Past Subscriptions
             </Button>
             <Button
               variant="outline"
-              colorScheme="blue"
               onClick={() => router.push("/tool-store/manage-subscription")}
+              rightIcon={<Call fontSize="small"/>}
             >
               Contact Sales
             </Button>

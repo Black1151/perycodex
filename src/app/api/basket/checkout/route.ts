@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
         "Content-Type": "application/json",
         Authorization: authToken ? `Bearer ${authToken}` : "",
       },
-      body: body,
+      body: JSON.stringify(body),
     });
 
     const data = await response.json();
