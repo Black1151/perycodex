@@ -31,7 +31,8 @@ import { SectionHeader } from "@/components/sectionHeader/SectionHeader";
 import { SpringScale } from "@/components/animations/SpringScale";
 import StaffHappinessDetailModal from "./StaffHappinessDetailModal";
 import { ColDef } from "ag-grid-community";
-
+import { NoDataOverlayPink } from "@/components/agGrids/DataGrid/DataGridComponentLight";
+import PerygonCard from "@/components/layout/PerygonCard";
 import { AgBarChart } from "@/components/graphs/AgBarChart";
 import DataGridComponentLight from "@/components/agGrids/DataGrid/DataGridComponentLight";
 import {
@@ -413,7 +414,13 @@ export default function ManagerDashboardInner({
                 <Flex width="100%" justifyContent="center" mb={4}>
                   <SectionHeader>Trend</SectionHeader>
                 </Flex>
-                <LineGraph DataPoints={lineGraphData} />
+                {lineGraphData.length > 1 ? (
+                  <LineGraph DataPoints={lineGraphData} />
+                ) : (
+                  <PerygonCard width="100%" height={400}>
+                    <NoDataOverlayPink />
+                  </PerygonCard>
+                )}
               </SpringScale>
             </GridItem>
 
