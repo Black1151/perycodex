@@ -131,17 +131,19 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
 
         {userIsFree && (
         <HStack
-          px={3}
-          py={2}
+          px={4}
+          pr={8}
+          py={4}
           bgColor={theme.colors.primary}
           justifyContent="left"
           alignItems="center"
-          fontSize={[14, 16, 18]}
+          fontSize={[16, 18, 18]}
           borderRadius={"md"}
           color={theme.colors.white}
           cursor={"pointer"}
           mb={2}
           onClick={userIsFreeAction}
+          gap={4}
         >
           <AccessTime fontSize="large" />
           <VStack spacing={0} align={"left"}>
@@ -158,29 +160,31 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
         </HStack>
         )}
 
-        {menuItems.map((item) => (
-          <MenuItem
-            closeOnSelect
-            key={item.label}
-            fontSize={[14, 16, 18]}
-            display="flex"
-            alignItems="center"
-            position="relative"
-            overflow="hidden"
-            bg="elementBG"
-            borderRadius="md"
-            _hover={{
-              backgroundColor: theme.colors.primary,
-              color: "white",
-            }}
-            onClick={item.onClick}
-          >
-            {item.icon}
-            <Text flex={1} zIndex={2} ml={2}>
-              {item.label}
-            </Text>
-          </MenuItem>
-        ))}
+        {menuItems
+          .sort((a, b) => (a.orderGroup ?? 0) - (b.orderGroup ?? 0))
+          .map((item) => (
+            <MenuItem
+              closeOnSelect
+              key={item.label}
+              fontSize={[14, 16, 18]}
+              display="flex"
+              alignItems="center"
+              position="relative"
+              overflow="hidden"
+              bg="elementBG"
+              borderRadius="md"
+              _hover={{
+          backgroundColor: theme.colors.primary,
+          color: "white",
+              }}
+              onClick={item.onClick}
+            >
+              {item.icon}
+              <Text flex={1} zIndex={2} ml={2}>
+          {item.label}
+              </Text>
+            </MenuItem>
+          ))}
 
         {themeDropdownOptions[0] && (
           <HStack px={3} py={2}>
