@@ -25,6 +25,7 @@ import WarningIcon from "@mui/icons-material/Warning";
 import BackButton from "@/components/BackButton";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { Call } from "@mui/icons-material";
+import { Header } from "../Header";
 
 export default function CurrentSubscriptionPage() {
   const { subscription, getSubscription, basket } = useBasket();
@@ -86,30 +87,7 @@ export default function CurrentSubscriptionPage() {
 
   return (
     <VStack spacing={0} align="center" justify="center" w="100%">
-      {/* Header */}
-      <Flex
-        flexDirection={["column", "row", "row"]}
-        gap={2}
-        w="100%"
-        p={0}
-        align="left"
-        justify="space-between"
-        mb={4}
-      >
-        <HStack spacing={1} align={"center"}>
-          <BackButton />
-          <Text
-            fontWeight="400"
-            color={theme.colors.elementBG}
-            fontFamily="bonfire"
-            fontSize={[24, 24, 32, 42]}
-            mb={-3}
-          >
-            My Current Subscription
-          </Text>
-        </HStack>
-        <BillingCycleToggle />
-      </Flex>
+      <Header title="My Subscription" />
 
       <Flex
         direction={{ base: "column-reverse", lg: "column" }}
