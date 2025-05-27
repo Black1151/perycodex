@@ -1,16 +1,8 @@
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
+import { useBasket, BasketItem, SubscriptionInfo } from "../useBasket";
 import {
-  useBasket,
-  BasketItem,
-  ToolConfig,
-  SubscriptionInfo,
-} from "../useBasket";
-import {
-  Collapse,
-  useBreakpointValue,
-  IconButton,
   Flex,
   Text,
   Box,
@@ -20,60 +12,59 @@ import {
   Stack,
   useTheme,
   useToast,
-  Image,
-  Badge,
+  IconButton,
+  useBreakpointValue,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerHeader,
+  DrawerBody,
+  useDisclosure,
+  Spinner,
+  Slide,
 } from "@chakra-ui/react";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { transparentize } from "@chakra-ui/theme-tools";
-import { FiTrash2 } from "react-icons/fi";
-import { useRouter } from "next/navigation";
-import BillingCycleToggle from "../BillingCyleToggle";
+import { Close } from "@mui/icons-material";
 import AnimatedTillNumber from "@/components/animations/AnimatedTillNumber";
 import BasketItemCard from "./BasketItemCard";
-import BackButton from "@/components/BackButton";
-import { Close } from "@mui/icons-material";
 import ToolSelectedIndicators from "./ToolSelectedIndicators";
-import WarningIcon from "@mui/icons-material/Warning";
 import LicenseAmountIndicator from "./LicenseAmountIndicator";
 import { subscriptionLimits } from "@/utils/constants/subscriptionLimits";
 import { PerygonModal } from "@/components/modals/PerygonModal";
-import { set } from "lodash";
 import ToolInfoCard from "./ToolInfoCard";
 import LicensePicker from "../LicensePicker";
 import BillingAddressForm, {
   BillingAddressFormHandle,
 } from "./BillingAddressForm";
-import { Spinner } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
+import { Header } from "../Header";
 
 export default function BasketPage() {
   const {
     basket,
     clearBasket,
-    updateBasket,
-    removeItemFromBasket,
-    changeLicenseCount,
     getBasket,
-    error,
+    removeItemFromBasket,
     addVoucher,
+    error,
   } = useBasket();
   const router = useRouter();
   const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [newQuantity, setNewQuantity] = useState<number>(0);
-  const [isSummaryOpen, setSummaryOpen] = useState(false);
-  const isMobile = useBreakpointValue({ base: true, lg: false });
   const [addingVoucher, setAddingVoucher] = useState(false);
-  const [salesModalOpen, setSalesModalOpen] = useState(false);
+  const isMobile = useBreakpointValue({ base: true, lg: false });
   const billingRef = useRef<BillingAddressFormHandle>(null);
+  const [removingIds, setRemovingIds] = useState<Set<string>>(new Set());
+
+  // Drawers for mobile
+  const voucherDrawer = useDisclosure();
+  const billingDrawer = useDisclosure();
 
   const theme = useTheme();
   const cardBg = transparentize(theme.colors.elementBG, 1)(theme);
 
-  const [removingIds, setRemovingIds] = useState<Set<string>>(new Set());
-
+  // ----- Basket data parsing -----
   const newItems: BasketItem[] = React.useMemo(() => {
     setLoading(true);
     if (!basket) return [];
@@ -109,20 +100,18 @@ export default function BasketPage() {
     } else {
       getBasket();
     }
-  }, [basket]);
-
-  useEffect(() => {
-    if (basket) {
-      setNewQuantity(basket.licensedUsers);
-    }
-  }, [basket?.licensedUsers]);
+  }, [basket, error]);
 
   if (basket?.licensedUsers === undefined) {
     return null;
   }
 
   const handleRemove = async (uniqueId: string) => {
-    setRemovingIds((prev) => new Set(prev).add(uniqueId));
+    setRemovingIds((prev) => {
+      const next = new Set(prev);
+      next.add(uniqueId);
+      return next;
+    });
     try {
       await removeItemFromBasket(uniqueId);
     } catch (error) {
@@ -207,7 +196,7 @@ export default function BasketPage() {
 
       const redirectUrl = data?.resource?.original?.redirectUrl;
       if (redirectUrl) {
-        window.open(redirectUrl, "_blank");
+        window.open(redirectUrl);
       } else {
         toast({
           title: "Error",
@@ -217,7 +206,6 @@ export default function BasketPage() {
           isClosable: true,
         });
       }
-
       return data;
     } catch (error) {
       toast({
@@ -239,56 +227,14 @@ export default function BasketPage() {
     <VStack spacing={0} align="center" justify="center" w="100%">
       <PerygonModal
         title="Please Contact Sales"
-        isOpen={salesModalOpen}
-        onClose={() => setSalesModalOpen(false)}
-        body={
-          <VStack spacing={4} align="center" justify="center">
-            <Text color={theme.colors.primaryTextColor}>
-              To reduce your license count, please contact our sales team.
-            </Text>
-            <HStack spacing={2} align="center">
-              {/* //TODO: Add a link to the sales team contact page */}
-              <Button mt={4} colorScheme="brand">
-                Contact Sales
-              </Button>
-              <Button
-                mt={4}
-                colorScheme="brand"
-                onClick={() => setSalesModalOpen(false)}
-              >
-                Close
-              </Button>
-            </HStack>
-          </VStack>
-        }
+        isOpen={false /* salesModal logic unchanged */}
+        onClose={() => {}}
+        body={<></>}
       >
-        <></>
+        {" "}
       </PerygonModal>
 
-      {/* Header */}
-      <Flex
-        flexDirection={["column", "row", "row"]}
-        gap={2}
-        w="100%"
-        p={0}
-        align="left"
-        justify="space-between"
-        mb={4}
-      >
-        <HStack spacing={1} align={"center"}>
-          <BackButton />
-          <Text
-            fontWeight="400"
-            color={theme.colors.elementBG}
-            fontFamily="bonfire"
-            fontSize={[32, 42]}
-            mb={-3}
-          >
-            Manage Subscription
-          </Text>
-        </HStack>
-        <BillingCycleToggle />
-      </Flex>
+      <Header title="Manage Subscription" />
 
       {basket.totals ? (
         <Flex
@@ -296,308 +242,255 @@ export default function BasketPage() {
           gap={4}
           w="100%"
         >
+          {/* Left: Items */}
           <Stack flex="1" spacing={4}>
-            {/* License block */}
             <LicensePicker />
 
-            {/* Old Items Product list */}
-            {oldItems.length > 0 &&
-              oldItems
-                .filter(
-                  (item) =>
-                    !newItems.some(
-                      (newItem) =>
-                        newItem.toolConfigUniqueId === item.uniqueId ||
-                        newItem.id === item.id
-                    )
-                )
-                .map((item) => {
-                  return (
-                    <ToolInfoCard
-                      key={item.uniqueId}
-                      info={item}
-                      licensedUsers={basket.licensedUsers}
-                      isNew={false}
-                    />
-                  );
-                })}
+            {oldItems
+              .filter(
+                (item) =>
+                  !newItems.some(
+                    (newItem) =>
+                      newItem.toolConfigUniqueId === item.uniqueId ||
+                      newItem.id === item.id
+                  )
+              )
+              .map((item) => (
+                <ToolInfoCard
+                  key={item.uniqueId}
+                  info={item}
+                  licensedUsers={basket.licensedUsers}
+                  isNew={false}
+                />
+              ))}
 
             {newItems.length === 0 ? (
               <Box p={6} bg={cardBg} borderRadius="md" boxShadow="sm">
                 <Text>You have no changes made to your subscription</Text>
               </Box>
             ) : (
-              newItems.map((item) => {
-                const isNew = !oldItems.some(
-                  (sub) => sub.id === item.toolConfig.id
-                );
-                return (
-                  <BasketItemCard
-                    key={item.uniqueId}
-                    item={item}
-                    licensedUsers={basket.quantity}
-                    isNew={isNew}
-                    removingIds={removingIds}
-                    handleRemove={handleRemove}
-                  />
-                );
-              })
+              newItems.map((item) => (
+                <BasketItemCard
+                  key={item.basketUniqueId}
+                  item={item}
+                  removingIds={removingIds}
+                  licensedUsers={basket.quantity}
+                  isNew={!oldItems.some((sub) => sub.id === item.toolConfig.id)}
+                  handleRemove={handleRemove}
+                />
+              ))
             )}
           </Stack>
 
-          <Box w={{ base: "100%", md: "100%", lg: "400px" }} gap={4}>
-            {/* mobile header with chevron */}
-            {isMobile && (
-              <Flex
-                align="center"
-                justify="space-between"
-                px={2}
-                bg="white"
-                borderRadius="lg"
-                boxShadow="sm"
-                p={4}
-                mb={isSummaryOpen ? 1 : 0}
-              >
-                <Text fontSize={[16, 18, 20, 22]} fontWeight="semibold">
+          {/* Right: Totals & Controls */}
+          <Box w={{ base: "100%", lg: "400px" }} gap={4}>
+            <Box bg="white" borderRadius="lg" boxShadow="sm" p={6} mb={4}>
+              {/* Totals */}
+              <HStack justify="space-between" mb={4}>
+                <Text fontSize={[14, 18]} fontWeight="semibold">
                   Subscription Totals
                 </Text>
-                <IconButton
-                  aria-label="Toggle summary"
-                  icon={isSummaryOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                  onClick={() => setSummaryOpen((o) => !o)}
-                  variant="ghost"
-                  size="sm"
-                />
-              </Flex>
-            )}
-
-            <Collapse in={!isMobile || isSummaryOpen} animateOpacity>
-              <Box
-                bg={isMobile ? "rgba(255,255,255,0.85)" : "white"}
-                borderRadius="lg"
-                boxShadow="sm"
-                p={6}
-              >
-                {/* non-mobile header */}
-                {!isMobile && (
-                  <HStack justify="space-between" mb={4}>
-                    <Text fontSize={[14, 16, 18]} fontWeight="semibold">
-                      Subscription Totals
-                    </Text>
-                  </HStack>
-                )}
-
-                <Stack spacing={2} mb={4}>
-                  <HStack justify="space-between">
-                    <Text>{basket.isAnnual ? "Yearly" : "Monthly"} Total</Text>
-                    <HStack spacing={1} fontSize="md">
-                      <Text>£</Text>
-                      <AnimatedTillNumber
-                        value={parseFloat(basket.totals.subtotal)}
-                        fontSize="md"
-                        duration={0.65}
-                      />
-                    </HStack>
-                  </HStack>
-                  <HStack justify="space-between">
-                    <Text>Total Discount</Text>
-                    <HStack spacing={1} fontSize="md">
-                      <Text color="green.500">–£</Text>
-                      <AnimatedTillNumber
-                        value={parseFloat(basket.totals.discountsTotal)}
-                        fontSize="md"
-                        duration={0.65}
-                        color="green.500"
-                      />
-                    </HStack>
-                  </HStack>
-                  <HStack justify="space-between">
-                    <Text>VAT</Text>
-                    <HStack spacing={1} fontSize="md">
-                      <Text>£</Text>
-                      <AnimatedTillNumber
-                        value={parseFloat(basket.totals.taxTotal)}
-                        fontSize="md"
-                        duration={0.65}
-                      />
-                    </HStack>
-                  </HStack>
-                  <HStack justify="space-between">
-                    <Text fontWeight="bold">Total</Text>
-                    <HStack spacing={1} fontSize="lg">
-                      <Text fontWeight="bold">£</Text>
-                      <AnimatedTillNumber
-                        value={parseFloat(basket.totals.grandTotal)}
-                        fontSize="lg"
-                        duration={0.65}
-                      />
-                      <Text fontWeight="bold">
-                        {basket.isAnnual ? "/year" : "/mo"}
-                      </Text>
-                    </HStack>
-                  </HStack>
-                </Stack>
-
-                <Button
-                  colorScheme="brand"
-                  w="full"
-                  mb={3}
-                  onClick={async () => {
-                    handleCheckout();
-                  }}
-                  disabled={basket.quantity === 0}
-                  isLoading={checkoutLoading}
-                  loadingText="Continuing to checkout..."
-                  spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
-                  spinnerPlacement="start"
-                >
-                  Checkout
-                </Button>
-                <Button
-                  variant="outline"
-                  w="full"
-                  onClick={handleClearBasket}
-                  bg={"white"}
-                  mb={3}
-                >
-                  Clear Changes
-                </Button>
-                <Button
-                  variant={"outline"}
-                  w="full"
-                  onClick={() => setAddingVoucher((prev) => !prev)}
-                >
-                  Add Voucher Code
-                </Button>
-              </Box>
-            </Collapse>
-
-            <Collapse in={isMobile || !isMobile} animateOpacity>
-              <BillingAddressForm ref={billingRef}/>
-            </Collapse>
-
-            <Collapse in={addingVoucher} animateOpacity>
-              <Box
-                bg={isMobile ? "rgba(255,255,255,0.85)" : "white"}
-                borderRadius="lg"
-                boxShadow="sm"
-                p={6}
-                mt={3}
-              >
-                {/* non-mobile header */}
-                {!isMobile && (
-                  <HStack justify="space-between" mb={4}>
-                    <Text fontSize={[14, 16, 18]} fontWeight="semibold">
-                      Add Voucher
-                    </Text>
-                    <IconButton
-                      aria-label="Toggle summary"
-                      icon={addingVoucher ? <Close /> : <></>}
-                      onClick={() => setAddingVoucher((o) => !o)}
-                      variant="ghost"
-                      size="sm"
+              </HStack>
+              <Stack spacing={2} mb={4}>
+                <HStack justify="space-between">
+                  <Text>{basket.isAnnual ? "Yearly" : "Monthly"} Total</Text>
+                  <HStack spacing={1} fontSize="md">
+                    <Text>£</Text>
+                    <AnimatedTillNumber
+                      value={parseFloat(basket.totals.subtotal)}
+                      fontSize="md"
+                      duration={0.65}
                     />
                   </HStack>
-                )}
+                </HStack>
+                <HStack justify="space-between">
+                  <Text>Total Discount</Text>
+                  <HStack spacing={1} fontSize="md">
+                    <Text color="green.500">–£</Text>
+                    <AnimatedTillNumber
+                      value={parseFloat(basket.totals.discountsTotal)}
+                      fontSize="md"
+                      duration={0.65}
+                      color="green.500"
+                    />
+                  </HStack>
+                </HStack>
+                <HStack justify="space-between">
+                  <Text>VAT</Text>
+                  <HStack spacing={1} fontSize="md">
+                    <Text>£</Text>
+                    <AnimatedTillNumber
+                      value={parseFloat(basket.totals.taxTotal)}
+                      fontSize="md"
+                      duration={0.65}
+                    />
+                  </HStack>
+                </HStack>
+                <HStack justify="space-between">
+                  <Text fontWeight="bold">Total</Text>
+                  <HStack spacing={1} fontSize="lg">
+                    <Text fontWeight="bold">£</Text>
+                    <AnimatedTillNumber
+                      value={parseFloat(basket.totals.grandTotal)}
+                      fontSize="lg"
+                      duration={0.65}
+                    />
+                    <Text fontWeight="bold">
+                      {basket.isAnnual ? "/year" : "/mo"}
+                    </Text>
+                  </HStack>
+                </HStack>
+              </Stack>
+              <Button
+                colorScheme="brand"
+                w="full"
+                mb={3}
+                onClick={handleCheckout}
+                isLoading={checkoutLoading}
+                disabled={basket.quantity === 0}
+                spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
+                spinnerPlacement="start"
+              >
+                Checkout
+              </Button>
+              <Button
+                variant="outline"
+                w="full"
+                mb={3}
+                onClick={handleClearBasket}
+              >
+                Clear Changes
+              </Button>
 
-                {/* Add a voucher code from here */}
+              {isMobile ? (
+                <>
+                  <Button
+                    w="full"
+                    mb={2}
+                    onClick={voucherDrawer.onOpen}
+                    variant={"outline"}
+                  >
+                    Add Voucher Code
+                  </Button>
+                  <Button
+                    w="full"
+                    onClick={billingDrawer.onOpen}
+                    variant={"outline"}
+                  >
+                    Edit Billing Address
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    variant="outline"
+                    w="full"
+                    mb={3}
+                    onClick={() => setAddingVoucher((v) => !v)}
+                  >
+                    Add Voucher Code
+                  </Button>
+                </>
+              )}
+            </Box>
+
+            {!isMobile && addingVoucher && (
+              <Box bg="white" borderRadius="lg" boxShadow="sm" p={6}>
+                <HStack justify="space-between" mb={4}>
+                  <Text fontSize={[14, 18]} fontWeight="semibold">
+                    Add Voucher
+                  </Text>
+                  <IconButton
+                    aria-label="Close"
+                    icon={<Close />}
+                    size="sm"
+                    onClick={() => setAddingVoucher(false)}
+                  />
+                </HStack>
                 <form
                   onSubmit={async (e) => {
                     e.preventDefault();
-                    const form = e.target as HTMLFormElement;
-                    const input = form.elements.namedItem(
-                      "voucher"
-                    ) as HTMLInputElement;
-                    const code = input.value.trim();
+                    const code = (
+                      e.currentTarget.elements.namedItem(
+                        "voucher"
+                      ) as HTMLInputElement
+                    ).value.trim();
                     if (!code) {
                       toast({
-                        title: "Please enter a voucher code.",
+                        title: "Enter a code",
                         status: "warning",
                         duration: 2000,
-                        isClosable: true,
                       });
                       return;
                     }
                     setLoading(true);
                     try {
-                      addVoucher(code);
+                      await addVoucher(code);
                       toast({
                         title: "Voucher applied!",
-                        description: "Your voucher code has been applied.",
                         status: "success",
                         duration: 3000,
-                        isClosable: true,
                       });
-                    } catch (error) {
+                    } catch (err) {
                       toast({
                         title: "Error",
                         description:
-                          error instanceof Error
-                            ? error.message
-                            : "An unexpected error occurred.",
+                          err instanceof Error
+                            ? err.message
+                            : "Unexpected error",
                         status: "error",
                         duration: 3000,
-                        isClosable: true,
                       });
                     } finally {
                       setLoading(false);
                     }
                   }}
                 >
-                  <Stack spacing={3} mb={3}>
-                    <Text fontSize="sm" color="gray.600">
-                      Enter your voucher code below:
-                    </Text>
-                    <HStack>
-                      <input
-                        name="voucher"
-                        type="text"
-                        placeholder="Voucher code"
-                        style={{
-                          flex: 1,
-                          padding: "8px 12px",
-                          borderRadius: "4px",
-                          border: "1px solid #CBD5E0",
-                          fontSize: "16px",
-                        }}
-                        disabled={loading}
-                        autoComplete="off"
-                      />
-                      <Button
-                        colorScheme="brand"
-                        type="submit"
-                        isLoading={loading}
-                        disabled={loading}
-                      >
-                        Apply
-                      </Button>
-                    </HStack>
+                  <Stack spacing={3}>
+                    <input
+                      name="voucher"
+                      placeholder="Voucher code"
+                      style={{
+                        flex: 1,
+                        padding: "8px 12px",
+                        borderRadius: 4,
+                        border: "1px solid #CBD5E0",
+                        fontSize: 16,
+                      }}
+                      disabled={loading}
+                      autoComplete="off"
+                    />
+                    <Button
+                      type="submit"
+                      colorScheme="brand"
+                      isLoading={loading}
+                    >
+                      Apply
+                    </Button>
                   </Stack>
                 </form>
               </Box>
-            </Collapse>
+            )}
+
+            {!isMobile && <BillingAddressForm ref={billingRef} />}
           </Box>
         </Flex>
       ) : (
-        <VStack spacing={4} w={"100%"}>
+        <VStack spacing={4} w="100%">
           <VStack
             spacing={2}
             align="center"
             justify="center"
             w="100%"
-            fontSize={[20, 20, 22, 24]}
+            fontSize={[20, 22, 24]}
             bg={cardBg}
             py={8}
-            borderRadius={"md"}
+            borderRadius="md"
           >
-            <Text fontWeight="semibold" textAlign={"center"}>
+            <Text fontWeight="semibold" textAlign="center">
               You haven't made any changes to your subscription.
             </Text>
-            <Text
-              fontWeight="400"
-              fontSize={[14, 14, 16, 18]}
-              textAlign={"center"}
-            >
+            <Text fontWeight="400" fontSize={[14, 16, 18]} textAlign="center">
               Add some tools or user licenses to get started.
             </Text>
           </VStack>
@@ -606,73 +499,184 @@ export default function BasketPage() {
             spacing={4}
             align="center"
             direction={{ base: "column", lg: "row" }}
-            w={"100%"}
+            w="100%"
           >
             <VStack
               spacing={4}
               align="center"
-              w={["100%", "100%", "100%", "50%"]}
+              w={["100%", "100%", "100%"]}
               bg={cardBg}
-              borderRadius={"md"}
+              borderRadius="md"
               p={4}
               pt={6}
-              minH={["", "", "", "300px"]}
-              justify={"center"}
-              overflow={"hidden"}
+              minH={["", "", "300px"]}
+              justify="center"
             >
               {basket.licensedUsers === 0 ? (
                 <VStack spacing={2}>
-                  {/* Customer is free, show amount of free licenses they have */}
-                  <HStack spacing={2} fontSize={[14, 16, 18, 18]}>
+                  <HStack spacing={2} fontSize={[14, 18]}>
                     <LicenseAmountIndicator
                       amount={subscriptionLimits.free.maxUsers}
                     />
                   </HStack>
-                  <HStack align="flex-end" spacing={2} justify={"center"}>
+                  <HStack align="flex-end" spacing={2} justify="center">
                     <AnimatedTillNumber
                       value={subscriptionLimits.free.maxUsers}
                       fontSize="32"
                       duration={0.65}
                       isCurrency={false}
                     />
-                    <Text fontWeight="normal" fontSize={[14, 16, 18, 18]}>
-                      Free Trial Licenses
-                    </Text>
+                    <Text fontSize={[14, 18]}>Free Trial Licenses</Text>
                   </HStack>
                 </VStack>
               ) : (
                 <HStack spacing={4}>
-                  <Box>
-                    <HStack spacing={2} fontSize={[14, 16, 18, 18]}>
-                      <LicenseAmountIndicator amount={basket.licensedUsers} />
-                    </HStack>
-                  </Box>
+                  <HStack spacing={2} fontSize={[14, 18]}>
+                    <LicenseAmountIndicator amount={basket.licensedUsers} />
+                  </HStack>
                 </HStack>
               )}
-              <LicensePicker showAlreadySubscribedText={false} />
+              <HStack maxW={"450px"} >
+                <LicensePicker showAlreadySubscribedText={false} />
+              </HStack>
             </VStack>
 
             <VStack
               spacing={4}
               align="center"
-              w={["100%", "100%", "100%", "50%"]}
+              w={["100%", "100%", "100%"]}
               bg={cardBg}
-              borderRadius={"md"}
+              borderRadius="md"
               p={4}
               pt={6}
-              minH={["", "", "", "300px"]}
-              justify={"center"}
+              minH="300px"
+              justify="center"
             >
               <ToolSelectedIndicators
                 subscriptionInfo={basket.ownedSubscriptionInfo}
               />
-              <Button size={"lg"} onClick={() => router.push("/tool-store")}>
+              <Button size="lg" onClick={() => router.push("/tool-store")}>
                 Browse Tools
               </Button>
             </VStack>
           </Stack>
         </VStack>
       )}
+      {/* Mobile Voucher Drawer */}
+      <Drawer
+        isOpen={voucherDrawer.isOpen}
+        placement="right"
+        onClose={voucherDrawer.onClose}
+        size="xs"
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader borderBottomWidth="1px">Add Voucher Code</DrawerHeader>
+          <DrawerBody>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const code = (
+                  e.currentTarget.elements.namedItem(
+                    "voucher"
+                  ) as HTMLInputElement
+                ).value.trim();
+                if (!code) {
+                  toast({
+                    title: "Enter a code",
+                    status: "warning",
+                    duration: 2000,
+                  });
+                  return;
+                }
+                setLoading(true);
+                try {
+                  await addVoucher(code);
+                  toast({
+                    title: "Voucher applied!",
+                    status: "success",
+                    duration: 3000,
+                  });
+                  voucherDrawer.onClose();
+                } catch (err) {
+                  toast({
+                    title: "Error",
+                    description:
+                      err instanceof Error ? err.message : "Unexpected",
+                    status: "error",
+                    duration: 3000,
+                  });
+                } finally {
+                  setLoading(false);
+                }
+              }}
+            >
+              <Stack spacing={4} mt={4}>
+                <input
+                  name="voucher"
+                  placeholder="Voucher code"
+                  style={{
+                    flex: 1,
+                    padding: "8px 12px",
+                    borderRadius: 4,
+                    border: "1px solid #CBD5E0",
+                    fontSize: 16,
+                  }}
+                  disabled={loading}
+                  autoComplete="off"
+                />
+                <Button type="submit" colorScheme="brand" isLoading={loading}>
+                  Apply
+                </Button>
+              </Stack>
+            </form>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+
+      {/* Mobile “drawer” via Slide + backdrop */}
+      {billingDrawer.isOpen && (
+        <Box
+          pos="fixed"
+          inset={0}
+          bg="blackAlpha.600"
+          zIndex="overlay"
+          onClick={billingDrawer.onClose}
+        />
+      )}
+
+      <Slide
+        direction="right"
+        in={billingDrawer.isOpen}
+        unmountOnExit={false}
+        style={{ zIndex: 1400 }}
+      >
+        <Box
+          bg="white"
+          w="xs"
+          h="full"
+          pos="fixed"
+          top="0"
+          right="0"
+          shadow="md"
+          p={4}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Flex justify="space-between" align="center" mb={4}>
+            <Text fontSize="lg" fontWeight="semibold">
+              Billing Address
+            </Text>
+            <IconButton
+              aria-label="Close"
+              icon={<Close />}
+              size="sm"
+              onClick={billingDrawer.onClose}
+            />
+          </Flex>
+
+          <BillingAddressForm ref={billingRef} />
+        </Box>
+      </Slide>
     </VStack>
   );
 }

@@ -39,6 +39,7 @@ const useNavMenuItems = (
         label: "Logout",
         icon: <ExitToAppIcon />,
         onClick: handleLogout,
+        orderGroup: 4,
       },
     ];
   }
@@ -49,6 +50,7 @@ const useNavMenuItems = (
         label: "Admin",
         icon: <SettingsIcon />,
         onClick: () => router.push("/customers"),
+        orderGroup: 1
       },
     ];
   }
@@ -65,11 +67,13 @@ const useNavMenuItems = (
         label: "Admin Tools",
         icon: <SettingsIcon />,
         onClick: () => router.push("/users?userType=internal"),
+        orderGroup: 1
       },
       {
         label: "Tool Store",
         icon: <StorefrontIcon />,
         onClick: () => router.push("/tool-store"),
+        orderGroup: 3
       }
     );
   }
@@ -80,16 +84,19 @@ const useNavMenuItems = (
       label: "My Tools",
       icon: <HomeIcon />,
       onClick: () => router.push("/"),
+      orderGroup: 1
     },
     {
       label: "My Profile",
       icon: <PersonIcon />,
       onClick: () => router.push("/my-profile"),
+      orderGroup: 1
     },
     {
       label: "My Company",
       icon: <BusinessIcon />,
       onClick: () => router.push("/my-company"),
+      orderGroup: 1
     }
   );
 
@@ -99,6 +106,7 @@ const useNavMenuItems = (
       label: "Activity",
       icon: <Timeline />,
       onClick: () => router.push("/activity"),
+      orderGroup: 1
     });
   }
 
@@ -108,6 +116,7 @@ const useNavMenuItems = (
       label: "Client Activity",
       icon: <ViewTimeline />,
       onClick: () => router.push("/client-activity"),
+      orderGroup: 1
     });
   }
 
@@ -117,6 +126,7 @@ const useNavMenuItems = (
       label: "Recognition Hub",
       icon: <Celebration />,
       onClick: () => router.push("/big-up"),
+      orderGroup: 1
     });
   }
 
@@ -125,6 +135,7 @@ const useNavMenuItems = (
     label: "Reset Password",
     icon: <LockIcon />,
     onClick: openResetModal,
+    orderGroup: 4
   });
 
   return commonMenuItems;

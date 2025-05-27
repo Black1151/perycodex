@@ -66,7 +66,7 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
         zIndex={1}
       >
         <Flex
-          direction={{ base: "column", sm: "row" }}
+          direction={{ base: "column", md: "row" }}
           w="100%"
           align="top"
           justify="space-between"
@@ -102,6 +102,7 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
                 justify={"center"}
                 p={4}
                 w={"150px"}
+                borderBottomRightRadius={["md", "md", "none"]}
               >
                 <Image src={item.toolConfig.iconImageUrl} objectFit="contain" />
               </Flex>
@@ -113,7 +114,7 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
               w={"100%"}
               justify={"center"}
               h={"100%"}
-              p={4}
+              p={{base: 2, md: 4}}
             >
               <HStack spacing={1} mb={2} flexWrap="wrap" w="100%">
                 <Text
@@ -153,13 +154,14 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
           </HStack>
 
           <Stack
-            direction={{ base: "row", sm: "column" }}
+            direction={{ base: "row", md: "column" }}
             align={{ base: "center", sm: "flex-end" }}
             spacing={2}
-            mt={{ base: 4, md: 0 }}
+            mt={{ base: 0, md: 0 }}
             w="100%"
             justify={{ base: "center", sm: "center" }}
-            p={4}
+            p={{base: 2, md: 4}}
+            pt={{base: 0, md: 0}}
           >
             {item.itemGrandTotal != item.itemSubtotal && (
               <HStack spacing={1} fontSize="24">

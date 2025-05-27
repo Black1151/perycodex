@@ -114,7 +114,7 @@ export default function LicensePicker({
         <VStack spacing={2} justify="center" flex="1" px={4}>
           {showAlreadySubscribedText ? (
             <>
-              <HStack spacing={2} fontSize={[16, 18, 20]}>
+              <Flex direction={["column","row"]} gap={2} align="center" fontSize={[16, 18, 20]}>
                 <AnimatedTillNumber
                   value={quantity}
                   fontSize="24"
@@ -129,8 +129,8 @@ export default function LicensePicker({
                     + {diff}
                   </Badge>
                 )}
-              </HStack>
-              <Text fontSize={15} color="gray.500">
+              </Flex>
+              <Text fontSize={15} color="gray.500" textAlign={"center"}>
                 {basket.licensedUsers} Licenses Already Subscribed
               </Text>
             </>

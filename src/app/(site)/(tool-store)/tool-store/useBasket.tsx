@@ -9,7 +9,6 @@ import React, {
 } from "react";
 import { useFetchClient } from "@/hooks/useFetchClient";
 
-// Types
 export interface Basket {
   id: number;
   uniqueId: string;
@@ -163,7 +162,6 @@ type BasketContextType = {
   loading: boolean;
   error: Error | null;
   getBasket: () => Promise<void>;
-  //newBasket: () => Promise<void>;
   updateBasket: (basket: UpdateBasketProps) => Promise<void>;
   clearBasket: () => Promise<void>;
   removeItemFromBasket: (itemUId: string) => Promise<void>;
@@ -184,11 +182,6 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
   const [subscription, setSubscription] = useState<Basket | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
-
-  /**
-   * POST /api/basket — create a new basket... unused for now
-   */
-  // const newBasket = async () => {
   //   console.log("[Basket] POST /api/basket — creating new basket");
   //   setError(null);
 
@@ -506,7 +499,6 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
 
   return false;
 };
-
 
   const prevBasketRef = useRef<Basket | null>(null);
 

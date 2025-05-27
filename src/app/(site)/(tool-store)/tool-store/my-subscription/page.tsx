@@ -23,6 +23,9 @@ import AnimatedTillNumber from "@/components/animations/AnimatedTillNumber";
 import { useUser } from "@/providers/UserProvider";
 import WarningIcon from "@mui/icons-material/Warning";
 import BackButton from "@/components/BackButton";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { Call } from "@mui/icons-material";
+import { Header } from "../Header";
 
 export default function CurrentSubscriptionPage() {
   const { subscription, getSubscription, basket } = useBasket();
@@ -84,30 +87,7 @@ export default function CurrentSubscriptionPage() {
 
   return (
     <VStack spacing={0} align="center" justify="center" w="100%">
-      {/* Header */}
-      <Flex
-        flexDirection={["column", "row", "row"]}
-        gap={2}
-        w="100%"
-        p={0}
-        align="left"
-        justify="space-between"
-        mb={4}
-      >
-        <HStack spacing={1} align={"center"}>
-          <BackButton />
-          <Text
-            fontWeight="400"
-            color={theme.colors.elementBG}
-            fontFamily="bonfire"
-            fontSize={[32, 42]}
-            mb={-3}
-          >
-            My Current Subscription
-          </Text>
-        </HStack>
-        <BillingCycleToggle />
-      </Flex>
+      <Header title="My Subscription" />
 
       <Flex
         direction={{ base: "column-reverse", lg: "column" }}
@@ -223,7 +203,13 @@ export default function CurrentSubscriptionPage() {
           </SimpleGrid>
 
           {/* Dates & licenses */}
-          <Stack spacing={2} mb={6} direction={"row"}>
+            <Stack
+            spacing={2}
+            mb={6}
+            direction={{ base: "column", md: "row" }}
+            flexWrap="wrap"
+            shouldWrapChildren
+            >
             <Badge colorScheme="blue">
               Start Date:{" "}
               {new Date(subscription.updatedAt).toLocaleDateString("en-GB")}
@@ -231,22 +217,19 @@ export default function CurrentSubscriptionPage() {
             {/* //TODO: Add renewal date in from db when col is made */}
             <Badge colorScheme="blue">Renewal Date: XX/XX/XXXX</Badge>
             <Badge colorScheme="blue">Subscription ID: {subscription.id}</Badge>
-          </Stack>
+            </Stack>
 
           {/* Action buttons */}
           <Stack direction={{ base: "column", md: "row" }} spacing={3}>
             <Button
               variant="outline"
-              colorScheme="blue"
-              flex={1}
               onClick={() => router.push("/tool-store/manage-subscription")}
+              rightIcon={<OpenInNewIcon fontSize="small"/>}
             >
               Invoice
             </Button>
             <Button
               variant="outline"
-              colorScheme="blue"
-              flex={1}
               onClick={() => router.push("/tool-store/manage-subscription")}
             >
               Manage Subscription
@@ -254,17 +237,14 @@ export default function CurrentSubscriptionPage() {
             <Button
               variant="outline"
               disabled
-              colorScheme="blue"
-              flex={1}
               onClick={() => router.push("/tool-store/manage-subscription")}
             >
               Past Subscriptions
             </Button>
             <Button
               variant="outline"
-              colorScheme="blue"
-              flex={1}
               onClick={() => router.push("/tool-store/manage-subscription")}
+              rightIcon={<Call fontSize="small"/>}
             >
               Contact Sales
             </Button>

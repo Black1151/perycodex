@@ -115,20 +115,9 @@ const LineGraph: React.FC<LineGraphProps> = memo(
      */
     if (DataPoints.length === 1) {
       return (
-        <Flex
-          height={`${totalHeight}px`}
-          position="relative"
-          width="100%"
-          flex={1}
-          justifyContent="center"
-          alignItems="center"
-          bg="white"
-          borderRadius={{ base: "8px", md: "16px" }}
-        >
-          <Text color={theme.colors.primary} fontSize="xl" textAlign="center">
-            No history to display
-          </Text>
-        </Flex>
+        <PerygonCard width="100%" height={`${totalHeight}px`}>
+          <NoDataOverlayPink />
+        </PerygonCard>
       );
     }
 
