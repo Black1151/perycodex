@@ -55,7 +55,7 @@ const ToolSelectedIndicators: React.FC<ToolSelectedIndicatorsProps> = ({
   if (loading) {
     return (
       <Wrap spacing={6}>
-        {Array.from({ length: 4 }).map((_, index) => (
+        {Array.from({ length: 5 }).map((_, index) => (
           <WrapItem key={index}>
             <Box
               w="58px"

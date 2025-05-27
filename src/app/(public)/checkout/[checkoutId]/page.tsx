@@ -13,6 +13,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation"
+import ConfettiAlt from "@/components/animations/confetti/ConfettiAlt";
 
 interface PageProps {
   params: { checkoutId: string };
@@ -129,6 +130,7 @@ export default function Page({ params }: PageProps) {
               Checkout ID: {params.checkoutId}
             </Text>
             <Button onClick={() => router.push("/tool-store/my-subscription")}>Finish</Button>
+            <ConfettiAlt show={!error && !loading}/>
           </VStack>
         )}
       </Box>

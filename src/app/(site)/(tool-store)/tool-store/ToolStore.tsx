@@ -15,14 +15,10 @@ import { useUser } from "@/providers/UserProvider";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { useTheme } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
-import StoreIcon from "@mui/icons-material/Store";
-import BadgeIcon from "@mui/icons-material/Badge";
-import PersonIcon from "@mui/icons-material/Person";
 import { ToolCard } from "./ToolCard";
 import { ToolConfig } from "./useBasket";
-import BillingCycleToggle from "./BillingCyleToggle";
-import BackButton from "@/components/BackButton";
 import {MoreToolsComingSoonCard} from "./MoreToolsComingSoonCard";
+import { Header } from "./Header";
 
 interface ToolSelectionPageResponse {
   resource: ToolConfig[];
@@ -68,29 +64,7 @@ const ToolStore: React.FC = () => {
 
   return (
     <VStack spacing={0} align="center" justify="center" w="100%">
-      {/* Header */}
-      <Flex
-        flexDirection={["column", "row", "row"]}
-        gap={2}
-        w="100%"
-        p={0}
-        align="left"
-        justify="space-between"
-      >
-        <HStack spacing={1} align={"center"}>
-        <BackButton />
-          <Text
-            fontWeight="400"
-            color={theme.colors.elementBG}
-            fontFamily="bonfire"
-            fontSize={[24, 24, 32, 42]}
-            mb={-3}
-          >
-            Tool Store
-          </Text>
-        </HStack>
-          <BillingCycleToggle />
-      </Flex>
+      <Header title="Tool Store" />
 
       {/* All Tools */}
       <SimpleGrid

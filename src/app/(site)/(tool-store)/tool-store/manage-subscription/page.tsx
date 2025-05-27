@@ -25,10 +25,8 @@ import {
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
 import { Close } from "@mui/icons-material";
-import BillingCycleToggle from "../BillingCyleToggle";
 import AnimatedTillNumber from "@/components/animations/AnimatedTillNumber";
 import BasketItemCard from "./BasketItemCard";
-import BackButton from "@/components/BackButton";
 import ToolSelectedIndicators from "./ToolSelectedIndicators";
 import LicenseAmountIndicator from "./LicenseAmountIndicator";
 import { subscriptionLimits } from "@/utils/constants/subscriptionLimits";
@@ -39,6 +37,7 @@ import BillingAddressForm, {
   BillingAddressFormHandle,
 } from "./BillingAddressForm";
 import { useRouter } from "next/navigation";
+import { Header } from "../Header";
 
 export default function BasketPage() {
   const {
@@ -197,7 +196,7 @@ export default function BasketPage() {
 
       const redirectUrl = data?.resource?.original?.redirectUrl;
       if (redirectUrl) {
-        window.open(redirectUrl, "_blank");
+        window.open(redirectUrl);
       } else {
         toast({
           title: "Error",
@@ -207,7 +206,6 @@ export default function BasketPage() {
           isClosable: true,
         });
       }
-
       return data;
     } catch (error) {
       toast({
@@ -236,28 +234,7 @@ export default function BasketPage() {
         {" "}
       </PerygonModal>
 
-      {/* Header */}
-      <Flex
-        flexDirection={["column", "row"]}
-        gap={2}
-        w="100%"
-        align="center"
-        justify="space-between"
-        mb={4}
-      >
-        <HStack spacing={1}>
-          <BackButton />
-          <Text
-            fontWeight="400"
-            color={theme.colors.elementBG}
-            fontFamily="bonfire"
-            fontSize={[24, 32, 42]}
-          >
-            Manage Subscription
-          </Text>
-        </HStack>
-        <BillingCycleToggle />
-      </Flex>
+      <Header title="Manage Subscription" />
 
       {basket.totals ? (
         <Flex
@@ -527,12 +504,12 @@ export default function BasketPage() {
             <VStack
               spacing={4}
               align="center"
-              w={["100%", "50%"]}
+              w={["100%", "100%", "100%"]}
               bg={cardBg}
               borderRadius="md"
               p={4}
               pt={6}
-              minH="300px"
+              minH={["", "", "300px"]}
               justify="center"
             >
               {basket.licensedUsers === 0 ? (
@@ -559,13 +536,15 @@ export default function BasketPage() {
                   </HStack>
                 </HStack>
               )}
-              <LicensePicker showAlreadySubscribedText={false} />
+              <HStack maxW={"450px"} >
+                <LicensePicker showAlreadySubscribedText={false} />
+              </HStack>
             </VStack>
 
             <VStack
               spacing={4}
               align="center"
-              w={["100%", "50%"]}
+              w={["100%", "100%", "100%"]}
               bg={cardBg}
               borderRadius="md"
               p={4}
