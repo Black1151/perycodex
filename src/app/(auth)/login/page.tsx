@@ -1,4 +1,4 @@
-import { Center, VStack } from "@chakra-ui/react";
+import { Center, VStack, Flex, Image, Link } from "@chakra-ui/react";
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
 import { LoginForm } from "@/components/forms/LoginForm";
 import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
@@ -6,6 +6,7 @@ import { LoginCard } from "@/components/login/LoginCard";
 import { cookies } from "next/headers";
 import apiClient from "@/lib/apiClient";
 import { redirect } from "next/navigation";
+import AppStoreIcons from "./AppStoreIcons";
 
 interface SearchParams {
   l?: string;
@@ -86,7 +87,7 @@ export default async function LoginPage({
   };
   return (
     <PerygonContainer>
-      <Center flex={1} maxW={["100%"]}>
+      <Center flex={1} maxW={["100%"]} flexDirection={"column"} p={4}>
         <LoginCard
           height={getHeight()}
           imageOffset={getOffset()}
@@ -100,9 +101,8 @@ export default async function LoginPage({
         >
           <LoginForm />
         </LoginCard>
+        <AppStoreIcons />
       </Center>
     </PerygonContainer>
   );
 }
-
-// On login grab parameter l

@@ -25,6 +25,7 @@ import {
   Dashboard,
   DashboardCustomize,
   BlurOn,
+  Help,
 } from "@mui/icons-material";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -34,6 +35,7 @@ import { useTags } from "@/providers/TagsProvider";
 import { useBreakpointValue } from "@chakra-ui/react";
 import NavigationSidebar from "@/components/Sidebars/NavigationSidebar/NavigationSidebar";
 import NavigationBottombar from "@/components/Bottombar/NavigationBottombar/NavigationBottombar";
+import GuideModal from "@/components/modals/guideModal/guideModal";
 
 export default function SideBars() {
   const router = useRouter();
@@ -43,6 +45,8 @@ export default function SideBars() {
   const modalRef = useRef(null);
   const { recordIds } = useTags();
   const [leftMenuItems, setLeftMenuItems] = useState<MenuItem[]>([]);
+  const [adminGuideModalOpen, setAdminGuideModalOpen] =
+    useState<boolean>(false);
 
   const { recordId, recordParentId, recordCustomerId } = recordIds || {};
 
@@ -478,7 +482,6 @@ export default function SideBars() {
     }));
   };
 
-
   useEffect(() => {
     const newItems = generateLeftSidebarItemsDrawer(
       user?.role,
@@ -509,6 +512,11 @@ export default function SideBars() {
     }
 
     let shouldShowManageTags = false;
+    let shouldShowAdminGuides = true;
+
+    if (pathname === "/help-center") {
+      shouldShowAdminGuides = false;
+    }
 
     // Skip all logic if user role is PA
     if (user?.role !== "PA") {
@@ -533,18 +541,30 @@ export default function SideBars() {
       }
     }
 
-    return shouldShowManageTags
-      ? [
-          {
-            label: "Add / Remove Tags",
-            icon: <Sell sx={{ height: "100%", width: "100%" }} />,
-            onClick: () =>
-              // @ts-ignore
-              modalRef.current?.openModal(),
-            locked: user?.customerIsFree ? true : false,
-          },
-        ]
-      : [];
+    const items = [];
+
+    if (shouldShowManageTags) {
+      items.push({
+        label: "Add / Remove Tags",
+        icon: <Sell sx={{ height: "100%", width: "100%" }} />,
+        onClick: () =>
+          // @ts-ignore
+          modalRef.current?.openModal(),
+        locked: user?.customerIsFree ? true : false,
+      });
+    }
+
+    if (shouldShowAdminGuides) {
+      items.push({
+        label: "Admin Guides",
+        icon: <Help sx={{ height: "100%", width: "100%" }} />,
+        onClick: () => {
+          setAdminGuideModalOpen(true);
+        },
+      });
+    }
+
+    return items;
   }, [
     pathname,
     user?.role,
@@ -558,13 +578,6 @@ export default function SideBars() {
   const rightMenuItems = generateRightSidebarItemsDrawer;
 
   let modalCustomerId = user?.customerId || 0;
-
-  // Default drawer state for right-hand panel
-  const rightDrawerDefaultState =
-    useBreakpointValue({
-      base: "closed",
-      md: "half-open",
-    } as const) ?? "closed";
 
   return (
     <>
@@ -581,10 +594,15 @@ export default function SideBars() {
           menuItems={rightMenuItems}
           side={"right"}
           openButtonIcon={BlurOn}
-          drawerState={rightDrawerDefaultState}
+          drawerState={"half-open"}
         />
       )}
       <ManageTagsModal ref={modalRef} customerId={modalCustomerId} />
+      <GuideModal
+        isOpen={adminGuideModalOpen}
+        onClose={() => setAdminGuideModalOpen(false)}
+        guideType="admin"
+      />
     </>
   );
 }
