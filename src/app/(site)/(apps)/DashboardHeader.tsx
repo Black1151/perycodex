@@ -7,6 +7,10 @@ import {
   Heading,
   useTheme,
   useBreakpointValue,
+  IconButton,
+  Button,
+  Text,
+  HStack,
 } from "@chakra-ui/react";
 import AddButtonMobile from "@/components/Buttons/AddButtonMobile";
 import { useWorkflow } from "@/providers/WorkflowProvider";
@@ -14,6 +18,7 @@ import BackButton from "@/components/BackButton";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { useRouter } from "next/navigation";
 import AddButtonDesktop from "@/components/Buttons/AddButtonDesktop";
+import { Help, Info } from "@mui/icons-material";
 
 interface DashboardHeaderProps {
   headingText: string;

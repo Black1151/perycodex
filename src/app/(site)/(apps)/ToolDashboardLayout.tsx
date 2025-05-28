@@ -9,6 +9,8 @@ import NavigationBottombar from "@/components/Bottombar/NavigationBottombar/Navi
 import { getMuiIconByName } from "@/utils/muiIconMapper";
 import { Icon } from "@chakra-ui/react";
 import { useUser } from "@/providers/UserProvider";
+import GuideModal from "@/components/modals/guideModal/guideModal";
+import { Article, Help } from "@mui/icons-material";
 
 interface DashboardAPIResponse {
   filteredDashboards: Dashboard[];
@@ -27,13 +29,14 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
   const pathname = usePathname();
   const { user } = useUser();
   const isFree = user?.customerIsFree ?? false;
+  const [toolGuideModalOpen, setToolGuideModalOpen] = useState(false);
 
   const toolId = searchParams.get("toolId");
   const workflowId = searchParams.get("wfId");
 
   const [dashboardList, setDashboardList] = useState<Dashboard[]>([]);
   const [activeDashboardName, setActiveDashboardName] = useState<string | null>(
-    null,
+    null
   );
   const [toolData, setToolData] = useState<{ startInUi: boolean } | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -45,7 +48,7 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
       setLoading(true);
       try {
         const response = await fetch(
-          `/api/dashboards?toolId=${toolId}&workflowId=${workflowId}`,
+          `/api/dashboards?toolId=${toolId}&workflowId=${workflowId}`
         );
         if (!response.ok) throw new Error("Failed to fetch dashboards");
 
@@ -64,10 +67,10 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
 
   useEffect(() => {
     const activeDashboard = dashboardList.find((dashboard) =>
-      pathname.includes(dashboard.dashboardUrl),
+      pathname.includes(dashboard.dashboardUrl)
     );
     setActiveDashboardName(
-      activeDashboard ? activeDashboard.dashboardName : "Dashboard",
+      activeDashboard ? activeDashboard.dashboardName : "Dashboard"
     );
   }, [pathname, dashboardList]);
 
@@ -80,13 +83,21 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
       icon,
       onClick: () =>
         router.push(
-          `${dashboard.dashboardUrl}?toolId=${toolId}&wfId=${workflowId}`,
+          `${dashboard.dashboardUrl}?toolId=${toolId}&wfId=${workflowId}`
         ),
       category: "Dashboards",
       active: pathname.includes(dashboard.dashboardUrl),
       locked: isFree ? dashboard.disableIfFree : false,
     };
   });
+
+  const contextualMenuItems = {
+    label: "Tool Guides",
+    icon: <Help />,
+    onClick: () => setToolGuideModalOpen(true),
+    active: false,
+    locked: false,
+  };
 
   if (menuItems.length === 1) {
     return (
@@ -111,6 +122,18 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
         headingText={activeDashboardName ?? ""}
         canStartWorkflow={toolData?.startInUi ?? false}
         toolUrl={toolUrl}
+      />
+      <NavigationSidebar
+        menuItems={[contextualMenuItems]}
+        drawerState={"half-open"}
+        side={"right"}
+        loading={loading}
+      />
+      <GuideModal
+        isOpen={toolGuideModalOpen}
+        onClose={() => setToolGuideModalOpen(false)}
+        toolId={toolId}
+        guideType="tool"
       />
     </>
   );
