@@ -8,7 +8,6 @@ import {
   Button,
   Portal,
   ScaleFade,
-  useColorModeValue,
   Icon as ChakraIcon,
   useBreakpointValue,
   useTheme,
@@ -144,7 +143,7 @@ const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
                 key={idx}
                 variants={itemVariants}
                 mb={idx < menuItems.length - 1 ? 3 : 0}
-                bg={useColorModeValue("gray.50", "gray.700")}
+                bg="gray.50"
                 rounded="md"
                 p={2}
                 pl={0}
