@@ -106,7 +106,7 @@ export default function StaffDashboardPage() {
           {lineGraphData.length > 0 ? (
             <LineGraph DataPoints={lineGraphData} />
           ) : (
-            <PerygonCard width="100%" height={600}>
+            <PerygonCard width="100%" height={400}>
               <NoDataOverlayPink />
             </PerygonCard>
           )}

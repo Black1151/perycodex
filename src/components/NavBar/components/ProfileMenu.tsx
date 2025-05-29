@@ -36,6 +36,7 @@ interface ProfileMenuProps {
   userIsFree: boolean;
   userIsFreeUntil: string;
   userIsFreeAction: () => void;
+  userRole: string;
 }
 
 function daysLeft(freeUntil: string): string {
@@ -66,6 +67,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
   userIsFree,
   userIsFreeUntil,
   userIsFreeAction,
+  userRole,
 }) => {
   const theme = useTheme();
   const { setThemeId, themeId } = useThemeContext();
@@ -128,36 +130,41 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
       </Box>
 
       <MenuList bg="elementBG" color={theme.colors.themeTextColor} px={2}>
-
         {userIsFree && (
-        <HStack
-          px={4}
-          pr={8}
-          py={4}
-          bgColor={theme.colors.primary}
-          justifyContent="left"
-          alignItems="center"
-          fontSize={[16, 18, 18]}
-          borderRadius={"md"}
-          color={theme.colors.white}
-          cursor={"pointer"}
-          mb={2}
-          onClick={userIsFreeAction}
-          gap={4}
-        >
-          <AccessTime fontSize="large" />
-          <VStack spacing={0} align={"left"}>
-            <Text fontWeight={"semibold"}>Free Trial</Text>
-            <HStack spacing={1} alignItems="center" justify={"center"}>
-              <Text fontSize={"14"} color="whiteAlpha.900">
-                {daysLeft(userIsFreeUntil)} -
-              </Text>
-              <Text fontSize={"12"} color="whiteAlpha.800" decoration="underline">
-                Upgrade Now
-              </Text>
-            </HStack>
-          </VStack>
-        </HStack>
+          <HStack
+            px={4}
+            pr={8}
+            py={4}
+            bgColor={theme.colors.primary}
+            justifyContent="left"
+            alignItems="center"
+            fontSize={[16, 18, 18]}
+            borderRadius={"md"}
+            color={theme.colors.white}
+            cursor={"pointer"}
+            mb={2}
+            onClick={userIsFreeAction}
+            gap={4}
+          >
+            <AccessTime fontSize="large" />
+            <VStack spacing={0} align={"left"}>
+              <Text fontWeight={"semibold"}>Free Trial</Text>
+              <HStack spacing={1} alignItems="center" justify={"center"}>
+                <Text fontSize={"14"} color="whiteAlpha.900">
+                  {daysLeft(userIsFreeUntil)} -
+                </Text>
+                {(userRole == "CA" || "CL") && (
+                  <Text
+                    fontSize={"12"}
+                    color="whiteAlpha.800"
+                    decoration="underline"
+                  >
+                    Upgrade Now
+                  </Text>
+                )}
+              </HStack>
+            </VStack>
+          </HStack>
         )}
 
         {menuItems
@@ -174,14 +181,14 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
               bg="elementBG"
               borderRadius="md"
               _hover={{
-          backgroundColor: theme.colors.primary,
-          color: "white",
+                backgroundColor: theme.colors.primary,
+                color: "white",
               }}
               onClick={item.onClick}
             >
               {item.icon}
               <Text flex={1} zIndex={2} ml={2}>
-          {item.label}
+                {item.label}
               </Text>
             </MenuItem>
           ))}

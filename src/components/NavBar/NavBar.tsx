@@ -150,6 +150,7 @@ const NavBar: React.FC<NavBarProps> = ({
             userIsFree={isFree}
             userIsFreeUntil={isFreeUntil}
             userIsFreeAction={() => router.push("/tool-store")}
+            userRole={userRole}
           />
         </MotionHStack>
       </HStack>
