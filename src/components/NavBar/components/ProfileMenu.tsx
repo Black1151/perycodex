@@ -12,9 +12,15 @@ import {
   useBreakpointValue,
   Select,
   HStack,
+  VStack,
 } from "@chakra-ui/react";
 import PersonIcon from "@mui/icons-material/Person";
-import { Celebration, ExitToApp, Palette } from "@mui/icons-material";
+import {
+  AccessTime,
+  Celebration,
+  ExitToApp,
+  Palette,
+} from "@mui/icons-material";
 
 import PulsatingIcon from "./PulsatingIcon";
 import { MenuItemProps } from "./types";
@@ -27,6 +33,29 @@ interface ProfileMenuProps {
   unread: boolean;
   themeDropdownOptions: ThemeDropdownOption[];
   handleLogout: () => void;
+  userIsFree: boolean;
+  userIsFreeUntil: string;
+  userIsFreeAction: () => void;
+  userRole: string;
+}
+
+function daysLeft(freeUntil: string): string {
+  const [year, month, day] = freeUntil.split("-").map(Number);
+  const endDate = new Date(Date.UTC(year, month - 1, day));
+
+  const now = new Date();
+  const todayUTC = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+  );
+
+  const msPerDay = 1000 * 60 * 60 * 24;
+  const diffMs = endDate.getTime() - todayUTC.getTime();
+  const diffDays = Math.ceil(diffMs / msPerDay);
+
+  if (diffDays <= 0) {
+    return "Expired";
+  }
+  return `${diffDays} day${diffDays === 1 ? "" : "s"} left`;
 }
 
 const ProfileMenu: React.FC<ProfileMenuProps> = ({
@@ -35,6 +64,10 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
   unread,
   themeDropdownOptions,
   handleLogout,
+  userIsFree,
+  userIsFreeUntil,
+  userIsFreeAction,
+  userRole,
 }) => {
   const theme = useTheme();
   const { setThemeId, themeId } = useThemeContext();
@@ -97,29 +130,68 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
       </Box>
 
       <MenuList bg="elementBG" color={theme.colors.themeTextColor} px={2}>
-        {menuItems.map((item) => (
-          <MenuItem
-            closeOnSelect
-            key={item.label}
-            fontSize={[14, 16, 18]}
-            display="flex"
+        {userIsFree && (
+          <HStack
+            px={4}
+            pr={8}
+            py={4}
+            bgColor={theme.colors.primary}
+            justifyContent="left"
             alignItems="center"
-            position="relative"
-            overflow="hidden"
-            bg="elementBG"
-            borderRadius="md"
-            _hover={{
-              backgroundColor: theme.colors.primary,
-              color: "white",
-            }}
-            onClick={item.onClick}
+            fontSize={[16, 18, 18]}
+            borderRadius={"md"}
+            color={theme.colors.white}
+            cursor={"pointer"}
+            mb={2}
+            onClick={userIsFreeAction}
+            gap={4}
           >
-            {item.icon}
-            <Text flex={1} zIndex={2} ml={2}>
-              {item.label}
-            </Text>
-          </MenuItem>
-        ))}
+            <AccessTime fontSize="large" />
+            <VStack spacing={0} align={"left"}>
+              <Text fontWeight={"semibold"}>Free Trial</Text>
+              <HStack spacing={1} alignItems="center" justify={"center"}>
+                <Text fontSize={"14"} color="whiteAlpha.900">
+                  {daysLeft(userIsFreeUntil)} -
+                </Text>
+                {(userRole == "CA" || "CL") && (
+                  <Text
+                    fontSize={"12"}
+                    color="whiteAlpha.800"
+                    decoration="underline"
+                  >
+                    Upgrade Now
+                  </Text>
+                )}
+              </HStack>
+            </VStack>
+          </HStack>
+        )}
+
+        {menuItems
+          .sort((a, b) => (a.orderGroup ?? 0) - (b.orderGroup ?? 0))
+          .map((item) => (
+            <MenuItem
+              closeOnSelect
+              key={item.label}
+              fontSize={[14, 16, 18]}
+              display="flex"
+              alignItems="center"
+              position="relative"
+              overflow="hidden"
+              bg="elementBG"
+              borderRadius="md"
+              _hover={{
+                backgroundColor: theme.colors.primary,
+                color: "white",
+              }}
+              onClick={item.onClick}
+            >
+              {item.icon}
+              <Text flex={1} zIndex={2} ml={2}>
+                {item.label}
+              </Text>
+            </MenuItem>
+          ))}
 
         {themeDropdownOptions[0] && (
           <HStack px={3} py={2}>

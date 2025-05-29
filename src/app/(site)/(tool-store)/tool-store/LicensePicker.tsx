@@ -10,6 +10,7 @@ import {
   useTheme,
   VStack,
   Spinner,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
 import AnimatedTillNumber from "@/components/animations/AnimatedTillNumber";
@@ -27,6 +28,7 @@ export default function LicensePicker({
   const [isModalOpen, setModalOpen] = useState(false);
   const [increaseLoading, setIncreaseLoading] = useState(false);
   const [decreaseLoading, setDecreaseLoading] = useState(false);
+  const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
 
   if (!basket || basket.licensedUsers === undefined) {
     return null;
@@ -80,89 +82,102 @@ export default function LicensePicker({
       >
         <></>
       </PerygonModal>
-
-      <Flex
-        bg={cardBgLighter}
-        borderRadius="md"
-        p={4}
-        align="stretch"
-        justify="space-between"
-        w="full"
-        h="auto"
-      >
-        <Button
-          variant="outline"
-          size="lg"
-          bg="red.100"
+      <VStack bg={cardBgLighter} borderRadius="md" p={4} gap={2}>
+        <Flex
+          align="stretch"
+          justify="space-between"
+          w="full"
           h="auto"
-          _hover={{ bg: "red.200" }}
-          onClick={handleDecrease}
-          isLoading={decreaseLoading}
-          spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
-          disabled={increaseLoading || decreaseLoading}
+          textAlign={"center"}
         >
-          <Box
-            w="100%"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
+          <Button
+            variant="outline"
+            size="lg"
+            bg="red.100"
+            h="auto"
+            maxH={"80px"}
+            _hover={{ bg: "red.200" }}
+            onClick={handleDecrease}
+            isLoading={decreaseLoading}
+            spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
+            disabled={increaseLoading || decreaseLoading}
           >
-            -20
-          </Box>
-        </Button>
+            <Box
+              w="100%"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+            >
+              -20
+            </Box>
+          </Button>
 
-        <VStack spacing={2} justify="center" flex="1" px={4}>
-          {showAlreadySubscribedText ? (
-            <>
-              <HStack spacing={2} fontSize={[16, 18, 20]}>
+          <VStack spacing={2} justify="center" flex="1" px={4}>
+            {showAlreadySubscribedText ? (
+              <>
+                <Flex
+                  direction={["column", "column", "row"]}
+                  gap={2}
+                  align="center"
+                  fontSize={[16, 18, 20]}
+                >
+                  <AnimatedTillNumber
+                    value={quantity}
+                    fontSize="24"
+                    duration={0.65}
+                    isCurrency={false}
+                  />
+                  <Text fontWeight="semibold" fontSize={[16, 18, 20]}>
+                    Total User Licenses
+                  </Text>
+                  {diff !== 0 && (
+                    <Badge colorScheme="blue" fontSize="0.8em">
+                      + {diff}
+                    </Badge>
+                  )}
+                </Flex>
+                {!isMobile && (
+                  <Text fontSize={15} color="gray.500" textAlign={"center"}>
+                    {basket.licensedUsers} Licenses Already Subscribed
+                  </Text>
+                )}
+              </>
+            ) : (
+              <VStack spacing={1} fontSize={[16, 18, 20]} align="center">
                 <AnimatedTillNumber
                   value={quantity}
                   fontSize="24"
                   duration={0.65}
                   isCurrency={false}
                 />
-                <Text fontWeight="semibold" fontSize={[16, 18, 20]}>
+                <Text fontSize={[14, 16]} align={"center"} textAlign={"center"}>
                   Total User Licenses
                 </Text>
-                {diff !== 0 && (
-                  <Badge colorScheme="blue" fontSize="0.8em">
-                    + {diff}
-                  </Badge>
-                )}
-              </HStack>
-              <Text fontSize={15} color="gray.500">
-                {basket.licensedUsers} Licenses Already Subscribed
-              </Text>
-            </>
-          ) : (
-            <VStack spacing={1} fontSize={[16, 18, 20]} align="center">
-              <AnimatedTillNumber
-                value={quantity}
-                fontSize="24"
-                duration={0.65}
-                isCurrency={false}
-              />
-              <Text fontSize={[14, 16]} align={"center"} textAlign={"center"}>
-                Total User Licenses
-              </Text>
-            </VStack>
-          )}
-        </VStack>
+              </VStack>
+            )}
+          </VStack>
 
-        <Button
-          variant="outline"
-          size="lg"
-          bg="green.100"
-          h="auto"
-          _hover={{ bg: "green.200" }}
-          onClick={handleIncrease}
-          isLoading={increaseLoading}
-          disabled={increaseLoading || decreaseLoading}
-          spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
-        >
-          +20
-        </Button>
-      </Flex>
+          <Button
+            variant="outline"
+            size="lg"
+            bg="green.100"
+            h="auto"
+            maxH={"80px"}
+            _hover={{ bg: "green.200" }}
+            onClick={handleIncrease}
+            isLoading={increaseLoading}
+            disabled={increaseLoading || decreaseLoading}
+            spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
+          >
+            +20
+          </Button>
+        </Flex>
+        {(isMobile && showAlreadySubscribedText) && (
+          <Text fontSize={15} color="gray.500" textAlign={"center"}>
+            {basket.licensedUsers} Licenses Already Subscribed
+          </Text>
+        )}
+      </VStack>
     </>
   );
 }

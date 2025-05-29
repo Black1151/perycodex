@@ -18,6 +18,7 @@ import { InputField } from "./InputField";
 import { useRouter } from "next/navigation";
 import { passwordValidation } from "./validationSchema/validationSchema";
 import { useFetchClient } from "@/hooks/useFetchClient";
+import { Email } from "@mui/icons-material";
 
 export type ActivateAccountFormInputs = {
   password: string;
@@ -132,7 +133,8 @@ export function PasswordResetForm({ token }: ActivateAccountFormProps) {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent p={5}>
-          <VStack gap={8}>
+          <VStack gap={2}>
+            <Email fontSize="large"/>
             <ModalHeader>Password updated successfully</ModalHeader>
             <ModalBody>
               Your password has been successfully updated. You can now log in

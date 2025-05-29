@@ -35,6 +35,7 @@ export function LoginCard({
         justifyContent="flex-end"
         width={["100%", null, 480]}
         maxW={"100%"}
+        zIndex={10}
       >
         <Image
           src="/perygonSpeechBubble.png"

@@ -65,6 +65,7 @@ const NavBar: React.FC<NavBarProps> = ({
 
   const menuItems = useNavMenuItems(userRole, handleLogout, openResetModal);
   const isFree = user?.customerIsFree || false;
+  const isFreeUntil = user?.customerIsFreeUntilDate || "";
 
   const buildThemeDropdownOptions = async () => {
     const response = await fetch("/api/theme/getThemesForCustomer", {
@@ -126,6 +127,7 @@ const NavBar: React.FC<NavBarProps> = ({
             userRole={userRole}
             toolLogo={resolvedToolLogo || undefined}
             toolPath={toolPath || undefined}
+            userIsFree={isFree}
           />
         </MotionBox>
 
@@ -145,6 +147,10 @@ const NavBar: React.FC<NavBarProps> = ({
             unread={unread}
             themeDropdownOptions={themeDropdownOptions}
             handleLogout={handleLogout}
+            userIsFree={isFree}
+            userIsFreeUntil={isFreeUntil}
+            userIsFreeAction={() => router.push("/tool-store")}
+            userRole={userRole}
           />
         </MotionHStack>
       </HStack>

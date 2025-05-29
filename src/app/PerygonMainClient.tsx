@@ -74,7 +74,9 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
 
   return (
     <Flex flex={1} overflow="hidden" width="100%">
-      {!showNoToolsModal && !showTrialEndedModal && <CarouselDisplay carouselItems={carouselItems} />}
+      {!showNoToolsModal && !showTrialEndedModal && (
+        <CarouselDisplay carouselItems={carouselItems} />
+      )}
 
       <Modal
         isOpen={!!showNoToolsModal}
@@ -97,8 +99,7 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
               No Tools Subscribed
             </Text>
             <Text mb={4}>
-              Your have no tools. Please visit our tool store to
-              continue.
+              Your have no tools. Please visit our tool store to continue.
             </Text>
             <HStack spacing={2} width="100%" justifyContent="center">
               <Button
@@ -135,35 +136,46 @@ export const PerygonMainClient: React.FC<PerygonMainClientProps> = ({
             <Text fontSize="xl" fontWeight="semibold" mb={2}>
               Your Trial Ended On{" "}
               {user?.customerIsFreeUntilDate
-              ? new Date(user.customerIsFreeUntilDate).toLocaleDateString("en-GB", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-                }).replace(
-                /^(\d{1,2})/,
-                (d) =>
-                  d +
-                  (["1", "21", "31"].includes(d)
-                  ? "st"
-                  : ["2", "22"].includes(d)
-                  ? "nd"
-                  : ["3", "23"].includes(d)
-                  ? "rd"
-                  : "th")
-                )
-              : ""}
+                ? new Date(user.customerIsFreeUntilDate)
+                    .toLocaleDateString("en-GB", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })
+                    .replace(
+                      /^(\d{1,2})/,
+                      (d) =>
+                        d +
+                        (["1", "21", "31"].includes(d)
+                          ? "st"
+                          : ["2", "22"].includes(d)
+                            ? "nd"
+                            : ["3", "23"].includes(d)
+                              ? "rd"
+                              : "th")
+                    )
+                : ""}
             </Text>
-            <Text mb={4}>
-              Your free trial has ended. Please visit our tool store to
-              continue.
-            </Text>
+            {user?.role == "CA" || "CL" ? (
+              <Text mb={4}>
+                Your free trial has ended. Please visit our tool store to
+                continue.
+              </Text>
+            ) : (
+              <Text mb={4}>
+                Your companies free trial has ended. Please contact your IT
+                admin.
+              </Text>
+            )}
             <HStack spacing={2} width="100%" justifyContent="center">
+               {(user?.role == "CA" || "CL") && (
               <Button
                 onClick={() => router.push("/tool-store")}
                 loadingText="Going to tool store..."
               >
                 Tool Store
               </Button>
+              )}
               <Button onClick={logoutUser} loadingText="Logging out...">
                 Logout
               </Button>
