@@ -80,6 +80,18 @@ const useNavMenuItems = (
     );
   }
 
+  // CL extras
+  if (userRole === "CL") {
+    commonMenuItems.push(
+      {
+        label: "Tool Store",
+        icon: <StorefrontIcon />,
+        onClick: () => router.push("/tool-store"),
+        orderGroup: 3
+      }
+    );
+  }
+
   // Always‑present entries
   commonMenuItems.push(
     {

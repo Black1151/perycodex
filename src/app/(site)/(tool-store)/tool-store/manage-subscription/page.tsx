@@ -24,7 +24,7 @@ import {
   Slide,
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
-import { Close } from "@mui/icons-material";
+import { Check, Close } from "@mui/icons-material";
 import AnimatedTillNumber from "@/components/animations/AnimatedTillNumber";
 import BasketItemCard from "./BasketItemCard";
 import ToolSelectedIndicators from "./ToolSelectedIndicators";
@@ -667,8 +667,8 @@ export default function BasketPage() {
               Billing Address
             </Text>
             <IconButton
-              aria-label="Close"
-              icon={<Close />}
+              aria-label="Check"
+              icon={<Check />}
               size="sm"
               onClick={billingDrawer.onClose}
             />
