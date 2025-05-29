@@ -76,7 +76,7 @@ export interface ContextualMenuProps {
 
 const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const overlayBg = useColorModeValue("blackAlpha.700", "whiteAlpha.200");
+  const overlayBg = "blackAlpha.700"
   const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
 
   const toggle = () => setIsExpanded((prev) => !prev);
