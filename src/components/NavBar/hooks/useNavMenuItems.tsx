@@ -11,6 +11,8 @@ import {
   ExitToApp as ExitToAppIcon,
   Settings as SettingsIcon,
   Storefront as StorefrontIcon,
+  HelpCenter,
+  Help,
 } from "@mui/icons-material";
 import { useUser } from "@/providers/UserProvider";
 
@@ -129,6 +131,14 @@ const useNavMenuItems = (
       orderGroup: 1
     });
   }
+
+  //Help Center (always available)
+  commonMenuItems.push({
+    label: "Help Center",
+    icon: <Help/>,
+    onClick: () => router.push("/help-center"),
+    orderGroup: 4
+  });
 
   // Reset Password (always available)
   commonMenuItems.push({

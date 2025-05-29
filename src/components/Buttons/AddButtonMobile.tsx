@@ -1,7 +1,7 @@
 // components/AddButtonMobile.tsx
 import React from "react";
-import { Button } from "@chakra-ui/react";
-import { Add } from "@mui/icons-material";
+import { Button, Text } from "@chakra-ui/react";
+import { Add, PlayCircleFilled } from "@mui/icons-material";
 
 interface AddButtonMobileProps {
   onAddButtonClick: () => void;
@@ -9,13 +9,15 @@ interface AddButtonMobileProps {
   /** A React component for the icon (defaults to MUI’s Add) */
   IconComponent?: React.ComponentType<any>;
   workflow?: boolean;
+  label?: string;
 }
 
 const AddButtonMobile: React.FC<AddButtonMobileProps> = ({
   onAddButtonClick,
   isLoading = false,
-  IconComponent = Add,
+  IconComponent = PlayCircleFilled,
   workflow = true,
+  label,
 }) => (
   <Button
     variant="workflowStart"
@@ -23,13 +25,16 @@ const AddButtonMobile: React.FC<AddButtonMobileProps> = ({
     bottom={workflow ? "110px" : ["10px", "45px"]}
     right="12px"
     onClick={onAddButtonClick}
+    minH="40px"
     minW="48px"
-    minH="48px"
-    aspectRatio={1}
+    h="40px"
+    w={"auto"}
     borderRadius="full"
     isLoading={isLoading}
     zIndex={20}
+    gap={1}
   >
+    <Text fontSize="md">{label}</Text>
     <IconComponent />
   </Button>
 );

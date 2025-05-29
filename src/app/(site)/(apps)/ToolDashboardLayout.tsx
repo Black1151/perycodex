@@ -122,12 +122,7 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
         headingText={activeDashboardName ?? ""}
         canStartWorkflow={toolData?.startInUi ?? false}
         toolUrl={toolUrl}
-      />
-      <NavigationSidebar
-        menuItems={[contextualMenuItems]}
-        drawerState={"half-open"}
-        side={"right"}
-        loading={loading}
+        contextualMenuItems={[contextualMenuItems]}
       />
       <GuideModal
         isOpen={toolGuideModalOpen}

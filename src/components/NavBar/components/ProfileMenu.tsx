@@ -128,7 +128,6 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
       </Box>
 
       <MenuList bg="elementBG" color={theme.colors.themeTextColor} px={2}>
-
         {userIsFree && (
         <HStack
           px={4}

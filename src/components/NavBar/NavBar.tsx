@@ -112,7 +112,7 @@ const NavBar: React.FC<NavBarProps> = ({
         top={0}
         left={0}
         right={0}
-        zIndex={100}
+        zIndex={200}
         bgGradient={theme.components.navBar.baseStyle.bgGradient}
         borderBottom="white 1px solid"
       >
