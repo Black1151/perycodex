@@ -1,4 +1,4 @@
-import { UserContextProps, useUser } from "@/providers/UserProvider";
+import { UserAccessControlContextProps, UserContextProps, useUser } from "@/providers/UserProvider";
 import {
   Box,
   Flex,
@@ -17,8 +17,10 @@ import { useState } from "react";
 // UserModal component with Person icon and modal for displaying user data
 export const UserModal = ({
   userMetadata,
+  userAccessControl
 }: {
   userMetadata: UserContextProps;
+  userAccessControl: UserAccessControlContextProps;
 }) => {
   const { user } = useUser();
   const [isOpen, setIsOpen] = useState(false);
@@ -49,21 +51,6 @@ export const UserModal = ({
               {/* User Context Data */}
               <Box flex="1" p={4} bg="gray.50" borderRadius="md">
                 <Text fontWeight="bold" mb={2}>
-                  User Context
-                </Text>
-                <Box
-                  as="pre"
-                  fontSize="sm"
-                  whiteSpace="pre-wrap"
-                  wordBreak="break-word"
-                >
-                  {JSON.stringify(user, null, 2)}
-                </Box>
-              </Box>
-
-              {/* User Metadata Data */}
-              <Box flex="1" p={4} bg="gray.50" borderRadius="md">
-                <Text fontWeight="bold" mb={2}>
                   User Metadata
                 </Text>
                 <Box
@@ -73,6 +60,21 @@ export const UserModal = ({
                   wordBreak="break-word"
                 >
                   {JSON.stringify(userMetadata, null, 2)}
+                </Box>
+              </Box>
+
+              {/* User Metadata Data */}
+              <Box flex="1" p={4} bg="gray.50" borderRadius="md">
+                <Text fontWeight="bold" mb={2}>
+                  User Access Control
+                </Text>
+                <Box
+                  as="pre"
+                  fontSize="sm"
+                  whiteSpace="pre-wrap"
+                  wordBreak="break-word"
+                >
+                  {JSON.stringify(userAccessControl, null, 2)}
                 </Box>
               </Box>
             </Flex>

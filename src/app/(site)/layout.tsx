@@ -4,7 +4,10 @@ import { PerygonContainer } from "@/components/layout/PerygonContainer";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import SiteProviders from "./SiteProviders";
-import { UserContextProps } from "@/providers/UserProvider";
+import {
+  UserAccessControlContextProps,
+  UserContextProps,
+} from "@/providers/UserProvider";
 import apiClient from "@/lib/apiClient";
 import NavBar from "@/components/NavBar/NavBar";
 
@@ -37,8 +40,9 @@ export default async function MainLayout({
     userRole: "",
     userCustomerId: "",
   };
-  
+
   let userMetadata: UserContextProps | null = null;
+  let userAccessControl: UserAccessControlContextProps | null = null;
 
   try {
     const [fetchUserInfo, fetchUserMetadata] = await Promise.all([
@@ -64,24 +68,38 @@ export default async function MainLayout({
     };
 
     userMetadata = userMetadataData.resource;
+    if (userMetadata) {
+      userAccessControl = {
+        role: userMetadata.role,
+        customerId: userMetadata.customerId,
+        teamManagerCount: userMetadata.teamManagerCount,
+        groupNames: userMetadata.groupNames,
+        customerIsFree: userMetadata.customerIsFree,
+        customerIsFreeUntilDate: userMetadata.customerIsFreeUntilDate,
+        subscribedTools: userMetadata.subscribedTools,
+      };
+    }
 
-    if (userMetadata?.role === "CA" && userMetadata?.customerId === null) {  
+    if (userMetadata?.role === "CA" && userMetadata?.customerId === null) {
       return (
-        <SiteProviders userMetadata={userMetadata as UserContextProps}>
-          <PerygonContainer>
-            {children}
-          </PerygonContainer>
+        <SiteProviders
+          userMetadata={userMetadata as UserContextProps}
+          userAccessControl={userAccessControl as UserAccessControlContextProps}
+        >
+          <PerygonContainer>{children}</PerygonContainer>
         </SiteProviders>
       );
     }
-
   } catch (error: any) {
     console.error("Error details:", error);
     redirect("/error");
   }
 
   return (
-    <SiteProviders userMetadata={userMetadata as UserContextProps}>
+    <SiteProviders
+      userMetadata={userMetadata as UserContextProps}
+      userAccessControl={userAccessControl as UserAccessControlContextProps}
+    >
       <PerygonContainer>
         <NavBar {...(navBarProps as NavBarProps)} />
         {children}

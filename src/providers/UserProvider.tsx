@@ -64,8 +64,19 @@ export interface UserContextProps {
   subscribedTools: string[];
 }
 
+export interface UserAccessControlContextProps {
+  role: Role;
+  customerId?: number;
+  teamManagerCount?: number;
+  groupNames: string[] | null;
+  customerIsFree?: boolean;
+  customerIsFreeUntilDate?: string | null;
+  subscribedTools: string[];
+}
+
 interface UserProviderProps {
   user: UserContextProps | null;
+  userAccessControl: UserAccessControlContextProps | null;
   showDeveloperBoard: boolean;
   updateShowDeveloperBoard: (value: boolean) => void;
 }
@@ -85,6 +96,7 @@ export const UserProvider: React.FC<{
   children: ReactNode;
 }> = ({ value, children }) => {
   const [user, setUser] = useState<UserContextProps | null>(value || null);
+  const [userAccessControl, setUserAccessControl] = useState<UserAccessControlContextProps | null>(null)
   const [showDeveloperBoard, setShowDeveloperBoard] = useState<boolean>(false);
   const { fetchClient } = useFetchClient();
 
@@ -104,13 +116,29 @@ export const UserProvider: React.FC<{
     }
   };
 
+  useEffect(() => {
+    if (user) {
+      setUserAccessControl({
+        role: user.role,
+        customerId: user.customerId,
+        teamManagerCount: user.teamManagerCount,
+        groupNames: user.groupNames,
+        customerIsFree: user.customerIsFree,
+        customerIsFreeUntilDate: user.customerIsFreeUntilDate,
+        subscribedTools: user.subscribedTools,
+      });
+    } else {
+      setUserAccessControl(null);
+    }
+  }, [user]);
+
   const updateShowDeveloperBoard = (value: boolean): void => {
     setShowDeveloperBoard(value);
   };
 
   return (
     <UserContext.Provider
-      value={{ user, showDeveloperBoard, updateShowDeveloperBoard }}
+      value={{ user, userAccessControl, showDeveloperBoard, updateShowDeveloperBoard }}
     >
       {children}
     </UserContext.Provider>
