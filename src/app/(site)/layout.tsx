@@ -65,6 +65,7 @@ export default async function MainLayout({
 
     userMetadata = userMetadataData.resource;
 
+    // for company registration
     if (userMetadata?.role === "CA" && userMetadata?.customerId === null) {  
       return (
         <SiteProviders userMetadata={userMetadata as UserContextProps}>

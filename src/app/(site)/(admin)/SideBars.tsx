@@ -32,10 +32,11 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useUser } from "@/providers/UserProvider";
 import { ManageTagsModal } from "@/components/modals/adminModals/ManageTagsModal";
 import { useTags } from "@/providers/TagsProvider";
-import { useBreakpointValue } from "@chakra-ui/react";
+import { useBreakpointValue, Flex, Text } from "@chakra-ui/react";
 import NavigationSidebar from "@/components/Sidebars/NavigationSidebar/NavigationSidebar";
 import NavigationBottombar from "@/components/Bottombar/NavigationBottombar/NavigationBottombar";
 import GuideModal from "@/components/modals/guideModal/guideModal";
+import ContextualMenu from "@/components/Sidebars/ContextualMenu";
 
 export default function SideBars() {
   const router = useRouter();
@@ -49,6 +50,7 @@ export default function SideBars() {
     useState<boolean>(false);
 
   const { recordId, recordParentId, recordCustomerId } = recordIds || {};
+  const isMobile = useBreakpointValue({ base: true, md: false }) ?? false;
 
   const generateLeftSidebarItemsDrawer = (
     userRole: string | undefined,
@@ -499,9 +501,6 @@ export default function SideBars() {
     }
   }, [user?.role, pathname]);
 
-  /**
-   * Determines if we should show right-hand "Add / Remove Tags".
-   */
   const generateRightSidebarItemsDrawer = useMemo(() => {
     let entityType = null;
 
@@ -589,14 +588,11 @@ export default function SideBars() {
         />
       )}
       <NavigationBottombar menuItems={leftMenuItems} />
-      {rightMenuItems.length > 0 && (
-        <NavigationSidebar
-          menuItems={rightMenuItems}
-          side={"right"}
-          openButtonIcon={BlurOn}
-          drawerState={"half-open"}
-        />
-      )}
+      <Flex w={61} position={"fixed"} right={0} mt={3} zIndex={120}>
+        {rightMenuItems.length > 0 && (
+          <ContextualMenu menuItems={rightMenuItems} />
+        )}
+      </Flex>
       <ManageTagsModal ref={modalRef} customerId={modalCustomerId} />
       <GuideModal
         isOpen={adminGuideModalOpen}

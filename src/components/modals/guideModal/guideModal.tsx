@@ -26,7 +26,13 @@ import {
   useTheme,
 } from "@chakra-ui/react";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { Article, Menu, Help } from "@mui/icons-material";
+import {
+  Article,
+  Menu,
+  Help,
+  ArrowBack,
+  ArrowForward,
+} from "@mui/icons-material";
 import { useFetchClient } from "@/hooks/useFetchClient";
 
 type GuideModalProps = {
@@ -174,10 +180,16 @@ export default function GuideModal({
           _hover={{ bg: "gray.100" }}
         >
           <HStack spacing={2} justify="left" flex={1} overflow="hidden">
-            {isMobile ? <Article fontSize="medium" /> : <Article fontSize="small" />}
+            {isMobile ? (
+              <Article fontSize="medium" />
+            ) : (
+              <Article fontSize="small" />
+            )}
             <Text>{g.title}</Text>
           </HStack>
-          {readGuides[g.urlPath] && <CheckCircleIcon style={{ color: "#07ad4c" }} />}
+          {readGuides[g.urlPath] && (
+            <CheckCircleIcon style={{ color: "#07ad4c" }} />
+          )}
         </Button>
       ))}
     </VStack>
@@ -186,7 +198,12 @@ export default function GuideModal({
   return (
     <>
       {isMobile && (
-        <Drawer isOpen={isDrawerOpen} placement="left" onClose={closeDrawer} size="xs">
+        <Drawer
+          isOpen={isDrawerOpen}
+          placement="left"
+          onClose={closeDrawer}
+          size="xs"
+        >
           <DrawerOverlay />
           <DrawerContent>
             <DrawerCloseButton />
@@ -196,7 +213,8 @@ export default function GuideModal({
                   Guide List
                 </Text>
                 <Text fontSize="sm" color="gray.500" mb={4}>
-                  ({Object.values(readGuides).filter(Boolean).length} of {guideList.length} guides completed)
+                  ({Object.values(readGuides).filter(Boolean).length} of{" "}
+                  {guideList.length} guides completed)
                 </Text>
                 {SidebarList}
               </VStack>
@@ -207,45 +225,124 @@ export default function GuideModal({
 
       <Modal isOpen={isOpen} onClose={onClose} size="6xl" isCentered>
         <ModalOverlay />
-        <ModalContent maxH="90vh" maxW="90vw" minH="80vh" minW="80vw">
+        <ModalContent
+          maxH="90vh"
+          maxW="90vw"
+          minH="80vh"
+          minW="80vw"
+          borderRadius={"md"}
+          overflow={"none"}
+        >
           <ModalCloseButton />
-          <ModalBody p={0} display="flex" flexDirection="column" bg={bg}>            
+          <ModalBody
+            p={0}
+            display="flex"
+            flexDirection="column"
+            bg={bg}
+            borderRadius={"md"}
+            overflow={"none"}
+          >
             {/* Header */}
-            <HStack px={4} py={3} bg={bg} borderBottom="1px solid" borderColor="gray.200" justify="left">
+            <HStack
+              px={4}
+              py={3}
+              bg={bg}
+              borderBottom="1px solid"
+              borderColor="gray.200"
+              justify="left"
+              borderRadius={"md"}
+              overflow={"none"}
+            >
               {isMobile && (
-                <IconButton aria-label="Open guide list" icon={<Menu />} onClick={openDrawer} size="md" variant="outline" />
+                <IconButton
+                  aria-label="Open guide list"
+                  icon={<Menu />}
+                  onClick={openDrawer}
+                  size="md"
+                  variant="outline"
+                />
               )}
-              {iconImageUrl ? <Image src={iconImageUrl} boxSize="40px" alt="Tool icon" /> : (
-                <Box boxSize="40px" display="flex" alignItems="center" justifyContent="center" color={theme.colors.primary}>
+              {iconImageUrl ? (
+                <Image src={iconImageUrl} boxSize="40px" alt="Tool icon" />
+              ) : (
+                <Box
+                  boxSize="40px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  color={theme.colors.primary}
+                >
                   <Help fontSize="large" />
                 </Box>
               )}
               <Text fontSize="xl" fontWeight="bold">
-                {guideType === "tool" ? "Tool Guide" : guideType === "admin" ? "Admin Guide" : "Platform Guide"}
+                {guideType === "tool"
+                  ? "Tool Guide"
+                  : guideType === "admin"
+                    ? "Admin Guide"
+                    : "Platform Guide"}
               </Text>
-              <Text fontSize="sm" color="gray.500" display={{ base: "none", md: "block" }}>
-                ({Object.values(readGuides).filter(Boolean).length} of {guideList.length} guides completed)
+              <Text
+                fontSize="sm"
+                color="gray.500"
+                display={{ base: "none", md: "block" }}
+              >
+                ({Object.values(readGuides).filter(Boolean).length} of{" "}
+                {guideList.length} guides completed)
               </Text>
             </HStack>
 
-            {(guideList.length === 0 && !loading) ? (
-              <VStack w={mainW} width="100%" textAlign="center" height="100%" justify="center">
-                <Text fontFamily="bonfire" fontSize={36}>Oops! No Guides Yet...</Text>
+            {guideList.length === 0 && !loading ? (
+              <VStack
+                w={mainW}
+                width="100%"
+                textAlign="center"
+                height="100%"
+                justify="center"
+              >
+                <Text fontFamily="bonfire" fontSize={36}>
+                  Oops! No Guides Yet...
+                </Text>
                 <Text>Please contact support if you need assistance</Text>
               </VStack>
             ) : (
               <Flex flex="1" overflow="hidden">
                 {!isMobile && (
-                  <Box w={sideW} borderRight="1px solid" borderColor="gray.200" overflowY="auto" p={4}>
+                  <Box
+                    w={sideW}
+                    borderRight="1px solid"
+                    borderColor="gray.200"
+                    overflowY="auto"
+                    p={4}
+                  >
                     {SidebarList}
                   </Box>
                 )}
-                <Box w={mainW} display="flex" flexDirection="column" flex="1">
+                <Box
+                  w={mainW}
+                  display="flex"
+                  flexDirection="column"
+                  flex="1"
+                  borderRadius={"md"}
+                  overflow={"none"}
+                >
                   {selectedGuide ? (
                     <>
-                      <Box flex="1" overflowY="auto" position="relative" bg={pdfBg}>
+                      <Box
+                        flex="1"
+                        overflowY="auto"
+                        position="relative"
+                        bg={pdfBg}
+                      >
                         {pdfLoading && (
-                          <Flex position="absolute" inset="0" align="center" justify="center" bg={pdfBg} zIndex={1}>
+                          <Flex
+                            position="absolute"
+                            inset="0"
+                            align="center"
+                            justify="center"
+                            bg={pdfBg}
+                            zIndex={1}
+                          >
                             <Spinner size="lg" />
                           </Flex>
                         )}
@@ -258,10 +355,54 @@ export default function GuideModal({
                           aria-label={`Guide PDF: ${selectedGuide.title}`}
                         />
                       </Box>
-                      <Flex px={{ base: 4, md: 6 }} py={{ base: 3, md: 4 }} bg={bg} borderTop="1px solid" borderColor="gray.200" position="sticky" bottom={0} align="center" justify="space-between" minH="48px">
-                        <Button onClick={handlePrev} isDisabled={currentIndex <= 0} px={{ base: 4, md: 3 }} py={{ base: 3, md: 2 }}>Previous</Button>
-                        <ChakraCheckbox isChecked={!!readGuides[selectedGuide.urlPath]} onChange={(e) => setReadGuides((p) => ({ ...p, [selectedGuide.urlPath]: e.target.checked }))} fontSize={{ base: "md", md: "sm" }}>Mark as read</ChakraCheckbox>
-                        <Button onClick={handleNext} isDisabled={currentIndex >= guideList.length - 1} px={{ base: 4, md: 3 }} py={{ base: 3, md: 2 }}>Next</Button>
+                      <Flex
+                        px={{ base: 4, md: 6 }}
+                        py={{ base: 3, md: 4 }}
+                        bg={bg}
+                        borderTop="1px solid"
+                        borderColor="gray.200"
+                        position="sticky"
+                        bottom={0}
+                        align="center"
+                        justify="space-between"
+                        minH="48px"
+                        borderRadius={"md"}
+                        overflow={"none"}
+                      >
+                        <HStack justify={"start"} color="white">
+                          <Button
+                            onClick={handlePrev}
+                            isDisabled={currentIndex <= 0}
+                            px={{ base: 4, md: 3 }}
+                            py={{ base: 4, md: 3 }}
+                            borderRadius={"full"}
+                            variant={"outline"}
+                          >
+                            <ArrowBack/>
+                          </Button>
+                          <Button
+                            onClick={handleNext}
+                            isDisabled={currentIndex >= guideList.length - 1}
+                            px={{ base: 4, md: 3 }}
+                            py={{ base: 4, md: 3 }}
+                            borderRadius={"full"}
+                            variant={"outline"}
+                          >
+                            <ArrowForward/>
+                          </Button>
+                        </HStack>
+                        <ChakraCheckbox
+                          isChecked={!!readGuides[selectedGuide.urlPath]}
+                          onChange={(e) =>
+                            setReadGuides((p) => ({
+                              ...p,
+                              [selectedGuide.urlPath]: e.target.checked,
+                            }))
+                          }
+                          fontSize={{ base: "md", md: "sm" }}
+                        >
+                          Mark as read
+                        </ChakraCheckbox>
                       </Flex>
                     </>
                   ) : (

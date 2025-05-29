@@ -28,7 +28,7 @@ export default function SiteProviders({
   return (
     <UserProvider value={userMetadata}>
       {children}
-      <DeveloperBoardOptions userMetadata={userMetadata} />
+      {/* <DeveloperBoardOptions userMetadata={userMetadata} /> */}
     </UserProvider>
   );
 }
