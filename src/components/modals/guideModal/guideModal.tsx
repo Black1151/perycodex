@@ -13,7 +13,6 @@ import {
   useBreakpointValue,
   useColorModeValue,
   Button,
-  Checkbox as ChakraCheckbox,
   HStack,
   Image,
   IconButton,
@@ -34,6 +33,8 @@ import {
   ArrowForward,
 } from "@mui/icons-material";
 import { useFetchClient } from "@/hooks/useFetchClient";
+import MarkAsRead from "./markAsRead";
+import { useUser } from "@/providers/UserProvider";
 
 type GuideModalProps = {
   isOpen: boolean;
@@ -43,6 +44,7 @@ type GuideModalProps = {
 };
 
 type Guide = {
+  guideId: number | string;
   title: string;
   type: "tool" | "admin" | "platform";
   role: string[];
@@ -64,6 +66,9 @@ export default function GuideModal({
   const [readGuides, setReadGuides] = useState<Record<string, boolean>>({});
   const [pdfLoading, setPdfLoading] = useState(false);
   const [iconImageUrl, setIconImageUrl] = useState<string | null>(null);
+  const [recordIdMap, setRecordIdMap] = useState<
+    Record<string, number | undefined>
+  >({});
   const { fetchClient } = useFetchClient();
   const {
     isOpen: isDrawerOpen,
@@ -71,55 +76,52 @@ export default function GuideModal({
     onClose: closeDrawer,
   } = useDisclosure();
   const theme = useTheme();
+  const { user } = useUser();
 
   // Reset PDF-spinner when guide changes
   useEffect(() => {
     if (selectedGuide) setPdfLoading(true);
   }, [selectedGuide]);
 
-  // Fetch all guides once open
   useEffect(() => {
     if (!isOpen) {
       setGuideList([]);
       setSelectedGuide(null);
+      setReadGuides({});
       setError(null);
       setIconImageUrl(null);
       setLoading(true);
       return;
     }
 
-    const fetchConfig = async () => {
+    const loadGuidesAndReads = async () => {
       setLoading(true);
       setError(null);
-
       try {
-        // Choose endpoint based on guideType and toolId explicitly
-        let response;
-        if (guideType === "tool" && toolId != null) {
-          response = await fetchClient<{ resource: any[] }>(
+        let resGuides;
+        if (guideType === 'tool' && toolId != null) {
+          resGuides = await fetchClient<{ resource: any[] }>(
             `/api/guide/findBy?type=tool&toolId=${toolId}`
           );
-        } else if (guideType === "admin") {
-          response = await fetchClient<{ resource: any[] }>(
-            "/api/guide/findBy?type=admin"
+        } else if (guideType === 'admin') {
+          resGuides = await fetchClient<{ resource: any[] }>(
+            '/api/guide/findBy?type=admin'
           );
-        } else if (guideType === "platform") {
-          response = await fetchClient<{ resource: any[] }>(
-            "/api/guide/findBy?type=platform"
+        } else {
+          resGuides = await fetchClient<{ resource: any[] }>(
+            '/api/guide/findBy?type=platform'
           );
         }
-        const rawGuides = response?.resource || [];
-
-        const processedGuides: Guide[] = rawGuides
-          .filter((g) => g.isActive)
-          .filter((g) => {
-            if (guideType === "tool" && toolId != null) {
-              // Ensure type-safe comparison
-              return String(g.toolId) === String(toolId);
-            }
-            return g.type === guideType;
-          })
-          .map((g) => ({
+        const raw = resGuides?.resource || [];
+        const sorted: Guide[] = raw
+          .filter(g => g.isActive)
+          .filter(g =>
+            guideType === 'tool' && toolId != null
+              ? String(g.toolId) === String(toolId)
+              : g.type === guideType
+          )
+          .map(g => ({
+            guideId: g.guideId ?? g.id,
             title: g.guideTitle,
             type: g.type,
             role: g.userRole ? [g.userRole] : [],
@@ -128,19 +130,34 @@ export default function GuideModal({
             toolId: g.toolId,
           }))
           .sort((a, b) => a.sortOrder - b.sortOrder);
+        setGuideList(sorted);
+        setSelectedGuide(sorted[0] ?? null);
 
-        console.log("setting guide list:", processedGuides);
-        setGuideList(processedGuides);
-        setSelectedGuide(processedGuides[0] ?? null);
+        const resRead = await fetchClient<{ resource: Array<{ id: number; guideId: string | number }> }>(
+          '/api/guideRead'
+        );
+        const records = resRead?.resource || [];
+
+        const boolMap: Record<string, boolean> = {};
+        const recIdMap: Record<string, number> = {};
+
+        sorted.forEach(g => {
+          const rec = records.find(r => String(r.guideId) === String(g.guideId));
+          boolMap[g.urlPath] = !!rec;
+          if (rec) recIdMap[g.urlPath] = rec.id;
+        });
+
+        setReadGuides(boolMap);
+        setRecordIdMap(recIdMap);
       } catch (e: any) {
-        console.error(e);
-        setError(e.message || "Failed to load guides");
+        console.error('Error loading guides or reads:', e);
+        setError(e.message || 'Failed to load guides');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchConfig();
+    loadGuidesAndReads();
   }, [isOpen, toolId, guideType]);
 
   const bg = useColorModeValue("white", "gray.800");
@@ -162,7 +179,6 @@ export default function GuideModal({
       setSelectedGuide(guideList[currentIndex + 1]);
   }, [currentIndex, guideList]);
 
-  // Sidebar list
   const SidebarList = (
     <VStack align="stretch" spacing={2}>
       {guideList.map((g) => (
@@ -187,7 +203,7 @@ export default function GuideModal({
             )}
             <Text>{g.title}</Text>
           </HStack>
-          {readGuides[g.urlPath] && (
+          {recordIdMap[g.urlPath] && (
             <CheckCircleIcon style={{ color: "#07ad4c" }} />
           )}
         </Button>
@@ -242,7 +258,6 @@ export default function GuideModal({
             borderRadius={"md"}
             overflow={"none"}
           >
-            {/* Header */}
             <HStack
               px={4}
               py={3}
@@ -378,7 +393,7 @@ export default function GuideModal({
                             borderRadius={"full"}
                             variant={"outline"}
                           >
-                            <ArrowBack/>
+                            <ArrowBack />
                           </Button>
                           <Button
                             onClick={handleNext}
@@ -388,21 +403,29 @@ export default function GuideModal({
                             borderRadius={"full"}
                             variant={"outline"}
                           >
-                            <ArrowForward/>
+                            <ArrowForward />
                           </Button>
                         </HStack>
-                        <ChakraCheckbox
-                          isChecked={!!readGuides[selectedGuide.urlPath]}
-                          onChange={(e) =>
-                            setReadGuides((p) => ({
-                              ...p,
-                              [selectedGuide.urlPath]: e.target.checked,
-                            }))
-                          }
-                          fontSize={{ base: "md", md: "sm" }}
-                        >
-                          Mark as read
-                        </ChakraCheckbox>
+                        {selectedGuide && (
+                          <MarkAsRead
+                            guideId={selectedGuide.guideId}
+                            customerId={user?.customerId ?? ""}
+                            userId={user?.userId ?? ""}
+                            initialRecordId={recordIdMap[selectedGuide.urlPath]}
+                            onMark={(newId) =>
+                              setRecordIdMap((prev) => ({
+                                ...prev,
+                                [selectedGuide.urlPath]: newId,
+                              }))
+                            }
+                            onUnmark={() =>
+                              setRecordIdMap((prev) => ({
+                                ...prev,
+                                [selectedGuide.urlPath]: undefined,
+                              }))
+                            }
+                          />
+                        )}
                       </Flex>
                     </>
                   ) : (

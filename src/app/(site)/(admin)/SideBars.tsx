@@ -26,7 +26,7 @@ import {
   DashboardCustomize,
   BlurOn,
   Help,
-  ContentCopy
+  ContentCopy,
 } from "@mui/icons-material";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -47,7 +47,7 @@ export default function SideBars() {
   const { user } = useUser();
   const modalRef = useRef(null);
   const { recordIds } = useTags();
-  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false)
+  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
   const [leftMenuItems, setLeftMenuItems] = useState<MenuItem[]>([]);
   const [adminGuideModalOpen, setAdminGuideModalOpen] =
     useState<boolean>(false);
@@ -504,6 +504,46 @@ export default function SideBars() {
     }
   }, [user?.role, pathname]);
 
+  // Auto-open Admin Guide Modal once per session if any admin guide is unread
+  useEffect(() => {
+    const sessionKey = "adminGuideOpened";
+    if (sessionStorage.getItem(sessionKey)) return;
+
+    async function checkAdminGuides() {
+      try {
+        // 1) Fetch all admin guides
+        const guidesRes = await fetch("/api/guide/findBy?type=admin");
+        if (!guidesRes.ok) throw new Error("Failed to fetch admin guides");
+        const { resource: guides } = (await guidesRes.json()) as {
+          resource: Array<{ guideId?: number; id?: number }>;
+        };
+        // Normalize to string IDs
+        const allGuideIds = (guides || []).map((g) =>
+          String(g.guideId ?? g.id)
+        );
+
+        // 2) Fetch read records
+        const readRes = await fetch("/api/guideRead");
+        if (!readRes.ok) throw new Error("Failed to fetch read records");
+        const { resource: readRecords } = (await readRes.json()) as {
+          resource: Array<{ guideId: number | string }>;
+        };
+        const readSet = new Set(readRecords.map((r) => String(r.guideId)));
+
+        // 3) Open if there's any unread guide
+        const hasUnread = allGuideIds.some((id) => !readSet.has(id));
+        if (hasUnread) {
+          setAdminGuideModalOpen(true);
+          sessionStorage.setItem(sessionKey, "1");
+        }
+      } catch (err) {
+        console.error("Error checking admin guide auto-open:", err);
+      }
+    }
+
+    checkAdminGuides();
+  }, []);
+
   const generateRightSidebarItemsDrawer = useMemo(() => {
     let entityType = null;
 
@@ -610,7 +650,10 @@ export default function SideBars() {
           <ContextualMenu menuItems={rightMenuItems} />
         )}
       </Flex>
-      <AssignGroupModal isOpen={isAssignModalOpen} onClose={() => setIsAssignModalOpen(false)}/>
+      <AssignGroupModal
+        isOpen={isAssignModalOpen}
+        onClose={() => setIsAssignModalOpen(false)}
+      />
       <ManageTagsModal ref={modalRef} customerId={modalCustomerId} />
       <GuideModal
         isOpen={adminGuideModalOpen}
