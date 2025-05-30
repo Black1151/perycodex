@@ -22,6 +22,7 @@ export default function ToolStoreLayout({
           px={[3, 3, 78]}
           py={3}
           overflowY="auto"
+          pb={"60px"}
         >
           {children}
         </Container>
