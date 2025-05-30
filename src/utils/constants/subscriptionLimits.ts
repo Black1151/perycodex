@@ -4,5 +4,6 @@ export const subscriptionLimits = {
     maxTeams: 3,
     maxSites: 3,
     trialDays: 45,
+    toolIds: [1,2]
   },
 };
