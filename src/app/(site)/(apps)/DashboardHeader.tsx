@@ -21,6 +21,7 @@ import ContextualMenu from "@/components/Sidebars/ContextualMenu";
 interface DashboardHeaderProps {
   headingText: string;
   canStartWorkflow: boolean;
+  startBtnText?: string
   toolUrl: string;
   contextualMenuItems?: MenuItem[];
 }
@@ -28,6 +29,7 @@ interface DashboardHeaderProps {
 const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   headingText,
   canStartWorkflow,
+  startBtnText,
   toolUrl,
   contextualMenuItems,
 }) => {
@@ -100,12 +102,12 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
       <HStack ml="auto" spacing={2}>
         {ableToStart && isMobile && (
-          <AddButtonMobile onAddButtonClick={handleStartClick} label="Start" />
+          <AddButtonMobile onAddButtonClick={handleStartClick} label={startBtnText||"Start"} />
         )}
 
         {ableToStart && !isMobile && (
           <AddButtonDesktop
-            label="Start"
+            label={startBtnText||"Start"}
             onAddButtonClick={handleStartClick}
           />
         )}

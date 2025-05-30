@@ -34,7 +34,7 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
   const [activeDashboardName, setActiveDashboardName] = useState<string | null>(
     null
   );
-  const [toolData, setToolData] = useState<{ startInUi: boolean } | null>(null);
+  const [toolData, setToolData] = useState<{ startInUi: boolean, altStartText: string } | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   const toolId = searchParams.get("toolId");
@@ -93,8 +93,14 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
         if (!response.ok) throw new Error("Failed to fetch dashboards");
 
         const data: DashboardAPIResponse = await response.json();
+
+        console.log("HERE!", data)
         setDashboardList(data.filteredDashboards);
-        setToolData(data.toolData || null);
+        setToolData(
+          data.toolData
+            ? { startInUi: data.toolData.startInUi, altStartText: (data.toolData as any).altStartText ?? "start" }
+            : null
+        );
       } catch (error) {
         console.error("Error fetching dashboards:", error);
       } finally {
@@ -133,6 +139,7 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
       <DashboardHeader
         headingText={activeDashboardName || ""}
         canStartWorkflow={toolData?.startInUi || false}
+        startBtnText={toolData?.altStartText || "Start"}
         toolUrl={toolUrl}
         contextualMenuItems={[contextualMenuItems]}
       />
@@ -151,6 +158,7 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
       <DashboardHeader
         headingText={activeDashboardName || ""}
         canStartWorkflow={toolData?.startInUi || false}
+        startBtnText={toolData?.altStartText || "Start"}
         toolUrl={toolUrl}
         contextualMenuItems={[contextualMenuItems]}
       />
