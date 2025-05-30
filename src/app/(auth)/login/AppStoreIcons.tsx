@@ -49,38 +49,35 @@ const MotionFlex = motion(Flex);
 
 const AppStoreIcons = () => {
   const [showGoogle, setShowGoogle] = useState(false);
-  const [showApple, setShowApple] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [showApple, setShowApple]   = useState(false);
+  const [visible,    setVisible]    = useState(false);
 
   const isRunningInApp = (() => {
     if (typeof window === "undefined") return false;
-    const ua = window.navigator.userAgent || "";
-    // matches “median” or “gonative” in any case
-    const appUA = /median|gonative/i.test(ua);
-    // or the presence of the JS bridge object
+    const ua = window.navigator.userAgent;
+    const appUA   = /median|gonative/i.test(ua);
     const hasBridge = typeof (window as any).Median !== "undefined";
     return appUA || hasBridge;
   })();
 
-  if (isRunningInApp) {
-    return null;
-  }
-
   useEffect(() => {
     const { os } = getOSAndBrowser();
-    const screenIsTabletOrAbove = window.innerWidth >= 768;
+    const wide = window.innerWidth >= 768;
 
-    // on tablets/desktops show both badges
-    if (screenIsTabletOrAbove || os === "Windows" || os === "MacOS") {
+    if (wide || os === "Windows" || os === "MacOS") {
       setShowGoogle(true);
       setShowApple(true);
     } else {
       if (os === "Android") setShowGoogle(true);
-      if (os === "iOS") setShowApple(true);
+      if (os === "iOS")     setShowApple(true);
     }
 
     setVisible(true);
   }, []);
+
+  if (isRunningInApp) {
+    return null;
+  }
 
   return (
     <AnimatePresence>
