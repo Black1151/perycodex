@@ -23,7 +23,7 @@ import AnimatedTillNumber from "@/components/animations/AnimatedTillNumber";
 import { useUser } from "@/providers/UserProvider";
 import WarningIcon from "@mui/icons-material/Warning";
 import BackButton from "@/components/BackButton";
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Call } from "@mui/icons-material";
 import { Header } from "../Header";
 
@@ -45,7 +45,7 @@ export default function CurrentSubscriptionPage() {
   }, [basket]);
 
   if (loading) {
-    return (<Spinner/>);
+    return <Spinner />;
   }
 
   // don’t render until we know how many licenses we have
@@ -102,31 +102,50 @@ export default function CurrentSubscriptionPage() {
               borderColor={borderColor}
               borderRadius="md"
               boxShadow="sm"
-              p={4}
+              p={0}
               justify="space-between"
-              align="center"
+              align="stretch"
               spacing={4}
+              overflow="hidden"
+              w="full"
             >
-              <HStack spacing={4} flex="1">
+              {/* Icon column */}
+              <VStack
+                bg={theme.colors.primary}
+                p={4}
+                flexShrink={0} 
+                minW="60px"
+                align="center"
+                justify="center"
+              >
                 {item.iconImageUrl && (
                   <Image
                     src={item.iconImageUrl}
                     alt={item.displayName}
-                    boxSize="50px"
+                    boxSize="60px"
+                    objectFit="contain"
                     borderRadius="md"
+                    flexShrink={0}
                   />
                 )}
-                <VStack align="flex-start" spacing={0} flex="1">
-                  <Text fontSize={[16, 18, 20]} fontWeight="semibold">
-                    {item.displayName}
-                  </Text>
-                  <Text fontSize={[14, 16]} color="gray.500">
-                    {subscription.licensedUsers} licenses
-                  </Text>
-                </VStack>
-              </HStack>
+              </VStack>
 
-              <VStack spacing={0}>
+              <VStack
+                flex="1"
+                align="flex-start"
+                spacing={0}
+                p={4}
+                minW={0}
+              >
+                <Text fontSize={[16, 18, 20]} fontWeight="semibold">
+                  {item.displayName}
+                </Text>
+                <Text fontSize={[14, 16]} color="gray.500">
+                  {subscription.licensedUsers} licenses
+                </Text>
+              </VStack>
+
+              <VStack spacing={0} p={4} align="flex-end" justify="center">
                 <HStack spacing={1} align="baseline">
                   <Text fontSize={[16, 18, 20]} fontWeight="semibold">
                     £{Number(item.itemGrandTotal).toFixed(2)}
@@ -136,7 +155,7 @@ export default function CurrentSubscriptionPage() {
                   </Text>
                 </HStack>
                 <Text fontSize={[14, 16]} color="gray.500">
-                  £{(Number(item.itemGrandTotal) * 1.2).toFixed(2)}(incl. VAT)
+                  £{(Number(item.itemGrandTotal) * 1.2).toFixed(2)} (incl. VAT)
                 </Text>
               </VStack>
             </HStack>
@@ -203,28 +222,37 @@ export default function CurrentSubscriptionPage() {
           </SimpleGrid>
 
           {/* Dates & licenses */}
-            <Stack
+          <Stack
             spacing={2}
             mb={6}
             direction={{ base: "column", md: "row" }}
             flexWrap="wrap"
             shouldWrapChildren
-            >
+          >
             <Badge colorScheme="blue">
               Start Date:{" "}
               {new Date(subscription.updatedAt).toLocaleDateString("en-GB")}
             </Badge>
-            {/* //TODO: Add renewal date in from db when col is made */}
-            <Badge colorScheme="blue">Renewal Date: XX/XX/XXXX</Badge>
+            <Badge colorScheme="blue">
+              Renewal Date: {subscription.renewalDate}
+            </Badge>
             <Badge colorScheme="blue">Subscription ID: {subscription.id}</Badge>
-            </Stack>
+          </Stack>
 
           {/* Action buttons */}
           <Stack direction={{ base: "column", md: "row" }} spacing={3}>
             <Button
               variant="outline"
-              onClick={() => router.push("/tool-store/manage-subscription")}
-              rightIcon={<OpenInNewIcon fontSize="small"/>}
+              onClick={() => {
+                if (subscription.invoiceUrl) {
+                  window.open(
+                    subscription.invoiceUrl,
+                    "_blank",
+                    "noopener,noreferrer"
+                  );
+                }
+              }}
+              rightIcon={<OpenInNewIcon fontSize="small" />}
             >
               Invoice
             </Button>
@@ -244,7 +272,7 @@ export default function CurrentSubscriptionPage() {
             <Button
               variant="outline"
               onClick={() => router.push("/tool-store/manage-subscription")}
-              rightIcon={<Call fontSize="small"/>}
+              rightIcon={<Call fontSize="small" />}
             >
               Contact Sales
             </Button>
