@@ -7,8 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 function getOSAndBrowser() {
   const userAgent =
     typeof window !== "undefined" ? window.navigator.userAgent : "";
-  let os = "Unknown OS";
-  let browser = "Unknown Browser";
+  let os: string = "Unknown OS";
+  let browser: string = "Unknown Browser";
 
   if (/windows phone/i.test(userAgent)) {
     os = "Windows Phone";
@@ -49,30 +49,35 @@ const MotionFlex = motion(Flex);
 
 const AppStoreIcons = () => {
   const [showGoogle, setShowGoogle] = useState(false);
-  const [showApple, setShowApple] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [showApple, setShowApple]   = useState(false);
+  const [visible,    setVisible]    = useState(false);
+
+  const isRunningInApp = (() => {
+    if (typeof window === "undefined") return false;
+    const ua = window.navigator.userAgent;
+    const appUA   = /median|gonative/i.test(ua);
+    const hasBridge = typeof (window as any).Median !== "undefined";
+    return appUA || hasBridge;
+  })();
 
   useEffect(() => {
     const { os } = getOSAndBrowser();
+    const wide = window.innerWidth >= 768;
 
-    const isMedian = typeof window !== "undefined" &&
-      ((window as any).Median !== undefined ||
-        !!document.querySelector('[class*="median"]'));
-
-    if (isMedian) return;
-
-    const screenIsTabletOrAbove = window.innerWidth >= 768;
-
-    if (screenIsTabletOrAbove || os === "Windows" || os === "MacOS") {
+    if (wide || os === "Windows" || os === "MacOS") {
       setShowGoogle(true);
       setShowApple(true);
     } else {
       if (os === "Android") setShowGoogle(true);
-      if (os === "iOS" || os === "MacOS") setShowApple(true);
+      if (os === "iOS")     setShowApple(true);
     }
 
     setVisible(true);
   }, []);
+
+  if (isRunningInApp) {
+    return null;
+  }
 
   return (
     <AnimatePresence>
@@ -85,7 +90,7 @@ const AppStoreIcons = () => {
           transition={{ duration: 0.6, ease: "easeOut", delay: 1.2 }}
           justify="center"
           gap={4}
-          bg="rgb(255,255,255,0.80)"
+          bg="rgba(255,255,255,0.80)"
           borderBottomRadius="md"
           px={6}
           py={3}
@@ -93,7 +98,10 @@ const AppStoreIcons = () => {
           position="relative"
         >
           {showGoogle && (
-            <Link href="https://play.google.com/store/apps/details?id=uk.co.sedulo.perygon&pcampaignid=web_share" isExternal>
+            <Link
+              href="https://play.google.com/store/apps/details?id=uk.co.sedulo.perygon&pcampaignid=web_share"
+              isExternal
+            >
               <Image
                 src="/images/Google_Play_Store_badge.svg.webp"
                 alt="Get Perygon on Google Play"
@@ -103,7 +111,10 @@ const AppStoreIcons = () => {
             </Link>
           )}
           {showApple && (
-            <Link href="https://apps.apple.com/gb/app/perygon/id6740286271" isExternal>
+            <Link
+              href="https://apps.apple.com/gb/app/perygon/id6740286271"
+              isExternal
+            >
               <Image
                 src="/images/Apple_App_Store_badge.svg"
                 alt="Download Perygon on the App Store"

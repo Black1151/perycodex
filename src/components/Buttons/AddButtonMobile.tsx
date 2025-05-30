@@ -34,8 +34,8 @@ const AddButtonMobile: React.FC<AddButtonMobileProps> = ({
     zIndex={20}
     gap={1}
   >
-    <Text fontSize="md">{label}</Text>
     <IconComponent />
+    <Text fontSize="md">{label}</Text>
   </Button>
 );
 

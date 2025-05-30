@@ -5,7 +5,8 @@ import {Box, useTheme, HStack} from "@chakra-ui/react";
 import Bottombar, {BottombarProps} from "@/components/Bottombar/Bottombar";
 import BottomNavigationMenuItem from "@/components/Bottombar/NavigationBottombar/BottomNavigationMenuItem";
 import {MenuItem} from "@/components/Sidebars/NavigationSidebar/NavigationSidebar";
-
+import { Home } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
 interface NavigationBottombarProps extends BottombarProps {
     menuItems: MenuItem[];
 }
@@ -13,10 +14,16 @@ interface NavigationBottombarProps extends BottombarProps {
 const NavigationBottombar: React.FC<NavigationBottombarProps> = ({menuItems, ...sidebarProps}) => {
 
     const [activeLabel, setActiveLabel] = useState<string | null>(null);
+    const router = useRouter()
 
     const handleItemClick = (clicked: MenuItem) => {
         setActiveLabel(clicked.label);
         clicked.onClick?.();
+    };
+
+    const handleHomeClick = () => {
+        setActiveLabel("Home");
+        router.push("/");
     };
 
     const content = (
@@ -35,7 +42,6 @@ const NavigationBottombar: React.FC<NavigationBottombarProps> = ({menuItems, ...
         >
             {menuItems.map((item, index) => (
                 <Box key={index} minWidth="80px" h={'full'}>
-                    {" "}
                     <BottomNavigationMenuItem
                         label={item.label}
                         icon={item.icon}
@@ -46,6 +52,14 @@ const NavigationBottombar: React.FC<NavigationBottombarProps> = ({menuItems, ...
                     />
                 </Box>
             ))}
+            <Box minWidth="80px" h={'full'}>
+                <BottomNavigationMenuItem
+                    label="Home"
+                    icon={<Home />}
+                    onClick={handleHomeClick}
+                    active={false}
+                />
+            </Box>
         </HStack>
     );
 
