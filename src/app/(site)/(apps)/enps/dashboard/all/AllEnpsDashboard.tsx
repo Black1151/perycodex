@@ -18,6 +18,7 @@ import { dateRangeOptions } from "@/components/Sidebars/Dashboards Filter/dateRa
 import { ScoreTooltipRenderer } from "@/components/agCharts/tooltips/ScoreTooltipRenderer";
 import { SubmissionsTooltipRenderer } from "@/components/agCharts/tooltips/SubmissionsTooltipRenderer";
 import { PieChartTooltipRenderer } from "@/components/agCharts/tooltips/PieChartTooltipRenderer";
+import { useUser } from "@/providers/UserProvider";
 
 interface enpsMainDashboardResponse {
   resource: {
@@ -56,6 +57,8 @@ const AllEnpsDashboard = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { fetchClient } = useFetchClient();
   const { getColor } = useColor();
+  const user = useUser()
+  const isFree = user?.user?.customerIsFree
 
   const [gaugeData, setGaugeData] = useState<GaugeData>({
     minScore: -100,
@@ -354,6 +357,8 @@ const AllEnpsDashboard = () => {
             title={"Category Breakdown"}
             chartOptions={pieChartOptions}
             noData={pieChartData?.length === 0}
+            locked={isFree}
+            lockedReason="Not available on free tier..."
           />
 
           {/* Histogram */}
@@ -362,6 +367,8 @@ const AllEnpsDashboard = () => {
             title={"Score Spread"}
             chartOptions={histogramOptions}
             noData={histogramData.length === 0}
+            locked={isFree}
+            lockedReason="Not available on free tier..."
           />
 
           {/* Line Chart */}
@@ -370,6 +377,8 @@ const AllEnpsDashboard = () => {
             title={"eNPS Trend"}
             chartOptions={lineChartOptions}
             noData={lineChartData.length === 0}
+            locked={isFree}
+            lockedReason="Not available on free tier..."
           />
         </Flex>
       </VStack>
