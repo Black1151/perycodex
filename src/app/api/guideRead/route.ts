@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
-const BACKEND_URL = process.env.BE_URL;
-if (!BACKEND_URL) throw new Error('Missing BE_URL environment variable');
 
 interface GuideReadPayload {
   id: number
@@ -20,12 +18,12 @@ async function forwardToBackend(
 
   let url: string;
   if (method === 'GET') {
-    url = `${BACKEND_URL}/guideRead/allBy`;
+    url = `${process.env.BE_URL}/guideRead/allBy`;
   } else if (method === 'DELETE' && payload) {
-    url = `${BACKEND_URL}/guideRead/${payload.id}`;
+    url = `${process.env.BE_URL}/guideRead/${payload.id}`;
   } else {
     // POST
-    url = `${BACKEND_URL}/guideRead`;
+    url = `${process.env.BE_URL}/guideRead`;
   }
   console.log(`[guideRead] ${method} → ${url}`);
 
