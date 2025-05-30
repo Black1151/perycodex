@@ -26,6 +26,7 @@ import {
   DashboardCustomize,
   BlurOn,
   Help,
+  ContentCopy
 } from "@mui/icons-material";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -37,6 +38,7 @@ import NavigationSidebar from "@/components/Sidebars/NavigationSidebar/Navigatio
 import NavigationBottombar from "@/components/Bottombar/NavigationBottombar/NavigationBottombar";
 import GuideModal from "@/components/modals/guideModal/guideModal";
 import ContextualMenu from "@/components/Sidebars/ContextualMenu";
+import AssignGroupModal from "./user-groups/AssignGroupModal";
 
 export default function SideBars() {
   const router = useRouter();
@@ -45,6 +47,7 @@ export default function SideBars() {
   const { user } = useUser();
   const modalRef = useRef(null);
   const { recordIds } = useTags();
+  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false)
   const [leftMenuItems, setLeftMenuItems] = useState<MenuItem[]>([]);
   const [adminGuideModalOpen, setAdminGuideModalOpen] =
     useState<boolean>(false);
@@ -512,9 +515,14 @@ export default function SideBars() {
 
     let shouldShowManageTags = false;
     let shouldShowAdminGuides = true;
+    let shouldShowAssignToCustomer = false;
 
     if (pathname === "/help-center") {
       shouldShowAdminGuides = false;
+    }
+
+    if (pathname === "/user-groups" && user?.role === "PA") {
+      shouldShowAssignToCustomer = true;
     }
 
     // Skip all logic if user role is PA
@@ -550,6 +558,15 @@ export default function SideBars() {
           // @ts-ignore
           modalRef.current?.openModal(),
         locked: user?.customerIsFree ? true : false,
+      });
+    }
+
+    if (shouldShowAssignToCustomer) {
+      items.push({
+        label: "Assign to Customer",
+        icon: <ContentCopy sx={{ height: "100%", width: "100%" }} />,
+        onClick: () => setIsAssignModalOpen(true),
+        category: "External",
       });
     }
 
@@ -593,6 +610,7 @@ export default function SideBars() {
           <ContextualMenu menuItems={rightMenuItems} />
         )}
       </Flex>
+      <AssignGroupModal isOpen={isAssignModalOpen} onClose={() => setIsAssignModalOpen(false)}/>
       <ManageTagsModal ref={modalRef} customerId={modalCustomerId} />
       <GuideModal
         isOpen={adminGuideModalOpen}
