@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import Carousel from "./Carousel";
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import { useUser } from "@/providers/UserProvider";
+import { Storefront } from "@mui/icons-material";
 
 export interface CarouselDisplayProps {
   carouselItems: CarouselItemProps[];
@@ -115,13 +116,13 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
         <Button
           as={Link}
           href="/tool-store"
-          leftIcon={<FiShoppingCart size={20} />}
+          leftIcon={<Storefront />}
           position="absolute"
           top={[2, 4]}
           right={[2, 4]}
           zIndex={3}
           mt={[5, 8]}
-          size="lg"
+          size="md"
           color="white"
           bgColor={theme.colors.primary}
           boxShadow="lg"

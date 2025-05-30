@@ -1,6 +1,6 @@
 "use client";
 
-import { Center, VStack, Flex } from "@chakra-ui/react";
+import { Center, VStack, Flex, Link, Image } from "@chakra-ui/react";
 import { PerygonContainer } from "@/components/layout/PerygonContainer";
 import { LoginCard } from "@/components/login/LoginCard";
 import dynamic from "next/dynamic";
@@ -14,16 +14,15 @@ import {
   FormLabel,
   HStack,
   Input,
-  Select, 
+  Select,
   Stack,
-  Spinner
+  Spinner,
 } from "@chakra-ui/react";
 import { useTheme } from "@chakra-ui/react";
 
-const SignUpPageClient = dynamic(
-  () => import("./SignUpPageClient"),
-  { ssr: false }
-);
+const SignUpPageClient = dynamic(() => import("./SignUpPageClient"), {
+  ssr: false,
+});
 
 export default function SignUpPage() {
   const [title, setTitle] = useState("Sign up");
@@ -40,16 +39,16 @@ export default function SignUpPage() {
       bgGradient={theme.gradients.primaryGradient}
     >
       <SignUpCard>
-      <Suspense
+        <Suspense
           fallback={
             <Center h="200px">
               <Spinner size="xl" />
             </Center>
           }
         >
-        <Box width="full" maxW="md">
-          <SignUpPageClient />
-        </Box>
+          <Box width="full" maxW="md">
+            <SignUpPageClient />
+          </Box>
         </Suspense>
       </SignUpCard>
     </Flex>

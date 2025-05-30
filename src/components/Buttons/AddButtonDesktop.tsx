@@ -2,6 +2,7 @@
 import React from "react";
 import { Button, Text } from "@chakra-ui/react";
 import { Add } from "@mui/icons-material";
+import {PlayCircleFilled} from "@mui/icons-material"
 
 interface AddButtonDesktopProps {
   label: string;
@@ -15,7 +16,7 @@ const AddButtonDesktop: React.FC<AddButtonDesktopProps> = ({
   label,
   onAddButtonClick,
   isLoading = false,
-  IconComponent = Add,
+  IconComponent = PlayCircleFilled,
 }) => {
   const iconSpacing = { marginRight: "8px" };
   return (
@@ -24,8 +25,9 @@ const AddButtonDesktop: React.FC<AddButtonDesktopProps> = ({
       position="relative"
       onClick={onAddButtonClick}
       minW="48px"
-      minH="48px"
-      borderRadius="md"
+      minH="40px"
+      h={"40px"}
+      borderRadius="full"
       isLoading={isLoading}
     >
       <IconComponent style={iconSpacing} />

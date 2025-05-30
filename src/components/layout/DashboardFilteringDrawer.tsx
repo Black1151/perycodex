@@ -92,7 +92,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
       {drawerState === "closed" && (
         <Box
           position="absolute"
-          top={["72px", null, "76px"]}
+          top={["72px", null, "74px"]}
           right={[3, 4, 5]}
           zIndex={1}
           display={["flex"]}
@@ -100,15 +100,14 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
           justifyContent="center"
           color={theme.colors.iconColor}
           borderRadius="full"
-          aspectRatio={1}
-          w={["30px", "30px", "36px"]}
-          h={["30px", "30px", "36px"]}
+          w={"40px"}
+          h={"40px"}
           backgroundColor={"rgba(255,255,255,0.2)"}
           border={`1px solid ${theme.colors.iconColor}`}
           p={1}
           transform="scale(1)"
           transition="transform 0.2s ease-in-out"
-          _hover={{ transform: "scale(1.2)" }}
+          _hover={{ transform: "scale(1.05)", bg: "rgba(255,255,255, 0.35)" }}
         >
           <FilterAlt
             onClick={toggleDrawer}
@@ -138,7 +137,7 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
         right={0}
         bottom={0}
         width={225}
-        zIndex={98}
+        zIndex={150}
         bg="elementBG"
         boxShadow="xl"
         transform={
