@@ -21,6 +21,7 @@ import ContextualMenu from "@/components/Sidebars/ContextualMenu";
 interface DashboardHeaderProps {
   headingText: string;
   canStartWorkflow: boolean;
+  startBtnText?: string
   toolUrl: string;
   contextualMenuItems?: MenuItem[];
 }
@@ -28,6 +29,7 @@ interface DashboardHeaderProps {
 const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   headingText,
   canStartWorkflow,
+  startBtnText,
   toolUrl,
   contextualMenuItems,
 }) => {
@@ -37,9 +39,10 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
     !!toolId && !!workflowId && canStartWorkflow
   );
 
+  console.log("contexual menu items:", contextualMenuItems)
+
   const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
 
-  // Bring fetch + routing logic up here
   const { fetchClient } = useFetchClient();
   const router = useRouter();
 
@@ -99,17 +102,17 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
       <HStack ml="auto" spacing={2}>
         {ableToStart && isMobile && (
-          <AddButtonMobile onAddButtonClick={handleStartClick} label="Start" />
+          <AddButtonMobile onAddButtonClick={handleStartClick} label={startBtnText||"Start"} />
         )}
 
         {ableToStart && !isMobile && (
           <AddButtonDesktop
-            label="Start"
+            label={startBtnText||"Start"}
             onAddButtonClick={handleStartClick}
           />
         )}
 
-        {contextualMenuItems && contextualMenuItems.length > 0 && (
+        {contextualMenuItems && (
           <ContextualMenu
             menuItems={contextualMenuItems}
           />

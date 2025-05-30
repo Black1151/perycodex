@@ -524,18 +524,19 @@ export function LoginForm() {
           </VStack>
         )}
         <Flex
-          gap={4}
+          gap={1}
           w={"100%"}
           top={6}
           position="relative"
           justify={"space-between"}
           align={"center"}
+          direction={"column"}
         >
-          <Text p="0" pt="10px" fontSize={["10px", "12px"]} color="gray">
-            Sedulo Accountants Limited © 2024 (V1.3.0)
+          <Text p="0" fontSize={["10px", "12px"]} color="gray">
+            Sedulo Accountants Limited © 2024 - 2025 (V1.4.0)
           </Text>
           <Link href={"/privacy-policy"}>
-            <Text p="0" pt="10px" fontSize={["10px", "12px"]} color="gray">
+            <Text p="0" fontSize={["10px", "12px"]} color="gray">
               Privacy Policy
             </Text>
           </Link>
