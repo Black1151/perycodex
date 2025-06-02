@@ -1,7 +1,7 @@
 import { subscriptionLimits } from "@/utils/constants/subscriptionLimits";
-
+ 
 const maxEmails = (subscriptionLimits.free.maxUsers ?? 0) - 2; // -2 as one less than amount of commas and -1 for the user themselves
-
+ 
 export const registerCustomerJson = {
   checkErrorsMode: "onValueChanged",
   pages: [
@@ -47,7 +47,7 @@ export const registerCustomerJson = {
           inputType: "tel",
           startWithNewLine: false,
           minWidth: "256px",
-          placeholder: "Enter the telephone number of your company",
+          placeholder: "Enter company telephone number",
           validators: [
             {
               type: "regex",
@@ -64,7 +64,7 @@ export const registerCustomerJson = {
           minWidth: "192px",
           isRequired: true,
           placeholder:
-            "Select the primary sector in which this business operates",
+            "Select your primary business sector",
           allowClear: true,
           choicesByUrl: {
             url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=sector`,
@@ -82,7 +82,7 @@ export const registerCustomerJson = {
           titleLocation: "top",
           isRequired: true,
           searchEnabled: false,
-          placeholder: "Select the region in which this business operates",
+          placeholder: "Select your primary region",
           allowClear: true,
           choicesByUrl: {
             url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=region`,
@@ -99,7 +99,7 @@ export const registerCustomerJson = {
           titleLocation: "top",
           minWidth: "192px",
           isRequired: true,
-          placeholder: "Select the business type of this business",
+          placeholder: "Select your business type",
           allowClear: true,
           choicesByUrl: {
             url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/surveyjs/selectItems?type=business_type`,
@@ -189,7 +189,7 @@ export const registerCustomerJson = {
         },
       ],
     },
-
+ 
     /* ─────────────────────────────  2 ▸ COMPANY SITES  ───────────────────────────── */
     {
       name: "customer-sites",
@@ -203,11 +203,11 @@ export const registerCustomerJson = {
           title: `Enter your company locations below. (First being the primary location of your organisation) You can add up to ${subscriptionLimits.free.maxSites} sites. `,
           panelCount: 1,
           maxPanelCount: `${subscriptionLimits.free.maxSites}`,
-
+ 
           // ←–– Enforce unique siteName across all panels
           keyName: "siteName",
           keyDuplicationError: "Each site name must be unique",
-
+ 
           templateElements: [
             /* ───────── always shown ───────── */
             {
@@ -255,6 +255,15 @@ export const registerCustomerJson = {
               requiredErrorText: "Please enter the postcode of this site",
             },
             {
+              type: "text",
+              name: "address3",
+              title: "Town / City",
+              minWidth: "256px",
+              isRequired: true,
+              placeholder: "City",
+              requiredErrorText: "Please enter the name of your city",
+            },
+            {
               type: "dropdown",
               name: "country",
               title: "Country",
@@ -276,7 +285,7 @@ export const registerCustomerJson = {
         },
       ],
     },
-
+ 
     /* ─────────────────────────────  3 ▸ COMPANY DEPARTMENTS  ─────────────────────── */
     {
       name: "company-departments",
@@ -290,12 +299,12 @@ export const registerCustomerJson = {
           minPanelCount: 0,
           maxPanelCount: `${subscriptionLimits.free.maxTeams - 1}`,
           renderMode: "tab",
-          templateTabTitle: "Department {panelIndex}: {panel.departmentName}",
-
+          templateTabTitle: "Dept {panelIndex}: {panel.departmentName}",
+ 
           // ←–– Enforce unique departmentName across panels
           keyName: "departmentName",
           keyDuplicationError: "Each department name must be unique",
-
+ 
           templateElements: [
             {
               type: "text",
@@ -322,7 +331,7 @@ export const registerCustomerJson = {
         },
       ],
     },
-
+ 
     /* ─────────────────────────────  4 ▸ COMPANY STAFF  ───────────────────────────── */
     {
       name: "company-staff-section",
@@ -360,10 +369,10 @@ export const registerCustomerJson = {
           visibleIf: "{useBulkEntry} = false and {inviteStaff} = true",
           minPanelCount: 0,
           isRequired: true,
-
+ 
           keyName: "staffEmail",
           keyDuplicationError: "Each email address must be unique",
-
+ 
           templateElements: [
             {
               type: "text",
@@ -411,7 +420,7 @@ export const registerCustomerJson = {
         },
       ],
     },
-
+ 
     // Tool selection -- no longer used in the form, but kept here for reference
     /* ─────────────────────────────  5 ▸ TOOL SELECTION  ──────────────────────────── */
     // {
@@ -429,7 +438,7 @@ export const registerCustomerJson = {
     //       name: "toolPanels",
     //       title: "Select the tools you'd like to use",
     //       width: "100%",
-
+ 
     //       setValueIf: "{x}=true",
     //       isrequired: true,
     //       setValueExpression:
