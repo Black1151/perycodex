@@ -113,18 +113,15 @@ export async function middleware(request: NextRequest) {
       subscribedTools,
     } = metadataJson.resource;
 
-    // Rebuild a trimmed object
     const userACMetadata = {
-      role,
-      customerId,
-      teamManagerCount,
-      groupNames,
+      role: role,
+      customerId: customerId,
+      teamManagerCount: teamManagerCount,
+      groupNames: groupNames,
       customerIsFree: customerIsFree === null ? true : customerIsFree,
-      customerIsFreeUntilDate,
-      subscribedTools,
+      customerIsFreeUntilDate: customerIsFreeUntilDate,
+      subscribedTools: subscribedTools,
     };
-
-    console.log("Access Control Metadata:", userACMetadata);
 
     // Section 3B: ACCESS CONTROL PLATFORM (platform check done first)
     try {
@@ -145,10 +142,6 @@ export async function middleware(request: NextRequest) {
       if (acpResponse.ok && acpResponse.status === 200) {
         acpJson = await acpResponse.json();
         console.log(
-          "[Middleware] ACPlatform Request:",
-          JSON.stringify({ checkUrl: fullPath })
-        );
-        console.log(
           `[Middleware] ACPlatform response: status=${acpResponse.status}, ok=${acpResponse.ok}, body=${JSON.stringify(
             acpJson
           )} path=${pathname}`
@@ -162,6 +155,19 @@ export async function middleware(request: NextRequest) {
         // Only grant access if that value is exactly the string "true"
         if (firstVal === "true") {
           allowed = true;
+        }
+
+        // Edge case, expired CA and CL trial users who are expired, redirect to /tool-store if their path gets blocked.
+        if (
+          !allowed &&
+          userACMetadata.customerIsFree &&
+          userACMetadata.customerIsFreeUntilDate &&
+          new Date(userACMetadata.customerIsFreeUntilDate) < new Date()
+        ) {
+          console.log(
+            "[Middleware] → Expired free user. Access denied, redirecting to /tool-store"
+          );
+          return NextResponse.redirect(new URL("/tool-store", request.url));
         }
       } else {
         console.warn(
@@ -222,7 +228,7 @@ export async function middleware(request: NextRequest) {
       }
     }
 
-    // final decision
+    // Section 3D: Final decision
     if (!allowed) {
       console.log(
         "[Middleware] → Access denied, redirecting to /access-denied"
