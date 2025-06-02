@@ -60,7 +60,6 @@ const NavBar: React.FC<NavBarProps> = ({
 
   const handleLogout = async () => {
     await fetch("/api/auth/sign-out", { method: "POST" });
-    sessionStorage.clear();
     await signOut({ redirect: false });
     router.push("/login");
   };
