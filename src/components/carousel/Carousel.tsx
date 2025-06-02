@@ -64,12 +64,13 @@ const Carousel: React.FC<CarouselProps> = ({
   return (
     <VStack
       width="100%"
-      maxWidth={["100%", 450, 650, 800, 1000]}
+      maxWidth={["100%", null, null, null, 1000]}
       spacing={4}
       mb={[0, 10]}
       position="relative"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
+
     >
       <CarouselNavigationButton
         direction="left"
@@ -97,6 +98,7 @@ const Carousel: React.FC<CarouselProps> = ({
           }%)`}
           transition="transform 0.5s ease-in-out"
           onTransitionEnd={() => setIsTransitioning(false)}
+ 
         >
           {carouselItems.map((item, index) => {
             let opacity = 1;
