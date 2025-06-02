@@ -176,13 +176,13 @@ export async function POST(req: Request) {
       }));
     }
 
-    const toolPayload = {
+    const toolPayloads = subscriptionLimits.free.toolIds.map((toolId: number) => ({
       customerId: companyId,
-      toolConfigId: 1, //HAPPINESS
+      toolConfigId: toolId,
       subStartDate: new Date().toISOString().split("T")[0],
-      subscriptionTypeId: 1, //FREE
+      subscriptionTypeId: 1, // FREE
       price: 0,
-    };
+    }));
 
     let primarySiteId: number | null = null;
 
@@ -219,8 +219,8 @@ export async function POST(req: Request) {
         return res;
       }),
 
-      // 3. generic tool payload... used for all free sign ups, they only get happiness
-      (async () => {
+      // 3. multiple calls for each free tool
+      ...toolPayloads.map(async (toolPayload) => {
         const toolRes = await apiClient(`/toolCustomer`, {
           method: "POST",
           body: JSON.stringify(toolPayload),
@@ -230,7 +230,7 @@ export async function POST(req: Request) {
           throw new Error("Failed to post tools");
         }
         return toolRes;
-      })(),
+      }),
     ];
 
     const promisesRes = await Promise.all(promises);

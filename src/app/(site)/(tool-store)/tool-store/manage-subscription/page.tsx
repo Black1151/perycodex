@@ -364,14 +364,15 @@ export default function BasketPage() {
 
               {isMobile ? (
                 <>
-                  <Button
+                  {/* TODO: Implement vouchers */}
+                  {/* <Button
                     w="full"
                     mb={2}
                     onClick={voucherDrawer.onOpen}
                     variant={"outline"}
                   >
                     Add Voucher Code
-                  </Button>
+                  </Button> */}
                   <Button
                     w="full"
                     onClick={billingDrawer.onOpen}

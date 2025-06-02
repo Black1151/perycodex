@@ -102,14 +102,14 @@ const Sidebar: React.FC<SidebarProps> = ({
         justifyContent="center"
         color={theme.colors.iconColor}
         borderRadius="full"
-        w={["30px", "30px", "36px"]}
-        h={["30px", "30px", "36px"]}
+        w={"40px"}
+        h={"40px"}
         backgroundColor={"rgba(255,255,255,0.2)"}
         border={`1px solid ${theme.colors.iconColor}`}
         p={1}
         transform="scale(1)"
         transition="transform 0.2s ease-in-out"
-        _hover={{ transform: "scale(1.2)" }}
+        _hover={{ transform: "scale(1.05)", bg: "rgba(255,255,255, 0.35)" }}
       >
         <OpenIcon
           onClick={onOpen}

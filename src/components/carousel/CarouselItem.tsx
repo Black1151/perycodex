@@ -68,14 +68,16 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
         <Box
           filter={isUAGLocked ? "brightness(0.35)" : undefined}
           transition="filter 0.3s ease-in-out"
+          p={0}
+          m={0}
         >
           <Image
             src={thumbNailImage}
             alt={alt}
             height={
               isSelected
-                ? ["120px", "150px", "180px", "200px", "200px"]
-                : ["90px", "112px", "120px", "160px", "160px"]
+                ? ["120px", "130px", "140px", "180px", "200px"]
+                : ["90px", "100px", "110px", "150px", "160px"]
             }
             transition="height 0.3s ease-in-out"
           />

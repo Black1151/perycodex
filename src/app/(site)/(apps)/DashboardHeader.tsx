@@ -1,15 +1,12 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import {
   Box,
   Flex,
   Heading,
   useTheme,
   useBreakpointValue,
-  IconButton,
-  Button,
-  Text,
   HStack,
 } from "@chakra-ui/react";
 import AddButtonMobile from "@/components/Buttons/AddButtonMobile";
@@ -18,29 +15,35 @@ import BackButton from "@/components/BackButton";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import { useRouter } from "next/navigation";
 import AddButtonDesktop from "@/components/Buttons/AddButtonDesktop";
-import { Help, Info } from "@mui/icons-material";
+import { MenuItem } from "@/components/Sidebars/NavigationSidebar/NavigationMobilePopoutMenu";
+import ContextualMenu from "@/components/Sidebars/ContextualMenu";
 
 interface DashboardHeaderProps {
   headingText: string;
   canStartWorkflow: boolean;
+  startBtnText?: string
   toolUrl: string;
+  contextualMenuItems?: MenuItem[];
 }
 
 const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   headingText,
   canStartWorkflow,
+  startBtnText,
   toolUrl,
+  contextualMenuItems,
 }) => {
+  const headerRef = useRef<HTMLDivElement>(null);
   const { toolId, workflowId } = useWorkflow();
   const [ableToStart, setAbleToStart] = useState(
     !!toolId && !!workflowId && canStartWorkflow
   );
 
-  // Chakra hook to detect mobile vs desktop
+  console.log("contexual menu items:", contextualMenuItems)
+
   const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
 
-  // Bring fetch + routing logic up here
-  const { fetchClient, loading } = useFetchClient();
+  const { fetchClient } = useFetchClient();
   const router = useRouter();
 
   const handleStartClick = useCallback(async () => {
@@ -72,7 +75,14 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   const theme = useTheme();
 
   return (
-    <Flex align="center" justify="flex-start" w="full" gap={4} lineHeight={0}>
+    <Flex
+      ref={headerRef}
+      align="center"
+      justify="flex-start"
+      w="full"
+      gap={4}
+      lineHeight={0}
+    >
       <BackButton
         color={theme.fringeCases.dashboardHeader.textcolor}
         prevRoute="/"
@@ -90,18 +100,24 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         {headingText}
       </Heading>
 
-      {ableToStart && (
-        <Box ml="auto">
-          {isMobile ? (
-            <AddButtonMobile onAddButtonClick={handleStartClick} />
-          ) : (
-            <AddButtonDesktop
-              label="Start"
-              onAddButtonClick={handleStartClick}
-            />
-          )}
-        </Box>
-      )}
+      <HStack ml="auto" spacing={2}>
+        {ableToStart && isMobile && (
+          <AddButtonMobile onAddButtonClick={handleStartClick} label={startBtnText||"Start"} />
+        )}
+
+        {ableToStart && !isMobile && (
+          <AddButtonDesktop
+            label={startBtnText||"Start"}
+            onAddButtonClick={handleStartClick}
+          />
+        )}
+
+        {contextualMenuItems && (
+          <ContextualMenu
+            menuItems={contextualMenuItems}
+          />
+        )}
+      </HStack>
     </Flex>
   );
 };
