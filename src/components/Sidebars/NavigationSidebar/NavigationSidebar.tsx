@@ -105,7 +105,7 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
         ))}
       </VStack>
       <SideBarMenuItem
-        label={"Home"}
+        label={"My Tools"}
         icon={<Home />}
         showIconOnly={true}
         iconSize={6}

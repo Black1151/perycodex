@@ -12,7 +12,6 @@ import {
   useTheme,
   VStack,
   Fade,
-  TabPanel,
   Flex,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
@@ -63,16 +62,24 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
 }: RightHandNavigationDrawerProps) {
   const theme = useTheme();
   const MotionBox = motion(Box);
+
+  // ─── Move all useBreakpointValue calls OUTSIDE any conditional ───
   const iconFontSize = useBreakpointValue({ base: "1.3rem", lg: "1.5rem" });
+
+  // For the "closed" button’s background and hover, call these hooks unconditionally:
+  const closedBg = useBreakpointValue({
+    base: "rgba(66, 66, 66, 0.6)",
+    md: "rgba(255,255,255,0.2)",
+  });
+  const closedHoverBg = useBreakpointValue({
+    base: "rgba(66, 66, 66, 0.75)",
+    md: "rgba(255,255,255, 0.35)",
+  });
 
   const drawerRef = useRef<HTMLDivElement>(null);
 
   const toggleDrawer = () => {
-    if (drawerState === "fully-open") {
-      setDrawerState("closed");
-    } else {
-      setDrawerState("fully-open");
-    }
+    setDrawerState(drawerState === "fully-open" ? "closed" : "fully-open");
   };
 
   useEffect(() => {
@@ -81,7 +88,6 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
     } else {
       document.body.style.overflow = "auto";
     }
-    // Cleanup: Reset overflow on unmount or whenever isOpen changes
     return () => {
       document.body.style.overflow = "auto";
     };
@@ -100,14 +106,17 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
           justifyContent="center"
           color={theme.colors.iconColor}
           borderRadius="full"
-          w={"40px"}
-          h={"40px"}
-          backgroundColor={"rgba(255,255,255,0.2)"}
+          w="40px"
+          h="40px"
+          backgroundColor={closedBg}
           border={`1px solid ${theme.colors.iconColor}`}
           p={1}
           transform="scale(1)"
           transition="transform 0.2s ease-in-out"
-          _hover={{ transform: "scale(1.05)", bg: "rgba(255,255,255, 0.35)" }}
+          _hover={{
+            transform: "scale(1.05)",
+            bg: closedHoverBg,
+          }}
         >
           <FilterAlt
             onClick={toggleDrawer}
@@ -116,22 +125,24 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
           />
         </Box>
       )}
+
       {drawerState === "fully-open" && (
-        <Fade in={drawerState === "fully-open"}>
+        <Fade in={true}>
           <Box
-            position={"fixed"}
+            position="fixed"
             zIndex={98}
-            bg={"rgba(0,0,0,0.5)"}
-            height={"100svh"}
-            width={"100svw"}
+            bg="rgba(0,0,0,0.5)"
+            height="100svh"
+            width="100svw"
             top={0}
             left={0}
-          ></Box>
+          />
         </Fade>
       )}
+
       <MotionBox
         ref={drawerRef}
-        display={"block"}
+        display="block"
         position="fixed"
         top={0}
         right={0}
@@ -145,23 +156,23 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
         }
         pb={[20, null, 0]}
       >
-        <VStack align="stretch" height="100%" pt={"60px"}>
+        <VStack align="stretch" height="100%" pt="60px">
           <Box
             display="flex"
             flexDirection="row"
             alignItems="center"
-            justifyContent={"space-between"}
+            justifyContent="space-between"
             gap={2}
             pr={2}
-            position={"absolute"}
+            position="absolute"
             right={0}
             zIndex={2}
-            background={"elementBG"}
-            w={"full"}
+            bg="elementBG"
+            w="full"
             pl={5}
             color={theme.colors.primaryTextColor}
-            fontWeight={"bold"}
-            fontSize={"1.2rem"}
+            fontWeight="bold"
+            fontSize="1.2rem"
           >
             Filter Options
             <Box onClick={() => setDrawerState("closed")} zIndex={1} pt={1}>
@@ -173,11 +184,10 @@ export const DashboardFilteringDrawer = memo(function DashboardFilteringDrawer({
               />
             </Box>
           </Box>
+
           {drawerState === "fully-open" && title && (
             <Box px={4}>
-              <Text style={{ color: theme.colors.primaryTextColor }}>
-                {title}
-              </Text>
+              <Text color={theme.colors.primaryTextColor}>{title}</Text>
             </Box>
           )}
 

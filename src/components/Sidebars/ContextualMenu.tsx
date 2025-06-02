@@ -75,7 +75,7 @@ export interface ContextualMenuProps {
 
 const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const overlayBg = "blackAlpha.700"
+  const overlayBg = "blackAlpha.700";
   const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
 
   const toggle = () => setIsExpanded((prev) => !prev);
@@ -132,7 +132,7 @@ const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
           <MotionFlex
             direction="column"
             mb={2}
-            minW="240px"
+            minW="180px"
             variants={containerVariants}
             initial="hidden"
             animate="show"
@@ -145,26 +145,36 @@ const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
                 mb={idx < menuItems.length - 1 ? 3 : 0}
                 bg="gray.50"
                 rounded="md"
-                p={2}
+                p={1}
                 pl={0}
               >
                 <Button
                   onClick={() => {
-                    item.onClick();
-                    close();
+                    if (!item.locked) {
+                      item.onClick();
+                      close();
+                    }
                   }}
-                  leftIcon={<ChakraIcon as={item.icon.type} boxSize={8} />}
+                  leftIcon={<ChakraIcon as={item.icon.type} boxSize={6} color={theme.colors.primary}/>}
                   justifyContent="start"
                   w="100%"
                   minH="44px"
                   variant="ghost"
                   isDisabled={item.locked}
-                  colorScheme={item.active ? "blue" : undefined}
                   pl={2}
-                  fontSize="small"
+                  fontSize="15px"
                 >
                   {item.label}
                 </Button>
+                {item.locked && (
+                  <Box position="absolute" top={2} right={2} zIndex={1}>
+                    <ChakraIcon
+                      as={require("@mui/icons-material/Lock").default}
+                      boxSize={4}
+                      color="gray.400"
+                    />
+                  </Box>
+                )}
               </MotionBox>
             ))}
           </MotionFlex>
@@ -232,25 +242,35 @@ const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
                 key={idx}
                 variants={itemVariantsDown}
                 mb={idx < menuItems.length - 1 ? 3 : 0}
+                position="relative"
               >
                 <Button
                   onClick={() => {
-                    item.onClick();
-                    close();
+                    if (!item.locked) {
+                      item.onClick();
+                      close();
+                    }
                   }}
-                  leftIcon={<ChakraIcon as={item.icon.type} boxSize={8} />}
+                  leftIcon={<ChakraIcon as={item.icon.type} boxSize={8} color={theme.colors.primary}/>}
                   justifyContent="start"
                   w="100%"
                   minH="44px"
                   variant="ghost"
-                  isDisabled={item.locked}
-                  colorScheme={item.active ? "blue" : undefined}
-                  fontSize="small"
+                  fontSize="16px"
                   pl={2}
                   bg={"white"}
                 >
                   {item.label}
                 </Button>
+                {item.locked && (
+                  <Box position="absolute" top={2} right={2} zIndex={1}>
+                    <ChakraIcon
+                      as={require("@mui/icons-material/Lock").default}
+                      boxSize={4}
+                      color="gray.400"
+                    />
+                  </Box>
+                )}
               </MotionBox>
             ))}
           </MotionFlex>
