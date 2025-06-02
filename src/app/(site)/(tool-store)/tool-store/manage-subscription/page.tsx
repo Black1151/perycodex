@@ -22,6 +22,8 @@ import {
   useDisclosure,
   Spinner,
   Slide,
+  ModalContent,
+  Modal,
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
 import { Check, Close } from "@mui/icons-material";
@@ -38,6 +40,7 @@ import BillingAddressForm, {
 } from "./BillingAddressForm";
 import { useRouter } from "next/navigation";
 import { Header } from "../Header";
+import { useUser } from "@/providers/UserProvider";
 
 export default function BasketPage() {
   const {
@@ -56,6 +59,7 @@ export default function BasketPage() {
   const isMobile = useBreakpointValue({ base: true, lg: false });
   const billingRef = useRef<BillingAddressFormHandle>(null);
   const [removingIds, setRemovingIds] = useState<Set<string>>(new Set());
+  const user = useUser();
 
   // Drawers for mobile
   const voucherDrawer = useDisclosure();
@@ -225,15 +229,6 @@ export default function BasketPage() {
 
   return (
     <VStack spacing={0} align="center" justify="center" w="100%">
-      <PerygonModal
-        title="Please Contact Sales"
-        isOpen={false /* salesModal logic unchanged */}
-        onClose={() => {}}
-        body={<></>}
-      >
-        {" "}
-      </PerygonModal>
-
       <Header title="Manage Subscription" />
 
       {basket.totals ? (
@@ -303,18 +298,20 @@ export default function BasketPage() {
                     />
                   </HStack>
                 </HStack>
-                <HStack justify="space-between">
-                  <Text>Total Discount</Text>
-                  <HStack spacing={1} fontSize="md">
-                    <Text color="green.500">–£</Text>
-                    <AnimatedTillNumber
-                      value={parseFloat(basket.totals.discountsTotal)}
-                      fontSize="md"
-                      duration={0.65}
-                      color="green.500"
-                    />
+                {parseFloat(basket.totals.discountsTotal) > 0 && (
+                  <HStack justify="space-between">
+                    <Text>Total Discount</Text>
+                    <HStack spacing={1} fontSize="md">
+                      <Text color="green.500">–£</Text>
+                      <AnimatedTillNumber
+                        value={parseFloat(basket.totals.discountsTotal)}
+                        fontSize="md"
+                        duration={0.65}
+                        color="green.500"
+                      />
+                    </HStack>
                   </HStack>
-                </HStack>
+                )}
                 <HStack justify="space-between">
                   <Text>VAT</Text>
                   <HStack spacing={1} fontSize="md">
@@ -341,18 +338,35 @@ export default function BasketPage() {
                   </HStack>
                 </HStack>
               </Stack>
-              <Button
-                colorScheme="brand"
-                w="full"
-                mb={3}
-                onClick={handleCheckout}
-                isLoading={checkoutLoading}
-                disabled={basket.quantity === 0}
-                spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
-                spinnerPlacement="start"
-              >
-                Checkout
-              </Button>
+
+              {basket.isAnnual && !basket.isFree ? (
+                <Button
+                  colorScheme="brand"
+                  w="full"
+                  mb={3}
+                  onClick={() => router.push("/tool-store/contact-sales")}
+                  isLoading={checkoutLoading}
+                  disabled={basket.quantity === 0}
+                  spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
+                  spinnerPlacement="start"
+                >
+                  Contact Sales
+                </Button>
+              ) : (
+                <Button
+                  colorScheme="brand"
+                  w="full"
+                  mb={3}
+                  onClick={handleCheckout}
+                  isLoading={checkoutLoading}
+                  disabled={basket.quantity === 0}
+                  spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
+                  spinnerPlacement="start"
+                >
+                  Checkout
+                </Button>
+              )}
+
               <Button
                 variant="outline"
                 w="full"
@@ -364,8 +378,7 @@ export default function BasketPage() {
 
               {isMobile ? (
                 <>
-                  {/* TODO: Implement vouchers */}
-                  {/* <Button
+                  {/*<Button
                     w="full"
                     mb={2}
                     onClick={voucherDrawer.onOpen}
@@ -383,14 +396,14 @@ export default function BasketPage() {
                 </>
               ) : (
                 <>
-                  <Button
+                  {/* <Button
                     variant="outline"
                     w="full"
                     mb={3}
                     onClick={() => setAddingVoucher((v) => !v)}
                   >
                     Add Voucher Code
-                  </Button>
+                  </Button> */}
                 </>
               )}
             </Box>
@@ -537,7 +550,7 @@ export default function BasketPage() {
                   </HStack>
                 </HStack>
               )}
-              <HStack maxW={"450px"} >
+              <HStack maxW={"450px"}>
                 <LicensePicker showAlreadySubscribedText={false} />
               </HStack>
             </VStack>

@@ -34,7 +34,10 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
   const [activeDashboardName, setActiveDashboardName] = useState<string | null>(
     null
   );
-  const [toolData, setToolData] = useState<{ startInUi: boolean, altStartText: string } | null>(null);
+  const [toolData, setToolData] = useState<{
+    startInUi: boolean;
+    altStartText: string;
+  } | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   const toolId = searchParams.get("toolId");
@@ -94,11 +97,14 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
 
         const data: DashboardAPIResponse = await response.json();
 
-        console.log("HERE!", data)
+        console.log("HERE!", data);
         setDashboardList(data.filteredDashboards);
         setToolData(
           data.toolData
-            ? { startInUi: data.toolData.startInUi, altStartText: (data.toolData as any).altStartText ?? "start" }
+            ? {
+                startInUi: data.toolData.startInUi,
+                altStartText: (data.toolData as any).altStartText ?? "start",
+              }
             : null
         );
       } catch (error) {
@@ -134,17 +140,25 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
     locked: false,
   };
 
-  if (menuItems.length === 1) {
-    return (
-      <DashboardHeader
-        headingText={activeDashboardName || ""}
-        canStartWorkflow={toolData?.startInUi || false}
-        startBtnText={toolData?.altStartText || "Start"}
-        toolUrl={toolUrl}
-        contextualMenuItems={[contextualMenuItems]}
-      />
-    );
-  }
+  // if (menuItems.length === 1) {
+  //   return (
+  //     <>
+  //       <DashboardHeader
+  //         headingText={activeDashboardName || ""}
+  //         canStartWorkflow={toolData?.startInUi || false}
+  //         startBtnText={toolData?.altStartText || "Start"}
+  //         toolUrl={toolUrl}
+  //         contextualMenuItems={[contextualMenuItems]}
+  //       />
+  //       <GuideModal
+  //         isOpen={toolGuideModalOpen}
+  //         onClose={() => setToolGuideModalOpen(false)}
+  //         guideType="tool"
+  //         toolId={toolId}
+  //       />
+  //     </>
+  //   );
+  // }
 
   return (
     <>

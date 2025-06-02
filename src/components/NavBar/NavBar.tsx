@@ -24,6 +24,7 @@ const MotionHStack = motion(HStack);
 export interface ThemeDropdownOption {
   label: string;
   value: string;
+  locked?: string;
 }
 
 export interface NavBarProps {
@@ -59,6 +60,7 @@ const NavBar: React.FC<NavBarProps> = ({
 
   const handleLogout = async () => {
     await fetch("/api/auth/sign-out", { method: "POST" });
+    sessionStorage.clear();
     await signOut({ redirect: false });
     router.push("/login");
   };
@@ -76,14 +78,22 @@ const NavBar: React.FC<NavBarProps> = ({
 
     let dropdownOptions = [];
 
-    //Free customers get no theme choices
+    // Free customers: only the theme with theme.id is unlocked, all others are locked
     if (!isFree) {
       dropdownOptions = Array.isArray(data.resource)
-        ? data.resource.map((theme: any) => ({
-            label: theme.themename,
-            value: theme.id,
-          }))
-        : [];
+      ? data.resource.map((theme: any) => ({
+        label: theme.themename,
+        value: theme.id,
+        }))
+      : [];
+    } else {
+      dropdownOptions = Array.isArray(data.resource)
+      ? data.resource.map((theme: any) => ({
+        label: theme.themename,
+        value: theme.id,
+        locked: theme.id !== 1, // Only unlock perygon theme
+        }))
+      : [];
     }
 
     setThemeDropdownOptions(dropdownOptions);
