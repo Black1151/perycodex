@@ -15,14 +15,24 @@ export async function middleware(request: NextRequest) {
   // • /login and all its sub-paths
   // • /api/* (backend routes) - not included yet
   // • /_next/* (Next.js internals)
+  // • other public routes
   if (
     /\/[^\/]+\.[^\/]+$/.test(pathname) || // ends with a file extension
     pathname === "/login" ||
     pathname.startsWith("/login/") ||
     pathname.startsWith("/api/") ||
     pathname.startsWith("/_next/") ||
-    pathname.startsWith("/access-denied")
+    pathname.startsWith("/access-denied") ||
+    pathname.startsWith("/sign-up") ||
+    pathname.startsWith("/activate-account") ||
+    pathname.startsWith("/profile-setup") ||
+    pathname.startsWith("/privacy-policy") ||
+    pathname.startsWith("/support") ||
+    pathname.startsWith("/marketing") ||
+    pathname.startsWith("/delete-my-data") ||
+    pathname.startsWith("/checkout")
   ) {
+    console.log(`[Middleware] Bypassing: ${pathname}`);
     return NextResponse.next();
   }
 
@@ -49,8 +59,7 @@ export async function middleware(request: NextRequest) {
     });
 
     if (!ok || status !== 200) {
-      console.log(
-      );
+      console.log();
       const res = NextResponse.redirect(
         new URL("/login?MissingAuthToken=true", request.url)
       );
@@ -70,31 +79,79 @@ export async function middleware(request: NextRequest) {
       return res;
     }
 
-
     // -----------------------------
     // Section 3: ACCESS CONTROL (api fail results in access denied)
     // -----------------------------
     console.log(`[Middleware] Checking access control for URL: ${fullPath}`);
     let allowed = false;
 
-    // Section 3A: ACCESS CONTROL PLATFORM (platform check done first)
+    // SECTION 3A: get user metadata
+    const userUUID = request.cookies.get("user_uuid")?.value;
+    if (!userUUID) {
+      console.warn("No user UUID found in cookies — denying access.");
+      return new Response("Unauthorized", { status: 401 });
+    }
+
+    const metadataResponse = await apiClient("/getUserMetadata", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ p_userUniqueId: userUUID ?? "" }),
+    });
+
+    const metadataJson = await metadataResponse.json();
+
+    const {
+      role,
+      customerId,
+      teamManagerCount,
+      groupNames,
+      customerIsFree,
+      customerIsFreeUntilDate,
+      subscribedTools,
+    } = metadataJson.resource;
+
+    // Rebuild a trimmed object
+    const userACMetadata = {
+      role,
+      customerId,
+      teamManagerCount,
+      groupNames,
+      customerIsFree: customerIsFree === null ? true : customerIsFree,
+      customerIsFreeUntilDate,
+      subscribedTools,
+    };
+
+    console.log("Access Control Metadata:", userACMetadata);
+
+    // Section 3B: ACCESS CONTROL PLATFORM (platform check done first)
     try {
+      const params = new URLSearchParams();
+      params.append("checkUrl", fullPath);
+      params.append("userMetadata", JSON.stringify(userACMetadata));
+
       const acpResponse = await apiClient("/getAllowedPlatformUrlsUser", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: JSON.stringify({ checkUrl: fullPath }),
+        body: params.toString(),
       });
 
       let acpJson: any = null;
       if (acpResponse.ok && acpResponse.status === 200) {
         acpJson = await acpResponse.json();
         console.log(
+          "[Middleware] ACPlatform Request:",
+          JSON.stringify({ checkUrl: fullPath })
+        );
+        console.log(
           `[Middleware] ACPlatform response: status=${acpResponse.status}, ok=${acpResponse.ok}, body=${JSON.stringify(
             acpJson
-          )}`
+          )} path=${pathname}`
         );
 
         const resourceObj = acpJson?.resource?.[0];
@@ -108,24 +165,30 @@ export async function middleware(request: NextRequest) {
         }
       } else {
         console.warn(
-          `[Middleware] ACPlatorm endpoint returned non-200: status=${acpResponse.status}, ok=${acpResponse.ok}`
+          `[Middleware] ACPlatorm endpoint returned non-200: status=${acpResponse.status}, ok=${acpResponse.ok} path=${pathname}`
         );
       }
     } catch (err: any) {
       // any exception we shoud deny
-      console.error(`[Middleware] Platform Access-control call failed on path ${fullPath}: ${err}`);
+      console.error(
+        `[Middleware] Platform Access-control call failed on path ${fullPath}: ${err}`
+      );
     }
 
-    // Section 3B: ACCESS CONTROL DASHBAORDS (if access has not already been granted, check if its an allowed dashb path)
+    // Section 3C: ACCESS CONTROL DASHBAORDS (if access has not already been granted, check if its an allowed dashb path)
     if (!allowed) {
       try {
+        const params = new URLSearchParams();
+        params.append("checkUrl", fullPath);
+        params.append("userMetadata", JSON.stringify(userACMetadata));
+
         const acdResponse = await apiClient("/getAllowedDashboardUrlsUser", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded",
           },
-          body: JSON.stringify({ checkUrl: fullPath }),
+          body: params.toString(),
         });
 
         let acdJson: any = null;
@@ -134,7 +197,7 @@ export async function middleware(request: NextRequest) {
           console.log(
             `[Middleware] ACDashboard response: status=${acdResponse.status}, ok=${acdResponse.ok}, body=${JSON.stringify(
               acdJson
-            )}`
+            )} path=${pathname}`
           );
 
           const resourceObj = acdJson?.resource?.[0];
@@ -148,7 +211,7 @@ export async function middleware(request: NextRequest) {
           }
         } else {
           console.warn(
-            `[Middleware] AC endpoint returned non-200: status=${acdResponse.status}, ok=${acdResponse.ok}`
+            `[Middleware] ACDashboard endpoint returned non-200: status=${acdResponse.status}, ok=${acdResponse.ok}`
           );
         }
       } catch (err: any) {
