@@ -361,9 +361,8 @@ export default function GuideModal({
                             <Spinner size="lg" />
                           </Flex>
                         )}
-                        <embed
+                        <iframe
                           src={`${selectedGuide.urlPath}#toolbar=0&navpanes=0&scrollbar=0`}
-                          type="application/pdf"
                           width="100%"
                           height="100%"
                           onLoad={() => setPdfLoading(false)}

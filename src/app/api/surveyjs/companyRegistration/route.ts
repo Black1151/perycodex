@@ -26,6 +26,7 @@ interface CompanyData {
 interface Site {
   siteName: string;
   address1: string;
+  address3: string;
   postcode: string;
   country: number;
 }
@@ -59,7 +60,7 @@ export async function POST(req: Request) {
       numberOfEmployees: data.numberOfEmployees,
       address1: primarySite.address1,
       address2: "", //Address2 is not provided in the data, leave empty
-      address3: "", //Address3 is not provided in the data, leave empty
+      address3: primarySite.address3,
       address4: "", //Address4 is not provided in the data, leave empty
       postcode: primarySite.postcode,
       isFree: true,
