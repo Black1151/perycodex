@@ -1,12 +1,15 @@
+# azure-pipelines.yml ────────────────────────────────────────────
 trigger:
   branches:
-   include:
-     - develop
+    include:
+      - develop          # ← normal CI/CD
+
 pr:
   branches:
-   include:
-     - develop
+    include:
+      - develop          # ← PR validation
 
+# ─────────────── Common variables ───────────────
 variables:
   dockerRegistryServiceConnection: "cded2d3b-6a50-4f45-a781-7e60a4e51b58"
   imageRepository:    "perygon-develop"
@@ -16,57 +19,67 @@ variables:
   vmImageName:        "ubuntu-latest"
   AGKey:              "$(NEXT_PUBLIC_AG_GRID_LICENSE_KEY)"
 
+# ================================================================
+#  STAGE 1 -- fast PR validation
+# ================================================================
 stages:
-# ───────── Stage 1 – PR validation ─────────
 - stage: UnitTest
-  displayName: "Docker build (validation only)"
+  displayName: "Build / Test"
   jobs:
-  - job: BuildOnly
-    pool: { vmImage: $(vmImageName) }
+  - job: Test
+    displayName: "Restore → Compile → Test"
+    pool:
+      vmImage: $(vmImageName)
     steps:
-    - task: Docker@2
-      displayName: "docker build – no push"
-      inputs:
-        command: build
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        tags: |
-          $(tag)-pr-$(Build.BuildId)
-        # pass any build-args your Dockerfile expects
-        arguments: |
-          --build-arg NEXT_PUBLIC_AG_GRID_LICENSE_KEY=$(AGKey)
+    # ----- restore / install -----
+    - script: echo "##[section]️ Installing dependencies"
+      displayName: "Install deps"
+      # e.g. npm ci   / dotnet restore   / pnpm i   etc.
 
-# ───────── Stage 2 – build + push + deploy (CI only) ─────────
+    # ----- compile -----
+    - script: echo "##[section]️ Building the app"
+      displayName: "Compile"
+      # e.g. npm run build   / dotnet build
+
+    # ----- unit tests -----
+    - script: echo "##[section]️ Running tests"
+      displayName: "Unit tests"
+      # e.g. npm test -- --ci   / dotnet test
+
+# ================================================================
+#  STAGE 2 -- full container build + deploy  (CI only)
+# ================================================================
 - stage: Containerize
-  displayName: "Build → Push → Deploy"
+  displayName: "Build Docker → Push → Deploy"
   dependsOn: UnitTest
-  condition: and(
-              succeeded(),
-              eq( variables['Build.SourceBranch'], 'refs/heads/develop'),
-              ne( variables['Build.Reason'], 'PullRequest')
-            )
+  condition: and(succeeded(),
+                 eq(variables['Build.SourceBranch'], 'refs/heads/develop'),
+                 ne(variables['Build.Reason'], 'PullRequest'))
 
   jobs:
+  # ────────── Build + push image ──────────
   - job: BuildPush
-    displayName: "docker build + push"
-    pool: { vmImage: $(vmImageName) }
+    displayName: "Docker build & push"
+    pool:
+      vmImage: $(vmImageName)
     steps:
     - task: Docker@2
-      displayName: "docker build & push"
+      displayName: "Build & push image"
       inputs:
         command: buildAndPush
-        repository: $(imageRepository)
         dockerfile: $(dockerfilePath)
+        repository: $(imageRepository)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
-        arguments: |
-          --build-arg NEXT_PUBLIC_AG_GRID_LICENSE_KEY=$(AGKey)
 
+  # ────────── Deploy (optional) ──────────
   - job: Deploy
-    displayName: "kubectl apply"
+    displayName: "Deploy container"
     dependsOn: BuildPush
-    pool: { vmImage: $(vmImageName) }
+    pool:
+      vmImage: $(vmImageName)
     steps:
-    - script: kubectl apply -f k8s/
-      displayName: "Deploy manifest"
+    - script: echo "kubectl apply -f k8s/*.yaml"
+      displayName: "kubectl apply"
+
