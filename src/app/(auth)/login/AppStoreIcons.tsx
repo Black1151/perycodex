@@ -49,27 +49,30 @@ const MotionFlex = motion(Flex);
 
 const AppStoreIcons = () => {
   const [showGoogle, setShowGoogle] = useState(false);
-  const [showApple, setShowApple]   = useState(false);
-  const [visible,    setVisible]    = useState(false);
+  const [showApple, setShowApple] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [wide, setWide] = useState(false);
 
   const isRunningInApp = (() => {
     if (typeof window === "undefined") return false;
     const ua = window.navigator.userAgent;
-    const appUA   = /median|gonative/i.test(ua);
+    const appUA = /median|gonative/i.test(ua);
     const hasBridge = typeof (window as any).Median !== "undefined";
     return appUA || hasBridge;
   })();
 
   useEffect(() => {
     const { os } = getOSAndBrowser();
-    const wide = window.innerWidth >= 768;
+    // calculate once and store in state
+    const isWide = window.innerWidth >= 768;
+    setWide(isWide);
 
-    if (wide || os === "Windows" || os === "MacOS") {
+    if (isWide || os === "Windows" || os === "MacOS") {
       setShowGoogle(true);
       setShowApple(true);
     } else {
       if (os === "Android") setShowGoogle(true);
-      if (os === "iOS")     setShowApple(true);
+      if (os === "iOS") setShowApple(true);
     }
 
     setVisible(true);
@@ -84,18 +87,21 @@ const AppStoreIcons = () => {
       {visible && (showGoogle || showApple) && (
         <MotionFlex
           as="footer"
-          initial={{ opacity: 0, y: -30 }}
+          initial={{ opacity: 0, y: wide ? -30 : 30 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -30 }}
+          exit={{ opacity: 0, y: wide ? -30 : 30 }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 1.2 }}
           justify="center"
           gap={4}
           bg="rgba(255,255,255,0.80)"
-          borderBottomRadius="md"
-          px={6}
+          borderBottomRadius={["none", "md"]}
+          borderTopRadius={["md", "none"]}
+          px={[0, 6]}
           py={3}
           zIndex={1}
-          position="relative"
+          position={["fixed", "relative"]}
+          bottom="0"
+          w={["full", "auto"]}
         >
           {showGoogle && (
             <Link
