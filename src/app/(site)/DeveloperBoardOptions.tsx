@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { UserModal } from "@/components/modals/userModal/UserModal";
 import { WorkflowModal } from "@/components/modals/workflowModal/WorkflowModal";
-import { UserContextProps, useUser } from "@/providers/UserProvider";
+import { UserAccessControlContextProps, UserContextProps, useUser } from "@/providers/UserProvider";
 import { Flex, IconButton } from "@chakra-ui/react";
 import {
   Cancel,
@@ -13,10 +13,12 @@ import {
 
 interface DeveloperBoardOptionsProps {
   userMetadata: UserContextProps;
+  userAccessControl: UserAccessControlContextProps
 }
 
 const DeveloperBoardOptions: React.FC<DeveloperBoardOptionsProps> = ({
   userMetadata,
+  userAccessControl,
 }) => {
   const { showDeveloperBoard, updateShowDeveloperBoard } = useUser();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -76,7 +78,7 @@ const DeveloperBoardOptions: React.FC<DeveloperBoardOptionsProps> = ({
             borderRadius="full"
           />
 
-          <UserModal userMetadata={userMetadata} />
+          <UserModal userMetadata={userMetadata} userAccessControl={userAccessControl}/>
 
           <WorkflowModal />
         </Flex>

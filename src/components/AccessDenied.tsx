@@ -1,12 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import ErrorBox from "@/components/layout/ErrorBox";
+import AccessDeniedBox from "@/components/layout/AccessDeniedBox";
 import { Box } from "@chakra-ui/react";
 
 export default function AccessDenied() {
   const router = useRouter();
-  const supportingText = `You do not have permission to access this tool or workflow. If you believe this is an error, please contact your administrator.`;
+  const supportingText = `You do not have permission to access this area. If you believe this is an error, please contact your administrator.`;
 
   return (
     <Box
@@ -18,7 +18,7 @@ export default function AccessDenied() {
       zIndex="9999"
       overflow="hidden"
     >
-      <ErrorBox
+      <AccessDeniedBox
         supportingText={supportingText}
         buttonText="Go to homepage"
         onButtonClick={() => router.push("/")}
