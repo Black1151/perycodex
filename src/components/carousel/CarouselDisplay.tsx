@@ -8,7 +8,6 @@ import {
   Button,
   Flex,
 } from "@chakra-ui/react";
-import { FiShoppingCart } from "react-icons/fi";
 import Link from "next/link";
 import { CarouselItemProps } from "./CarouselItem";
 import { useRouter } from "next/navigation";
@@ -239,7 +238,7 @@ const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
 
         {/* carousel thumbnails / controls */}
         {carouselItems.length > 1 && (
-          <VStack zIndex={2} w="100%" pb={[4, 6]}>
+          <VStack zIndex={2} w="100%" pb={[4, 6]} px={[0, null, 55, null, 0]}>
             <Carousel carouselItems={carouselItems} setParentIndex={setIndex} />
           </VStack>
         )}
