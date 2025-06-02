@@ -21,6 +21,8 @@ export interface CarouselDisplayProps {
   carouselItems: CarouselItemProps[];
 }
 
+// delete me - testing purposes
+
 const CarouselDisplay = ({ carouselItems }: CarouselDisplayProps) => {
   const fallbackImage = "/assets/apps/invoicePro/invoiceProBG.png";
 
