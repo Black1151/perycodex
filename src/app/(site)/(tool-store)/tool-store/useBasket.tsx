@@ -28,6 +28,8 @@ export interface Basket {
   content: BasketItem[];
   totals: Totals;
   annualDiscountPercent: number | null;
+  invoiceUrl?: string;
+  renewalDate?: string;
 }
 
 export interface SubscriptionInfo {

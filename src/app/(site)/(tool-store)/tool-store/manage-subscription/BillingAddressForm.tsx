@@ -149,7 +149,6 @@ const BillingAddressForm = forwardRef<BillingAddressFormHandle>((_props, ref) =>
         };
         for (const field of required) {
           if (!address[field]?.trim()) {
-            toast({ title: `Please fill out ${labels[field]}`, status: "error", duration: 3000, isClosable: true });
             return null;
           }
         }
