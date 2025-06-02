@@ -211,8 +211,13 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
               }}
             >
               {themeDropdownOptions.map((themeOption) => (
-                <option key={themeOption.value} value={themeOption.value}>
+                <option
+                  key={themeOption.value}
+                  value={themeOption.value}
+                  disabled={!!themeOption.locked}
+                >
                   {themeOption.label}
+                  {themeOption.locked ? "🔒" : ""}
                 </option>
               ))}
             </Select>
