@@ -145,7 +145,7 @@ const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
                 mb={idx < menuItems.length - 1 ? 3 : 0}
                 bg="gray.50"
                 rounded="md"
-                p={2}
+                p={1}
                 pl={0}
               >
                 <Button
@@ -155,14 +155,14 @@ const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
                       close();
                     }
                   }}
-                  leftIcon={<ChakraIcon as={item.icon.type} boxSize={6} />}
+                  leftIcon={<ChakraIcon as={item.icon.type} boxSize={6} color={theme.colors.primary}/>}
                   justifyContent="start"
                   w="100%"
                   minH="44px"
                   variant="ghost"
                   isDisabled={item.locked}
                   pl={2}
-                  fontSize="small"
+                  fontSize="15px"
                 >
                   {item.label}
                 </Button>
@@ -251,12 +251,12 @@ const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
                       close();
                     }
                   }}
-                  leftIcon={<ChakraIcon as={item.icon.type} boxSize={8} />}
+                  leftIcon={<ChakraIcon as={item.icon.type} boxSize={8} color={theme.colors.primary}/>}
                   justifyContent="start"
                   w="100%"
                   minH="44px"
                   variant="ghost"
-                  fontSize="small"
+                  fontSize="16px"
                   pl={2}
                   bg={"white"}
                 >

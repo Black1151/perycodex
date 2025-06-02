@@ -22,7 +22,7 @@ const NavigationBottombar: React.FC<NavigationBottombarProps> = ({menuItems, ...
     };
 
     const handleHomeClick = () => {
-        setActiveLabel("Home");
+        setActiveLabel("My Tools");
         router.push("/");
     };
 
@@ -54,7 +54,7 @@ const NavigationBottombar: React.FC<NavigationBottombarProps> = ({menuItems, ...
             ))}
             <Box minWidth="80px" h={'full'}>
                 <BottomNavigationMenuItem
-                    label="Home"
+                    label="My Tools"
                     icon={<Home />}
                     onClick={handleHomeClick}
                     active={false}
