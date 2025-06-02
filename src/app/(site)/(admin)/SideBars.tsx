@@ -557,12 +557,8 @@ export default function SideBars() {
     let shouldShowAdminGuides = true;
     let shouldShowAssignToCustomer = false;
 
-    if (pathname === "/help-center" || "/activity" || "/client-activity") {
+    if (pathname === "/help-center") {
       shouldShowAdminGuides = false;
-    }
-
-    if(user?.role === "PA") {
-      shouldShowAdminGuides = false
     }
 
     if (pathname === "/user-groups" && user?.role === "PA") {

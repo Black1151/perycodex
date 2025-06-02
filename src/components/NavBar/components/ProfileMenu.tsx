@@ -143,6 +143,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
             color={theme.colors.white}
             cursor={"pointer"}
             mb={2}
+            onClick={userIsFreeAction}
             gap={4}
           >
             <AccessTime fontSize="large" />
@@ -157,19 +158,6 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
                     fontSize={"12"}
                     color="whiteAlpha.800"
                     decoration="underline"
-                    onClick={(e) => {
-                      userIsFreeAction();
-                      // Close the menu & force the menu to close
-                      const menu = e.currentTarget.closest('[role="menu"]');
-                      if (menu) {
-                        const button = document.querySelector(
-                          '[aria-haspopup="menu"][aria-expanded="true"]'
-                        );
-                        if (button instanceof HTMLElement) {
-                          button.click();
-                        }
-                      }
-                    }}
                   >
                     Upgrade Now
                   </Text>
@@ -223,13 +211,8 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({
               }}
             >
               {themeDropdownOptions.map((themeOption) => (
-                <option
-                  key={themeOption.value}
-                  value={themeOption.value}
-                  disabled={!!themeOption.locked}
-                >
+                <option key={themeOption.value} value={themeOption.value}>
                   {themeOption.label}
-                  {themeOption.locked ? "🔒" : ""}
                 </option>
               ))}
             </Select>

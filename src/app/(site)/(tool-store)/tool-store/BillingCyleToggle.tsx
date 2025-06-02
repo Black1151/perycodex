@@ -17,7 +17,6 @@ import {
 } from "@chakra-ui/react";
 import { PerygonModal } from "@/components/modals/PerygonModal";
 import { useUser } from "@/providers/UserProvider";
-import { useRouter } from "next/navigation";
 
 const BillingCycleToggle: FC = () => {
   const { basket, loading, updateBasket } = useBasket();
@@ -26,7 +25,6 @@ const BillingCycleToggle: FC = () => {
   const isUserFree = user?.user?.customerIsFree;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const theme = useTheme();
-  const router = useRouter()
 
   // default to monthly if basket or flag is missing
   const isAnnual = Boolean(basket?.isAnnual);
@@ -59,11 +57,11 @@ const BillingCycleToggle: FC = () => {
         onClose={() => setIsModalOpen(false)}
         body={
           <Box p={4} textAlign="center">
-            <Text mb={8} color={theme.colors.primaryTextColor}>
+            <Text mb={4} color={theme.colors.primaryTextColor}>
               To change your billing cycle, please contact our sales team.
             </Text>
             <HStack spacing={2} mb={4} justify="center">
-              <Button onClick={() => router.push("/tool-store/contact-sales")}>
+              <Button as="a" href="/contact-sales">
                 Contact Sales
               </Button>
               <Button onClick={() => setIsModalOpen(false)}>Close</Button>
