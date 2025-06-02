@@ -17,7 +17,6 @@ import { useRouter } from "next/navigation";
 import AddButtonDesktop from "@/components/Buttons/AddButtonDesktop";
 import { MenuItem } from "@/components/Sidebars/NavigationSidebar/NavigationMobilePopoutMenu";
 import ContextualMenu from "@/components/Sidebars/ContextualMenu";
-import { useUser } from "@/providers/UserProvider";
 
 interface DashboardHeaderProps {
   headingText: string;
@@ -46,7 +45,6 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
   const { fetchClient } = useFetchClient();
   const router = useRouter();
-  const user = useUser()
 
   const handleStartClick = useCallback(async () => {
     if (!toolId || !workflowId) return;
@@ -73,11 +71,6 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   useEffect(() => {
     setAbleToStart(!!toolId && !!workflowId && canStartWorkflow);
   }, [toolId, workflowId, canStartWorkflow]);
-
-  let shouldShowToolGuides = true
-  if (user?.user && user.user.role === "PA") {
-    shouldShowToolGuides = false
-  }
 
   const theme = useTheme();
 
@@ -119,7 +112,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           />
         )}
 
-        {contextualMenuItems && shouldShowToolGuides && (
+        {contextualMenuItems && (
           <ContextualMenu
             menuItems={contextualMenuItems}
           />

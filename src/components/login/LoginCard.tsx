@@ -20,10 +20,6 @@ export function LoginCard({
   imageOffset = -350,
   speechBubbleHeight = "100%",
 }: LoginCardProps) {
-
-  //clearing session storage for guide popups to reset.
-  sessionStorage.clear()
-
   return (
     <SpringScale style={{ width: "100%" }}>
       <VStack
