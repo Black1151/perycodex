@@ -391,7 +391,7 @@ const AllEnpsDashboard = () => {
             chartOptions={pieChartOptions}
             noData={pieChartData?.length === 0}
             locked={isFree}
-            lockedReason="Not available on free tier..."
+            lockedReason="Not available on trial..."
           />
 
           {/* Histogram */}
@@ -401,7 +401,7 @@ const AllEnpsDashboard = () => {
             chartOptions={histogramOptions}
             noData={histogramData.length === 0}
             locked={isFree}
-            lockedReason="Not available on free tier..."
+            lockedReason="Not available on trial..."
           />
 
           {/* Line Chart */}
@@ -411,7 +411,7 @@ const AllEnpsDashboard = () => {
             chartOptions={lineChartOptions}
             noData={lineChartData.length === 0}
             locked={isFree}
-            lockedReason="Not available on free tier..."
+            lockedReason="Not available on trial..."
           />
         </Flex>
       </VStack>
