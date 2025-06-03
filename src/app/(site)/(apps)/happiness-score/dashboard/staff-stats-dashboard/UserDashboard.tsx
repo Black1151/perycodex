@@ -181,8 +181,21 @@ const UserDashboard: React.FC = () => {
     },
   ];
 
-  const getData = async (postBody: Record<string, any> = filterOptions) => {
+  const getData = async (maybeFilters?: any) => {
     setIsLoading(true);
+    let postBody: Record<string, any> = filterOptions;
+    if (
+      maybeFilters &&
+      typeof maybeFilters === "object" &&
+      !(
+        "nativeEvent" in maybeFilters ||
+        "preventDefault" in maybeFilters ||
+        "currentTarget" in maybeFilters
+      )
+    ) {
+      postBody = maybeFilters;
+    }
+
     try {
       const response = await fetchClient<ApiResponse>(
         "/api/happiness-score/dashboards/user-stats",
@@ -194,7 +207,7 @@ const UserDashboard: React.FC = () => {
             ...postBody,
           },
           redirectOnError: false,
-        },
+        }
       );
 
       if (response && response.resource) {
@@ -211,7 +224,7 @@ const UserDashboard: React.FC = () => {
         setUserDistribution(parseData<UserDistributionItem>(userDistribution));
         setComparativeData(parseData<ComparativeItem>(comparativeData));
         setMonthlyComparativeData(
-          parseData<MonthlyComparativeItem>(monthlyComparativeData || []),
+          parseData<MonthlyComparativeItem>(monthlyComparativeData || [])
         );
       } else {
         // Handle empty or error response if needed
@@ -232,7 +245,7 @@ const UserDashboard: React.FC = () => {
     }
 
     const monthlyOption = dateRangeOptions[dateRangeOption].find(
-      (opt) => opt.value === defaultDateFilterOption,
+      (opt) => opt.value === defaultDateFilterOption
     );
 
     if (monthlyOption) {

@@ -51,6 +51,7 @@ export default function SideBars() {
   const [leftMenuItems, setLeftMenuItems] = useState<MenuItem[]>([]);
   const [adminGuideModalOpen, setAdminGuideModalOpen] =
     useState<boolean>(false);
+  const [shouldShowAdminGuides, setShouldShowAdminGuides] = useState(true);
 
   const { recordId, recordParentId, recordCustomerId } = recordIds || {};
   const isMobile = useBreakpointValue({ base: true, md: false }) ?? false;
@@ -122,6 +123,12 @@ export default function SideBars() {
           icon: <LocationOn sx={{ height: "100%", width: "100%" }} />,
           url: "/sites?siteType=external",
           category: "Clients",
+        },
+        {
+          label: "Help Centre",
+          icon: <Help sx={{ height: "100%", width: "100%" }} />,
+          url: "/help-centre",
+          category: "Help",
         }
       );
     } else if (userRole === "PA") {
@@ -308,6 +315,12 @@ export default function SideBars() {
           url: "/sites?siteType=external",
           category: "Clients",
           locked: true,
+        },
+        {
+          label: "Help Centre",
+          icon: <Help sx={{ height: "100%", width: "100%" }} />,
+          url: "/help-centre",
+          category: "Help",
         }
       );
     } else if (isFree && userRole === "CU") {
@@ -336,6 +349,12 @@ export default function SideBars() {
           url: "/customers?customerType=external",
           category: "Clients",
           locked: true,
+        },
+        {
+          label: "Help Centre",
+          icon: <Help sx={{ height: "100%", width: "100%" }} />,
+          url: "/help-centre",
+          category: "Help",
         }
       );
     } else if (!isFree && userRole === "CU") {
@@ -363,6 +382,12 @@ export default function SideBars() {
           icon: <Domain sx={{ height: "100%", width: "100%" }} />,
           url: "/customers?customerType=external",
           category: "Clients",
+        },
+        {
+          label: "Help Centre",
+          icon: <Help sx={{ height: "100%", width: "100%" }} />,
+          url: "/help-centre",
+          category: "Help",
         }
       );
     } else if (isFree && userRole === "CS") {
@@ -391,6 +416,12 @@ export default function SideBars() {
           url: "/customers?customerType=external",
           category: "Clients",
           locked: true,
+        },
+        {
+          label: "Help Centre",
+          icon: <Help sx={{ height: "100%", width: "100%" }} />,
+          url: "/help-centre",
+          category: "Help",
         }
       );
     } else if (!isFree && userRole === "CS") {
@@ -418,6 +449,12 @@ export default function SideBars() {
           icon: <Domain sx={{ height: "100%", width: "100%" }} />,
           url: "/customers?customerType=external",
           category: "Clients",
+        },
+        {
+          label: "Help Centre",
+          icon: <Help sx={{ height: "100%", width: "100%" }} />,
+          url: "/help-centre",
+          category: "Help",
         }
       );
     } else if (isFree && userRole === "CL") {
@@ -446,6 +483,12 @@ export default function SideBars() {
           url: "/customers?customerType=external",
           category: "Clients",
           locked: true,
+        },
+        {
+          label: "Help Centre",
+          icon: <Help sx={{ height: "100%", width: "100%" }} />,
+          url: "/help-centre",
+          category: "Help",
         }
       );
     } else if (!isFree && userRole === "CL") {
@@ -473,6 +516,12 @@ export default function SideBars() {
           icon: <Domain sx={{ height: "100%", width: "100%" }} />,
           url: "/customers?customerType=external",
           category: "Clients",
+        },
+        {
+          label: "Help Centre",
+          icon: <Help sx={{ height: "100%", width: "100%" }} />,
+          url: "/help-centre",
+          category: "Help",
         }
       );
     }
@@ -488,6 +537,7 @@ export default function SideBars() {
   };
 
   useEffect(() => {
+    console.log("pathname:", pathname);
     const newItems = generateLeftSidebarItemsDrawer(
       user?.role,
       user?.customerIsFree ?? true
@@ -504,46 +554,6 @@ export default function SideBars() {
     }
   }, [user?.role, pathname]);
 
-  // Auto-open Admin Guide Modal once per session if any admin guide is unread
-  useEffect(() => {
-    const sessionKey = "adminGuideOpened";
-    if (sessionStorage.getItem(sessionKey)) return;
-
-    async function checkAdminGuides() {
-      try {
-        // 1) Fetch all admin guides
-        const guidesRes = await fetch("/api/guide/findBy?type=admin");
-        if (!guidesRes.ok) throw new Error("Failed to fetch admin guides");
-        const { resource: guides } = (await guidesRes.json()) as {
-          resource: Array<{ guideId?: number; id?: number }>;
-        };
-        // Normalize to string IDs
-        const allGuideIds = (guides || []).map((g) =>
-          String(g.guideId ?? g.id)
-        );
-
-        // 2) Fetch read records
-        const readRes = await fetch("/api/guideRead");
-        if (!readRes.ok) throw new Error("Failed to fetch read records");
-        const { resource: readRecords } = (await readRes.json()) as {
-          resource: Array<{ guideId: number | string }>;
-        };
-        const readSet = new Set(readRecords.map((r) => String(r.guideId)));
-
-        // 3) Open if there's any unread guide
-        const hasUnread = allGuideIds.some((id) => !readSet.has(id));
-        if (hasUnread) {
-          setAdminGuideModalOpen(true);
-          sessionStorage.setItem(sessionKey, "1");
-        }
-      } catch (err) {
-        console.error("Error checking admin guide auto-open:", err);
-      }
-    }
-
-    checkAdminGuides();
-  }, []);
-
   const generateRightSidebarItemsDrawer = useMemo(() => {
     let entityType = null;
 
@@ -554,15 +564,16 @@ export default function SideBars() {
     }
 
     let shouldShowManageTags = false;
-    let shouldShowAdminGuides = true;
     let shouldShowAssignToCustomer = false;
 
-    if (pathname === "/help-center" || "/activity" || "/client-activity") {
-      shouldShowAdminGuides = false;
+    const hideGuidePaths = ["/help-center", "/activity", "/client-activity"];
+
+    if (hideGuidePaths.includes(pathname)) {
+      setShouldShowAdminGuides(false);
     }
 
-    if(user?.role === "PA") {
-      shouldShowAdminGuides = false
+    if (user?.role === "PA") {
+      setShouldShowAdminGuides(false);
     }
 
     if (pathname === "/user-groups" && user?.role === "PA") {
@@ -636,6 +647,55 @@ export default function SideBars() {
   ]);
 
   const rightMenuItems = generateRightSidebarItemsDrawer;
+
+  // Auto-open Admin Guide Modal once per session if any admin guide is unread
+  useEffect(() => {
+    const sessionKey = "adminGuideOpened";
+    if (sessionStorage.getItem(sessionKey)) return;
+
+    async function checkAdminGuides() {
+      try {
+        // 1) Fetch all admin guides
+        const guidesRes = await fetch("/api/guide/findBy?type=admin");
+        if (!guidesRes.ok) throw new Error("Failed to fetch admin guides");
+        const guidesJson = await guidesRes.json();
+        const rawGuides = guidesJson.resource;
+        const allGuideIds = Array.isArray(rawGuides)
+          ? rawGuides.map((g) => String(g.guideId ?? g.id))
+          : [];
+
+        // 2) Fetch read records
+        const readRes = await fetch("/api/guideRead");
+        if (!readRes.ok) throw new Error("Failed to fetch read records");
+        const readJson = await readRes.json();
+        console.log("Raw /api/guideRead response:", readJson);
+
+        // Normalize into an array
+        const raw = readJson.resource;
+        let readRecordsArray: Array<{ guideId: number | string }>;
+        if (Array.isArray(raw)) {
+          readRecordsArray = raw;
+        } else if (raw == null) {
+          readRecordsArray = [];
+        } else {
+          readRecordsArray = [raw];
+        }
+
+        const readSet = new Set(readRecordsArray.map((r) => String(r.guideId)));
+        // 3) Open if there’s any unread guide
+        const hasUnread = allGuideIds.some((id) => !readSet.has(id));
+        console.log("hasUnread", hasUnread);
+        if (hasUnread) {
+          setAdminGuideModalOpen(true);
+          sessionStorage.setItem(sessionKey, "1");
+        }
+      } catch (err) {
+        console.error("Error checking admin guide auto-open:", err);
+      }
+    }
+
+    checkAdminGuides();
+  }, []);
 
   let modalCustomerId = user?.customerId || 0;
 

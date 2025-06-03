@@ -23,7 +23,7 @@ import {
   Center,
   Stack,
 } from "@chakra-ui/react";
-import { Menu } from "@mui/icons-material";
+import { Menu, Search } from "@mui/icons-material";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import AdminHeading from "@/components/AdminHeader";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
@@ -47,14 +47,20 @@ export default function HelpCenterPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [guideList, setGuideList] = useState<Guide[]>([]);
-  const [toolConfigs, setToolConfigs] = useState<Record<string, ToolConfig>>({});
+  const [toolConfigs, setToolConfigs] = useState<Record<string, ToolConfig>>(
+    {}
+  );
   const [selectedGuide, setSelectedGuide] = useState<Guide | null>(null);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [embedError, setEmbedError] = useState(false);
   const [filterText, setFilterText] = useState("");
 
   const { fetchClient } = useFetchClient();
-  const { isOpen: isDrawerOpen, onOpen: openDrawer, onClose: closeDrawer } = useDisclosure();
+  const {
+    isOpen: isDrawerOpen,
+    onOpen: openDrawer,
+    onClose: closeDrawer,
+  } = useDisclosure();
 
   // Fetch guides and tools
   useEffect(() => {
@@ -71,8 +77,8 @@ export default function HelpCenterPage() {
 
         // Process guides
         const guides: Guide[] = rawGuides
-          .filter(g => g.isActive)
-          .map(g => ({
+          .filter((g) => g.isActive)
+          .map((g) => ({
             title: g.guideTitle,
             type: g.type,
             urlPath: g.guideFilePath,
@@ -85,13 +91,15 @@ export default function HelpCenterPage() {
 
         // Process tool configs
         const configMap: Record<string, ToolConfig> = {};
-        rawTools.filter(t => t.isActive).forEach(t => {
-          configMap[String(t.id)] = {
-            id: t.id,
-            displayName: t.displayName,
-            iconImageUrl: t.iconImageUrl,
-          };
-        });
+        rawTools
+          .filter((t) => t.isActive)
+          .forEach((t) => {
+            configMap[String(t.id)] = {
+              id: t.id,
+              displayName: t.displayName,
+              iconImageUrl: t.iconImageUrl,
+            };
+          });
         setToolConfigs(configMap);
       } catch (e: any) {
         console.error(e);
@@ -124,9 +132,13 @@ export default function HelpCenterPage() {
     g.title.toLowerCase().includes(filterText.toLowerCase());
 
   // Categorize guides
-  const platformGuides = guideList.filter(g => g.type === 'platform' && filter(g));
-  const adminGuides    = guideList.filter(g => g.type === 'admin' && filter(g));
-  const toolGuides     = guideList.filter(g => g.type === 'tool' && g.toolId != null && filter(g));
+  const platformGuides = guideList.filter(
+    (g) => g.type === "platform" && filter(g)
+  );
+  const adminGuides = guideList.filter((g) => g.type === "admin" && filter(g));
+  const toolGuides = guideList.filter(
+    (g) => g.type === "tool" && g.toolId != null && filter(g)
+  );
 
   // Group guides by toolId for sidebar sections
   const toolGroups = toolGuides.reduce<Record<string, Guide[]>>((acc, g) => {
@@ -135,23 +147,57 @@ export default function HelpCenterPage() {
     return acc;
   }, {});
 
-  if (loading) return <Center h="100vh"><Spinner size="xl" /></Center>;
-  if (error)   return <Center h="100vh"><Text color="red.500">{error}</Text></Center>;
+  if (loading)
+    return (
+      <Center h="100vh">
+        <Spinner size="xl" />
+      </Center>
+    );
+  if (error)
+    return (
+      <Center h="100vh">
+        <Text color="red.500">{error}</Text>
+      </Center>
+    );
 
   // Sidebar component
   const Sidebar = (
-    <VStack align="start" spacing={2} p={4} w="100%" borderRadius={"md"}>
-      <Input
-        placeholder="Search guides..."
-        size="sm"
-        value={filterText}
-        onChange={e => setFilterText(e.target.value)}
-        mb={0}
-      />
+    <VStack
+      align="start"
+      spacing={2}
+      p={4}
+      w="100%"
+      borderRadius={"md"}
+      mt={[8, 7, 0]}
+    >
+      <HStack w="full">
+        <Search fontSize={"small"} />
+        <Input
+          placeholder="Search guides..."
+          size={["xs", "xs", "md"]}
+          value={filterText}
+          onChange={(e) => setFilterText(e.target.value)}
+          mb={0}
+          border={"none"}
+          borderBottom={"1px"}
+          borderRadius={0}
+          borderColor={"gray.200"}
+          py={2}
+          px={[0, 0, 1]}
+          w="full"
+          transition="border-color 0.2s, box-shadow 0.2s, padding-left 0.2s"
+          _focus={{
+            boxShadow: "none",
+            borderBottom: "1px",
+            borderColor: "gray.500",
+            paddingLeft: "4px",
+          }}
+        />
+      </HStack>
 
       {[
-        { label: 'Platform', items: platformGuides, icon: "" },
-        { label: 'Admin',    items: adminGuides,    icon: "" },
+        { label: "Platform", items: platformGuides, icon: "" },
+        { label: "Admin", items: adminGuides, icon: "" },
         // One section per tool
         ...Object.entries(toolGroups).map(([toolId, items]) => {
           const cfg = toolConfigs[toolId];
@@ -159,7 +205,11 @@ export default function HelpCenterPage() {
             label: `${cfg?.displayName || `Tool ${toolId}`}`,
             items,
             icon: cfg?.iconImageUrl ? (
-              <Image boxSize="32px" src={cfg.iconImageUrl} alt={cfg.displayName} />
+              <Image
+                boxSize="32px"
+                src={cfg.iconImageUrl}
+                alt={cfg.displayName}
+              />
             ) : (
               <ArticleOutlinedIcon />
             ),
@@ -172,19 +222,30 @@ export default function HelpCenterPage() {
             <Box w="100%">
               <HStack mb={2} spacing={2}>
                 {icon}
-                <Text fontSize={["base", "base", "lg"]} fontWeight="semibold">{label}</Text>
+                <Text fontSize={["base", "base", "lg"]} fontWeight="semibold">
+                  {label}
+                </Text>
               </HStack>
               <VStack align="stretch" spacing={2}>
-                {items.map(g => (
+                {items.map((g) => (
                   <Button
                     key={g.urlPath}
-                    variant={selectedGuide?.urlPath === g.urlPath ? 'solid' : 'ghost'}
-                    color={selectedGuide?.urlPath === g.urlPath ? 'white' : 'gray.700'}
+                    variant={
+                      selectedGuide?.urlPath === g.urlPath ? "solid" : "ghost"
+                    }
+                    color={
+                      selectedGuide?.urlPath === g.urlPath
+                        ? "white"
+                        : "gray.700"
+                    }
                     justifyContent="left"
                     leftIcon={<ArticleOutlinedIcon />}
-                    _hover={{ bg: 'gray.100', color: "gray.800" }}
-                    _active={{ transform: 'scale(0.98)' }}
-                    onClick={() => { setSelectedGuide(g); if (isMobile) closeDrawer(); }}
+                    _hover={{ bg: "gray.100", color: "gray.800" }}
+                    _active={{ transform: "scale(0.98)" }}
+                    onClick={() => {
+                      setSelectedGuide(g);
+                      if (isMobile) closeDrawer();
+                    }}
                     fontSize={14}
                   >
                     {g.title}
@@ -193,7 +254,14 @@ export default function HelpCenterPage() {
               </VStack>
             </Box>
             {/* Add border between categories except after the last one */}
-            {idx < arr.length - 1 && <Box w="100%" borderBottom="1px solid" borderColor="gray.200" my={2} />}
+            {idx < arr.length - 1 && (
+              <Box
+                w="100%"
+                borderBottom="1px solid"
+                borderColor="gray.200"
+                my={2}
+              />
+            )}
           </React.Fragment>
         );
       })}
@@ -203,21 +271,41 @@ export default function HelpCenterPage() {
   return (
     <VStack w="full" spacing={4} h="full" overflow="hidden">
       <AdminHeading headingText="help-center" />
-      <Flex h="80vh" w="full" borderRadius="md" overflow="hidden" bgGradient="linear(to-br, pink.50, white)" boxShadow="sm" direction={["column", "column", "row"]}>
-
+      <Flex
+        h="80vh"
+        w="full"
+        borderRadius="md"
+        overflow="hidden"
+        bgGradient="linear(to-br, pink.50, white)"
+        boxShadow="sm"
+        direction={["column", "column", "row"]}
+      >
         {/* Mobile toggle */}
         {isMobile && (
           <>
-            <Button aria-label="Open guide list" m={4} onClick={openDrawer} gap={1} color={"white"}>
-              <Menu/>
-              <Text fontSize={"sm"}>Guides</Text>
+            <Button
+              aria-label="Open guide list"
+              m={4}
+              w={"min"}
+              onClick={openDrawer}
+              gap={1}
+              color={"white"}
+            >
+              <Menu />
+              <Text fontSize={"sm"}>All Guides</Text>
             </Button>
-            <Drawer isOpen={isDrawerOpen} placement="left" onClose={closeDrawer}>
+            <Drawer
+              isOpen={isDrawerOpen}
+              placement="left"
+              onClose={closeDrawer}
+            >
               <DrawerOverlay />
               <DrawerContent>
                 <DrawerCloseButton />
                 <DrawerBody p={0}>
-                  <Box bg={cardBg} h="full" overflowY="auto">{Sidebar}</Box>
+                  <Box bg={cardBg} h="full" overflowY="auto">
+                    {Sidebar}
+                  </Box>
                 </DrawerBody>
               </DrawerContent>
             </Drawer>
@@ -226,19 +314,39 @@ export default function HelpCenterPage() {
 
         {/* Sidebar */}
         {!isMobile && (
-          <Box w={sideW} bg={cardBg} borderRight="1px solid" borderColor="gray.200" boxShadow="sm">
+          <Box
+            w={sideW}
+            bg={cardBg}
+            borderRight="1px solid"
+            borderColor="gray.200"
+            boxShadow="sm"
+          >
             {Sidebar}
           </Box>
         )}
 
         {/* PDF Viewer */}
         <Box w={mainW} display="flex" flexDirection="column" p={4} h="full">
-          <Box flex="1" bg={cardBg} rounded="md" overflow="hidden" position="relative">
-            {pdfLoading && <Flex position="absolute" inset={0} align="center" justify="center"><Spinner size="xl" /></Flex>}
+          <Box
+            flex="1"
+            bg={cardBg}
+            rounded="md"
+            overflow="hidden"
+            position="relative"
+          >
+            {pdfLoading && (
+              <Flex
+                position="absolute"
+                inset={0}
+                align="center"
+                justify="center"
+              >
+                <Spinner size="xl" />
+              </Flex>
+            )}
             {!embedError ? (
-              <embed
+              <iframe
                 src={`${selectedGuide?.urlPath}#toolbar=0&navpanes=0&scrollbar=0`}
-                type="application/pdf"
                 width="100%"
                 height="100%"
                 onError={() => setEmbedError(true)}
@@ -247,8 +355,12 @@ export default function HelpCenterPage() {
             ) : (
               <Center h="full" p={8}>
                 <Stack spacing={4} textAlign="center">
-                  <Text fontSize="4xl" fontWeight="bold" color="pink.500">Error...</Text>
-                  <Text fontSize="lg">Oops! An error occurred loading this guide.</Text>
+                  <Text fontSize="4xl" fontWeight="bold" color="pink.500">
+                    Error...
+                  </Text>
+                  <Text fontSize="lg">
+                    Oops! An error occurred loading this guide.
+                  </Text>
                 </Stack>
               </Center>
             )}

@@ -31,7 +31,8 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/marketing") ||
     pathname.startsWith("/delete-my-data") ||
     pathname.startsWith("/checkout") ||
-    pathname.startsWith("/error")
+    pathname.startsWith("/error") ||
+    pathname.startsWith("/password-recovery")
   ) {
     console.log(`[Middleware] Bypassing: ${pathname}`);
     return NextResponse.next();

@@ -97,7 +97,6 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
 
         const data: DashboardAPIResponse = await response.json();
 
-        console.log("HERE!", data);
         setDashboardList(data.filteredDashboards);
         setToolData(
           data.toolData
@@ -139,26 +138,6 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
     active: false,
     locked: false,
   };
-
-  // if (menuItems.length === 1) {
-  //   return (
-  //     <>
-  //       <DashboardHeader
-  //         headingText={activeDashboardName || ""}
-  //         canStartWorkflow={toolData?.startInUi || false}
-  //         startBtnText={toolData?.altStartText || "Start"}
-  //         toolUrl={toolUrl}
-  //         contextualMenuItems={[contextualMenuItems]}
-  //       />
-  //       <GuideModal
-  //         isOpen={toolGuideModalOpen}
-  //         onClose={() => setToolGuideModalOpen(false)}
-  //         guideType="tool"
-  //         toolId={toolId}
-  //       />
-  //     </>
-  //   );
-  // }
 
   return (
     <>

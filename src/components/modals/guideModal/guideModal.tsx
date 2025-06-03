@@ -314,6 +314,7 @@ export default function GuideModal({
                 textAlign="center"
                 height="100%"
                 justify="center"
+                pt={4}
               >
                 <Text fontFamily="bonfire" fontSize={36}>
                   Oops! No Guides Yet...
