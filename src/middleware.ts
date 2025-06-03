@@ -176,7 +176,9 @@ export async function middleware(request: NextRequest) {
             console.log(
               "[Middleware] → Expired free user. Access denied, redirecting to /tool-store"
             );
-            return NextResponse.redirect(new URL("/trial-expired", request.url));
+            return NextResponse.redirect(
+              new URL("/trial-expired", request.url)
+            );
           }
         }
       } else {
