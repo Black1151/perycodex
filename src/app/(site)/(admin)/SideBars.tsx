@@ -566,7 +566,7 @@ export default function SideBars() {
     let shouldShowManageTags = false;
     let shouldShowAssignToCustomer = false;
 
-    const hideGuidePaths = ["/help-center", "/activity", "/client-activity"];
+    const hideGuidePaths = ["/help-centre", "/activity", "/client-activity"];
 
     if (hideGuidePaths.includes(pathname)) {
       setShouldShowAdminGuides(false);
@@ -665,7 +665,8 @@ export default function SideBars() {
           : [];
 
         // 2) Fetch read records
-        const readRes = await fetch("/api/guideRead");
+        if (!user) throw new Error("User is not defined");
+        const readRes = await fetch(`/api/guideRead/?userId=${user.userId}`);
         if (!readRes.ok) throw new Error("Failed to fetch read records");
         const readJson = await readRes.json();
         console.log("Raw /api/guideRead response:", readJson);

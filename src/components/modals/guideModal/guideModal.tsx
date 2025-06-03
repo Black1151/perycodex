@@ -134,7 +134,7 @@ export default function GuideModal({
         setSelectedGuide(sorted[0] ?? null);
 
         const resRead = await fetchClient<{ resource: Array<{ id: number; guideId: string | number }> }>(
-          '/api/guideRead'
+          `/api/guideRead/?userId=${user?.userId}`
         );
         const records = resRead?.resource || [];
 

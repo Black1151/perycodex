@@ -144,11 +144,11 @@ const useNavMenuItems = (
     });
   }
 
-  //Help Center (always available)
+  //Help Centre (always available)
   commonMenuItems.push({
-    label: "Help Center",
+    label: "Help Centre",
     icon: <Help/>,
-    onClick: () => router.push("/help-center"),
+    onClick: () => router.push("/help-centre"),
     orderGroup: 4
   });
 

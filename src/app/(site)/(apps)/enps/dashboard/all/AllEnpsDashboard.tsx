@@ -1,17 +1,37 @@
+// AllEnpsDashboard.tsx
+
 "use client";
 
 import React, { useState, useEffect } from "react";
 import AgChartComponent from "@/components/agCharts/AgChartComponent";
-import { Flex, VStack, useTheme } from "@chakra-ui/react";
+import AgGaugeComponent from "@/components/agCharts/AgGaugeComponent";
 import FilterSidebar from "@/components/Sidebars/Dashboards Filter/FilterSidebar";
+import {
+  Flex,
+  VStack,
+  useTheme,
+  Box,
+  Tooltip,
+  IconButton,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  Button,
+  Heading,
+  Text,
+  useDisclosure
+} from "@chakra-ui/react";
+import { Info } from "@mui/icons-material";
 import {
   AgChartOptions,
   AgRadialGaugeOptions,
   AgPolarChartOptions,
   AgPieSeriesOptions,
 } from "ag-charts-types";
-import AgGaugeComponent from "@/components/agCharts/AgGaugeComponent";
-
 import { useFetchClient } from "@/hooks/useFetchClient";
 import useColor from "@/hooks/useColor";
 import { dateRangeOptions } from "@/components/Sidebars/Dashboards Filter/dateRangeUtils";
@@ -57,8 +77,8 @@ const AllEnpsDashboard = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { fetchClient } = useFetchClient();
   const { getColor } = useColor();
-  const user = useUser()
-  const isFree = user?.user?.customerIsFree
+  const user = useUser();
+  const isFree = user?.user?.customerIsFree ?? false;
 
   const [gaugeData, setGaugeData] = useState<GaugeData>({
     minScore: -100,
@@ -69,6 +89,9 @@ const AllEnpsDashboard = () => {
   const [histogramData, setHistogramData] = useState<HistogramRecord[]>([]);
   const [lineChartData, setLineChartData] = useState<LineDataRecord[]>([]);
   const [pieChartData, setPieChartData] = useState<PieChartDataRecord[]>();
+
+  // Modal state
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const gaugeOptions: AgRadialGaugeOptions = {
     background: {
@@ -125,9 +148,7 @@ const AllEnpsDashboard = () => {
         itemStyler: (params) => {
           const { datum, xKey } = params;
           const score = datum[xKey];
-
           let color = "";
-
           if (score < 7) {
             color = "red";
           } else if (score < 9) {
@@ -135,7 +156,6 @@ const AllEnpsDashboard = () => {
           } else {
             color = theme.colors.seduloGreen;
           }
-
           return {
             fill: color,
           };
@@ -178,7 +198,6 @@ const AllEnpsDashboard = () => {
       {
         type: "line",
         yKey: "value",
-
         xKey: "monthYear",
         stroke: theme.colors.primary,
         interpolation: {
@@ -193,7 +212,6 @@ const AllEnpsDashboard = () => {
             const { datum, yKey } = params;
             const score = datum[yKey];
             const fillColor = getColor(score);
-
             return {
               fill: fillColor,
               size: 10,
@@ -250,7 +268,6 @@ const AllEnpsDashboard = () => {
     itemStyler: (params) => {
       const { datum } = params;
       const category = datum.category;
-
       let color = "";
       if (category === "Promoters") {
         color = theme.colors.seduloGreen;
@@ -278,8 +295,8 @@ const AllEnpsDashboard = () => {
   function safeJsonParse(str: any) {
     try {
       return JSON.parse(str);
-    } catch (err) {
-      return null; // or some default fallback
+    } catch {
+      return [];
     }
   }
 
@@ -300,9 +317,9 @@ const AllEnpsDashboard = () => {
         setHistogramData(safeJsonParse(response.resource.histogram));
         setLineChartData(safeJsonParse(response.resource.monthlyLineChart));
         setPieChartData(safeJsonParse(response.resource.pieChart));
-      } else {
       }
     } catch (error) {
+      console.error("Error fetching dashboard data:", error);
     } finally {
       setIsLoading(false);
     }
@@ -341,48 +358,115 @@ const AllEnpsDashboard = () => {
         dateFilterMode={dateRangeOption}
         defaultDateFilter={defaultDateFilterOption}
       />
+
       <VStack align="stretch" spacing={6} w="full" py={4}>
-        <Flex w={"100%"} gap={6} flexWrap={"wrap"}>
-          {/* Gauge */}
-          <AgGaugeComponent
-            flex={"1 1 45%"}
-            title={"eNPS Score"}
-            chartOptions={gaugeOptions}
-            noData={gaugeData.count === 0 || !gaugeData.count}
-          />
+        <Flex w="100%" gap={6} flexWrap="wrap" align="flex-start">
+          {/* Gauge + Info Icon */}
+          <Box flex="1 1 45%" position="relative">
+            <AgGaugeComponent
+              flex="1 1 45%"
+              title="eNPS Score"
+              chartOptions={gaugeOptions}
+              noData={gaugeData.count === 0 || !gaugeData.count}
+            />
+            <Tooltip label="How to calculate NPS" hasArrow>
+              <IconButton
+                aria-label="NPS Info"
+                icon={<Info />}
+                variant="ghost"
+                color="white"
+                _hover={{ color: "primary", background: "white" }}
+                position="absolute"
+                top="0px"
+                right="0px"
+                onClick={onOpen}
+              />
+            </Tooltip>
+          </Box>
 
           {/* Pie Chart */}
           <AgChartComponent
-            flex={"1 1 45%"}
-            title={"Category Breakdown"}
+            flex="1 1 45%"
+            title="Category Breakdown"
             chartOptions={pieChartOptions}
             noData={pieChartData?.length === 0}
             locked={isFree}
-            lockedReason="Not available on free tier..."
+            lockedReason="Not available on trial..."
           />
 
           {/* Histogram */}
           <AgChartComponent
-            flex={"1 1 45%"}
-            title={"Score Spread"}
+            flex="1 1 45%"
+            title="Score Spread"
             chartOptions={histogramOptions}
             noData={histogramData.length === 0}
             locked={isFree}
-            lockedReason="Not available on free tier..."
+            lockedReason="Not available on trial..."
           />
 
           {/* Line Chart */}
           <AgChartComponent
-            flex={"1 1 45%"}
-            title={"eNPS Trend"}
+            flex="1 1 45%"
+            title="eNPS Trend"
             chartOptions={lineChartOptions}
             noData={lineChartData.length === 0}
             locked={isFree}
-            lockedReason="Not available on free tier..."
+            lockedReason="Not available on trial..."
           />
         </Flex>
       </VStack>
+
+      {/* NPS Calculation Modal */}
+      <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>How to calculate Net Promoter Score (NPS)</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <VStack align="start" spacing={4} textAlign="left">
+              <Text>
+                Ask your employees: “On a scale from 0 to 10, how likely are you to
+                recommend our product/service to a friend or colleague?”
+              </Text>
+              <Heading as="h4" size="sm">
+                Categorise the responses:
+              </Heading>
+              <Box pl={4}>
+                <Text>• Promoters: 9–10</Text>
+                <Text>• Passives: 7–8</Text>
+                <Text>• Detractors: 0–6</Text>
+              </Box>
+              <Heading as="h4" size="sm" pt={2}>
+                Calculate the percentages:
+              </Heading>
+              <Box pl={4}>
+                <Text>
+                  % Promoters = (Number of Promoters ÷ Total Responses) × 100
+                </Text>
+                <Text>
+                  % Detractors = (Number of Detractors ÷ Total Responses) × 100
+                </Text>
+              </Box>
+              <Heading as="h4" size="sm" pt={2}>
+                Subtract:
+              </Heading>
+              <Box pl={4}>
+                <Text>NPS = % Promoters - % Detractors</Text>
+              </Box>
+              <Text pt={2}>
+                The final score ranges from -100 to +100. Higher is better!
+              </Text>
+            </VStack>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="primary" onClick={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 };
+
 export default AllEnpsDashboard;

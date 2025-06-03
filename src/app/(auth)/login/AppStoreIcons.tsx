@@ -1,6 +1,9 @@
+// AppStoreIcons.tsx
+
 "use client";
 
-import { Flex, Link, Image } from "@chakra-ui/react";
+import { Flex, Link, Image, IconButton } from "@chakra-ui/react";
+import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -63,7 +66,6 @@ const AppStoreIcons = () => {
 
   useEffect(() => {
     const { os } = getOSAndBrowser();
-    // calculate once and store in state
     const isWide = window.innerWidth >= 768;
     setWide(isWide);
 
@@ -90,8 +92,9 @@ const AppStoreIcons = () => {
           initial={{ opacity: 0, y: wide ? -30 : 30 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: wide ? -30 : 30 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: 1.2 }}
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.75 }}
           justify="center"
+          align="center"
           gap={4}
           bg="rgba(255,255,255,0.80)"
           borderBottomRadius={["none", "md"]}
@@ -103,6 +106,20 @@ const AppStoreIcons = () => {
           bottom="0"
           w={["full", "auto"]}
         >
+          {/* Close icon only on mobile */}
+          {!wide && (
+            <IconButton
+              aria-label="Close"
+              icon={<CloseIcon />}
+              variant="ghost"
+              size="sm"
+              position="absolute"
+              top="8px"
+              right="8px"
+              onClick={() => setVisible(false)}
+            />
+          )}
+
           {showGoogle && (
             <Link
               href="https://play.google.com/store/apps/details?id=uk.co.sedulo.perygon&pcampaignid=web_share"
