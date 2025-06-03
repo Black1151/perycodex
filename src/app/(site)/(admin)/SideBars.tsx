@@ -658,25 +658,34 @@ export default function SideBars() {
         // 1) Fetch all admin guides
         const guidesRes = await fetch("/api/guide/findBy?type=admin");
         if (!guidesRes.ok) throw new Error("Failed to fetch admin guides");
-        const { resource: guides } = (await guidesRes.json()) as {
-          resource: Array<{ guideId?: number; id?: number }>;
-        };
-        // Normalize to string IDs
-        const allGuideIds = (guides || []).map((g) =>
-          String(g.guideId ?? g.id)
-        );
+        const guidesJson = await guidesRes.json();
+        const rawGuides = guidesJson.resource;
+        const allGuideIds = Array.isArray(rawGuides)
+          ? rawGuides.map((g) => String(g.guideId ?? g.id))
+          : [];
 
         // 2) Fetch read records
         const readRes = await fetch("/api/guideRead");
         if (!readRes.ok) throw new Error("Failed to fetch read records");
-        const { resource: readRecords } = (await readRes.json()) as {
-          resource: Array<{ guideId: number | string }>;
-        };
-        const readSet = new Set(readRecords.map((r) => String(r.guideId)));
+        const readJson = await readRes.json();
+        console.log("Raw /api/guideRead response:", readJson);
 
-        // 3) Open if there's any unread guide
+        // Normalize into an array
+        const raw = readJson.resource;
+        let readRecordsArray: Array<{ guideId: number | string }>;
+        if (Array.isArray(raw)) {
+          readRecordsArray = raw;
+        } else if (raw == null) {
+          readRecordsArray = [];
+        } else {
+          readRecordsArray = [raw];
+        }
+
+        const readSet = new Set(readRecordsArray.map((r) => String(r.guideId)));
+        // 3) Open if there’s any unread guide
         const hasUnread = allGuideIds.some((id) => !readSet.has(id));
-        if (hasUnread && shouldShowAdminGuides) {
+        console.log("hasUnread", hasUnread);
+        if (hasUnread) {
           setAdminGuideModalOpen(true);
           sessionStorage.setItem(sessionKey, "1");
         }

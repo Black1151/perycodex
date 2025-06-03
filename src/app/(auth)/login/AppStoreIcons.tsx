@@ -98,7 +98,7 @@ const AppStoreIcons = () => {
           borderTopRadius={["md", "none"]}
           px={[0, 6]}
           py={3}
-          zIndex={1}
+          zIndex={400}
           position={["fixed", "relative"]}
           bottom="0"
           w={["full", "auto"]}
