@@ -32,7 +32,8 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/delete-my-data") ||
     pathname.startsWith("/checkout") ||
     pathname.startsWith("/error") ||
-    pathname.startsWith("/password-recovery")
+    pathname.startsWith("/password-recovery") ||
+    pathname.startsWith("/trial-expired")
   ) {
     console.log(`[Middleware] Bypassing: ${pathname}`);
     return NextResponse.next();
@@ -166,10 +167,17 @@ export async function middleware(request: NextRequest) {
           userACMetadata.customerIsFreeUntilDate &&
           new Date(userACMetadata.customerIsFreeUntilDate) < new Date()
         ) {
-          console.log(
-            "[Middleware] → Expired free user. Access denied, redirecting to /tool-store"
-          );
-          return NextResponse.redirect(new URL("/tool-store", request.url));
+          if (userACMetadata.role === "CA" || userACMetadata.role === "CL") {
+            console.log(
+              "[Middleware] → Expired free user (CA) or (CL). Access denied, redirecting to /tool-store"
+            );
+            return NextResponse.redirect(new URL("/tool-store", request.url));
+          } else {
+            console.log(
+              "[Middleware] → Expired free user. Access denied, redirecting to /tool-store"
+            );
+            return NextResponse.redirect(new URL("/trial-expired", request.url));
+          }
         }
       } else {
         console.warn(
