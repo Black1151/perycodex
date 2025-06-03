@@ -347,7 +347,7 @@ export default function GuideModal({
                       <Box
                         flex="1"
                         overflowY="auto"
-                        position="relative"
+                        // position="relative"
                         bg={pdfBg}
                       >
                         {pdfLoading && (
@@ -363,7 +363,7 @@ export default function GuideModal({
                           </Flex>
                         )}
                         <iframe
-                          src={`${selectedGuide.urlPath}#toolbar=0&navpanes=0&scrollbar=0`}
+                          src={`${selectedGuide.urlPath}#toolbar=0&navpanes=0&scrollbar=0&zoom=100`}
                           width="100%"
                           height="100%"
                           onLoad={() => setPdfLoading(false)}
