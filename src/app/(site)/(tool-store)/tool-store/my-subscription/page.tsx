@@ -24,7 +24,7 @@ import { useUser } from "@/providers/UserProvider";
 import WarningIcon from "@mui/icons-material/Warning";
 import BackButton from "@/components/BackButton";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import { Call } from "@mui/icons-material";
+import { Call, Close } from "@mui/icons-material";
 import { Header } from "../Header";
 
 export default function CurrentSubscriptionPage() {
@@ -113,7 +113,7 @@ export default function CurrentSubscriptionPage() {
               <VStack
                 bg={theme.colors.primary}
                 p={4}
-                flexShrink={0} 
+                flexShrink={0}
                 minW="60px"
                 align="center"
                 justify="center"
@@ -130,13 +130,7 @@ export default function CurrentSubscriptionPage() {
                 )}
               </VStack>
 
-              <VStack
-                flex="1"
-                align="flex-start"
-                spacing={0}
-                p={4}
-                minW={0}
-              >
+              <VStack flex="1" align="flex-start" spacing={0} p={4} minW={0}>
                 <Text fontSize={[16, 18, 20]} fontWeight="semibold">
                   {item.displayName}
                 </Text>
@@ -231,10 +225,21 @@ export default function CurrentSubscriptionPage() {
           >
             <Badge colorScheme="blue">
               Start Date:{" "}
-              {new Date(subscription.updatedAt).toLocaleDateString("en-GB")}
+              {new Date(subscription.updatedAt).toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+              })}
             </Badge>
             <Badge colorScheme="blue">
-              Renewal Date: {subscription.renewalDate}
+              Renewal Date:{" "}
+              {subscription.renewalDate
+              ? new Date(subscription.renewalDate).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                })
+              : ""}
             </Badge>
             <Badge colorScheme="blue">Subscription ID: {subscription.id}</Badge>
           </Stack>
@@ -275,6 +280,14 @@ export default function CurrentSubscriptionPage() {
               rightIcon={<Call fontSize="small" />}
             >
               Contact Sales
+            </Button>
+            <Button
+              rightIcon={<Close />}
+              variant="outline"
+              colorScheme="red"
+              onClick={() => router.push("/tool-store/manage-subscription")}
+            >
+              Cancel Subscription
             </Button>
           </Stack>
         </Box>

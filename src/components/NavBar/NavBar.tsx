@@ -67,7 +67,8 @@ const NavBar: React.FC<NavBarProps> = ({
 
   const menuItems = useNavMenuItems(userRole, handleLogout, openResetModal);
   const isFree = user?.customerIsFree || false;
-  const isFreeUntil = user?.customerIsFreeUntilDate || "";
+  const isFreeUntil = user?.customerIsFreeUntilDate;
+  const isExpired = !!isFreeUntil && new Date(isFreeUntil) < new Date();
 
   const buildThemeDropdownOptions = async () => {
     const response = await fetch("/api/theme/getThemesForCustomer", {
@@ -138,6 +139,7 @@ const NavBar: React.FC<NavBarProps> = ({
             toolLogo={resolvedToolLogo || undefined}
             toolPath={toolPath || undefined}
             userIsFree={isFree}
+            userIsExpired={isExpired}
           />
         </MotionBox>
 
@@ -158,7 +160,7 @@ const NavBar: React.FC<NavBarProps> = ({
             themeDropdownOptions={themeDropdownOptions}
             handleLogout={handleLogout}
             userIsFree={isFree}
-            userIsFreeUntil={isFreeUntil}
+            userIsFreeUntil={isFreeUntil ?? ""}
             userIsFreeAction={() => router.push("/tool-store")}
             userRole={userRole}
           />
