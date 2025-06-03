@@ -87,7 +87,7 @@ export default async function LoginPage({
   };
   return (
     <PerygonContainer>
-      <Center flex={1} maxW={["100%"]} flexDirection={"column"} p={4}>
+      <Center flex={1} maxW={["100%"]} flexDirection={"column"}>
         <LoginCard
           height={getHeight()}
           imageOffset={getOffset()}

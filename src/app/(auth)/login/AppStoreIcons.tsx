@@ -112,7 +112,7 @@ const AppStoreIcons = () => {
               aria-label="Close"
               icon={<CloseIcon />}
               variant="ghost"
-              size="sm"
+              size="xs"
               position="absolute"
               top="8px"
               right="8px"
