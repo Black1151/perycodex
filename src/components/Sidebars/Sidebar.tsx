@@ -148,7 +148,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           {...(isLeft ? { left: 0 } : { right: 0 })}
           bottom={0}
           width={drawerState === "fully-open" ? 225 : 61}
-          zIndex={98}
+          zIndex={120}
           bg="elementBG"
           boxShadow="xl"
           gap={0}
