@@ -204,19 +204,22 @@ function DataGridComponentLight<T>({
   });
 
   const onFilterTextBoxChanged = useCallback(() => {
-    const input = document.getElementById(
-      `filter-text-box-${uniqueQuickFilterId}`
-    ) as HTMLInputElement;
-    if (input) {
-      // @ts-ignore
-      gridRef.current?.api.setQuickFilter(input.value);
-    }
+    // @ts-ignore
+    gridRef.current?.api.setGridOption(
+      "quickFilterText",
+      (
+        document.getElementById(
+          `filter-text-box-${uniqueQuickFilterId}`
+        ) as HTMLInputElement
+      )?.value
+    );
   }, [uniqueQuickFilterId]);
 
   const resetFilter = useCallback(() => {
-    gridRef.current?.api.setFilterModel(null);
-    // @ts-ignore
-    gridRef.current?.api.setQuickFilter("");
+    const api = gridRef.current?.api;
+    if (!api) return;
+    api.setFilterModel(null);
+    api.setGridOption("quickFilterText", "");
     const input = document.getElementById(
       `filter-text-box-${uniqueQuickFilterId}`
     ) as HTMLInputElement;
