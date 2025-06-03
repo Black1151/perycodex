@@ -18,7 +18,7 @@ async function forwardToBackend(
 
   let url: string;
   if (method === 'GET') {
-    url = `${process.env.BE_URL}/guideRead/allBy`;
+    url = `${process.env.BE_URL}/guideRead/findBy/?userId=${payload?.userId}`;
   } else if (method === 'DELETE' && payload) {
     url = `${process.env.BE_URL}/guideRead/${payload.id}`;
   } else {
