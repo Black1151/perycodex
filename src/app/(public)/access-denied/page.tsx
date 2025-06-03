@@ -1,21 +1,12 @@
-"use client"
-
-import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import AccessDenied from "@/components/AccessDenied";
 
+export const dynamic = "force-dynamic"; // disables prerendering
+
 export default function AccessDeniedPage() {
-    const searchParams = useSearchParams();
-    const deniedPath = searchParams.get("path") || "";
-    const userParam = searchParams.get("user") || "";
-    let userAccessControlMetadata = null;
-
-    try {
-        userAccessControlMetadata = userParam ? userParam : null;
-    } catch {
-        userAccessControlMetadata = null;
-    }
-
-    return (
-        <AccessDenied deniedPath={deniedPath} userAccessControlMetadata={userAccessControlMetadata} />
-    );
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AccessDenied />
+    </Suspense>
+  );
 }
