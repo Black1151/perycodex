@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Box, Button, Center, Text, useTheme, VStack } from "@chakra-ui/react";
+import { Box, Button, Center, Code, Text, useTheme, VStack } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
 import { SpringScale } from "@/components/animations/SpringScale";
 import { LetterFlyIn } from "@/components/animations/text/LetterFlyIn";
@@ -24,13 +24,17 @@ const ErrorBox = ({
   supportingText,
   onButtonClick,
   buttonLink,
+  deniedPath,
+  userAccessControlMetadata,
 }: {
   buttonText: string;
   supportingText: string;
   onButtonClick?: () => void;
   buttonLink?: string;
+  deniedPath?: string;
+  userAccessControlMetadata?: any;
 }) => {
-  const theme = useTheme()
+  const theme = useTheme();
   return (
     <Center flex={1} h="100vh" position="relative" overflow="hidden" bg={theme.colors.seduloRed}>
       <SpringScale>
@@ -45,7 +49,6 @@ const ErrorBox = ({
           maxW="2xl"
           mx="auto"
         >
-          {/* 404 Error text with animated effect */}
           <Box position="relative" textAlign="center">
             <LetterFlyIn color="primary" fontSize={68}>Access Denied...</LetterFlyIn>
             <Text
@@ -53,16 +56,30 @@ const ErrorBox = ({
               fontWeight="bold"
               mt={-2}
               color="gray.700"
-              textShadow="1px 1px 2px rgba(0,0,0,0.2)"
+              textShadow="1px 1px 2px rgba(0,0,0,0.2)"  
             >
               Oops! You can't access this.
             </Text>
           </Box>
-          {/* Supporting text */}
+
           <Text fontSize="lg" textAlign="center" color="gray.500" maxW="md">
             {supportingText}
           </Text>
-          {/* Button with smooth animation */}
+
+          {/* Show Denied Path */}
+          {deniedPath && (
+            <Text fontSize="md" color="gray.600">
+              <strong>Denied Path:</strong> <Code>{deniedPath}</Code>
+            </Text>
+          )}
+
+          {/* Show Metadata */}
+          {deniedPath && (
+            <Text fontSize="md" color="gray.600">
+              <strong>User UUID:</strong> <Code>{userAccessControlMetadata}</Code>
+            </Text>
+          )}
+
           {buttonLink ? (
             <Link href={buttonLink} passHref>
               <Button

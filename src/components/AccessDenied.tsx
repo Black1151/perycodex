@@ -2,9 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import AccessDeniedBox from "@/components/layout/AccessDeniedBox";
-import { Box } from "@chakra-ui/react";
+import { Box, Text, Code, VStack } from "@chakra-ui/react";
 
-export default function AccessDenied() {
+export default function AccessDenied({
+  deniedPath,
+  userAccessControlMetadata,
+}: {
+  deniedPath?: string;
+  userAccessControlMetadata?: any;
+}) {
   const router = useRouter();
   const supportingText = `You do not have permission to access this area. If you believe this is an error, please contact your administrator.`;
 
@@ -22,6 +28,8 @@ export default function AccessDenied() {
         supportingText={supportingText}
         buttonText="Go to homepage"
         onButtonClick={() => router.push("/")}
+        deniedPath={deniedPath}
+        userAccessControlMetadata={userAccessControlMetadata}
       />
     </Box>
   );

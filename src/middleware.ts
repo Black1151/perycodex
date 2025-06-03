@@ -30,7 +30,8 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/support") ||
     pathname.startsWith("/marketing") ||
     pathname.startsWith("/delete-my-data") ||
-    pathname.startsWith("/checkout")
+    pathname.startsWith("/checkout") ||
+    pathname.startsWith("/error")
   ) {
     console.log(`[Middleware] Bypassing: ${pathname}`);
     return NextResponse.next();
@@ -233,7 +234,10 @@ export async function middleware(request: NextRequest) {
       console.log(
         "[Middleware] → Access denied, redirecting to /access-denied"
       );
-      return NextResponse.redirect(new URL("/access-denied", request.url));
+      const redirectUrl = new URL("/access-denied", request.url);
+      redirectUrl.searchParams.set("path", fullPath);
+      redirectUrl.searchParams.set("user", userUUID);
+      return NextResponse.redirect(redirectUrl);
     }
 
     console.log("[Middleware] → Access granted");
