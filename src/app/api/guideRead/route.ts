@@ -15,10 +15,12 @@ async function forwardToBackend(
 ): Promise<NextResponse> {
   const cookieStore = cookies();
   const authToken = cookieStore.get('auth_token')?.value;
+  console.log("payload:", payload)
 
   let url: string;
   if (method === 'GET') {
-    url = `${process.env.BE_URL}/guideRead/findBy/?userId=${payload?.userId}`;
+    url = `${process.env.BE_URL}/guideRead/allBy/?userId=${payload?.userId}`;
+    console.log("url:", url)
   } else if (method === 'DELETE' && payload) {
     url = `${process.env.BE_URL}/guideRead/${payload.id}`;
   } else {
@@ -92,7 +94,12 @@ export async function DELETE(req: NextRequest) {
   }
 }
 
-export async function GET(_req: NextRequest) {
+export async function GET(req: NextRequest) {
   console.log('[guideRead][GET] Handler start');
-  return forwardToBackend('GET', null);
+  const { searchParams } = new URL(req.url);
+  const userId = searchParams.get('userId');
+  if (!userId) {
+    return NextResponse.json({ error: 'Missing userId in query params' }, { status: 400 });
+  }
+  return forwardToBackend('GET', { id: 0, guideId: '', customerId: '', userId });
 }

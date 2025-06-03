@@ -64,7 +64,7 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
           String(g.guideId ?? g.id)
         );
 
-        const readRes = await fetch("/api/guideRead");
+        const readRes = await fetch(`/api/guideRead/?userId=${user?.userId}`);
         if (!readRes.ok) throw new Error("Failed to fetch read records");
         const { resource: readRecords } = (await readRes.json()) as {
           resource: Array<{ guideId: number }>;
