@@ -566,7 +566,7 @@ export default function SideBars() {
     let shouldShowManageTags = false;
     let shouldShowAssignToCustomer = false;
 
-    const hideGuidePaths = ["/help-center", "/activity", "/client-activity"];
+    const hideGuidePaths = ["/help-centre", "/activity", "/client-activity"];
 
     if (hideGuidePaths.includes(pathname)) {
       setShouldShowAdminGuides(false);

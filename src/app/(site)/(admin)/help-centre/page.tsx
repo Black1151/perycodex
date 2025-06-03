@@ -43,7 +43,7 @@ type ToolConfig = {
   iconImageUrl: string;
 };
 
-export default function HelpCenterPage() {
+export default function HelpCentrePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [guideList, setGuideList] = useState<Guide[]>([]);
@@ -270,7 +270,7 @@ export default function HelpCenterPage() {
 
   return (
     <VStack w="full" spacing={4} h="full" overflow="hidden">
-      <AdminHeading headingText="help-center" />
+      <AdminHeading headingText="help-centre" />
       <Flex
         h="80vh"
         w="full"
