@@ -276,7 +276,7 @@ export default function CurrentSubscriptionPage() {
             </Button>
             <Button
               variant="outline"
-              onClick={() => router.push("/tool-store/manage-subscription")}
+              onClick={() => router.push("/tool-store/contact-sales")}
               rightIcon={<Call fontSize="small" />}
             >
               Contact Sales
@@ -285,6 +285,7 @@ export default function CurrentSubscriptionPage() {
               rightIcon={<Close />}
               variant="outline"
               colorScheme="red"
+              disabled
               onClick={() => router.push("/tool-store/manage-subscription")}
             >
               Cancel Subscription
