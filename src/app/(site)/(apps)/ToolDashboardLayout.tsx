@@ -10,7 +10,8 @@ import { getMuiIconByName } from "@/utils/muiIconMapper";
 import { Icon } from "@chakra-ui/react";
 import { useUser } from "@/providers/UserProvider";
 import GuideModal from "@/components/modals/guideModal/guideModal";
-import { Help } from "@mui/icons-material";
+import { Help, ScheduleSend } from "@mui/icons-material";
+import QuickScheduleSetupModal from "@/components/modals/scheduleModal.tsx/scheduleModal";
 
 interface DashboardAPIResponse {
   filteredDashboards: Dashboard[];
@@ -44,6 +45,7 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
   const workflowId = searchParams.get("wfId");
 
   const [toolGuideModalOpen, setToolGuideModalOpen] = useState(false);
+  const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
 
   // Auto-open guide modal if any guide is unread (once per session)
   useEffect(() => {
@@ -131,13 +133,22 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
     locked: isFree ? d.disableIfFree : false,
   }));
 
-  const contextualMenuItems = {
-    label: "Tool Guides",
-    icon: <Help />,
-    onClick: () => setToolGuideModalOpen(true),
-    active: false,
-    locked: false,
-  };
+  const contextualMenuItems = [
+    {
+      label: "Tool Guides",
+      icon: <Help />,
+      onClick: () => setToolGuideModalOpen(true),
+      active: false,
+      locked: false,
+    },
+    {
+      label: "Quick Schedule Setup",
+      icon: <ScheduleSend />,
+      onClick: () => setScheduleModalOpen(true),
+      active: false,
+      locked: false,
+    },
+  ];
 
   return (
     <>
@@ -153,7 +164,7 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
         canStartWorkflow={toolData?.startInUi || false}
         startBtnText={toolData?.altStartText || "Start"}
         toolUrl={toolUrl}
-        contextualMenuItems={[contextualMenuItems]}
+        contextualMenuItems={contextualMenuItems}
       />
       <GuideModal
         isOpen={toolGuideModalOpen}
@@ -161,6 +172,17 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
         guideType="tool"
         toolId={toolId}
       />
+      {toolId &&
+        !isNaN(Number(toolId)) &&
+        user?.customerId && (
+          <QuickScheduleSetupModal
+            isOpen={scheduleModalOpen}
+            onClose={() => setScheduleModalOpen(false)}
+            customerId={user?.customerId}
+            toolId={Number(toolId)}
+            isFree={user?.customerIsFree ?? true}
+          />
+        )}
     </>
   );
 };

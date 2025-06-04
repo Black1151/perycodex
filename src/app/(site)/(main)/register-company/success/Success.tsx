@@ -1,4 +1,3 @@
-// pages/register-company/success.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -15,6 +14,7 @@ import { useUser } from "@/providers/UserProvider";
 import LogoUpload from "../LogoUpload";
 import ConfettiAlt from "@/components/animations/confetti/ConfettiAlt";
 import { Check } from "@mui/icons-material";
+import { useFetchClient } from "@/hooks/useFetchClient";
 
 interface RegisterSuccessProps {
   initialCustomerData: any;
@@ -26,30 +26,82 @@ export default function RegisterSuccess({
   const { user } = useUser();
   const router = useRouter();
   const theme = useTheme();
+  const fetchClient = useFetchClient();
 
-  // track that we’ve done our one-time refresh
-  const [didRefresh, setDidRefresh] = useState(false);
-
-  // local state for your existing UI
-  const [customerData, setCustomerData] =
-    useState<any>(initialCustomerData);
-  const [hasLogo, setHasLogo] = useState(
-    Boolean(initialCustomerData?.custImageUrl)
-  );
-  const [loading, setLoading] = useState(false);
+  const [hasRefreshed, setHasRefreshed] = useState(false);
+  const [schedulesComplete, setSchedulesComplete] = useState(false);
+  const [customerData, setCustomerData] = useState<any>(initialCustomerData);
+  const [hasLogo, setHasLogo] = useState(Boolean(initialCustomerData?.custImageUrl));
+  const [loading, setLoading] = useState(true); // Show loading immediately
   const [error, setError] = useState<string | null>(null);
 
-  // run a one‐time router.refresh() as soon as we mount to show the nav and footer.
+  // 🔁 Immediately trigger router.refresh() on first render
   useEffect(() => {
-    if (!didRefresh) {
-      setDidRefresh(true);
+    if (!hasRefreshed) {
       router.refresh();
+      setHasRefreshed(true);
     }
-  }, [didRefresh, router]);
+  }, [hasRefreshed, router]);
 
-  if (!didRefresh) {
-    return null;
-  }
+  // 🛠 Setup schedules once user and refresh are ready
+  useEffect(() => {
+    if (!user || !hasRefreshed) return;
+
+    const parsedTools = (() => {
+      try {
+        return typeof user.subscribedTools === "string"
+          ? JSON.parse(user.subscribedTools)
+          : Array.isArray(user.subscribedTools)
+            ? user.subscribedTools
+            : [];
+      } catch (e) {
+        console.error("[RegisterSuccess] ❌ Failed to parse subscribedTools:", e);
+        return [];
+      }
+    })();
+
+    const schedulePayloads = parsedTools.map((toolId: number) => ({
+      customerId: user.customerId,
+      toolId: Number(toolId),
+      subscriptionType: "free",
+    }));
+
+    const setupSchedules = async () => {
+      try {
+        if (schedulePayloads.length === 0) {
+          console.log("[RegisterSuccess] No schedules to create.");
+          setSchedulesComplete(true);
+          setLoading(false);
+          return;
+        }
+
+        console.log("[RegisterSuccess] Creating schedule payloads:", schedulePayloads);
+
+        const responses = await Promise.all(
+          schedulePayloads.map((payload: any, idx: any) => {
+            console.log(`→ POSTing schedule payload #${idx + 1}:`, payload);
+            return fetchClient.fetchClient("/api/quickSchedules", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: payload,
+            });
+          })
+        );
+
+        const allSuccessful = responses.every((res) => res.ok);
+
+        console.log("[RegisterSuccess] ✅ All schedules created successfully.");
+        setSchedulesComplete(true);
+      } catch (err: any) {
+        console.error("[RegisterSuccess] ⚠️ Error setting up schedules:", err);
+        setError(err.message || "Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    setupSchedules();
+  }, [user, hasRefreshed]);
 
   if (loading) {
     return (
@@ -77,7 +129,8 @@ export default function RegisterSuccess({
         textAlign="center"
         flex={1}
       >
-        <ConfettiAlt show={didRefresh} />
+        <ConfettiAlt show={hasRefreshed} />
+
         <VStack spacing={1}>
           <Text fontFamily="bonfire" fontSize="4xl" color="white">
             Your company has been registered successfully!
@@ -95,8 +148,10 @@ export default function RegisterSuccess({
         <Text color="white" fontSize="lg">
           Last Step… Upload your company logo (optional)
         </Text>
+
         <LogoUpload
           onUploadComplete={(url: string) => {
+            console.log("[RegisterSuccess] Logo uploaded:", url);
             setHasLogo(true);
             setCustomerData((prev: any) => ({
               ...prev,
@@ -111,7 +166,12 @@ export default function RegisterSuccess({
           _hover={{ bg: theme.colors.seduloGreenDark }}
           color="white"
           rightIcon={<Check />}
-          onClick={() => router.push("/tool-store")}
+          onClick={() => {
+            console.log(
+              "[RegisterSuccess] Finished – navigating to /tool-store"
+            );
+            router.push("/tool-store");
+          }}
         >
           Finish
         </Button>
