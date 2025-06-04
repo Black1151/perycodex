@@ -23,7 +23,7 @@ import {
   Button,
   Heading,
   Text,
-  useDisclosure
+  useDisclosure,
 } from "@chakra-ui/react";
 import { Info } from "@mui/icons-material";
 import {
@@ -369,7 +369,7 @@ const AllEnpsDashboard = () => {
               chartOptions={gaugeOptions}
               noData={gaugeData.count === 0 || !gaugeData.count}
             />
-            <Tooltip label="How to calculate NPS" hasArrow>
+            <Tooltip label="How to calculate eNPS" hasArrow>
               <IconButton
                 aria-label="NPS Info"
                 icon={<Info />}
@@ -420,13 +420,13 @@ const AllEnpsDashboard = () => {
       <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>How to calculate Net Promoter Score (NPS)</ModalHeader>
+          <ModalHeader fontFamily={"bonfire"}>How to calculate Employee Net Promoter Score (eNPS)</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <VStack align="start" spacing={4} textAlign="left">
               <Text>
-                Ask your employees: “On a scale from 0 to 10, how likely are you to
-                recommend our product/service to a friend or colleague?”
+                Ask your employees: “On a scale from 0 to 10, how likely are you
+                to recommend our organisation as a place to work?”
               </Text>
               <Heading as="h4" size="sm">
                 Categorise the responses:
@@ -458,7 +458,7 @@ const AllEnpsDashboard = () => {
               </Text>
             </VStack>
           </ModalBody>
-          <ModalFooter>
+          <ModalFooter justifyContent={"center"}>
             <Button colorScheme="primary" onClick={onClose}>
               Close
             </Button>
