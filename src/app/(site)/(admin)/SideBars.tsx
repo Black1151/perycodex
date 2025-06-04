@@ -52,6 +52,7 @@ export default function SideBars() {
   const [adminGuideModalOpen, setAdminGuideModalOpen] =
     useState<boolean>(false);
   const [shouldShowAdminGuides, setShouldShowAdminGuides] = useState(true);
+  const [shouldPopupAdminGuides, setShouldPopupAdminGuides] = useState(true);
 
   const { recordId, recordParentId, recordCustomerId } = recordIds || {};
   const isMobile = useBreakpointValue({ base: true, md: false }) ?? false;
@@ -569,11 +570,14 @@ export default function SideBars() {
     const hideGuidePaths = ["/help-centre", "/activity", "/client-activity"];
 
     if (hideGuidePaths.includes(pathname)) {
+      console.log("HIDING ADMIN GUIDES")
       setShouldShowAdminGuides(false);
+      setShouldPopupAdminGuides(false);
     }
 
     if (user?.role === "PA") {
       setShouldShowAdminGuides(false);
+      setShouldPopupAdminGuides(false);
     }
 
     if (pathname === "/user-groups" && user?.role === "PA") {
@@ -686,7 +690,7 @@ export default function SideBars() {
         // 3) Open if there’s any unread guide
         const hasUnread = allGuideIds.some((id) => !readSet.has(id));
         console.log("hasUnread", hasUnread);
-        if (hasUnread) {
+        if (hasUnread && shouldPopupAdminGuides) {
           setAdminGuideModalOpen(true);
           sessionStorage.setItem(sessionKey, "1");
         }
