@@ -16,8 +16,8 @@ interface ContactSalesProps {
   subscriptionId: string;
 }
 
-const SUPPORT_EMAIL = "sales@perygon.com";
-const SUPPORT_TEL = "+1-800-123-4567";
+const SUPPORT_EMAIL = "sales@perygon.co.uk";
+const SUPPORT_TEL = "0333 222 4445";
 
 const ContactSales: React.FC<ContactSalesProps> = ({ subscriptionId }) => {
   const basket = useBasket();

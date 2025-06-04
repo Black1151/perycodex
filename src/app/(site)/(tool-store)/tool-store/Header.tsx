@@ -14,7 +14,7 @@ import {
 import { Info } from "@mui/icons-material";
 import BackButton from "@/components/BackButton";
 import BillingCycleToggle from "./BillingCyleToggle";
-import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
+import LargeTextModal from "@/components/surveyjs/layout/default/LargeTextModal";
 
 interface HeaderProps {
   title: string;
@@ -34,7 +34,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
     setModalData({
       title: "Monthly vs Annual Subscription Terms",
       body: (
-        <Box textAlign="left" fontFamily="Arial, sans-serif" lineHeight={1.6} maxW="700px">
+        <Box textAlign="left" fontFamily="Arial, sans-serif" lineHeight={1.6}>
           <Heading as="h2" size="md" mb={2}>
             (a) Monthly Subscription Terms
           </Heading>
@@ -46,7 +46,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
             Subscription Model
           </Heading>
           <Text mb={4}>
-            Your monthly subscription grants you access to our SaaS platform’s features as selected at the time of signup. The subscription begins on the date of your first payment, which is charged upfront.
+            Your monthly subscription grants you access to our SaaS platform’s features as selected at the time of checkout. The subscription begins on the date of your first payment, which is charged upfront.
           </Text>
 
           <Heading as="h4" size="sm" mt={4} mb={2}>
@@ -92,7 +92,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
             Subscription Model
           </Heading>
           <Text mb={4}>
-            Your annual subscription grants you access to our SaaS platform’s features as selected at the time of signup. The subscription begins on the date of your first payment, which is charged upfront for the full year.
+            Your annual subscription grants you access to our SaaS platform’s features as selected at the time of checkout. The subscription begins on the date of your first payment, which is charged upfront for the full year.
           </Text>
 
           <Heading as="h4" size="sm" mt={4} mb={2}>
@@ -146,11 +146,11 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
   return (
     <>
       {/* Shared SurveyModal */}
-      <SurveyModal
+      <LargeTextModal
         isOpen={isOpen}
         onClose={onClose}
         onConfirm={onClose}
-        showButtons={{ close: false, confirm: false }}
+        showButtons={{ close: true, confirm: false }}
         title={modalData.title}
         titleProps={{
           fontFamily: "Bonfire",

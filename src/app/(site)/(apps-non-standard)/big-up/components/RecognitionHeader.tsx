@@ -48,6 +48,7 @@ const RecognitionHeader: React.FC<RecognitionHeaderProps> = ({
             onAddButtonClick={onAddButtonClick}
             IconComponent={Celebration}
             workflow={false}
+            label="Recognise Someone!"
           />
         ) : (
           <AddButtonDesktop
