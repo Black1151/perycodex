@@ -271,14 +271,6 @@ export default function BasketPage() {
           <Text color="gray.200" fontSize="md" textAlign={"center"}>
             Please wait, do not close or refresh this page.
           </Text>
-          <Button
-            mt={6}
-            colorScheme="brand"
-            onClick={handleCheckout}
-            isLoading={checkoutLoading}
-          >
-            Relaunch Checkout
-          </Button>
         </Box>
       )}
 
@@ -413,6 +405,7 @@ export default function BasketPage() {
                   disabled={basket.quantity === 0}
                   spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
                   spinnerPlacement="start"
+                  color={"white"}
                 >
                   Checkout
                 </Button>

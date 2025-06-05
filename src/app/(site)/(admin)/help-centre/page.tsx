@@ -35,6 +35,7 @@ type Guide = {
   urlPath: string;
   sortOrder: number;
   toolId?: number | string;
+  guideImagePath: "string"
 };
 
 type ToolConfig = {
@@ -84,6 +85,7 @@ export default function HelpCentrePage() {
             urlPath: g.guideFilePath,
             sortOrder: g.sortOrder,
             toolId: g.toolId,
+            guideImagePath: g.guideImagePath,
           }))
           .sort((a, b) => a.sortOrder - b.sortOrder);
         setGuideList(guides);
@@ -325,15 +327,15 @@ export default function HelpCentrePage() {
           </Box>
         )}
 
-        {/* PDF Viewer */}
         <Box w={mainW} display="flex" flexDirection="column" p={4} h="full">
           <Box
             flex="1"
             bg={cardBg}
             rounded="md"
-            overflow="hidden"
             position="relative"
+            overflow="hidden"
           >
+            {/* Spinner while loading */}
             {pdfLoading && (
               <Flex
                 position="absolute"
@@ -344,15 +346,37 @@ export default function HelpCentrePage() {
                 <Spinner size="xl" />
               </Flex>
             )}
+
             {!embedError ? (
-              <iframe
-                src={`${selectedGuide?.urlPath}#toolbar=0&navpanes=0&scrollbar=0`}
+              // Scrollable container for the “A4 portrait” image
+              <Box
                 width="100%"
                 height="100%"
-                onError={() => setEmbedError(true)}
-                onLoad={() => setPdfLoading(false)}
-              />
+                overflowY="auto" // only vertical scrolling
+                overflowX="hidden" // no horizontal scroll
+                bg={cardBg}
+              >
+                {selectedGuide ? (
+                  <Image
+                    src={selectedGuide.guideImagePath}
+                    alt={selectedGuide.title}
+                    width="100%" // fill container’s width
+                    height="auto" // let height exceed container
+                    objectFit="contain" // preserve aspect ratio
+                    onLoad={() => setPdfLoading(false)}
+                    onError={() => setEmbedError(true)}
+                    aria-label={`Guide: ${selectedGuide.title}`}
+                  />
+                ) : (
+                  <Center h="full" p={8}>
+                    <Text fontSize="lg" color="gray.500">
+                      No guide selected.
+                    </Text>
+                  </Center>
+                )}
+              </Box>
             ) : (
+              // Error state if the image failed to load
               <Center h="full" p={8}>
                 <Stack spacing={4} textAlign="center">
                   <Text fontSize="4xl" fontWeight="bold" color="pink.500">

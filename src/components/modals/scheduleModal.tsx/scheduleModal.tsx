@@ -396,7 +396,7 @@ export default function QuickScheduleSetupModal({
               <Text fontSize={["xl","2xl","3xl"]} fontWeight="medium" fontFamily={"bonfire"} mb={-3}>
                 Quick Schedule Setup
               </Text>
-              {loadingSchedules && !isMobile ? (
+              {loadingSchedules || isMobile ? (
                 <></>
               ) : (
                 <Text fontSize="sm" color="gray.500" ml={2}>
@@ -438,6 +438,7 @@ export default function QuickScheduleSetupModal({
                 overflowY="auto"
                 display="flex"
                 flexDirection="column"
+                bg="gray.200"
               >
                 {loadingSchedules ? (
                   <></>

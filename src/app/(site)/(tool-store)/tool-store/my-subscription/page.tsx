@@ -268,7 +268,9 @@ export default function CurrentSubscriptionPage() {
                   )
                 : ""}
             </Badge>
-            <Badge colorScheme="blue">Subscription ID: {subscription.id}</Badge>
+            <Badge colorScheme="blue">
+              Subscription ID: {subscription.uniqueId?.slice(0, 6)}
+            </Badge>
           </Stack>
 
           {/* Action buttons */}

@@ -49,6 +49,7 @@ type Guide = {
   type: "tool" | "admin" | "platform";
   role: string[];
   urlPath: string;
+  guideImagePath: string;
   sortOrder: number;
   toolId?: number | string;
 };
@@ -126,12 +127,15 @@ export default function GuideModal({
             type: g.type,
             role: g.userRole ? [g.userRole] : [],
             urlPath: g.guideFilePath,
+            guideImagePath: g.guideImagePath ?? "",
             sortOrder: g.sortOrder,
             toolId: g.toolId,
           }))
           .sort((a, b) => a.sortOrder - b.sortOrder);
         setGuideList(sorted);
         setSelectedGuide(sorted[0] ?? null);
+
+        console.log("guide list", guideList);
 
         const resRead = await fetchClient<{
           resource: Array<{ id: number; guideId: string | number }>;
@@ -369,28 +373,47 @@ export default function GuideModal({
                       <Box
                         flex="1"
                         overflowY="auto"
-                        // position="relative"
                         bg={pdfBg}
+                        position="relative"
                       >
-                        {pdfLoading && (
-                          <Flex
-                            position="absolute"
-                            inset="0"
-                            align="center"
-                            justify="center"
-                            bg={pdfBg}
-                            zIndex={1}
+                        {isMobile ? (
+                          <Box
+                            width="100%"
+                            height={"600px"} // ← fixed-height viewport
+                            overflowY="auto" // ← vertical scrollbar only
+                            overflowX="hidden" // ← prevent horizontal scrolling
+                            bg="gray.50" // ← just an example background
                           >
-                            <Spinner size="lg" />
-                          </Flex>
+                            <Image
+                              src={selectedGuide.guideImagePath}
+                              width="100%" // ← force image to fill container’s width
+                              height="auto" // ← let height grow beyond container
+                              objectFit="contain" // ← preserves aspect ratio
+                            />
+                          </Box>
+                        ) : (
+                          <>
+                            {pdfLoading && (
+                              <Flex
+                                position="absolute"
+                                inset="0"
+                                align="center"
+                                justify="center"
+                                bg={pdfBg}
+                                zIndex={1}
+                              >
+                                <Spinner size="lg" />
+                              </Flex>
+                            )}
+                            <iframe
+                              src={`${selectedGuide.urlPath}#toolbar=0&navpanes=0&scrollbar=0&zoom=100`}
+                              width="100%"
+                              height="100%"
+                              onLoad={() => setPdfLoading(false)}
+                              aria-label={`Guide PDF: ${selectedGuide.title}`}
+                            />
+                          </>
                         )}
-                        <iframe
-                          src={`${selectedGuide.urlPath}#toolbar=0&navpanes=0&scrollbar=0&zoom=100`}
-                          width="100%"
-                          height="100%"
-                          onLoad={() => setPdfLoading(false)}
-                          aria-label={`Guide PDF: ${selectedGuide.title}`}
-                        />
                       </Box>
                       <Flex
                         px={{ base: 4, md: 6 }}
