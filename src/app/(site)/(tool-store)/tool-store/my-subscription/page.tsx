@@ -15,6 +15,7 @@ import {
   SimpleGrid,
   Badge,
   Spinner,
+  Tooltip
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
 import { useRouter } from "next/navigation";
@@ -26,6 +27,7 @@ import BackButton from "@/components/BackButton";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Call, Close } from "@mui/icons-material";
 import { Header } from "../Header";
+import { useFetchClient } from "@/hooks/useFetchClient";
 
 export default function CurrentSubscriptionPage() {
   const { subscription, getSubscription, basket } = useBasket();
@@ -34,6 +36,7 @@ export default function CurrentSubscriptionPage() {
   const theme = useTheme();
   const user = useUser();
   const router = useRouter();
+  const fetchClient = useFetchClient();
 
   const borderColor = "rgba(255, 255, 255, 0.65)";
   const cardBg = transparentize(theme.colors.elementBG, 0.95)(theme);
@@ -43,6 +46,17 @@ export default function CurrentSubscriptionPage() {
     setLoading(true);
     getSubscription().finally(() => setLoading(false));
   }, [basket]);
+
+  const handleCancel = async () => {
+    type CancelResponse = { resource?: string };
+    const cancelResp = await fetchClient.fetchClient<{ resource?: string }>("/api/checkout/cancel", {
+      method: "POST",
+    });
+    if (cancelResp && cancelResp.resource === "success") {
+      await getSubscription();
+      router.push("/tool-store");
+    }
+  };
 
   if (loading) {
     return <Spinner />;
@@ -164,31 +178,33 @@ export default function CurrentSubscriptionPage() {
           p={6}
           flex="1"
         >
-          {/* 2-column grid for Subtotal, Discounts, VAT, Total */}
-          <SimpleGrid columns={2} spacingY={4} spacingX={6} mb={6} w="100%">
+            {/* 2-column grid for Subtotal, Discounts, VAT, Total */}
+            <SimpleGrid columns={2} spacingY={4} spacingX={6} mb={6} w="100%">
             {[
               {
-                label: "Subtotal",
-                value: subscription.totals.subtotal,
-                isCurrency: true,
+              label: "Subtotal",
+              value: subscription.totals.subtotal,
+              isCurrency: true,
               },
               {
-                label: "Discounts",
-                value: subscription.totals.discountsTotal,
-                isCurrency: true,
-                isNegative: true,
+              label: "Discounts",
+              value: subscription.totals.discountsTotal,
+              isCurrency: true,
+              isNegative: true,
               },
               {
-                label: "VAT",
-                value: subscription.totals.taxTotal,
-                isCurrency: true,
+              label: "VAT",
+              value: subscription.totals.taxTotal,
+              isCurrency: true,
               },
               {
-                label: "Total",
-                value: subscription.totals.grandTotal,
-                isCurrency: true,
+              label: "Total",
+              value: subscription.totals.grandTotal,
+              isCurrency: true,
               },
-            ].map(({ label, value, isCurrency, isNegative }) => (
+            ]
+              .filter(({ value }) => Number(value) !== 0)
+              .map(({ label, value, isCurrency, isNegative }) => (
               <Box
                 key={label}
                 borderBottom="inset"
@@ -197,23 +213,23 @@ export default function CurrentSubscriptionPage() {
                 display="contents"
               >
                 <Text fontWeight="medium" color="gray.600">
-                  {subscription.isAnnual ? "Annual " : "Monthly "}
-                  {label}
+                {subscription.isAnnual ? "Annual " : "Monthly "}
+                {label}
                 </Text>
                 <Flex align="baseline" justify="flex-end">
-                  <Text
-                    fontSize={[16, 18, 20]}
-                    fontWeight="semibold"
-                    color={isNegative ? "green.600" : undefined}
-                  >
-                    {isNegative ? "-" : ""}
-                    {isCurrency ? "£" : ""}
-                    {Number(value).toFixed(2)}
-                  </Text>
+                <Text
+                  fontSize={[16, 18, 20]}
+                  fontWeight="semibold"
+                  color={isNegative ? "green.600" : undefined}
+                >
+                  {isNegative ? "-" : ""}
+                  {isCurrency ? "£" : ""}
+                  {Number(value).toFixed(2)}
+                </Text>
                 </Flex>
               </Box>
-            ))}
-          </SimpleGrid>
+              ))}
+            </SimpleGrid>
 
           {/* Dates & licenses */}
           <Stack
@@ -245,22 +261,35 @@ export default function CurrentSubscriptionPage() {
           </Stack>
 
           {/* Action buttons */}
-          <Stack direction={{ base: "column", md: "row" }} spacing={3}>
-            <Button
+          <Stack direction={{ base: "column", md: "column", lg:"row" }} spacing={3}>
+            {subscription.invoiceUrl ? (
+              <Button
               variant="outline"
               onClick={() => {
                 if (subscription.invoiceUrl) {
-                  window.open(
-                    subscription.invoiceUrl,
-                    "_blank",
-                    "noopener,noreferrer"
-                  );
+                window.open(
+                  subscription.invoiceUrl,
+                  "_blank",
+                  "noopener,noreferrer"
+                );
                 }
               }}
               rightIcon={<OpenInNewIcon fontSize="small" />}
-            >
+              disabled={!subscription.invoiceUrl}
+              >
               Invoice
-            </Button>
+              </Button>
+            ) : (
+              <Tooltip label="No invoice available. Contact sales for assistance.">
+              <Button
+                variant="outline"
+                rightIcon={<OpenInNewIcon fontSize="small" />}
+                disabled
+              >
+                Invoice
+              </Button>
+              </Tooltip>
+            )}
             <Button
               variant="outline"
               onClick={() => router.push("/tool-store/manage-subscription")}
@@ -285,8 +314,7 @@ export default function CurrentSubscriptionPage() {
               rightIcon={<Close />}
               variant="outline"
               colorScheme="red"
-              disabled
-              onClick={() => router.push("/tool-store/manage-subscription")}
+              onClick={handleCancel}
             >
               Cancel Subscription
             </Button>

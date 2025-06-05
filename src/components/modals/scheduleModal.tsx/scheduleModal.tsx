@@ -1,5 +1,3 @@
-// src/components/QuickScheduleSetupModal.tsx
-
 import {
   Modal,
   ModalOverlay,
@@ -23,8 +21,10 @@ import {
   Alert,
   AlertIcon,
   Badge,
+  Flex,
+  useTheme
 } from "@chakra-ui/react";
-import { Lock, Menu } from "@mui/icons-material";
+import { Lock, Menu, ScheduleSend } from "@mui/icons-material";
 import { useEffect, useState, useCallback } from "react";
 import { ScheduleType, QuickSchedule, EmailSchedule } from "@/types/schedules";
 import EmailSchedulePanel from "./EmailSchedulePanel";
@@ -45,6 +45,7 @@ export default function QuickScheduleSetupModal({
   customerId,
   isFree,
 }: QuickScheduleSetupModalProps) {
+  const theme = useTheme()
   const {
     isOpen: isDrawerOpen,
     onOpen,
@@ -192,6 +193,9 @@ export default function QuickScheduleSetupModal({
   // 8) Sidebar JSX
   const SidebarList = (
     <VStack align="stretch" spacing={4}>
+      {Object.values(groupedSchedules).every(arr => arr.length === 0) && (
+        <Text color="gray.500" textAlign="center" mt={10}>No schedules available.</Text>
+      )}
       {Object.entries(groupedSchedules).map(([type, items]) => (
         <Box key={type}>
           <Text
@@ -250,7 +254,7 @@ export default function QuickScheduleSetupModal({
                   w="10px"
                   h="10px"
                   borderRadius="full"
-                  bg={sched.isActive ? "green.400" : "gray.400"}
+                  bg={sched.isActive ? "green.400" : "red.300"}
                   position="absolute"
                   top="8px"
                   right="8px"
@@ -335,8 +339,8 @@ export default function QuickScheduleSetupModal({
           <DrawerContent>
             <DrawerCloseButton />
             <DrawerBody p={4}>
-              <Text fontSize="xl" fontWeight="bold" mb={4}>
-                Quick Schedule Setup
+              <Text fontSize={["xl","2xl","3xl"]} fontWeight="medium" fontFamily={"bonfire"} mb={-2}>
+                Your Schedules
               </Text>
               {loadingSchedules ? (
                 <VStack spacing={4} align="center" mt={10}>
@@ -357,9 +361,9 @@ export default function QuickScheduleSetupModal({
       )}
 
       {/* Main Modal */}
-      <Modal isOpen={isOpen} onClose={onClose} size="6xl" isCentered>
+      <Modal isOpen={isOpen} onClose={onClose} size="5xl" isCentered>
         <ModalOverlay />
-        <ModalContent maxW="90vw" maxH="90vh">
+        <ModalContent maxW={["90vw","90vw","90vw","1200px"]} maxH="90vh" minH={"500px"}>
           <ModalCloseButton />
           <ModalBody
             p={0}
@@ -377,21 +381,23 @@ export default function QuickScheduleSetupModal({
               borderColor="gray.200"
               justify="left"
               borderRadius={"md"}
+              fontSize={"28px"}
             >
               {isMobile && (
                 <IconButton
                   aria-label="Open schedule list"
-                  icon={<Menu />}
+                  icon={<Menu fontSize="inherit"/>}
                   onClick={onOpen}
-                  size="md"
+                  size="sm"
                   variant="outline"
                 />
               )}
-              <Text fontSize="xl" fontWeight="bold">
+              <ScheduleSend fontSize="inherit" htmlColor={theme.colors.primary} />
+              <Text fontSize={["xl","2xl","3xl"]} fontWeight="medium" fontFamily={"bonfire"} mb={-3}>
                 Quick Schedule Setup
               </Text>
-              {loadingSchedules ? (
-                <Spinner size="sm" ml={2} />
+              {loadingSchedules && !isMobile ? (
+                <></>
               ) : (
                 <Text fontSize="sm" color="gray.500" ml={2}>
                   {localSchedules ? localSchedules.length : 0} total
@@ -412,7 +418,7 @@ export default function QuickScheduleSetupModal({
                   {loadingSchedules ? (
                     <VStack spacing={4} align="center" mt={10}>
                       <Spinner size="lg" />
-                      <Text>Loading schedules...</Text>
+                      <Text>Loading your schedules...</Text>
                     </VStack>
                   ) : fetchError ? (
                     <Alert status="error">
@@ -434,10 +440,7 @@ export default function QuickScheduleSetupModal({
                 flexDirection="column"
               >
                 {loadingSchedules ? (
-                  <VStack spacing={4} align="center" mt={10}>
-                    <Spinner size="lg" />
-                    <Text>Loading schedules...</Text>
-                  </VStack>
+                  <></>
                 ) : fetchError ? (
                   <Alert status="error">
                     <AlertIcon />

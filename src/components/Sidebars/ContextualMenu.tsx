@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import {
   Box,
@@ -11,12 +9,15 @@ import {
   Icon as ChakraIcon,
   useBreakpointValue,
   useTheme,
+  Badge,
+  VStack,
+  Text,
 } from "@chakra-ui/react";
 import { Close } from "@mui/icons-material";
 import { motion, Variants } from "framer-motion";
 import { MenuItem } from "./NavigationSidebar/NavigationMobilePopoutMenu";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { transparentize } from "@chakra-ui/theme-tools";
 
 const containerVariants: Variants = {
   hidden: {
@@ -82,7 +83,24 @@ const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
   const close = () => setIsExpanded(false);
   const theme = useTheme();
 
-  // The button + popout panel for **mobile**:
+  // Determine if any item needs action
+  const hasActionNeeded = menuItems.some((item) => item.actionNeeded);
+
+  // Pulsing glow animation settings (using primaryColor)
+  const primaryColor = theme.colors.primary || "#0059ff";
+  const pulseAnimation = {
+    boxShadow: [
+      `0 0 16px 4px ${transparentize(primaryColor, 0.55)(theme)}`,
+      `0 0 32px 12px ${transparentize(primaryColor, 0.75)(theme)}`,
+      `0 0 16px 4px ${transparentize(primaryColor, 0.55)(theme)}`,
+    ],
+  };
+  const pulseTransition = {
+    duration: 0.8,
+    repeat: Infinity,
+    ease: "easeInOut",
+  };
+
   const mobileMenu = (
     <>
       {isExpanded && (
@@ -105,28 +123,49 @@ const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
         flexDirection="column-reverse"
         alignItems="flex-start"
       >
-        <IconButton
-          aria-label={isExpanded ? "Close menu" : "Open menu"}
-          icon={
-            isExpanded ? (
-              <Close fontSize="medium" />
-            ) : (
-              <MoreHorizIcon fontSize="medium" />
-            )
-          }
-          onClick={toggle}
-          color={theme.colors.iconColor}
-          bg="rgba(66, 66, 66, 0.6)"
-          backdropFilter="blur(10px)"
-          borderRadius="full"
-          w="40px"
-          h="40px"
-          border={`1px solid ${theme.colors.iconColor}`}
-          p={0}
-          transform="scale(1)"
-          transition="transform 0.2s ease-in-out"
-          _hover={{ transform: "scale(1.05)", bg: "rgba(66, 66, 66, 0.75)" }}
-        />
+        {/* Wrapper for pulsing & indicator */}
+        <MotionBox
+          position="relative"
+          animate={(hasActionNeeded && !isExpanded) ? pulseAnimation : {}}
+          transition={(hasActionNeeded && !isExpanded) ? pulseTransition : {}}
+          as="span"
+          overflow={"visible"}
+          rounded={"full"}
+        >
+          <IconButton
+            aria-label={isExpanded ? "Close menu" : "Open menu"}
+            icon={
+              isExpanded ? (
+                <Close fontSize="medium" />
+              ) : (
+                <MoreHorizIcon fontSize="medium" />
+              )
+            }
+            onClick={toggle}
+            color={theme.colors.iconColor}
+            bg="rgba(66, 66, 66, 0.6)"
+            backdropFilter="blur(10px)"
+            borderRadius="full"
+            w="40px"
+            h="40px"
+            border={`1px solid ${theme.colors.iconColor}`}
+            p={0}
+            transform="scale(1)"
+            transition="transform 0.2s ease-in-out"
+            _hover={{ transform: "scale(1.05)", bg: "rgba(66, 66, 66, 0.75)" }}
+          />
+          {hasActionNeeded && (
+            <Box
+              position="absolute"
+              top="1px"
+              right="1px"
+              w="12px"
+              h="12px"
+              bg="red.500"
+              rounded="full"
+            />
+          )}
+        </MotionBox>
 
         <ScaleFade in={isExpanded} initialScale={0.95} unmountOnExit>
           <MotionFlex
@@ -136,18 +175,37 @@ const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
             variants={containerVariants}
             initial="hidden"
             animate="show"
-            bg={"rgb(0,0,0,0)"}
+            bg="rgb(0,0,0,0)"
           >
             {menuItems.map((item, idx) => (
               <MotionBox
                 key={idx}
                 variants={itemVariants}
+                initial="hidden"
+                animate="show"
                 mb={idx < menuItems.length - 1 ? 3 : 0}
                 bg="gray.50"
                 rounded="md"
                 p={1}
                 pl={0}
+                position="relative"
+                borderLeftWidth={item.actionNeeded ? "8px" : undefined}
+                borderLeftColor={
+                  item.actionNeeded ? theme.colors.primary : undefined
+                }
               >
+                {/* Pulsing glow layer */}
+                {item.actionNeeded && (
+                  <MotionBox
+                    position="absolute"
+                    inset={0}
+                    rounded="md"
+                    style={{ zIndex: -1 }}
+                    animate={pulseAnimation}
+                    transition={pulseTransition}
+                  />
+                )}
+
                 <Button
                   onClick={() => {
                     if (!item.locked) {
@@ -155,16 +213,31 @@ const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
                       close();
                     }
                   }}
-                  leftIcon={<ChakraIcon as={item.icon.type} boxSize={6} color={theme.colors.primary}/>}
+                  leftIcon={
+                    <ChakraIcon
+                      as={item.icon.type}
+                      boxSize={6}
+                      color={theme.colors.primary}
+                    />
+                  }
                   justifyContent="start"
                   w="100%"
-                  minH="44px"
+                  h="auto"
                   variant="ghost"
                   isDisabled={item.locked}
                   pl={2}
+                  py={2}
                   fontSize="15px"
+                  bg="white"
                 >
-                  {item.label}
+                  <VStack justifyContent="left" align="left" spacing={1}>
+                    <Text>{item.label}</Text>
+                    {item.actionNeeded && (
+                        <Badge colorScheme="red" fontSize="0.7em">
+                        {item.actionNeededText ?? "Action Needed"}
+                        </Badge>
+                    )}
+                  </VStack>
                 </Button>
                 {item.locked && (
                   <Box position="absolute" top={2} right={2} zIndex={1}>
@@ -198,29 +271,47 @@ const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
           transition="opacity 0.2s ease-in-out"
         />
       )}
-      <Box position="relative" display="inline-block" zIndex={101}>
-        <IconButton
-          aria-label={isExpanded ? "Close menu" : "Open menu"}
-          icon={
-            isExpanded ? (
-              <Close fontSize="medium" />
-            ) : (
-              <MoreHorizIcon fontSize="medium" />
-            )
-          }
-          onClick={toggle}
-          color={theme.colors.iconColor}
-          bg="rgba(255,255,255,0.2)"
-          backdropFilter="blur(10px)"
-          borderRadius="full"
-          w="40px"
-          h="40px"
-          border={`1px solid ${theme.colors.iconColor}`}
-          p={0}
-          transform="scale(1)"
-          transition="transform 0.2s ease-in-out"
-          _hover={{ transform: "scale(1.05)", bg: "rgba(255,255,255, 0.35)" }}
-        />
+      <Box position="relative" display="inline-block" zIndex={101} bg={"transparent"}>
+        <MotionBox
+          animate={(hasActionNeeded && !isExpanded) ? pulseAnimation : {}}
+          transition={(hasActionNeeded && !isExpanded) ? pulseTransition : {}}
+          as="span"
+          rounded={"full"}
+        >
+          <IconButton
+            aria-label={isExpanded ? "Close menu" : "Open menu"}
+            icon={
+              isExpanded ? (
+                <Close fontSize="medium" />
+              ) : (
+                <MoreHorizIcon fontSize="medium" />
+              )
+            }
+            onClick={toggle}
+            color={theme.colors.iconColor}
+            bg="rgba(255,255,255,0.2)"
+            backdropFilter="blur(10px)"
+            borderRadius="full"
+            w="40px"
+            h="40px"
+            border={`1px solid ${theme.colors.iconColor}`}
+            p={0}
+            transform="scale(1)"
+            transition="transform 0.2s ease-in-out"
+            _hover={{ transform: "scale(1.05)", bg: "rgba(255,255,255, 0.35)" }}
+          />
+          {hasActionNeeded && (
+            <Box
+              position="absolute"
+              top="1px"
+              right="1px"
+              w="12px"
+              h="12px"
+              bg="red.500"
+              rounded="full"
+            />
+          )}
+        </MotionBox>
 
         <ScaleFade in={isExpanded} initialScale={0.95} unmountOnExit>
           <MotionFlex
@@ -229,21 +320,39 @@ const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
             right={0}
             direction="column"
             minW="240px"
-            boxShadow="md"
             rounded="md"
             p={2}
             variants={containerVariantsDown}
             initial="hidden"
             animate="show"
-            bg={"rgb(0,0,0,0)"}
+            bg="rgb(0,0,0,0)"
           >
             {menuItems.map((item, idx) => (
               <MotionBox
                 key={idx}
                 variants={itemVariantsDown}
+                initial="hidden"
+                animate="show"
                 mb={idx < menuItems.length - 1 ? 3 : 0}
                 position="relative"
+                borderLeftWidth={item.actionNeeded ? "8px" : undefined}
+                borderLeftColor={
+                  item.actionNeeded ? theme.colors.primary : undefined
+                }
+                rounded="md"
               >
+                {/* Pulsing glow layer */}
+                {item.actionNeeded && (
+                  <MotionBox
+                    position="absolute"
+                    inset={0}
+                    rounded="md"
+                    style={{ zIndex: -1 }}
+                    animate={pulseAnimation}
+                    transition={pulseTransition}
+                  />
+                )}
+
                 <Button
                   onClick={() => {
                     if (!item.locked) {
@@ -251,16 +360,30 @@ const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
                       close();
                     }
                   }}
-                  leftIcon={<ChakraIcon as={item.icon.type} boxSize={8} color={theme.colors.primary}/>}
+                  leftIcon={
+                    <ChakraIcon
+                      as={item.icon.type}
+                      boxSize={8}
+                      color={theme.colors.primary}
+                    />
+                  }
                   justifyContent="start"
                   w="100%"
-                  minH="44px"
+                  h="auto"
                   variant="ghost"
                   fontSize="16px"
                   pl={2}
-                  bg={"white"}
+                  py={2}
+                  bg="white"
                 >
-                  {item.label}
+                  <VStack justifyContent="left" align="left" spacing={1}>
+                    <Text>{item.label}</Text>
+                    {item.actionNeeded && (
+                      <Badge ml="auto" colorScheme="red" fontSize="0.75em">
+                        {item.actionNeededText ?? "Action Needed"}
+                      </Badge>
+                    )}
+                  </VStack>
                 </Button>
                 {item.locked && (
                   <Box position="absolute" top={2} right={2} zIndex={1}>

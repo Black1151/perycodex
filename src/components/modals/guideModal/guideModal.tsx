@@ -99,28 +99,28 @@ export default function GuideModal({
       setError(null);
       try {
         let resGuides;
-        if (guideType === 'tool' && toolId != null) {
+        if (guideType === "tool" && toolId != null) {
           resGuides = await fetchClient<{ resource: any[] }>(
             `/api/guide/findBy?type=tool&toolId=${toolId}`
           );
-        } else if (guideType === 'admin') {
+        } else if (guideType === "admin") {
           resGuides = await fetchClient<{ resource: any[] }>(
-            '/api/guide/findBy?type=admin'
+            "/api/guide/findBy?type=admin"
           );
         } else {
           resGuides = await fetchClient<{ resource: any[] }>(
-            '/api/guide/findBy?type=platform'
+            "/api/guide/findBy?type=platform"
           );
         }
         const raw = resGuides?.resource || [];
         const sorted: Guide[] = raw
-          .filter(g => g.isActive)
-          .filter(g =>
-            guideType === 'tool' && toolId != null
+          .filter((g) => g.isActive)
+          .filter((g) =>
+            guideType === "tool" && toolId != null
               ? String(g.toolId) === String(toolId)
               : g.type === guideType
           )
-          .map(g => ({
+          .map((g) => ({
             guideId: g.guideId ?? g.id,
             title: g.guideTitle,
             type: g.type,
@@ -133,16 +133,18 @@ export default function GuideModal({
         setGuideList(sorted);
         setSelectedGuide(sorted[0] ?? null);
 
-        const resRead = await fetchClient<{ resource: Array<{ id: number; guideId: string | number }> }>(
-          `/api/guideRead/?userId=${user?.userId}`
-        );
+        const resRead = await fetchClient<{
+          resource: Array<{ id: number; guideId: string | number }>;
+        }>(`/api/guideRead/?userId=${user?.userId}`);
         const records = resRead?.resource || [];
 
         const boolMap: Record<string, boolean> = {};
         const recIdMap: Record<string, number> = {};
 
-        sorted.forEach(g => {
-          const rec = records.find(r => String(r.guideId) === String(g.guideId));
+        sorted.forEach((g) => {
+          const rec = records.find(
+            (r) => String(r.guideId) === String(g.guideId)
+          );
           boolMap[g.urlPath] = !!rec;
           if (rec) recIdMap[g.urlPath] = rec.id;
         });
@@ -150,8 +152,8 @@ export default function GuideModal({
         setReadGuides(boolMap);
         setRecordIdMap(recIdMap);
       } catch (e: any) {
-        console.error('Error loading guides or reads:', e);
-        setError(e.message || 'Failed to load guides');
+        console.error("Error loading guides or reads:", e);
+        setError(e.message || "Failed to load guides");
       } finally {
         setLoading(false);
       }
@@ -180,34 +182,44 @@ export default function GuideModal({
   }, [currentIndex, guideList]);
 
   const SidebarList = (
-    <VStack align="stretch" spacing={2}>
-      {guideList.map((g) => (
-        <Button
-          key={g.urlPath}
-          justifyContent="space-between"
-          variant={selectedGuide?.urlPath === g.urlPath ? "solid" : "ghost"}
-          onClick={() => {
-            setSelectedGuide(g);
-            if (isMobile) closeDrawer();
-          }}
-          px={{ base: 2, md: 2 }}
-          py={{ base: 6, md: 2 }}
-          fontSize={{ base: "md", md: "sm" }}
-          _hover={{ bg: "gray.100" }}
-        >
-          <HStack spacing={2} justify="left" flex={1} overflow="hidden">
-            {isMobile ? (
-              <Article fontSize="medium" />
-            ) : (
-              <Article fontSize="small" />
+    <VStack align="stretch" spacing={4}>
+      {guideList.length === 0 && (
+        <Text color="gray.500" textAlign="center" mt={10}>
+          No guides available.
+        </Text>
+      )}
+      {guideList.map((g) => {
+        const isSelected = selectedGuide?.urlPath === g.urlPath;
+        return (
+          <Box
+            key={g.urlPath}
+            position="relative"
+            border="1px solid"
+            borderColor={isSelected ? "blue.400" : "gray.200"}
+            borderRadius="md"
+            p={3}
+            mb={2}
+            _hover={{ bg: "gray.50", cursor: "pointer" }}
+            onClick={() => {
+              setSelectedGuide(g);
+              if (isMobile) closeDrawer();
+            }}
+          >
+            <HStack spacing={2} flex={1} overflow="hidden">
+              <Article fontSize={"medium"} />
+              <Text isTruncated>{g.title}</Text>
+            </HStack>
+            {recordIdMap[g.urlPath] && (
+              <Box position="absolute" top="2px" right="2px">
+                <CheckCircleIcon
+                  fontSize="small"
+                  style={{ color: theme.colors.primary }}
+                />
+              </Box>
             )}
-            <Text>{g.title}</Text>
-          </HStack>
-          {recordIdMap[g.urlPath] && (
-            <CheckCircleIcon style={{ color: "#07ad4c" }} />
-          )}
-        </Button>
-      ))}
+          </Box>
+        );
+      })}
     </VStack>
   );
 
@@ -225,7 +237,12 @@ export default function GuideModal({
             <DrawerCloseButton />
             <DrawerBody px={4}>
               <VStack align="top" spacing={0} my={3}>
-                <Text fontSize="xl" fontWeight="bold">
+                <Text
+                  fontSize={"3xl"}
+                  fontWeight="medium"
+                  fontFamily={"bonfire"}
+                  mb={-1}
+                >
                   Guide List
                 </Text>
                 <Text fontSize="sm" color="gray.500" mb={4}>
@@ -290,7 +307,12 @@ export default function GuideModal({
                   <Help fontSize="large" />
                 </Box>
               )}
-              <Text fontSize="xl" fontWeight="bold">
+              <Text
+                fontSize={["2xl", "2xl", "3xl"]}
+                fontWeight="medium"
+                fontFamily={"bonfire"}
+                mb={-3}
+              >
                 {guideType === "tool"
                   ? "Tool Guide"
                   : guideType === "admin"
