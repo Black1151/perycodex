@@ -10,6 +10,22 @@ export default function TrialExpiredPage() {
   const theme = useTheme();
   const router = useRouter();
 
+  const logout = async () => {
+    try {
+      await fetch("/api/auth/sign-out", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      router.push("/error");
+    }
+  };
+
   return (
     <Center flex={1} h="100vh" position="relative" overflow="hidden" bg={theme.colors.seduloRed}>
       <SpringScale>
@@ -43,7 +59,7 @@ export default function TrialExpiredPage() {
           <Text fontSize="lg" textAlign="center" color="gray.500" maxW="md">
             Your trial period has expired. Please contact your admin team for further assistance or to renew your access.
           </Text>
-          <Button onClick={() => router.push("/logout")} rightIcon={<ExitToApp/>}>
+          <Button onClick={logout} rightIcon={<ExitToApp/>}>
             Finish
           </Button>
         </VStack>
