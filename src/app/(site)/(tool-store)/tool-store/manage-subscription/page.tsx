@@ -59,6 +59,7 @@ export default function BasketPage() {
   const isMobile = useBreakpointValue({ base: true, lg: false });
   const billingRef = useRef<BillingAddressFormHandle>(null);
   const [removingIds, setRemovingIds] = useState<Set<string>>(new Set());
+  const [checkoutOverlay, setCheckoutOverlay] = useState(false);
   const user = useUser();
 
   // Drawers for mobile
@@ -161,6 +162,7 @@ export default function BasketPage() {
 
   const handleCheckout = async () => {
     setCheckoutLoading(true);
+    setCheckoutOverlay(true);
 
     const addr = billingRef.current?.getAddress();
     if (!addr) {
@@ -172,6 +174,7 @@ export default function BasketPage() {
         isClosable: true,
       });
       setCheckoutLoading(false);
+      setCheckoutOverlay(false);
       return;
     }
 
@@ -230,6 +233,54 @@ export default function BasketPage() {
   return (
     <VStack spacing={0} align="center" justify="center" w="100%">
       <Header title="Manage Subscription" />
+
+      {checkoutOverlay && (
+        <Box
+          position="fixed"
+          top={0}
+          left={0}
+          width="100vw"
+          height="100vh"
+          bg="rgba(0,0,0,0.6)"
+          zIndex={2000}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          flexDirection="column"
+          pointerEvents="all"
+          style={{ backdropFilter: "blur(2px)" }}
+        >
+          <Spinner
+            thickness="6px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="brand.500"
+            size="xl"
+            mb={6}
+          />
+          <Text
+            color="white"
+            fontSize="4xl"
+            fontWeight="normal"
+            mb={2}
+            textAlign={"center"}
+            fontFamily={"bonfire"}
+          >
+            Processing your checkout...
+          </Text>
+          <Text color="gray.200" fontSize="md" textAlign={"center"}>
+            Please wait, do not close or refresh this page.
+          </Text>
+          <Button
+            mt={6}
+            colorScheme="brand"
+            onClick={handleCheckout}
+            isLoading={checkoutLoading}
+          >
+            Relaunch Checkout
+          </Button>
+        </Box>
+      )}
 
       {basket.totals ? (
         <Flex
@@ -358,7 +409,7 @@ export default function BasketPage() {
                   w="full"
                   mb={3}
                   onClick={handleCheckout}
-                  isLoading={checkoutLoading}
+                  isLoading={checkoutLoading || loading || (billingRef.current?.getAddress==null)}
                   disabled={basket.quantity === 0}
                   spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
                   spinnerPlacement="start"
@@ -379,13 +430,13 @@ export default function BasketPage() {
               {isMobile ? (
                 <>
                   {/*<Button
-                    w="full"
-                    mb={2}
-                    onClick={voucherDrawer.onOpen}
-                    variant={"outline"}
-                  >
-                    Add Voucher Code
-                  </Button> */}
+            w="full"
+            mb={2}
+            onClick={voucherDrawer.onOpen}
+            variant={"outline"}
+            >
+            Add Voucher Code
+            </Button> */}
                   <Button
                     w="full"
                     onClick={billingDrawer.onOpen}
@@ -397,13 +448,13 @@ export default function BasketPage() {
               ) : (
                 <>
                   {/* <Button
-                    variant="outline"
-                    w="full"
-                    mb={3}
-                    onClick={() => setAddingVoucher((v) => !v)}
-                  >
-                    Add Voucher Code
-                  </Button> */}
+            variant="outline"
+            w="full"
+            mb={3}
+            onClick={() => setAddingVoucher((v) => !v)}
+            >
+            Add Voucher Code
+            </Button> */}
                 </>
               )}
             </Box>
