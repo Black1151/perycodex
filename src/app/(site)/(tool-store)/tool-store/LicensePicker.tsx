@@ -15,6 +15,9 @@ import {
 import { transparentize } from "@chakra-ui/theme-tools";
 import AnimatedTillNumber from "@/components/animations/AnimatedTillNumber";
 import { PerygonModal } from "@/components/modals/PerygonModal";
+import { useRouter } from "next/navigation";
+import { SpringModal } from "@/components/modals/springModal/SpringModal";
+import { Message, Phone, Send, Sms } from "@mui/icons-material";
 
 interface LicensePickerProps {
   showAlreadySubscribedText?: boolean;
@@ -25,10 +28,11 @@ export default function LicensePicker({
 }: LicensePickerProps) {
   const { basket, changeLicenseCount } = useBasket();
   const theme = useTheme();
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [increaseLoading, setIncreaseLoading] = useState(false);
   const [decreaseLoading, setDecreaseLoading] = useState(false);
   const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
+  const router = useRouter();
 
   if (!basket || basket.licensedUsers === undefined) {
     return null;
@@ -40,7 +44,7 @@ export default function LicensePicker({
 
   const handleDecrease = async () => {
     if (quantity === 0 || basket.licensedUsers === quantity) {
-      setModalOpen(true);
+      setIsModalOpen(true);
     } else {
       setDecreaseLoading(true);
       try {
@@ -62,26 +66,18 @@ export default function LicensePicker({
 
   return (
     <>
-      <PerygonModal
-        title="Please Contact Sales"
+      <SpringModal
         isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)}
-        body={
-          <Box p={4} textAlign="center">
-            <Text mb={4} color={theme.colors.primaryTextColor}>
-              To reduce your license count, please contact our sales team.
-            </Text>
-            <HStack spacing={2} mb={4} justify="center">
-              <Button as="a" href="/contact-sales">
-                Contact Sales
-              </Button>
-              <Button onClick={() => setModalOpen(false)}>Close</Button>
-            </HStack>
-          </Box>
-        }
-      >
-        <></>
-      </PerygonModal>
+        onClose={() => setIsModalOpen(false)}
+        bgIcon={<Message fontSize="inherit" />}
+        frontIcon={<Phone fontSize="inherit" />}
+        header="Please Contact Sales"
+        body={"To reduce your licenses, please contact our sales team."}
+        primaryLabel="Contact Sales Team"
+        onPrimaryClick={() => router.push("/tool-store/contact-sales")}
+        bg={theme.colors.primary}
+        showClose={true}
+      />
       <VStack bg={cardBgLighter} borderRadius="md" p={4} gap={2}>
         <Flex
           align="stretch"
@@ -172,7 +168,7 @@ export default function LicensePicker({
             +20
           </Button>
         </Flex>
-        {(isMobile && showAlreadySubscribedText) && (
+        {isMobile && showAlreadySubscribedText && (
           <Text fontSize={15} color="gray.500" textAlign={"center"}>
             {basket.licensedUsers} Licenses Already Subscribed
           </Text>

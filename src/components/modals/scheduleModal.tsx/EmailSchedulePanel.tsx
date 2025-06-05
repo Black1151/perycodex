@@ -10,6 +10,7 @@ import {
   FormControl,
   FormLabel,
   Button,
+  Stack,
   Spacer,
   Badge,
   useToast,
@@ -267,10 +268,10 @@ export default function EmailSchedulePanel({
   };
 
   return (
-    <Box p={4} border="1px solid" borderColor="gray.200" borderRadius="md">
+    <Box p={4} border="1px solid" borderColor="gray.200" borderRadius="md" bg={"white"}>
       {/* Top Bar: Name + Active Switch + Status Badge */}
-      <HStack mb={6} justify="space-between" w="full">
-        <Text fontSize="2xl" fontWeight="bold">
+      <Stack mb={6} justify="space-between" w="full" direction={["column", "row"]}>
+        <Text fontSize={["lg", "xl"]} fontWeight="bold">
           {editableSchedule.name}
         </Text>
         <FormControl display="flex" alignItems="center" w="auto" gap={1}>
@@ -330,7 +331,7 @@ export default function EmailSchedulePanel({
             onChange={(e) => handleActiveToggle(e.target.checked)}
           />
         </FormControl>
-      </HStack>
+      </Stack>
 
       <VStack align="stretch" spacing={4}>
         {editableSchedule.frequency === "weekly" ? (
