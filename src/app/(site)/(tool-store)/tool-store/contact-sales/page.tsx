@@ -11,6 +11,8 @@ import {
 } from "@chakra-ui/react";
 import { useBasket } from "../useBasket";
 import { useUser } from "@/providers/UserProvider";
+import { Phone } from "@mui/icons-material";
+import BackButton from "@/components/BackButton";
 
 interface ContactSalesProps {
   subscriptionId: string;
@@ -21,7 +23,7 @@ const SUPPORT_TEL = "0333 222 4445";
 
 const ContactSales: React.FC<ContactSalesProps> = ({ subscriptionId }) => {
   const basket = useBasket();
-  const user = useUser()
+  const user = useUser();
 
   return (
     <Box
@@ -33,9 +35,19 @@ const ContactSales: React.FC<ContactSalesProps> = ({ subscriptionId }) => {
       borderRadius="lg"
       boxShadow="md"
     >
-      <Heading as="h1" size="lg" mb="4">
-        Contact Sales
-      </Heading>
+      <HStack align={"center"} mb={4} spacing={4}>
+        <BackButton color={"grey.700"} iconSize="medium"/>
+        <Heading
+          as="h1"
+          size="xl"
+          fontWeight={"normal"}
+          fontFamily={"bonfire"}
+          mb={-2}
+        >
+          Contact Sales
+        </Heading>
+        <Phone fontSize="large" />
+      </HStack>
       <Text mb="4">
         To change your billing cycle, adjust an annual subscription or any other
         sales inquiries, please contact us using the information below.
