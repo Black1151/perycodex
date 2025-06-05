@@ -15,6 +15,7 @@ import {
   SimpleGrid,
   Badge,
   Spinner,
+  Tooltip
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
 import { useRouter } from "next/navigation";
@@ -260,22 +261,35 @@ export default function CurrentSubscriptionPage() {
           </Stack>
 
           {/* Action buttons */}
-          <Stack direction={{ base: "column", md: "row" }} spacing={3}>
-            <Button
+          <Stack direction={{ base: "column", md: "column", lg:"row" }} spacing={3}>
+            {subscription.invoiceUrl ? (
+              <Button
               variant="outline"
               onClick={() => {
                 if (subscription.invoiceUrl) {
-                  window.open(
-                    subscription.invoiceUrl,
-                    "_blank",
-                    "noopener,noreferrer"
-                  );
+                window.open(
+                  subscription.invoiceUrl,
+                  "_blank",
+                  "noopener,noreferrer"
+                );
                 }
               }}
               rightIcon={<OpenInNewIcon fontSize="small" />}
-            >
+              disabled={!subscription.invoiceUrl}
+              >
               Invoice
-            </Button>
+              </Button>
+            ) : (
+              <Tooltip label="No invoice available. Contact sales for assistance.">
+              <Button
+                variant="outline"
+                rightIcon={<OpenInNewIcon fontSize="small" />}
+                disabled
+              >
+                Invoice
+              </Button>
+              </Tooltip>
+            )}
             <Button
               variant="outline"
               onClick={() => router.push("/tool-store/manage-subscription")}
