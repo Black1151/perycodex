@@ -32,6 +32,7 @@ export default function LicensePicker({
   const [increaseLoading, setIncreaseLoading] = useState(false);
   const [decreaseLoading, setDecreaseLoading] = useState(false);
   const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
+  const router = useRouter();
 
   if (!basket || basket.licensedUsers === undefined) {
     return null;
@@ -40,7 +41,6 @@ export default function LicensePicker({
   const quantity = basket.quantity ?? basket.licensedUsers;
   const diff = quantity - basket.licensedUsers;
   const cardBgLighter = theme.colors.elementBG;
-  const router = useRouter()
 
   const handleDecrease = async () => {
     if (quantity === 0 || basket.licensedUsers === quantity) {
