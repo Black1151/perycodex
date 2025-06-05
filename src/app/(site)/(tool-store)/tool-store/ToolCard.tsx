@@ -14,8 +14,6 @@ import { Add, Close, Lock, Remove } from "@mui/icons-material";
 import { transparentize } from "@chakra-ui/theme-tools";
 import { useBasket } from "./useBasket";
 import type { ToolConfig } from "./useBasket";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 import { motion } from "framer-motion";
 import AnimatedTillNumber from "@/components/animations/AnimatedTillNumber";
 import { useRouter } from "next/navigation";
@@ -199,6 +197,7 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
               border="0px solid"
               borderColor={cardBg}
               borderRadius="md"
+              boxShadow="inset 0 4px 10px rgba(0,0,0,0.24)"
             >
               <Box
                 h="80px"
