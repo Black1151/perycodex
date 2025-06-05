@@ -70,13 +70,13 @@ const ContactSales: React.FC<ContactSalesProps> = ({ subscriptionId }) => {
         <HStack>
           <Text fontWeight="bold">Your Subscription ID:</Text>
           <Code mt={1} fontSize="md">
-            {basket.basket?.id}
+            {basket.subscription?.uniqueId?.slice(0, 6)}
           </Code>
         </HStack>
         <HStack>
           <Text fontWeight="bold">Your Organisation ID:</Text>
           <Code mt={1} fontSize="md">
-            {user.user?.customerId}
+            {user.user?.customerUniqueId?.slice(0, 6)}
           </Code>
         </HStack>
       </>
