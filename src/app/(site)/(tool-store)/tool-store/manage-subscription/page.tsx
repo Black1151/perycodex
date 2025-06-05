@@ -203,7 +203,7 @@ export default function BasketPage() {
 
       const redirectUrl = data?.resource?.original?.redirectUrl;
       if (redirectUrl) {
-        window.open(redirectUrl);
+        window.location.href = redirectUrl;
       } else {
         toast({
           title: "Error",
