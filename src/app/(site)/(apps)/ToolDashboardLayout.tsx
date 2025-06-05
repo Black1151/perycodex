@@ -147,6 +147,8 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
       onClick: () => setScheduleModalOpen(true),
       active: false,
       locked: false,
+      actionNeeded: true,
+      actionNeededText: "New!"
     },
   ];
 
