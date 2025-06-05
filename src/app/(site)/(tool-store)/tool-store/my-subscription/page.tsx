@@ -15,7 +15,7 @@ import {
   SimpleGrid,
   Badge,
   Spinner,
-  Tooltip
+  Tooltip,
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
 import { useRouter } from "next/navigation";
@@ -25,9 +25,10 @@ import { useUser } from "@/providers/UserProvider";
 import WarningIcon from "@mui/icons-material/Warning";
 import BackButton from "@/components/BackButton";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import { Call, Close } from "@mui/icons-material";
+import { Call, Cancel, Close } from "@mui/icons-material";
 import { Header } from "../Header";
 import { useFetchClient } from "@/hooks/useFetchClient";
+import { SpringModal } from "@/components/modals/springModal/SpringModal";
 
 export default function CurrentSubscriptionPage() {
   const { subscription, getSubscription, basket } = useBasket();
@@ -37,6 +38,8 @@ export default function CurrentSubscriptionPage() {
   const user = useUser();
   const router = useRouter();
   const fetchClient = useFetchClient();
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false)
 
   const borderColor = "rgba(255, 255, 255, 0.65)";
   const cardBg = transparentize(theme.colors.elementBG, 0.95)(theme);
@@ -48,14 +51,19 @@ export default function CurrentSubscriptionPage() {
   }, [basket]);
 
   const handleCancel = async () => {
+    setCancelLoading(true)
     type CancelResponse = { resource?: string };
-    const cancelResp = await fetchClient.fetchClient<{ resource?: string }>("/api/checkout/cancel", {
-      method: "POST",
-    });
+    const cancelResp = await fetchClient.fetchClient<{ resource?: string }>(
+      "/api/checkout/cancel",
+      {
+        method: "POST",
+      }
+    );
     if (cancelResp && cancelResp.resource === "success") {
       await getSubscription();
       router.push("/tool-store");
     }
+    setCancelLoading(false)
   };
 
   if (loading) {
@@ -178,58 +186,58 @@ export default function CurrentSubscriptionPage() {
           p={6}
           flex="1"
         >
-            {/* 2-column grid for Subtotal, Discounts, VAT, Total */}
-            <SimpleGrid columns={2} spacingY={4} spacingX={6} mb={6} w="100%">
+          {/* 2-column grid for Subtotal, Discounts, VAT, Total */}
+          <SimpleGrid columns={2} spacingY={4} spacingX={6} mb={6} w="100%">
             {[
               {
-              label: "Subtotal",
-              value: subscription.totals.subtotal,
-              isCurrency: true,
+                label: "Subtotal",
+                value: subscription.totals.subtotal,
+                isCurrency: true,
               },
               {
-              label: "Discounts",
-              value: subscription.totals.discountsTotal,
-              isCurrency: true,
-              isNegative: true,
+                label: "Discounts",
+                value: subscription.totals.discountsTotal,
+                isCurrency: true,
+                isNegative: true,
               },
               {
-              label: "VAT",
-              value: subscription.totals.taxTotal,
-              isCurrency: true,
+                label: "VAT",
+                value: subscription.totals.taxTotal,
+                isCurrency: true,
               },
               {
-              label: "Total",
-              value: subscription.totals.grandTotal,
-              isCurrency: true,
+                label: "Total",
+                value: subscription.totals.grandTotal,
+                isCurrency: true,
               },
             ]
               .filter(({ value }) => Number(value) !== 0)
               .map(({ label, value, isCurrency, isNegative }) => (
-              <Box
-                key={label}
-                borderBottom="inset"
-                borderColor="gray.200"
-                gridColumn="1 / span 2"
-                display="contents"
-              >
-                <Text fontWeight="medium" color="gray.600">
-                {subscription.isAnnual ? "Annual " : "Monthly "}
-                {label}
-                </Text>
-                <Flex align="baseline" justify="flex-end">
-                <Text
-                  fontSize={[16, 18, 20]}
-                  fontWeight="semibold"
-                  color={isNegative ? "green.600" : undefined}
+                <Box
+                  key={label}
+                  borderBottom="inset"
+                  borderColor="gray.200"
+                  gridColumn="1 / span 2"
+                  display="contents"
                 >
-                  {isNegative ? "-" : ""}
-                  {isCurrency ? "£" : ""}
-                  {Number(value).toFixed(2)}
-                </Text>
-                </Flex>
-              </Box>
+                  <Text fontWeight="medium" color="gray.600">
+                    {subscription.isAnnual ? "Annual " : "Monthly "}
+                    {label}
+                  </Text>
+                  <Flex align="baseline" justify="flex-end">
+                    <Text
+                      fontSize={[16, 18, 20]}
+                      fontWeight="semibold"
+                      color={isNegative ? "green.600" : undefined}
+                    >
+                      {isNegative ? "-" : ""}
+                      {isCurrency ? "£" : ""}
+                      {Number(value).toFixed(2)}
+                    </Text>
+                  </Flex>
+                </Box>
               ))}
-            </SimpleGrid>
+          </SimpleGrid>
 
           {/* Dates & licenses */}
           <Stack
@@ -242,52 +250,58 @@ export default function CurrentSubscriptionPage() {
             <Badge colorScheme="blue">
               Start Date:{" "}
               {new Date(subscription.updatedAt).toLocaleDateString("en-GB", {
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
               })}
             </Badge>
             <Badge colorScheme="blue">
               Renewal Date:{" "}
               {subscription.renewalDate
-              ? new Date(subscription.renewalDate).toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-                })
-              : ""}
+                ? new Date(subscription.renewalDate).toLocaleDateString(
+                    "en-GB",
+                    {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    }
+                  )
+                : ""}
             </Badge>
             <Badge colorScheme="blue">Subscription ID: {subscription.id}</Badge>
           </Stack>
 
           {/* Action buttons */}
-          <Stack direction={{ base: "column", md: "column", lg:"row" }} spacing={3}>
+          <Stack
+            direction={{ base: "column", md: "column", lg: "row" }}
+            spacing={3}
+          >
             {subscription.invoiceUrl ? (
               <Button
-              variant="outline"
-              onClick={() => {
-                if (subscription.invoiceUrl) {
-                window.open(
-                  subscription.invoiceUrl,
-                  "_blank",
-                  "noopener,noreferrer"
-                );
-                }
-              }}
-              rightIcon={<OpenInNewIcon fontSize="small" />}
-              disabled={!subscription.invoiceUrl}
-              >
-              Invoice
-              </Button>
-            ) : (
-              <Tooltip label="No invoice available. Contact sales for assistance.">
-              <Button
                 variant="outline"
+                onClick={() => {
+                  if (subscription.invoiceUrl) {
+                    window.open(
+                      subscription.invoiceUrl,
+                      "_blank",
+                      "noopener,noreferrer"
+                    );
+                  }
+                }}
                 rightIcon={<OpenInNewIcon fontSize="small" />}
-                disabled
+                disabled={!subscription.invoiceUrl}
               >
                 Invoice
               </Button>
+            ) : (
+              <Tooltip label="No invoice available. Contact sales for assistance.">
+                <Button
+                  variant="outline"
+                  rightIcon={<OpenInNewIcon fontSize="small" />}
+                  disabled
+                >
+                  Invoice
+                </Button>
               </Tooltip>
             )}
             <Button
@@ -312,15 +326,36 @@ export default function CurrentSubscriptionPage() {
             </Button>
             <Button
               rightIcon={<Close />}
-              variant="outline"
+              variant="solid"
               colorScheme="red"
-              onClick={handleCancel}
+              onClick={() => setIsCancelModalOpen(true)}
+              bg={"red.600"}
+              color={"white"}
+              border={"none"}
+              _hover={{ color: "white", bg: "red.500" }}
             >
               Cancel Subscription
             </Button>
           </Stack>
         </Box>
       </Flex>
+      <SpringModal
+        bgIcon={<Cancel fontSize="inherit" />}
+        frontIcon={<Cancel fontSize="inherit" />}
+        header={"Cancel Subscription?"}
+        body={
+          "Are you sure you want to cancel? You will lose access to your tools and licenses."
+        }
+        showClose={false}
+        isOpen={isCancelModalOpen}
+        primaryLabel="No, keep my subscription"
+        onPrimaryClick={() => setIsCancelModalOpen(false)}
+        onSecondaryClick={handleCancel}
+        secondaryLabel="Yes, I am sure"
+        isSecondaryLoading={cancelLoading}
+        onClose={() => setIsCancelModalOpen(false)}
+        bg="red.600"
+      />
     </VStack>
   );
 }
