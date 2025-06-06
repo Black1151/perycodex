@@ -10,8 +10,6 @@ export async function PUT(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
     const custSchedId = searchParams.get("custSchedId");
 
-    console.log("MARKING", custSchedId, "as viewed");
-
     if (!custSchedId) {
       return NextResponse.json(
         { error: "ID is required in search params." },
@@ -33,7 +31,6 @@ export async function PUT(req: NextRequest) {
       );
 
       const responseData = await response.json();
-      console.log(responseData);
 
       if (!response.ok || response.status !== 200) {
         const errorMessage =
@@ -71,9 +68,6 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    console.log("customer: ", customerId);
-    console.log("custSchedId: ", custSchedId);
-
     const response = await apiClient(
       `/emailScheduleCustomerOpt/allBy/?customerId=${customerId}&id=${custSchedId}`,
       {
@@ -82,7 +76,6 @@ export async function GET(req: NextRequest) {
     );
 
     const responseData = await response.json();
-    console.log("ResponseData", responseData);
 
     if (!response.ok || response.status !== 200) {
       const errorMessage =

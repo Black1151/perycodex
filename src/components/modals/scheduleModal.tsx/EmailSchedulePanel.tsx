@@ -96,8 +96,6 @@ export default function EmailSchedulePanel({
       isActive: checked,
     };
 
-    console.log("→ Sending toggleActive payload:", payload);
-
     try {
       const resp = await fetch("/api/quickSchedules", {
         method: "POST",
@@ -105,7 +103,6 @@ export default function EmailSchedulePanel({
         body: JSON.stringify(payload),
       });
 
-      console.log("→ Toggle API responded with status:", resp.status);
       if (!resp.ok) {
         const errorJson = await resp.json().catch(() => null);
         const message =
@@ -122,7 +119,6 @@ export default function EmailSchedulePanel({
       }
 
       const result = await resp.json();
-      console.log("→ Toggle API success result:", result);
 
       // Update local and parent state
       setIsActive(checked);
@@ -208,7 +204,6 @@ export default function EmailSchedulePanel({
       day: localDayOfWeek,
     };
 
-    console.log("→ Sending save payload:", payload);
 
     try {
       const resp = await fetch("/api/quickSchedules", {
@@ -217,7 +212,6 @@ export default function EmailSchedulePanel({
         body: JSON.stringify(payload),
       });
 
-      console.log("→ Save API responded with status:", resp.status);
       if (!resp.ok) {
         const errorJson = await resp.json().catch(() => null);
         const message =
@@ -234,7 +228,6 @@ export default function EmailSchedulePanel({
       }
 
       const result = await resp.json();
-      console.log("→ Save API success result:", result);
 
       // Now immediately fetch back the latest copy of this exact schedule
       const latest = await fetchLatestSchedule();

@@ -14,7 +14,6 @@ export async function POST(
 ): Promise<NextResponse<ApiResponse>> {
   const cookieStore = cookies();
   const authToken = cookieStore.get("auth_token")?.value;
-  console.log("=== quickSchedules POST called ===");
 
   let body: any;
   try {
@@ -23,8 +22,6 @@ export async function POST(
     console.error("⚠️ Could not parse JSON body:", jsonErr);
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
-
-  console.log("Request body:", body);
 
   const {
     customerId,
@@ -36,13 +33,6 @@ export async function POST(
     isActive,
   } = body;
 
-  // 1) Basic validation of required fields
-  console.log("Validating required fields:", {
-    customerId,
-    toolId,
-    subscriptionType,
-
-  });
   const missingFields: string[] = [];
   if (typeof customerId !== "number") missingFields.push("customerId (number)");
   if (typeof toolId !== "number") missingFields.push("toolId (number)");
@@ -63,9 +53,6 @@ export async function POST(
 
   // 2) Validate subscriptionType
   if (!["view", "free", "paid"].includes(subscriptionType)) {
-    console.error(
-      `❌ Invalid subscriptionType: ${subscriptionType}. Expected "view", "free", or "paid".`
-    );
     return NextResponse.json(
       { error: 'subscriptionType must be one of: "view", "free", "paid"' },
       { status: 400 }
@@ -81,21 +68,14 @@ export async function POST(
       { status: 500 }
     );
   }
-  console.log("Using BACKEND_URL:", BACKEND_URL);
 
   //
   // 4) Handle “view” → POST to backend/setupCustomerSchedulesForTool
   //
   if (subscriptionType === "view") {
-    console.log(
-      "→ subscriptionType = 'view'; POSTing to backend to fetch schedules."
-    );
-
     try {
       const url = `${BACKEND_URL}/setupCustomerSchedulesForTool`;
       const viewBody = { customerId, toolId, subscriptionType: "view" };
-      console.log("  POST", url);
-      console.log("  Body:", viewBody);
 
       const viewResp = await fetch(url, {
         method: "POST",
@@ -106,7 +86,6 @@ export async function POST(
         body: JSON.stringify(viewBody),
       });
 
-      console.log("  Backend responded:", viewResp.status);
       if (!viewResp.ok) {
         let errJson: any = null;
         try {
@@ -120,7 +99,6 @@ export async function POST(
       }
 
       const schedules = await viewResp.json();
-      console.log("  Successfully fetched schedules:", schedules);
       return NextResponse.json({ schedules }, { status: 200 });
     } catch (fetchError: any) {
       console.error("⚠️ Unexpected error in 'view' branch:", fetchError);
@@ -131,16 +109,8 @@ export async function POST(
     }
   }
 
-  //
-  // 5) Handle “free” or “paid” → validate edit parameters, then POST to backend/setupCustomerSchedulesForTool
-  //
-  console.log(
-    `→ subscriptionType = '${subscriptionType}'; validating edit parameters.`
-  );
-
   // Validate isActive if provided
   if (typeof isActive !== "undefined" && typeof isActive !== "boolean") {
-    console.error(`❌ isActive must be boolean if provided. Got: ${isActive}`);
     return NextResponse.json(
       { error: "isActive must be a boolean if included" },
       { status: 400 }
@@ -176,26 +146,6 @@ export async function POST(
     );
   }
 
-  // Enforce: at least one of isActive, timeOfDay, or day must be present
-  // if (
-  //   typeof isActive === "undefined" &&
-  //   typeof timeOfDay === "undefined" &&
-  //   typeof day === "undefined"
-  // ) {
-  //   console.error(
-  //     "❌ Missing update field: must include at least one of isActive, timeOfDay, or day."
-  //   );
-  //   return NextResponse.json(
-  //     {
-  //       error:
-  //         "Must include at least one of: isActive (boolean), timeOfDay ('morning' | 'afternoon' | 'evening'), or day (1-7).",
-  //     },
-  //     { status: 400 }
-  //   );
-  // }
-
-  console.log("All edit parameters are valid. Preparing payload for backend.");
-
   // Build the edit payload with only provided fields
   const editBody: any = {
     customerId,
@@ -215,10 +165,8 @@ export async function POST(
     editBody.day = day;
   }
 
-  console.log("Edit body:", editBody);
 
   const url = `${BACKEND_URL}/setupCustomerSchedulesForTool`;
-  console.log(`→ POST to backend ${url}`);
 
   try {
     const editResp = await fetch(url, {
@@ -230,7 +178,6 @@ export async function POST(
       body: JSON.stringify(editBody),
     });
 
-    console.log("  Backend responded:", editResp.status);
     if (!editResp.ok) {
       let errJson: any = null;
       try {
@@ -244,7 +191,6 @@ export async function POST(
     }
 
     const editResult = await editResp.json();
-    console.log("  Successfully updated schedule. Backend result:", editResult);
 
     return NextResponse.json(
       { success: true, result: editResult },
@@ -258,6 +204,3 @@ export async function POST(
     );
   }
 }
-
-// (Optional) If you need a GET endpoint in the future, you can:
-// export async function GET(request: Request) { … }

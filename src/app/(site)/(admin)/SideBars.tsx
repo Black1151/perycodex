@@ -538,7 +538,6 @@ export default function SideBars() {
   };
 
   useEffect(() => {
-    console.log("pathname:", pathname);
     const newItems = generateLeftSidebarItemsDrawer(
       user?.role,
       user?.customerIsFree ?? true
@@ -570,7 +569,6 @@ export default function SideBars() {
     const hideGuidePaths = ["/help-centre", "/activity", "/client-activity"];
 
     if (hideGuidePaths.includes(pathname)) {
-      console.log("HIDING ADMIN GUIDES")
       setShouldShowAdminGuides(false);
       setShouldPopupAdminGuides(false);
     }
@@ -673,7 +671,6 @@ export default function SideBars() {
         const readRes = await fetch(`/api/guideRead/?userId=${user.userId}`);
         if (!readRes.ok) throw new Error("Failed to fetch read records");
         const readJson = await readRes.json();
-        console.log("Raw /api/guideRead response:", readJson);
 
         // Normalize into an array
         const raw = readJson.resource;
@@ -689,7 +686,6 @@ export default function SideBars() {
         const readSet = new Set(readRecordsArray.map((r) => String(r.guideId)));
         // 3) Open if there’s any unread guide
         const hasUnread = allGuideIds.some((id) => !readSet.has(id));
-        console.log("hasUnread", hasUnread);
         if (hasUnread && shouldPopupAdminGuides) {
           setAdminGuideModalOpen(true);
           sessionStorage.setItem(sessionKey, "1");

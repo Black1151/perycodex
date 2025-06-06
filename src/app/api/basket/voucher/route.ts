@@ -9,14 +9,10 @@ export async function PUT(req: NextRequest) {
   const cookieStore = cookies();
   const authToken = cookieStore.get("auth_token")?.value;
 
-  console.log("[BASKET PUT VOUCHER] Incoming request to add voucher to basket");
-
   let body;
   try {
     body = await req.json();
-    console.log("[BASKET PUT VOUCHER] Request body:", body);
   } catch (error) {
-    console.error("[BASKET PUT VOUCHER] Failed to parse JSON body:", error);
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
@@ -33,7 +29,6 @@ export async function PUT(req: NextRequest) {
     });
 
     const data = await response.json();
-    console.log("[BASKET PUT VOUCHER] Backend response:", data);
 
     if (!response.ok) {
       console.error("[BASKET PUT VOUCHER] Backend error:", data);

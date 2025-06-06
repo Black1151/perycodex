@@ -47,9 +47,6 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
     (item: any) => item.uniqueId === tool.uniqueId
   );
 
-  console.log(basket?.ownedSubscriptionInfo[0]?.uniqueId);
-  console.log(tool.uniqueId);
-
   const handleButtonClick = async () => {
     setLoading(true);
     if (!basket) {

@@ -163,14 +163,12 @@ export async function POST(req: Request) {
 
     if (data.useBulkEntry && data.companyStaffBulk) {
       // If bulk entry is used, split the string by commas and trim whitespace
-      console.log("Bulk entry used:", data.companyStaffBulk);
       staffInvitePayloads = data.companyStaffBulk.split(",").map((email) => ({
         email: email.trim(),
         customerId: companyId,
       }));
     } else {
       // If not bulk entry, use the individual staff emails
-      console.log("Individual emails used:", data.companyStaff);
       staffInvitePayloads = data.companyStaff.map((staff) => ({
         email: staff.staffEmail,
         customerId: companyId,
@@ -247,7 +245,6 @@ export async function POST(req: Request) {
 
     // 6. Now we can send the staff invites
     const invitePromises = staffInvitePayloads.map(async (payload) => {
-      console.log("Inviting staff:", payload);
       const res = await apiClient("/registerByInvite", {
         method: "POST",
         body: JSON.stringify(payload),
@@ -261,9 +258,6 @@ export async function POST(req: Request) {
     });
 
     await Promise.all(invitePromises);
-
-    console.log("Successful invites:", successfulInvites);
-    console.log("Failed invites:", failedInvites);
 
     //7. once all the above is done and successful, we add the company id to their record so they
     //   get redirected to home.
