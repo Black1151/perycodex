@@ -1,3 +1,22 @@
+/**
+ * QuickScheduleSetupModal
+ *
+ * A responsive modal for viewing / editing “quick schedules” (currently only
+ * email schedules).  Responsibilities:
+ *
+ * 1.  Fetch schedules for the supplied customer + tool
+ * 2.  Indicate which of them are still *un-viewed* for this customer
+ *     – and notify the parent via `onUnviewedChange`
+ * 3.  Marks all schedules shown as viewed once the modal opens
+ *
+ * UI notes
+ * --------
+ * • Drawer on mobile, sidebar on desktop  
+ * • Locked rows are greyed-out when the customer is on the free tier  
+ * • An active schedule pulses green; inactive shows red
+ *
+ */
+
 import {
   Modal,
   ModalOverlay,
@@ -20,17 +39,13 @@ import {
   IconButton,
   Alert,
   AlertIcon,
-  Badge,
-  Flex,
-  useTheme
 } from "@chakra-ui/react";
 import { Lock, Menu, ScheduleSend } from "@mui/icons-material";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { ScheduleType, QuickSchedule, EmailSchedule } from "@/types/schedules";
 import EmailSchedulePanel from "./EmailSchedulePanel";
-import { useUser } from "@/providers/UserProvider";
 
-type QuickScheduleSetupModalProps = {
+type Props = {
   isOpen: boolean;
   onClose: () => void;
   toolId: number;
@@ -44,50 +59,34 @@ export default function QuickScheduleSetupModal({
   toolId,
   customerId,
   isFree,
-}: QuickScheduleSetupModalProps) {
-  const theme = useTheme()
+}: Props) {
+  /* ─────────────────────────────── UI helpers ────────────────────────────── */
+
   const {
-    isOpen: isDrawerOpen,
-    onOpen,
+    isOpen: drawerOpen,
+    onOpen: openDrawer,
     onClose: closeDrawer,
   } = useDisclosure();
   const isMobile = useBreakpointValue({ base: true, md: false });
   const bg = useColorModeValue("white", "gray.800");
-  const user = useUser();
 
-  // 1) State to hold schedules fetched from the API
-  const [localSchedules, setLocalSchedules] = useState<QuickSchedule[]>([]);
-  const [loadingSchedules, setLoadingSchedules] = useState<boolean>(false);
-  const [fetchError, setFetchError] = useState<string | null>(null);
+  /* ────────────────────────────── component state ────────────────────────── */
 
-  // 2) Group schedules by type
-  const [groupedSchedules, setGroupedSchedules] = useState<
-    Record<ScheduleType, QuickSchedule[]>
-  >({ email: [] });
+  const [schedules, setSchedules] = useState<QuickSchedule[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // 3) The currently selected schedule (or null if none selected)
-  const [selectedSchedule, setSelectedSchedule] =
-    useState<QuickSchedule | null>(null);
+  const [unviewedIds, setUnviewedIds] = useState<number[]>([]);
+  const [selected, setSelected] = useState<QuickSchedule | null>(null);
 
-  // 4) Helper: derive timeOfDay
-  const deriveTimeOfDay = (
-    sendTime: string
-  ): "morning" | "afternoon" | "evening" => {
-    const hour = parseInt(sendTime.split(":")[0], 10);
-    if (hour < 12) return "morning";
-    if (hour < 18) return "afternoon";
-    return "evening";
-  };
+  /* ──────────────────────────── data fetch: schedules ────────────────────── */
 
-  // 5) Fetch schedules using subscriptionType="view"
   const fetchSchedules = useCallback(async () => {
-    setLoadingSchedules(true);
-    setFetchError(null);
-
-    console.log("Modal: fetching schedules...", { customerId, toolId });
+    setLoading(true);
+    setError(null);
 
     try {
-      const response = await fetch("/api/quickSchedules", {
+      const res = await fetch("/api/quickSchedules", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -97,261 +96,201 @@ export default function QuickScheduleSetupModal({
           singleToolSched: toolId,
         }),
       });
+      if (!res.ok) throw new Error("quickSchedules request failed");
+      const json = await res.json();
 
-      console.log("→ API responded with status:", response.status);
-
-      if (!response.ok) {
-        const errorJson = await response.json().catch(() => null);
-        const message = errorJson?.error || "Unknown error fetching schedules";
-        console.error("→ API fetch error:", message);
-        setFetchError(message);
-        setLocalSchedules([]);
-      } else {
-        const data = await response.json();
-        console.log("→ Raw payload:", data);
-
-        // Now pull from data.schedules.resource[0].schedule_status
-        const container = data.schedules;
-        const resourceArray = Array.isArray(container?.resource)
-          ? container.resource
-          : [];
-        if (resourceArray.length === 0) {
-          console.warn("→ No resource array returned from API");
-          setLocalSchedules([]);
-        } else {
-          const scheduleStatusString = resourceArray[0].schedule_status;
-          let parsedSchedules: QuickSchedule[] = [];
-          try {
-            parsedSchedules = JSON.parse(scheduleStatusString);
-          } catch (parseErr) {
-            console.error("⚠️ Error parsing schedule_status JSON:", parseErr);
-            setFetchError("Failed to parse schedule data");
-            setLocalSchedules([]);
-            setLoadingSchedules(false);
-            return;
-          }
-
-          console.log("→ Parsed schedules:", parsedSchedules);
-          setLocalSchedules(parsedSchedules);
-        }
+      const resourceArr = Array.isArray(json?.schedules?.resource)
+        ? json.schedules.resource
+        : [];
+      if (!resourceArr.length) {
+        setSchedules([]);
+        return;
       }
-    } catch (err: any) {
-      console.error("→ Fetch exception:", err);
-      setFetchError("Network error while fetching schedules");
-      setLocalSchedules([]);
-    } finally {
-      setLoadingSchedules(false);
-    }
-  }, []);
 
-  useEffect(() => {
-    if (isOpen) {
-      fetchSchedules();
+      setSchedules(JSON.parse(resourceArr[0].schedule_status) as QuickSchedule[]);
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message ?? "Unknown error");
+    } finally {
+      setLoading(false);
     }
+  }, [customerId, toolId]);
+
+  /* ───────────────────── data fetch: “has this schedule been viewed?” ────── */
+
+  const checkUnviewed = useCallback(async () => {
+    if (!schedules.length) return;
+
+    try {
+      const results = await Promise.all(
+        schedules.map(async (s) => {
+          const url = `/api/emailScheduleCustomerOpt/?customerId=${customerId}&custSchedId=${s.custSchedId}&isViewed=false`;
+          const r = await fetch(url, { headers: { "Content-Type": "application/json" } });
+          if (!r.ok) throw new Error(`isViewed check failed for ${s.custSchedId}`);
+          return r.json();
+        })
+      );
+
+      const ids = results
+        .flatMap((p) => (p?.resource as any[]) ?? [])
+        .filter((row) => row.isViewed === false)
+        .map((row) => row.id);
+
+      setUnviewedIds(ids);
+    } catch (err) {
+      console.error("Unviewed check error:", err);
+      setUnviewedIds([]);
+    }
+  }, [schedules, customerId]);
+
+  /* mark everything we just found as viewed */
+  const markViewed = useCallback(async () => {
+    if (!unviewedIds.length) return;
+
+    try {
+      await Promise.all(
+        unviewedIds.map((id) =>
+          fetch(`/api/emailScheduleCustomerOpt/?custSchedId=${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+          })
+        )
+      );
+      setUnviewedIds([]);
+    } catch (err) {
+      console.error("Mark viewed error:", err);
+    }
+  }, [unviewedIds]);
+
+  /* fetch schedules whenever the modal opens */
+  useEffect(() => {
+    if (isOpen) fetchSchedules();
   }, [isOpen, fetchSchedules]);
 
-  // 6) Regroup whenever localSchedules changes
+  /* re-evaluate selected schedule & unviewed list after every fetch */
   useEffect(() => {
-    const grouped = (localSchedules ?? []).reduce(
-      (acc, sched) => {
-        acc[sched.type] = acc[sched.type] || [];
-        acc[sched.type].push(sched);
-        return acc;
-      },
-      {} as Record<ScheduleType, QuickSchedule[]>
-    );
-
-    setGroupedSchedules(grouped);
-
-    if (localSchedules && localSchedules.length > 0) {
-      const stillExists =
-        selectedSchedule &&
-        localSchedules.find(
-          (s) => s.scheduleId === selectedSchedule.scheduleId
-        );
-      if (stillExists) {
-        setSelectedSchedule(stillExists);
-      } else {
-        setSelectedSchedule(localSchedules[0]);
-      }
-    } else {
-      setSelectedSchedule(null);
+    if (!schedules.length) {
+      setSelected(null);
+      return;
     }
-  }, [localSchedules]);
 
-  // 7) When a schedule updates, update localSchedules so changes persist
-  const handleUpdateSchedule = (updated: EmailSchedule) => {
-    setLocalSchedules((prev) =>
-      prev.map((s) => (s.scheduleId === updated.scheduleId ? updated : s))
+    setSelected((prev) => schedules.find((s) => s.scheduleId === prev?.scheduleId) ?? schedules[0]);
+    checkUnviewed();
+  }, [schedules, checkUnviewed]);
+
+  /* mark as viewed once the list of unviewed ids stabilises (modal is open) */
+  useEffect(() => {
+    if (isOpen) markViewed();
+  }, [isOpen, unviewedIds, markViewed]);
+
+
+  const grouped = useMemo(() => {
+    return schedules.reduce<Record<ScheduleType, QuickSchedule[]>>((acc, s) => {
+      (acc[s.type] ??= []).push(s);
+      return acc;
+    }, {} as any);
+  }, [schedules]);
+
+
+  const ScheduleCard = (sched: QuickSchedule) => {
+    const locked = isFree && sched.subscriptionType === "paid";
+
+    return (
+      <Box
+        key={sched.scheduleId}
+        position="relative"
+        border="1px solid"
+        borderColor={selected?.scheduleId === sched.scheduleId ? "blue.400" : "gray.200"}
+        borderRadius="md"
+        p={3}
+        mb={2}
+        opacity={locked ? 0.5 : 1}
+        _hover={{ cursor: locked ? "not-allowed" : "pointer", bg: locked ? undefined : "gray.50" }}
+        onClick={() => {
+          if (!locked) {
+            setSelected(sched);
+            if (isMobile) closeDrawer();
+          }
+        }}
+      >
+        {locked && (
+          <Lock fontSize="small" style={{ position: "absolute", top: 8, left: 8, color: "gray.900" }} />
+        )}
+
+        <Box
+          w="10px"
+          h="10px"
+          borderRadius="full"
+          bg={sched.isActive ? "green.400" : "red.300"}
+          position="absolute"
+          top="8px"
+          right="8px"
+          sx={
+            sched.isActive
+              ? {
+                  animation: "pulseGreen 1.2s infinite",
+                  "@keyframes pulseGreen": {
+                    "0%": { boxShadow: "0 0 0 0 rgba(72,187,120,.7)" },
+                    "70%": { boxShadow: "0 0 0 8px rgba(72,187,120,0)" },
+                    "100%": { boxShadow: "0 0 0 0 rgba(72,187,120,0)" },
+                  },
+                }
+              : {}
+          }
+        />
+
+        <Text fontWeight="semibold">{sched.name}</Text>
+        <Text fontSize="sm" color="gray.500">
+          {formatFrequency(sched)}
+        </Text>
+        {"userDistGroupNames" in sched && (
+          <Text fontSize="sm" color="gray.600">
+            Groups: {(sched.userDistGroupNames || []).join(", ")}
+          </Text>
+        )}
+      </Box>
     );
   };
 
-  if (toolId == null) {
-    return;
-  }
-
-  // 8) Sidebar JSX
   const SidebarList = (
     <VStack align="stretch" spacing={4}>
-      {Object.values(groupedSchedules).every(arr => arr.length === 0) && (
-        <Text color="gray.500" textAlign="center" mt={10}>No schedules available.</Text>
+      {Object.values(grouped).every((arr) => !arr.length) && (
+        <Text color="gray.500" textAlign="center" mt={10}>
+          No schedules available.
+        </Text>
       )}
-      {Object.entries(groupedSchedules).map(([type, items]) => (
-        <Box key={type}>
-          <Text
-            fontWeight="bold"
-            fontSize="md"
-            mb={2}
-            textTransform="capitalize"
-          >
+
+      {Object.entries(grouped).map(([, items]) => (
+        <Box key="email">
+          <Text fontWeight="bold" fontSize="md" mb={2}>
             Emails
           </Text>
-          {items.map((sched) => {
-            const isLocked = isFree && sched.subscriptionType === "paid";
-
-            return (
-              <Box
-                key={sched.scheduleId}
-                position="relative"
-                border="1px solid"
-                borderColor={
-                  selectedSchedule?.scheduleId === sched.scheduleId
-                    ? "blue.400"
-                    : "gray.200"
-                }
-                borderRadius="md"
-                p={3}
-                mb={2}
-                opacity={isLocked ? 0.5 : 1} // grey out if locked
-                pointerEvents={isLocked ? "none" : "auto"} // prevent clicks if locked
-                _hover={{
-                  cursor: isLocked ? "not-allowed" : "pointer",
-                  bg: isLocked ? undefined : "gray.50",
-                }}
-                onClick={() => {
-                  if (
-                    (sched.subscriptionType === "free" && isFree) ||
-                    !isFree
-                  ) {
-                    setSelectedSchedule(sched);
-                    if (isMobile) closeDrawer();
-                  }
-                }}
-              >
-                {isLocked && (
-                  <Lock
-                    fontSize="small"
-                    style={{
-                      position: "absolute",
-                      top: 8,
-                      left: 8,
-                      color: "gray.900",
-                    }}
-                  />
-                )}
-
-                <Box
-                  w="10px"
-                  h="10px"
-                  borderRadius="full"
-                  bg={sched.isActive ? "green.400" : "red.300"}
-                  position="absolute"
-                  top="8px"
-                  right="8px"
-                  sx={
-                    sched.isActive
-                      ? {
-                          animation: "pulseGreen 1.2s infinite",
-                          "@keyframes pulseGreen": {
-                            "0%": {
-                              boxShadow: "0 0 0 0 rgba(72,187,120, 0.7)",
-                            },
-                            "70%": {
-                              boxShadow: "0 0 0 8px rgba(72,187,120, 0)",
-                            },
-                            "100%": {
-                              boxShadow: "0 0 0 0 rgba(72,187,120, 0)",
-                            },
-                          },
-                        }
-                      : {}
-                  }
-                />
-
-                <Text fontWeight="semibold">{sched.name}</Text>
-
-                <Text fontSize="sm" color="gray.500">
-                  {(() => {
-                    const getWeekdayName = (dayNum: number) =>
-                      [
-                        "Monday",
-                        "Tuesday",
-                        "Wednesday",
-                        "Thursday",
-                        "Friday",
-                        "Saturday",
-                        "Sunday",
-                      ][(dayNum - 1 + 7) % 7];
-
-                    if (sched.frequency === "daily") {
-                      return `Every day at ${sched.sendTime}`;
-                    } else if (
-                      sched.frequency === "weekly" &&
-                      sched.daysOfWeek !== undefined
-                    ) {
-                      const days = Array.isArray(sched.daysOfWeek)
-                        ? sched.daysOfWeek
-                        : [sched.daysOfWeek];
-                      return `Every ${days.map(getWeekdayName).join(", ")} at ${sched.sendTime}`;
-                    } else if (
-                      sched.frequency === "monthly" &&
-                      sched.daysOfWeek !== undefined
-                    ) {
-                      const days = Array.isArray(sched.daysOfWeek)
-                        ? sched.daysOfWeek
-                        : [sched.daysOfWeek];
-                      return `Every month on a ${days.map(getWeekdayName).join(", ")} at ${sched.sendTime}`;
-                    } else {
-                      return `${sched.frequency} at ${sched.sendTime}`;
-                    }
-                  })()}
-                </Text>
-
-                {sched.type === "email" && "userDistGroupNames" in sched && (
-                  <Text fontSize="sm" color="gray.600">
-                    Groups: {(sched.userDistGroupNames || []).join(", ")}
-                  </Text>
-                )}
-              </Box>
-            );
-          })}
+          {items.map(ScheduleCard)}
         </Box>
       ))}
     </VStack>
   );
 
+  /* ─────────────────────────────── render ───────────────────────────────── */
+
+  if (!toolId) return null;
+
   return (
     <>
-      {/* Mobile Drawer */}
+      {/* Mobile drawer */}
       {isMobile && (
-        <Drawer isOpen={isDrawerOpen} placement="left" onClose={closeDrawer}>
+        <Drawer isOpen={drawerOpen} placement="left" onClose={closeDrawer}>
           <DrawerOverlay />
           <DrawerContent>
             <DrawerCloseButton />
             <DrawerBody p={4}>
-              <Text fontSize={["xl","2xl","3xl"]} fontWeight="medium" fontFamily={"bonfire"} mb={-2}>
+              <Text fontSize={["xl", "2xl", "3xl"]} fontWeight="medium" fontFamily="bonfire" mb={-2}>
                 Your Schedules
               </Text>
-              {loadingSchedules ? (
-                <VStack spacing={4} align="center" mt={10}>
-                  <Spinner size="lg" />
-                  <Text>Loading schedules...</Text>
-                </VStack>
-              ) : fetchError ? (
-                <Alert status="error">
-                  <AlertIcon />
-                  {fetchError}
-                </Alert>
+              {loading ? (
+                <SpinnerBlock />
+              ) : error ? (
+                <ErrorAlert message={error} />
               ) : (
                 SidebarList
               )}
@@ -360,112 +299,36 @@ export default function QuickScheduleSetupModal({
         </Drawer>
       )}
 
-      {/* Main Modal */}
+      {/* Main modal */}
       <Modal isOpen={isOpen} onClose={onClose} size="5xl" isCentered>
         <ModalOverlay />
-        <ModalContent maxW={["90vw","90vw","90vw","1200px"]} maxH="90vh" minH={"500px"}>
+        <ModalContent maxW={["90vw", null, null, "1200px"]} maxH="90vh" minH="500px">
           <ModalCloseButton />
-          <ModalBody
-            p={0}
-            bg={bg}
-            display="flex"
-            flexDirection="column"
-            borderRadius={"md"}
-          >
-            {/* Header */}
-            <HStack
-              px={4}
-              py={3}
-              bg={bg}
-              borderBottom="1px solid"
-              borderColor="gray.200"
-              justify="left"
-              borderRadius={"md"}
-              fontSize={"28px"}
-            >
-              {isMobile && (
-                <IconButton
-                  aria-label="Open schedule list"
-                  icon={<Menu fontSize="inherit"/>}
-                  onClick={onOpen}
-                  size="sm"
-                  variant="outline"
-                />
-              )}
-              <ScheduleSend fontSize="inherit" htmlColor={theme.colors.primary} />
-              <Text fontSize={["xl","2xl","3xl"]} fontWeight="medium" fontFamily={"bonfire"} mb={-3}>
-                Quick Schedule Setup
-              </Text>
-              {loadingSchedules || isMobile ? (
-                <></>
-              ) : (
-                <Text fontSize="sm" color="gray.500" ml={2}>
-                  {localSchedules ? localSchedules.length : 0} total
-                </Text>
-              )}
-            </HStack>
+          <ModalBody p={0} bg={bg} display="flex" flexDirection="column">
+            <Header total={schedules.length} />
 
-            <Box display="flex" flex="1" overflow="hidden" w="100%">
+            <Box display="flex" flex="1" overflow="hidden">
               {/* Sidebar (desktop) */}
               {!isMobile && (
-                <Box
-                  width="30%"
-                  borderRight="1px solid"
-                  borderColor="gray.200"
-                  p={4}
-                  overflowY="auto"
-                >
-                  {loadingSchedules ? (
-                    <VStack spacing={4} align="center" mt={10}>
-                      <Spinner size="lg" />
-                      <Text>Loading your schedules...</Text>
-                    </VStack>
-                  ) : fetchError ? (
-                    <Alert status="error">
-                      <AlertIcon />
-                      {fetchError}
-                    </Alert>
-                  ) : (
-                    SidebarList
-                  )}
+                <Box width="30%" borderRight="1px solid" borderColor="gray.200" p={4} overflowY="auto">
+                  {loading ? <SpinnerBlock /> : error ? <ErrorAlert message={error} /> : SidebarList}
                 </Box>
               )}
 
               {/* Main panel */}
-              <Box
-                width={isMobile ? "100%" : "70%"}
-                p={4}
-                overflowY="auto"
-                display="flex"
-                flexDirection="column"
-                bg="gray.200"
-              >
-                {loadingSchedules ? (
-                  <></>
-                ) : fetchError ? (
-                  <Alert status="error">
-                    <AlertIcon />
-                    {fetchError}
-                  </Alert>
-                ) : !selectedSchedule ? (
-                  <Box textAlign="center" mt={10}>
-                    <Text>No schedules available to display.</Text>
-                  </Box>
-                ) : selectedSchedule.type === "email" ? (
-                  <EmailSchedulePanel
-                    schedule={selectedSchedule as EmailSchedule}
-                    onUpdateSchedule={handleUpdateSchedule}
-                    customerId={customerId}
-                    toolId={toolId}
-                  />
+              <Box width={isMobile ? "100%" : "70%"} p={4} bg="gray.200" overflowY="auto">
+                {loading ? null : error ? (
+                  <ErrorAlert message={error} />
+                ) : !selected ? (
+                  <Text textAlign="center" mt={10}>
+                    No schedules available to display.
+                  </Text>
                 ) : (
-                  // <Box textAlign="center" mt={10}>
-                  //   <Text>This schedule type is not yet supported.</Text>
-                  // </Box>
-                  // NOTE: we only have emails at the min
                   <EmailSchedulePanel
-                    schedule={selectedSchedule as EmailSchedule}
-                    onUpdateSchedule={handleUpdateSchedule}
+                    schedule={selected as EmailSchedule}
+                    onUpdateSchedule={(upd) =>
+                      setSchedules((prev) => prev.map((s) => (s.scheduleId === upd.scheduleId ? upd : s)))
+                    }
                     customerId={customerId}
                     toolId={toolId}
                   />
@@ -477,4 +340,72 @@ export default function QuickScheduleSetupModal({
       </Modal>
     </>
   );
+
+  function SpinnerBlock() {
+    return (
+      <VStack spacing={4} align="center" mt={10}>
+        <Spinner size="lg" />
+        <Text>Loading schedules...</Text>
+      </VStack>
+    );
+  }
+
+  function ErrorAlert({ message }: { message: string }) {
+    return (
+      <Alert status="error">
+        <AlertIcon />
+        {message}
+      </Alert>
+    );
+  }
+
+  function Header({ total }: { total: number }) {
+    return (
+      <HStack
+        px={4}
+        py={3}
+        bg={bg}
+        borderBottom="1px solid"
+        borderColor="gray.200"
+        fontSize="28px"
+        align="center"
+      >
+        {isMobile && (
+          <IconButton
+            aria-label="Open schedule list"
+            icon={<Menu fontSize="inherit" />}
+            onClick={openDrawer}
+            size="sm"
+            variant="outline"
+          />
+        )}
+        <ScheduleSend fontSize="inherit" htmlColor="var(--chakra-colors-primary)" />
+        <Text fontSize={["xl", "2xl", "3xl"]} fontWeight="medium" fontFamily="bonfire" mb={-3}>
+          Quick Schedule Setup
+        </Text>
+        {!loading && !isMobile && (
+          <Text fontSize="sm" color="gray.500" ml={2}>
+            {total} total
+          </Text>
+        )}
+      </HStack>
+    );
+  }
+
+  function formatFrequency(s: QuickSchedule) {
+    const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    if (s.frequency === "daily") return `Every day at ${s.sendTime}`;
+
+    if (s.frequency === "weekly" && s.daysOfWeek) {
+      const days = Array.isArray(s.daysOfWeek) ? s.daysOfWeek : [s.daysOfWeek];
+      return `Every ${days.map((d) => weekdays[(d - 1 + 7) % 7]).join(", ")} at ${s.sendTime}`;
+    }
+
+    if (s.frequency === "monthly" && s.daysOfWeek) {
+      const days = Array.isArray(s.daysOfWeek) ? s.daysOfWeek : [s.daysOfWeek];
+      return `Every month on a ${days.map((d) => weekdays[(d - 1 + 7) % 7]).join(", ")} at ${s.sendTime}`;
+    }
+
+    return `${s.frequency} at ${s.sendTime}`;
+  }
 }

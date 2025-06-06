@@ -2,6 +2,7 @@ export type ScheduleType = 'email'
 
 // Shared fields
 export interface BaseSchedule {
+  custSchedId: number
   name: string;
   scheduleId: number;
   customerId: number;
