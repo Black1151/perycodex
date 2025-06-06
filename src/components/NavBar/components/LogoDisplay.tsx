@@ -74,7 +74,7 @@ const LogoDisplay: React.FC<LogoDisplayProps> = ({
               </MotionBadge>
             ) : typeof amountDays === "number" && amountDays > 0 ? (
               <MotionBadge
-                colorScheme="yellow"
+                colorScheme="teal"
                 h="min-content"
                 fontSize={[10, 12]}
                 variants={badgeVariants}
