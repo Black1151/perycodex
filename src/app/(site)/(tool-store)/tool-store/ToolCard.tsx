@@ -240,33 +240,28 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
           >
             <Text fontSize="sm">{tool.previewText}</Text>
 
-            {!isOwned && (
-              <HStack
-                spacing={2}
-                align="center"
-                justify="space-between"
-                w="100%"
-              >
-                <HStack spacing={1} align="center">
-                  <Text fontSize="md" fontWeight="bold">
-                    £
-                  </Text>
+            <HStack spacing={2} align="center" justify="space-between" w="100%">
+              <HStack spacing={1} align="center">
+                <Text fontSize="md" fontWeight="bold">
+                  £
+                </Text>
 
-                  <AnimatedTillNumber
-                    value={
-                      basket?.isAnnual
-                        ? Number(tool.annualPrice)
-                        : Number(tool.monthlyPrice)
-                    }
-                    fontSize="md"
-                    duration={0.65}
-                  />
+                <AnimatedTillNumber
+                  value={
+                    basket?.isAnnual
+                      ? Number(tool.annualPrice)
+                      : Number(tool.monthlyPrice)
+                  }
+                  fontSize="md"
+                  duration={0.65}
+                />
 
-                  <Text fontSize="md" fontWeight="bold">
-                    /user
-                  </Text>
-                </HStack>
+                <Text fontSize="md" fontWeight="bold">
+                  /user
+                </Text>
+              </HStack>
 
+              {!isOwned ? (
                 <Button
                   size="sm"
                   variant="outline"
@@ -283,36 +278,34 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
                   isLoading={loading}
                 >
                   {isInBasket ? (
-                    <HStack spacing={1} align="center" m={0}> 
-                      <Remove fontSize="small"/>
+                    <HStack spacing={1} align="center" m={0}>
+                      <Remove fontSize="small" />
                       <Text fontSize="sm" color="white">
                         Remove
                       </Text>
                     </HStack>
                   ) : (
                     <HStack spacing={1} align="center" m={0}>
-                      <Add fontSize="small"/>
+                      <Add fontSize="small" />
                       <Text fontSize="sm" color="white">
                         Add
                       </Text>
                     </HStack>
                   )}
                 </Button>
-              </HStack>
-            )}
-
-            {isOwned && (
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => {
-                  const url = `${tool.appUrl}?toolId=${tool.id}&wfId=${tool.workflowId}`;
-                  router.push(url);
-                }}
-              >
-                Start Tool
-              </Button>
-            )}
+              ) : (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    const url = `${tool.appUrl}?toolId=${tool.id}&wfId=${tool.workflowId}`;
+                    router.push(url);
+                  }}
+                >
+                  Start Tool
+                </Button>
+              )}
+            </HStack>
           </VStack>
         </VStack>
       </Box>
