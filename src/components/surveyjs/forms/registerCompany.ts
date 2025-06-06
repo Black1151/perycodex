@@ -110,7 +110,7 @@ export const registerCustomerJson = {
           requiredErrorText: "Please select your business type",
         },
         {
-          type: "text",
+          type: "dropdown",
           name: "sicCode",
           title: "SIC Code",
           titleLocation: "top",

@@ -222,23 +222,27 @@ const ToolDashboardLayout: React.FC<ToolDashboardLayoutProps> = ({
   }));
 
   const contextualMenuItems = [
-    {
-      label: "Tool Guides",
-      icon: <Help />,
-      onClick: () => setGuideModalOpen(true),
-      active: false,
-      locked: false,
-    },
-    {
-      label: "Quick Schedule Setup",
-      icon: <ScheduleSend />,
-      onClick: () => setScheduleModalOpen(true),
-      active: false,
-      locked: false,
-      actionNeeded: scheduleActionNeeded,
-      actionNeededText: "New!",
-    },
-  ];
+  {
+    label: "Tool Guides",
+    icon: <Help />,
+    onClick: () => setGuideModalOpen(true),
+    active: false,
+    locked: false,
+  },
+  ...(user?.role === "CA"
+    ? [
+        {
+          label: "Quick Schedule Setup",
+          icon: <ScheduleSend />,
+          onClick: () => setScheduleModalOpen(true),
+          active: false,
+          locked: false,
+          actionNeeded: scheduleActionNeeded,
+          actionNeededText: "New!",
+        },
+      ]
+    : []),
+];
 
   /* ───────────────────────────── render ──────────────────────────────────── */
 
