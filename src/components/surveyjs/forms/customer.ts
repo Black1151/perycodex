@@ -76,7 +76,7 @@ export const customerJson = {
             "Enter Company Number In accordance with Companies House",
         },
         {
-          type: "text",
+          type: "dropdown",
           name: "sicCode",
           title: "SIC Code",
           titleLocation: "top",

@@ -11,8 +11,8 @@
  *
  * UI notes
  * --------
- * • Drawer on mobile, sidebar on desktop  
- * • Locked rows are greyed-out when the customer is on the free tier  
+ * • Drawer on mobile, sidebar on desktop
+ * • Locked rows are greyed-out when the customer is on the free tier
  * • An active schedule pulses green; inactive shows red
  *
  */
@@ -107,7 +107,9 @@ export default function QuickScheduleSetupModal({
         return;
       }
 
-      setSchedules(JSON.parse(resourceArr[0].schedule_status) as QuickSchedule[]);
+      setSchedules(
+        JSON.parse(resourceArr[0].schedule_status) as QuickSchedule[]
+      );
     } catch (err: any) {
       console.error(err);
       setError(err.message ?? "Unknown error");
@@ -125,8 +127,11 @@ export default function QuickScheduleSetupModal({
       const results = await Promise.all(
         schedules.map(async (s) => {
           const url = `/api/emailScheduleCustomerOpt/?customerId=${customerId}&custSchedId=${s.custSchedId}&isViewed=false`;
-          const r = await fetch(url, { headers: { "Content-Type": "application/json" } });
-          if (!r.ok) throw new Error(`isViewed check failed for ${s.custSchedId}`);
+          const r = await fetch(url, {
+            headers: { "Content-Type": "application/json" },
+          });
+          if (!r.ok)
+            throw new Error(`isViewed check failed for ${s.custSchedId}`);
           return r.json();
         })
       );
@@ -174,7 +179,10 @@ export default function QuickScheduleSetupModal({
       return;
     }
 
-    setSelected((prev) => schedules.find((s) => s.scheduleId === prev?.scheduleId) ?? schedules[0]);
+    setSelected(
+      (prev) =>
+        schedules.find((s) => s.scheduleId === prev?.scheduleId) ?? schedules[0]
+    );
     checkUnviewed();
   }, [schedules, checkUnviewed]);
 
@@ -183,14 +191,12 @@ export default function QuickScheduleSetupModal({
     if (isOpen) markViewed();
   }, [isOpen, unviewedIds, markViewed]);
 
-
   const grouped = useMemo(() => {
     return schedules.reduce<Record<ScheduleType, QuickSchedule[]>>((acc, s) => {
       (acc[s.type] ??= []).push(s);
       return acc;
     }, {} as any);
   }, [schedules]);
-
 
   const ScheduleCard = (sched: QuickSchedule) => {
     const locked = isFree && sched.subscriptionType === "paid";
@@ -200,12 +206,17 @@ export default function QuickScheduleSetupModal({
         key={sched.scheduleId}
         position="relative"
         border="1px solid"
-        borderColor={selected?.scheduleId === sched.scheduleId ? "blue.400" : "gray.200"}
+        borderColor={
+          selected?.scheduleId === sched.scheduleId ? "blue.400" : "gray.200"
+        }
         borderRadius="md"
         p={3}
         mb={2}
         opacity={locked ? 0.5 : 1}
-        _hover={{ cursor: locked ? "not-allowed" : "pointer", bg: locked ? undefined : "gray.50" }}
+        _hover={{
+          cursor: locked ? "not-allowed" : "pointer",
+          bg: locked ? undefined : "gray.50",
+        }}
         onClick={() => {
           if (!locked) {
             setSelected(sched);
@@ -214,7 +225,10 @@ export default function QuickScheduleSetupModal({
         }}
       >
         {locked && (
-          <Lock fontSize="small" style={{ position: "absolute", top: 8, left: 8, color: "gray.900" }} />
+          <Lock
+            fontSize="small"
+            style={{ position: "absolute", top: 8, left: 8, color: "gray.900" }}
+          />
         )}
 
         <Box
@@ -253,22 +267,32 @@ export default function QuickScheduleSetupModal({
   };
 
   const SidebarList = (
-    <VStack align="stretch" spacing={4}>
-      {Object.values(grouped).every((arr) => !arr.length) && (
-        <Text color="gray.500" textAlign="center" mt={10}>
-          No schedules available.
-        </Text>
-      )}
-
-      {Object.entries(grouped).map(([, items]) => (
-        <Box key="email">
-          <Text fontWeight="bold" fontSize="md" mb={2}>
-            Emails
+    <Box
+      flex="1"
+      overflowY="auto"
+      css={{
+        "&::-webkit-scrollbar": { display: "none" }, // Chrome / Safari
+        "-ms-overflow-style": "none", // IE / Edge
+        scrollbarWidth: "none", // Firefox
+      }}
+    >
+      <VStack align="stretch" spacing={4} pb={4}>
+        {Object.values(grouped).every((arr) => !arr.length) && (
+          <Text color="gray.500" textAlign="center" mt={10}>
+            No schedules available.
           </Text>
-          {items.map(ScheduleCard)}
-        </Box>
-      ))}
-    </VStack>
+        )}
+
+        {Object.entries(grouped).map(([, items]) => (
+          <Box key="email">
+            <Text fontWeight="bold" fontSize="md" mb={2}>
+              Emails
+            </Text>
+            {items.map(ScheduleCard)}
+          </Box>
+        ))}
+      </VStack>
+    </Box>
   );
 
   /* ─────────────────────────────── render ───────────────────────────────── */
@@ -284,7 +308,12 @@ export default function QuickScheduleSetupModal({
           <DrawerContent>
             <DrawerCloseButton />
             <DrawerBody p={4}>
-              <Text fontSize={["xl", "2xl", "3xl"]} fontWeight="medium" fontFamily="bonfire" mb={-2}>
+              <Text
+                fontSize={["xl", "2xl", "3xl"]}
+                fontWeight="medium"
+                fontFamily="bonfire"
+                mb={-2}
+              >
                 Your Schedules
               </Text>
               {loading ? (
@@ -302,21 +331,64 @@ export default function QuickScheduleSetupModal({
       {/* Main modal */}
       <Modal isOpen={isOpen} onClose={onClose} size="5xl" isCentered>
         <ModalOverlay />
-        <ModalContent maxW={["90vw", null, null, "1200px"]} maxH="90vh" minH="500px">
+        <ModalContent
+          maxW={["90vw", null, null, "1200px"]}
+          maxH="85vh"
+          minH="500px"
+          borderRadius={"md"}
+          overflow={"hidden"}
+        >
           <ModalCloseButton />
-          <ModalBody p={0} bg={bg} display="flex" flexDirection="column">
+          <ModalBody p={0} bg={bg} display="flex" flexDirection="column" flex="1" minH="0">
             <Header total={schedules.length} />
 
-            <Box display="flex" flex="1" overflow="hidden">
-              {/* Sidebar (desktop) */}
+            <Box display="flex" flex="1" overflow="hidden" minH="0">
               {!isMobile && (
-                <Box width="30%" borderRight="1px solid" borderColor="gray.200" p={4} overflowY="auto">
-                  {loading ? <SpinnerBlock /> : error ? <ErrorAlert message={error} /> : SidebarList}
+                <Box
+                  width="30%"
+                  overflowY="auto"
+                  minH="0"
+                  css={{
+                    "&::-webkit-scrollbar": { display: "none" }, // Chrome/Safari
+                    "-ms-overflow-style": "none", // IE/Edge
+                    scrollbarWidth: "none", // Firefox
+                    WebkitOverflowScrolling: "touch", // iOS momentum
+                  }}
+                  borderRight="1px solid"
+                  borderColor="gray.200"
+                  p={4}
+                >
+                  {loading ? (
+                    <SpinnerBlock />
+                  ) : error ? (
+                    <ErrorAlert message={error} />
+                  ) : (
+                    <VStack align="stretch" spacing={4} pb={4}>
+                      {Object.values(grouped).every((arr) => !arr.length) ? (
+                        <Text color="gray.500" textAlign="center" mt={10}>
+                          No schedules available.
+                        </Text>
+                      ) : (
+                        Object.entries(grouped).map(([key, items]) => (
+                          <Box key={key}>
+                            <Text fontWeight="bold" fontSize="md" mb={2}>
+                              Emails
+                            </Text>
+                            {items.map(ScheduleCard)}
+                          </Box>
+                        ))
+                      )}
+                    </VStack>
+                  )}
                 </Box>
               )}
-
               {/* Main panel */}
-              <Box width={isMobile ? "100%" : "70%"} p={4} bg="gray.200" overflowY="auto">
+              <Box
+                width={isMobile ? "100%" : "70%"}
+                p={4}
+                bg="gray.200"
+                overflowY="auto"
+              >
                 {loading ? null : error ? (
                   <ErrorAlert message={error} />
                 ) : !selected ? (
@@ -327,7 +399,11 @@ export default function QuickScheduleSetupModal({
                   <EmailSchedulePanel
                     schedule={selected as EmailSchedule}
                     onUpdateSchedule={(upd) =>
-                      setSchedules((prev) => prev.map((s) => (s.scheduleId === upd.scheduleId ? upd : s)))
+                      setSchedules((prev) =>
+                        prev.map((s) =>
+                          s.scheduleId === upd.scheduleId ? upd : s
+                        )
+                      )
                     }
                     customerId={customerId}
                     toolId={toolId}
@@ -379,8 +455,16 @@ export default function QuickScheduleSetupModal({
             variant="outline"
           />
         )}
-        <ScheduleSend fontSize="inherit" htmlColor="var(--chakra-colors-primary)" />
-        <Text fontSize={["xl", "2xl", "3xl"]} fontWeight="medium" fontFamily="bonfire" mb={-3}>
+        <ScheduleSend
+          fontSize="inherit"
+          htmlColor="var(--chakra-colors-primary)"
+        />
+        <Text
+          fontSize={["xl", "2xl", "3xl"]}
+          fontWeight="medium"
+          fontFamily="bonfire"
+          mb={-3}
+        >
           Quick Schedule Setup
         </Text>
         {!loading && !isMobile && (
@@ -393,7 +477,15 @@ export default function QuickScheduleSetupModal({
   }
 
   function formatFrequency(s: QuickSchedule) {
-    const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    const weekdays = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ];
     if (s.frequency === "daily") return `Every day at ${s.sendTime}`;
 
     if (s.frequency === "weekly" && s.daysOfWeek) {
