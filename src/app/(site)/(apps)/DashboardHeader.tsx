@@ -43,8 +43,6 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
     !!toolId && !!workflowId && canStartWorkflow
   );
 
-  console.log("contexual menu items:", contextualMenuItems);
-
   const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
 
   const { fetchClient } = useFetchClient();

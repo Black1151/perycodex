@@ -135,8 +135,6 @@ export default function GuideModal({
         setGuideList(sorted);
         setSelectedGuide(sorted[0] ?? null);
 
-        console.log("guide list", guideList);
-
         const resRead = await fetchClient<{
           resource: Array<{ id: number; guideId: string | number }>;
         }>(`/api/guideRead/?userId=${user?.userId}`);

@@ -159,8 +159,12 @@ export function NewCompanyUserProfileCompletionForm({
             name="mobile"
             placeholder="Mobile"
             type="text"
+            register={() =>
+              register("mobile", {
+                required: "Mobile is required",
+              })
+            }
             error={formErrors.mobile}
-            register={() => register("mobile")}
             focusBorderColor={theme.colors.primary}
           />
 

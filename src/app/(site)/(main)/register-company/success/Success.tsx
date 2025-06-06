@@ -69,17 +69,13 @@ export default function RegisterSuccess({
     const setupSchedules = async () => {
       try {
         if (schedulePayloads.length === 0) {
-          console.log("[RegisterSuccess] No schedules to create.");
           setSchedulesComplete(true);
           setLoading(false);
           return;
         }
 
-        console.log("[RegisterSuccess] Creating schedule payloads:", schedulePayloads);
-
         const responses = await Promise.all(
           schedulePayloads.map((payload: any, idx: any) => {
-            console.log(`→ POSTing schedule payload #${idx + 1}:`, payload);
             return fetchClient.fetchClient("/api/quickSchedules", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -88,12 +84,8 @@ export default function RegisterSuccess({
           })
         );
 
-        const allSuccessful = responses.every((res) => res.ok);
-
-        console.log("[RegisterSuccess] ✅ All schedules created successfully.");
         setSchedulesComplete(true);
       } catch (err: any) {
-        console.error("[RegisterSuccess] ⚠️ Error setting up schedules:", err);
         setError(err.message || "Something went wrong");
       } finally {
         setLoading(false);
@@ -151,7 +143,6 @@ export default function RegisterSuccess({
 
         <LogoUpload
           onUploadComplete={(url: string) => {
-            console.log("[RegisterSuccess] Logo uploaded:", url);
             setHasLogo(true);
             setCustomerData((prev: any) => ({
               ...prev,
@@ -167,9 +158,6 @@ export default function RegisterSuccess({
           color="white"
           rightIcon={<Check />}
           onClick={() => {
-            console.log(
-              "[RegisterSuccess] Finished – navigating to /tool-store"
-            );
             router.push("/tool-store");
           }}
         >

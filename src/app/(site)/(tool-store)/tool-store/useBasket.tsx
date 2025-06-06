@@ -184,41 +184,11 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
   const [subscription, setSubscription] = useState<Basket | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
-  //   console.log("[Basket] POST /api/basket — creating new basket");
-  //   setError(null);
-
-  //   const defaultPayload = {
-  //     quantity: 0,
-  //     subscriptions: ["626b1c62-a5cd-4478-aa88-5935bf8023df"],
-  //     isAnnual: true,
-  //   };
-
-  //   try {
-  //     const data = await fetchClient<{ resource: Basket }>("/api/basket", {
-  //       method: "POST",
-  //       body: defaultPayload,
-  //     });
-
-  //     console.log("[Basket] POST response:", data);
-
-  //     if (data && data.resource) {
-  //       setBasket(data.resource);
-  //     } else {
-  //       const err = new Error("Failed to create basket");
-  //       console.error("[Basket] POST error:", err);
-  //       setError(err);
-  //     }
-  //   } catch (err: any) {
-  //     console.error("[Basket] POST exception:", err);
-  //     setError(err);
-  //   }
-  // };
 
   /**
    * GET /api/basket — fetch the current basket
    */
   const getBasket = async () => {
-    console.log("[Basket] GET /api/basket — start");
     setLoading(true);
     setError(null);
 
@@ -230,8 +200,6 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
         method: "GET",
         redirectOnError: false,
       });
-
-      console.log("[Basket] GET response:", response);
 
       const isEmptyObject =
         response &&
@@ -248,7 +216,6 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
 
       if (response && response.resource) {
         setBasket(response.resource);
-        console.log("[Basket] GET basket:", response.resource);
       } else {
         const err = new Error("No basket data returned");
         console.error("[Basket] GET error:", err);
@@ -259,7 +226,6 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
       setError(err);
     } finally {
       setLoading(false);
-      console.log("[Basket] GET /api/basket — complete");
     }
   };
 
@@ -267,7 +233,6 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
    * GET /api/basket — fetch the current basket
    */
   const getSubscription = async () => {
-    console.log("[Subscription] GET /api/basket — start");
     setLoading(true);
     setError(null);
 
@@ -279,8 +244,6 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
         method: "GET",
         redirectOnError: false,
       });
-
-      console.log("[Subscription] GET response:", response);
 
       const isEmptyObject =
         response &&
@@ -297,7 +260,6 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
 
       if (response && response.resource) {
         setSubscription(response.resource);
-        console.log("[Subscription] GET basket:", response.resource);
       } else {
         const err = new Error("No basket data returned");
         console.error("[Subscription] GET error:", err);
@@ -308,7 +270,6 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
       setError(err);
     } finally {
       setLoading(false);
-      console.log("[Subscription] GET /api/basket/subscription — complete");
     }
   };
 
@@ -316,17 +277,8 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
    * PUT /api/basket — update the current basket
    */
   const updateBasket = async (basketUpdate: UpdateBasketProps) => {
-    console.log("[Basket] PUT /api/basket — updating basket", basketUpdate);
     setLoading(true);
     setError(null);
-
-    // //If the basketUpdate includes a quanity we need to get the current tools the user owns add add their ids into the basketUpdate
-    // if (basketUpdate.quantity) {
-    //   const ownedSubscriptionInfo = basket?.ownedSubscriptionInfo || [];
-
-    //   const subscriptions = ownedSubscriptionInfo.map((tool) => tool.uniqueId);
-    //   basketUpdate.subscriptions = subscriptions;
-    // }
 
     try {
       const data = await fetchClient<{ resource: any }>("/api/basket", {
@@ -334,18 +286,13 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
         body: JSON.stringify(basketUpdate),
       });
 
-      console.log("[Basket] PUT response:", data);
-
       if (data && data.resource) {
-        console.log("HERE: NEW BASKET", data.resource); 
         setBasket(data.resource);
       } else {
         const err = new Error("Failed to update basket");
-        console.error("[Basket] PUT error:", err);
         setError(err);
       }
     } catch (err: any) {
-      console.error("[Basket] PUT exception:", err);
       setError(err);
     } finally {
       setLoading(false);
@@ -360,7 +307,6 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
     setError(null);
 
     if(!basket) {
-        console.error("[Basket] No basket found to update");
         return;
       }
 
@@ -374,18 +320,14 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
         body: JSON.stringify(basketUpdate),
       });
 
-      console.log("[Basket] PUT response:", data);
 
       if (data && data.resource) {
-        console.log("HERE: NEW BASKET", data.resource); 
         setBasket(data.resource);
       } else {
         const err = new Error("Failed to update basket");
-        console.error("[Basket] PUT error:", err);
         setError(err);
       }
     } catch (err: any) {
-      console.error("[Basket] PUT exception:", err);
       setError(err);
     } finally {
       setLoading(false);
@@ -396,7 +338,6 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
    * DELETE /api/basket — clear the current basket
    */
   const clearBasket = async () => {
-    console.log("[Basket] DELETE /api/basket — clearing basket");
     setLoading(true);
     setError(null);
     try {
@@ -404,17 +345,13 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
         method: "DELETE",
       });
 
-      console.log("[Basket] DELETE response:", data);
-
       if (data && data.resource) {
         setBasket(data.resource);
       } else {
         const err = new Error("Failed to update basket");
-        console.error("[Basket] DELETE error:", err);
         setError(err);
       }
     } catch (err: any) {
-      console.error("[Basket] DELETE exception:", err);
       setError(err);
     } finally {
       setLoading(false);
@@ -425,7 +362,6 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
    * DELETE /api/basket/item — remove an item from the basket
    */
   const removeItemFromBasket = async (itemUId: string) => {
-    console.log("[Basket] DELETE /api/basket/item — removing item from basket", itemUId);
     setLoading(true);
     setError(null);
     try {
@@ -433,17 +369,13 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
         method: "DELETE",
       });
 
-      console.log("[Basket] DELETE response:", data);
-
       if (data && data.resource) {
         setBasket(data.resource);
       } else {
         const err = new Error("Failed to update basket");
-        console.error("[Basket] DELETE error:", err);
         setError(err);
       }
     } catch (err: any) {
-      console.error("[Basket] DELETE exception:", err);
       setError(err);
     } finally {
       setLoading(false);
@@ -454,7 +386,6 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
    * PUT /api/basket/voucher — add a voucher to the basket
    */
   const addVoucher = async (voucher: string) => {
-    console.log("[Basket] PUT /api/basket/voucher — adding voucher", voucher);
     setLoading(true);
     setError(null);
 
@@ -464,8 +395,6 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
         body: JSON.stringify({ "dicountCode": voucher }),
       });
 
-      console.log("[Basket] PUT response:", data);
-
       if (data && data.resource) {
         setBasket(data.resource);
       } else {
@@ -474,7 +403,6 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
         setError(err);
       }
     } catch (err: any) {
-      console.error("[Basket] PUT exception:", err);
       setError(err);
     } finally {
       setLoading(false);
@@ -493,9 +421,6 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
     basket.licensedUsers === basket.quantity;
 
   if (noNewItems && noSeatChange) {
-    console.log(
-      "[Basket] No new items AND no change in licensed users — clearing basket"
-    );
     return true;
   }
 
@@ -510,7 +435,6 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
     const wasNonEmpty = prev && !checkForEmptyBasket(prev);
 
     if (nowEmpty && wasNonEmpty) {
-      console.log("[Basket Empty?] Basket is empty, clearing basket");
       clearBasket();
     }
 

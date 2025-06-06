@@ -117,7 +117,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
             <Link color="blue.500" href="mailto:sales@perygon.co.uk">
               sales@perygon.co.uk
             </Link>
-            . Any changes, including upgrades or downgrades, will be processed manually and may be subject to additional charges or terms as agreed at the time of change.
+            . Any changes, will be processed manually and may be subject to additional charges or terms as agreed at the time of change.
           </Text>
 
           <Heading as="h4" size="sm" mt={4} mb={2}>
