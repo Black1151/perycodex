@@ -86,15 +86,6 @@ const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
   // Determine if any item needs action
   const hasActionNeeded = menuItems.some((item) => item.actionNeeded);
 
-  // Pulsing glow animation settings (using primaryColor)
-  const primaryColor = theme.colors.primary || "#0059ff";
-  // const pulseAnimation = {
-  //   boxShadow: [
-  //     `0 0 16px 4px ${transparentize(primaryColor, 0.55)(theme)}`,
-  //     `0 0 32px 12px ${transparentize(primaryColor, 0.75)(theme)}`,
-  //     `0 0 16px 4px ${transparentize(primaryColor, 0.55)(theme)}`,
-  //   ],
-  // };
   const pulseAnimation = {
     boxShadow: [
       `0 0 16px 4px rgb(255,255,255,0.35)`,
