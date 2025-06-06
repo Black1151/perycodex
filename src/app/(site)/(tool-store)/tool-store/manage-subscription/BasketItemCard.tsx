@@ -122,13 +122,6 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
                   w={"100%"}
                   noOfLines={2}
                   fontSize={[16, 18, 20, 20]}
-                  cursor="pointer"
-                  onClick={() =>
-                    window.open(
-                      `/tool-store/${item.toolConfigUniqueId}`,
-                      "_blank"
-                    )
-                  }
                 >
                   {item.toolConfig.displayName}
                 </Text>
