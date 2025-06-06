@@ -228,6 +228,7 @@ export const SubscriptionActions: React.FC<SubscriptionActionsProps> = ({
       subtitle: "Stop future billing",
       Icon: CancelIcon,
       onClick: onOpenCancel,
+      disabled: true
     },
   ];
 

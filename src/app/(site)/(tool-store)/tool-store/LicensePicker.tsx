@@ -18,6 +18,7 @@ import { PerygonModal } from "@/components/modals/PerygonModal";
 import { useRouter } from "next/navigation";
 import { SpringModal } from "@/components/modals/springModal/SpringModal";
 import { Message, Phone, Send, Sms } from "@mui/icons-material";
+import { RaisedButton } from "./RaisedButton";
 
 interface LicensePickerProps {
   showAlreadySubscribedText?: boolean;
@@ -86,29 +87,15 @@ export default function LicensePicker({
           h="auto"
           textAlign={"center"}
         >
-          <Button
-            variant="outline"
-            size="lg"
-            bg="red.100"
-            h="auto"
-            maxH={"80px"}
-            _hover={{ bg: "red.200" }}
-            onClick={handleDecrease}
-            isLoading={decreaseLoading}
-            spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
-            disabled={increaseLoading || decreaseLoading}
-          >
-            <Box
-              w="100%"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-            >
-              -20
-            </Box>
-          </Button>
+          <RaisedButton
+            text="-20"
+            handleIncrease={handleDecrease}
+            increaseLoading={increaseLoading}
+            decreaseLoading={decreaseLoading}
+            color="red"
+          />
 
-          <VStack spacing={2} justify="center" flex="1" px={4}>
+          <VStack spacing={2} justify="center" flex="1" px={4} color={theme.colors.primaryTextColor}>
             {showAlreadySubscribedText ? (
               <>
                 <Flex
@@ -153,20 +140,13 @@ export default function LicensePicker({
             )}
           </VStack>
 
-          <Button
-            variant="outline"
-            size="lg"
-            bg="green.100"
-            h="auto"
-            maxH={"80px"}
-            _hover={{ bg: "green.200" }}
-            onClick={handleIncrease}
-            isLoading={increaseLoading}
-            disabled={increaseLoading || decreaseLoading}
-            spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
-          >
-            +20
-          </Button>
+          <RaisedButton
+            text="+20"
+            handleIncrease={handleIncrease}
+            increaseLoading={increaseLoading}
+            decreaseLoading={decreaseLoading}
+            color="green"
+          />
         </Flex>
         {isMobile && showAlreadySubscribedText && (
           <Text fontSize={15} color="gray.500" textAlign={"center"}>

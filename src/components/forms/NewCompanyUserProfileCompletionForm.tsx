@@ -157,7 +157,7 @@ export function NewCompanyUserProfileCompletionForm({
 
           <InputField
             name="mobile"
-            placeholder="Mobile"
+            placeholder="Mobile *"
             type="text"
             register={() =>
               register("mobile", {

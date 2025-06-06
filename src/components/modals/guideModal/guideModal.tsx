@@ -262,7 +262,7 @@ export default function GuideModal({
       <Modal isOpen={isOpen} onClose={onClose} size="6xl" isCentered>
         <ModalOverlay />
         <ModalContent
-          maxH="90vh"
+          maxH="75vh"
           maxW="90vw"
           minH="80vh"
           minW="80vw"
