@@ -27,6 +27,7 @@ import { Menu, Search } from "@mui/icons-material";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import AdminHeading from "@/components/AdminHeader";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
+import ZoomableImg from "@/components/ZoomableImg";
 
 // Define Guide and ToolConfig types
 type Guide = {
@@ -35,7 +36,7 @@ type Guide = {
   urlPath: string;
   sortOrder: number;
   toolId?: number | string;
-  guideImagePath: "string"
+  guideImagePath: "string";
 };
 
 type ToolConfig = {
@@ -357,15 +358,9 @@ export default function HelpCentrePage() {
                 bg={cardBg}
               >
                 {selectedGuide ? (
-                  <Image
+                  <ZoomableImg
                     src={selectedGuide.guideImagePath}
                     alt={selectedGuide.title}
-                    width="100%" // fill container’s width
-                    height="auto" // let height exceed container
-                    objectFit="contain" // preserve aspect ratio
-                    onLoad={() => setPdfLoading(false)}
-                    onError={() => setEmbedError(true)}
-                    aria-label={`Guide: ${selectedGuide.title}`}
                   />
                 ) : (
                   <Center h="full" p={8}>
