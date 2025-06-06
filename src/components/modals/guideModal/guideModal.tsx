@@ -35,6 +35,7 @@ import {
 import { useFetchClient } from "@/hooks/useFetchClient";
 import MarkAsRead from "./markAsRead";
 import { useUser } from "@/providers/UserProvider";
+import ZoomableImg from "@/components/ZoomableImg";
 
 type GuideModalProps = {
   isOpen: boolean;
@@ -382,12 +383,13 @@ export default function GuideModal({
                             overflowX="hidden" // ← prevent horizontal scrolling
                             bg="gray.50" // ← just an example background
                           >
-                            <Image
+                            {/* <Image
                               src={selectedGuide.guideImagePath}
                               width="100%" // ← force image to fill container’s width
                               height="auto" // ← let height grow beyond container
                               objectFit="contain" // ← preserves aspect ratio
-                            />
+                            /> */}
+                            <ZoomableImg src={selectedGuide.guideImagePath}/>
                           </Box>
                         ) : (
                           <>
