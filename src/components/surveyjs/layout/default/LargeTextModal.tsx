@@ -12,6 +12,7 @@ import {
   ModalHeaderProps,
   ModalOverlay,
   Box,
+  useTheme,
 } from "@chakra-ui/react";
 import DoneIcon from "@mui/icons-material/Done";
 import CloseIcon from "@mui/icons-material/Close";
@@ -55,6 +56,7 @@ const LargeTextModal: React.FC<ModalProps> = ({
   const bodyRef = useRef<HTMLDivElement>(null);
   const [showTopShadow, setShowTopShadow] = useState(false);
   const [showBottomShadow, setShowBottomShadow] = useState(false);
+  const theme = useTheme();
 
   const handleScroll = () => {
     if (!bodyRef.current) return;
@@ -81,7 +83,10 @@ const LargeTextModal: React.FC<ModalProps> = ({
     >
       {" "}
       <ModalOverlay />
-      <ModalContent bgColor="elementBG" maxH={"75vh"}>
+      <ModalContent
+        bgColor={theme.colors.elementBG}
+        maxH={"75vh"}
+      >
         <PerygonCard>
           {icon && (
             <Flex
@@ -98,6 +103,7 @@ const LargeTextModal: React.FC<ModalProps> = ({
               justifyContent={"center"}
               alignItems={"center"}
               width={"100%"}
+              color={theme.colors.primaryTextColour}
             >
               {title}
             </Flex>
@@ -111,6 +117,7 @@ const LargeTextModal: React.FC<ModalProps> = ({
             borderRadius="lg"
             overflow="hidden"
             mx={[2, 4, 8]}
+            color={theme.colors.primaryTextColour}
           >
             {/* Scrollable box (now `position="relative"`) */}
             <Box
@@ -128,7 +135,8 @@ const LargeTextModal: React.FC<ModalProps> = ({
                   left: 0,
                   right: 0,
                   height: "16px",
-                  background: "linear-gradient(to bottom, rgba(0,0,0,0.2), transparent)",
+                  background:
+                    "linear-gradient(to bottom, rgba(0,0,0,0.2), transparent)",
                   pointerEvents: "none",
                   zIndex: 1,
                 }}
@@ -136,7 +144,9 @@ const LargeTextModal: React.FC<ModalProps> = ({
                 animate={{ opacity: showTopShadow ? 1 : 0 }}
                 transition={{ duration: 0.2 }}
               />
-              <Flex px={[2, 4, 4]}>{bodyContent}</Flex>
+              <Flex px={[2, 4, 4]} color={theme.colors.primaryTextColor}>
+                {bodyContent}
+              </Flex>
               <MotionBox
                 style={{
                   position: "sticky",
@@ -144,7 +154,8 @@ const LargeTextModal: React.FC<ModalProps> = ({
                   left: 0,
                   right: 0,
                   height: "16px",
-                  background: "linear-gradient(to top, rgba(0,0,0,0.2), transparent)",
+                  background:
+                    "linear-gradient(to top, rgba(0,0,0,0.2), transparent)",
                   pointerEvents: "none",
                   zIndex: 1,
                 }}

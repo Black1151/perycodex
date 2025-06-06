@@ -26,7 +26,6 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
   const [loading, setLoading] = React.useState(false);
   const router = useRouter();
 
-  const borderColor = "rgb(255, 255, 255, 0.65)";
   const cardBg = theme.colors.elementBG;
   const textColor = theme.colors.primaryTextColor;
   const addBtnBg = transparentize(theme.colors.seduloGreen, 0.6)(theme);
@@ -266,7 +265,7 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
                   size="sm"
                   variant="outline"
                   border="none"
-                  color={"white"}
+                  color={theme.colors.primaryTextColor}
                   bg={isInBasket ? removeBtnBg : addBtnBg}
                   _hover={{
                     color: "white",
@@ -280,14 +279,14 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
                   {isInBasket ? (
                     <HStack spacing={1} align="center" m={0}>
                       <Remove fontSize="small" />
-                      <Text fontSize="sm" color="white">
+                      <Text fontSize="sm" color={theme.colors.primaryTextColor}>
                         Remove
                       </Text>
                     </HStack>
                   ) : (
                     <HStack spacing={1} align="center" m={0}>
                       <Add fontSize="small" />
-                      <Text fontSize="sm" color="white">
+                      <Text fontSize="sm" color={theme.colors.primaryTextColor}>
                         Add
                       </Text>
                     </HStack>
@@ -301,6 +300,7 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
                     const url = `${tool.appUrl}?toolId=${tool.id}&wfId=${tool.workflowId}`;
                     router.push(url);
                   }}
+                  color={theme.colors.primaryTextColor}
                 >
                   Start Tool
                 </Button>

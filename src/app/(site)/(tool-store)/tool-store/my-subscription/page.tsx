@@ -67,7 +67,7 @@ export default function CurrentSubscriptionPage() {
   if (loading) return <Spinner />;
   if (!subscription) {
     return (
-      <VStack h="70vh" justify="center" spacing={4}>
+      <VStack h="70vh" justify="center" spacing={4} color={theme.colors.primaryTextColor}>
         <WarningIcon fontSize="large" />
         <Text fontSize={{ base: "lg", md: "xl" }}>
           No active subscription found.
@@ -106,15 +106,16 @@ export default function CurrentSubscriptionPage() {
             <Flex
               key={item.id}
               align="center"
-              bg={idx % 2 ? "gray.50" : "white"}
+              bg={theme.colors.elementBG}
               rounded="md"
               shadow="sm"
               px={3}
               py={3}
+              color={theme.colors.primaryTextColor}
             >
               {/* icon */}
               <Flex
-                bg={primaryTransparent}
+                bg={theme.colors.primary}
                 boxSize="64px"
                 borderRadius="md"
                 align="center"
@@ -137,7 +138,7 @@ export default function CurrentSubscriptionPage() {
                 <Text fontWeight="semibold" fontSize={{ base: "md", md: "lg" }}>
                   {item.displayName}
                 </Text>
-                <Text fontSize={{ base: "sm", md: "md" }} color="gray.500">
+                <Text fontSize={{ base: "sm", md: "md" }} color={theme.colors.secondaryTextColor}>
                   {subscription.licensedUsers} licences
                 </Text>
               </Box>
@@ -149,12 +150,12 @@ export default function CurrentSubscriptionPage() {
                   <Text
                     as="span"
                     fontSize={{ base: "sm", md: "md" }}
-                    color="gray.500"
+                    color={theme.colors.secondaryTextColor}
                   >
                     /{subscription.isAnnual ? "yr" : "mo"}
                   </Text>
                 </Text>
-                <Text fontSize={{ base: "sm", md: "md" }} color="gray.500">
+                <Text fontSize={{ base: "sm", md: "md" }} color={theme.colors.secondaryTextColor}>
                   £{(Number(item.itemGrandTotal) * 1.2).toFixed(2)} (incl. VAT)
                 </Text>
               </Box>
@@ -165,7 +166,7 @@ export default function CurrentSubscriptionPage() {
         <VStack gap={4} h={"min"}>
           {/* ——— Totals card ——— */}
           <Box
-            bg={cardBg}
+            bg={theme.colors.elementBG}
             borderWidth="1px"
             borderColor={borderColor}
             borderRadius="md"
@@ -178,17 +179,17 @@ export default function CurrentSubscriptionPage() {
             <SimpleGrid columns={2} spacingY={4} spacingX={6} mb={5}>
               {subtotal !== "0" && (
                 <>
-                  <Text fontSize={{ base: "sm", md: "md" }} color="gray.600">
+                  <Text fontSize={{ base: "sm", md: "md" }} color={theme.colors.secondaryTextColor}>
                     {subscription.isAnnual ? "Annual" : "Monthly"} Subtotal
                   </Text>
-                  <Text textAlign="right" fontSize={{ base: "md", md: "lg" }}>
+                  <Text textAlign="right" fontSize={{ base: "md", md: "lg" }} color={theme.colors.primaryTextColor}>
                     £{Number(subtotal).toFixed(2)}
                   </Text>
                 </>
               )}
               {discountsTotal !== "0" && (
                 <>
-                  <Text fontSize={{ base: "sm", md: "md" }} color="gray.600">
+                  <Text fontSize={{ base: "sm", md: "md" }} color={theme.colors.primaryTextColor}>
                     Discounts
                   </Text>
                   <Text
@@ -202,21 +203,22 @@ export default function CurrentSubscriptionPage() {
               )}
               {taxTotal !== "0" && (
                 <>
-                  <Text fontSize={{ base: "sm", md: "md" }} color="gray.600">
+                  <Text fontSize={{ base: "sm", md: "md" }} color={theme.colors.primaryTextColor}>
                     VAT
                   </Text>
-                  <Text textAlign="right" fontSize={{ base: "md", md: "lg" }}>
+                  <Text textAlign="right" fontSize={{ base: "md", md: "lg" }} color={theme.colors.primaryTextColor}>
                     £{Number(taxTotal).toFixed(2)}
                   </Text>
                 </>
               )}
-              <Text fontWeight="medium" fontSize={{ base: "sm", md: "md" }}>
+              <Text fontWeight="medium" fontSize={{ base: "sm", md: "md" }} color={theme.colors.primaryTextColor}>
                 Total
               </Text>
               <Text
                 fontWeight="bold"
                 textAlign="right"
                 fontSize={{ base: "lg", md: "xl" }}
+                color={theme.colors.primaryTextColor}
               >
                 £{Number(grandTotal).toFixed(2)}
               </Text>
@@ -250,7 +252,7 @@ export default function CurrentSubscriptionPage() {
 
           {/* action buttons */}
           <Box
-            bg={cardBg}
+            bg={theme.colors.elementBG}
             borderWidth="1px"
             borderColor={borderColor}
             borderRadius="md"

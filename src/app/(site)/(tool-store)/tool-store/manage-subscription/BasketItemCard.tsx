@@ -52,6 +52,7 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
       justify="center"
       w="100%"
       position="relative"
+      color={theme.colors.primaryTextColor}
     >
       <Flex
         direction={"column"}

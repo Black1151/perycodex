@@ -322,7 +322,7 @@ export default function BasketPage() {
 
           {/* Right: Totals & Controls */}
           <Box w={{ base: "100%", lg: "400px" }} gap={4}>
-            <Box bg="white" borderRadius="lg" boxShadow="sm" p={6} mb={4}>
+            <Box bg={theme.colors.elementBG} borderRadius="lg" boxShadow="sm" p={6} mb={4} color={theme.colors.primaryTextColor}>
               {/* Totals */}
               <HStack justify="space-between" mb={4}>
                 <Text fontSize={[14, 18]} fontWeight="semibold">
@@ -351,6 +351,7 @@ export default function BasketPage() {
                         fontSize="md"
                         duration={0.65}
                         color="green.500"
+                        isDiscount={true}
                       />
                     </HStack>
                   </HStack>
