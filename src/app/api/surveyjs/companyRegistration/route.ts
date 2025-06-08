@@ -8,6 +8,8 @@ interface CompanyData {
   userUniqueId: string;
   userId: number;
   telephone: string;
+  sicCode: string;
+  companyNumber: string;
   sectorId: number;
   regionId: number;
   businessTypeId: number;
@@ -55,6 +57,8 @@ export async function POST(req: Request) {
       businessTypeId: data.businessTypeId,
       sectorId: data.sectorId,
       regionId: data.regionId,
+      sicCode: data.sicCode,
+      companyNo: data.companyNumber,
       primaryContactId: data.userId,
       companySizeId: data.companySizeId,
       numberOfEmployees: data.numberOfEmployees,
