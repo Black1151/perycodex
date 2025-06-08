@@ -206,7 +206,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
             fontFamily="bonfire"
             fontSize={[34, 32, 42]}
             mb={-4}
-            color={theme.colors.primaryTextColor}
+            color={theme.colors.elementBG}
           >
             {title}
           </Text>

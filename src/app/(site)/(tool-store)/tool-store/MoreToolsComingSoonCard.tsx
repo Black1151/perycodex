@@ -1,10 +1,11 @@
 "use client";
 
 import React from "react";
-import { Box, Text, VStack, useTheme } from "@chakra-ui/react";
+import { Box, Text, VStack, useTheme, Link, Button } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { transparentize } from "@chakra-ui/theme-tools";
 import { Construction } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
 
 /**
  * A placeholder card that fits alongside ToolCard components,
@@ -16,6 +17,7 @@ export function MoreToolsComingSoonCard() {
   const textColor = "white"
   const secondaryTextColor = "whiteAlpha.900";
   const borderColor = transparentize(theme.colors.elementBG, 0.8)(theme);
+  const router = useRouter();
 
   return (
     <VStack>
@@ -30,6 +32,7 @@ export function MoreToolsComingSoonCard() {
         flexDirection="column"
         h="full"
         as={motion.div}
+        minH="300px"
         whileHover={{ scale: 1.00 }}
       >
         <VStack
@@ -47,8 +50,12 @@ export function MoreToolsComingSoonCard() {
             More Tools Coming Soon!
           </Text>
           <Text fontSize="sm" textAlign="center" color={secondaryTextColor}>
-            We're hard at work building new tools. Stay tuned!
+            Our team is working hard to build new tools. Stay tuned!
           </Text>
+          <Text fontSize="sm" textAlign="center" color={secondaryTextColor}>
+            Have something in mind? 
+          </Text>
+          <Button variant={"outline"} size={"sm"} bg={cardBg} color="black" onClick={() => router.push("/tool-store/contact-sales")}>Let us know</Button>
         </VStack>
       </Box>
     </VStack>
