@@ -4,8 +4,6 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import apiClient from "./lib/apiClient";
 
-/// TESTING: DELETE THSI COMMENT
-
 export async function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   const fullPath = `${pathname}${search}`;
