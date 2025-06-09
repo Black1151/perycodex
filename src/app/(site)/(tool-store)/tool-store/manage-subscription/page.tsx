@@ -32,7 +32,6 @@ import BasketItemCard from "./BasketItemCard";
 import ToolSelectedIndicators from "./ToolSelectedIndicators";
 import LicenseAmountIndicator from "./LicenseAmountIndicator";
 import { subscriptionLimits } from "@/utils/constants/subscriptionLimits";
-import { PerygonModal } from "@/components/modals/PerygonModal";
 import ToolInfoCard from "./ToolInfoCard";
 import LicensePicker from "../LicensePicker";
 import BillingAddressForm, {

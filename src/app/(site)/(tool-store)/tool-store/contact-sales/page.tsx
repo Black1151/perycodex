@@ -89,7 +89,7 @@ const ContactSales: React.FC = () => {
               <Code fontSize="lg">
                 {subscription?.uniqueId
                   ? subscription.uniqueId.slice(0, 6)
-                  : "Loading..."}
+                  : "N/A"}
               </Code>
             </HStack>
 

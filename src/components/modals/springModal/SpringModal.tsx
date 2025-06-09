@@ -24,40 +24,25 @@ export interface SpringModalProps {
   onClose: () => void;
   showClose: boolean;
 
-  /** Big translucent icon behind everything (e.g. <FiAlertCircle />) */
   bgIcon?: React.ReactNode;
-  /** Smaller icon in the white circle above the header */
   frontIcon?: React.ReactNode;
-  /** Header text or JSX */
   header: React.ReactNode;
-  /** Body text or JSX */
   body: React.ReactNode;
 
-  /** Label for the “secondary” (left) button. */
   secondaryLabel?: string;
-  /** Callback for when the secondary button is clicked */
   onSecondaryClick?: () => void;
-  /** If true, the secondary button will show a spinner and be disabled */
   isSecondaryLoading?: boolean;
 
-  /** Label for the “primary” (right) button. */
   primaryLabel?: string;
-  /** Callback for when the primary button is clicked */
   onPrimaryClick?: () => void;
-  /** If true, the primary button will show a spinner and be disabled */
   isPrimaryLoading?: boolean;
 
-  /**
-   * If you want a totally custom footer, pass this node instead.
-   * If `footer` is defined, the two “primary/secondary” props are ignored.
-   */
+  //Totally custom footer if required
   footer?: React.ReactNode;
 
-  /** Spread any extra props onto the ModalContent container */
   modalContentProps?: React.ComponentProps<typeof ModalContent>;
-
-  /** Background color (or gradient) if you want to override the default gradient */
   bg?: string;
+  color?: string;
 }
 
 const overlayTransition: Transition = { duration: 0.2, ease: "easeOut" };
@@ -84,6 +69,7 @@ export const SpringModal: React.FC<SpringModalProps> = ({
   isPrimaryLoading = false,
   modalContentProps,
   bg,
+  color = "white"
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered motionPreset="none">
@@ -106,7 +92,7 @@ export const SpringModal: React.FC<SpringModalProps> = ({
         exit={{ scale: 0, rotate: 0, opacity: 0 }}
         transition={contentTransition as any}
         bgGradient="linear(to-br, violet.600, indigo.600)"
-        color="white"
+        color={color}
         borderRadius="lg"
         overflow="hidden"
         maxW="lg"
@@ -144,7 +130,7 @@ export const SpringModal: React.FC<SpringModalProps> = ({
               mx="auto"
               mb="2"
               fontSize="3xl"
-              color={bg ?? "indigo.600"}
+              color={bg ?? "grey.500"}
             >
               {frontIcon}
             </Box>
@@ -159,14 +145,14 @@ export const SpringModal: React.FC<SpringModalProps> = ({
             position="absolute"
             top="2"
             right="2"
-            color="white"
+            color={color}
             opacity={0.8}
             _hover={{ opacity: 1 }}
             zIndex={2}
           />
         )}
 
-        <ModalBody pt={0} pb={6} position="relative" zIndex={1}>
+        <ModalBody pt={0} pb={6} position="relative" zIndex={1} color={color}>
           <Box textAlign="center">{body}</Box>
         </ModalBody>
 
