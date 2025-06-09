@@ -30,7 +30,7 @@ const ContactSales: React.FC = () => {
     if (!subscription?.uniqueId) {
       getSubscription();
     }
-  }, [subscription, getSubscription]);
+  }, [subscription]);
 
   return (
     <VStack spacing={3} align="center" justify="center" w="100%">
@@ -86,7 +86,7 @@ const ContactSales: React.FC = () => {
           <VStack align="start" spacing={3}>
             <HStack>
               <Text fontWeight="bold">Your Subscription ID:</Text>
-              <Code fontSize="lg">
+              <Code fontSize="lg" textTransform={"uppercase"}>
                 {subscription?.uniqueId
                   ? subscription.uniqueId.slice(0, 6)
                   : "N/A"}
@@ -95,7 +95,7 @@ const ContactSales: React.FC = () => {
 
             <HStack>
               <Text fontWeight="bold">Your Organisation ID:</Text>
-              <Code fontSize="lg">
+              <Code fontSize="lg" textTransform={"uppercase"}>
                 {user.user?.customerUniqueId?.slice(0, 6) || "Unknown"}
               </Code>
             </HStack>
