@@ -262,12 +262,14 @@ export default function GuideModal({
       <Modal isOpen={isOpen} onClose={onClose} size="6xl" isCentered>
         <ModalOverlay />
         <ModalContent
-          maxH="75vh"
+          maxH={{ base: "95dvh", md: "95vh" }}
           maxW="90vw"
-          minH="80vh"
           minW="80vw"
-          borderRadius={"md"}
-          overflow={"none"}
+          h={{ base: "95dvh", md: "900px" }}
+          borderRadius="md"
+          overflow="hidden"
+          display="flex"
+          flexDirection="column"
         >
           <ModalCloseButton />
           <ModalBody
@@ -275,8 +277,8 @@ export default function GuideModal({
             display="flex"
             flexDirection="column"
             bg={bg}
-            borderRadius={"md"}
-            overflow={"none"}
+            flex="1"
+            overflow="hidden"
           >
             <HStack
               px={4}
@@ -314,7 +316,7 @@ export default function GuideModal({
                 fontSize={["2xl", "2xl", "3xl"]}
                 fontWeight="medium"
                 fontFamily={"bonfire"}
-                mb={-3}
+                mb={-2}
               >
                 {guideType === "tool"
                   ? "Tool Guide"
@@ -389,7 +391,7 @@ export default function GuideModal({
                               height="auto" // ← let height grow beyond container
                               objectFit="contain" // ← preserves aspect ratio
                             /> */}
-                            <ZoomableImg src={selectedGuide.guideImagePath}/>
+                            <ZoomableImg src={selectedGuide.guideImagePath} />
                           </Box>
                         ) : (
                           <>

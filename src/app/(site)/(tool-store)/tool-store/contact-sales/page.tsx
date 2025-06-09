@@ -14,16 +14,16 @@ import { useUser } from "@/providers/UserProvider";
 import { Phone } from "@mui/icons-material";
 import BackButton from "@/components/BackButton";
 
-interface ContactSalesProps {
-  subscriptionId: string;
-}
-
 const SUPPORT_EMAIL = "sales@perygon.co.uk";
 const SUPPORT_TEL = "0333 222 4445";
 
-const ContactSales: React.FC<ContactSalesProps> = ({ subscriptionId }) => {
-  const basket = useBasket();
+const ContactSales: React.FC = () => {
+  const {subscription, getSubscription} = useBasket();
   const user = useUser();
+
+  if (!subscription?.uniqueId) {
+    getSubscription()
+  }
 
   return (
     <Box
@@ -36,20 +36,20 @@ const ContactSales: React.FC<ContactSalesProps> = ({ subscriptionId }) => {
       boxShadow="md"
     >
       <HStack align={"center"} mb={4} spacing={4}>
-        <BackButton color={"grey.700"} iconSize="medium"/>
+        <BackButton color={"grey.700"} iconSize="medium" />
         <Heading
           as="h1"
           size="xl"
           fontWeight={"normal"}
           fontFamily={"bonfire"}
-          mb={-2}
+          mb={-3}
         >
           Contact Sales
         </Heading>
         <Phone fontSize="large" />
       </HStack>
       <Text mb="4">
-        To change your billing cycle, adjust an annual subscription or any other
+        To discuss an order, change your billing cycle, adjust an annual subscription or any other
         sales inquiries, please contact us using the information below.
       </Text>
       <Stack spacing={2} mb={6}>
@@ -70,9 +70,12 @@ const ContactSales: React.FC<ContactSalesProps> = ({ subscriptionId }) => {
         <HStack>
           <Text fontWeight="bold">Your Subscription ID:</Text>
           <Code mt={1} fontSize="md">
-            {basket.subscription?.uniqueId?.slice(0, 6)}
+            {subscription?.uniqueId
+              ? subscription.uniqueId.slice(0, 6)
+              : "Loading..."}
           </Code>
         </HStack>
+
         <HStack>
           <Text fontWeight="bold">Your Organisation ID:</Text>
           <Code mt={1} fontSize="md">
@@ -85,7 +88,5 @@ const ContactSales: React.FC<ContactSalesProps> = ({ subscriptionId }) => {
 };
 
 export default function Page() {
-  const subscriptionId = "SUBSCRIPTION-123456";
-
-  return <ContactSales subscriptionId={subscriptionId} />;
+  return <ContactSales/>;
 }
