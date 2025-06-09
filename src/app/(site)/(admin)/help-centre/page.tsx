@@ -336,18 +336,6 @@ export default function HelpCentrePage() {
             position="relative"
             overflow="hidden"
           >
-            {/* Spinner while loading */}
-            {pdfLoading && (
-              <Flex
-                position="absolute"
-                inset={0}
-                align="center"
-                justify="center"
-              >
-                <Spinner size="xl" />
-              </Flex>
-            )}
-
             {!embedError ? (
               // Scrollable container for the “A4 portrait” image
               <Box
@@ -358,10 +346,20 @@ export default function HelpCentrePage() {
                 bg={cardBg}
               >
                 {selectedGuide ? (
-                  <ZoomableImg
-                    src={selectedGuide.guideImagePath}
-                    alt={selectedGuide.title}
-                  />
+                  isMobile ? (
+                    <ZoomableImg
+                      src={selectedGuide.guideImagePath}
+                      alt={selectedGuide.title}
+                    />
+                  ) : (
+                    <iframe
+                      src={`${selectedGuide.urlPath}#toolbar=0&navpanes=0&scrollbar=0`}
+                      title={selectedGuide.title}
+                      width="100%"
+                      height="100%"
+                      style={{ border: "none" }}
+                    />
+                  )
                 ) : (
                   <Center h="full" p={8}>
                     <Text fontSize="lg" color="gray.500">
