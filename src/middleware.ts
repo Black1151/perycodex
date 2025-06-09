@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import apiClient from "./lib/apiClient";
 
+/// TESTING: DELETE THSI COMMENT
+
 export async function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   const fullPath = `${pathname}${search}`;
@@ -16,6 +18,7 @@ export async function middleware(request: NextRequest) {
   // • /api/* (backend routes) - not included yet
   // • /_next/* (Next.js internals)
   // • other public routes
+
   if (
     /\/[^\/]+\.[^\/]+$/.test(pathname) || // ends with a file extension
     pathname === "/login" ||
