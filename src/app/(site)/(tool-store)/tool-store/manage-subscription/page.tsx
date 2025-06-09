@@ -322,7 +322,14 @@ export default function BasketPage() {
 
           {/* Right: Totals & Controls */}
           <Box w={{ base: "100%", lg: "400px" }} gap={4}>
-            <Box bg={theme.colors.elementBG} borderRadius="lg" boxShadow="sm" p={6} mb={4} color={theme.colors.primaryTextColor}>
+            <Box
+              bg={theme.colors.elementBG}
+              borderRadius="lg"
+              boxShadow="sm"
+              p={6}
+              mb={4}
+              color={theme.colors.primaryTextColor}
+            >
               {/* Totals */}
               <HStack justify="space-between" mb={4}>
                 <Text fontSize={[14, 18]} fontWeight="semibold">
@@ -383,7 +390,8 @@ export default function BasketPage() {
                 </HStack>
               </Stack>
 
-              {basket.isAnnual && !basket.isFree ? (
+              {/* REMOVING STRIPE CHECKOUT BTN FOR NOW - UNCOMMENT BELOW FOR FULL IMPLEMENTATION*/}
+              {/* {basket.isAnnual && !basket.isFree ? (
                 <Button
                   colorScheme="brand"
                   w="full"
@@ -393,6 +401,7 @@ export default function BasketPage() {
                   disabled={basket.quantity === 0}
                   spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
                   spinnerPlacement="start"
+                  color={"white"}
                 >
                   Contact Sales
                 </Button>
@@ -410,7 +419,21 @@ export default function BasketPage() {
                 >
                   Checkout
                 </Button>
-              )}
+              )} */}
+
+              <Button
+                colorScheme="brand"
+                w="full"
+                mb={3}
+                onClick={() => router.push("/tool-store/contact-sales")}
+                isLoading={checkoutLoading}
+                disabled={basket.quantity === 0}
+                spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
+                spinnerPlacement="start"
+                color={"white"}
+              >
+                Contact Sales
+              </Button>
 
               <Button
                 variant="outline"
