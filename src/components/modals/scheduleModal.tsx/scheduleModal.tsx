@@ -1,7 +1,7 @@
 /**
  * QuickScheduleSetupModal
  *
- * A responsive modal for viewing / editing “quick schedules” (currently only
+ * A responsive modal for viewing / editing "quick schedules" (currently only
  * email schedules).  Responsibilities:
  *
  * 1.  Fetch schedules for the supplied customer + tool
@@ -118,7 +118,7 @@ export default function QuickScheduleSetupModal({
     }
   }, [customerId, toolId]);
 
-  /* ───────────────────── data fetch: “has this schedule been viewed?” ────── */
+  /* ───────────────────── data fetch: "has this schedule been viewed?" ────── */
 
   const checkUnviewed = useCallback(async () => {
     if (!schedules.length) return;
@@ -210,6 +210,7 @@ export default function QuickScheduleSetupModal({
           selected?.scheduleId === sched.scheduleId ? "blue.400" : "gray.200"
         }
         borderRadius="md"
+        h="min"
         p={3}
         mb={2}
         opacity={locked ? 0.5 : 1}
@@ -303,29 +304,168 @@ export default function QuickScheduleSetupModal({
     <>
       {/* Mobile drawer */}
       {isMobile && (
-        <Drawer isOpen={drawerOpen} placement="left" onClose={closeDrawer}>
-          <DrawerOverlay />
-          <DrawerContent>
-            <DrawerCloseButton />
-            <DrawerBody p={4}>
+        <Box
+          position="fixed"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+          zIndex={9999}
+          display={drawerOpen ? "block" : "none"}
+        >
+          <Box
+            position="fixed"
+            top={0}
+            left={0}
+            right={0}
+            bottom={0}
+            bg="blackAlpha.600"
+            onClick={closeDrawer}
+            zIndex={9999}
+          />
+          <Box
+            position="fixed"
+            top={0}
+            left={0}
+            bottom={0}
+            width="85%"
+            maxWidth="400px"
+            bg={bg}
+            boxShadow="xl"
+            display="flex"
+            flexDirection="column"
+            zIndex={10000}
+          >
+            <Box
+              p={4}
+              borderBottom="1px solid"
+              borderColor="gray.200"
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+            >
               <Text
                 fontSize={["xl", "2xl", "3xl"]}
                 fontWeight="medium"
                 fontFamily="bonfire"
-                mb={-2}
               >
                 Your Schedules
               </Text>
+              <IconButton
+                aria-label="Close drawer"
+                icon={<Menu />}
+                variant="ghost"
+                onClick={closeDrawer}
+              />
+            </Box>
+
+            <Box
+              flex="1"
+              overflowY="auto"
+              p={4}
+              sx={{
+                WebkitOverflowScrolling: "touch",
+                touchAction: "pan-y",
+                "&::-webkit-scrollbar": { display: "none" },
+                "-ms-overflow-style": "none",
+                scrollbarWidth: "none"
+              }}
+            >
               {loading ? (
                 <SpinnerBlock />
               ) : error ? (
                 <ErrorAlert message={error} />
+              ) : Object.values(grouped).every((arr) => !arr.length) ? (
+                <Text color="gray.500" textAlign="center" mt={10}>
+                  No schedules available.
+                </Text>
               ) : (
-                SidebarList
+                <VStack spacing={4} align="stretch">
+                  {Object.entries(grouped).map(([key, items]) => (
+                    <Box key={key}>
+                      <Text fontWeight="bold" fontSize="md" mb={2}>
+                        Emails
+                      </Text>
+                      {items.map((sched) => (
+                        <Box
+                          key={sched.scheduleId}
+                          position="relative"
+                          border="1px solid"
+                          borderColor={
+                            selected?.scheduleId === sched.scheduleId
+                              ? "blue.400"
+                              : "gray.200"
+                          }
+                          borderRadius="md"
+                          p={3}
+                          mb={2}
+                          opacity={isFree && sched.subscriptionType === "paid" ? 0.5 : 1}
+                          _hover={{
+                            cursor:
+                              isFree && sched.subscriptionType === "paid"
+                                ? "not-allowed"
+                                : "pointer",
+                            bg: isFree && sched.subscriptionType === "paid" ? undefined : "gray.50",
+                          }}
+                          onClick={() => {
+                            if (!(isFree && sched.subscriptionType === "paid")) {
+                              setSelected(sched);
+                              closeDrawer();
+                            }
+                          }}
+                        >
+                          {isFree && sched.subscriptionType === "paid" && (
+                            <Lock
+                              fontSize="small"
+                              style={{
+                                position: "absolute",
+                                top: 8,
+                                left: 8,
+                                color: "gray.900",
+                              }}
+                            />
+                          )}
+
+                          <Box
+                            w="10px"
+                            h="10px"
+                            borderRadius="full"
+                            bg={sched.isActive ? "green.400" : "red.300"}
+                            position="absolute"
+                            top="8px"
+                            right="8px"
+                            sx={
+                              sched.isActive
+                                ? {
+                                    animation: "pulseGreen 1.2s infinite",
+                                    "@keyframes pulseGreen": {
+                                      "0%": { boxShadow: "0 0 0 0 rgba(72,187,120,.7)" },
+                                      "70%": { boxShadow: "0 0 0 8px rgba(72,187,120,0)" },
+                                      "100%": { boxShadow: "0 0 0 0 rgba(72,187,120,0)" },
+                                    },
+                                  }
+                                : {}
+                            }
+                          />
+
+                          <Text fontWeight="semibold">{sched.name}</Text>
+                          <Text fontSize="sm" color="gray.500">
+                            {formatFrequency(sched)}
+                          </Text>
+                          {"userDistGroupNames" in sched && (
+                            <Text fontSize="sm" color="gray.600">
+                              Groups: {(sched.userDistGroupNames || []).join(", ")}
+                            </Text>
+                          )}
+                        </Box>
+                      ))}
+                    </Box>
+                  ))}
+                </VStack>
               )}
-            </DrawerBody>
-          </DrawerContent>
-        </Drawer>
+            </Box>
+          </Box>
+        </Box>
       )}
 
       {/* Main modal */}

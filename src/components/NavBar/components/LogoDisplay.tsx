@@ -1,6 +1,6 @@
 // components/NavBar/LogoDisplay.tsx
 import React from "react";
-import { HStack, Image, Text, Badge, VStack } from "@chakra-ui/react";
+import { HStack, Image, Text, Badge, Stack } from "@chakra-ui/react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -9,7 +9,7 @@ interface LogoDisplayProps {
   toolLogo?: string;
   toolPath?: string;
   userIsFree?: boolean;
-  isFreeUntil?: string
+  isFreeUntil?: string;
 }
 
 function daysLeft(freeUntil: string): number {
@@ -48,10 +48,11 @@ const LogoDisplay: React.FC<LogoDisplayProps> = ({
       <HStack spacing={2}>
         <Image src={toolLogo} alt="logo" height="50px" objectFit="contain" />
         {userIsFree && (
-          <HStack spacing={0.5}>
+          <Stack flexDirection={["column", "row", "row"]} spacing={0.5}>
             <MotionBadge
               colorScheme="green"
               h="min-content"
+              w="min-content"
               fontSize={[10, 12]}
               variants={badgeVariants}
               initial="hidden"
@@ -64,6 +65,7 @@ const LogoDisplay: React.FC<LogoDisplayProps> = ({
               <MotionBadge
                 colorScheme="red"
                 h="min-content"
+                w="min-content"
                 fontSize={[10, 12]}
                 variants={badgeVariants}
                 initial="hidden"
@@ -76,6 +78,7 @@ const LogoDisplay: React.FC<LogoDisplayProps> = ({
               <MotionBadge
                 colorScheme="teal"
                 h="min-content"
+                w="min-content"
                 fontSize={[10, 12]}
                 variants={badgeVariants}
                 initial="hidden"
@@ -85,7 +88,7 @@ const LogoDisplay: React.FC<LogoDisplayProps> = ({
                 {amountDays} DAY{amountDays !== 1 ? "S" : ""} LEFT
               </MotionBadge>
             ) : null}
-          </HStack>
+          </Stack>
         )}
       </HStack>
     ) : (
@@ -95,14 +98,16 @@ const LogoDisplay: React.FC<LogoDisplayProps> = ({
           fontSize={[30, 40]}
           bgClip="text"
           color="white"
+          mb={-2.5}
         >
           Perygon
         </Text>
         {userIsFree && (
-          <HStack spacing={0.5}>
+          <Stack flexDirection={["column", "row", "row"]} spacing={0.5}>
             <MotionBadge
               colorScheme="green"
               h="min-content"
+              w="min-content"
               fontSize={[10, 12]}
               variants={badgeVariants}
               initial="hidden"
@@ -115,6 +120,7 @@ const LogoDisplay: React.FC<LogoDisplayProps> = ({
               <MotionBadge
                 colorScheme="red"
                 h="min-content"
+                w="min-content"
                 fontSize={[10, 12]}
                 variants={badgeVariants}
                 initial="hidden"
@@ -127,6 +133,7 @@ const LogoDisplay: React.FC<LogoDisplayProps> = ({
               <MotionBadge
                 colorScheme="cyan"
                 h="min-content"
+                w="min-content"
                 fontSize={[10, 12]}
                 variants={badgeVariants}
                 initial="hidden"
@@ -136,7 +143,7 @@ const LogoDisplay: React.FC<LogoDisplayProps> = ({
                 {amountDays} DAY{amountDays !== 1 ? "S" : ""} LEFT
               </MotionBadge>
             ) : null}
-          </HStack>
+          </Stack>
         )}
       </HStack>
     );

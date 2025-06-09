@@ -49,7 +49,7 @@ export default function LicensePicker({
     } else {
       setDecreaseLoading(true);
       try {
-        await changeLicenseCount(20, true);
+        await changeLicenseCount(10, true);
       } finally {
         setDecreaseLoading(false);
       }
@@ -59,7 +59,7 @@ export default function LicensePicker({
   const handleIncrease = async () => {
     setIncreaseLoading(true);
     try {
-      await changeLicenseCount(20, false);
+      await changeLicenseCount(10, false);
     } finally {
       setIncreaseLoading(false);
     }
@@ -88,7 +88,7 @@ export default function LicensePicker({
           textAlign={"center"}
         >
           <RaisedButton
-            text="-20"
+            text="-10"
             handleIncrease={handleDecrease}
             increaseLoading={increaseLoading}
             decreaseLoading={decreaseLoading}
@@ -141,7 +141,7 @@ export default function LicensePicker({
           </VStack>
 
           <RaisedButton
-            text="+20"
+            text="+10"
             handleIncrease={handleIncrease}
             increaseLoading={increaseLoading}
             decreaseLoading={decreaseLoading}
