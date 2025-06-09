@@ -13,6 +13,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import GroupIcon from "@mui/icons-material/Group";
 import { Business } from "@mui/icons-material";
 import ListAltIcon from '@mui/icons-material/ListAlt';
+import { Phone } from "@mui/icons-material";
 
 const Sidebars: React.FC = () => {
   const { basket } = useBasket();
@@ -42,6 +43,11 @@ const Sidebars: React.FC = () => {
       icon: ListAltIcon,
       href: "/tool-store/my-subscription",
     },
+    {
+      label: "Contact Sales",
+      icon: Phone,
+      href: "/tool-store/contact-sales"
+    }
   ];
 
   const currentPath = pathname.replace(/\/$/, "");
