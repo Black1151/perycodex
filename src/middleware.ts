@@ -36,7 +36,8 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/checkout") ||
     pathname.startsWith("/error") ||
     pathname.startsWith("/password-recovery") ||
-    pathname.startsWith("/trial-expired")
+    pathname.startsWith("/trial-expired") ||
+    pathname.startsWith("/g-login")
   ) {
     return NextResponse.next();
   }
