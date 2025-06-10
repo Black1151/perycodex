@@ -107,8 +107,16 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
         await getBasket();
 
         toast({
-          title: "Added to basket",
-          description: `${tool.displayName}`,
+          title: `Added ${tool.displayName} to basket`,
+          description: (
+            <Box
+              as="span"
+              cursor="pointer"
+              onClick={() => router.push('/tool-store/manage-subscription')}
+            >
+              View Basket
+            </Box>
+          ),
           status: "success",
           duration: 3000,
           isClosable: true,

@@ -19,6 +19,7 @@ import { ToolCard } from "./ToolCard";
 import { ToolConfig } from "./useBasket";
 import {MoreToolsComingSoonCard} from "./MoreToolsComingSoonCard";
 import { Header } from "./Header";
+import { ManageSubscriptionFab } from "./ManageSubscriptionFab";
 
 interface ToolSelectionPageResponse {
   resource: ToolConfig[];
@@ -91,6 +92,7 @@ const ToolStore: React.FC = () => {
         )
         }
       </SimpleGrid>
+      <ManageSubscriptionFab />
     </VStack>
   );
 };
