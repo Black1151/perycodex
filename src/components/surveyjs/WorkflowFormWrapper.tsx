@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 
 // Survey JS
 import "survey-core/survey-core.min.css";
-// import "survey-core/defaultV2.css";
+// import "survey-core/defaultV2.css"; // Keep or remove based on your styling needs
 import { Model } from "survey-core";
 
 // Admin Form
@@ -43,7 +43,17 @@ const WorkflowFormWrapper: React.FC<WorkflowFormWrapperProps> = ({
   );
 
   useEffect(() => {
-    setSurveyJSModel(new Model({ ...formJson }));
+    const newModel = new Model({ ...formJson });
+
+    newModel.scrollToFirstQuestion = () => {};
+    newModel.scrollElementToTop = () => {};
+    newModel.focusFirstQuestionAutomatic = false;
+
+    newModel.onAfterRenderPage.add((_, options) => {
+      window.scrollTo(0, 0); // Scrolls the entire window to the top on navigation event
+    });
+
+    setSurveyJSModel(newModel);
   }, [formJson]);
 
   const [canEdit, setCanEdit] = useState<boolean>(isAllowedToEdit);
