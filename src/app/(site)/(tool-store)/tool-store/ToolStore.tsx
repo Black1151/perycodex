@@ -18,6 +18,7 @@ import { transparentize } from "@chakra-ui/theme-tools";
 import { ToolCard } from "./ToolCard";
 import { ToolConfig } from "./useBasket";
 import {MoreToolsComingSoonCard} from "./MoreToolsComingSoonCard";
+import { AdditionalServicesCard } from "./AdditionalServicesCard";
 import { Header } from "./Header";
 import { ManageSubscriptionFab } from "./ManageSubscriptionFab";
 
@@ -88,6 +89,7 @@ const ToolStore: React.FC = () => {
           <>
             {allTools.map((tool) => <ToolCard key={tool.id} tool={tool} />)}
             <MoreToolsComingSoonCard />
+            <AdditionalServicesCard />
           </>
         )
         }

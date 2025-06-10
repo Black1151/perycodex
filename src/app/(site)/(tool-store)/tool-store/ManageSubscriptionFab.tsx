@@ -41,14 +41,14 @@ export function ManageSubscriptionFab() {
 
   useEffect(() => {
     const basketContentLength = basket?.content?.length ?? 0;
-    
+
     // Only show confetti when items are added (not removed)
     if (basketContentLength > prevBasketLength.current) {
       controls.start("bounce");
       setShowConfetti(true);
       setTimeout(() => setShowConfetti(false), 2000);
     }
-    
+
     prevBasketLength.current = basketContentLength;
   }, [basket?.content?.length, controls]);
 
@@ -57,8 +57,8 @@ export function ManageSubscriptionFab() {
       if (fabRef.current) {
         const rect = fabRef.current.getBoundingClientRect();
         setFabPosition({
-          x: rect.left + rect.width / 2,
-          y: rect.top + rect.height / 2,
+          x: rect.left + rect.width / 2 + window.scrollX,
+          y: rect.top + rect.height / 2 + window.scrollY,
         });
       }
     };
@@ -66,15 +66,19 @@ export function ManageSubscriptionFab() {
     // Update position initially and on window resize
     updatePosition();
     window.addEventListener('resize', updatePosition);
-    return () => window.removeEventListener('resize', updatePosition);
+    window.addEventListener('scroll', updatePosition);
+    return () => {
+      window.removeEventListener('resize', updatePosition);
+      window.removeEventListener('scroll', updatePosition);
+    };
   }, []);
 
   return (
     <Container
       position={isMobile ? "fixed" : "relative"}
-      bottom={isMobile ? 24 : 14}
+      bottom={isMobile ? 145 : 14}
       right={12}
-      left={0}
+      left={isMobile ? 2 : 0}
       maxW="container.xl"
       mx="auto"
       px={[3, 3, 78]}
@@ -100,7 +104,7 @@ export function ManageSubscriptionFab() {
             w="64px"
             h="64px"
             borderRadius="full"
-            bg={theme.colors.darkElementBG}
+            bg={theme.colors.elementBG}
             display="flex"
             alignItems="center"
             justifyContent="center"
@@ -108,7 +112,7 @@ export function ManageSubscriptionFab() {
             backdropFilter="blur(2px)"
             _hover={{
               boxShadow: "0 6px 16px rgba(0,0,0,0.2)",
-              bg: theme.colors.darkElementBG,
+              bg: theme.colors.elementBG,
             }}
           >
             <ShoppingCart
@@ -121,9 +125,9 @@ export function ManageSubscriptionFab() {
         </motion.div>
       </Box>
       {showConfetti && (
-        <MiniConfetti 
-          show={showConfetti} 
-          position={fabPosition} 
+        <MiniConfetti
+          show={showConfetti}
+          position={fabPosition}
         />
       )}
     </Container>

@@ -1,20 +1,16 @@
 "use client";
 
 import React from "react";
-import { Box, Text, VStack, useTheme, Link, Button } from "@chakra-ui/react";
+import { Box, Text, VStack, Button, useTheme } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { transparentize } from "@chakra-ui/theme-tools";
-import { Construction } from "@mui/icons-material";
+import { DisplaySettings, HomeRepairService, MiscellaneousServices } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 
-/**
- * A placeholder card that fits alongside ToolCard components,
- * indicating more tools are coming soon.
- */
-export function MoreToolsComingSoonCard() {
+export function AdditionalServicesCard() {
   const theme = useTheme();
   const cardBg = transparentize(theme.colors.elementBG, 0.25)(theme);
-  const textColor = "white"
+  const textColor = "white";
   const secondaryTextColor = "whiteAlpha.900";
   const borderColor = transparentize(theme.colors.elementBG, 0.8)(theme);
   const router = useRouter();
@@ -46,19 +42,16 @@ export function MoreToolsComingSoonCard() {
           fontSize={"45px"}
           textAlign={"center"}
         >
-          <Construction fontSize="inherit"/>
+          <DisplaySettings fontSize="inherit"/>
           <Text fontSize="xl" fontWeight="bold">
-            More Tools Coming Soon!
+            Additional Services
           </Text>
           <Text fontSize="sm" textAlign="center" color={secondaryTextColor}>
-            Our team is working hard to build new tools. Stay tuned!
+            Discover more ways we can help your business grow and succeed.
           </Text>
-          <Text fontSize="sm" textAlign="center" color={secondaryTextColor}>
-            Have something in mind? 
-          </Text>
-          <Button variant={"outline"} size={"sm"} bg={cardBg} color={secondaryTextColor} onClick={() => router.push("/tool-store/contact-sales")}>Let us know</Button>
+          <Button variant={"outline"} size={"sm"} bg={cardBg} color={secondaryTextColor} onClick={() => router.push("/tool-store/additional-services")}>Explore Services</Button>
         </VStack>
       </Box>
     </VStack>
   );
-}
+} 
