@@ -48,6 +48,7 @@ export default function BasketPage() {
     getBasket,
     removeItemFromBasket,
     addVoucher,
+    removeVoucher,
     error,
   } = useBasket();
   const router = useRouter();
@@ -74,8 +75,8 @@ export default function BasketPage() {
     if (!basket) return [];
     return Array.isArray(basket.content)
       ? basket.content.filter(
-          (item): item is BasketItem => "basketUniqueId" in item
-        )
+        (item): item is BasketItem => "basketUniqueId" in item
+      )
       : [];
   }, [basket]);
 
@@ -84,8 +85,8 @@ export default function BasketPage() {
     if (!basket) return [];
     return Array.isArray(basket.ownedSubscriptionInfo)
       ? basket.ownedSubscriptionInfo.filter(
-          (item): item is SubscriptionInfo => "name" in item
-        )
+        (item): item is SubscriptionInfo => "name" in item
+      )
       : [];
   }, [basket]);
 
@@ -294,7 +295,7 @@ export default function BasketPage() {
               )
               .map((item) => (
                 <ToolInfoCard
-                  key={item.uniqueId}
+                  key={`old-${item.uniqueId}-${item.id}`}
                   info={item}
                   licensedUsers={basket.licensedUsers}
                   isNew={false}
@@ -308,7 +309,7 @@ export default function BasketPage() {
             ) : (
               newItems.map((item) => (
                 <BasketItemCard
-                  key={item.basketUniqueId}
+                  key={`new-${item.basketUniqueId}-${item.uniqueId}`}
                   item={item}
                   removingIds={removingIds}
                   licensedUsers={basket.quantity}
@@ -387,10 +388,40 @@ export default function BasketPage() {
                     </Text>
                   </HStack>
                 </HStack>
+                {basket.discountCode && (
+                  <HStack justify="space-between" mt={2}>
+                    <Text>Applied Voucher</Text>
+                    <HStack spacing={2}>
+                      <Text color="green.500">{basket.discountCode}</Text>
+                      <IconButton
+                        aria-label="Remove voucher"
+                        icon={<Close />}
+                        size="sm"
+                        variant="ghost"
+                        onClick={async () => {
+                          try {
+                            await removeVoucher();
+                            toast({
+                              title: "Voucher removed",
+                              status: "success",
+                              duration: 3000,
+                            });
+                          } catch (err) {
+                            toast({
+                              title: "Error",
+                              description: err instanceof Error ? err.message : "Failed to remove voucher",
+                              status: "error",
+                              duration: 3000,
+                            });
+                          }
+                        }}
+                      />
+                    </HStack>
+                  </HStack>
+                )}
               </Stack>
 
-              {/* REMOVING STRIPE CHECKOUT BTN FOR NOW - UNCOMMENT BELOW FOR FULL IMPLEMENTATION*/}
-              {/* {basket.isAnnual && !basket.isFree ? (
+              {basket.isAnnual && !basket.isFree ? (
                 <Button
                   colorScheme="brand"
                   w="full"
@@ -410,7 +441,7 @@ export default function BasketPage() {
                   w="full"
                   mb={3}
                   onClick={handleCheckout}
-                  isLoading={checkoutLoading || loading || (billingRef.current?.getAddress==null)}
+                  isLoading={checkoutLoading || loading || (billingRef.current?.getAddress == null)}
                   disabled={basket.quantity === 0}
                   spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
                   spinnerPlacement="start"
@@ -418,21 +449,7 @@ export default function BasketPage() {
                 >
                   Checkout
                 </Button>
-              )} */}
-
-              <Button
-                colorScheme="brand"
-                w="full"
-                mb={3}
-                onClick={() => router.push("/tool-store/contact-sales")}
-                isLoading={checkoutLoading}
-                disabled={basket.quantity === 0}
-                spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
-                spinnerPlacement="start"
-                color={"white"}
-              >
-                Contact Sales
-              </Button>
+              )}
 
               <Button
                 variant="outline"
@@ -443,34 +460,29 @@ export default function BasketPage() {
                 Clear Changes
               </Button>
 
-              {isMobile ? (
+              {!basket.discountCode && (
                 <>
-                  {/*<Button
-            w="full"
-            mb={2}
-            onClick={voucherDrawer.onOpen}
-            variant={"outline"}
-            >
-            Add Voucher Code
-            </Button> */}
-                  <Button
-                    w="full"
-                    onClick={billingDrawer.onOpen}
-                    variant={"outline"}
-                  >
-                    Edit Billing Address
-                  </Button>
-                </>
-              ) : (
-                <>
-                  {/* <Button
-            variant="outline"
-            w="full"
-            mb={3}
-            onClick={() => setAddingVoucher((v) => !v)}
-            >
-            Add Voucher Code
-            </Button> */}
+                  {isMobile ? (
+                    <Button
+                      w="full"
+                      mb={2}
+                      onClick={voucherDrawer.onOpen}
+                      variant={"outline"}
+                      isDisabled={loading}
+                    >
+                      Add Voucher Code
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      w="full"
+                      mb={3}
+                      onClick={() => setAddingVoucher((v) => !v)}
+                      isDisabled={loading}
+                    >
+                      Add Voucher Code
+                    </Button>
+                  )}
                 </>
               )}
             </Box>
@@ -486,6 +498,7 @@ export default function BasketPage() {
                     icon={<Close />}
                     size="sm"
                     onClick={() => setAddingVoucher(false)}
+                    isDisabled={loading}
                   />
                 </HStack>
                 <form
@@ -496,6 +509,7 @@ export default function BasketPage() {
                         "voucher"
                       ) as HTMLInputElement
                     ).value.trim();
+                    
                     if (!code) {
                       toast({
                         title: "Enter a code",
@@ -504,6 +518,7 @@ export default function BasketPage() {
                       });
                       return;
                     }
+
                     setLoading(true);
                     try {
                       await addVoucher(code);
@@ -512,13 +527,11 @@ export default function BasketPage() {
                         status: "success",
                         duration: 3000,
                       });
+                      setAddingVoucher(false);
                     } catch (err) {
                       toast({
                         title: "Error",
-                        description:
-                          err instanceof Error
-                            ? err.message
-                            : "Unexpected error",
+                        description: err instanceof Error ? err.message : "Failed to apply voucher",
                         status: "error",
                         duration: 3000,
                       });
@@ -545,6 +558,7 @@ export default function BasketPage() {
                       type="submit"
                       colorScheme="brand"
                       isLoading={loading}
+                      w="full"
                     >
                       Apply
                     </Button>
@@ -715,7 +729,7 @@ export default function BasketPage() {
         </DrawerContent>
       </Drawer>
 
-      {/* Mobile “drawer” via Slide + backdrop */}
+      {/* Mobile "drawer" via Slide + backdrop */}
       {billingDrawer.isOpen && (
         <Box
           pos="fixed"

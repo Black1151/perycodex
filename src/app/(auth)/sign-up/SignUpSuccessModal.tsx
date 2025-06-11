@@ -38,7 +38,7 @@ export const SignUpSuccessModal = ({
             <ModalHeader>Registration Successful</ModalHeader>
             <ModalBody>
               Your account has been created successfully. Please check your
-              email for a activation link.
+              email for an activation link.
             </ModalBody>
             <ModalFooter>
               <Button variant="primary" onClick={onClose}>

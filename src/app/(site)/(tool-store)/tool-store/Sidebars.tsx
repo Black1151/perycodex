@@ -14,6 +14,8 @@ import GroupIcon from "@mui/icons-material/Group";
 import { Business } from "@mui/icons-material";
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import { Phone } from "@mui/icons-material";
+import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
+
 
 const Sidebars: React.FC = () => {
   const { basket } = useBasket();
@@ -47,7 +49,12 @@ const Sidebars: React.FC = () => {
       label: "Contact Sales",
       icon: Phone,
       href: "/tool-store/contact-sales"
-    }
+    },
+    {
+      label: "Additional Services",
+      icon: DisplaySettingsIcon,
+      href: "/tool-store/additional-services"
+    },
   ];
 
   const currentPath = pathname.replace(/\/$/, "");
