@@ -150,18 +150,18 @@ const AdditionalServicesPage: React.FC = () => {
   ];
 
   return (
-    <VStack spacing={8} align="center" w="100%" p={4}>
+    <VStack spacing={2} align="center" w="100%">
       <Header title="Additional Services" />
 
       <Box
         bg={theme.colors.elementBG}
         borderRadius="lg"
         boxShadow="sm"
-        p={6}
+        p={[3, 4, 6]}
         color={theme.colors.primaryTextColor}
         w="100%"
       >
-        <Text mb={6} fontSize="base" textAlign="left">
+        <Text mb={[3, 4, 6]} fontSize="base" textAlign="left">
           Explore our additional services to enhance your Perygon capabilities. Select the services you are interested in for a callback.
         </Text>
 
@@ -185,11 +185,12 @@ const AdditionalServicesPage: React.FC = () => {
                 }}
               >
                 {/* THIS wrapper stops clicks on the checkbox & icon from bubbling up */}
-                <HStack
+                <Stack
                   justify="space-between"
-                  align="center"
+                  align={["left","center"]}
                   w="100%"
                   onClick={e => e.stopPropagation()}
+                  flexDirection={["column", "row", "row"]}
                 >
                   <HStack spacing={3} flex="1">
                     <Checkbox
@@ -205,7 +206,7 @@ const AdditionalServicesPage: React.FC = () => {
                   <Text fontSize="md" color="gray.500" ml={4}>
                     {service.price}
                   </Text>
-                </HStack>
+                </Stack>
                 {service.description && (
                   <Text fontSize="sm" mt={2} color="gray.400">
                     {service.description}

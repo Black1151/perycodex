@@ -84,12 +84,12 @@ export function ManageSubscriptionFab() {
   return (
     <Container
       position={isMobile ? "fixed" : "relative"}
-      bottom={isMobile ? 145 : 14}
-      right={12}
+      bottom={isMobile ? 36 : 14}
+      right={isMobile ? 4 : 12}
       left={isMobile ? 2 : 0}
       maxW="container.xl"
       mx="auto"
-      px={[3, 3, 78]}
+      px={[2, 3, 78]}
       zIndex={1000}
     >
       <Box
@@ -115,8 +115,8 @@ export function ManageSubscriptionFab() {
           onClick={() => router.push("/tool-store/manage-subscription")}
         >
           <Box
-            w="64px"
-            h="64px"
+            w={isMobile ? "48px" : "64px"}
+            h={isMobile ? "48px" : "64px"}
             borderRadius="full"
             bg={theme.colors.elementBG}
             display="flex"
@@ -132,7 +132,7 @@ export function ManageSubscriptionFab() {
             <ShoppingCart
               sx={{
                 color: theme.colors.primary,
-                fontSize: "32px",
+                fontSize: isMobile ? "24px" : "32px",
               }}
             />
           </Box>

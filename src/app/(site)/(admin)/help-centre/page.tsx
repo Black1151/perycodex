@@ -22,6 +22,7 @@ import {
   useDisclosure,
   Center,
   Stack,
+  useTheme
 } from "@chakra-ui/react";
 import { Menu, Search } from "@mui/icons-material";
 import { useFetchClient } from "@/hooks/useFetchClient";
@@ -56,6 +57,7 @@ export default function HelpCentrePage() {
   const [pdfLoading, setPdfLoading] = useState(false);
   const [embedError, setEmbedError] = useState(false);
   const [filterText, setFilterText] = useState("");
+  const theme = useTheme()
 
   const { fetchClient } = useFetchClient();
   const {
@@ -90,7 +92,10 @@ export default function HelpCentrePage() {
           }))
           .sort((a, b) => a.sortOrder - b.sortOrder);
         setGuideList(guides);
-        setSelectedGuide(guides[0] ?? null);
+        
+        // Find and set the first admin guide as selected
+        const firstAdminGuide = guides.find(g => g.type === "admin");
+        setSelectedGuide(firstAdminGuide ?? guides[0] ?? null);
 
         // Process tool configs
         const configMap: Record<string, ToolConfig> = {};
@@ -150,6 +155,39 @@ export default function HelpCentrePage() {
     return acc;
   }, {});
 
+  // Create ordered sections array
+  const orderedSections = [
+    { label: "Admin", items: adminGuides, icon: "" },
+    { label: "Platform", items: platformGuides, icon: "" },
+    // One section per tool
+    ...Object.entries(toolGroups).map(([toolId, items]) => {
+      const cfg = toolConfigs[toolId];
+      return {
+        label: `${cfg?.displayName || `Tool ${toolId}`}`,
+        items,
+        icon: cfg?.iconImageUrl ? (
+          <Image
+            boxSize="32px"
+            src={cfg.iconImageUrl}
+            alt={cfg.displayName}
+          />
+        ) : (
+          <ArticleOutlinedIcon />
+        ),
+      };
+    }),
+  ].filter(section => section.items.length > 0);
+
+  // Set the first guide as selected if none is selected
+  useEffect(() => {
+    if (!selectedGuide && orderedSections.length > 0) {
+      const firstSection = orderedSections[0];
+      if (firstSection.items.length > 0) {
+        setSelectedGuide(firstSection.items[0]);
+      }
+    }
+  }, [orderedSections, selectedGuide]);
+
   if (loading)
     return (
       <Center h="100vh">
@@ -198,28 +236,7 @@ export default function HelpCentrePage() {
         />
       </HStack>
 
-      {[
-        { label: "Platform", items: platformGuides, icon: "" },
-        { label: "Admin", items: adminGuides, icon: "" },
-        // One section per tool
-        ...Object.entries(toolGroups).map(([toolId, items]) => {
-          const cfg = toolConfigs[toolId];
-          return {
-            label: `${cfg?.displayName || `Tool ${toolId}`}`,
-            items,
-            icon: cfg?.iconImageUrl ? (
-              <Image
-                boxSize="32px"
-                src={cfg.iconImageUrl}
-                alt={cfg.displayName}
-              />
-            ) : (
-              <ArticleOutlinedIcon />
-            ),
-          };
-        }),
-      ].map(({ label, items, icon }, idx, arr) => {
-        if (!items.length) return null;
+      {orderedSections.map(({ label, items, icon }, idx, arr) => {
         return (
           <React.Fragment key={label}>
             <Box w="100%">
@@ -272,23 +289,14 @@ export default function HelpCentrePage() {
   );
 
   return (
-    <VStack w="full" spacing={4} h="full" overflow="hidden">
-      <AdminHeading headingText="help-centre" />
-      <Flex
-        h="80vh"
-        w="full"
-        borderRadius="md"
-        overflow="hidden"
-        bgGradient="linear(to-br, pink.50, white)"
-        boxShadow="sm"
-        direction={["column", "column", "row"]}
-      >
+    <VStack w="full" spacing={4} h="71vh" overflow="hidden">
+      <VStack w="full" h="min" align={"left"}>
+        <AdminHeading headingText="help-centre" />
         {/* Mobile toggle */}
         {isMobile && (
           <>
             <Button
               aria-label="Open guide list"
-              m={4}
               w={"min"}
               onClick={openDrawer}
               gap={1}
@@ -315,6 +323,17 @@ export default function HelpCentrePage() {
             </Drawer>
           </>
         )}
+      </VStack>
+
+      <Flex
+        h="full"
+        w="full"
+        borderRadius="md"
+        overflow="hidden"
+        bg={theme.colors.elementBG}
+        boxShadow="sm"
+        direction={["column", "column", "row"]}
+      >
 
         {/* Sidebar */}
         {!isMobile && (
@@ -338,7 +357,7 @@ export default function HelpCentrePage() {
             overflow="hidden"
           >
             {!embedError ? (
-              // Scrollable container for the “A4 portrait” image
+              // Scrollable container for the "A4 portrait" image
               <Box
                 width="100%"
                 height="100%"

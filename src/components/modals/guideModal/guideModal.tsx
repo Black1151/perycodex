@@ -380,17 +380,9 @@ export default function GuideModal({
                         {isMobile ? (
                           <Box
                             width="100%"
-                            height={"600px"} // ← fixed-height viewport
-                            overflowY="auto" // ← vertical scrollbar only
-                            overflowX="hidden" // ← prevent horizontal scrolling
-                            bg="gray.50" // ← just an example background
+                            height={"full"}
+                            bg="gray.50"
                           >
-                            {/* <Image
-                              src={selectedGuide.guideImagePath}
-                              width="100%" // ← force image to fill container’s width
-                              height="auto" // ← let height grow beyond container
-                              objectFit="contain" // ← preserves aspect ratio
-                            /> */}
                             <ZoomableImg src={selectedGuide.guideImagePath} />
                           </Box>
                         ) : (
