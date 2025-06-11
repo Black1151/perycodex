@@ -185,11 +185,12 @@ const AdditionalServicesPage: React.FC = () => {
                 }}
               >
                 {/* THIS wrapper stops clicks on the checkbox & icon from bubbling up */}
-                <HStack
+                <Stack
                   justify="space-between"
-                  align="center"
+                  align={["left","center"]}
                   w="100%"
                   onClick={e => e.stopPropagation()}
+                  flexDirection={["column", "row", "row"]}
                 >
                   <HStack spacing={3} flex="1">
                     <Checkbox
@@ -205,7 +206,7 @@ const AdditionalServicesPage: React.FC = () => {
                   <Text fontSize="md" color="gray.500" ml={4}>
                     {service.price}
                   </Text>
-                </HStack>
+                </Stack>
                 {service.description && (
                   <Text fontSize="sm" mt={2} color="gray.400">
                     {service.description}

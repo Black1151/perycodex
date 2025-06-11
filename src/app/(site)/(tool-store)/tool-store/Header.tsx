@@ -15,6 +15,7 @@ import { Info } from "@mui/icons-material";
 import BackButton from "@/components/BackButton";
 import BillingCycleToggle from "./BillingCyleToggle";
 import LargeTextModal from "@/components/surveyjs/layout/default/LargeTextModal";
+import { useUser } from "@/providers/UserProvider";
 
 interface HeaderProps {
   title: string;
@@ -22,6 +23,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ title }) => {
   const theme = useTheme();
+  const { user } = useUser();
 
   // Modal state
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -51,7 +53,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
             Subscription Model
           </Heading>
           <Text mb={4}>
-            Your monthly subscription grants you access to our SaaS platform’s
+            Your monthly subscription grants you access to our SaaS platform's
             features as selected at the time of checkout. The subscription
             begins on the date of your first payment, which is charged upfront.
           </Text>
@@ -111,7 +113,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
             Subscription Model
           </Heading>
           <Text mb={4}>
-            Your annual subscription grants you access to our SaaS platform’s
+            Your annual subscription grants you access to our SaaS platform's
             features as selected at the time of checkout. The subscription
             begins on the date of your first payment, which is charged upfront
             for the full year.
@@ -225,7 +227,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
           </Tooltip>
         </HStack>
 
-        <BillingCycleToggle />
+        {(user?.role === "CL" || user?.role === "CA") && <BillingCycleToggle />}
       </Flex>
     </>
   );
