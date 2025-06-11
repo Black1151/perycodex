@@ -293,6 +293,7 @@ export default function HelpCentrePage() {
               onClick={openDrawer}
               gap={1}
               color={"white"}
+              size={"md"}
             >
               <Menu />
               <Text fontSize={"sm"}>All Guides</Text>

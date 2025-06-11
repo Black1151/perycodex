@@ -111,12 +111,12 @@ const BillingAddressForm = forwardRef<BillingAddressFormHandle>((_props, ref) =>
         country: countryCode = "",
       } = res;
       setAddress({
-        address1,
-        address2,
+        address1: address1 || "",
+        address2: address2 || "",
         city: rawCity !== "-" ? rawCity : "",
         county: rawCounty !== "-" ? rawCounty : "",
-        postcode,
-        country: countryCode || "",
+        postcode: postcode || "",
+        country: countryCode || "337",
       });
     } catch (err: any) {
       toast({ title: "Error fetching address", description: err.message, status: "error" });

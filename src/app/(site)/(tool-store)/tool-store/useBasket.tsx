@@ -33,7 +33,7 @@ export interface Basket {
 }
 
 export interface SubscriptionInfo {
-  /** This is the subscription‐record’s PK */
+  /** This is the subscription‐record's PK */
   id: number;
   subscriptionTypeId: number;
   subscriptionStartDate: string;
@@ -170,6 +170,7 @@ type BasketContextType = {
   changeLicenseCount: (delta: number, isNegative: boolean) => Promise<void>;
   getSubscription: () => Promise<void>;
   addVoucher: (voucher: string) => Promise<void>;
+  removeVoucher: () => Promise<void>;
 };
 
 const BasketContext = createContext<BasketContextType | undefined>(undefined);
@@ -386,24 +387,58 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
    * PUT /api/basket/voucher — add a voucher to the basket
    */
   const addVoucher = async (voucher: string) => {
+    if (!voucher?.trim()) {
+      throw new Error("Please enter a valid voucher code");
+    }
+
+    // Clean the voucher code
+    const cleanVoucher = voucher.trim().replace(/^["']|["']$/g, '');
+
     setLoading(true);
     setError(null);
 
     try {
       const data = await fetchClient<{ resource: Basket }>("/api/basket/voucher", {
         method: "PUT",
-        body: JSON.stringify({ "dicountCode": voucher }),
+        body: JSON.stringify(cleanVoucher),
       });
 
-      if (data && data.resource) {
-        setBasket(data.resource);
-      } else {
-        const err = new Error("Failed to update basket");
-        console.error("[Basket] PUT error:", err);
-        setError(err);
+      if (!data?.resource) {
+        throw new Error("Failed to apply voucher");
       }
+
+      if (!data.resource.discountCode) {
+        throw new Error("Invalid or expired voucher code");
+      }
+
+      setBasket(data.resource);
     } catch (err: any) {
-      setError(err);
+      const error = new Error(err.message || "Failed to apply voucher");
+      setError(error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const removeVoucher = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await fetchClient<{ resource: Basket }>("/api/basket/voucher/remove", {
+        method: "PUT",
+      });
+
+      if (!data?.resource) {
+        throw new Error("Failed to remove voucher");
+      }
+
+      setBasket(data.resource);
+    } catch (err: any) {
+      const error = new Error(err.message || "Failed to remove voucher");
+      setError(error);
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -447,7 +482,7 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
 
   return (
     <BasketContext.Provider
-      value={{ basket, loading, error, getBasket, updateBasket, clearBasket, removeItemFromBasket, changeLicenseCount, getSubscription, subscription, addVoucher } as BasketContextType}
+      value={{ basket, loading, error, getBasket, updateBasket, clearBasket, removeItemFromBasket, changeLicenseCount, getSubscription, subscription, addVoucher, removeVoucher } as BasketContextType}
     >
       {children}
     </BasketContext.Provider>

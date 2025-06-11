@@ -2,34 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 /**
- * PUT /api/basket/voucher
- * - Updates the current basket with a voucher
+ * PUT /api/basket/voucher/remove
+ * - Removes the voucher
  */
 export async function PUT(req: NextRequest) {
   const cookieStore = cookies();
   const authToken = cookieStore.get("auth_token")?.value;
 
-  let value;
-  try {
-    value = await req.json();
-    // Ensure we're working with a clean string value
-    if (typeof value === 'string') {
-      // Remove any surrounding quotes
-      value = value.replace(/^["']|["']$/g, '');
-    } else {
-      return NextResponse.json({ error: "Invalid voucher code format" }, { status: 400 });
-    }
-  } catch (error) {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
-  }
-
   const backendUrl = `${process.env.BE_URL}/basket`;
   
-  console.log(backendUrl)
   try {
     const response = await fetch(backendUrl, {
       method: "PUT",
-      body: JSON.stringify({ discountCode: value }),
+      body: JSON.stringify({discountCode: null}),
       headers: {
         "Content-Type": "application/json",
         Authorization: authToken ? `Bearer ${authToken}` : "",
@@ -47,14 +32,6 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    // Validate that the voucher was actually applied
-    if (!data.resource?.discountCode) {
-      return NextResponse.json(
-        { error: "Invalid or expired voucher code" },
-        { status: 400 }
-      );
-    }
-
     return NextResponse.json(data);
   } catch (error: any) {
     console.error("[BASKET PUT VOUCHER] Exception caught:", error);
@@ -63,4 +40,4 @@ export async function PUT(req: NextRequest) {
       { status: 500 }
     );
   }
-}
+} 

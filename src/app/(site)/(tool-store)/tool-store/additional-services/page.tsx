@@ -122,31 +122,31 @@ const AdditionalServicesPage: React.FC = () => {
     {
       id: "custom-theme",
       name: "Custom Theme Creation",
-      price: "£299 one off",
-      description: "Get a fully customized look and feel for your platform, including brand colors, logos, and tailored UI elements to match your company's identity.",
+      price: "£200 one off payment",
+      description: "Get a custom platform theme including brand colours and logo to match your company's identity.",
       icon: <PaletteIcon sx={{ color: theme.colors.primary }} />
-    },
-    {
-      id: "bespoke-development",
-      name: "Bespoke Tool, Dashboard or Report Development",
-      price: "£800 per day",
-      description: "Custom development of tools, dashboards, or reports tailored to your specific business needs and requirements.",
-      icon: <CodeIcon sx={{ color: theme.colors.primary }} />
     },
     {
       id: "enabling-sso",
       name: "Enabling SSO",
-      price: "£200 one off",
-      description: "Set up Single Sign-On integration with your existing identity provider (e.g., Azure AD, Okta, Google Workspace) for seamless user authentication.",
+      price: "£200 one off payment",
+      description: "Set up Single Sign-On integration with your existing identity provider (e.g., Azure AD, Google Workspace, Apple) for seamless user authentication.",
       icon: <SecurityIcon sx={{ color: theme.colors.primary }} />
     },
     {
       id: "auto-user-signup",
       name: "Enabling Auto Company User Signup",
       price: "Free!",
-      description: "Automatically create and manage user accounts for your company, streamlining the onboarding process for new team members.",
+      description: "Automatically create and assign user accounts for your company, streamlining the onboarding process for new team members based on your company email address domain.",
       icon: <GroupAddIcon sx={{ color: theme.colors.primary }} />
     },
+    {
+      id: "bespoke-development",
+      name: "Bespoke Tool, Dashboard or Report Development",
+      price: "£850 per day",
+      description: "Work with our development team to build bespoke tools, dashboards, or reports tailored to your specific business needs and requirements.",
+      icon: <CodeIcon sx={{ color: theme.colors.primary }} />
+    }
   ];
 
   return (
@@ -162,7 +162,7 @@ const AdditionalServicesPage: React.FC = () => {
         w="100%"
       >
         <Text mb={6} fontSize="base" textAlign="left">
-          Explore our additional services to enhance your business capabilities. Select the services you are interested in for a callback.
+          Explore our additional services to enhance your Perygon capabilities. Select the services you are interested in for a callback.
         </Text>
 
         <CheckboxGroup value={selectedServices} onChange={handleServiceChange}>
@@ -184,24 +184,36 @@ const AdditionalServicesPage: React.FC = () => {
                   handleServiceChange(newSelection);
                 }}
               >
-                <HStack justify="space-between" align="center" w="100%">
+                {/* THIS wrapper stops clicks on the checkbox & icon from bubbling up */}
+                <HStack
+                  justify="space-between"
+                  align="center"
+                  w="100%"
+                  onClick={e => e.stopPropagation()}
+                >
                   <HStack spacing={3} flex="1">
-                    <Checkbox 
-                      value={service.id} 
+                    <Checkbox
+                      value={service.id}
                       isChecked={selectedServices.includes(service.id)}
-                      onChange={() => {}} // Empty onChange as we handle it in the Box onClick
                     >
-                      <Text fontWeight="bold" fontSize="md">{service.name}</Text>
+                      <Text fontWeight="bold" fontSize="md">
+                        {service.name}
+                      </Text>
                     </Checkbox>
                     {service.icon}
                   </HStack>
-                  <Text fontSize="md" color="gray.500" ml={4}>{service.price}</Text>
+                  <Text fontSize="md" color="gray.500" ml={4}>
+                    {service.price}
+                  </Text>
                 </HStack>
                 {service.description && (
-                  <Text fontSize="sm" mt={2} color="gray.400">{service.description}</Text>
+                  <Text fontSize="sm" mt={2} color="gray.400">
+                    {service.description}
+                  </Text>
                 )}
               </Box>
             ))}
+
           </VStack>
         </CheckboxGroup>
 
