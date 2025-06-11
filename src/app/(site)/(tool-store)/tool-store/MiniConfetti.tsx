@@ -71,12 +71,12 @@ const MiniConfetti: React.FC<MiniConfettiProps> = ({ show, position }) => {
 
     const spawnParticles = () => {
       const totalParticles = 20; // Fewer particles
-      const origin = { x: canvas.width / 2, y: canvas.height / 2 };
+      const origin = { x: canvas.width / 2, y: canvas.height }; // Start from bottom center
 
-      // Create particles in a circular burst
+      // Create particles shooting upward
       for (let i = 0; i < totalParticles; i++) {
-        const angle = Math.random() * 360;
-        const speed = Math.random() * 2 + 2; // Slower speed
+        const angle = 270 + (Math.random() * 60 - 30); // Angle between 240-300 degrees (straight up with slight spread)
+        const speed = Math.random() + 3; // Faster upward speed
         particles.push(new Particle(origin, angle, speed));
       }
     };
@@ -118,7 +118,7 @@ const MiniConfetti: React.FC<MiniConfettiProps> = ({ show, position }) => {
       ref={canvasRef}
       style={{
         position: "fixed",
-        top: position.y - 100,
+        top: position.y - 200, // Position above the button
         left: position.x - 100,
         width: "200px",
         height: "200px",

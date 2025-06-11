@@ -17,6 +17,7 @@ import type { ToolConfig } from "./useBasket";
 import { motion } from "framer-motion";
 import AnimatedTillNumber from "@/components/animations/AnimatedTillNumber";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/providers/UserProvider";
 
 export function ToolCard({ tool }: { tool: ToolConfig }) {
   const { basket, updateBasket, getBasket, removeItemFromBasket } = useBasket();
@@ -25,6 +26,9 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
   const isFree = basket?.isFree;
   const [loading, setLoading] = React.useState(false);
   const router = useRouter();
+  const { user } = useUser();
+
+  const isAuthorized = user?.role === "CA" || user?.role === "CL";
 
   const cardBg = theme.colors.elementBG;
   const textColor = theme.colors.primaryTextColor;
@@ -248,27 +252,39 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
             <Text fontSize="sm">{tool.previewText}</Text>
 
             <HStack spacing={2} align="center" justify="space-between" w="100%">
-              <HStack spacing={1} align="center">
-                <Text fontSize="md" fontWeight="bold">
-                  £
-                </Text>
+              {!isOwned && isAuthorized && (
+                <HStack spacing={1} align="center">
+                  <Text fontSize="md" fontWeight="bold">
+                    £
+                  </Text>
+                  <AnimatedTillNumber
+                    value={
+                      basket?.isAnnual
+                        ? Number(tool.annualPrice)
+                        : Number(tool.monthlyPrice)
+                    }
+                    fontSize="md"
+                    duration={0.65}
+                  />
+                  <Text fontSize="md" fontWeight="bold">
+                    /user
+                  </Text>
+                </HStack>
+              )}
 
-                <AnimatedTillNumber
-                  value={
-                    basket?.isAnnual
-                      ? Number(tool.annualPrice)
-                      : Number(tool.monthlyPrice)
-                  }
-                  fontSize="md"
-                  duration={0.65}
-                />
-
-                <Text fontSize="md" fontWeight="bold">
-                  /user
-                </Text>
-              </HStack>
-
-              {!isOwned ? (
+              {isOwned ? (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    const url = `${tool.appUrl}?toolId=${tool.id}&wfId=${tool.workflowId}`;
+                    router.push(url);
+                  }}
+                  color={theme.colors.primaryTextColor}
+                >
+                  Start Tool
+                </Button>
+              ) : isAuthorized ? (
                 <Button
                   size="sm"
                   variant="outline"
@@ -300,19 +316,7 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
                     </HStack>
                   )}
                 </Button>
-              ) : (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => {
-                    const url = `${tool.appUrl}?toolId=${tool.id}&wfId=${tool.workflowId}`;
-                    router.push(url);
-                  }}
-                  color={theme.colors.primaryTextColor}
-                >
-                  Start Tool
-                </Button>
-              )}
+              ) : null}
             </HStack>
           </VStack>
         </VStack>

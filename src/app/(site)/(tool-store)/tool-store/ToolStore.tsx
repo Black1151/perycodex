@@ -38,6 +38,8 @@ const ToolStore: React.FC = () => {
   const skeletonBg1 = transparentize(theme.colors.darkGray[500], 0.2)(theme);
   const skeletonBg2 = transparentize(theme.colors.darkGray[500], 0.4)(theme);
 
+  const isAuthorized = user?.role === "CA" || user?.role === "CL";
+
   const loadTools = useCallback(async () => {
     if (!user) return;
     setLoading(true);
@@ -89,12 +91,12 @@ const ToolStore: React.FC = () => {
           <>
             {allTools.map((tool) => <ToolCard key={tool.id} tool={tool} />)}
             <MoreToolsComingSoonCard />
-            <AdditionalServicesCard />
+            {isAuthorized && <AdditionalServicesCard />}
           </>
         )
         }
       </SimpleGrid>
-      <ManageSubscriptionFab />
+      {isAuthorized && <ManageSubscriptionFab />}
     </VStack>
   );
 };

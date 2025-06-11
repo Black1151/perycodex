@@ -18,6 +18,7 @@ export function ManageSubscriptionFab() {
   const [fabPosition, setFabPosition] = useState({ x: 0, y: 0 });
   const fabRef = useRef<HTMLDivElement>(null);
   const prevBasketLength = useRef<number>(0);
+  const isFirstRender = useRef(true);
 
   const fabVariants = {
     initial: {
@@ -41,6 +42,13 @@ export function ManageSubscriptionFab() {
 
   useEffect(() => {
     const basketContentLength = basket?.content?.length ?? 0;
+
+    // Skip animation on first render
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      prevBasketLength.current = basketContentLength;
+      return;
+    }
 
     // Only show confetti when items are added (not removed)
     if (basketContentLength > prevBasketLength.current) {
@@ -89,6 +97,12 @@ export function ManageSubscriptionFab() {
         right={isMobile ? "auto" : 0}
         left={isMobile ? 0 : "auto"}
       >
+        {showConfetti && (
+          <MiniConfetti
+            show={showConfetti}
+            position={fabPosition}
+          />
+        )}
         <motion.div
           ref={fabRef}
           initial="initial"
@@ -124,12 +138,6 @@ export function ManageSubscriptionFab() {
           </Box>
         </motion.div>
       </Box>
-      {showConfetti && (
-        <MiniConfetti
-          show={showConfetti}
-          position={fabPosition}
-        />
-      )}
     </Container>
   );
 } 
