@@ -72,12 +72,6 @@ const useNavMenuItems = (
         icon: <SettingsIcon />,
         onClick: () => router.push("/users?userType=internal"),
         orderGroup: 1
-      },
-      {
-        label: "Tool Store",
-        icon: <StorefrontIcon />,
-        onClick: () => router.push("/tool-store"),
-        orderGroup: 3
       }
     );
   }
@@ -101,6 +95,12 @@ const useNavMenuItems = (
       icon: <HomeIcon />,
       onClick: () => router.push("/"),
       orderGroup: 1
+    },
+    {
+      label: "Tool Store",
+      icon: <StorefrontIcon />,
+      onClick: () => router.push("/tool-store"),
+      orderGroup: 3
     },
     {
       label: "My Profile",

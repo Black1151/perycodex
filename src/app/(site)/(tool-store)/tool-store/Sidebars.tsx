@@ -15,12 +15,22 @@ import { Business } from "@mui/icons-material";
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import { Phone } from "@mui/icons-material";
 import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
+import { useUser } from "@/providers/UserProvider";
+import { SvgIconTypeMap } from "@mui/material";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
 
+interface NavItem {
+  label: string;
+  icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string };
+  href: string;
+  badgeNumber?: number;
+}
 
 const Sidebars: React.FC = () => {
   const { basket } = useBasket();
   const router = useRouter();
   const pathname = usePathname();
+  const { user } = useUser();
 
   const basketCount =
     basket && basket.content && basket.ownedSubscriptionInfo
@@ -32,8 +42,11 @@ const Sidebars: React.FC = () => {
         ).length
       : 0;
 
-  const navItems = [
+  const baseNavItems: NavItem[] = [
     { label: "Tool Store", icon: StorefrontIcon, href: "/tool-store" },
+  ];
+
+  const restrictedNavItems: NavItem[] = [
     {
       label: "Manage Subscription",
       icon: ShoppingCartIcon,
@@ -50,11 +63,17 @@ const Sidebars: React.FC = () => {
       icon: Phone,
       href: "/tool-store/contact-sales"
     },
-    {
-      label: "Additional Services",
-      icon: DisplaySettingsIcon,
-      href: "/tool-store/additional-services"
-    },
+  ];
+
+  const additionalServicesItem: NavItem = {
+    label: "Additional Services",
+    icon: DisplaySettingsIcon,
+    href: "/tool-store/additional-services"
+  };
+
+  const navItems = [
+    ...baseNavItems,
+    ...(user?.role === "CA" || user?.role === "CL" ? [...restrictedNavItems, additionalServicesItem] : [])
   ];
 
   const currentPath = pathname.replace(/\/$/, "");
