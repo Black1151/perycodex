@@ -150,18 +150,18 @@ const AdditionalServicesPage: React.FC = () => {
   ];
 
   return (
-    <VStack spacing={8} align="center" w="100%" p={4}>
+    <VStack spacing={2} align="center" w="100%">
       <Header title="Additional Services" />
 
       <Box
         bg={theme.colors.elementBG}
         borderRadius="lg"
         boxShadow="sm"
-        p={6}
+        p={[3, 4, 6]}
         color={theme.colors.primaryTextColor}
         w="100%"
       >
-        <Text mb={6} fontSize="base" textAlign="left">
+        <Text mb={[3, 4, 6]} fontSize="base" textAlign="left">
           Explore our additional services to enhance your Perygon capabilities. Select the services you are interested in for a callback.
         </Text>
 
