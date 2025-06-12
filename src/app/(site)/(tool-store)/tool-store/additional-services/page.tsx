@@ -19,6 +19,7 @@ import CodeIcon from '@mui/icons-material/Code';
 import SecurityIcon from '@mui/icons-material/Security';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { useSession } from "next-auth/react";
+import { useUser } from "@/providers/UserProvider";
 
 interface Service {
   id: string;
@@ -31,6 +32,7 @@ interface Service {
 const AdditionalServicesPage: React.FC = () => {
   const toast = useToast();
   const theme = useTheme();
+  const user = useUser()
   const { data: session } = useSession();
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -39,7 +41,7 @@ const AdditionalServicesPage: React.FC = () => {
     setSelectedServices(value);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (selectedServices.length === 0) {
       toast({
         title: "No services selected.",
@@ -50,73 +52,26 @@ const AdditionalServicesPage: React.FC = () => {
       });
       return;
     }
-
-    setIsSubmitting(true);
-
-    try {
-      const servicesList = selectedServices.map((serviceId) => {
-        const service = {
-          'custom-theme': 'Custom Theme Creation (£299 one off)',
-          'bespoke-development': 'Bespoke Tool, Dashboard or Report Development (£800 per day)',
-          'enabling-sso': 'Enabling SSO (£200 one off)',
-          'auto-user-signup': 'Enabling Auto Company User Signup (Free)',
-        }[serviceId];
-        return service;
-      });
-
-      const emailHtml = `
-        <h2>New Additional Services Request</h2>
-        <p><strong>User:</strong> ${session?.user?.name || 'Not provided'}</p>
-        <p><strong>Email:</strong> ${session?.user?.email || 'Not provided'}</p>
-        <h3>Selected Services:</h3>
-        <ul>
-          ${servicesList.map(service => `<li>${service}</li>`).join('')}
-        </ul>
-        <p>Please follow up with the customer regarding their interest in these services.</p>
-      `;
-
-      const response = await fetch('/api/...', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: 'additional-services-request',
-          recipient: 'sales',
-          subject: 'New Additional Services Request',
-          html: emailHtml,
-          metadata: {
-            selectedServices,
-            userEmail: session?.user?.email,
-            userName: session?.user?.name,
-          }
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to send notification');
-      }
-
-      toast({
-        title: "Callback Request Sent!",
-        description: "We will contact you shortly regarding your selected services.",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
-      setSelectedServices([]); // Clear selection after submission
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to send your request. Please try again later.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+  
+    const servicesList = selectedServices.map((serviceId) => {
+      return {
+        'custom-theme': 'Custom Theme Creation (£299 one off)',
+        'bespoke-development': 'Bespoke Tool, Dashboard or Report Development (£800 per day)',
+        'enabling-sso': 'Enabling SSO (£200 one off)',
+        'auto-user-signup': 'Enabling Auto Company User Signup (Free)',
+      }[serviceId];
+    });
+  
+    const subject = encodeURIComponent(`New Perygon Services Request: From ${user.user?.customerName || "Not provided"}, CustomerID: ${user.user?.customerId || "Not provided"} `);
+    const body = encodeURIComponent(
+      `Hi,\n\nI'd like to request more information about the following services:\n\n` +
+      servicesList.map(service => `- ${service}`).join("\n") +
+      `\n\nName: ${user.user?.fullName || "Not provided"}\nCustomer Name: ${user.user?.customerName || "Not provided"}\nCustomerID: ${user.user?.customerId || "Not provided"}\n\nThanks!`
+    );
+  
+    window.location.href = `mailto:sales@perygon.co.uk?subject=${subject}&body=${body}`;
   };
+  
 
   const services: Service[] = [
     {
@@ -203,12 +158,12 @@ const AdditionalServicesPage: React.FC = () => {
                     </Checkbox>
                     {service.icon}
                   </HStack>
-                  <Text fontSize="md" color="gray.500" ml={4}>
+                  <Text fontSize="md" ml={4}>
                     {service.price}
                   </Text>
                 </Stack>
                 {service.description && (
-                  <Text fontSize="sm" mt={2} color="gray.400">
+                  <Text fontSize="sm" mt={2}>
                     {service.description}
                   </Text>
                 )}

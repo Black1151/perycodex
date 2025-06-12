@@ -588,7 +588,7 @@ export default function BasketPage() {
               You haven't made any changes to your subscription.
             </Text>
             <Text fontWeight="400" fontSize={[14, 16, 18]} textAlign="center">
-              Add some tools or user licenses to get started.
+              Add some tools or user Licences to get started.
             </Text>
           </VStack>
 
@@ -623,7 +623,7 @@ export default function BasketPage() {
                       duration={0.65}
                       isCurrency={false}
                     />
-                    <Text fontSize={[14, 18]}>Free Trial Licenses</Text>
+                    <Text fontSize={[14, 18]}>Free Trial Licences</Text>
                   </HStack>
                 </VStack>
               ) : (

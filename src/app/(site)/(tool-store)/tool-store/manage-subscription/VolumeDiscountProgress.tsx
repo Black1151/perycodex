@@ -110,7 +110,7 @@ const VolumeDiscountProgress: React.FC = () => {
       <VStack align="stretch" spacing={3} mb={4}>
         <Text fontSize="md" color="white">
           Volume discounts are automatically applied to your subscription when
-          you reach certain license thresholds. The more licenses you purchase,
+          you reach certain license thresholds. The more Licences you purchase,
           the higher your discount percentage becomes.
         </Text>
       </VStack>
@@ -129,7 +129,7 @@ const VolumeDiscountProgress: React.FC = () => {
             transition={{ duration: 0.3, type: "spring" }}
           >
             <Tooltip
-              label={`${tier.discountPercentage}% off when you have ${tier.minLicenses} or more licenses`}
+              label={`${tier.discountPercentage}% off when you have ${tier.minLicenses} or more Licences`}
               placement="top"
             >
               <HStack
@@ -143,7 +143,7 @@ const VolumeDiscountProgress: React.FC = () => {
                   {tier.discountPercentage}% off
                 </Text>
                 <Text fontSize="md" color="gray.700">
-                  ({tier.minLicenses}+ licenses)
+                  ({tier.minLicenses}+ Licences)
                 </Text>
                 {isAchieved &&
                   tier.minLicenses === currentDiscountTier?.minLicenses && (

@@ -130,7 +130,7 @@ const ToolInfoCard: React.FC<ToolInfoCardProps> = ({
                   isCurrency={false}
                 />
                 <Text fontWeight="normal" noOfLines={2}>
-                  Licenses
+                  Licences
                 </Text>
               </HStack>
             </VStack>
