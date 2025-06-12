@@ -40,6 +40,7 @@ import BillingAddressForm, {
 import { useRouter } from "next/navigation";
 import { Header } from "../Header";
 import { useUser } from "@/providers/UserProvider";
+import VolumeDiscountProgress from "./VolumeDiscountProgress";
 
 export default function BasketPage() {
   const {
@@ -283,6 +284,7 @@ export default function BasketPage() {
           {/* Left: Items */}
           <Stack flex="1" spacing={4}>
             <LicensePicker />
+            <VolumeDiscountProgress/>
 
             {oldItems
               .filter(
