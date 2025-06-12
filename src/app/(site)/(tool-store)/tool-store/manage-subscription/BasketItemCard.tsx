@@ -136,11 +136,11 @@ const BasketItemCard: React.FC<BasketItemCardProps> = ({
                   isCurrency={false}
                 />
                 <Text fontWeight="normal" noOfLines={2}>
-                  Licenses
+                  Licences
                 </Text>
                 {item.newLicences > 0 && (
                   <Badge colorScheme="blue">
-                    +{item.newLicences} New Licenses
+                    +{item.newLicences} New Licences
                   </Badge>
                 )}
               </HStack>

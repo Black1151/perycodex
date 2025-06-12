@@ -73,7 +73,7 @@ export default function LicensePicker({
         bgIcon={<Message fontSize="inherit" />}
         frontIcon={<Phone fontSize="inherit" />}
         header="Please Contact Sales"
-        body={"To reduce your licenses, please contact our sales team."}
+        body={"To reduce your Licences, please contact our sales team."}
         primaryLabel="Contact Sales Team"
         onPrimaryClick={() => router.push("/tool-store/contact-sales")}
         bg={theme.colors.primary}
@@ -111,7 +111,7 @@ export default function LicensePicker({
                     isCurrency={false}
                   />
                   <Text fontWeight="semibold" fontSize={[16, 18, 20]}>
-                    Total User Licenses
+                    Total User Licences
                   </Text>
                   {diff !== 0 && (
                     <Badge colorScheme="blue" fontSize="0.8em">
@@ -121,7 +121,7 @@ export default function LicensePicker({
                 </Flex>
                 {!isMobile && (
                   <Text fontSize={15} color="gray.500" textAlign={"center"}>
-                    {basket.licensedUsers} Licenses Already Subscribed
+                    {basket.licensedUsers} Licences Already Subscribed
                   </Text>
                 )}
               </>
@@ -134,7 +134,7 @@ export default function LicensePicker({
                   isCurrency={false}
                 />
                 <Text fontSize={[14, 16]} align={"center"} textAlign={"center"}>
-                  Total User Licenses
+                  Total User Licences
                 </Text>
               </VStack>
             )}
@@ -150,7 +150,7 @@ export default function LicensePicker({
         </Flex>
         {isMobile && showAlreadySubscribedText && (
           <Text fontSize={15} color="gray.500" textAlign={"center"}>
-            {basket.licensedUsers} Licenses Already Subscribed
+            {basket.licensedUsers} Licences Already Subscribed
           </Text>
         )}
       </VStack>
