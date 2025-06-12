@@ -115,8 +115,6 @@ const VolumeDiscountProgress: React.FC = () => {
         </Text>
         <Text fontSize="sm" color="white" opacity={0.9}>
           • Discounts are applied automatically to your subscription
-          <br />• You can mix and match different tools within your license
-          count
           <br />• Discounts are calculated based on your total license count
         </Text>
       </VStack>
