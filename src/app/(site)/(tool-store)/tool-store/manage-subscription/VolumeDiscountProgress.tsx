@@ -113,10 +113,6 @@ const VolumeDiscountProgress: React.FC = () => {
           you reach certain license thresholds. The more licenses you purchase,
           the higher your discount percentage becomes.
         </Text>
-        <Text fontSize="sm" color="white" opacity={0.9}>
-          • Discounts are applied automatically to your subscription
-          <br />• Discounts are calculated based on your total license count
-        </Text>
       </VStack>
 
       {DISCOUNT_TIERS.map((tier, idx) => {
@@ -287,8 +283,8 @@ const VolumeDiscountProgress: React.FC = () => {
         showClose
         bg={theme.colors.primary}
         color="#fff"
-        frontIcon={<Info />}
-        bgIcon={<Info />}
+        frontIcon={<Info fontSize="inherit" />}
+        bgIcon={<Info fontSize="inherit"/>}
         header="Volume Discount Tiers"
         body={<DiscountTiersContent />}
       />

@@ -60,84 +60,52 @@ export function ManageSubscriptionFab() {
     prevBasketLength.current = basketContentLength;
   }, [basket?.content?.length, controls]);
 
-  useEffect(() => {
-    const updatePosition = () => {
-      if (fabRef.current) {
-        const rect = fabRef.current.getBoundingClientRect();
-        setFabPosition({
-          x: rect.left + rect.width / 2 + window.scrollX,
-          y: rect.top + rect.height / 2 + window.scrollY,
-        });
-      }
-    };
-
-    // Update position initially and on window resize
-    updatePosition();
-    window.addEventListener('resize', updatePosition);
-    window.addEventListener('scroll', updatePosition);
-    return () => {
-      window.removeEventListener('resize', updatePosition);
-      window.removeEventListener('scroll', updatePosition);
-    };
-  }, []);
-
   return (
     <Container
-      position={isMobile ? "fixed" : "relative"}
-      bottom={isMobile ? 36 : 14}
-      right={isMobile ? 4 : 12}
-      left={isMobile ? 2 : 0}
-      maxW="container.xl"
-      mx="auto"
-      px={[2, 3, 78]}
-      zIndex={1000}
+      /* 💡 always fixed so it stays visible while you scroll */
+      position="fixed"
+      /* vertical offset */
+      bottom={isMobile ? 24 : 12}
+      /* centred horizontally for desktop, bottom-right for mobile */
+      left={isMobile ? "auto" : "85%"}
+      right={isMobile ? 4 : "auto"}
+      /* pull it back half its own width so it’s perfectly centred */
+      transform={isMobile ? undefined : "translateX(-50%)"}
+      /* let its own width decide how big it is */
+      w="fit-content"
+      zIndex={130}
+      /* remove extra padding / max-width – they aren’t useful for a FAB */
+      p={0}
+      m={0}
     >
-      <Box
-        position="absolute"
-        right={isMobile ? "auto" : 0}
-        left={isMobile ? 0 : "auto"}
+      <motion.div
+        ref={fabRef}
+        initial={{ scale: 1 }}
+        whileHover={{ scale: 1.1 }}
+        animate={controls}
+        style={{ cursor: "pointer" }}
+        onClick={() => router.push("/tool-store/manage-subscription")}
       >
-        {showConfetti && (
-          <MiniConfetti
-            show={showConfetti}
-            position={fabPosition}
-          />
-        )}
-        <motion.div
-          ref={fabRef}
-          initial="initial"
-          animate={controls}
-          whileHover="hover"
-          variants={fabVariants}
-          style={{
-            cursor: "pointer",
-          }}
-          onClick={() => router.push("/tool-store/manage-subscription")}
+        <Box
+          w={isMobile ? "48px" : "64px"}
+          h={isMobile ? "48px" : "64px"}
+          borderRadius="full"
+          bg={theme.colors.elementBG}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          boxShadow="0 4px 12px rgba(0,0,0,0.15)"
+          backdropFilter="blur(2px)"
+          _hover={{ boxShadow: "0 6px 16px rgba(0,0,0,0.2)" }}
         >
-          <Box
-            w={isMobile ? "48px" : "64px"}
-            h={isMobile ? "48px" : "64px"}
-            borderRadius="full"
-            bg={theme.colors.elementBG}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            boxShadow="0 4px 12px rgba(0,0,0,0.15)"
-            backdropFilter="blur(2px)"
-            _hover={{
-              boxShadow: "0 6px 16px rgba(0,0,0,0.2)",
-              bg: theme.colors.elementBG,
+          <ShoppingCart
+            sx={{
+              color: theme.colors.primary,
+              fontSize: isMobile ? "24px" : "32px",
             }}
-          >
-            <ShoppingCart
-              sx={{
-                color: theme.colors.primary,
-                fontSize: isMobile ? "24px" : "32px",
-              }}
-            />
-          </Box>
-        </motion.div>
-      </Box>
+          />
+        </Box>
+      </motion.div>
     </Container>
   );
-} 
+}
