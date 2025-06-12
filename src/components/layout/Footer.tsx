@@ -24,7 +24,7 @@ export const Footer = () => {
         <Text fontFamily="Bonfire" pt={2}>
           Perygon
         </Text>
-        <Text display={["none", "flex"]}>Copyright © 2024 -2025</Text>
+        <Text display={["none", "flex"]}>Copyright © 2024 - 2025</Text>
       </HStack>
     </Box>
   );
