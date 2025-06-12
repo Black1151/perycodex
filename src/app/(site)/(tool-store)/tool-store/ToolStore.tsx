@@ -95,8 +95,8 @@ const ToolStore: React.FC = () => {
           </>
         )
         }
+        {isAuthorized && <ManageSubscriptionFab />}
       </SimpleGrid>
-      {isAuthorized && <ManageSubscriptionFab />}
     </VStack>
   );
 };
