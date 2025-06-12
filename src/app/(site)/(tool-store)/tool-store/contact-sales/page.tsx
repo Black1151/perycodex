@@ -33,7 +33,7 @@ const ContactSales: React.FC = () => {
   }, [subscription]);
 
   return (
-    <VStack spacing={3} align="center" justify="center" w="100%">
+    <VStack spacing={[4, 6, 8]} align="center" justify="center" w="100%" maxW="1200px" mx="auto" px={[4, 6, 8]}>
       <Header title="Contact Sales" />
 
       <Box
