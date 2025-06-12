@@ -16,6 +16,7 @@ import useInitialiseForm from "@/components/surveyjs/hooks/useInitialiseForm";
 import useFormNavigation from "@/components/surveyjs/hooks/useFormNavigation";
 import { FormComponent } from "@/components/surveyjs/FormComponent";
 import useWorkflowFormSubmission from "@/components/surveyjs/hooks/useWorkflowFormSubmission";
+import { useBreakpointValue } from '@chakra-ui/react';
 
 const WorkflowFormWrapper: React.FC<WorkflowFormWrapperProps> = ({
   formJson,
@@ -50,16 +51,12 @@ const WorkflowFormWrapper: React.FC<WorkflowFormWrapperProps> = ({
     newModel.focusFirstQuestionAutomatic = false;
 
     newModel.onAfterRenderPage.add((_, options) => {
-      if (window.innerWidth <= 570) {
+      if (window.innerWidth < 768) { // md breakpoint
         window.scrollTo(0, 0);
       } else {
         const container = document.querySelector('.sd-body');
         if (container) {
-          const containerPosition = container.getBoundingClientRect().top + window.pageYOffset;
-          window.scrollTo({
-            top: containerPosition,
-            behavior: 'smooth'
-          });
+          container.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       }
     });
