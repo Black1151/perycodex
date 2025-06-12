@@ -50,7 +50,18 @@ const WorkflowFormWrapper: React.FC<WorkflowFormWrapperProps> = ({
     newModel.focusFirstQuestionAutomatic = false;
 
     newModel.onAfterRenderPage.add((_, options) => {
-      window.scrollTo(0, 0); // Scrolls the entire window to the top on navigation event
+      if (window.innerWidth <= 570) {
+        window.scrollTo(0, 0);
+      } else {
+        const container = document.querySelector('.sd-body');
+        if (container) {
+          const containerPosition = container.getBoundingClientRect().top + window.pageYOffset;
+          window.scrollTo({
+            top: containerPosition,
+            behavior: 'smooth'
+          });
+        }
+      }
     });
 
     setSurveyJSModel(newModel);
