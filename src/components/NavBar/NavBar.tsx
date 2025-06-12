@@ -86,6 +86,8 @@ const NavBar: React.FC<NavBarProps> = ({
         value: theme.id,
         }))
       : [];
+    } else if (user?.role == "EU") {
+      dropdownOptions = [];
     } else {
       dropdownOptions = Array.isArray(data.resource)
       ? data.resource.map((theme: any) => ({
