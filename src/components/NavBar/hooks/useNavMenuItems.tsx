@@ -36,17 +36,9 @@ const useNavMenuItems = (
   /* Role‑specific single‑item menus                                           */
   /* ------------------------------------------------------------------------- */
 
-  // Duplicated logout?
-  // if (userRole === "EU") {
-  //   return [
-  //     {
-  //       label: "Logout",
-  //       icon: <ExitToAppIcon />,
-  //       onClick: handleLogout,
-  //       orderGroup: 4,
-  //     },
-  //   ];
-  // }
+  if (userRole === "EU") {
+    return [];
+  }
 
   if (userRole === "PA") {
     return [

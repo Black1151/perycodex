@@ -17,6 +17,7 @@ import ConfettiAlt from "@/components/animations/confetti/ConfettiAlt";
 import { SpringModal } from "@/components/modals/springModal/SpringModal";
 import InfoIcon from "@mui/icons-material/Info";
 import { Info } from "@mui/icons-material";
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 /* ------------------------------------------------------------------ */
 /*  tier table                                                        */
@@ -114,8 +115,6 @@ const VolumeDiscountProgress: React.FC = () => {
         </Text>
         <Text fontSize="sm" color="white" opacity={0.9}>
           • Discounts are applied automatically to your subscription
-          <br />• You can mix and match different tools within your license
-          count
           <br />• Discounts are calculated based on your total license count
         </Text>
       </VStack>
@@ -224,9 +223,12 @@ const VolumeDiscountProgress: React.FC = () => {
       </VStack>
 
       {nextTier && (
-        <Text fontSize="xl" fontWeight="bold" color={textCol}>
-          Next tier: {nextTier.minLicenses} licences
-        </Text>
+        <HStack spacing={1}>
+          <ArrowForwardIosIcon fontSize="small"/>
+          <Text fontSize="xl" fontWeight="bold" color={textCol}>
+            Next tier: {nextTier.minLicenses} licences
+          </Text>
+        </HStack>
       )}
 
       {/* progress bar */}
