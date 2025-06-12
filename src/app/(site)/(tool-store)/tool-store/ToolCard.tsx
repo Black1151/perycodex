@@ -252,7 +252,7 @@ export function ToolCard({ tool }: { tool: ToolConfig }) {
             <Text fontSize="sm">{tool.previewText}</Text>
 
             <HStack spacing={2} align="center" justify="space-between" w="100%">
-              {!isOwned && isAuthorized && (
+              {isAuthorized && (
                 <HStack spacing={1} align="center">
                   <Text fontSize="md" fontWeight="bold">
                     £
