@@ -94,7 +94,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         {...(isLeft
           ? { left: [4, 4, 5], right: "auto" }
           : { right: [4, 4, 5], left: "auto" })}
-        zIndex={1}
+        zIndex={160}
         display={[
           side === "right" ? "flex" : "none",
           side === "right" ? "flex" : "none",
@@ -152,7 +152,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         top={0}
         bottom={0}
         {...(isLeft ? { left: 0 } : { right: 0 })}
-        zIndex={120}
+        zIndex={160}
         bg="elementBG"
         boxShadow="xl"
         overflow="hidden"
