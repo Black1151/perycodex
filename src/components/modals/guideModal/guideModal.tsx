@@ -185,7 +185,13 @@ export default function GuideModal({
   }, [currentIndex, guideList]);
 
   const SidebarList = (
-    <VStack align="stretch" spacing={4}>
+    <VStack align="stretch" spacing={4} sx={{
+      '&::-webkit-scrollbar': {
+        display: 'none'
+      },
+      '-ms-overflow-style': 'none',
+      'scrollbar-width': 'none'
+    }}>
       {guideList.length === 0 && (
         <Text color="gray.500" textAlign="center" mt={10}>
           No guides available.
@@ -238,7 +244,13 @@ export default function GuideModal({
           <DrawerOverlay />
           <DrawerContent>
             <DrawerCloseButton />
-            <DrawerBody px={4}>
+            <DrawerBody px={4} sx={{
+              '&::-webkit-scrollbar': {
+                display: 'none'
+              },
+              '-ms-overflow-style': 'none',
+              'scrollbar-width': 'none'
+            }}>
               <VStack align="top" spacing={0} my={3}>
                 <Text
                   fontSize={"3xl"}
@@ -357,6 +369,13 @@ export default function GuideModal({
                     borderColor="gray.200"
                     overflowY="auto"
                     p={4}
+                    sx={{
+                      '&::-webkit-scrollbar': {
+                        display: 'none'
+                      },
+                      '-ms-overflow-style': 'none',
+                      'scrollbar-width': 'none'
+                    }}
                   >
                     {SidebarList}
                   </Box>
