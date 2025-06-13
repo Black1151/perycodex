@@ -11,7 +11,7 @@ import StorefrontIcon from "@mui/icons-material/Storefront";
 import BuildIcon from "@mui/icons-material/Build";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import GroupIcon from "@mui/icons-material/Group";
-import { Business } from "@mui/icons-material";
+import { Business, TipsAndUpdates } from "@mui/icons-material";
 import ListAltIcon from '@mui/icons-material/ListAlt';
 import { Phone } from "@mui/icons-material";
 import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
@@ -63,17 +63,21 @@ const Sidebars: React.FC = () => {
       icon: Phone,
       href: "/tool-store/contact-sales"
     },
+    {
+      label: "Additional Services",
+      icon: DisplaySettingsIcon,
+      href: "/tool-store/additional-services"
+    },
+    {
+      label: "Feature Suggestions",
+      icon: TipsAndUpdates,
+      href: "/tool-store/feature-suggestions"
+    }
   ];
-
-  const additionalServicesItem: NavItem = {
-    label: "Additional Services",
-    icon: DisplaySettingsIcon,
-    href: "/tool-store/additional-services"
-  };
 
   const navItems = [
     ...baseNavItems,
-    ...(user?.role === "CA" || user?.role === "CL" ? [...restrictedNavItems, additionalServicesItem] : [])
+    ...(user?.role === "CA" || user?.role === "CL" ? [...restrictedNavItems] : [])
   ];
 
   const currentPath = pathname.replace(/\/$/, "");
