@@ -36,7 +36,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
             // Create email body with user information and bug report details
             const emailBody = `
                 Hi, I would like to report a bug with Perygon.
-                
+
                 Bug Report Details:
                 ------------------
                 Description: ${description}
@@ -93,8 +93,9 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
             color={theme.colors.elementBG}
             body={
                 <VStack spacing={4} align="stretch" w="100%">
-                    <FormControl isRequired>
-                        <FormLabel color={theme.colors.elementBG}>Bug Description</FormLabel>
+                    <Text >Reporing issues you find helps our development team, iron out pesky bugs and keep Perygon running smoothly.  </Text>
+                    <FormControl>
+                        <FormLabel fontWeight={"semibold"} color={theme.colors.elementBG}>Bug Description</FormLabel>
                         <Textarea
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
@@ -106,7 +107,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
                     </FormControl>
 
                     <FormControl>
-                        <FormLabel color={theme.colors.elementBG}>Steps to Reproduce</FormLabel>
+                        <FormLabel fontWeight={"semibold"} color={theme.colors.elementBG}>Steps to Reproduce</FormLabel>
                         <Textarea
                             value={steps}
                             onChange={(e) => setSteps(e.target.value)}
@@ -121,7 +122,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
             primaryLabel="Submit Report"
             onPrimaryClick={handleSubmit}
             isPrimaryLoading={isSubmitting}
-            secondaryLabel="Cancel"
+            secondaryLabel="Close"
             onSecondaryClick={onClose}
         />
     );

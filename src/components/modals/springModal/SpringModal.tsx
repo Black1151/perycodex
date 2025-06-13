@@ -114,7 +114,7 @@ export const SpringModal: React.FC<SpringModalProps> = ({
             top="-24"
             left="-6"
             fontSize="12rem"
-            opacity={0.1}
+            opacity={0.2}
             transform="rotate(12deg)"
             zIndex={0}
             pointerEvents="none"
@@ -159,7 +159,7 @@ export const SpringModal: React.FC<SpringModalProps> = ({
         )}
 
         <ModalBody position="relative" zIndex={1} color={color}>
-          <Box textAlign="center">{body}</Box>
+          <Box textAlign="center" borderRadius="md">{body}</Box>
         </ModalBody>
 
         {footer ? (

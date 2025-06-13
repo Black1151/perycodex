@@ -185,7 +185,7 @@ const UserGroupsTabs: React.FC<UserGroupsTabsProps> = ({
         onClose={() => setShowUnsavedChangesModal(false)}
         onConfirm={handleConfirmNavigation}
         title="Unsaved Changes"
-        bodyContent="You have unsaved changes to your user groups. Are you sure you want to leave?"
+        bodyContent="You may have unsaved changes to your user groups. Are you sure you want to leave?"
         confirmLabel="Leave"
         cancelLabel="Stay"
         type="warning"

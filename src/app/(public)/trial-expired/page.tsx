@@ -9,6 +9,7 @@ import { SpringModal } from "@/components/modals/springModal/SpringModal";
 import { useState } from "react";
 import { History } from "@mui/icons-material";
 import ScheduleTwoToneIcon from '@mui/icons-material/ScheduleTwoTone';
+import { Logout } from "@mui/icons-material";
 
 export default function TrialExpiredPage() {
   const theme = useTheme();
@@ -49,9 +50,10 @@ export default function TrialExpiredPage() {
           "Your trial period has expired. Please contact your admin team for further assistance or to renew your access."
         }
         primaryLabel="Logout"
+        primaryIcon={<Logout/>}
         onPrimaryClick={logout}
         bg={theme.colors.primary}
-        showClose={true}
+        showClose={false}
       />
     </Center>
   );
