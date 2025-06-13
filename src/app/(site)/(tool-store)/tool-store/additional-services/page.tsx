@@ -107,7 +107,7 @@ const AdditionalServicesPage: React.FC = () => {
 
   return (
     <VStack spacing={6} align="center" justify="center" w="100%">
-      <Header title="Additional Services" />
+      <Header title="Additional Services" showBillingCycle={false}/>
 
       <Box
         bg={theme.colors.elementBG}

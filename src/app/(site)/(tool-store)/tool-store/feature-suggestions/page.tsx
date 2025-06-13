@@ -71,7 +71,7 @@ const FeatureSuggestionsPage: React.FC = () => {
 
   return (
     <VStack spacing={6} align="center" justify="center" w="100%">
-      <Header title="Feature Suggestions" />
+      <Header title="Feature Suggestions" showBillingCycle={false}/>
 
       <Box
         bg={theme.colors.elementBG}

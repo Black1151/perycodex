@@ -84,6 +84,7 @@ const BillingCycleToggle: FC = () => {
         variant="line"
         isFitted
         borderRadius="full"
+        color={theme.colors.primaryTextColor}
       >
         <TabList borderRadius="full">
           <Tab
@@ -94,7 +95,8 @@ const BillingCycleToggle: FC = () => {
             <Flex align="center" justify="center">
               <Text
                 fontSize={["xs", "sm", "md"]}
-                fontWeight={!isAnnual ? "bold" : "normal"}
+                fontWeight={!isAnnual ? "extrabold" : "normal"}
+                color={theme.colors.primaryTextColor}
               >
                 Monthly
               </Text>
@@ -109,7 +111,8 @@ const BillingCycleToggle: FC = () => {
             <Flex align="center" justify="center">
               <Text
                 fontSize={["xs", "sm", "md"]}
-                fontWeight={isAnnual ? "bold" : "normal"}
+                fontWeight={isAnnual ? "extrabold" : "normal"}
+                color={theme.colors.primaryTextColor}
               >
                 Annual
               </Text>
