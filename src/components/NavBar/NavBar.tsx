@@ -11,6 +11,7 @@ import LogoDisplay from "./components/LogoDisplay";
 import GreetingText from "./components/GreetingText";
 import ProfileMenu from "./components/ProfileMenu";
 import UserAvatar from "./components/UserAvatar";
+import { BugReportModal } from "../modals/BugReportModal";
 
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import { useUser } from "@/providers/UserProvider";
@@ -43,6 +44,7 @@ const NavBar: React.FC<NavBarProps> = ({
   const theme = useTheme();
   const { toolLogo, toolPath } = useWorkflow();
   const { unread, checkUnread } = useUnread();
+  const [isBugReportModalOpen, setIsBugReportModalOpen] = useState(false)
   const [passwordResetModalOpen, setPasswordResetModalOpen] = useState(false);
   const [themeDropdownOptions, setThemeDropdownOptions] = useState<
     ThemeDropdownOption[]
@@ -65,8 +67,12 @@ const NavBar: React.FC<NavBarProps> = ({
     router.push("/login");
   };
 
-  const menuItems = useNavMenuItems(userRole, handleLogout, openResetModal);
-  const isFree = user?.customerIsFree || false;
+  const menuItems = useNavMenuItems(
+    userRole,
+    handleLogout,
+    openResetModal,
+    () => setIsBugReportModalOpen(true)
+  ); const isFree = user?.customerIsFree || false;
   const isFreeUntil = user?.customerIsFreeUntilDate;
 
   const buildThemeDropdownOptions = async () => {
@@ -81,21 +87,21 @@ const NavBar: React.FC<NavBarProps> = ({
     // Free customers: only the theme with theme.id is unlocked, all others are locked
     if (!isFree) {
       dropdownOptions = Array.isArray(data.resource)
-      ? data.resource.map((theme: any) => ({
-        label: theme.themename,
-        value: theme.id,
+        ? data.resource.map((theme: any) => ({
+          label: theme.themename,
+          value: theme.id,
         }))
-      : [];
+        : [];
     } else if (user?.role == "EU") {
       dropdownOptions = [];
     } else {
       dropdownOptions = Array.isArray(data.resource)
-      ? data.resource.map((theme: any) => ({
-        label: theme.themename,
-        value: theme.id,
-        locked: theme.id !== 1, // Only unlock perygon theme
+        ? data.resource.map((theme: any) => ({
+          label: theme.themename,
+          value: theme.id,
+          locked: theme.id !== 1, // Only unlock perygon theme
         }))
-      : [];
+        : [];
     }
 
     setThemeDropdownOptions(dropdownOptions);
@@ -171,6 +177,12 @@ const NavBar: React.FC<NavBarProps> = ({
       <ResetPasswordModal
         openState={passwordResetModalOpen}
         handleOnClose={handleOnClose}
+      />
+
+      <BugReportModal
+        isOpen={isBugReportModalOpen}
+        onClose={() => setIsBugReportModalOpen(false)}
+        
       />
     </>
   );

@@ -28,22 +28,53 @@ import {
   Box,
   Spinner,
   useDisclosure,
-  Drawer,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  DrawerBody,
   HStack,
   useBreakpointValue,
   useColorModeValue,
   IconButton,
   Alert,
   AlertIcon,
+  Select,
+  Flex,
+  Badge,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Button,
+  useTheme,
+  Icon
 } from "@chakra-ui/react";
-import { Lock, Menu, ScheduleSend } from "@mui/icons-material";
+import { Lock, ScheduleSend, Check, Close as CloseIcon, KeyboardArrowDown } from "@mui/icons-material";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { ScheduleType, QuickSchedule, EmailSchedule } from "@/types/schedules";
 import EmailSchedulePanel from "./EmailSchedulePanel";
+
+// Helper function for formatting schedule frequency
+function formatFrequency(s: QuickSchedule) {
+  const weekdays = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+  if (s.frequency === "daily") return `Every day at ${s.sendTime}`;
+
+  if (s.frequency === "weekly" && s.daysOfWeek) {
+    const days = Array.isArray(s.daysOfWeek) ? s.daysOfWeek : [s.daysOfWeek];
+    return `Every ${days.map((d) => weekdays[(d - 1 + 7) % 7]).join(", ")} at ${s.sendTime}`;
+  }
+
+  if (s.frequency === "monthly" && s.daysOfWeek) {
+    const days = Array.isArray(s.daysOfWeek) ? s.daysOfWeek : [s.daysOfWeek];
+    return `Every month on a ${days.map((d) => weekdays[(d - 1 + 7) % 7]).join(", ")} at ${s.sendTime}`;
+  }
+
+  return `${s.frequency} at ${s.sendTime}`;
+}
 
 type Props = {
   isOpen: boolean;
@@ -62,13 +93,9 @@ export default function QuickScheduleSetupModal({
 }: Props) {
   /* ─────────────────────────────── UI helpers ────────────────────────────── */
 
-  const {
-    isOpen: drawerOpen,
-    onOpen: openDrawer,
-    onClose: closeDrawer,
-  } = useDisclosure();
   const isMobile = useBreakpointValue({ base: true, md: false });
-  const bg = useColorModeValue("white", "gray.800");
+  const theme = useTheme()
+  const bg = theme.colors.elementBG
 
   /* ────────────────────────────── component state ────────────────────────── */
 
@@ -221,7 +248,6 @@ export default function QuickScheduleSetupModal({
         onClick={() => {
           if (!locked) {
             setSelected(sched);
-            if (isMobile) closeDrawer();
           }
         }}
       >
@@ -243,13 +269,13 @@ export default function QuickScheduleSetupModal({
           sx={
             sched.isActive
               ? {
-                  animation: "pulseGreen 1.2s infinite",
-                  "@keyframes pulseGreen": {
-                    "0%": { boxShadow: "0 0 0 0 rgba(72,187,120,.7)" },
-                    "70%": { boxShadow: "0 0 0 8px rgba(72,187,120,0)" },
-                    "100%": { boxShadow: "0 0 0 0 rgba(72,187,120,0)" },
-                  },
-                }
+                animation: "pulseGreen 1.2s infinite",
+                "@keyframes pulseGreen": {
+                  "0%": { boxShadow: "0 0 0 0 rgba(72,187,120,.7)" },
+                  "70%": { boxShadow: "0 0 0 8px rgba(72,187,120,0)" },
+                  "100%": { boxShadow: "0 0 0 0 rgba(72,187,120,0)" },
+                },
+              }
               : {}
           }
         />
@@ -268,15 +294,7 @@ export default function QuickScheduleSetupModal({
   };
 
   const SidebarList = (
-    <Box
-      flex="1"
-      overflowY="auto"
-      css={{
-        "&::-webkit-scrollbar": { display: "none" }, // Chrome / Safari
-        "-ms-overflow-style": "none", // IE / Edge
-        scrollbarWidth: "none", // Firefox
-      }}
-    >
+    <Box>
       <VStack align="stretch" spacing={4} pb={4}>
         {Object.values(grouped).every((arr) => !arr.length) && (
           <Text color="gray.500" textAlign="center" mt={10}>
@@ -302,172 +320,6 @@ export default function QuickScheduleSetupModal({
 
   return (
     <>
-      {/* Mobile drawer */}
-      {isMobile && (
-        <Box
-          position="fixed"
-          top={0}
-          left={0}
-          right={0}
-          bottom={0}
-          zIndex={9999}
-          display={drawerOpen ? "block" : "none"}
-        >
-          <Box
-            position="fixed"
-            top={0}
-            left={0}
-            right={0}
-            bottom={0}
-            bg="blackAlpha.600"
-            onClick={closeDrawer}
-            zIndex={9999}
-          />
-          <Box
-            position="fixed"
-            top={0}
-            left={0}
-            bottom={0}
-            width="85%"
-            maxWidth="400px"
-            bg={bg}
-            boxShadow="xl"
-            display="flex"
-            flexDirection="column"
-            zIndex={10000}
-          >
-            <Box
-              p={4}
-              borderBottom="1px solid"
-              borderColor="gray.200"
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <Text
-                fontSize={["xl", "2xl", "3xl"]}
-                fontWeight="medium"
-                fontFamily="bonfire"
-              >
-                Your Schedules
-              </Text>
-              <IconButton
-                aria-label="Close drawer"
-                icon={<Menu />}
-                variant="ghost"
-                onClick={closeDrawer}
-              />
-            </Box>
-
-            <Box
-              flex="1"
-              overflowY="auto"
-              p={4}
-              sx={{
-                WebkitOverflowScrolling: "touch",
-                touchAction: "pan-y",
-                "&::-webkit-scrollbar": { display: "none" },
-                "-ms-overflow-style": "none",
-                scrollbarWidth: "none"
-              }}
-            >
-              {loading ? (
-                <SpinnerBlock />
-              ) : error ? (
-                <ErrorAlert message={error} />
-              ) : Object.values(grouped).every((arr) => !arr.length) ? (
-                <Text color="gray.500" textAlign="center" mt={10}>
-                  No schedules available.
-                </Text>
-              ) : (
-                <VStack spacing={4} align="stretch">
-                  {Object.entries(grouped).map(([key, items]) => (
-                    <Box key={key}>
-                      <Text fontWeight="bold" fontSize="md" mb={2}>
-                        Emails
-                      </Text>
-                      {items.map((sched) => (
-                        <Box
-                          key={sched.scheduleId}
-                          position="relative"
-                          border="1px solid"
-                          borderColor={
-                            selected?.scheduleId === sched.scheduleId
-                              ? "blue.400"
-                              : "gray.200"
-                          }
-                          borderRadius="md"
-                          p={3}
-                          mb={2}
-                          opacity={isFree && sched.subscriptionType === "paid" ? 0.5 : 1}
-                          _hover={{
-                            cursor:
-                              isFree && sched.subscriptionType === "paid"
-                                ? "not-allowed"
-                                : "pointer",
-                            bg: isFree && sched.subscriptionType === "paid" ? undefined : "gray.50",
-                          }}
-                          onClick={() => {
-                            if (!(isFree && sched.subscriptionType === "paid")) {
-                              setSelected(sched);
-                              closeDrawer();
-                            }
-                          }}
-                        >
-                          {isFree && sched.subscriptionType === "paid" && (
-                            <Lock
-                              fontSize="small"
-                              style={{
-                                position: "absolute",
-                                top: 8,
-                                left: 8,
-                                color: "gray.900",
-                              }}
-                            />
-                          )}
-
-                          <Box
-                            w="10px"
-                            h="10px"
-                            borderRadius="full"
-                            bg={sched.isActive ? "green.400" : "red.300"}
-                            position="absolute"
-                            top="8px"
-                            right="8px"
-                            sx={
-                              sched.isActive
-                                ? {
-                                    animation: "pulseGreen 1.2s infinite",
-                                    "@keyframes pulseGreen": {
-                                      "0%": { boxShadow: "0 0 0 0 rgba(72,187,120,.7)" },
-                                      "70%": { boxShadow: "0 0 0 8px rgba(72,187,120,0)" },
-                                      "100%": { boxShadow: "0 0 0 0 rgba(72,187,120,0)" },
-                                    },
-                                  }
-                                : {}
-                            }
-                          />
-
-                          <Text fontWeight="semibold">{sched.name}</Text>
-                          <Text fontSize="sm" color="gray.500">
-                            {formatFrequency(sched)}
-                          </Text>
-                          {"userDistGroupNames" in sched && (
-                            <Text fontSize="sm" color="gray.600">
-                              Groups: {(sched.userDistGroupNames || []).join(", ")}
-                            </Text>
-                          )}
-                        </Box>
-                      ))}
-                    </Box>
-                  ))}
-                </VStack>
-              )}
-            </Box>
-          </Box>
-        </Box>
-      )}
-
       {/* Main modal */}
       <Modal isOpen={isOpen} onClose={onClose} size="5xl" isCentered>
         <ModalOverlay />
@@ -483,16 +335,17 @@ export default function QuickScheduleSetupModal({
             <Header total={schedules.length} />
 
             <Box display="flex" flex="1" overflow="hidden" minH="0">
+              {/* Desktop sidebar */}
               {!isMobile && (
                 <Box
                   width="30%"
                   overflowY="auto"
                   minH="0"
                   css={{
-                    "&::-webkit-scrollbar": { display: "none" }, // Chrome/Safari
-                    "-ms-overflow-style": "none", // IE/Edge
-                    scrollbarWidth: "none", // Firefox
-                    WebkitOverflowScrolling: "touch", // iOS momentum
+                    "&::-webkit-scrollbar": { display: "none" },
+                    "-ms-overflow-style": "none",
+                    scrollbarWidth: "none",
+                    WebkitOverflowScrolling: "touch",
                   }}
                   borderRight="1px solid"
                   borderColor="gray.200"
@@ -503,25 +356,11 @@ export default function QuickScheduleSetupModal({
                   ) : error ? (
                     <ErrorAlert message={error} />
                   ) : (
-                    <VStack align="stretch" spacing={4} pb={4}>
-                      {Object.values(grouped).every((arr) => !arr.length) ? (
-                        <Text color="gray.500" textAlign="center" mt={10}>
-                          No schedules available.
-                        </Text>
-                      ) : (
-                        Object.entries(grouped).map(([key, items]) => (
-                          <Box key={key}>
-                            <Text fontWeight="bold" fontSize="md" mb={2}>
-                              Emails
-                            </Text>
-                            {items.map(ScheduleCard)}
-                          </Box>
-                        ))
-                      )}
-                    </VStack>
+                    SidebarList
                   )}
                 </Box>
               )}
+
               {/* Main panel */}
               <Box
                 width={isMobile ? "100%" : "70%"}
@@ -536,18 +375,57 @@ export default function QuickScheduleSetupModal({
                     No schedules available to display.
                   </Text>
                 ) : (
-                  <EmailSchedulePanel
-                    schedule={selected as EmailSchedule}
-                    onUpdateSchedule={(upd) =>
-                      setSchedules((prev) =>
-                        prev.map((s) =>
-                          s.scheduleId === upd.scheduleId ? upd : s
+                  <>
+                    {isMobile && schedules.length > 0 && (
+                      <Box mb={4}>
+                        <Menu>
+                          <MenuButton as={Button} rightIcon={<KeyboardArrowDown />} width="100%" bg={theme.colors.elementBG}>
+                            <HStack spacing={2} width="100%" justifyContent="space-between">
+                              <Text flex="1" textAlign="left" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+                                {selected.name}
+                              </Text>
+                              {selected.isActive ? (
+                                <Icon as={Check} color="green.500" />
+                              ) : (
+                                <Icon as={CloseIcon} color="red.500" />
+                              )}
+                            </HStack>
+                          </MenuButton>
+                          <MenuList width="100%">
+                            {schedules.map((sched) => (
+                              <MenuItem
+                                key={sched.scheduleId}
+                                onClick={() => setSelected(sched)}
+                              >
+                                <HStack spacing={2} width="100%" justifyContent="space-between">
+                                  <Text flex="1" textAlign="left" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+                                    {sched.name}
+                                  </Text>
+                                  {sched.isActive ? (
+                                    <Icon as={Check} color="green.500" />
+                                  ) : (
+                                    <Icon as={CloseIcon} color="red.500" />
+                                  )}
+                                </HStack>
+                              </MenuItem>
+                            ))}
+                          </MenuList>
+                        </Menu>
+                      </Box>
+                    )}
+                    <EmailSchedulePanel
+                      schedule={selected as EmailSchedule}
+                      onUpdateSchedule={(upd) =>
+                        setSchedules((prev) =>
+                          prev.map((s) =>
+                            s.scheduleId === upd.scheduleId ? upd : s
+                          )
                         )
-                      )
-                    }
-                    customerId={customerId}
-                    toolId={toolId}
-                  />
+                      }
+                      customerId={customerId}
+                      toolId={toolId}
+                    />
+                  </>
                 )}
               </Box>
             </Box>
@@ -586,15 +464,6 @@ export default function QuickScheduleSetupModal({
         fontSize="28px"
         align="center"
       >
-        {isMobile && (
-          <IconButton
-            aria-label="Open schedule list"
-            icon={<Menu fontSize="inherit" />}
-            onClick={openDrawer}
-            size="sm"
-            variant="outline"
-          />
-        )}
         <ScheduleSend
           fontSize="inherit"
           htmlColor="var(--chakra-colors-primary)"
@@ -614,30 +483,5 @@ export default function QuickScheduleSetupModal({
         )}
       </HStack>
     );
-  }
-
-  function formatFrequency(s: QuickSchedule) {
-    const weekdays = [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday",
-    ];
-    if (s.frequency === "daily") return `Every day at ${s.sendTime}`;
-
-    if (s.frequency === "weekly" && s.daysOfWeek) {
-      const days = Array.isArray(s.daysOfWeek) ? s.daysOfWeek : [s.daysOfWeek];
-      return `Every ${days.map((d) => weekdays[(d - 1 + 7) % 7]).join(", ")} at ${s.sendTime}`;
-    }
-
-    if (s.frequency === "monthly" && s.daysOfWeek) {
-      const days = Array.isArray(s.daysOfWeek) ? s.daysOfWeek : [s.daysOfWeek];
-      return `Every month on a ${days.map((d) => weekdays[(d - 1 + 7) % 7]).join(", ")} at ${s.sendTime}`;
-    }
-
-    return `${s.frequency} at ${s.sendTime}`;
   }
 }

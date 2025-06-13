@@ -12,6 +12,7 @@ import {
   Checkbox,
   Stack,
   HStack,
+  Badge,
 } from "@chakra-ui/react";
 import { Header } from "../Header";
 import PaletteIcon from '@mui/icons-material/Palette';
@@ -105,33 +106,34 @@ const AdditionalServicesPage: React.FC = () => {
   ];
 
   return (
-    <VStack spacing={2} align="center" w="100%">
+    <VStack spacing={6} align="center" justify="center" w="100%">
       <Header title="Additional Services" />
 
       <Box
         bg={theme.colors.elementBG}
-        borderRadius="lg"
-        boxShadow="sm"
-        p={[3, 4, 6]}
+        borderRadius="md"
+        boxShadow="md"
+        p={6}
         color={theme.colors.primaryTextColor}
         w="100%"
       >
-        <Text mb={[3, 4, 6]} fontSize="base" textAlign="left">
+        <Text mb={6} fontSize={["sm", "md", "lg"]} textAlign="left">
           Explore our additional services to enhance your Perygon capabilities. Select the services you are interested in for a callback.
         </Text>
 
         <CheckboxGroup value={selectedServices} onChange={handleServiceChange}>
-          <VStack align="stretch" spacing={4} w="100%">
+          <VStack align="stretch" spacing={6} w="100%">
             {services.map((service) => (
               <Box
                 key={service.id}
                 w="100%"
-                p={4}
+                p={6}
                 borderWidth="1px"
                 borderRadius="md"
                 borderColor={theme.colors.borderColor}
                 _hover={{ borderColor: theme.colors.primary }}
                 cursor="pointer"
+                transition="all 0.2s"
                 onClick={() => {
                   const newSelection = selectedServices.includes(service.id)
                     ? selectedServices.filter(id => id !== service.id)
@@ -139,37 +141,38 @@ const AdditionalServicesPage: React.FC = () => {
                   handleServiceChange(newSelection);
                 }}
               >
-                {/* THIS wrapper stops clicks on the checkbox & icon from bubbling up */}
                 <Stack
+                  direction={["column", "column", "row"]}
                   justify="space-between"
-                  align={["left","center"]}
+                  align={["flex-start", "center"]}
                   w="100%"
                   onClick={e => e.stopPropagation()}
-                  flexDirection={["column", "row", "row"]}
+                  spacing={6}
                 >
-                  <HStack spacing={3} flex="1">
+                  <HStack spacing={6} flex="1">
                     <Checkbox
                       value={service.id}
                       isChecked={selectedServices.includes(service.id)}
                     >
-                      <Text fontWeight="bold" fontSize="md">
+                      <Text fontWeight="bold" fontSize={["sm", "md", "lg"]}>
                         {service.name}
                       </Text>
                     </Checkbox>
-                    {service.icon}
+                    <Box as="span" display="flex" alignItems="center">
+                      {React.cloneElement(service.icon as React.ReactElement, { style: { fontSize: 28 } })}
+                    </Box>
                   </HStack>
-                  <Text fontSize="md" ml={4}>
+                  <Badge colorScheme="green" fontSize={"0.8em"}>
                     {service.price}
-                  </Text>
+                  </Badge>
                 </Stack>
                 {service.description && (
-                  <Text fontSize="sm" mt={2}>
+                  <Text fontSize={["xs", "sm", "md"]} mt={2}>
                     {service.description}
                   </Text>
                 )}
               </Box>
             ))}
-
           </VStack>
         </CheckboxGroup>
 
@@ -180,6 +183,8 @@ const AdditionalServicesPage: React.FC = () => {
           w="100%"
           isDisabled={selectedServices.length === 0 || isSubmitting}
           isLoading={isSubmitting}
+          fontSize={["sm", "md", "lg"]}
+          p={[4, 6]}
         >
           Request Callback
         </Button>
