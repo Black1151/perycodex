@@ -12,6 +12,7 @@ import {
   Checkbox,
   Stack,
   HStack,
+  Badge,
 } from "@chakra-ui/react";
 import { Header } from "../Header";
 import PaletteIcon from '@mui/icons-material/Palette';
@@ -161,9 +162,9 @@ const AdditionalServicesPage: React.FC = () => {
                       {React.cloneElement(service.icon as React.ReactElement, { style: { fontSize: 28 } })}
                     </Box>
                   </HStack>
-                  <Text fontSize={["sm", "md", "lg"]} ml={4}>
+                  <Badge colorScheme="green" fontSize={"0.8em"}>
                     {service.price}
-                  </Text>
+                  </Badge>
                 </Stack>
                 {service.description && (
                   <Text fontSize={["xs", "sm", "md"]} mt={2}>
