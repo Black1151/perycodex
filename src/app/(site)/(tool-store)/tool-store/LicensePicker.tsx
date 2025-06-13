@@ -14,7 +14,6 @@ import {
 } from "@chakra-ui/react";
 import { transparentize } from "@chakra-ui/theme-tools";
 import AnimatedTillNumber from "@/components/animations/AnimatedTillNumber";
-import { PerygonModal } from "@/components/modals/PerygonModal";
 import { useRouter } from "next/navigation";
 import { SpringModal } from "@/components/modals/springModal/SpringModal";
 import { Message, Phone, Send, Sms } from "@mui/icons-material";
