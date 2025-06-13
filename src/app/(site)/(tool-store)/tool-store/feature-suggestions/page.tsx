@@ -63,6 +63,7 @@ const FeatureSuggestionsPage: React.FC = () => {
       `Name: ${user.user?.fullName || "Not provided"}\n` +
       `Customer Name: ${user.user?.customerName || "Not provided"}\n` +
       `CustomerID: ${user.user?.customerId || "Not provided"}\n\n` +
+      `CustomerEmail: ${user.user?.email || "Not provided"}\n\n` +
       `Thanks!`
     );
 

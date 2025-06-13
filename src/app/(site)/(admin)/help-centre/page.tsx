@@ -291,7 +291,7 @@ export default function HelpCentrePage() {
   return (
     <VStack w="full" spacing={4} h="71vh" overflow="hidden">
       <VStack w="full" h="min" align={"left"}>
-        <AdminHeading headingText="help-centre" />
+        <AdminHeading headingText="Help Centre" />
         {/* Mobile toggle */}
         {isMobile && (
           <>
@@ -315,7 +315,18 @@ export default function HelpCentrePage() {
               <DrawerContent>
                 <DrawerCloseButton />
                 <DrawerBody p={0}>
-                  <Box bg={cardBg} h="full" overflowY="auto">
+                  <Box 
+                    bg={cardBg} 
+                    h="full" 
+                    overflowY="auto"
+                    sx={{
+                      '&::-webkit-scrollbar': {
+                        display: 'none'
+                      },
+                      '-ms-overflow-style': 'none',
+                      'scrollbar-width': 'none'
+                    }}
+                  >
                     {Sidebar}
                   </Box>
                 </DrawerBody>
@@ -343,6 +354,14 @@ export default function HelpCentrePage() {
             borderRight="1px solid"
             borderColor="gray.200"
             boxShadow="sm"
+            sx={{
+              '&::-webkit-scrollbar': {
+                display: 'none'
+              },
+              '-ms-overflow-style': 'none',
+              'scrollbar-width': 'none'
+            }}
+            overflowY="auto"
           >
             {Sidebar}
           </Box>

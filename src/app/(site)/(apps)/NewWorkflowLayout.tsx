@@ -456,7 +456,6 @@ const NewWorkflowLayout = ({
               flexDirection={"column"}
               gap={2}
             >
-              <Icon as={Check} boxSize={8} color={"green.500"} />
               <Text textAlign={"center"}>All Done!</Text>
             </Flex>
           )
@@ -476,6 +475,7 @@ const NewWorkflowLayout = ({
         }
         confirmLabel={user?.role === "EU" ? "Logout" : "Finish"}
         cancelLabel="Cancel"
+        type="success"
       />
 
       <WorkflowSidebar
