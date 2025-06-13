@@ -255,7 +255,7 @@ export default function BasketPage() {
             thickness="6px"
             speed="0.65s"
             emptyColor="gray.200"
-            color="brand.500"
+            color="primary"
             size="xl"
             mb={6}
           />
@@ -425,7 +425,6 @@ export default function BasketPage() {
 
               {basket.isAnnual && !basket.isFree ? (
                 <Button
-                  colorScheme="brand"
                   w="full"
                   mb={3}
                   onClick={() => router.push("/tool-store/contact-sales")}
@@ -433,13 +432,13 @@ export default function BasketPage() {
                   disabled={basket.quantity === 0}
                   spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
                   spinnerPlacement="start"
-                  color={"white"}
+                  colorScheme="primary"
+                  color="white"
                 >
                   Contact Sales
                 </Button>
               ) : (
                 <Button
-                  colorScheme="brand"
                   w="full"
                   mb={3}
                   onClick={handleCheckout}
@@ -447,7 +446,8 @@ export default function BasketPage() {
                   disabled={basket.quantity === 0}
                   spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
                   spinnerPlacement="start"
-                  color={"white"}
+                  colorScheme="primary"
+                  color="white"
                 >
                   Checkout
                 </Button>
@@ -458,6 +458,12 @@ export default function BasketPage() {
                 w="full"
                 mb={3}
                 onClick={handleClearBasket}
+                color={theme.colors.primaryTextColor}
+                borderColor={theme.colors.primary}
+                _hover={{
+                  bg: theme.colors.primary,
+                  color: "white"
+                }}
               >
                 Clear Changes
               </Button>
@@ -469,8 +475,14 @@ export default function BasketPage() {
                       w="full"
                       mb={2}
                       onClick={voucherDrawer.onOpen}
-                      variant={"outline"}
+                      variant="outline"
                       isDisabled={loading}
+                      color={theme.colors.primaryTextColor}
+                      borderColor={theme.colors.primary}
+                      _hover={{
+                        bg: theme.colors.primary,
+                        color: "white"
+                      }}
                     >
                       Add Voucher Code
                     </Button>
@@ -481,6 +493,12 @@ export default function BasketPage() {
                       mb={3}
                       onClick={() => setAddingVoucher((v) => !v)}
                       isDisabled={loading}
+                      color={theme.colors.primaryTextColor}
+                      borderColor={theme.colors.primary}
+                      _hover={{
+                        bg: theme.colors.primary,
+                        color: "white"
+                      }}
                     >
                       Add Voucher Code
                     </Button>
@@ -490,9 +508,9 @@ export default function BasketPage() {
             </Box>
 
             {!isMobile && addingVoucher && (
-              <Box bg="white" borderRadius="lg" boxShadow="sm" p={6}>
+              <Box bg={theme.colors.elementBG} borderRadius="lg" boxShadow="sm" p={6}>
                 <HStack justify="space-between" mb={4}>
-                  <Text fontSize={[14, 18]} fontWeight="semibold">
+                  <Text fontSize={[14, 18]} fontWeight="semibold" color={theme.colors.primaryTextColor}>
                     Add Voucher
                   </Text>
                   <IconButton
@@ -501,6 +519,7 @@ export default function BasketPage() {
                     size="sm"
                     onClick={() => setAddingVoucher(false)}
                     isDisabled={loading}
+                    color={theme.colors.primaryTextColor}
                   />
                 </HStack>
                 <form
@@ -550,17 +569,20 @@ export default function BasketPage() {
                         flex: 1,
                         padding: "8px 12px",
                         borderRadius: 4,
-                        border: "1px solid #CBD5E0",
+                        border: `1px solid ${theme.colors.primary}`,
                         fontSize: 16,
+                        color: theme.colors.primaryTextColor,
+                        backgroundColor: theme.colors.elementBG,
                       }}
                       disabled={loading}
                       autoComplete="off"
                     />
                     <Button
                       type="submit"
-                      colorScheme="brand"
+                      colorScheme="primary"
                       isLoading={loading}
                       w="full"
+                      color="white"
                     >
                       Apply
                     </Button>
@@ -749,7 +771,7 @@ export default function BasketPage() {
         style={{ zIndex: 1400 }}
       >
         <Box
-          bg="white"
+          bg={theme.colors.elementBG}
           w="xs"
           h="full"
           pos="fixed"
@@ -760,7 +782,7 @@ export default function BasketPage() {
           onClick={(e) => e.stopPropagation()}
         >
           <Flex justify="space-between" align="center" mb={4}>
-            <Text fontSize="lg" fontWeight="semibold">
+            <Text fontSize="lg" fontWeight="semibold" color={theme.colors.primaryTextColor}>
               Billing Address
             </Text>
             <IconButton
@@ -768,6 +790,7 @@ export default function BasketPage() {
               icon={<Check />}
               size="sm"
               onClick={billingDrawer.onClose}
+              color={theme.colors.primaryTextColor}
             />
           </Flex>
 

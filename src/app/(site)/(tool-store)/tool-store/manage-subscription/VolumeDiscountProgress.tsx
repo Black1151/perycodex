@@ -98,8 +98,8 @@ const VolumeDiscountProgress: React.FC = () => {
   }, [showTierBanner]);
 
   /* ---------- colours ------------------------------------------- */
-  const cardBg = "white"
-  const textCol = "gray.800"
+  const cardBg = theme.colors.elementBG
+  const textColour = theme.colors.primaryTextColor
   const trackCol = "gray.100"
 
   /* ------------------------------------------------------------------ */
@@ -200,7 +200,7 @@ const VolumeDiscountProgress: React.FC = () => {
       {/* header */}
       <VStack align="left" spacing={1}>
         <HStack justify="space-between">
-          <Text fontSize="lg" fontWeight="semibold" color={textCol}>
+          <Text fontSize="lg" fontWeight="semibold" color={textColour}>
             Volume Discounts
           </Text>
           <IconButton
@@ -208,12 +208,12 @@ const VolumeDiscountProgress: React.FC = () => {
             icon={<InfoIcon />}
             size="sm"
             variant="ghost"
-            color={textCol}
+            color={textColour}
             onClick={() => setIsModalOpen(true)}
           />
         </HStack>
 
-        <Text fontSize="md" color={textCol}>
+        <Text fontSize="md" color={textColour}>
           Add licences to unlock bigger discounts.
         </Text>
       </VStack>
@@ -221,7 +221,7 @@ const VolumeDiscountProgress: React.FC = () => {
       {nextTier && (
         <HStack spacing={1}>
           <ArrowForwardIosIcon fontSize="small"/>
-          <Text fontSize="xl" fontWeight="bold" color={textCol}>
+          <Text fontSize="xl" fontWeight="bold" color={textColour}>
             Next tier: {nextTier.minLicenses} licences
           </Text>
         </HStack>
@@ -253,7 +253,7 @@ const VolumeDiscountProgress: React.FC = () => {
             <Text
               fontSize="sm"
               fontWeight="bold"
-              color={theme.colors.primaryTextColor}
+              color={textColour}
             >
               {Math.round(progress)}%
             </Text>
@@ -263,7 +263,7 @@ const VolumeDiscountProgress: React.FC = () => {
 
       {/* upsell */}
       {nextTier ? (
-        <Text fontSize="md" color={textCol}>
+        <Text fontSize="md" color={textColour}>
           Add {nextTier.minLicenses - currentLicenses} more licences to unlock&nbsp;
           <Text as="span" fontWeight="bold">
             {nextTier.discountPercentage}% off
