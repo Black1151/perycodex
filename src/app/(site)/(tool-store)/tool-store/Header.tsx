@@ -19,9 +19,10 @@ import { useUser } from "@/providers/UserProvider";
 
 interface HeaderProps {
   title: string;
+  showBillingCycle?: boolean;
 }
 
-export const Header: React.FC<HeaderProps> = ({ title }) => {
+export const Header: React.FC<HeaderProps> = ({ title, showBillingCycle = true }) => {
   const theme = useTheme();
   const { user } = useUser();
 
@@ -195,7 +196,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 
       <Flex
         flexDirection={["column", "column", "row"]}
-        gap={0}
+        gap={3}
         w="100%"
         justify="space-between"
         mb={4}
@@ -207,7 +208,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
             fontWeight="400"
             fontFamily="bonfire"
             fontSize={[34, 32, 42]}
-            mb={-4}
+            mb={[-2, -3, -4]}
             color={theme.fringeCases.dashboardHeader.textcolor}
           >
             {title}
@@ -227,7 +228,7 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
           </Tooltip>
         </HStack>
 
-        {(user?.role === "CL" || user?.role === "CA") && <BillingCycleToggle />}
+        {(user?.role === "CL" || user?.role === "CA") && showBillingCycle && <BillingCycleToggle />}
       </Flex>
     </>
   );

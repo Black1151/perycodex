@@ -43,7 +43,7 @@ const ContactSales: React.FC = () => {
 
   return (
     <VStack spacing={6} align="center" justify="center" w="100%">
-      <Header title="Contact Sales" />
+      <Header title="Contact Sales" showBillingCycle={false}/>
 
       <Box
         bg={theme.colors.elementBG}

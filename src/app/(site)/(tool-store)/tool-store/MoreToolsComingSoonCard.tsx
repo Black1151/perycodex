@@ -56,7 +56,7 @@ export function MoreToolsComingSoonCard() {
           <Text fontSize="sm" textAlign="center" color={secondaryTextColor}>
             Have something in mind? 
           </Text>
-          <Button variant={"outline"} size={"sm"} bg={cardBg} color={secondaryTextColor} onClick={() => router.push("/tool-store/contact-sales")}>Let us know</Button>
+          <Button variant={"outline"} size={"sm"} bg={cardBg} color={secondaryTextColor} onClick={() => router.push("/tool-store/feature-suggestions")}>Let us know</Button>
         </VStack>
       </Box>
     </VStack>

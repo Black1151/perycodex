@@ -605,6 +605,7 @@ export default function BasketPage() {
             bg={cardBg}
             py={8}
             borderRadius="md"
+            color={theme.colors.primaryTextColor}
           >
             <Text fontWeight="semibold" textAlign="center">
               You haven't made any changes to your subscription.
