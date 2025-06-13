@@ -100,7 +100,7 @@ export function ManageSubscriptionFab() {
         >
           <ShoppingCart
             sx={{
-              color: theme.colors.primary,
+              color: theme.colors.primaryTextColor,
               fontSize: isMobile ? "24px" : "32px",
             }}
           />
