@@ -37,6 +37,10 @@ export interface SpringModalProps {
   onPrimaryClick?: () => void;
   isPrimaryLoading?: boolean;
 
+  // New: Optional button icons
+  primaryIcon?: React.ReactElement;
+  secondaryIcon?: React.ReactElement;
+
   //Totally custom footer if required
   footer?: React.ReactNode;
 
@@ -69,7 +73,9 @@ export const SpringModal: React.FC<SpringModalProps> = ({
   isPrimaryLoading = false,
   modalContentProps,
   bg,
-  color = "white"
+  color = "white",
+  primaryIcon,
+  secondaryIcon,
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered motionPreset="none">
@@ -152,7 +158,7 @@ export const SpringModal: React.FC<SpringModalProps> = ({
           />
         )}
 
-        <ModalBody pt={0} pb={6} position="relative" zIndex={1} color={color}>
+        <ModalBody position="relative" zIndex={1} color={color}>
           <Box textAlign="center">{body}</Box>
         </ModalBody>
 
@@ -171,7 +177,13 @@ export const SpringModal: React.FC<SpringModalProps> = ({
                   onClick={onSecondaryClick}
                   isLoading={isSecondaryLoading}
                   isDisabled={isSecondaryLoading}
-                  _hover={{ bg: "whiteAlpha.200" }}
+                  _hover={{ bg: "whiteAlpha.300" }}
+                  bg="whiteAlpha.100"
+                  border="1px solid"
+                  borderColor="whiteAlpha.300"
+                  borderRadius="lg"
+                  boxShadow="md"
+                  leftIcon={secondaryIcon || undefined}
                   py={3}
                 >
                   {secondaryLabel}
@@ -185,8 +197,11 @@ export const SpringModal: React.FC<SpringModalProps> = ({
                   onClick={onPrimaryClick}
                   isLoading={isPrimaryLoading}
                   isDisabled={isPrimaryLoading}
-                  _hover={{ opacity: 0.9 }}
+                  _hover={{ bg: "whiteAlpha.900" }}
                   border="none"
+                  borderRadius="lg"
+                  boxShadow="md"
+                  leftIcon={primaryIcon || undefined}
                   py={3}
                 >
                   {primaryLabel}
