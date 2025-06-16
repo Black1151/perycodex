@@ -13,7 +13,8 @@ import {
   Storefront as StorefrontIcon,
   HelpCenter,
   Help,
-  BugReport
+  BugReport,
+  Chat
 } from "@mui/icons-material";
 import { useUser } from "@/providers/UserProvider";
 
@@ -24,13 +25,15 @@ import { useUser } from "@/providers/UserProvider";
  * @param handleLogout    Callback to sign the user out.
  * @param openResetModal  Opens the reset‑password dialog.
  * @param openBugReportModal  Opens the bug report modal.
+ * @param openContactModal  Opens the contact support modal.
  * @returns MenuItemProps[]  Array fed directly to the NavBar component.
  */
 const useNavMenuItems = (
   userRole: string,
   handleLogout: () => void,
   openResetModal: () => void,
-  openBugReportModal: () => void
+  openBugReportModal: () => void,
+  openContactModal: () => void
 ): MenuItemProps[] => {
   const router = useRouter();
   const { user } = useUser();
@@ -146,6 +149,13 @@ const useNavMenuItems = (
     label: "Help Centre",
     icon: <Help />,
     onClick: () => router.push("/help-centre"),
+    orderGroup: 4
+  });
+
+  commonMenuItems.push({
+    label: "Contact Support",
+    icon: <Chat />,
+    onClick: openContactModal,
     orderGroup: 4
   });
 

@@ -18,6 +18,7 @@ import { Header } from "../Header";
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import { useSession } from "next-auth/react";
 import { useUser } from "@/providers/UserProvider";
+import { SALES_EMAIL } from "@/utils/emailAddresses";
 
 const FeatureSuggestionsPage: React.FC = () => {
   const toast = useToast();
@@ -62,12 +63,12 @@ const FeatureSuggestionsPage: React.FC = () => {
       `Submitted by:\n` +
       `Name: ${user.user?.fullName || "Not provided"}\n` +
       `Customer Name: ${user.user?.customerName || "Not provided"}\n` +
-      `CustomerID: ${user.user?.customerId || "Not provided"}\n\n` +
-      `CustomerEmail: ${user.user?.email || "Not provided"}\n\n` +
+      `CustomerID: ${user.user?.customerId || "Not provided"}\n` +
+      `Customer Email: ${user.user?.email || "Not provided"}\n\n` +
       `Thanks!`
     );
 
-    window.location.href = `mailto:sales@perygon.co.uk?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${SALES_EMAIL}?subject=${subject}&body=${body}`;
   };
 
   return (

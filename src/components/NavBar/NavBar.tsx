@@ -12,6 +12,7 @@ import GreetingText from "./components/GreetingText";
 import ProfileMenu from "./components/ProfileMenu";
 import UserAvatar from "./components/UserAvatar";
 import { BugReportModal } from "../modals/BugReportModal";
+import { ContactSupportModal } from "../modals/ContactSupportModal";
 
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import { useUser } from "@/providers/UserProvider";
@@ -44,7 +45,8 @@ const NavBar: React.FC<NavBarProps> = ({
   const theme = useTheme();
   const { toolLogo, toolPath } = useWorkflow();
   const { unread, checkUnread } = useUnread();
-  const [isBugReportModalOpen, setIsBugReportModalOpen] = useState(false)
+  const [isBugReportModalOpen, setIsBugReportModalOpen] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [passwordResetModalOpen, setPasswordResetModalOpen] = useState(false);
   const [themeDropdownOptions, setThemeDropdownOptions] = useState<
     ThemeDropdownOption[]
@@ -71,8 +73,10 @@ const NavBar: React.FC<NavBarProps> = ({
     userRole,
     handleLogout,
     openResetModal,
-    () => setIsBugReportModalOpen(true)
-  ); const isFree = user?.customerIsFree || false;
+    () => setIsBugReportModalOpen(true),
+    () => setIsContactModalOpen(true)
+  );
+  const isFree = user?.customerIsFree || false;
   const isFreeUntil = user?.customerIsFreeUntilDate;
 
   const buildThemeDropdownOptions = async () => {
@@ -182,7 +186,11 @@ const NavBar: React.FC<NavBarProps> = ({
       <BugReportModal
         isOpen={isBugReportModalOpen}
         onClose={() => setIsBugReportModalOpen(false)}
-        
+      />
+
+      <ContactSupportModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
       />
     </>
   );

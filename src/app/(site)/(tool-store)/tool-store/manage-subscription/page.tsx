@@ -284,7 +284,7 @@ export default function BasketPage() {
           {/* Left: Items */}
           <Stack flex="1" spacing={4}>
             <LicensePicker />
-            <VolumeDiscountProgress/>
+            <VolumeDiscountProgress />
 
             {oldItems
               .filter(
@@ -423,7 +423,8 @@ export default function BasketPage() {
                 )}
               </Stack>
 
-              {basket.isAnnual && !basket.isFree ? (
+              {/* //STRIPE DISABLED... */}
+              {/* {basket.isAnnual && !basket.isFree ? (
                 <Button
                   w="full"
                   mb={3}
@@ -451,7 +452,21 @@ export default function BasketPage() {
                 >
                   Checkout
                 </Button>
-              )}
+              )} */}
+
+              <Button
+                w="full"
+                mb={3}
+                onClick={() => router.push("/tool-store/contact-sales")}
+                isLoading={checkoutLoading}
+                disabled={basket.quantity === 0}
+                spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
+                spinnerPlacement="start"
+                colorScheme="primary"
+                color="white"
+              >
+                Contact Sales
+              </Button>
 
               <Button
                 variant="outline"
@@ -530,7 +545,7 @@ export default function BasketPage() {
                         "voucher"
                       ) as HTMLInputElement
                     ).value.trim();
-                    
+
                     if (!code) {
                       toast({
                         title: "Enter a code",

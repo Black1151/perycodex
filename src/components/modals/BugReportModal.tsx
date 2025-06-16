@@ -12,6 +12,7 @@ import {
 import { SpringModal } from "./springModal/SpringModal";
 import { BugReport, BugReport as BugReportIcon } from "@mui/icons-material";
 import { useUser } from "@/providers/UserProvider";
+import { SUPPORT_EMAIL } from "@/utils/emailAddresses";
 
 interface BugReportModalProps {
     isOpen: boolean;
@@ -52,7 +53,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
             `.trim();
 
             // Create mailto link
-            const mailtoLink = `mailto:support@perygon.com?subject=Bug Report&body=${encodeURIComponent(emailBody)}`;
+            const mailtoLink = `mailto:${SUPPORT_EMAIL}?subject=Bug Report&body=${encodeURIComponent(emailBody)}`;
 
             // Open email client
             window.location.href = mailtoLink;

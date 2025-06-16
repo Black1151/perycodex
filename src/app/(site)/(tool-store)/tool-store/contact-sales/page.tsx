@@ -19,6 +19,7 @@ import { useBasket } from "../useBasket";
 import { useUser } from "@/providers/UserProvider";
 import { Header } from "../Header";
 import { Phone, Email } from "@mui/icons-material";
+import { SALES_EMAIL } from "@/utils/emailAddresses";
 
 const SUPPORT_EMAIL = "sales@perygon.co.uk";
 const SUPPORT_TEL = "0333 222 4445";

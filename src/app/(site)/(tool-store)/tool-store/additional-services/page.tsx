@@ -21,6 +21,7 @@ import SecurityIcon from '@mui/icons-material/Security';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { useSession } from "next-auth/react";
 import { useUser } from "@/providers/UserProvider";
+import { SALES_EMAIL } from "@/utils/emailAddresses";
 
 interface Service {
   id: string;
@@ -56,10 +57,10 @@ const AdditionalServicesPage: React.FC = () => {
   
     const servicesList = selectedServices.map((serviceId) => {
       return {
-        'custom-theme': 'Custom Theme Creation (£299 one off)',
-        'bespoke-development': 'Bespoke Tool, Dashboard or Report Development (£800 per day)',
+        'custom-theme': 'Custom Theme Creation (£200 one off)',
+        'bespoke-development': 'Bespoke Tool, Dashboard or Report Development (£850 per day)',
         'enabling-sso': 'Enabling SSO (£200 one off)',
-        'auto-user-signup': 'Enabling Auto Company User Signup (Free)',
+        'auto-user-signup': 'Enabling Auto Company User Signup (Free!)',
       }[serviceId];
     });
   
@@ -67,10 +68,10 @@ const AdditionalServicesPage: React.FC = () => {
     const body = encodeURIComponent(
       `Hi,\n\nI'd like to request more information about the following services:\n\n` +
       servicesList.map(service => `- ${service}`).join("\n") +
-      `\n\nName: ${user.user?.fullName || "Not provided"}\nCustomer Name: ${user.user?.customerName || "Not provided"}\nCustomerID: ${user.user?.customerId || "Not provided"}\n\nThanks!`
+      `\n\nName: ${user.user?.fullName || "Not provided"}\nCustomer Name: ${user.user?.customerName || "Not provided"}\nCustomerID: ${user.user?.customerId || "Not provided"}\nCustomer Email: ${user.user?.email || "Not provided"}\n\nThanks!`
     );
   
-    window.location.href = `mailto:sales@perygon.co.uk?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${SALES_EMAIL}?subject=${subject}&body=${body}`;
   };
   
 
