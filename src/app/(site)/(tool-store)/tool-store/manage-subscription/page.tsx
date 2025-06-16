@@ -423,7 +423,7 @@ export default function BasketPage() {
                 )}
               </Stack>
 
-                //STRIPE DISABLED...
+              {/* //STRIPE DISABLED... */}
               {/* {basket.isAnnual && !basket.isFree ? (
                 <Button
                   w="full"
@@ -467,7 +467,7 @@ export default function BasketPage() {
               >
                 Contact Sales
               </Button>
-              
+
               <Button
                 variant="outline"
                 w="full"
