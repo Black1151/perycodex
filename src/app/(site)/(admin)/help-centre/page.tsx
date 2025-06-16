@@ -22,13 +22,18 @@ import {
   useDisclosure,
   Center,
   Stack,
-  useTheme
+  useTheme,
+  Textarea,
 } from "@chakra-ui/react";
-import { Menu, Search } from "@mui/icons-material";
+import { Menu, Search, Chat } from "@mui/icons-material";
 import { useFetchClient } from "@/hooks/useFetchClient";
 import AdminHeading from "@/components/AdminHeader";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import ZoomableImg from "@/components/ZoomableImg";
+import { SpringModal } from "@/components/modals/springModal/SpringModal";
+import { useUser } from "@/providers/UserProvider";
+import { ContactSupportModal } from "@/components/modals/ContactSupportModal";
+import { SUPPORT_EMAIL } from "@/utils/emailAddresses";
 
 // Define Guide and ToolConfig types
 type Guide = {
@@ -50,20 +55,25 @@ export default function HelpCentrePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [guideList, setGuideList] = useState<Guide[]>([]);
-  const [toolConfigs, setToolConfigs] = useState<Record<string, ToolConfig>>(
-    {}
-  );
+  const [toolConfigs, setToolConfigs] = useState<Record<string, ToolConfig>>({});
   const [selectedGuide, setSelectedGuide] = useState<Guide | null>(null);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [embedError, setEmbedError] = useState(false);
   const [filterText, setFilterText] = useState("");
-  const theme = useTheme()
+  const [contactMessage, setContactMessage] = useState("");
+  const theme = useTheme();
+  const { user } = useUser();
 
   const { fetchClient } = useFetchClient();
   const {
     isOpen: isDrawerOpen,
     onOpen: openDrawer,
     onClose: closeDrawer,
+  } = useDisclosure();
+  const {
+    isOpen: isContactOpen,
+    onOpen: openContact,
+    onClose: closeContact,
   } = useDisclosure();
 
   // Fetch guides and tools
@@ -126,10 +136,6 @@ export default function HelpCentrePage() {
     if (selectedGuide) setPdfLoading(true);
   }, [selectedGuide]);
 
-  // Theme values
-  const bg = useColorModeValue("gray.50", "gray.800");
-  const cardBg = useColorModeValue("white", "gray.700");
-
   // Layout breakpoints
   const sideW = useBreakpointValue({ base: "full", md: "30%" });
   const mainW = useBreakpointValue({ base: "full", md: "70%" });
@@ -188,6 +194,21 @@ export default function HelpCentrePage() {
     }
   }, [orderedSections, selectedGuide]);
 
+  const handleContactSubmit = () => {
+    const userDetails = `
+Customer Name: ${user?.customerName || 'N/A'}
+Customer ID: ${user?.customerId || 'N/A'}
+User Email: ${user?.email || 'N/A'}
+
+Message:
+${contactMessage}`;
+    
+    const emailBody = encodeURIComponent(userDetails);
+    window.location.href = `mailto:${SUPPORT_EMAIL}?subject=Help Centre Support Request&body=${emailBody}`;
+    closeContact();
+    setContactMessage("");
+  };
+
   if (loading)
     return (
       <Center h="100vh">
@@ -197,7 +218,7 @@ export default function HelpCentrePage() {
   if (error)
     return (
       <Center h="100vh">
-        <Text color="red.500">{error}</Text>
+        <Text color={theme.colors.danger}>{error}</Text>
       </Center>
     );
 
@@ -242,7 +263,7 @@ export default function HelpCentrePage() {
             <Box w="100%">
               <HStack mb={2} spacing={2}>
                 {icon}
-                <Text fontSize={["base", "base", "lg"]} fontWeight="semibold">
+                <Text fontSize={["base", "base", "lg"]} fontWeight="semibold" color={theme.colors.primaryTextColor}>
                   {label}
                 </Text>
               </HStack>
@@ -255,12 +276,12 @@ export default function HelpCentrePage() {
                     }
                     color={
                       selectedGuide?.urlPath === g.urlPath
-                        ? "white"
-                        : "gray.700"
+                        ? (theme.colors.buttonTextSelected || "white")
+                        : theme.colors.primaryTextColor
                     }
                     justifyContent="left"
                     leftIcon={<ArticleOutlinedIcon />}
-                    _hover={{ bg: "gray.100", color: "gray.800" }}
+                    _hover={{ bg: theme.colors.elementBG, color: theme.colors.primaryTextColor }}
                     _active={{ transform: "scale(0.98)" }}
                     onClick={() => {
                       setSelectedGuide(g);
@@ -289,50 +310,68 @@ export default function HelpCentrePage() {
   );
 
   return (
-    <VStack w="full" spacing={4} h="71vh" overflow="hidden">
+    <VStack w="full" spacing={4} h={["71vh", "71vh", "82vh"]} overflow="hidden">
       <VStack w="full" h="min" align={"left"}>
         <AdminHeading headingText="Help Centre" />
-        {/* Mobile toggle */}
-        {isMobile && (
-          <>
+        {/* Mobile toggle and contact button */}
+        <HStack spacing={2}>
+          {isMobile && (
             <Button
               aria-label="Open guide list"
               w={"min"}
               onClick={openDrawer}
               gap={1}
               color={"white"}
-              size={"md"}
+              size={"sm"}
             >
               <Menu />
-              <Text fontSize={"sm"}>All Guides</Text>
+              <Text fontSize={"xs"}>Guides</Text>
             </Button>
-            <Drawer
-              isOpen={isDrawerOpen}
-              placement="left"
-              onClose={closeDrawer}
-            >
-              <DrawerOverlay />
-              <DrawerContent>
-                <DrawerCloseButton />
-                <DrawerBody p={0}>
-                  <Box 
-                    bg={cardBg} 
-                    h="full" 
-                    overflowY="auto"
-                    sx={{
-                      '&::-webkit-scrollbar': {
-                        display: 'none'
-                      },
-                      '-ms-overflow-style': 'none',
-                      'scrollbar-width': 'none'
-                    }}
-                  >
-                    {Sidebar}
-                  </Box>
-                </DrawerBody>
-              </DrawerContent>
-            </Drawer>
-          </>
+          )}
+          <Button
+            aria-label="Contact support"
+            w={"min"}
+            onClick={openContact}
+            gap={1}
+            color={"white"}
+            size={"sm"}
+            leftIcon={<Chat />}
+          >
+            <Text fontSize={"xs"}>{isMobile ? "Contact" : "Contact Support"}</Text>
+          </Button>
+        </HStack>
+
+        {/* Contact Modal */}
+        <ContactSupportModal isOpen={isContactOpen} onClose={closeContact} />
+
+        {/* Mobile drawer */}
+        {isMobile && (
+          <Drawer
+            isOpen={isDrawerOpen}
+            placement="left"
+            onClose={closeDrawer}
+          >
+            <DrawerOverlay />
+            <DrawerContent>
+              <DrawerCloseButton />
+              <DrawerBody p={0}>
+                <Box 
+                  bg={theme.colors.elementBG} 
+                  h="full" 
+                  overflowY="auto"
+                  sx={{
+                    '&::-webkit-scrollbar': {
+                      display: 'none'
+                    },
+                    '-ms-overflow-style': 'none',
+                    'scrollbar-width': 'none'
+                  }}
+                >
+                  {Sidebar}
+                </Box>
+              </DrawerBody>
+            </DrawerContent>
+          </Drawer>
         )}
       </VStack>
 
@@ -350,17 +389,10 @@ export default function HelpCentrePage() {
         {!isMobile && (
           <Box
             w={sideW}
-            bg={cardBg}
+            bg={theme.colors.elementBG}
             borderRight="1px solid"
             borderColor="gray.200"
             boxShadow="sm"
-            sx={{
-              '&::-webkit-scrollbar': {
-                display: 'none'
-              },
-              '-ms-overflow-style': 'none',
-              'scrollbar-width': 'none'
-            }}
             overflowY="auto"
           >
             {Sidebar}
@@ -370,7 +402,7 @@ export default function HelpCentrePage() {
         <Box w={mainW} display="flex" flexDirection="column" p={4} h="full">
           <Box
             flex="1"
-            bg={cardBg}
+            bg={theme.colors.elementBG}
             rounded="md"
             position="relative"
             overflow="hidden"
@@ -382,7 +414,7 @@ export default function HelpCentrePage() {
                 height="100%"
                 overflowY="auto" // only vertical scrolling
                 overflowX="hidden" // no horizontal scroll
-                bg={cardBg}
+                bg={theme.colors.elementBG}
               >
                 {selectedGuide ? (
                   isMobile ? (
@@ -401,7 +433,7 @@ export default function HelpCentrePage() {
                   )
                 ) : (
                   <Center h="full" p={8}>
-                    <Text fontSize="lg" color="gray.500">
+                    <Text fontSize="lg" color={theme.colors.secondaryTextColor}>
                       No guide selected.
                     </Text>
                   </Center>
@@ -411,10 +443,10 @@ export default function HelpCentrePage() {
               // Error state if the image failed to load
               <Center h="full" p={8}>
                 <Stack spacing={4} textAlign="center">
-                  <Text fontSize="4xl" fontWeight="bold" color="pink.500">
+                  <Text fontSize="4xl" fontWeight="bold" color={theme.colors.danger}>
                     Error...
                   </Text>
-                  <Text fontSize="lg">
+                  <Text fontSize="lg" color={theme.colors.secondaryTextColor}>
                     Oops! An error occurred loading this guide.
                   </Text>
                 </Stack>

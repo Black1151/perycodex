@@ -16,6 +16,7 @@ import BackButton from "@/components/BackButton";
 import BillingCycleToggle from "./BillingCyleToggle";
 import LargeTextModal from "@/components/surveyjs/layout/default/LargeTextModal";
 import { useUser } from "@/providers/UserProvider";
+import { SALES_EMAIL } from "@/utils/emailAddresses";
 
 interface HeaderProps {
   title: string;
@@ -78,8 +79,8 @@ export const Header: React.FC<HeaderProps> = ({ title, showBillingCycle = true }
             Downgrading (reducing the number of users or tools) is not available
             via the self-service platform. To request a downgrade, please
             contact us directly at{" "}
-            <Link color="blue.500" href="mailto:sales@perygon.co.uk">
-              sales@perygon.co.uk
+            <Link color="blue.500" href={`mailto:${SALES_EMAIL}`}>
+              {SALES_EMAIL}
             </Link>
             . Downgrades will take effect at the end of the current monthly
             billing period, and no refunds or credits will be issued for the
@@ -144,8 +145,8 @@ export const Header: React.FC<HeaderProps> = ({ title, showBillingCycle = true }
           <Text mb={4}>
             Subscriptions cannot be changed during the subscription year without
             contacting us directly via{" "}
-            <Link color="blue.500" href="mailto:sales@perygon.co.uk">
-              sales@perygon.co.uk
+            <Link color="blue.500" href={`mailto:${SALES_EMAIL}`}>
+              {SALES_EMAIL}
             </Link>
             . Any changes, will be processed manually and may be subject to
             additional charges or terms as agreed at the time of change.
@@ -157,8 +158,8 @@ export const Header: React.FC<HeaderProps> = ({ title, showBillingCycle = true }
           <Text mb={4}>
             Annual subscriptions cannot be cancelled via the platform at any
             time. Contact us directly via{" "}
-            <Link color="blue.500" href="mailto:sales@perygon.co.uk">
-              sales@perygon.co.uk
+            <Link color="blue.500" href={`mailto:${SALES_EMAIL}`}>
+              {SALES_EMAIL}
             </Link>
             , but no refunds or credits will be issued for any unused portion of
             the subscription year.
