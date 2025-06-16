@@ -508,7 +508,7 @@ export default function BasketPage() {
                 Clear Changes
               </Button>
 
-              {!basket.discountCode && (
+              {!basket.discountCode && showStripe && (
                 <>
                   {isMobile ? (
                     <Button
@@ -547,7 +547,7 @@ export default function BasketPage() {
               )}
             </Box>
 
-            {!isMobile && addingVoucher && (
+            {!isMobile && addingVoucher && showStripe && (
               <Box bg={theme.colors.elementBG} borderRadius="lg" boxShadow="sm" p={6}>
                 <HStack justify="space-between" mb={4}>
                   <Text fontSize={[14, 18]} fontWeight="semibold" color={theme.colors.primaryTextColor}>
