@@ -36,24 +36,25 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
         try {
             // Create email body with user information and bug report details
             const emailBody = `
-                Hi, I would like to report a bug with Perygon.
+Hi,
 
-                Bug Report Details:
-                ------------------
-                Description: ${description}
+I have found a bug with Perygon:
 
-                Steps to Reproduce: ${steps}
+Description: ${description}
 
-                User Information:
-                ----------------
-                Name: ${user?.fullName || 'Not provided'}
-                Email: ${user?.email || 'Not provided'}
-                Customer ID: ${user?.customerId || 'Not provided'}
-                Customer Name: ${user?.customerName || 'Not provided'}
-            `.trim();
+Steps to Reproduce: ${steps}
+
+Submitted by:
+Name: ${user?.fullName || 'Not provided'}
+Email: ${user?.email || 'Not provided'}
+Customer Name: ${user?.customerName || 'Not provided'}
+Customer ID: ${user?.customerId || 'Not provided'}
+
+Many thanks
+`.trim();
 
             // Create mailto link
-            const mailtoLink = `mailto:${SUPPORT_EMAIL}?subject=Bug Report&body=${encodeURIComponent(emailBody)}`;
+            const mailtoLink = `mailto:${SUPPORT_EMAIL}?subject=Perygon Bug Report&body=${encodeURIComponent(emailBody)}`;
 
             // Open email client
             window.location.href = mailtoLink;
