@@ -62,6 +62,8 @@ export default function BasketPage() {
   const [removingIds, setRemovingIds] = useState<Set<string>>(new Set());
   const [checkoutOverlay, setCheckoutOverlay] = useState(false);
   const user = useUser();
+  const [stripeCounter, setStripeCounter] = useState(0);
+  const [showStripe, setShowStripe] = useState(false);
 
   // Drawers for mobile
   const voucherDrawer = useDisclosure();
@@ -107,6 +109,25 @@ export default function BasketPage() {
       getBasket();
     }
   }, [basket, error]);
+
+  // Handle key press for down arrow
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowDown') {
+        setStripeCounter(prev => {
+          const newCount = prev + 1;
+          if (newCount >= 5) {
+            setShowStripe(true);
+            alert("DEV MODE ENABLED\n\n⚠️ WARNING: This is a test environment.\nDO NOT use real card details.");
+          }
+          return newCount;
+        });
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, []);
 
   if (basket?.licensedUsers === undefined) {
     return null;
@@ -333,7 +354,21 @@ export default function BasketPage() {
               color={theme.colors.primaryTextColor}
             >
               {/* Totals */}
-              <HStack justify="space-between" mb={4}>
+              <HStack 
+                justify="space-between" 
+                mb={4}
+                onClick={() => {
+                  setStripeCounter(prev => {
+                    const newCount = prev + 1;
+                    if (newCount >= 5) {
+                      setShowStripe(true);
+                      alert("DEV MODE ENABLED\n\n⚠️ WARNING: This is a test environment.\nDO NOT use real card details.");
+                    }
+                    return newCount;
+                  });
+                }}
+                cursor="pointer"
+              >
                 <Text fontSize={[14, 18]} fontWeight="semibold">
                   Subscription Totals
                 </Text>
@@ -423,8 +458,26 @@ export default function BasketPage() {
                 )}
               </Stack>
 
-              {/* //STRIPE DISABLED... */}
-              {/* {basket.isAnnual && !basket.isFree ? (
+              {showStripe ? (
+                <>
+                  <Button
+                    w="full"
+                    mb={3}
+                    onClick={handleCheckout}
+                    isLoading={checkoutLoading || loading || (billingRef.current?.getAddress == null)}
+                    disabled={basket.quantity === 0}
+                    spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
+                    spinnerPlacement="start"
+                    colorScheme="primary"
+                    color="white"
+                  >
+                    Checkout (Test Mode)
+                  </Button>
+                  <Text fontSize="sm" color="red.500" mb={3} textAlign="center">
+                    ⚠️ Test Mode: Do not use real card details
+                  </Text>
+                </>
+              ) : (
                 <Button
                   w="full"
                   mb={3}
@@ -438,35 +491,7 @@ export default function BasketPage() {
                 >
                   Contact Sales
                 </Button>
-              ) : (
-                <Button
-                  w="full"
-                  mb={3}
-                  onClick={handleCheckout}
-                  isLoading={checkoutLoading || loading || (billingRef.current?.getAddress == null)}
-                  disabled={basket.quantity === 0}
-                  spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
-                  spinnerPlacement="start"
-                  colorScheme="primary"
-                  color="white"
-                >
-                  Checkout
-                </Button>
-              )} */}
-
-              <Button
-                w="full"
-                mb={3}
-                onClick={() => router.push("/tool-store/contact-sales")}
-                isLoading={checkoutLoading}
-                disabled={basket.quantity === 0}
-                spinner={<Spinner thickness="2px" speed="0.65s" size="sm" />}
-                spinnerPlacement="start"
-                colorScheme="primary"
-                color="white"
-              >
-                Contact Sales
-              </Button>
+              )}
 
               <Button
                 variant="outline"

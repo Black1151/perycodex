@@ -53,19 +53,16 @@ const FeatureSuggestionsPage: React.FC = () => {
       return;
     }
 
-    const subject = encodeURIComponent(`New Perygon ${formData.type === 'feature' ? 'Feature' : 'Tool'} Suggestion: ${formData.featureName}`);
+    const subject = encodeURIComponent(`Perygon Feature Suggestion: ${formData.featureName}`);
     const body = encodeURIComponent(
-      `Hi,\n\nI have an suggestion for Perygon:\n\n` +
-      `Suggestion/Feature Name: ${formData.featureName}\n` +
-      `Type: ${formData.type === 'feature' ? 'Feature' : 'Tool'}\n` +
-      `Priority: ${formData.priority}\n\n` +
-      `Description:\n${formData.description}\n\n` +
+      `Hi,\n\nI have a suggestion for Perygon:\n\n` +
+      `${formData.description}\n\n` +
       `Submitted by:\n` +
       `Name: ${user.user?.fullName || "Not provided"}\n` +
+      `Email: ${user.user?.email || "Not provided"}\n` +
       `Customer Name: ${user.user?.customerName || "Not provided"}\n` +
-      `CustomerID: ${user.user?.customerId || "Not provided"}\n` +
-      `Customer Email: ${user.user?.email || "Not provided"}\n\n` +
-      `Thanks!`
+      `Customer ID: ${user.user?.customerId || "Not provided"}\n\n` +
+      `Many thanks`
     );
 
     window.location.href = `mailto:${SALES_EMAIL}?subject=${subject}&body=${body}`;

@@ -54,7 +54,7 @@ const AdditionalServicesPage: React.FC = () => {
       });
       return;
     }
-  
+
     const servicesList = selectedServices.map((serviceId) => {
       return {
         'custom-theme': 'Custom Theme Creation (£200 one off)',
@@ -63,17 +63,22 @@ const AdditionalServicesPage: React.FC = () => {
         'auto-user-signup': 'Enabling Auto Company User Signup (Free!)',
       }[serviceId];
     });
-  
-    const subject = encodeURIComponent(`New Perygon Services Request: From ${user.user?.customerName || "Not provided"}, CustomerID: ${user.user?.customerId || "Not provided"} `);
+
+    const subject = encodeURIComponent(`Perygon Additional Services Request`);
     const body = encodeURIComponent(
-      `Hi,\n\nI'd like to request more information about the following services:\n\n` +
+      `Hi,\n\nI would like to request more information about the following Perygon services:\n\n` +
       servicesList.map(service => `- ${service}`).join("\n") +
-      `\n\nName: ${user.user?.fullName || "Not provided"}\nCustomer Name: ${user.user?.customerName || "Not provided"}\nCustomerID: ${user.user?.customerId || "Not provided"}\nCustomer Email: ${user.user?.email || "Not provided"}\n\nThanks!`
+      `\n\nSubmitted by:\n` +
+      `Name: ${user.user?.fullName || "Not provided"}\n` +
+      `Email: ${user.user?.email || "Not provided"}\n` +
+      `Customer Name: ${user.user?.customerName || "Not provided"}\n` +
+      `Customer ID: ${user.user?.customerId || "Not provided"}\n\n` +
+      `Many thanks`
     );
-  
+
     window.location.href = `mailto:${SALES_EMAIL}?subject=${subject}&body=${body}`;
   };
-  
+
 
   const services: Service[] = [
     {
@@ -108,7 +113,7 @@ const AdditionalServicesPage: React.FC = () => {
 
   return (
     <VStack spacing={6} align="center" justify="center" w="100%">
-      <Header title="Additional Services" showBillingCycle={false}/>
+      <Header title="Additional Services" showBillingCycle={false} />
 
       <Box
         bg={theme.colors.elementBG}
