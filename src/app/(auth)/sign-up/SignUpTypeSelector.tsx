@@ -173,8 +173,8 @@ export const SignUpTypeSelector = ({
         body={(
           <VStack spacing={4} align="start">
             <Text>When you create a new company account, you'll receive a {subscriptionLimits.free.trialDays} day free trial of Perygon.</Text>
-            <Text>During this trial, you can explore all features and invite your team members. No credit card is required to start your trial.</Text>
-            <Text>After the trial period, you'll have the option to upgrade to a paid plan to continue using Perygon.</Text>
+            <Text>During this trial, you can explore a number of tools and features and invite your team members. No credit card is required to start your trial.</Text>
+            <Text>After the trial period, you'll have the option to upgrade to a paid plan to continue using Perygon and unlock features.</Text>
           </VStack>
         )}
         showClose={true}
@@ -187,14 +187,13 @@ export const SignUpTypeSelector = ({
         header="Joining an Existing Company"
         body={(
           <VStack spacing={4} align="start">
-            <Text>If your company is already using Perygon, you can join their existing workspace.</Text>
+            <Text>If your company is already using Perygon, you may be able join them here.</Text>
             <Text>To do this, please sign up using your work email address. Perygon uses your company's email domain to automatically connect you with your team.</Text>
-            <Text>If you're unsure whether your company is using Perygon, please contact your administrator or IT department.</Text>
+            <Text>If you're unsure whether your company is using Perygon and you can use this sign up method, please contact your administrator or IT department.</Text>
           </VStack>
         )}
         showClose={true}
         bg={theme.colors.primary}
-
       />
     </VStack>
   );

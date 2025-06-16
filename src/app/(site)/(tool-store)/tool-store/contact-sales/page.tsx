@@ -14,6 +14,8 @@ import {
   Badge,
   Skeleton,
   SkeletonText,
+  Textarea,
+  Button,
 } from "@chakra-ui/react";
 import { useBasket } from "../useBasket";
 import { useUser } from "@/providers/UserProvider";
@@ -30,6 +32,7 @@ const ContactSales: React.FC = () => {
   const toast = useToast();
   const theme = useTheme();
   const [isLoading, setIsLoading] = useState(true);
+  const [contactMessage, setContactMessage] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,9 +45,44 @@ const ContactSales: React.FC = () => {
     fetchData();
   }, [subscription]);
 
+  const handleContactSubmit = () => {
+    if (!contactMessage.trim()) {
+      toast({
+        title: "Missing information",
+        description: "Please enter your message before submitting.",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    const emailBody = `
+Hi,
+
+I would like to discuss the following with the sales team:
+
+${contactMessage}
+
+Submitted by:
+Name: ${user.user?.fullName || 'Not provided'}
+Email: ${user.user?.email || 'Not provided'}
+Customer Name: ${user.user?.customerName || 'Not provided'}
+Customer ID: ${user.user?.customerId || 'Not provided'}
+Subscription ID: ${subscription?.uniqueId.slice(0, 6) || 'Not provided'}
+
+Many thanks
+`.trim();
+
+    const subject = encodeURIComponent("Perygon Sales Inquiry");
+    const body = encodeURIComponent(emailBody);
+    window.location.href = `mailto:${SALES_EMAIL}?subject=${subject}&body=${body}`;
+    setContactMessage("");
+  };
+
   return (
     <VStack spacing={6} align="center" justify="center" w="100%">
-      <Header title="Contact Sales" showBillingCycle={false}/>
+      <Header title="Contact Sales" showBillingCycle={false} />
 
       <Box
         bg={theme.colors.elementBG}
@@ -63,9 +101,9 @@ const ContactSales: React.FC = () => {
         </SkeletonText>
       </Box>
 
-      <Stack 
-        direction={["column", "column", "row"]} 
-        w="100%" 
+      <Stack
+        direction={["column", "column", "row"]}
+        w="100%"
         spacing={6}
       >
         <Box
@@ -86,8 +124,8 @@ const ContactSales: React.FC = () => {
               <SkeletonText isLoaded={!isLoading} noOfLines={1}>
                 <Text fontSize={["sm", "md", "lg"]}>
                   <strong>Phone:</strong>{" "}
-                  <Link 
-                    href={`tel:${SUPPORT_TEL}`} 
+                  <Link
+                    href={`tel:${SUPPORT_TEL}`}
                     color={theme.colors.primary}
                     _hover={{ textDecoration: "none", color: theme.colors.primary }}
                   >
@@ -103,12 +141,12 @@ const ContactSales: React.FC = () => {
               <SkeletonText isLoaded={!isLoading} noOfLines={1}>
                 <Text fontSize={["sm", "md", "lg"]}>
                   <strong>Email:</strong>{" "}
-                  <Link 
-                    href={`mailto:${SUPPORT_EMAIL}`} 
+                  <Link
+                    href={`mailto:${SALES_EMAIL}`}
                     color={theme.colors.primary}
                     _hover={{ textDecoration: "none", color: theme.colors.primary }}
                   >
-                    {SUPPORT_EMAIL}
+                    {SALES_EMAIL}
                   </Link>
                 </Text>
               </SkeletonText>
@@ -132,7 +170,7 @@ const ContactSales: React.FC = () => {
                 <Text fontWeight="bold" fontSize={["sm", "md", "lg"]}>Your Subscription ID:</Text>
               </SkeletonText>
               <Skeleton isLoaded={!isLoading}>
-                <Badge 
+                <Badge
                   textTransform="uppercase"
                   colorScheme="blue"
                   px={2}
@@ -153,7 +191,7 @@ const ContactSales: React.FC = () => {
                 <Text fontWeight="bold" fontSize={["sm", "md", "lg"]}>Your Customer ID:</Text>
               </SkeletonText>
               <Skeleton isLoaded={!isLoading}>
-                <Badge 
+                <Badge
                   textTransform="uppercase"
                   colorScheme="blue"
                   px={2}
@@ -169,6 +207,38 @@ const ContactSales: React.FC = () => {
           </VStack>
         </Box>
       </Stack>
+
+      <Box
+        bg={theme.colors.elementBG}
+        borderRadius="md"
+        boxShadow="md"
+        p={6}
+        w="100%"
+        color={theme.colors.primaryTextColor}
+      >
+        <VStack spacing={4} align="stretch">
+          <Text fontSize={["sm", "md", "lg"]} fontWeight="bold">
+            Send us a message
+          </Text>
+          <Textarea
+            placeholder="Please describe what you would like to discuss with our sales team..."
+            value={contactMessage}
+            onChange={(e) => setContactMessage(e.target.value)}
+            size="md"
+            rows={6}
+            bg="white"
+            color="gray.800"
+          />
+          <Button
+            colorScheme="blue"
+            onClick={handleContactSubmit}
+            isLoading={isLoading}
+            loadingText="Preparing..."
+          >
+            Send Message
+          </Button>
+        </VStack>
+      </Box>
     </VStack>
   );
 };
