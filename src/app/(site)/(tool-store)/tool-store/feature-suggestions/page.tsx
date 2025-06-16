@@ -16,7 +16,6 @@ import {
 } from "@chakra-ui/react";
 import { Header } from "../Header";
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
-import { useSession } from "next-auth/react";
 import { useUser } from "@/providers/UserProvider";
 import { SALES_EMAIL } from "@/utils/emailAddresses";
 
@@ -24,12 +23,11 @@ const FeatureSuggestionsPage: React.FC = () => {
   const toast = useToast();
   const theme = useTheme();
   const user = useUser();
-  const { data: session } = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     featureName: "",
     description: "",
-    type: "feature", // or "tool"
+    type: "platform", // platform, tool, or other
     priority: "medium",
   });
 
@@ -53,9 +51,9 @@ const FeatureSuggestionsPage: React.FC = () => {
       return;
     }
 
-    const subject = encodeURIComponent(`Perygon Feature Suggestion: ${formData.featureName}`);
+    const subject = encodeURIComponent(`Perygon ${formData.type.charAt(0).toUpperCase() + formData.type.slice(1)} Suggestion: ${formData.featureName}`);
     const body = encodeURIComponent(
-      `Hi,\n\nI have a suggestion for Perygon:\n\n` +
+      `Hi,\n\nI have a ${formData.type} suggestion for Perygon:\n\n` +
       `${formData.description}\n\n` +
       `Submitted by:\n` +
       `Name: ${user.user?.fullName || "Not provided"}\n` +
@@ -105,7 +103,7 @@ const FeatureSuggestionsPage: React.FC = () => {
               onChange={handleInputChange}
               fontSize={["sm", "md", "lg"]}
             >
-              <option value="feature">Platform Feature</option>
+              <option value="platform">Platform Feature</option>
               <option value="tool">Tool</option>
               <option value="other">Other</option>
             </Select>
@@ -145,4 +143,4 @@ const FeatureSuggestionsPage: React.FC = () => {
 
 export default function Page() {
   return <FeatureSuggestionsPage />;
-} 
+}
