@@ -53,7 +53,7 @@ const FeatureSuggestionsPage: React.FC = () => {
 
     const subject = encodeURIComponent(`Perygon ${formData.type.charAt(0).toUpperCase() + formData.type.slice(1)} Suggestion: ${formData.featureName}`);
     const body = encodeURIComponent(
-      `Hi,\n\nI have a ${formData.type} suggestion for Perygon:\n\n` +
+      `Hi,\n\nI have a ${formData.type === 'other' ? '' : formData.type} suggestion for Perygon:\n\n` +
       `${formData.description}\n\n` +
       `Submitted by:\n` +
       `Name: ${user.user?.fullName || "Not provided"}\n` +
