@@ -20,8 +20,11 @@ interface BigUpCategory {
 
 export async function GET(req: NextRequest) {
     try {
+        const searchParams = req.nextUrl.searchParams;
+        const customerId = searchParams.get('customerId') || null;
+
         const response = await apiClient(
-            `/userBigupType/allBy?selectColumns=id,name,description,points,isActive`,
+            `/userBigupType/allBy?selectColumns=id,name,description,points,isActive&customerId=${customerId}`,
             {
                 method: "GET",
                 headers: {
