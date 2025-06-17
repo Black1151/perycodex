@@ -20,8 +20,10 @@ interface BigUpCategory {
 
 export async function GET(req: NextRequest) {
     try {
+        console.log("[BigUp] GET: Fetching categories");
         const searchParams = req.nextUrl.searchParams;
         const customerId = searchParams.get('customerId') || null;
+        console.log("[BigUp] GET: Customer ID:", customerId);
 
         const response = await apiClient(
             `/userBigupType/allBy?selectColumns=id,name,description,points,isActive&customerId=${customerId}`,
@@ -34,9 +36,10 @@ export async function GET(req: NextRequest) {
         );
 
         const data = await response.json();
-
+        console.log("[BigUp] GET: Successfully fetched categories");
         return NextResponse.json(data);
     } catch (error: any) {
+        console.error("[BigUp] GET: Error fetching categories:", error.message);
         const errorMessage =
             error.message ||
             "An error occurred while fetching BigUp categories data.";
@@ -46,14 +49,12 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
     try {
-        console.log("POST /api/bigup/categories: Request started.");
-        console.log("req cookies:", req.cookies)
-        const authToken = req.headers.get('authorization')?.split(' ')[1]
+        console.log("[BigUp] POST: Creating new category");
+        const authToken = req.headers.get('authorization')?.split(' ')[1];
 
         const { name, description, points, isActive }: BigUpCategoryPayload = await req.json();
-        console.log("POST /api/bigup/categories: Received body - name:", name, ", description:", description, ", points:", points);
+        console.log("[BigUp] POST: Category details:", { name, description, points, isActive });
 
-        console.log("POST /api/bigup/categories: Making apiClient call to /userBigupType");
         const response = await apiClient(`/userBigupType`, {
             method: "POST",
             headers: {
@@ -67,20 +68,18 @@ export async function POST(req: NextRequest) {
                 isActive
             }),
         });
-        console.log("POST /api/bigup/categories: apiClient response", response);
 
         if (!response.ok) {
             const errorData = await response.json();
-            console.error("POST /api/bigup/categories: apiClient error response:", errorData);
+            console.error("[BigUp] POST: API error:", errorData);
             throw new Error(errorData.error || "Failed to create category on external API");
         }
 
         const data = await response.json();
-        console.log("POST /api/bigup/categories: apiClient successful data:", data);
-
+        console.log("[BigUp] POST: Successfully created category");
         return NextResponse.json(data);
     } catch (error: any) {
-        console.error("POST /api/bigup/categories: Error in catch block:", error);
+        console.error("[BigUp] POST: Error creating category:", error.message);
         const errorMessage =
             error.message || "An error occurred while creating BigUp category.";
         return NextResponse.json({ error: errorMessage }, { status: 500 });
@@ -89,23 +88,21 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
     try {
-        console.log("PUT /api/bigup/categories: Request started.");
-        console.log("req cookies:", req.cookies)
-        const authToken = req.headers.get('authorization')?.split(' ')[1]
+        console.log("[BigUp] PUT: Updating category");
+        const authToken = req.headers.get('authorization')?.split(' ')[1];
 
         const body = await req.json();
-        console.log("PUT /api/bigup/categories: Full request body:", body);
         const { uniqueId, name, description, points, isActive }: BigUpCategory = body;
-        console.log("PUT /api/bigup/categories: Received body - uniqueId:", uniqueId, ", name:", name, ", description:", description, ", points:", points, "isActive:", isActive);
+        console.log("[BigUp] PUT: Category details:", { uniqueId, name, description, points, isActive });
 
         if (!uniqueId) {
+            console.error("[BigUp] PUT: Missing required parameter: id");
             return NextResponse.json(
                 { error: "Missing required parameter: id" },
                 { status: 400 }
             );
         }
 
-        console.log("PUT /api/bigup/categories: Making apiClient call to /userBigupType");
         const response = await apiClient(`/userBigupType/${uniqueId}`, {
             method: "PUT",
             headers: {
@@ -119,20 +116,18 @@ export async function PUT(req: NextRequest) {
                 isActive
             }),
         });
-        console.log("PUT /api/bigup/categories: apiClient response", response);
 
         if (!response.ok) {
             const errorData = await response.json();
-            console.error("PUT /api/bigup/categories: apiClient error response:", errorData);
+            console.error("[BigUp] PUT: API error:", errorData);
             throw new Error(errorData.error || "Failed to update category on external API");
         }
 
         const data = await response.json();
-        console.log("PUT /api/bigup/categories: apiClient successful data:", data);
-
+        console.log("[BigUp] PUT: Successfully updated category");
         return NextResponse.json(data);
     } catch (error: any) {
-        console.error("PUT /api/bigup/categories: Error in catch block:", error);
+        console.error("[BigUp] PUT: Error updating category:", error.message);
         const errorMessage =
             error.message || "An error occurred while updating BigUp category.";
         return NextResponse.json({ error: errorMessage }, { status: 500 });
