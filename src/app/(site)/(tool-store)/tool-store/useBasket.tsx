@@ -8,6 +8,7 @@ import React, {
   useRef,
 } from "react";
 import { useFetchClient } from "@/hooks/useFetchClient";
+import { Toast, useToast } from "@chakra-ui/react";
 
 export interface Basket {
   id: number;
@@ -23,6 +24,7 @@ export interface Basket {
   customerId: number | null;
   discountCode: string | null;
   quantity: number;
+  reason: string | null;
   licensedUsers: number;
   ownedSubscriptionInfo: SubscriptionInfo[];
   content: BasketItem[];
@@ -181,6 +183,7 @@ interface BasketProviderProps {
 
 export const BasketProvider = ({ children }: BasketProviderProps) => {
   const { fetchClient } = useFetchClient();
+  const toast = useToast();
   const [basket, setBasket] = useState<Basket | null>(null);
   const [subscription, setSubscription] = useState<Basket | null>(null);
   const [error, setError] = useState<Error | null>(null);
@@ -407,8 +410,25 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
         throw new Error("Failed to apply voucher");
       }
 
-      if (!data.resource.discountCode) {
-        throw new Error("Invalid or expired voucher code");
+      if (data.resource.discountCode === null) {
+        if (data.resource.reason) {
+          toast({
+            title: "Voucher Issue",
+            description: data.resource.reason,
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+          throw new Error(data.resource.reason);
+        } else {
+          toast({
+            title: "Voucher Invalid",
+            description: "Please contact sales",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+        }
       }
 
       setBasket(data.resource);
