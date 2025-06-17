@@ -6,12 +6,14 @@ import { categoryFields } from "../../../../components/agGrids/dataFields/recogn
 import AdminHeader from "@/components/AdminHeader";
 import { useState, useEffect } from "react";
 import { useUser } from "@/providers/UserProvider";
+import { Spinner, useTheme, Center } from "@chakra-ui/react";
 
 export default function RecognitionCategoriesPage() {
   const [categories, setCategories] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<any>(null);
   const { user } = useUser();
+  const theme = useTheme();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -38,7 +40,11 @@ export default function RecognitionCategoriesPage() {
   }, [user]);
 
   if (error) return <div>Failed to load categories.</div>;
-  if (isLoading) return <div>Loading categories...</div>;
+  if (isLoading) return (
+    <Center h="80vh">
+      <Spinner size="xl" color={theme.colors.elementBG} />
+    </Center>
+  );
 
   const categoryData = categories?.resource || [];
   const categoryCount = categoryData.length;

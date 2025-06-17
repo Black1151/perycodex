@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
         console.log("[BigUp] GET: Customer ID:", customerId);
 
         const response = await apiClient(
-            `/userBigupType/allBy?selectColumns=id,name,description,points,isActive&customerId=${customerId}`,
+            `/userBigupType/allBy?selectColumns=id,name,description,points,isActive&customerId=${customerId}&orderBy=id`,
             {
                 method: "GET",
                 headers: {

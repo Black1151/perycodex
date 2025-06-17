@@ -1,23 +1,34 @@
 import { ColDef } from "ag-grid-community";
 import ActionButtonRenderer from "../CellRenderers/ActionButtonRenderer";
+import BigupCategoryRenderer from "../CellRenderers/BigupCategroyRenderer";
 
 export const categoryFields: ColDef[] = [
   {
+    field: "id",
+    headerName: "ID",
+    maxWidth: 128,
+    minWidth: 64,
+  },
+  {
     field: "name",
     headerName: "Title",
-    width: 200,
     filter: "agTextColumnFilter",
+    cellRenderer: BigupCategoryRenderer,
+    cellRendererParams: {
+      nameField: "name",
+      uniqueIdField: "id",
+    },
   },
   {
     field: "description",
     headerName: "Description",
-    width: 300,
     filter: "agTextColumnFilter",
   },
   {
     field: "points",
     headerName: "Points",
-    width: 100,
+    maxWidth: 200,
+    minWidth: 100,
     filter: "agNumberColumnFilter",
   },
   {
@@ -29,5 +40,7 @@ export const categoryFields: ColDef[] = [
       updateUrl: "/api/bigup/isActiveToggle",
       idField: "id",
     },
+    maxWidth: 200,
+    minWidth: 100,
   },
 ]; 
