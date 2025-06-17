@@ -20,7 +20,7 @@ import CategoriesModal from "./CategoriesModal";
 interface RecognitionHeaderProps {
   headingText: string;
   onAddButtonClick?: () => void;
-  customerId: string;
+  customerId?: string;
 }
 
 const RecognitionHeader: React.FC<RecognitionHeaderProps> = ({
