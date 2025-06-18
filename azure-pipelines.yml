@@ -6,7 +6,7 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: "cded2d3b-6a50-4f45-a781-7e60a4e51b58"
+  dockerRegistryServiceConnection: "1ea05f5b-e5ed-4183-b5be-19d4d76697ac"
   imageRepository: "perygon-develop"
   containerRegistry: "sedulocontainerreg.azurecr.io"
   dockerfilePath: "$(Build.SourcesDirectory)/Dockerfile"
