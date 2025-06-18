@@ -27,6 +27,7 @@ import {
   } from '@mui/icons-material';
   import { ReactNode } from 'react';
   import { motion, Transition } from 'framer-motion';
+  import { transparentize } from "@chakra-ui/theme-tools";
   
   type MobileSelectorItem = {
     id: string | number;
@@ -83,11 +84,23 @@ import {
     const isMobile = useBreakpointValue({ base: true, md: false });
     const theme = useTheme();
     const bg = theme.colors.elementBG;
+    const transparentBg = transparentize(theme.colors.elementBG, 0.65)(theme);
+    const borderColor = transparentize(theme.colors.primaryTextColor, 0.15)(theme)
+    const textColor = theme.colors.primaryTextColor;
+    const secondaryTextColor = theme.colors.primaryTextColor;
+    const successColor = theme.colors.green[500];
+    const errorColor = theme.colors.red[500];
   
     const SkeletonSidebar = () => (
       <VStack align='stretch' spacing={4}>
         {Array.from({ length: sidebarSkeletonCount }).map((_, i) => (
-          <Box key={i} border='1px solid' borderColor='gray.200' borderRadius='md' p={3}>
+          <Box 
+            key={i} 
+            border='1px solid' 
+            borderColor={borderColor} 
+            borderRadius={theme.radii.md} 
+            p={3}
+          >
             <Skeleton h='20px' mb={2} />
             <SkeletonText noOfLines={2} spacing='2' skeletonHeight='14px' />
           </Box>
@@ -106,25 +119,36 @@ import {
               as={Button}
               rightIcon={<KeyboardArrowDown />}
               width='100%'
-              bg={theme.colors.elementBG}
+              bg={bg}
+              _hover={{ bg: transparentize(bg, 0.8)(theme) }}
+              _active={{ bg: transparentize(bg, 0.9)(theme) }}
             >
               <HStack spacing={2} w='100%' justifyContent='space-between'>
-                <Text flex='1' textAlign='left' isTruncated>
+                <Text flex='1' textAlign='left' isTruncated color={textColor}>
                   {sel?.label ?? 'Select…'}
                 </Text>
                 {sel ? (
-                  sel.isActive ? <Icon as={Check} color='green.500' /> : <Icon as={CloseIcon} color='red.500' />
+                  sel.isActive ? 
+                    <Icon as={Check} color={successColor} /> : 
+                    <Icon as={CloseIcon} color={errorColor} />
                 ) : null}
               </HStack>
             </MenuButton>
-            <MenuList w='100%'>
+            <MenuList w='100%' bg={bg} borderColor={borderColor}>
               {mobileItems.map((it) => (
-                <MenuItem key={it.id} onClick={() => onMobileSelect(it.id)}>
+                <MenuItem 
+                  key={it.id} 
+                  onClick={() => onMobileSelect(it.id)}
+                  _hover={{ bg: transparentize(bg, 0.8)(theme) }}
+                >
                   <HStack w='100%' justifyContent='space-between'>
-                    <Text flex='1' textAlign='left' isTruncated>
+                    <Text flex='1' textAlign='left' isTruncated color={textColor}>
                       {it.label}
                     </Text>
-                    {it.isActive ? <Icon as={Check} color='green.500' /> : <Icon as={CloseIcon} color='red.500' />}
+                    {it.isActive ? 
+                      <Icon as={Check} color={successColor} /> : 
+                      <Icon as={CloseIcon} color={errorColor} />
+                    }
                   </HStack>
                 </MenuItem>
               ))}
@@ -136,7 +160,6 @@ import {
   
     return (
       <Modal isOpen={isOpen} onClose={onClose} size='5xl' isCentered motionPreset='none'>
-        {/* overlay */}
         <ModalOverlay
           as={MotionOverlay}
           initial={{ opacity: 0 }}
@@ -144,9 +167,9 @@ import {
           exit={{ opacity: 0 }}
           transition={overlayTransition as any}
           backdropFilter='blur(4px)'
+          bg={transparentize(theme.colors.black, 0.4)(theme)}
         />
   
-        {/* content */}
         <ModalContent
           as={MotionContent}
           initial={{ scale: 0, rotate: 12.5, opacity: 0 }}
@@ -156,56 +179,64 @@ import {
           maxW={['90vw', null, null, contentMaxW]}
           maxH={contentMaxH}
           minH={contentMinH}
-          borderRadius='md'
+          borderRadius={theme.radii.md}
           overflow='hidden'
+          bg="transparent"
+          boxShadow={theme.shadows.xl}
         >
-          <ModalCloseButton />
+          <ModalCloseButton 
+            color={textColor}
+            _hover={{ bg: transparentize(bg, 0.8)(theme) }}
+          />
   
-          <ModalBody p={0} bg={bg} display='flex' flexDirection='column' flex='1' minH='0'>
-            {/* header */}
+          <ModalBody p={0} display='flex' flexDirection='column' flex='1' minH='0'>
             <HStack
               px={4}
               py={3}
               bg={bg}
               borderBottom='1px solid'
-              borderColor='gray.200'
+              borderColor={borderColor}
               fontSize='28px'
               align='center'
             >
               {icon}
-              <Text fontSize={['xl', '2xl', '3xl']} fontWeight='medium' fontFamily='bonfire' mb={-3}>
+              <Text 
+                fontSize={['xl', '2xl', '3xl']} 
+                fontWeight='medium' 
+                fontFamily='bonfire' 
+                mb={-3}
+                color={textColor}
+              >
                 {title}
               </Text>
               {total !== undefined && !isMobile && (
-                <Text fontSize='sm' color='gray.500' ml={2}>
+                <Text fontSize='sm' color={secondaryTextColor} ml={2}>
                   {total} total
                 </Text>
               )}
             </HStack>
   
-            {/* split panes */}
             <Box display='flex' flex='1' overflow='hidden' minH='0'>
-              {/* desktop sidebar */}
               {!isMobile && (
                 <Box
                   width='30%'
                   overflowY='auto'
                   minH='0'
                   borderRight='1px solid'
-                  borderColor='gray.200'
+                  borderColor={borderColor}
                   p={4}
-                  css={{
-                    '&::-webkit-scrollbar': { display: 'none' },
-                    '-ms-overflow-style': 'none',
-                    scrollbarWidth: 'none',
-                  }}
+                  bg={bg}
                 >
                   {sidebarLoading ? <SkeletonSidebar /> : sidebar}
                 </Box>
               )}
   
-              {/* main panel */}
-              <Box width={isMobile ? '100%' : '70%'} p={4} bg='gray.200' overflowY='auto'>
+              <Box 
+                width={isMobile ? '100%' : '70%'} 
+                p={4} 
+                bg={transparentBg} 
+                overflowY='auto'
+              >
                 {sidebarLoading ? null : (
                   <>
                     {isMobile && renderMobileSelector()}

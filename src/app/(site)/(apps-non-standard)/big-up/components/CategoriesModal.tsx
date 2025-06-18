@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, useMemo } from 'react';
-import { Category as CategoryIcon, Lock } from '@mui/icons-material';
+import { Category as CategoryIcon, Lock, Add } from '@mui/icons-material';
 import {
   Box,
   VStack,
@@ -8,7 +8,11 @@ import {
   Alert,
   AlertIcon,
   Badge,
+  useTheme,
+  Button,
+  HStack,
 } from '@chakra-ui/react';
+import { transparentize } from '@chakra-ui/theme-tools';
 import CategoryPanel from './CategoryPanel';
 import SplitPaneModal from '@/components/modals/SplitPaneModal';
 
@@ -20,6 +24,14 @@ type Category = {
   isActive: boolean;
 };
 
+const emptyCategory: Category = {
+  uniqueId: -1,
+  name: '',
+  description: '',
+  points: 0,
+  isActive: true,
+};
+
 export default function CategoriesModal(props: {
   isOpen: boolean;
   onClose: () => void;
@@ -28,13 +40,16 @@ export default function CategoriesModal(props: {
   toolId: number;
 }) {
   const { isOpen, onClose, customerId, isFree, toolId } = props;
+  const theme = useTheme();
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading]   = useState(false);
   const [error,   setError]     = useState<string | null>(null);
   const [selId,   setSelId]     = useState<number | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
 
-  const selected = categories.find((c) => c.uniqueId === selId) ?? null;
+  const selected = isCreating ? emptyCategory : categories.find((c) => c.uniqueId === selId) ?? null;
+  const borderColor = transparentize(theme.colors.primaryTextColor, 0.15)(theme)
 
   const fetchCats = useCallback(async () => {
     if (!customerId) return;
@@ -48,59 +63,186 @@ export default function CategoriesModal(props: {
         points: i.points, isActive: i.isActive,
       }));
       setCategories(mapped);
-      setSelId(mapped[0]?.uniqueId ?? null);
+      if (mapped.length > 0) {
+        setSelId(mapped[0].uniqueId);
+        setIsCreating(false);
+      }
     } catch (e: any) { setError(e.message); }
     finally          { setLoading(false); }
   }, [customerId]);
 
-  useEffect(() => { if (isOpen) fetchCats(); }, [isOpen, fetchCats]);
+  useEffect(() => { 
+    if (isOpen) {
+      setIsCreating(false);
+      fetchCats();
+    }
+  }, [isOpen, fetchCats]);
+
+  const handleCreateNew = () => {
+    setIsCreating(true);
+    setSelId(null);
+  };
+
+  const handleCancelCreate = () => {
+    setIsCreating(false);
+    setSelId(categories[0]?.uniqueId ?? null);
+  };
+
+  const handleCategorySelect = (id: number) => {
+    if (isCreating) {
+      setIsCreating(false);
+    }
+    setSelId(id);
+  };
 
   const Sidebar = useMemo(() => {
-    if (loading) return <Spinner size='lg' />;
+    if (loading) return <Spinner size='lg' color={theme.colors.primary} />;
     if (error)   return (
-      <Alert status='error'><AlertIcon />{error}</Alert>
-    );
-    if (!categories.length) return (
-      <Text textAlign='center' mt={10}>No categories.</Text>
+      <Alert status='error' bg={theme.colors.red[50]} color={theme.colors.red[700]}>
+        <AlertIcon color={theme.colors.red[500]} />
+        {error}
+      </Alert>
     );
 
     return (
       <VStack align='stretch' spacing={4}>
-        {categories.map((c) => {
-          const locked = props.isFree && !c.isActive;
-          return (
-            <Box
-              key={c.uniqueId}
-              border='1px solid'
-              borderColor={selId === c.uniqueId ? 'blue.400' : 'gray.200'}
-              p={3}
-              borderRadius='md'
-              opacity={locked ? 0.5 : 1}
-              _hover={{ cursor: locked ? 'not-allowed' : 'pointer', bg: 'gray.50' }}
-              onClick={() => !locked && setSelId(c.uniqueId)}
+        {/* Create New Category Item */}
+        <Box
+          border='1px solid'
+          borderColor={isCreating ? theme.colors.primary : borderColor}
+          p={3}
+          borderRadius={theme.radii.md}
+          transition="all 0.2s ease"
+          _hover={{ 
+            cursor: 'pointer',
+            bg: isCreating 
+              ? transparentize(theme.colors.primary, 0.1)(theme)
+              : transparentize(theme.colors.elementBG, 0.8)(theme),
+            transform: 'translateY(-1px)',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+            borderColor: theme.colors.primary
+          }}
+          onClick={handleCreateNew}
+          bg={isCreating ? transparentize(theme.colors.primary, 0.1)(theme) : theme.colors.elementBG}
+          position="relative"
+          _before={isCreating ? {
+            content: '""',
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: '3px',
+            bg: theme.colors.primary,
+            borderTopLeftRadius: theme.radii.md,
+            borderBottomLeftRadius: theme.radii.md,
+          } : undefined}
+        >
+          <HStack spacing={2} color={theme.colors.primaryTextColor}>
+            <Add fontSize='medium'  />
+            <Text 
+              fontWeight='semibold' 
             >
-              {locked && <Lock fontSize='small' />}
-              <Text fontWeight='semibold' mb={1}>{c.name}</Text>
-              <Text fontSize='sm' noOfLines={2}>{c.description}</Text>
-              <Badge mt={1} colorScheme='blue'>{c.points} pts</Badge>
-            </Box>
-          );
-        })}
+              Create New Category
+            </Text>
+          </HStack>
+        </Box>
+
+        {!categories.length && !isCreating ? (
+          <Text textAlign='center' mt={10} color={theme.colors.primaryTextColor}>
+            No categories.
+          </Text>
+        ) : (
+          categories.map((c) => {
+            const locked = props.isFree && !c.isActive;
+            return (
+              <Box
+                key={c.uniqueId}
+                border='1px solid'
+                borderColor={selId === c.uniqueId ? theme.colors.primary : borderColor}
+                p={3}
+                borderRadius={theme.radii.md}
+                opacity={locked ? 0.5 : 1}
+                transition="all 0.2s ease"
+                _hover={{ 
+                  cursor: locked ? 'not-allowed' : 'pointer', 
+                  bg: selId === c.uniqueId 
+                    ? transparentize(theme.colors.primary, 0.1)(theme)
+                    : transparentize(theme.colors.elementBG, 0.8)(theme),
+                  transform: locked ? 'none' : 'translateY(-1px)',
+                  boxShadow: locked ? 'none' : '0 2px 4px rgba(0,0,0,0.05)',
+                  borderColor: locked ? borderColor : theme.colors.primary
+                }}
+                onClick={() => !locked && handleCategorySelect(c.uniqueId)}
+                bg={selId === c.uniqueId ? transparentize(theme.colors.primary, 0.1)(theme) : theme.colors.elementBG}
+                position="relative"
+                _before={selId === c.uniqueId ? {
+                  content: '""',
+                  position: 'absolute',
+                  left: 0,
+                  top: 0,
+                  bottom: 0,
+                  width: '3px',
+                  bg: theme.colors.primary,
+                  borderTopLeftRadius: theme.radii.md,
+                  borderBottomLeftRadius: theme.radii.md,
+                } : undefined}
+              >
+                {locked && <Lock fontSize='small' color={theme.colors.primaryTextColor} />}
+                <Text 
+                  fontWeight='semibold' 
+                  mb={1}
+                  color={theme.colors.primaryTextColor}
+                >
+                  {c.name}
+                </Text>
+                <Text 
+                  fontSize='sm' 
+                  noOfLines={2}
+                  color={theme.colors.secondaryTextColor}
+                >
+                  {c.description}
+                </Text>
+                <Badge 
+                  mt={1} 
+                  colorScheme='primary'
+                  bg={theme.colors.primary}
+                  color={theme.colors.white}
+                >
+                  {c.points} pts
+                </Badge>
+              </Box>
+            );
+          })
+        )}
       </VStack>
     );
-  }, [categories, selId, loading, error, props.isFree]);
+  }, [categories, selId, loading, error, props.isFree, theme, isCreating]);
 
   const Panel = selected ? (
     <CategoryPanel
       category={selected}
-      onUpdateCategory={(u) =>
-        setCategories((p) => p.map((c) => (c.uniqueId === u.uniqueId ? u : c)))
-      }
+      onUpdateCategory={(u) => {
+        if (isCreating) {
+          setCategories((p) => [...p, u]);
+          setIsCreating(false);
+          setSelId(u.uniqueId);
+        } else {
+          setCategories((p) => p.map((c) => (c.uniqueId === u.uniqueId ? u : c)));
+        }
+      }}
       customerId={customerId}
       toolId={toolId}
+      isCreating={isCreating}
+      onCancelCreate={handleCancelCreate}
     />
   ) : (
-    <Text textAlign='center' mt={10}>No category selected</Text>
+    <Text 
+      textAlign='center' 
+      mt={10}
+      color={theme.colors.primaryTextColor}
+    >
+      No category selected
+    </Text>
   );
 
   /* mobile selector items ---------------------------------------------- */
@@ -114,7 +256,7 @@ export default function CategoriesModal(props: {
     <SplitPaneModal
       isOpen={isOpen}
       onClose={onClose}
-      icon={<CategoryIcon fontSize='inherit' htmlColor='var(--chakra-colors-primary)' />}
+      icon={<CategoryIcon fontSize='inherit' htmlColor={theme.colors.primary} />}
       title='Manage Categories'
       total={categories.length}
       sidebar={Sidebar}
