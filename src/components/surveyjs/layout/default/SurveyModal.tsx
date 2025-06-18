@@ -25,6 +25,8 @@ interface ModalProps {
   confirmLabel?: string;
   cancelLabel?: string;
   icon?: React.ReactNode;
+  isConfirmLoading?: boolean;
+  isCancelLoading?: boolean;
 }
 
 const getModalConfig = (type: ModalType, theme: any) => {
@@ -73,6 +75,8 @@ const SurveyModal: React.FC<ModalProps> = ({
   confirmLabel = "Confirm",
   cancelLabel = "Cancel",
   icon,
+  isConfirmLoading = false,
+  isCancelLoading = false,
 }) => {
   const theme = useTheme();
   const modalConfig = getModalConfig(type, theme);
@@ -91,9 +95,11 @@ const SurveyModal: React.FC<ModalProps> = ({
       primaryLabel={showButtons.confirm ? confirmLabel : undefined}
       onPrimaryClick={showButtons.confirm ? onConfirm : undefined}
       primaryIcon={<Check/>}
+      isPrimaryLoading={isConfirmLoading}
       secondaryLabel={showButtons.close ? cancelLabel : undefined}
       onSecondaryClick={showButtons.close ? onClose : undefined}
       secondaryIcon={<Close/>}
+      isSecondaryLoading={isCancelLoading}
     />
   );
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { HStack, Box, useTheme } from "@chakra-ui/react";
+import { HStack, Box, useTheme, useToast } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
@@ -13,6 +13,8 @@ import ProfileMenu from "./components/ProfileMenu";
 import UserAvatar from "./components/UserAvatar";
 import { BugReportModal } from "../modals/BugReportModal";
 import { ContactSupportModal } from "../modals/ContactSupportModal";
+import SurveyModal from "@/components/surveyjs/layout/default/SurveyModal";
+import { Logout as LogoutIcon } from "@mui/icons-material";
 
 import { useWorkflow } from "@/providers/WorkflowProvider";
 import { useUser } from "@/providers/UserProvider";
@@ -43,11 +45,14 @@ const NavBar: React.FC<NavBarProps> = ({
   const router = useRouter();
   const { user } = useUser();
   const theme = useTheme();
+  const toast = useToast();
   const { toolLogo, toolPath } = useWorkflow();
   const { unread, checkUnread } = useUnread();
   const [isBugReportModalOpen, setIsBugReportModalOpen] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [passwordResetModalOpen, setPasswordResetModalOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [themeDropdownOptions, setThemeDropdownOptions] = useState<
     ThemeDropdownOption[]
   >([]);
@@ -63,15 +68,27 @@ const NavBar: React.FC<NavBarProps> = ({
   const handleOnClose = () => setPasswordResetModalOpen(false);
 
   const handleLogout = async () => {
-    await fetch("/api/auth/sign-out", { method: "POST" });
-    sessionStorage.clear();
-    await signOut({ redirect: false });
-    router.push("/login");
+    try {
+      setIsLoggingOut(true);
+      await fetch("/api/auth/sign-out", { method: "POST" });
+      sessionStorage.clear();
+      await signOut({ redirect: false });
+      router.push("/login");
+      toast({
+        title: "Successfully logged out",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error("Logout failed:", error);
+      setIsLoggingOut(false);
+    }
   };
 
   const menuItems = useNavMenuItems(
     userRole,
-    handleLogout,
+    () => setIsLogoutModalOpen(true),
     openResetModal,
     () => setIsBugReportModalOpen(true),
     () => setIsContactModalOpen(true)
@@ -169,7 +186,7 @@ const NavBar: React.FC<NavBarProps> = ({
             menuItems={menuItems}
             unread={unread}
             themeDropdownOptions={themeDropdownOptions}
-            handleLogout={handleLogout}
+            handleLogout={() => setIsLogoutModalOpen(true)}
             userIsFree={isFree}
             userIsFreeUntil={isFreeUntil ?? ""}
             userIsFreeAction={() => router.push("/tool-store")}
@@ -191,6 +208,19 @@ const NavBar: React.FC<NavBarProps> = ({
       <ContactSupportModal
         isOpen={isContactModalOpen}
         onClose={() => setIsContactModalOpen(false)}
+      />
+
+      <SurveyModal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={handleLogout}
+        title="Confirm Logout"
+        bodyContent="Are you sure you want to log out?"
+        confirmLabel="Logout"
+        cancelLabel="Cancel"
+        type="warning"
+        icon={<LogoutIcon fontSize="inherit" />}
+        isConfirmLoading={isLoggingOut}
       />
     </>
   );
