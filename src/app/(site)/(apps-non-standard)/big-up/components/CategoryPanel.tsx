@@ -16,14 +16,7 @@ import {
 } from '@chakra-ui/react';
 import { transparentize } from '@chakra-ui/theme-tools';
 import { useEffect, useState } from 'react';
-
-type Category = {
-  uniqueId: number;
-  name: string;
-  description: string;
-  points: number;
-  isActive: boolean;
-};
+import { Category } from "./CategoriesModal"
 
 type Props = {
   category: Category;
@@ -78,15 +71,15 @@ export default function CategoryPanel({
   /* toggle active */
   const toggle = async (checked: boolean) => {
     patch('isActive', checked);
-    await save(); // simple: reuse same endpoint
+    await save();
   };
 
   return (
-    <Box 
-      p={4} 
-      border='1px solid' 
-      borderColor={transparentize(theme.colors.primaryTextColor, 0.15)(theme)} 
-      borderRadius='md' 
+    <Box
+      p={4}
+      border='1px solid'
+      borderColor={transparentize(theme.colors.primaryTextColor, 0.15)(theme)}
+      borderRadius='md'
       bg={theme.colors.elementBG}
     >
       {/* header row */}
@@ -183,19 +176,35 @@ export default function CategoryPanel({
           />
         </FormControl>
 
-        <FormControl>
-          <FormLabel color={theme.colors.primaryTextColor}>Points</FormLabel>
-          <Input
-            type='number'
-            value={editable.points}
-            onChange={(e) => patch('points', parseInt(e.target.value))}
-            isDisabled={!editable.isActive}
-            borderColor={transparentize(theme.colors.primaryTextColor, 0.15)(theme)}
-            _hover={{ borderColor: theme.colors.primary }}
-            _focus={{ borderColor: theme.colors.primary, boxShadow: `0 0 0 1px ${theme.colors.primary}` }}
-            color={theme.colors.primaryTextColor}
-          />
-        </FormControl>
+        <Stack direction={["column", "row", "row"]}>
+          <FormControl>
+            <FormLabel color={theme.colors.primaryTextColor}>Receiver Points</FormLabel>
+            <Input
+              type='number'
+              value={editable.points}
+              onChange={(e) => patch('points', parseInt(e.target.value))}
+              isDisabled={!editable.isActive}
+              borderColor={transparentize(theme.colors.primaryTextColor, 0.15)(theme)}
+              _hover={{ borderColor: theme.colors.primary }}
+              _focus={{ borderColor: theme.colors.primary, boxShadow: `0 0 0 1px ${theme.colors.primary}` }}
+              color={theme.colors.primaryTextColor}
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel color={theme.colors.primaryTextColor}>Giver Points</FormLabel>
+            <Input
+              type='number'
+              value={editable.giverPoints}
+              onChange={(e) => patch('giverPoints', parseInt(e.target.value))}
+              isDisabled={!editable.isActive}
+              borderColor={transparentize(theme.colors.primaryTextColor, 0.15)(theme)}
+              _hover={{ borderColor: theme.colors.primary }}
+              _focus={{ borderColor: theme.colors.primary, boxShadow: `0 0 0 1px ${theme.colors.primary}` }}
+              color={theme.colors.primaryTextColor}
+            />
+          </FormControl>
+        </Stack>
       </VStack>
 
       <HStack justify='flex-end' mt={6} spacing={4}>
@@ -205,11 +214,11 @@ export default function CategoryPanel({
             onClick={onCancelCreate}
             color={theme.colors.primaryTextColor}
             _hover={
-            {
-              bg: 'transparent',
-              borderColor: theme.colors.primary,
-              color: theme.colors.primary
-            }
+              {
+                bg: 'transparent',
+                borderColor: theme.colors.primary,
+                color: theme.colors.primary
+              }
             }
           >
             Cancel

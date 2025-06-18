@@ -11,7 +11,6 @@ import {
   Text,
   Spinner,
   useBreakpointValue,
-  useColorModeValue,
   Button,
   HStack,
   Image,
@@ -23,7 +22,9 @@ import {
   DrawerBody,
   useDisclosure,
   useTheme,
+  chakra,
 } from "@chakra-ui/react";
+import { motion, Transition } from "framer-motion";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import {
   Article,
@@ -36,6 +37,7 @@ import { useFetchClient } from "@/hooks/useFetchClient";
 import MarkAsRead from "./markAsRead";
 import { useUser } from "@/providers/UserProvider";
 import ZoomableImg from "@/components/ZoomableImg";
+import { transparentize } from "@chakra-ui/theme-tools";
 
 type GuideModalProps = {
   isOpen: boolean;
@@ -54,6 +56,12 @@ type Guide = {
   sortOrder: number;
   toolId?: number | string;
 };
+
+const MotionOverlay = chakra(motion.div);
+const MotionContent = chakra(motion.div);
+
+const overlayTransition: Transition = { duration: 0.2, ease: 'easeOut' };
+const contentTransition: Transition = { type: 'spring', stiffness: 300, damping: 30 };
 
 export default function GuideModal({
   isOpen,
@@ -79,6 +87,14 @@ export default function GuideModal({
   } = useDisclosure();
   const theme = useTheme();
   const { user } = useUser();
+
+  const bg = theme.colors.elementBG;
+  const transparentBg = transparentize(theme.colors.elementBG, 0.65)(theme);
+  const borderColor = transparentize(theme.colors.primaryTextColor, 0.15)(theme);
+  const textColor = theme.colors.primaryTextColor;
+  const secondaryTextColor = theme.colors.primaryTextColor;
+  const successColor = theme.colors.green[500];
+  const errorColor = theme.colors.red[500];
 
   // Reset PDF-spinner when guide changes
   useEffect(() => {
@@ -165,8 +181,6 @@ export default function GuideModal({
     loadGuidesAndReads();
   }, [isOpen, toolId, guideType]);
 
-  const bg = useColorModeValue("white", "gray.800");
-  const pdfBg = useColorModeValue("white", "gray.50");
   const sideW = useBreakpointValue({ base: "full", md: "30%" });
   const mainW = useBreakpointValue({ base: "full", md: "70%" });
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -193,7 +207,7 @@ export default function GuideModal({
       'scrollbar-width': 'none'
     }}>
       {guideList.length === 0 && (
-        <Text color="gray.500" textAlign="center" mt={10}>
+        <Text color={secondaryTextColor} textAlign="center" mt={10}>
           No guides available.
         </Text>
       )}
@@ -204,11 +218,11 @@ export default function GuideModal({
             key={g.urlPath}
             position="relative"
             border="1px solid"
-            borderColor={isSelected ? "blue.400" : "gray.200"}
+            borderColor={isSelected ? "blue.400" : borderColor}
             borderRadius="md"
             p={3}
             mb={2}
-            _hover={{ bg: "gray.50", cursor: "pointer" }}
+            _hover={{ bg: transparentize(bg, 0.8)(theme), cursor: "pointer" }}
             onClick={() => {
               setSelectedGuide(g);
               if (isMobile) closeDrawer();
@@ -216,13 +230,13 @@ export default function GuideModal({
           >
             <HStack spacing={2} flex={1} overflow="hidden">
               <Article fontSize={"medium"} />
-              <Text isTruncated>{g.title}</Text>
+              <Text isTruncated color={textColor}>{g.title}</Text>
             </HStack>
             {recordIdMap[g.urlPath] && (
               <Box position="absolute" top="2px" right="2px">
                 <CheckCircleIcon
                   fontSize="small"
-                  style={{ color: theme.colors.primary }}
+                  style={{ color: theme.colors.green[500] }}
                 />
               </Box>
             )}
@@ -242,8 +256,8 @@ export default function GuideModal({
           size="xs"
         >
           <DrawerOverlay />
-          <DrawerContent>
-            <DrawerCloseButton />
+          <DrawerContent bg={bg}>
+            <DrawerCloseButton color={textColor} />
             <DrawerBody px={4} sx={{
               '&::-webkit-scrollbar': {
                 display: 'none'
@@ -257,10 +271,11 @@ export default function GuideModal({
                   fontWeight="medium"
                   fontFamily={"bonfire"}
                   mb={-1}
+                  color={textColor}
                 >
                   Guide List
                 </Text>
-                <Text fontSize="sm" color="gray.500" mb={4}>
+                <Text fontSize="sm" color={secondaryTextColor} mb={4}>
                   ({Object.values(readGuides).filter(Boolean).length} of{" "}
                   {guideList.length} guides completed)
                 </Text>
@@ -271,9 +286,22 @@ export default function GuideModal({
         </Drawer>
       )}
 
-      <Modal isOpen={isOpen} onClose={onClose} size="6xl" isCentered>
-        <ModalOverlay />
+      <Modal isOpen={isOpen} onClose={onClose} size="6xl" isCentered motionPreset="none">
+        <ModalOverlay
+          as={MotionOverlay}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={overlayTransition as any}
+          backdropFilter="blur(4px)"
+          bg={transparentize(theme.colors.black, 0.4)(theme)}
+        />
         <ModalContent
+          as={MotionContent}
+          initial={{ scale: 0, rotate: 12.5, opacity: 0 }}
+          animate={{ scale: 1, rotate: 0, opacity: 1 }}
+          exit={{ scale: 0, rotate: 0, opacity: 0 }}
+          transition={contentTransition as any}
           maxH={{ base: "95dvh", md: "95vh" }}
           maxW="90vw"
           minW="80vw"
@@ -282,8 +310,13 @@ export default function GuideModal({
           overflow="hidden"
           display="flex"
           flexDirection="column"
+          bg="transparent"
+          boxShadow={theme.shadows.xl}
         >
-          <ModalCloseButton />
+          <ModalCloseButton 
+            color={textColor}
+            _hover={{ bg: transparentize(bg, 0.8)(theme) }}
+          />
           <ModalBody
             p={0}
             display="flex"
@@ -297,7 +330,7 @@ export default function GuideModal({
               py={3}
               bg={bg}
               borderBottom="1px solid"
-              borderColor="gray.200"
+              borderColor={borderColor}
               justify="left"
               borderRadius={"md"}
               overflow={"none"}
@@ -309,6 +342,7 @@ export default function GuideModal({
                   onClick={openDrawer}
                   size="md"
                   variant="outline"
+                  color={textColor}
                 />
               )}
               {iconImageUrl ? (
@@ -329,6 +363,7 @@ export default function GuideModal({
                 fontWeight="medium"
                 fontFamily={"bonfire"}
                 mb={-2}
+                color={textColor}
               >
                 {guideType === "tool"
                   ? "Tool Guide"
@@ -338,7 +373,7 @@ export default function GuideModal({
               </Text>
               <Text
                 fontSize="sm"
-                color="gray.500"
+                color={secondaryTextColor}
                 display={{ base: "none", md: "block" }}
               >
                 ({Object.values(readGuides).filter(Boolean).length} of{" "}
@@ -355,10 +390,10 @@ export default function GuideModal({
                 justify="center"
                 pt={4}
               >
-                <Text fontFamily="bonfire" fontSize={36}>
+                <Text fontFamily="bonfire" fontSize={36} color={textColor}>
                   Oops! No Guides Yet...
                 </Text>
-                <Text>Please contact support if you need assistance</Text>
+                <Text color={secondaryTextColor}>Please contact support if you need assistance</Text>
               </VStack>
             ) : (
               <Flex flex="1" overflow="hidden">
@@ -366,9 +401,10 @@ export default function GuideModal({
                   <Box
                     w={sideW}
                     borderRight="1px solid"
-                    borderColor="gray.200"
+                    borderColor={borderColor}
                     overflowY="auto"
                     p={4}
+                    bg={bg}
                     sx={{
                       '&::-webkit-scrollbar': {
                         display: 'none'
@@ -393,14 +429,14 @@ export default function GuideModal({
                       <Box
                         flex="1"
                         overflowY="auto"
-                        bg={pdfBg}
+                        bg={transparentBg}
                         position="relative"
                       >
                         {isMobile ? (
                           <Box
                             width="100%"
                             height={"full"}
-                            bg="gray.50"
+                            bg={transparentBg}
                           >
                             <ZoomableImg src={selectedGuide.guideImagePath} />
                           </Box>
@@ -412,7 +448,7 @@ export default function GuideModal({
                                 inset="0"
                                 align="center"
                                 justify="center"
-                                bg={pdfBg}
+                                bg={transparentBg}
                                 zIndex={1}
                               >
                                 <Spinner size="lg" />
@@ -433,7 +469,7 @@ export default function GuideModal({
                         py={{ base: 3, md: 4 }}
                         bg={bg}
                         borderTop="1px solid"
-                        borderColor="gray.200"
+                        borderColor={borderColor}
                         position="sticky"
                         bottom={0}
                         align="center"
@@ -442,7 +478,7 @@ export default function GuideModal({
                         borderRadius={"md"}
                         overflow={"none"}
                       >
-                        <HStack justify={"start"} color="white">
+                        <HStack justify={"start"} color={textColor}>
                           <Button
                             onClick={handlePrev}
                             isDisabled={currentIndex <= 0}
@@ -450,6 +486,7 @@ export default function GuideModal({
                             py={{ base: 4, md: 3 }}
                             borderRadius={"full"}
                             variant={"outline"}
+                            color={textColor}
                           >
                             <ArrowBack />
                           </Button>
@@ -460,6 +497,7 @@ export default function GuideModal({
                             py={{ base: 4, md: 3 }}
                             borderRadius={"full"}
                             variant={"outline"}
+                            color={textColor}
                           >
                             <ArrowForward />
                           </Button>

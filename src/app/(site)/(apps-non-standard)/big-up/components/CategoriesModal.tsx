@@ -11,17 +11,19 @@ import {
   useTheme,
   Button,
   HStack,
+  Stack,
 } from '@chakra-ui/react';
 import { transparentize } from '@chakra-ui/theme-tools';
 import CategoryPanel from './CategoryPanel';
 import SplitPaneModal from '@/components/modals/SplitPaneModal';
 
-type Category = {
+export type Category = {
   uniqueId: number;
   name: string;
   description: string;
   points: number;
   isActive: boolean;
+  giverPoints: number
 };
 
 const emptyCategory: Category = {
@@ -29,6 +31,7 @@ const emptyCategory: Category = {
   name: '',
   description: '',
   points: 0,
+  giverPoints: 0,
   isActive: true,
 };
 
@@ -43,9 +46,9 @@ export default function CategoriesModal(props: {
   const theme = useTheme();
 
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading]   = useState(false);
-  const [error,   setError]     = useState<string | null>(null);
-  const [selId,   setSelId]     = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [selId, setSelId] = useState<number | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
   const selected = isCreating ? emptyCategory : categories.find((c) => c.uniqueId === selId) ?? null;
@@ -58,9 +61,10 @@ export default function CategoriesModal(props: {
       const r = await fetch(`/api/bigup?customerId=${customerId}`);
       if (!r.ok) throw new Error('fetch failed');
       const j = await r.json();
+      console.log(j)
       const mapped: Category[] = (j.resource ?? []).map((i: any) => ({
         uniqueId: i.id, name: i.name, description: i.description,
-        points: i.points, isActive: i.isActive,
+        points: i.points, giverPoints: i.giverPoints, isActive: i.isActive,
       }));
       setCategories(mapped);
       if (mapped.length > 0) {
@@ -68,10 +72,10 @@ export default function CategoriesModal(props: {
         setIsCreating(false);
       }
     } catch (e: any) { setError(e.message); }
-    finally          { setLoading(false); }
+    finally { setLoading(false); }
   }, [customerId]);
 
-  useEffect(() => { 
+  useEffect(() => {
     if (isOpen) {
       setIsCreating(false);
       fetchCats();
@@ -97,7 +101,7 @@ export default function CategoriesModal(props: {
 
   const Sidebar = useMemo(() => {
     if (loading) return <Spinner size='lg' color={theme.colors.primary} />;
-    if (error)   return (
+    if (error) return (
       <Alert status='error' bg={theme.colors.red[50]} color={theme.colors.red[700]}>
         <AlertIcon color={theme.colors.red[500]} />
         {error}
@@ -113,9 +117,9 @@ export default function CategoriesModal(props: {
           p={3}
           borderRadius={theme.radii.md}
           transition="all 0.2s ease"
-          _hover={{ 
+          _hover={{
             cursor: 'pointer',
-            bg: isCreating 
+            bg: isCreating
               ? transparentize(theme.colors.primary, 0.1)(theme)
               : transparentize(theme.colors.elementBG, 0.8)(theme),
             transform: 'translateY(-1px)',
@@ -138,9 +142,9 @@ export default function CategoriesModal(props: {
           } : undefined}
         >
           <HStack spacing={2} color={theme.colors.primaryTextColor}>
-            <Add fontSize='medium'  />
-            <Text 
-              fontWeight='semibold' 
+            <Add fontSize='medium' />
+            <Text
+              fontWeight='semibold'
             >
               Create New Category
             </Text>
@@ -163,9 +167,9 @@ export default function CategoriesModal(props: {
                 borderRadius={theme.radii.md}
                 opacity={locked ? 0.5 : 1}
                 transition="all 0.2s ease"
-                _hover={{ 
-                  cursor: locked ? 'not-allowed' : 'pointer', 
-                  bg: selId === c.uniqueId 
+                _hover={{
+                  cursor: locked ? 'not-allowed' : 'pointer',
+                  bg: selId === c.uniqueId
                     ? transparentize(theme.colors.primary, 0.1)(theme)
                     : transparentize(theme.colors.elementBG, 0.8)(theme),
                   transform: locked ? 'none' : 'translateY(-1px)',
@@ -188,28 +192,38 @@ export default function CategoriesModal(props: {
                 } : undefined}
               >
                 {locked && <Lock fontSize='small' color={theme.colors.primaryTextColor} />}
-                <Text 
-                  fontWeight='semibold' 
+                <Text
+                  fontWeight='semibold'
                   mb={1}
                   color={theme.colors.primaryTextColor}
                 >
                   {c.name}
                 </Text>
-                <Text 
-                  fontSize='sm' 
+                <Text
+                  fontSize='sm'
                   noOfLines={2}
                   color={theme.colors.secondaryTextColor}
                 >
                   {c.description}
                 </Text>
-                <Badge 
-                  mt={1} 
-                  colorScheme='primary'
-                  bg={theme.colors.primary}
-                  color={theme.colors.white}
-                >
-                  {c.points} pts
-                </Badge>
+                <Stack direction={"row"}>
+                  <Badge
+                    mt={1}
+                    colorScheme='primary'
+                    bg={theme.colors.primary}
+                    color={theme.colors.white}
+                  >
+                    {c.points} Receiver pts
+                  </Badge>
+                  <Badge
+                    mt={1}
+                    colorScheme='primary'
+                    bg={theme.colors.primary}
+                    color={theme.colors.white}
+                  >
+                    {c.giverPoints} Giver pts
+                  </Badge>
+                </Stack>
               </Box>
             );
           })
@@ -236,8 +250,8 @@ export default function CategoriesModal(props: {
       onCancelCreate={handleCancelCreate}
     />
   ) : (
-    <Text 
-      textAlign='center' 
+    <Text
+      textAlign='center'
       mt={10}
       color={theme.colors.primaryTextColor}
     >
