@@ -14,9 +14,11 @@ import {
   Spacer,
   Badge,
   useToast,
+  useTheme,
 } from "@chakra-ui/react";
 import { EmailSchedule } from "@/types/schedules";
 import { useState, useEffect } from "react";
+import { transparentize } from '@chakra-ui/theme-tools';
 
 type EmailSchedulePanelProps = {
   schedule: EmailSchedule;
@@ -31,6 +33,7 @@ export default function EmailSchedulePanel({
   customerId,
   toolId
 }: EmailSchedulePanelProps) {
+  const theme = useTheme();
   // 1) Manage toggling active/inactive
   const [isActive, setIsActive] = useState(schedule.isActive);
   const isEditable = isActive;
@@ -151,7 +154,7 @@ export default function EmailSchedulePanel({
     }
   };
 
-  // Fetch the updated schedule from the backend’s “view” response
+  // Fetch the updated schedule from the backend's "view" response
   const fetchLatestSchedule = async () => {
     try {
       const resp = await fetch("/api/quickSchedules", {
@@ -261,10 +264,16 @@ export default function EmailSchedulePanel({
   };
 
   return (
-    <Box p={4} border="1px solid" borderColor="gray.200" borderRadius="md" bg={"white"}>
+    <Box 
+      p={4} 
+      border="1px solid" 
+      borderColor={transparentize(theme.colors.primaryTextColor, 0.15)(theme)} 
+      borderRadius="md" 
+      bg={theme.colors.elementBG}
+    >
       {/* Top Bar: Name + Active Switch + Status Badge */}
       <Stack mb={6} justify="space-between" w="full" direction={["column", "row"]}>
-        <Text fontSize={["lg", "xl"]} fontWeight="bold">
+        <Text fontSize={["lg", "xl"]} fontWeight="bold" color={theme.colors.primaryTextColor}>
           {editableSchedule.name}
         </Text>
         <FormControl display="flex" alignItems="center" w="auto" gap={1}>
@@ -331,11 +340,15 @@ export default function EmailSchedulePanel({
           <>
             {/* Weekly: Day of Week */}
             <FormControl>
-              <FormLabel>Day of Week</FormLabel>
+              <FormLabel color={theme.colors.primaryTextColor}>Day of Week</FormLabel>
               <Select
                 value={localDayOfWeek}
                 onChange={(e) => handleDayOfWeekChange(+e.target.value)}
                 isDisabled={!isActive}
+                borderColor={transparentize(theme.colors.primaryTextColor, 0.15)(theme)}
+                _hover={{ borderColor: theme.colors.primary }}
+                _focus={{ borderColor: theme.colors.primary, boxShadow: `0 0 0 1px ${theme.colors.primary}` }}
+                color={theme.colors.primaryTextColor}
               >
                 <option value={1}>Monday</option>
                 <option value={2}>Tuesday</option>
@@ -349,11 +362,15 @@ export default function EmailSchedulePanel({
 
             {/* Weekly: Time of Day */}
             <FormControl>
-              <FormLabel>Time of Day</FormLabel>
+              <FormLabel color={theme.colors.primaryTextColor}>Time of Day</FormLabel>
               <Select
                 value={localTimeOfDay}
                 onChange={(e) => handleTimeOfDayChange(e.target.value as any)}
                 isDisabled={!isActive}
+                borderColor={transparentize(theme.colors.primaryTextColor, 0.15)(theme)}
+                _hover={{ borderColor: theme.colors.primary }}
+                _focus={{ borderColor: theme.colors.primary, boxShadow: `0 0 0 1px ${theme.colors.primary}` }}
+                color={theme.colors.primaryTextColor}
               >
                 <option value="morning">Morning</option>
                 <option value="afternoon">Afternoon</option>
@@ -365,15 +382,15 @@ export default function EmailSchedulePanel({
           <>
             {/* Non-Weekly: Show frequency */}
             <FormControl>
-              <FormLabel>Frequency</FormLabel>
-              <Text textTransform="capitalize">
+              <FormLabel color={theme.colors.primaryTextColor}>Frequency</FormLabel>
+              <Text textTransform="capitalize" color={theme.colors.primaryTextColor}>
                 {editableSchedule.frequency}
               </Text>
             </FormControl>
             {/* Non-Weekly: Show derived time-of-day from sendTime */}
             <FormControl>
-              <FormLabel>Time of Day</FormLabel>
-              <Text textTransform="capitalize">
+              <FormLabel color={theme.colors.primaryTextColor}>Time of Day</FormLabel>
+              <Text textTransform="capitalize" color={theme.colors.primaryTextColor}>
                 {deriveTimeOfDay(editableSchedule.sendTime)}
               </Text>
             </FormControl>
@@ -382,17 +399,20 @@ export default function EmailSchedulePanel({
 
         {/* Distribution Groups (read-only) */}
         <FormControl>
-          <FormLabel>Groups</FormLabel>
+          <FormLabel color={theme.colors.primaryTextColor}>Groups</FormLabel>
           {editableSchedule.userDistGroupNames.length > 0 ? (
             <HStack wrap="wrap">
               {editableSchedule.userDistGroupNames.map((group) => (
-                <Tag key={group} colorScheme="blue">
+                <Tag 
+                  key={group} 
+                  colorScheme="blue"
+                >
                   {group}
                 </Tag>
               ))}
             </HStack>
           ) : (
-            <Text color="gray.500">No groups assigned</Text>
+            <Text color={theme.colors.primaryTextColor}>No groups assigned</Text>
           )}
         </FormControl>
       </VStack>
@@ -400,7 +420,9 @@ export default function EmailSchedulePanel({
       {/* Save Button */}
       <HStack mt={6} justify="flex-end">
         <Button
-          colorScheme="blue"
+          bg={theme.colors.primary}
+          color={theme.colors.white}
+          _hover={{ bg: transparentize(theme.colors.primary, 0.8)(theme) }}
           onClick={handleSave}
           isDisabled={!hasChanges || !isActive}
         >

@@ -50,6 +50,7 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import { ScheduleType, QuickSchedule, EmailSchedule } from "@/types/schedules";
 import EmailSchedulePanel from "./EmailSchedulePanel";
 import SplitPaneModal from "../SplitPaneModal";
+import { transparentize } from '@chakra-ui/theme-tools';
 
 // Helper function for formatting schedule frequency
 function formatFrequency(s: QuickSchedule) {
@@ -228,6 +229,7 @@ export default function QuickScheduleSetupModal({
 
   const ScheduleCard = (sched: QuickSchedule) => {
     const locked = isFree && sched.subscriptionType === "paid";
+    const borderColor = useColorModeValue("gray.200", "gray.700");
 
     return (
       <Box
@@ -235,27 +237,45 @@ export default function QuickScheduleSetupModal({
         position="relative"
         border="1px solid"
         borderColor={
-          selected?.scheduleId === sched.scheduleId ? "blue.400" : "gray.200"
+          selected?.scheduleId === sched.scheduleId ? theme.colors.primary : transparentize(theme.colors.primaryTextColor, 0.15)(theme)
         }
         borderRadius="md"
         h="min"
         p={3}
         mb={2}
         opacity={locked ? 0.5 : 1}
+        transition="all 0.2s ease"
+        bg={selected?.scheduleId === sched.scheduleId ? transparentize(theme.colors.primary, 0.1)(theme) : theme.colors.elementBG}
         _hover={{
           cursor: locked ? "not-allowed" : "pointer",
-          bg: locked ? undefined : "gray.50",
+          bg: selected?.scheduleId === sched.scheduleId 
+            ? transparentize(theme.colors.primary, 0.1)(theme)
+            : transparentize(theme.colors.elementBG, 0.8)(theme),
+          transform: locked ? 'none' : 'translateY(-1px)',
+          boxShadow: locked ? 'none' : '0 2px 4px rgba(0,0,0,0.05)',
+          borderColor: locked ? transparentize(theme.colors.primaryTextColor, 0.15)(theme) : theme.colors.primary
         }}
         onClick={() => {
           if (!locked) {
             setSelected(sched);
           }
         }}
+        _before={selected?.scheduleId === sched.scheduleId ? {
+          content: '""',
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          bottom: 0,
+          width: '3px',
+          bg: theme.colors.primary,
+          borderTopLeftRadius: theme.radii.md,
+          borderBottomLeftRadius: theme.radii.md,
+        } : undefined}
       >
         {locked && (
           <Lock
             fontSize="small"
-            style={{ position: "absolute", top: 8, left: 8, color: "gray.900" }}
+            style={{ position: "absolute", top: 8, left: 8, color: theme.colors.primaryTextColor }}
           />
         )}
 
@@ -281,12 +301,12 @@ export default function QuickScheduleSetupModal({
           }
         />
 
-        <Text fontWeight="semibold">{sched.name}</Text>
-        <Text fontSize="sm" color="gray.500">
+        <Text fontWeight="semibold" color={theme.colors.primaryTextColor}>{sched.name}</Text>
+        <Text fontSize="sm" color={theme.colors.secondaryTextColor}>
           {formatFrequency(sched)}
         </Text>
         {"userDistGroupNames" in sched && (
-          <Text fontSize="sm" color="gray.600">
+          <Text fontSize="sm" color={theme.colors.secondaryTextColor}>
             Groups: {(sched.userDistGroupNames || []).join(", ")}
           </Text>
         )}
@@ -305,9 +325,6 @@ export default function QuickScheduleSetupModal({
 
         {Object.entries(grouped).map(([, items]) => (
           <Box key="email">
-            <Text fontWeight="bold" fontSize="md" mb={2}>
-              Emails
-            </Text>
             {items.map(ScheduleCard)}
           </Box>
         ))}
