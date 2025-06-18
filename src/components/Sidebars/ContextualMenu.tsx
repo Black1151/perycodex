@@ -110,7 +110,8 @@ const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
           onClick={close}
           opacity={isExpanded ? 1 : 0}
           pointerEvents={isExpanded ? "auto" : "none"}
-          transition="opacity 0.2s ease-in-out"
+          transition="all 0.2s ease-in-out"
+          backdropFilter={isExpanded ? "blur(2px)" : "blur(0px)"}
         />
       )}
       <MotionFlex
@@ -266,7 +267,8 @@ const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
           onClick={close}
           opacity={isExpanded ? 1 : 0}
           pointerEvents={isExpanded ? "auto" : "none"}
-          transition="opacity 0.2s ease-in-out"
+          transition="all 0.2s ease-in-out"
+          backdropFilter={isExpanded ? "blur(2px)" : "blur(0px)"}
         />
       )}
       <Box position="relative" display="inline-block" zIndex={101} bg={"transparent"}>

@@ -416,7 +416,7 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
             title: "Voucher Issue",
             description: data.resource.reason,
             status: "error",
-            duration: 5000,
+            duration: 10000,
             isClosable: true,
           });
           throw new Error(data.resource.reason);
@@ -429,9 +429,9 @@ export const BasketProvider = ({ children }: BasketProviderProps) => {
             isClosable: true,
           });
         }
+      } else {
+        setBasket(data.resource);
       }
-
-      setBasket(data.resource);
     } catch (err: any) {
       const error = new Error(err.message || "Failed to apply voucher");
       setError(error);

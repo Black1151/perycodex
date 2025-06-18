@@ -94,15 +94,6 @@ export default function BasketPage() {
   }, [basket]);
 
   useEffect(() => {
-    if (error) {
-      toast({
-        title: "Error",
-        description: "Failed to load basket. Please reload the page.",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-    }
     if (basket) {
       setLoading(false);
     } else {
@@ -590,12 +581,8 @@ export default function BasketPage() {
                       });
                       setAddingVoucher(false);
                     } catch (err) {
-                      toast({
-                        title: "Error",
-                        description: err instanceof Error ? err.message : "Failed to apply voucher",
-                        status: "error",
-                        duration: 3000,
-                      });
+                      // Error toast is handled in useBasket
+                      setAddingVoucher(false);
                     } finally {
                       setLoading(false);
                     }
@@ -759,13 +746,7 @@ export default function BasketPage() {
                   });
                   voucherDrawer.onClose();
                 } catch (err) {
-                  toast({
-                    title: "Error",
-                    description:
-                      err instanceof Error ? err.message : "Unexpected",
-                    status: "error",
-                    duration: 3000,
-                  });
+                  // Error toast is handled in useBasket
                 } finally {
                   setLoading(false);
                 }

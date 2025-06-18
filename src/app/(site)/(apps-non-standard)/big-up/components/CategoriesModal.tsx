@@ -1,26 +1,16 @@
+import { useCallback, useEffect, useState, useMemo } from 'react';
+import { Category as CategoryIcon, Lock } from '@mui/icons-material';
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalCloseButton,
-  ModalBody,
+  Box,
   VStack,
   Text,
-  Box,
   Spinner,
-  useBreakpointValue,
-  useTheme,
-  IconButton,
   Alert,
   AlertIcon,
-  Flex,
   Badge,
-  Button,
-  HStack,
-} from "@chakra-ui/react";
-import { useEffect, useState, useCallback } from "react";
-import CategoryPanel from "./CategoryPanel";
-import { Lock } from "@mui/icons-material";
+} from '@chakra-ui/react';
+import CategoryPanel from './CategoryPanel';
+import SplitPaneModal from '@/components/modals/SplitPaneModal';
 
 type Category = {
   uniqueId: number;
@@ -30,239 +20,110 @@ type Category = {
   isActive: boolean;
 };
 
-type Props = {
+export default function CategoriesModal(props: {
   isOpen: boolean;
   onClose: () => void;
-  toolId: number;
   customerId: number | null;
   isFree: boolean;
-};
+  toolId: number;
+}) {
+  const { isOpen, onClose, customerId, isFree, toolId } = props;
 
-export default function CategoriesModal({
-  isOpen,
-  onClose,
-  toolId,
-  customerId,
-  isFree,
-}: Props) {
-  /* ─────────────────────────────── UI helpers ────────────────────────────── */
-  const isMobile = useBreakpointValue({ base: true, md: false });
-  const theme = useTheme();
-  const bg = theme.colors.elementBG;
-
-  /* ────────────────────────────── component state ────────────────────────── */
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [selected, setSelected] = useState<Category | null>(null);
+  const [loading, setLoading]   = useState(false);
+  const [error,   setError]     = useState<string | null>(null);
+  const [selId,   setSelId]     = useState<number | null>(null);
 
-  /* ──────────────────────────── data fetch: categories ────────────────────── */
-  const fetchCategories = useCallback(async () => {
-    if (!customerId) {
-      setCategories([]);
-      return;
-    }
+  const selected = categories.find((c) => c.uniqueId === selId) ?? null;
 
-    setLoading(true);
-    setError(null);
-
+  const fetchCats = useCallback(async () => {
+    if (!customerId) return;
+    setLoading(true); setError(null);
     try {
-      const res = await fetch(`/api/bigup?customerId=${customerId}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      if (!res.ok) throw new Error("categories request failed");
-      const json = await res.json();
-      console.log("[CategoriesModal] API Response:", json);
-
-      if (!json?.resource?.length) {
-        setCategories([]);
-        return;
-      }
-
-      // Map the API response to our Category type
-      const categories = json.resource.map((item: any) => ({
-        uniqueId: item.id,
-        name: item.name,
-        description: item.description,
-        points: item.points,
-        isActive: item.isActive,
+      const r = await fetch(`/api/bigup?customerId=${customerId}`);
+      if (!r.ok) throw new Error('fetch failed');
+      const j = await r.json();
+      const mapped: Category[] = (j.resource ?? []).map((i: any) => ({
+        uniqueId: i.id, name: i.name, description: i.description,
+        points: i.points, isActive: i.isActive,
       }));
-
-      console.log("[CategoriesModal] Mapped categories:", categories);
-      setCategories(categories);
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message ?? "Unknown error");
-    } finally {
-      setLoading(false);
-    }
+      setCategories(mapped);
+      setSelId(mapped[0]?.uniqueId ?? null);
+    } catch (e: any) { setError(e.message); }
+    finally          { setLoading(false); }
   }, [customerId]);
 
-  /* fetch categories whenever the modal opens */
-  useEffect(() => {
-    if (isOpen) fetchCategories();
-  }, [isOpen, fetchCategories]);
+  useEffect(() => { if (isOpen) fetchCats(); }, [isOpen, fetchCats]);
 
-  /* re-evaluate selected category after every fetch */
-  useEffect(() => {
-    if (!categories.length) {
-      setSelected(null);
-      return;
-    }
-
-    setSelected(
-      (prev) =>
-        categories.find((c) => c.uniqueId === prev?.uniqueId) ?? categories[0]
+  const Sidebar = useMemo(() => {
+    if (loading) return <Spinner size='lg' />;
+    if (error)   return (
+      <Alert status='error'><AlertIcon />{error}</Alert>
     );
-  }, [categories]);
-
-  const CategoryCard = (category: Category) => {
-    const locked = isFree && !category.isActive;
+    if (!categories.length) return (
+      <Text textAlign='center' mt={10}>No categories.</Text>
+    );
 
     return (
-      <Box
-        key={category.uniqueId}
-        position="relative"
-        border="1px solid"
-        borderColor={
-          selected?.uniqueId === category.uniqueId ? "blue.400" : "gray.200"
-        }
-        borderRadius="md"
-        h="min"
-        p={3}
-        mb={2}
-        opacity={locked ? 0.5 : 1}
-        _hover={{
-          cursor: locked ? "not-allowed" : "pointer",
-          bg: locked ? undefined : "gray.50",
-        }}
-        onClick={() => {
-          if (!locked) {
-            setSelected(category);
-          }
-        }}
-      >
-        <Flex direction="column" align="start" w="full">
-          <HStack justifyContent="space-between" w="full" mb={1}>
-            <HStack>
-              <Text fontWeight="medium">{category.name}</Text>
-              {locked && <Lock fontSize="small" />}
-            </HStack>
-            <Badge
-              colorScheme={category.isActive ? "green" : "red"}
-              variant="subtle"
+      <VStack align='stretch' spacing={4}>
+        {categories.map((c) => {
+          const locked = props.isFree && !c.isActive;
+          return (
+            <Box
+              key={c.uniqueId}
+              border='1px solid'
+              borderColor={selId === c.uniqueId ? 'blue.400' : 'gray.200'}
+              p={3}
+              borderRadius='md'
+              opacity={locked ? 0.5 : 1}
+              _hover={{ cursor: locked ? 'not-allowed' : 'pointer', bg: 'gray.50' }}
+              onClick={() => !locked && setSelId(c.uniqueId)}
             >
-              {category.isActive ? "Active" : "Inactive"}
-            </Badge>
-          </HStack>
-          <Text fontSize="sm" color="gray.600" noOfLines={2}>
-            {category.description}
-          </Text>
-          <Badge colorScheme="blue" variant="subtle" mt={2}>
-            {category.points} points
-          </Badge>
-        </Flex>
-      </Box>
+              {locked && <Lock fontSize='small' />}
+              <Text fontWeight='semibold' mb={1}>{c.name}</Text>
+              <Text fontSize='sm' noOfLines={2}>{c.description}</Text>
+              <Badge mt={1} colorScheme='blue'>{c.points} pts</Badge>
+            </Box>
+          );
+        })}
+      </VStack>
     );
-  };
+  }, [categories, selId, loading, error, props.isFree]);
 
-  function SpinnerBlock() {
-    return (
-      <Box p={8} textAlign="center">
-        <Spinner size="xl" />
-      </Box>
-    );
-  }
+  const Panel = selected ? (
+    <CategoryPanel
+      category={selected}
+      onUpdateCategory={(u) =>
+        setCategories((p) => p.map((c) => (c.uniqueId === u.uniqueId ? u : c)))
+      }
+      customerId={customerId}
+      toolId={toolId}
+    />
+  ) : (
+    <Text textAlign='center' mt={10}>No category selected</Text>
+  );
 
-  function ErrorAlert({ message }: { message: string }) {
-    return (
-      <Alert status="error" mb={4}>
-        <AlertIcon />
-        {message}
-      </Alert>
-    );
-  }
-
-  function Header({ total }: { total: number }) {
-    return (
-      <Flex justify="space-between" align="center" mb={4}>
-        <Text fontSize="lg" fontWeight="medium">
-          Categories ({total})
-        </Text>
-      </Flex>
-    );
-  }
+  /* mobile selector items ---------------------------------------------- */
+  const mobileItems = categories.map((c) => ({
+    id: c.uniqueId,
+    label: c.name,
+    isActive: c.isActive,
+  }));
 
   return (
-    <Modal
+    <SplitPaneModal
       isOpen={isOpen}
       onClose={onClose}
-      size={isMobile ? "full" : "6xl"}
-      motionPreset="slideInBottom"
-    >
-      <ModalOverlay />
-      <ModalContent
-        bg={bg}
-        maxH="90vh"
-        h={isMobile ? "100vh" : "auto"}
-        borderRadius={isMobile ? 0 : "md"}
-      >
-        <ModalCloseButton />
-        <ModalBody p={6}>
-          {loading ? (
-            <SpinnerBlock />
-          ) : error ? (
-            <ErrorAlert message={error} />
-          ) : (
-            <Flex
-              direction={isMobile ? "column" : "row"}
-              gap={6}
-              h="full"
-            >
-              {/* Left side: List of categories */}
-              <Box
-                flex={1}
-                maxH={isMobile ? "50vh" : "70vh"}
-                overflowY="auto"
-                pr={2}
-              >
-                <Header total={categories.length} />
-                <VStack spacing={2} align="stretch">
-                  {categories.map((category) => CategoryCard(category))}
-                </VStack>
-              </Box>
-
-              {/* Right side: Edit panel */}
-              {selected && (
-                <Box
-                  flex={1}
-                  maxH={isMobile ? "50vh" : "70vh"}
-                  overflowY="auto"
-                  borderLeft={isMobile ? "none" : "1px solid"}
-                  borderTop={isMobile ? "1px solid" : "none"}
-                  borderColor="gray.200"
-                  pl={isMobile ? 0 : 6}
-                  pt={isMobile ? 6 : 0}
-                >
-                  <CategoryPanel
-                    category={selected}
-                    onUpdateCategory={(updated: Category) => {
-                      setCategories((prev) =>
-                        prev.map((c) =>
-                          c.uniqueId === updated.uniqueId ? updated : c
-                        )
-                      );
-                    }}
-                    customerId={customerId || 0}
-                    toolId={toolId}
-                  />
-                </Box>
-              )}
-            </Flex>
-          )}
-        </ModalBody>
-      </ModalContent>
-    </Modal>
+      icon={<CategoryIcon fontSize='inherit' htmlColor='var(--chakra-colors-primary)' />}
+      title='Manage Categories'
+      total={categories.length}
+      sidebar={Sidebar}
+      panel={Panel}
+      sidebarLoading={loading}
+      sidebarSkeletonCount={4}
+      mobileItems={mobileItems}
+      mobileSelectedId={selId ?? undefined}
+      onMobileSelect={(id) => setSelId(id as number)}
+    />
   );
 }
