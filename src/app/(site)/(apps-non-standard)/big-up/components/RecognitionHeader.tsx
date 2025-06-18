@@ -11,11 +11,12 @@ import {
 import BackButton from "@/components/BackButton";
 import AddButtonMobile from "@/components/Buttons/AddButtonMobile";
 import AddButtonDesktop from "@/components/Buttons/AddButtonDesktop";
-import { Celebration, Category } from "@mui/icons-material";
+import { Celebration, Category, Help } from "@mui/icons-material";
 import ContextualMenu from "@/components/Sidebars/ContextualMenu";
 import { useUser } from "@/providers/UserProvider";
 import { MenuItem } from "@/components/Sidebars/NavigationSidebar/NavigationMobilePopoutMenu";
 import CategoriesModal from "./CategoriesModal";
+import GuideModal from "@/components/modals/guideModal/guideModal";
 
 interface RecognitionHeaderProps {
   headingText: string;
@@ -31,6 +32,7 @@ const RecognitionHeader: React.FC<RecognitionHeaderProps> = ({
   const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
   const { user } = useUser();
   const [isCategoriesModalOpen, setIsCategoriesModalOpen] = useState(false);
+  const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
 
   const menuItems = React.useMemo(() => {
     const items: MenuItem[] = [];
@@ -42,6 +44,12 @@ const RecognitionHeader: React.FC<RecognitionHeaderProps> = ({
         onClick: () => setIsCategoriesModalOpen(true)
       });
     }
+
+    items.push({
+      label: "View Guide",
+      icon: <Help />,
+      onClick: () => setIsGuideModalOpen(true)
+    });
 
     return items;
   }, [user]);
@@ -83,15 +91,20 @@ const RecognitionHeader: React.FC<RecognitionHeaderProps> = ({
         </HStack>
       </HStack>
 
-      {user?.customerId && (
-        <CategoriesModal 
-          isOpen={isCategoriesModalOpen}
-          onClose={() => setIsCategoriesModalOpen(false)}
-          customerId={user.customerId}
-          toolId={1}
-          isFree={false}
-        />
-      )}
+      <CategoriesModal 
+        isOpen={isCategoriesModalOpen}
+        onClose={() => setIsCategoriesModalOpen(false)}
+        customerId={user?.customerId ?? null}
+        toolId={1}
+        isFree={false}
+      />
+
+      <GuideModal
+        isOpen={isGuideModalOpen}
+        onClose={() => setIsGuideModalOpen(false)}
+        guideType="tool"
+        toolId={100}
+      />
     </>
   );
 };
