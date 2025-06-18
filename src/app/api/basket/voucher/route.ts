@@ -47,14 +47,6 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    // Validate that the voucher was actually applied
-    if (!data.resource?.discountCode) {
-      return NextResponse.json(
-        { error: "Invalid or expired voucher code" },
-        { status: 400 }
-      );
-    }
-
     return NextResponse.json(data);
   } catch (error: any) {
     console.error("[BASKET PUT VOUCHER] Exception caught:", error);

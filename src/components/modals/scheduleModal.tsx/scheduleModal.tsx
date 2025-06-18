@@ -49,6 +49,7 @@ import { Lock, ScheduleSend, Check, Close as CloseIcon, KeyboardArrowDown } from
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { ScheduleType, QuickSchedule, EmailSchedule } from "@/types/schedules";
 import EmailSchedulePanel from "./EmailSchedulePanel";
+import SplitPaneModal from "../SplitPaneModal";
 
 // Helper function for formatting schedule frequency
 function formatFrequency(s: QuickSchedule) {
@@ -319,169 +320,86 @@ export default function QuickScheduleSetupModal({
   if (!toolId) return null;
 
   return (
-    <>
-      {/* Main modal */}
-      <Modal isOpen={isOpen} onClose={onClose} size="5xl" isCentered>
-        <ModalOverlay />
-        <ModalContent
-          maxW={["90vw", null, null, "1200px"]}
-          maxH="85vh"
-          minH="500px"
-          borderRadius={"md"}
-          overflow={"hidden"}
-        >
-          <ModalCloseButton />
-          <ModalBody p={0} bg={bg} display="flex" flexDirection="column" flex="1" minH="0">
-            <Header total={schedules.length} />
-
-            <Box display="flex" flex="1" overflow="hidden" minH="0">
-              {/* Desktop sidebar */}
-              {!isMobile && (
-                <Box
-                  width="30%"
-                  overflowY="auto"
-                  minH="0"
-                  css={{
-                    "&::-webkit-scrollbar": { display: "none" },
-                    "-ms-overflow-style": "none",
-                    scrollbarWidth: "none",
-                    WebkitOverflowScrolling: "touch",
-                  }}
-                  borderRight="1px solid"
-                  borderColor="gray.200"
-                  p={4}
-                >
-                  {loading ? (
-                    <SpinnerBlock />
-                  ) : error ? (
-                    <ErrorAlert message={error} />
-                  ) : (
-                    SidebarList
-                  )}
-                </Box>
-              )}
-
-              {/* Main panel */}
-              <Box
-                width={isMobile ? "100%" : "70%"}
-                p={4}
-                bg="gray.200"
-                overflowY="auto"
-              >
-                {loading ? null : error ? (
-                  <ErrorAlert message={error} />
-                ) : !selected ? (
-                  <Text textAlign="center" mt={10}>
-                    No schedules available to display.
-                  </Text>
-                ) : (
-                  <>
-                    {isMobile && schedules.length > 0 && (
-                      <Box mb={4}>
-                        <Menu>
-                          <MenuButton as={Button} rightIcon={<KeyboardArrowDown />} width="100%" bg={theme.colors.elementBG}>
-                            <HStack spacing={2} width="100%" justifyContent="space-between">
-                              <Text flex="1" textAlign="left" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
-                                {selected.name}
-                              </Text>
-                              {selected.isActive ? (
-                                <Icon as={Check} color="green.500" />
-                              ) : (
-                                <Icon as={CloseIcon} color="red.500" />
-                              )}
-                            </HStack>
-                          </MenuButton>
-                          <MenuList width="100%">
-                            {schedules.map((sched) => (
-                              <MenuItem
-                                key={sched.scheduleId}
-                                onClick={() => setSelected(sched)}
-                              >
-                                <HStack spacing={2} width="100%" justifyContent="space-between">
-                                  <Text flex="1" textAlign="left" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
-                                    {sched.name}
-                                  </Text>
-                                  {sched.isActive ? (
-                                    <Icon as={Check} color="green.500" />
-                                  ) : (
-                                    <Icon as={CloseIcon} color="red.500" />
-                                  )}
-                                </HStack>
-                              </MenuItem>
-                            ))}
-                          </MenuList>
-                        </Menu>
-                      </Box>
-                    )}
-                    <EmailSchedulePanel
-                      schedule={selected as EmailSchedule}
-                      onUpdateSchedule={(upd) =>
-                        setSchedules((prev) =>
-                          prev.map((s) =>
-                            s.scheduleId === upd.scheduleId ? upd : s
-                          )
-                        )
-                      }
-                      customerId={customerId}
-                      toolId={toolId}
-                    />
-                  </>
-                )}
-              </Box>
-            </Box>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </>
+    <SplitPaneModal
+      isOpen={isOpen}
+      onClose={onClose}
+      icon={<ScheduleSend fontSize='inherit' htmlColor='var(--chakra-colors-primary)' />}
+      title='Quick Schedule Setup'
+      total={schedules.length}
+      sidebar={SidebarList /* as you already built */}
+      panel={selected ? (
+        <EmailSchedulePanel
+          schedule={selected as EmailSchedule}
+          onUpdateSchedule={(upd) =>
+            setSchedules((prev) =>
+              prev.map((s) =>
+                s.scheduleId === upd.scheduleId ? upd : s
+              )
+            )
+          }
+          customerId={customerId}
+          toolId={toolId}
+        />
+      ) : <Text mt={10} textAlign='center'>No schedules</Text>}
+      mobileItems={schedules.map((s) => ({
+        id: s.scheduleId,
+        label: s.name,
+        isActive: s.isActive,
+      }))}
+      mobileSelectedId={selected?.scheduleId}
+      onMobileSelect={(id) =>
+        setSelected(schedules.find((s) => s.scheduleId === id) ?? null)
+      }
+    />
   );
 
-  function SpinnerBlock() {
-    return (
-      <VStack spacing={4} align="center" mt={10}>
-        <Spinner size="lg" />
-        <Text>Loading schedules...</Text>
-      </VStack>
-    );
-  }
+function SpinnerBlock() {
+  return (
+    <VStack spacing={4} align="center" mt={10}>
+      <Spinner size="lg" />
+      <Text>Loading schedules...</Text>
+    </VStack>
+  );
+}
 
-  function ErrorAlert({ message }: { message: string }) {
-    return (
-      <Alert status="error">
-        <AlertIcon />
-        {message}
-      </Alert>
-    );
-  }
+function ErrorAlert({ message }: { message: string }) {
+  return (
+    <Alert status="error">
+      <AlertIcon />
+      {message}
+    </Alert>
+  );
+}
 
-  function Header({ total }: { total: number }) {
-    return (
-      <HStack
-        px={4}
-        py={3}
-        bg={bg}
-        borderBottom="1px solid"
-        borderColor="gray.200"
-        fontSize="28px"
-        align="center"
+function Header({ total }: { total: number }) {
+  return (
+    <HStack
+      px={4}
+      py={3}
+      bg={bg}
+      borderBottom="1px solid"
+      borderColor="gray.200"
+      fontSize="28px"
+      align="center"
+    >
+      <ScheduleSend
+        fontSize="inherit"
+        htmlColor="var(--chakra-colors-primary)"
+      />
+      <Text
+        fontSize={["xl", "2xl", "3xl"]}
+        fontWeight="medium"
+        fontFamily="bonfire"
+        mb={-3}
       >
-        <ScheduleSend
-          fontSize="inherit"
-          htmlColor="var(--chakra-colors-primary)"
-        />
-        <Text
-          fontSize={["xl", "2xl", "3xl"]}
-          fontWeight="medium"
-          fontFamily="bonfire"
-          mb={-3}
-        >
-          Quick Schedule Setup
+        Quick Schedule Setup
+      </Text>
+      {!loading && !isMobile && (
+        <Text fontSize="sm" color="gray.500" ml={2}>
+          {total} total
         </Text>
-        {!loading && !isMobile && (
-          <Text fontSize="sm" color="gray.500" ml={2}>
-            {total} total
-          </Text>
-        )}
-      </HStack>
-    );
-  }
+      )}
+    </HStack>
+  );
+}
 }

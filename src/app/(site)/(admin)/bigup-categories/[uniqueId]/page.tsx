@@ -3,12 +3,16 @@ import { redirect } from "next/navigation";
 import apiClient from "@/lib/apiClient";
 import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
 import { recognitionCategoryJson } from "@/components/surveyjs/forms/recognitionCategory";
+import { BigUpCategoryDetailsBanner } from "@/components/AdminDetailsBanners/BigupCategoryBanner";
 
 interface BigUpCategory {
   id: number;
   name: string;
   description: string;
   points: number;
+  isActive: boolean;
+  updatedAt: string;
+  createdAt: string;
 }
 
 export default async function RecognitionCategoryDetailPage({
@@ -34,6 +38,7 @@ export default async function RecognitionCategoryDetailPage({
 
   return (
     <>
+      <BigUpCategoryDetailsBanner bigUpCategory={categoryData} />
       <AdminFormWrapper
         formJson={recognitionCategoryJson}
         data={categoryData}
