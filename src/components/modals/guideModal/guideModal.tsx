@@ -22,7 +22,9 @@ import {
   DrawerBody,
   useDisclosure,
   useTheme,
+  chakra,
 } from "@chakra-ui/react";
+import { motion, Transition } from "framer-motion";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import {
   Article,
@@ -54,6 +56,12 @@ type Guide = {
   sortOrder: number;
   toolId?: number | string;
 };
+
+const MotionOverlay = chakra(motion.div);
+const MotionContent = chakra(motion.div);
+
+const overlayTransition: Transition = { duration: 0.2, ease: 'easeOut' };
+const contentTransition: Transition = { type: 'spring', stiffness: 300, damping: 30 };
 
 export default function GuideModal({
   isOpen,
@@ -278,9 +286,22 @@ export default function GuideModal({
         </Drawer>
       )}
 
-      <Modal isOpen={isOpen} onClose={onClose} size="6xl" isCentered>
-        <ModalOverlay bg={transparentize(theme.colors.black, 0.4)(theme)} />
+      <Modal isOpen={isOpen} onClose={onClose} size="6xl" isCentered motionPreset="none">
+        <ModalOverlay
+          as={MotionOverlay}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={overlayTransition as any}
+          backdropFilter="blur(4px)"
+          bg={transparentize(theme.colors.black, 0.4)(theme)}
+        />
         <ModalContent
+          as={MotionContent}
+          initial={{ scale: 0, rotate: 12.5, opacity: 0 }}
+          animate={{ scale: 1, rotate: 0, opacity: 1 }}
+          exit={{ scale: 0, rotate: 0, opacity: 0 }}
+          transition={contentTransition as any}
           maxH={{ base: "95dvh", md: "95vh" }}
           maxW="90vw"
           minW="80vw"
