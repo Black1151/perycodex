@@ -90,12 +90,13 @@ Many thanks
             onClose={onClose}
             showClose={true}
             frontIcon={<BugReport fontSize="inherit" />}
+            bgIcon={<BugReport fontSize="inherit" />}
             header="Report a Bug"
             bg={theme.colors.primary}
             color={theme.colors.elementBG}
             body={
                 <VStack spacing={4} align="stretch" w="100%">
-                    <Text >Reporing issues you find helps our development team, iron out pesky bugs and keep Perygon running smoothly.  </Text>
+                    <Text >Reporing issues you find helps our development team iron out pesky bugs and keep Perygon running smoothly.</Text>
                     <FormControl>
                         <FormLabel fontWeight={"semibold"} color={theme.colors.elementBG}>Bug Description</FormLabel>
                         <Textarea
