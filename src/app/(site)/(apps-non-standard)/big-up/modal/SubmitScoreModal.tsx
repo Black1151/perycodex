@@ -1,13 +1,6 @@
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
   Button,
   FormControl,
   FormLabel,
@@ -19,14 +12,15 @@ import {
 } from "@chakra-ui/react";
 import { BigUpTeamMember } from "../types";
 import TeamMemberAutocomplete from "../components/TeamMemberAutocomplete";
-import PerygonCard from "@/components/layout/PerygonCard";
+import { SpringModal } from "@/components/modals/springModal/SpringModal";
+import { EmojiEvents } from "@mui/icons-material";
 
 interface SubmitScoreModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: any) => void;
   teamMembers: BigUpTeamMember[];
-  categories: { id: number; name: string }[];
+  categories: { id: number; name: string, points: number }[];
 }
 
 const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
@@ -67,155 +61,105 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
   const theme = useTheme();
 
   return (
-    <Modal
+    <SpringModal
       isOpen={isOpen}
       onClose={handleClose}
-      isCentered
-      returnFocusOnClose={false}
-    >
-      <ModalOverlay />
-      <ModalContent>
-        <PerygonCard bg={theme.components.submitScoreModal.baseStyle.elementBG}>
-          <ModalHeader
-            fontSize="2xl"
-            color={theme.components.masonryCardItem.baseStyle.primaryTextColor}
-          >
-            Give Recognition
-          </ModalHeader>
-          <ModalCloseButton color="white" />
-          <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
-            <ModalBody>
-              {/* TEAM MEMBER */}
-              <FormControl mb={4} isRequired isInvalid={!!errors.teamMember}>
-                <FormLabel
-                  color={
-                    theme.components.masonryCardItem.baseStyle.primaryTextColor
-                  }
-                >
-                  Team Member
-                </FormLabel>
-                <Controller
-                  name="teamMember"
-                  control={control}
-                  rules={{ required: "Team Member is required" }}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <TeamMemberAutocomplete
-                      value={value}
-                      onChange={onChange}
-                      onBlur={onBlur}
-                      teamMembers={teamMembers}
-                      placeholder="Start typing to search..."
-                    />
-                  )}
+      showClose={true}
+      bg={theme.colors.primary}
+      color="white"
+      frontIcon={<EmojiEvents />}
+      bgIcon={<EmojiEvents />}
+      header="Give Recognition"
+      body={
+        <form onSubmit={handleSubmit(handleFormSubmit)} noValidate>
+          {/* TEAM MEMBER */}
+          <FormControl mb={4} isRequired isInvalid={!!errors.teamMember}>
+            <FormLabel color="white">Team Member</FormLabel>
+            <Controller
+              name="teamMember"
+              control={control}
+              rules={{ required: "Team Member is required" }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TeamMemberAutocomplete
+                  value={value}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  teamMembers={teamMembers}
+                  placeholder="Start typing to search..."
                 />
-                <FormErrorMessage>
-                  {errors.teamMember?.message}
-                </FormErrorMessage>
-              </FormControl>
+              )}
+            />
+            <FormErrorMessage>{errors.teamMember?.message}</FormErrorMessage>
+          </FormControl>
 
-              {/* CATEGORY */}
-              <FormControl mb={4} isRequired isInvalid={!!errors.category}>
-                <FormLabel
-                  color={
-                    theme.components.masonryCardItem.baseStyle.primaryTextColor
-                  }
+          {/* CATEGORY */}
+          <FormControl mb={4} isRequired isInvalid={!!errors.category}>
+            <FormLabel color="white">Category</FormLabel>
+            <Controller
+              name="category"
+              control={control}
+              rules={{ required: "Category is required" }}
+              render={({ field }) => (
+                <Select
+                  placeholder="Choose a category..."
+                  {...field}
+                  bg="white"
+                  color="gray.800"
+                  borderColor="whiteAlpha.300"
+                  _hover={{ borderColor: "whiteAlpha.400" }}
+                  _focus={{ bg: "white", color: "gray.800" }}
+                  sx={{
+                    option: {
+                      backgroundColor: "white",
+                      color: "gray.800",
+                    },
+                  }}
                 >
-                  Category
-                </FormLabel>
-                <Controller
-                  name="category"
-                  control={control}
-                  rules={{ required: "Category is required" }}
-                  render={({ field }) => (
-                    <Select
-                      placeholder="Choose a category..."
-                      {...field}
-                      bg="elementBG"
-                      color="primaryTextColor"
-                      borderColor="primary"
-                      _hover={{ borderColor: "primary" }}
-                      _focus={{ bg: "elementBG", color: "primaryTextColor" }}
-                      sx={{
-                        option: {
-                          backgroundColor: "elementBG",
-                          color: "primaryTextColor",
-                        },
-                      }}
-                    >
-                      {categories.map((category) => (
-                        <option key={category.id} value={category.id}>
-                          {category.name}
-                        </option>
-                      ))}
-                    </Select>
-                  )}
-                />
-                <FormErrorMessage>{errors.category?.message}</FormErrorMessage>
-              </FormControl>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}{category.points ? ` +${category.points}pts` : ''}
+                    </option>
+                  ))}
+                </Select>
+              )}
+            />
+            <FormErrorMessage>{errors.category?.message}</FormErrorMessage>
+          </FormControl>
 
-              {/* MESSAGE */}
-              <FormControl mb={4} isRequired isInvalid={!!errors.message}>
-                <FormLabel
-                  color={
-                    theme.components.masonryCardItem.baseStyle.primaryTextColor
-                  }
-                >
-                  Message
-                </FormLabel>
-                <Controller
-                  name="message"
-                  control={control}
-                  rules={{ required: "Message is required" }}
-                  render={({ field }) => (
-                    <>
-                      <Textarea
-                        placeholder="Enter your message here..."
-                        maxLength={maxLength}
-                        {...field}
-                        bg="elementBG"
-                        color={theme.colors.primaryTextColor}
-                        borderColor="primary"
-                        _hover={{ borderColor: "primary" }}
-                      />
-                      <Text
-                        fontSize="sm"
-                        color={
-                          theme.components.masonryCardItem.baseStyle
-                            .primaryTextColor
-                        }
-                      >
-                        {message.length}/{maxLength} characters
-                      </Text>
-                    </>
-                  )}
-                />
-                <FormErrorMessage>{errors.message?.message}</FormErrorMessage>
-              </FormControl>
-            </ModalBody>
-            <ModalFooter>
-              <Button
-                bg="primary"
-                color="white"
-                mr={3}
-                type="submit"
-                _hover={{ bg: "white", color: "primary" }}
-              >
-                Submit
-              </Button>
-              <Button
-                onClick={handleClose}
-                variant="outline"
-                borderColor="primary"
-                color="white"
-                _hover={{ bg: "rgba(255, 20, 147, 0.1)", borderColor: "white" }}
-              >
-                Cancel
-              </Button>
-            </ModalFooter>
-          </form>
-        </PerygonCard>
-      </ModalContent>
-    </Modal>
+          {/* MESSAGE */}
+          <FormControl mb={4} isRequired isInvalid={!!errors.message}>
+            <FormLabel color="white">Message</FormLabel>
+            <Controller
+              name="message"
+              control={control}
+              rules={{ required: "Message is required" }}
+              render={({ field }) => (
+                <>
+                  <Textarea
+                    placeholder="Enter your message here..."
+                    maxLength={maxLength}
+                    {...field}
+                    bg="white"
+                    color="gray.800"
+                    borderColor="whiteAlpha.300"
+                    _hover={{ borderColor: "whiteAlpha.400" }}
+                  />
+                  <Text fontSize="sm" color="whiteAlpha.800">
+                    {message.length}/{maxLength} characters
+                  </Text>
+                </>
+              )}
+            />
+            <FormErrorMessage>{errors.message?.message}</FormErrorMessage>
+          </FormControl>
+        </form>
+      }
+      primaryLabel="Submit"
+      onPrimaryClick={handleSubmit(handleFormSubmit)}
+      secondaryLabel="Cancel"
+      onSecondaryClick={handleClose}
+      primaryIcon={<EmojiEvents />}
+    />
   );
 };
 

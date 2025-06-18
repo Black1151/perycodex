@@ -7,6 +7,7 @@ interface BigUpCategoryPayload {
     name: string;
     description: string;
     points: number;
+    giverPoints: number
     isActive: boolean;
 }
 
@@ -15,6 +16,7 @@ interface BigUpCategory {
     name: string;
     description: string;
     points: number;
+    giverPoints: number
     isActive: boolean;
 }
 
@@ -26,7 +28,7 @@ export async function GET(req: NextRequest) {
         console.log("[BigUp] GET: Customer ID:", customerId);
 
         const response = await apiClient(
-            `/userBigupType/allBy?selectColumns=id,name,description,points,isActive&customerId=${customerId}&orderBy=id`,
+            `/userBigupType/allBy?customerId=${customerId}&orderBy=id`,
             {
                 method: "GET",
                 headers: {
@@ -37,6 +39,7 @@ export async function GET(req: NextRequest) {
 
         const data = await response.json();
         console.log("[BigUp] GET: Successfully fetched categories");
+        console.log(data)
         return NextResponse.json(data);
     } catch (error: any) {
         console.error("[BigUp] GET: Error fetching categories:", error.message);
@@ -52,8 +55,8 @@ export async function POST(req: NextRequest) {
         console.log("[BigUp] POST: Creating new category");
         const authToken = req.headers.get('authorization')?.split(' ')[1];
 
-        const { name, description, points, isActive }: BigUpCategoryPayload = await req.json();
-        console.log("[BigUp] POST: Category details:", { name, description, points, isActive });
+        const { name, description, points, giverPoints, isActive }: BigUpCategoryPayload = await req.json();
+        console.log("[BigUp] POST: Category details:", { name, description, points, giverPoints, isActive });
 
         const response = await apiClient(`/userBigupType`, {
             method: "POST",
@@ -65,6 +68,7 @@ export async function POST(req: NextRequest) {
                 name,
                 description,
                 points,
+                giverPoints,
                 isActive
             }),
         });
@@ -92,8 +96,8 @@ export async function PUT(req: NextRequest) {
         const authToken = req.headers.get('authorization')?.split(' ')[1];
 
         const body = await req.json();
-        const { uniqueId, name, description, points, isActive }: BigUpCategory = body;
-        console.log("[BigUp] PUT: Category details:", { uniqueId, name, description, points, isActive });
+        const { uniqueId, name, description, points, giverPoints, isActive }: BigUpCategory = body;
+        console.log("[BigUp] PUT: Category details:", { uniqueId, name, description, points, giverPoints, isActive });
 
         if (!uniqueId) {
             console.error("[BigUp] PUT: Missing required parameter: id");
@@ -113,6 +117,7 @@ export async function PUT(req: NextRequest) {
                 name,
                 description,
                 points,
+                giverPoints,
                 isActive
             }),
         });
