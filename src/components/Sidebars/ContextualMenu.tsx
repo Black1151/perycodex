@@ -17,7 +17,7 @@ import { Close } from "@mui/icons-material";
 import { motion, Variants } from "framer-motion";
 import { MenuItem } from "./NavigationSidebar/NavigationMobilePopoutMenu";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { transparentize } from "@chakra-ui/theme-tools";
+import { ResponsiveValue } from "@chakra-ui/react";
 
 const containerVariants: Variants = {
   hidden: {
@@ -72,9 +72,10 @@ const MotionBox = motion(Box);
 
 export interface ContextualMenuProps {
   menuItems: MenuItem[];
+  bottomOffset?: ResponsiveValue<string | number>;
 }
 
-const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
+const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems, bottomOffset="110px" }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const overlayBg = "blackAlpha.700";
   const isMobile = useBreakpointValue({ base: true, sm: true, md: false });
@@ -117,7 +118,7 @@ const ContextualMenu: React.FC<ContextualMenuProps> = ({ menuItems }) => {
       <MotionFlex
         position="fixed"
         left="12px"
-        bottom="110px"
+        bottom= {bottomOffset}
         zIndex={100}
         flexDirection="column-reverse"
         alignItems="flex-start"
