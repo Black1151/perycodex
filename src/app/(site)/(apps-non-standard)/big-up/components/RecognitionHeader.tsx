@@ -87,7 +87,7 @@ const RecognitionHeader: React.FC<RecognitionHeaderProps> = ({
               IconComponent={Celebration}
             />
           )}
-          <ContextualMenu menuItems={menuItems}/>
+          <ContextualMenu menuItems={menuItems} bottomOffset={["10px", "45px"]}/>
         </HStack>
       </HStack>
 
