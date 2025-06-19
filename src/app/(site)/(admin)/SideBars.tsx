@@ -127,12 +127,6 @@ export default function SideBars() {
           category: "Clients",
         },
         {
-          label: "Recognition Categories",
-          icon: <Celebration sx={{ height: "100%", width: "100%" }} />,
-          url: "/bigup-categories",
-          category: "Tools"
-        },
-        {
           label: "Help Centre",
           icon: <Help sx={{ height: "100%", width: "100%" }} />,
           url: "/help-centre",
@@ -212,12 +206,6 @@ export default function SideBars() {
           icon: <FormatAlignCenter sx={{ height: "100%", width: "100%" }} />,
           url: "/forms",
           category: "Workflows",
-        },
-        {
-          label: "Recognition Categories",
-          icon: <Celebration sx={{ height: "100%", width: "100%" }} />,
-          url: "/bigup-categories",
-          category: "Tools"
         },
         {
           label: "Dashboards",
@@ -538,6 +526,15 @@ export default function SideBars() {
           category: "Help",
         }
       );
+    }
+
+    if (userRole === "CA" && user?.subscribedTools.includes("100")) {
+      items.push({
+        label: "Recognition Categories",
+        icon: <Celebration sx={{ height: "100%", width: "100%" }} />,
+        url: "/bigup-categories",
+        category: "Tools",
+      });
     }
 
     return items.map(({ url, ...item }) => ({

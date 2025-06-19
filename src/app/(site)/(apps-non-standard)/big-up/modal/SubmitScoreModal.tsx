@@ -9,18 +9,27 @@ import {
   Textarea,
   Text,
   useTheme,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { BigUpTeamMember } from "../types";
 import TeamMemberAutocomplete from "../components/TeamMemberAutocomplete";
 import { SpringModal } from "@/components/modals/springModal/SpringModal";
 import { EmojiEvents } from "@mui/icons-material";
+import CustomCategoryDropdown from "./components/CustomCategoryDropdown";
+import MobileDrawerSelector from "@/components/modals/MobileDrawerSelector";
 
 interface SubmitScoreModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: any) => void;
   teamMembers: BigUpTeamMember[];
-  categories: { id: number; name: string, points: number }[];
+  categories: {
+    id: number;
+    name: string;
+    points: number;
+    giverPoints: number;
+    isActive: boolean;
+  }[];
 }
 
 const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
@@ -47,6 +56,9 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
   const message = watch("message", "");
   const maxLength = 255;
 
+  // Only include active categories
+  const activeCategories = categories.filter((cat) => cat.isActive);
+
   const handleClose = () => {
     reset();
     onClose();
@@ -59,6 +71,7 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
   };
 
   const theme = useTheme();
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   return (
     <SpringModal
@@ -94,36 +107,40 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
 
           {/* CATEGORY */}
           <FormControl mb={4} isRequired isInvalid={!!errors.category}>
-            <FormLabel color="white">Category</FormLabel>
             <Controller
               name="category"
               control={control}
               rules={{ required: "Category is required" }}
-              render={({ field }) => (
-                <Select
-                  placeholder="Choose a category..."
-                  {...field}
-                  bg="white"
-                  color="gray.800"
-                  borderColor="whiteAlpha.300"
-                  _hover={{ borderColor: "whiteAlpha.400" }}
-                  _focus={{ bg: "white", color: "gray.800" }}
-                  sx={{
-                    option: {
-                      backgroundColor: "white",
-                      color: "gray.800",
-                    },
-                  }}
-                >
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}{category.points ? ` +${category.points}pts` : ''}
-                    </option>
-                  ))}
-                </Select>
-              )}
+              render={({ field, fieldState }) =>
+                isMobile ? (
+                  <>
+                    <FormLabel color="white">Category</FormLabel>
+                    <MobileDrawerSelector
+                      items={activeCategories.map((cat) => ({
+                        id: cat.id,
+                        label: `${cat.name} ${cat.points ? ` +${cat.points} reciever pts` : ""} ${cat.giverPoints ? ` +${cat.giverPoints} giver pts` : ""}`,
+                      }))}
+                      selectedId={field.value}
+                      onSelect={field.onChange}
+                      triggerLabel={
+                        activeCategories.find(
+                          (cat) => String(cat.id) === String(field.value)
+                        )?.name || "Choose a category..."
+                      }
+                    />
+                  </>
+                ) : (
+                  <CustomCategoryDropdown
+                    categories={activeCategories}
+                    value={field.value}
+                    onChange={field.onChange}
+                    isInvalid={!!errors.category}
+                    isRequired
+                    errorMessage={errors.category?.message}
+                  />
+                )
+              }
             />
-            <FormErrorMessage>{errors.category?.message}</FormErrorMessage>
           </FormControl>
 
           {/* MESSAGE */}

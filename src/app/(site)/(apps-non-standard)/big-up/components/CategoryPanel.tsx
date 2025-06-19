@@ -13,10 +13,10 @@ import {
   Badge,
   useTheme,
   Stack,
-} from '@chakra-ui/react';
-import { transparentize } from '@chakra-ui/theme-tools';
-import { useEffect, useState } from 'react';
-import { Category } from "./CategoriesModal"
+} from "@chakra-ui/react";
+import { transparentize } from "@chakra-ui/theme-tools";
+import { useEffect, useState } from "react";
+import { Category } from "./CategoriesModal";
 
 type Props = {
   category: Category;
@@ -51,45 +51,74 @@ export default function CategoryPanel({
     setHasChanges(true);
   };
 
-  /* save */
-  const save = async () => {
+  /* save -------------------------------------------------------------- */
+  const save = async (payload: Category, toastTitle?: string) => {
     setLoading(true);
     try {
-      const resp = await fetch('/api/bigup', {
-        method: isCreating ? 'POST' : 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(editable),
+      const resp = await fetch("/api/bigup", {
+        method: isCreating ? "POST" : "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
-      if (!resp.ok) throw new Error('Save failed');
+      if (!resp.ok) throw new Error("Save failed");
       const data = await resp.json();
-      onUpdateCategory(isCreating ? { ...editable, uniqueId: data.resource.id } : editable);
+      onUpdateCategory(
+        isCreating ? { ...payload, uniqueId: data.resource.id } : payload
+      );
       setHasChanges(false);
-      toast({ title: isCreating ? 'Category created' : 'Changes saved', status: 'success', duration: 3000, isClosable: true });
+
+      toast({
+        title:
+          toastTitle ?? // 👈 use custom title if provided
+          (isCreating ? "Category created" : "Changes saved"),
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
     } catch (err: any) {
-      toast({ title: err.message ?? 'Error', status: 'error', duration: 4000, isClosable: true });
+      toast({
+        title: err.message ?? "Error",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  /* toggle active */
-  const toggle = async (checked: boolean) => {
-    patch('isActive', checked);
-    await save();
+  /* toggle ------------------------------------------------------------- */
+  const toggle = (checked: boolean) => {
+    const updated = { ...editable, isActive: checked };
+
+    setEditable(updated); // pure state update
+    setHasChanges(true); // another pure update
+
+    // single side-effect, executed exactly once
+    save(updated, checked ? "Category activated" : "Category deactivated");
   };
 
   return (
     <Box
       p={4}
-      border='1px solid'
+      border="1px solid"
       borderColor={transparentize(theme.colors.primaryTextColor, 0.15)(theme)}
-      borderRadius='md'
+      borderRadius="md"
       bg={theme.colors.elementBG}
     >
       {/* header row */}
-      <Stack mb={6} justify='space-between' w='full' direction={['column', 'row']}>
-        <Text fontSize={['lg', 'xl']} fontWeight='bold' color={theme.colors.primaryTextColor}>
-          {isCreating ? 'Create New Category' : editable.name}
+      <Stack
+        mb={6}
+        justify="space-between"
+        w="full"
+        direction={["column", "row"]}
+      >
+        <Text
+          fontSize={["lg", "xl"]}
+          fontWeight="bold"
+          color={theme.colors.primaryTextColor}
+        >
+          {isCreating ? "Create New Category" : editable.name}
         </Text>
         {!isCreating && (
           <FormControl display="flex" alignItems="center" w="auto" gap={1}>
@@ -152,78 +181,106 @@ export default function CategoryPanel({
         )}
       </Stack>
 
-      <VStack align='stretch' spacing={4}>
+      <VStack align="stretch" spacing={4}>
         <FormControl>
           <FormLabel color={theme.colors.primaryTextColor}>Name</FormLabel>
           <Input
             value={editable.name}
-            onChange={(e) => patch('name', e.target.value)}
+            onChange={(e) => patch("name", e.target.value)}
             isDisabled={!editable.isActive}
-            borderColor={transparentize(theme.colors.primaryTextColor, 0.15)(theme)}
+            borderColor={transparentize(
+              theme.colors.primaryTextColor,
+              0.15
+            )(theme)}
             _hover={{ borderColor: theme.colors.primary }}
-            _focus={{ borderColor: theme.colors.primary, boxShadow: `0 0 0 1px ${theme.colors.primary}` }}
+            _focus={{
+              borderColor: theme.colors.primary,
+              boxShadow: `0 0 0 1px ${theme.colors.primary}`,
+            }}
             color={theme.colors.primaryTextColor}
           />
         </FormControl>
 
         <FormControl>
-          <FormLabel color={theme.colors.primaryTextColor}>Description</FormLabel>
+          <FormLabel color={theme.colors.primaryTextColor}>
+            Description
+          </FormLabel>
           <Textarea
             value={editable.description}
-            onChange={(e) => patch('description', e.target.value)}
+            onChange={(e) => patch("description", e.target.value)}
             isDisabled={!editable.isActive}
             rows={3}
-            borderColor={transparentize(theme.colors.primaryTextColor, 0.15)(theme)}
+            borderColor={transparentize(
+              theme.colors.primaryTextColor,
+              0.15
+            )(theme)}
             _hover={{ borderColor: theme.colors.primary }}
-            _focus={{ borderColor: theme.colors.primary, boxShadow: `0 0 0 1px ${theme.colors.primary}` }}
+            _focus={{
+              borderColor: theme.colors.primary,
+              boxShadow: `0 0 0 1px ${theme.colors.primary}`,
+            }}
             color={theme.colors.primaryTextColor}
           />
         </FormControl>
 
         <Stack direction={["column", "row", "row"]}>
           <FormControl>
-            <FormLabel color={theme.colors.primaryTextColor}>Receiver Points</FormLabel>
+            <FormLabel color={theme.colors.primaryTextColor}>
+              Receiver Points
+            </FormLabel>
             <Input
-              type='number'
+              type="number"
               value={editable.points}
-              onChange={(e) => patch('points', parseInt(e.target.value))}
+              onChange={(e) => patch("points", parseInt(e.target.value))}
               isDisabled={!editable.isActive}
-              borderColor={transparentize(theme.colors.primaryTextColor, 0.15)(theme)}
+              borderColor={transparentize(
+                theme.colors.primaryTextColor,
+                0.15
+              )(theme)}
               _hover={{ borderColor: theme.colors.primary }}
-              _focus={{ borderColor: theme.colors.primary, boxShadow: `0 0 0 1px ${theme.colors.primary}` }}
+              _focus={{
+                borderColor: theme.colors.primary,
+                boxShadow: `0 0 0 1px ${theme.colors.primary}`,
+              }}
               color={theme.colors.primaryTextColor}
             />
           </FormControl>
 
           <FormControl>
-            <FormLabel color={theme.colors.primaryTextColor}>Giver Points</FormLabel>
+            <FormLabel color={theme.colors.primaryTextColor}>
+              Giver Points
+            </FormLabel>
             <Input
-              type='number'
+              type="number"
               value={editable.giverPoints}
-              onChange={(e) => patch('giverPoints', parseInt(e.target.value))}
+              onChange={(e) => patch("giverPoints", parseInt(e.target.value))}
               isDisabled={!editable.isActive}
-              borderColor={transparentize(theme.colors.primaryTextColor, 0.15)(theme)}
+              borderColor={transparentize(
+                theme.colors.primaryTextColor,
+                0.15
+              )(theme)}
               _hover={{ borderColor: theme.colors.primary }}
-              _focus={{ borderColor: theme.colors.primary, boxShadow: `0 0 0 1px ${theme.colors.primary}` }}
+              _focus={{
+                borderColor: theme.colors.primary,
+                boxShadow: `0 0 0 1px ${theme.colors.primary}`,
+              }}
               color={theme.colors.primaryTextColor}
             />
           </FormControl>
         </Stack>
       </VStack>
 
-      <HStack justify='flex-end' mt={6} spacing={4}>
+      <HStack justify="flex-end" mt={6} spacing={4}>
         {isCreating && onCancelCreate && (
           <Button
             variant="outline"
             onClick={onCancelCreate}
             color={theme.colors.primaryTextColor}
-            _hover={
-              {
-                bg: 'transparent',
-                borderColor: theme.colors.primary,
-                color: theme.colors.primary
-              }
-            }
+            _hover={{
+              bg: "transparent",
+              borderColor: theme.colors.primary,
+              color: theme.colors.primary,
+            }}
           >
             Cancel
           </Button>
@@ -234,9 +291,9 @@ export default function CategoryPanel({
           _hover={{ bg: transparentize(theme.colors.primary, 0.8)(theme) }}
           isDisabled={!hasChanges || !editable.isActive || loading}
           isLoading={loading}
-          onClick={save}
+          onClick={() => save(editable)}
         >
-          {isCreating ? 'Create' : 'Save'}
+          {isCreating ? "Create" : "Save"}
         </Button>
       </HStack>
     </Box>

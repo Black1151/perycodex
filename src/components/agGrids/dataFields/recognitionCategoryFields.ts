@@ -26,7 +26,7 @@ export const categoryFields: ColDef[] = [
   },
   {
     field: "points",
-    headerName: "Reciver Points",
+    headerName: "Receiver Points",
     maxWidth: 200,
     minWidth: 100,
     filter: "agNumberColumnFilter",

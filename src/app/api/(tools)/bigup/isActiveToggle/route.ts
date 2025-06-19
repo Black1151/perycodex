@@ -3,7 +3,6 @@ import apiClient from "@/lib/apiClient";
 import { cookies } from "next/headers";
 
 export async function PUT(req: NextRequest) {
-    console.log("IS ACTIVE TOGGLE ENDPOINT STARTING")
     try {
         const authToken = req.headers.get('authorization')?.split(' ')[1]
 

@@ -354,7 +354,7 @@ export default function CategoriesModal(props: {
 
       {isOpen && (
         <Button
-          rightIcon={<Add />}
+          leftIcon={<Add />}
           aria-label="Create new category"
           position="fixed"
           bottom={5}
