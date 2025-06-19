@@ -37,6 +37,7 @@ export default function CategoryPanel({
   const [editable, setEditable] = useState<Category>(category);
   const [hasChanges, setHasChanges] = useState(false);
   const toast = useToast();
+  const [loading, setLoading] = useState(false);
 
   /* reset local copy whenever parent changes */
   useEffect(() => {
@@ -52,6 +53,7 @@ export default function CategoryPanel({
 
   /* save */
   const save = async () => {
+    setLoading(true);
     try {
       const resp = await fetch('/api/bigup', {
         method: isCreating ? 'POST' : 'PUT',
@@ -65,6 +67,8 @@ export default function CategoryPanel({
       toast({ title: isCreating ? 'Category created' : 'Changes saved', status: 'success', duration: 3000, isClosable: true });
     } catch (err: any) {
       toast({ title: err.message ?? 'Error', status: 'error', duration: 4000, isClosable: true });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -228,7 +232,8 @@ export default function CategoryPanel({
           bg={theme.colors.primary}
           color={theme.colors.white}
           _hover={{ bg: transparentize(theme.colors.primary, 0.8)(theme) }}
-          isDisabled={!hasChanges || !editable.isActive}
+          isDisabled={!hasChanges || !editable.isActive || loading}
+          isLoading={loading}
           onClick={save}
         >
           {isCreating ? 'Create' : 'Save'}
