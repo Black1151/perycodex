@@ -45,7 +45,7 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
   });
 
   const message = watch("message", "");
-  const maxLength = 256;
+  const maxLength = 255;
 
   const handleClose = () => {
     reset();
