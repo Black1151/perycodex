@@ -169,7 +169,7 @@ export default function CategoriesModal(props: {
           }
         >
           <HStack spacing={2} color={theme.colors.primaryTextColor}>
-            <Add fontSize="medium"/>
+            <Add fontSize="medium" />
             <Text fontWeight="semibold">Create New Category</Text>
           </HStack>
         </Box>
@@ -235,6 +235,29 @@ export default function CategoriesModal(props: {
                     color={theme.colors.primaryTextColor}
                   />
                 )}
+                <Box
+                  w="10px"
+                  h="10px"
+                  borderRadius="full"
+                  bg={c.isActive ? "green.400" : "red.300"}
+                  position="absolute"
+                  top="8px"
+                  right="8px"
+                  sx={
+                    c.isActive
+                      ? {
+                          animation: "pulseGreen 1.2s infinite",
+                          "@keyframes pulseGreen": {
+                            "0%": { boxShadow: "0 0 0 0 rgba(72,187,120,.7)" },
+                            "70%": {
+                              boxShadow: "0 0 0 8px rgba(72,187,120,0)",
+                            },
+                            "100%": { boxShadow: "0 0 0 0 rgba(72,187,120,0)" },
+                          },
+                        }
+                      : {}
+                  }
+                />
                 <Text
                   fontWeight="semibold"
                   mb={1}
@@ -249,7 +272,10 @@ export default function CategoriesModal(props: {
                 >
                   {c.description}
                 </Text>
-                <Stack direction={["column", "column", "column", "row"]} gap={0}>
+                <Stack
+                  direction={["column", "column", "column", "row"]}
+                  gap={0}
+                >
                   <Badge
                     mt={1}
                     colorScheme="blackAlpha"
@@ -328,7 +354,7 @@ export default function CategoriesModal(props: {
 
       {isOpen && (
         <Button
-          rightIcon={<Add/>}
+          rightIcon={<Add />}
           aria-label="Create new category"
           position="fixed"
           bottom={5}

@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
         console.log("[BigUp] GET: Customer ID:", customerId);
 
         const response = await apiClient(
-            `/userBigupType/allBy?customerId=${customerId}&orderBy=id`,
+            `/userBigupType/allBy?customerId=${customerId}&orderBy=isActive&sort=desc`,
             {
                 method: "GET",
                 headers: {
