@@ -3,14 +3,13 @@ import { cookies } from "next/headers";
 import apiClient from "@/lib/apiClient";
 
 export async function POST(req: NextRequest) {
-  console.log("POSTING AT SURVEYJS ENDPOINT...")
   try {
     const cookieStore = cookies();
     const authToken = cookieStore.get("auth_token")?.value;
 
     const body = await req.json();
 
-    const { name, description, points, isActive } = body;
+    const { name, description, points, isActive, giverPoints } = body;
 
     const response = await apiClient(`/userBigupType`, {
       method: "POST",
@@ -22,13 +21,13 @@ export async function POST(req: NextRequest) {
           name,
           description,
           points,
+          giverPoints,
           isActive
       }),
   });
 
     // Propagate the status and data from the actual API response
     const data = await response.json();
-    console.log("data:", data)
     return NextResponse.json(data, { status: response.status });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

@@ -21,10 +21,21 @@ export const recognitionCategoryJson = {
         {
           type: "text",
           name: "points",
-          title: "Points",
+          title: "Reciever Points",
           isRequired: true,
           inputType: "number",
           defaultValue: 0,
+          width: "50%"
+        },
+        {
+          type: "text",
+          name: "giverPoints",
+          title: "Giver Points",
+          isRequired: true,
+          inputType: "number",
+          defaultValue: 0,
+          width: "50%",
+          startWithNewLine: false,
         },
         {
           type: "boolean",
@@ -34,7 +45,7 @@ export const recognitionCategoryJson = {
           labelTrue: "Yes",
           labelFalse: "No",
           swapOrder: true,
-          hidden: true
+          hidden: true,
         },
       ],
     }]
