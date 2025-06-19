@@ -21,7 +21,7 @@ export const recognitionCategoryJson = {
         {
           type: "text",
           name: "points",
-          title: "Reciever Points",
+          title: "Receiver Points",
           isRequired: true,
           inputType: "number",
           defaultValue: 0,

@@ -51,7 +51,7 @@ export default function MobileDrawerSelector({
                         {triggerLabel ?? sel?.label ?? "Select…"}
                     </Text>
 
-                    {sel && (
+                    {sel && sel.isActive !== undefined && (
                         <Box
                             as="span"
                             display="inline-block"
@@ -101,10 +101,11 @@ export default function MobileDrawerSelector({
                                     onClick={() => { onSelect(it.id); onClose(); }}
                                 >
                                     <Text flex="1" textAlign="left" isTruncated color={primaryTextColor} fontWeight={"normal"}>{it.label}</Text>
-                                    {it.isActive
-                                        ? <Badge colorScheme="green">Active</Badge>
-                                        : <Badge colorScheme="red">Inactive</Badge>
-                                    }
+                                    {it.isActive !== undefined && (
+                                        it.isActive
+                                            ? <Badge colorScheme="green">Active</Badge>
+                                            : <Badge colorScheme="red">Inactive</Badge>
+                                    )}
                                 </Button>
                             ))}
                         </VStack>

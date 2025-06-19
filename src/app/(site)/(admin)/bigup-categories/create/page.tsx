@@ -1,14 +1,6 @@
 import { recognitionCategoryJson } from "@/components/surveyjs/forms/recognitionCategory";
 import AdminHeader from "@/components/AdminHeader";
-
-import { checkUserRole } from "@/lib/dal";
 import AdminFormWrapper from "@/components/surveyjs/AdminFormWrapper";
-
-interface RecognitionCategoryForm {
-  name: string;
-  description: string;
-  points: number;
-}
 
 export default async function RecognitionCategoriesCreatePage() {
 
