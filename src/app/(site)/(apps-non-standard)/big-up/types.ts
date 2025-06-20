@@ -64,4 +64,7 @@ export interface BigUpTeamMember {
 export interface BigUpCategory {
   id: number;
   name: string;
+  points: number;
+  giverPoints: number;
+  isActive: boolean;
 }

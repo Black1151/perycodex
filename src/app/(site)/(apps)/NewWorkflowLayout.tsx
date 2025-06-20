@@ -23,7 +23,7 @@ import WorkflowSidebar, {
 } from "@/components/Sidebars/WorkflowSidebar/WorkflowSidebar";
 import WorkflowFormWrapper from "@/components/surveyjs/WorkflowFormWrapper";
 import WorkflowEngineDebugger from "@/app/(site)/(apps)/WorkflowEngineDebugger";
-import { Check, ViewTimeline } from "@mui/icons-material";
+import { Check, ViewTimeline, Error as ErrorIcon, Done as SuccessIcon } from "@mui/icons-material";
 
 //Types
 import { SubmissionResponse } from "@/types/form";
@@ -456,7 +456,6 @@ const NewWorkflowLayout = ({
               flexDirection={"column"}
               gap={2}
             >
-              <Icon as={Check} boxSize={8} color={"green.500"} />
               <Text textAlign={"center"}>All Done!</Text>
             </Flex>
           )
@@ -464,18 +463,19 @@ const NewWorkflowLayout = ({
         bodyContent={
           user?.role === "EU" ? (
             <Flex align="center" flexDirection={"column"} gap={3}>
-              <Text>You’ve completed all required steps.</Text>
+              <Text>You've completed all required steps.</Text>
               <Text>You will now be logged out.</Text>
             </Flex>
           ) : (
             <Flex align="center" flexDirection={"column"} gap={3}>
-              <Text>You’ve completed all required steps.</Text>
+              <Text>You've completed all required steps.</Text>
               <Text>Finish will return you to your dashboards</Text>
             </Flex>
           )
         }
         confirmLabel={user?.role === "EU" ? "Logout" : "Finish"}
         cancelLabel="Cancel"
+        type="success"
       />
 
       <WorkflowSidebar

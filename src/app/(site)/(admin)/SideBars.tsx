@@ -27,6 +27,7 @@ import {
   BlurOn,
   Help,
   ContentCopy,
+  Celebration,
 } from "@mui/icons-material";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -527,6 +528,15 @@ export default function SideBars() {
       );
     }
 
+    if (userRole === "CA" && user?.subscribedTools.includes("100")) {
+      items.push({
+        label: "Recognition Categories",
+        icon: <Celebration sx={{ height: "100%", width: "100%" }} />,
+        url: "/bigup-categories",
+        category: "Tools",
+      });
+    }
+
     return items.map(({ url, ...item }) => ({
       ...item,
       onClick: () => router.push(url),
@@ -538,7 +548,6 @@ export default function SideBars() {
   };
 
   useEffect(() => {
-    console.log("pathname:", pathname);
     const newItems = generateLeftSidebarItemsDrawer(
       user?.role,
       user?.customerIsFree ?? true
@@ -570,7 +579,6 @@ export default function SideBars() {
     const hideGuidePaths = ["/help-centre", "/activity", "/client-activity"];
 
     if (hideGuidePaths.includes(pathname)) {
-      console.log("HIDING ADMIN GUIDES")
       setShouldShowAdminGuides(false);
       setShouldPopupAdminGuides(false);
     }
@@ -673,7 +681,6 @@ export default function SideBars() {
         const readRes = await fetch(`/api/guideRead/?userId=${user.userId}`);
         if (!readRes.ok) throw new Error("Failed to fetch read records");
         const readJson = await readRes.json();
-        console.log("Raw /api/guideRead response:", readJson);
 
         // Normalize into an array
         const raw = readJson.resource;
@@ -689,7 +696,6 @@ export default function SideBars() {
         const readSet = new Set(readRecordsArray.map((r) => String(r.guideId)));
         // 3) Open if there’s any unread guide
         const hasUnread = allGuideIds.some((id) => !readSet.has(id));
-        console.log("hasUnread", hasUnread);
         if (hasUnread && shouldPopupAdminGuides) {
           setAdminGuideModalOpen(true);
           sessionStorage.setItem(sessionKey, "1");
