@@ -14,6 +14,7 @@ import {
   FormLabel,
   FormErrorMessage,
   Badge,
+  Portal,
 } from "@chakra-ui/react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 interface Category {
@@ -43,6 +44,7 @@ const CustomCategoryDropdown: React.FC<CustomCategoryDropdownProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const theme = useTheme();
   const ref = useRef<HTMLDivElement>(null);
+  const [dropdownStyles, setDropdownStyles] = useState<React.CSSProperties>({});
 
   useOutsideClick({
     ref,
@@ -50,6 +52,19 @@ const CustomCategoryDropdown: React.FC<CustomCategoryDropdownProps> = ({
   });
 
   const selected = categories.find((cat) => String(cat.id) === String(value));
+
+  useEffect(() => {
+    if (isOpen && ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+      setDropdownStyles({
+        position: "absolute",
+        top: rect.bottom + window.scrollY,
+        left: rect.left + window.scrollX,
+        width: rect.width,
+        zIndex: 2100,
+      });
+    }
+  }, [isOpen]);
 
   console.log("categories:", categories);
 
@@ -62,6 +77,7 @@ const CustomCategoryDropdown: React.FC<CustomCategoryDropdownProps> = ({
           justify="space-between"
           bg="white"
           color="gray.800"
+          zIndex={200}
           borderRadius="md"
           borderWidth="1px"
           borderColor={isInvalid ? theme.colors.red[500] : "whiteAlpha.300"}
@@ -77,13 +93,17 @@ const CustomCategoryDropdown: React.FC<CustomCategoryDropdownProps> = ({
                 <Text textAlign="left" fontSize={"base"}>
                   {selected.name}
                 </Text>
-                <VStack w="min" gap={1}>
-                  {selected.points && (
-                    <Badge>{`+${selected.points} Receiver pts`}</Badge>
-                  )}
-                  {selected.giverPoints && (
-                    <Badge>{`+${selected.giverPoints} Giver pts`}</Badge>
-                  )}
+                <VStack w="min" gap={1} align={"right"}>
+                  {selected.points ? (
+                    <Badge colorScheme="cyan" variant="subtle">
+                      +{selected.points} receiver pts
+                    </Badge>
+                  ) : null}
+                  {selected.giverPoints ? (
+                    <Badge colorScheme="blue" variant="subtle">
+                      +{selected.giverPoints} giver pts
+                    </Badge>
+                  ) : null}
                 </VStack>
               </HStack>
             ) : (
@@ -93,56 +113,59 @@ const CustomCategoryDropdown: React.FC<CustomCategoryDropdownProps> = ({
           <Icon as={KeyboardArrowDownIcon} boxSize={5} color="gray.500" />
         </Flex>
         {isOpen && (
-          <List
-            position="absolute"
-            zIndex={10}
-            mt={1}
-            w="100%"
-            bg="white"
-            color="gray.800"
-            borderRadius="md"
-            boxShadow="md"
-            maxH="200px"
-            overflowY="auto"
-          >
-            {categories.map((category, idx) => (
-              <ListItem
-                key={category.id}
-                px={4}
-                py={2}
-                cursor="pointer"
-                _hover={{ bg: theme.colors.gray[100] }}
-                bg={
-                  String(category.id) === String(value)
-                    ? theme.colors.gray[200]
-                    : ""
-                }
-                borderBottom={
-                  idx !== categories.length - 1
-                    ? `1px solid ${theme.colors.gray[200]}`
-                    : undefined
-                }
-                onClick={() => {
-                  onChange(category.id);
-                  setIsOpen(false);
-                }}
-              >
-                <HStack justifyContent="space-between" w="full">
-                <Text textAlign="left" fontSize={"base"}>
-                  {category.name}
-                </Text>
-                <VStack w="min" gap={1}>
-                  {category.points && (
-                    <Badge>{`+${category.points} Receiver pts`}</Badge>
-                  )}
-                  {category.giverPoints && (
-                    <Badge>{`+${category.giverPoints} Giver pts`}</Badge>
-                  )}
-                </VStack>
-              </HStack>
-              </ListItem>
-            ))}
-          </List>
+          <Portal>
+            <List
+              style={dropdownStyles}
+              bg="white"
+              color="gray.800"
+              borderRadius="md"
+              boxShadow="md"
+              maxH="400px"
+              overflowY="auto"
+            >
+              {categories.map((category, idx) => (
+                <ListItem
+                  key={category.id}
+                  px={4}
+                  py={2}
+                  cursor="pointer"
+                  _hover={{ bg: theme.colors.gray[100] }}
+                  bg={
+                    String(category.id) === String(value)
+                      ? theme.colors.gray[200]
+                      : ""
+                  }
+                  borderBottom={
+                    idx !== categories.length - 1
+                      ? `1px solid ${theme.colors.gray[200]}`
+                      : undefined
+                  }
+                  onClick={() => {
+                    onChange(category.id);
+                    setIsOpen(false);
+                  }}
+                >
+                  <HStack justifyContent="space-between" w="full">
+                    <Text textAlign="left" fontSize={"base"}>
+                      {category.name}
+                    </Text>
+                    <VStack w="min" gap={1} align={"right"}>
+                      {category.points ? (
+                        <Badge colorScheme="cyan" variant="subtle">
+                          +{category.points} receiver pts
+                        </Badge>
+                      ) : null}
+                      {category.giverPoints ? (
+                        <Badge colorScheme="blue" variant="subtle">
+                          +{category.giverPoints} giver pts
+                        </Badge>
+                      ) : null}
+                    </VStack>
+                  </HStack>
+                </ListItem>
+              ))}
+            </List>
+          </Portal>
         )}
       </Box>
       <FormErrorMessage>{errorMessage}</FormErrorMessage>

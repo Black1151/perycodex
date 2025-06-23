@@ -10,6 +10,10 @@ import {
   Text,
   useTheme,
   useBreakpointValue,
+  HStack,
+  Badge,
+  VStack,
+  Avatar,
 } from "@chakra-ui/react";
 import { BigUpTeamMember } from "../types";
 import TeamMemberAutocomplete from "../components/TeamMemberAutocomplete";
@@ -92,15 +96,55 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
               name="teamMember"
               control={control}
               rules={{ required: "Team Member is required" }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TeamMemberAutocomplete
-                  value={value}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  teamMembers={teamMembers}
-                  placeholder="Start typing to search..."
-                />
-              )}
+              render={({ field }) =>
+                isMobile ? (
+                  <MobileDrawerSelector
+                    items={teamMembers.map((member) => ({
+                      id: member.id,
+                      content: (
+                        <HStack w="100%" justify="space-between" align="center">
+                          <HStack w="min" justify="start" align="center" flex="1" minW={0}>
+                            <Avatar
+                              name={member.fullName}
+                              src={member.imageUrl}
+                              size="sm"
+                            />
+                            <Text
+                              isTruncated
+                              maxW="140px"
+                              whiteSpace="nowrap"
+                              flex="1"
+                              minW={0}
+                            >
+                              {member.fullName}
+                            </Text>
+                          </HStack>
+                          <Badge colorScheme="pink" variant="subtle" flexShrink={0}>
+                            OFFICE NAME
+                          </Badge>
+                        </HStack>
+                      ),
+                      searchableLabel: member.fullName,
+                    }))}
+                    selectedId={field.value}
+                    onSelect={field.onChange}
+                    triggerLabel={
+                      teamMembers.find(
+                        (m) => String(m.id) === String(field.value)
+                      )?.fullName || "Choose a team member..."
+                    }
+                    canSearch={true}
+                  />
+                ) : (
+                  <TeamMemberAutocomplete
+                    value={field.value}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    teamMembers={teamMembers}
+                    placeholder="Start typing to search..."
+                  />
+                )
+              }
             />
             <FormErrorMessage>{errors.teamMember?.message}</FormErrorMessage>
           </FormControl>
@@ -118,7 +162,28 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                     <MobileDrawerSelector
                       items={activeCategories.map((cat) => ({
                         id: cat.id,
-                        label: `${cat.name} ${cat.points ? ` +${cat.points} reciever pts` : ""} ${cat.giverPoints ? ` +${cat.giverPoints} giver pts` : ""}`,
+                        content: (
+                          <HStack
+                            w="100%"
+                            justify="space-between"
+                            align="center"
+                          >
+                            <Text>{cat.name}</Text>
+                            <VStack spacing={1} align="flex-end">
+                              {cat.points ? (
+                                <Badge colorScheme="cyan" variant="subtle">
+                                  +{cat.points} receiver pts
+                                </Badge>
+                              ) : null}
+                              {cat.giverPoints ? (
+                                <Badge colorScheme="blue" variant="subtle">
+                                  +{cat.giverPoints} giver pts
+                                </Badge>
+                              ) : null}
+                            </VStack>
+                          </HStack>
+                        ),
+                        searchableLabel: cat.name,
                       }))}
                       selectedId={field.value}
                       onSelect={field.onChange}
