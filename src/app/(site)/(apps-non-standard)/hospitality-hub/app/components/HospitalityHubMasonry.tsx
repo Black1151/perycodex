@@ -68,10 +68,10 @@ export function HospitalityHubMasonry({
   const [modalLoading, setModalLoading] = useState(false);
   const [loadingItemId, setLoadingItemId] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<HospitalityItem | null>(
-    null,
+    null
   );
   const [selectedItemSiteNames, setSelectedItemSiteNames] = useState<string[]>(
-    [],
+    []
   );
   const [sites, setSites] = useState<Site[]>([]);
   const [selectedSiteId, setSelectedSiteId] = useState<number | "">("");
@@ -121,12 +121,12 @@ export function HospitalityHubMasonry({
           const query = item.siteIds.map((id: number) => `id=${id}`).join("&");
           try {
             const siteRes = await fetch(
-              `/api/site/allBy?selectColumns=id,siteName&${query}`,
+              `/api/site/allBy?selectColumns=id,siteName&${query}`
             );
             const siteData = await siteRes.json();
             if (siteRes.ok) {
               setSelectedItemSiteNames(
-                (siteData.resource || []).map((s: any) => s.siteName),
+                (siteData.resource || []).map((s: any) => s.siteName)
               );
             } else {
               setSelectedItemSiteNames([]);

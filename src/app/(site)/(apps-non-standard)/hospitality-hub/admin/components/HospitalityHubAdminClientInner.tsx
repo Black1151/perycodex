@@ -18,8 +18,6 @@ import {
   FiPlusSquare,
   FiEdit2,
   FiTrash2,
-  FiToggleLeft,
-  FiToggleRight,
 } from "react-icons/fi";
 import { HospitalityCategory } from "@/types/hospitalityHub";
 import useHospitalityCategories from "../../hooks/useHospitalityCategories";
