@@ -133,7 +133,6 @@ const SubmitScoreModal: React.FC<SubmitScoreModalProps> = ({
                         (m) => String(m.id) === String(field.value)
                       )?.fullName || "Choose a team member..."
                     }
-                    canSearch={true}
                   />
                 ) : (
                   <TeamMemberAutocomplete
