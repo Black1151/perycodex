@@ -2,16 +2,21 @@ import {
     Drawer, DrawerOverlay, DrawerContent, DrawerHeader,
     DrawerBody, Button, HStack, Text, Icon, VStack, Box,
     useDisclosure, useTheme, IconButton,
-    Badge
+    Badge,
+    InputGroup, InputLeftElement, Input
 } from "@chakra-ui/react";
 import { KeyboardArrowDown, Check, Close as CloseIcon } from "@mui/icons-material";
 import { transparentize } from "@chakra-ui/theme-tools";
-import { ReactNode } from "react";
+import { ReactNode, ReactElement } from "react";
+import React from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import SearchIcon from "@mui/icons-material/Search";
 
 type Item = {
     id: string | number;
-    label: string;
     isActive?: boolean;
+    content: ReactNode;
+    searchableLabel?: string;
 };
 
 type Props = {
@@ -25,7 +30,7 @@ export default function MobileDrawerSelector({
     items,
     selectedId,
     onSelect,
-    triggerLabel
+    triggerLabel,
 }: Props) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const sel = items.find(i => i.id === selectedId);
@@ -35,6 +40,16 @@ export default function MobileDrawerSelector({
     const successColor = theme.colors.green[500];
     const errorColor = theme.colors.red[500];
     const primaryTextColor = theme.colors.primaryTextColor;
+    const [search, setSearch] = React.useState("");
+
+    // enableSearch is now determined by whether all items have a searchableLabel
+    const enableSearch = items.every(it => typeof it.searchableLabel === "string");
+
+    const filteredItems = enableSearch && isOpen
+        ? items.filter(it =>
+            it.searchableLabel!.toLowerCase().includes(search.toLowerCase())
+        )
+        : items;
 
     return (
         <>
@@ -43,12 +58,11 @@ export default function MobileDrawerSelector({
                 onClick={onOpen}
                 rightIcon={<KeyboardArrowDown />}
                 bg={bg}
-                _hover={{ bg: transparentize(bg, 0.8)(theme) }}
                 _active={{ bg: transparentize(bg, 0.9)(theme) }}
             >
                 <HStack w="100%" justifyContent="space-between">
-                    <Text flex="1" textAlign="left" isTruncated color={primaryTextColor}>
-                        {triggerLabel ?? sel?.label ?? "Select…"}
+                    <Text flex="1" textAlign="left" isTruncated color={primaryTextColor} fontWeight={"normal"}>
+                        {triggerLabel ?? sel?.content ?? "Select…"}
                     </Text>
 
                     {sel && sel.isActive !== undefined && (
@@ -84,30 +98,60 @@ export default function MobileDrawerSelector({
                                 onClick={onClose}
                             />
                         </HStack>
+                        {enableSearch && (
+                            <InputGroup mt={4}>
+                                <InputLeftElement pointerEvents="none" color="gray.400">
+                                    <SearchIcon fontSize="small" />
+                                </InputLeftElement>
+                                <Input
+                                    placeholder="Search..."
+                                    value={search}
+                                    onChange={e => setSearch(e.target.value)}
+                                    bg="white"
+                                    color="gray.800"
+                                />
+                            </InputGroup>
+                        )}
                     </DrawerHeader>
 
                     <DrawerBody p={0}>
-                        <VStack align="stretch" spacing={0} divider={
+                        <VStack align="stretch" spacing={2} divider={
                             <Box borderBottom="1px solid" borderColor={borderColor} />
                         }>
-                            {items.map(it => (
-                                <Button
-                                    key={it.id}
-                                    justifyContent="space-between"
-                                    variant="ghost"
-                                    borderRadius={0}
-                                    px={4} py={6}
-                                    _hover={{ bg: transparentize(bg, 0.8)(theme) }}
-                                    onClick={() => { onSelect(it.id); onClose(); }}
-                                >
-                                    <Text flex="1" textAlign="left" isTruncated color={primaryTextColor} fontWeight={"normal"}>{it.label}</Text>
-                                    {it.isActive !== undefined && (
-                                        it.isActive
-                                            ? <Badge colorScheme="green">Active</Badge>
-                                            : <Badge colorScheme="red">Inactive</Badge>
-                                    )}
-                                </Button>
-                            ))}
+                            <AnimatePresence initial={false}>
+                              {filteredItems.map((it, idx) => (
+                                <React.Fragment key={it.id}>
+                                  <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -20 }}
+                                    transition={{ duration: 0.18, type: "tween" }}
+                                    style={{ width: "100%"}}
+                                  >
+                                    <Button
+                                      justifyContent="space-between"
+                                      alignContent={"center"}
+                                      variant="ghost"
+                                      borderRadius={0}
+                                      px={4} py={8}
+                                      _hover={{ bg: transparentize(bg, 0.8)(theme) }}
+                                      onClick={() => { onSelect(it.id); onClose(); }}
+                                      w="100%"
+                                    >
+                                      <Text flex="1" textAlign="left" isTruncated color={primaryTextColor} fontWeight={"normal"}>{it.content}</Text>
+                                      {it.isActive !== undefined && (
+                                          it.isActive
+                                              ? <Badge colorScheme="green">Active</Badge>
+                                              : <Badge colorScheme="red">Inactive</Badge>
+                                      )}
+                                    </Button>
+                                  </motion.div>
+                                  {idx < filteredItems.length - 1 && (
+                                    <Box h="1px" w="100%" bg={borderColor} opacity={0.4} />
+                                  )}
+                                </React.Fragment>
+                              ))}
+                            </AnimatePresence>
                         </VStack>
                     </DrawerBody>
                 </DrawerContent>
