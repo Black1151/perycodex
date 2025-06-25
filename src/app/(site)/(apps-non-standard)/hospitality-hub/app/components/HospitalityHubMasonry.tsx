@@ -8,6 +8,8 @@ import {
   Spinner,
   Center,
   Select,
+  HStack,
+  Flex,
 } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
 import {
@@ -16,6 +18,7 @@ import {
 } from "@/components/animations/AnimatedList";
 import { useState, useEffect } from "react";
 import { Site } from "@/types/types";
+import { ArrowBack } from "@mui/icons-material";
 
 const preloadImage = (url: string) =>
   new Promise<void>((resolve) => {
@@ -178,60 +181,6 @@ export function HospitalityHubMasonry({
 
     return (
       <Center mt={20} mb={10}>
-        <Box
-          position="fixed"
-          top={71}
-          left={10}
-          cursor="pointer"
-          onClick={() => {
-            setSelected(null);
-          }}
-          p={2}
-          zIndex={1}
-          _hover={{ transform: "scale(1.05)" }}
-          transition="transform 0.2s"
-          mb={10}
-        >
-          <Text
-            bgColor="rgba(0, 0, 0, 0.57)"
-            fontWeight="bold"
-            fontSize="2xl"
-            color="hospitalityHubPremium"
-            p={3}
-            borderRadius="lg"
-            fontFamily="Metropolis"
-          >
-            &larr; Back
-          </Text>
-        </Box>
-        <Select
-          position="fixed"
-          top={150}
-          left={10}
-          w="200px"
-          zIndex={1}
-          bg="gray.700"
-          color="hospitalityHubPremium"
-          borderColor="hospitalityHubPremium"
-          borderWidth="1px"
-          value={selectedSiteId}
-          onChange={(e) =>
-            setSelectedSiteId(e.target.value ? Number(e.target.value) : "")
-          }
-        >
-          <option style={{ backgroundColor: "black" }} value="">
-            All Sites
-          </option>
-          {sites.map((site) => (
-            <option
-              key={site.id}
-              value={site.id}
-              style={{ backgroundColor: "black" }}
-            >
-              {site.siteName}
-            </option>
-          ))}
-        </Select>
         {displayedItems.length === 0 ? (
           <Center flex={1} w="100%">
             <Text
@@ -245,17 +194,73 @@ export function HospitalityHubMasonry({
           </Center>
         ) : (
           <Box w="100%" maxW="2000px" mx="auto">
-            {selectedCategoryData && (
-              <Text
-                fontFamily="bonfire"
-                fontSize="5xl"
-                textAlign="left"
+            <HStack justifyContent="space-between" alignItems="center" w="100%">
+              <Flex alignItems="center" gap={4}>
+                <Box
+                  pb={5}
+                  role="group"
+                  position="relative"
+                  cursor="pointer"
+                  onClick={() => setSelected(null)}
+                  transition="transform 0.3s ease, box-shadow 0.3s ease"
+                  _hover={{
+                    transform: "perspective(800px) translateZ(24px) scale(1.4)",
+                    boxShadow: "xl",
+                  }}
+                >
+                  {/* arrow icon / text */}
+                  <Text
+                    fontWeight="bold"
+                    fontSize="5xl"
+                    color="hospitalityHubPremium"
+                    p={3}
+                    borderRadius="lg"
+                    fontFamily="Metropolis"
+                  >
+                    &larr;
+                  </Text>
+                </Box>
+                {selectedCategoryData && (
+                  <Text
+                    fontFamily="bonfire"
+                    fontSize="5xl"
+                    textAlign="left"
+                    color="hospitalityHubPremium"
+                    mb={4}
+                  >
+                    {selectedCategoryData.name}
+                  </Text>
+                )}
+              </Flex>
+
+              <Select
+                w="200px"
+                zIndex={1}
+                bg="gray.700"
                 color="hospitalityHubPremium"
-                mb={4}
+                borderColor="hospitalityHubPremium"
+                borderWidth="1px"
+                value={selectedSiteId}
+                onChange={(e) =>
+                  setSelectedSiteId(
+                    e.target.value ? Number(e.target.value) : ""
+                  )
+                }
               >
-                {selectedCategoryData.name}
-              </Text>
-            )}
+                <option style={{ backgroundColor: "black" }} value="">
+                  All Sites
+                </option>
+                {sites.map((site) => (
+                  <option
+                    key={site.id}
+                    value={site.id}
+                    style={{ backgroundColor: "black" }}
+                  >
+                    {site.siteName}
+                  </option>
+                ))}
+              </Select>
+            </HStack>
             <SimpleGrid columns={[1, null, 2, 3]} gap={6} w="100%">
               <AnimatedList>
                 {displayedItems.map((item, index) => (
