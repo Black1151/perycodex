@@ -27,7 +27,6 @@ import {
   GridItem,
 } from "@chakra-ui/react";
 import ImageUploadWithCrop from "@/components/image/ImageUploadWithCrop";
-import DragDropFileInput from "@/components/forms/DragDropFileInput";
 import { useForm, Controller } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { HospitalityItem } from "@/types/hospitalityHub";
@@ -536,14 +535,11 @@ export default function AddItemModal({
                     setExistingCoverUrl(null);
                   }}
                 />
-                <FormControl mb={4}>
-                  <FormLabel>Additional Images</FormLabel>
-                  <DragDropFileInput
-                    multiple
-                    placeholder="Drag & drop additional images here"
-                    onFilesSelected={(files) => setAdditionalFiles(files)}
-                  />
-                </FormControl>
+                <ImageUploadWithCrop
+                  label="Additional Images"
+                  multiple
+                  onFilesSelected={(files) => setAdditionalFiles(files)}
+                />
               </GridItem>
             </Grid>
           </ModalBody>

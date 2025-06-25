@@ -5,6 +5,7 @@ import {
   FormControl,
   FormLabel,
   VStack,
+  HStack,
   Box,
   Button,
   Text,
@@ -17,34 +18,54 @@ import ImageCropper from "./ImageCropper";
 
 interface Props {
   label: string;
-  onFileSelected: (file: File | null) => void;
+  onFileSelected?: (file: File | null) => void;
+  onFilesSelected?: (files: File[]) => void;
   isRequired?: boolean;
   /** Existing image URL to display when editing */
   existingUrl?: string;
   /** Called when an existing image is removed */
   onRemoveExisting?: () => void;
+  /** Allow selecting multiple images */
+  multiple?: boolean;
 }
 
 export default function ImageUploadWithCrop({
   label,
   onFileSelected,
+  onFilesSelected,
   isRequired = false,
   existingUrl,
   onRemoveExisting,
+  multiple = false,
 }: Props) {
   const [file, setFile] = useState<File | null>(null);
+  const [fileQueue, setFileQueue] = useState<File[]>([]);
+  const [croppedFiles, setCroppedFiles] = useState<File[]>([]);
   const [cropOpen, setCropOpen] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string>("");
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [usingExisting, setUsingExisting] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const borderColor = useColorModeValue("gray.400", "gray.600");
   const hoverBorderColor = useColorModeValue("gray.200", "gray.400");
 
   const handleFiles = (files: FileList | File[]) => {
-    const f = files[0];
-    if (f) {
-      setFile(f);
-      setCropOpen(true);
+    const arr = Array.from(files);
+    if (multiple) {
+      setFileQueue((q) => [...q, ...arr]);
+      if (!file) {
+        const next = arr[0];
+        if (next) {
+          setFile(next);
+          setCropOpen(true);
+        }
+      }
+    } else {
+      const f = arr[0];
+      if (f) {
+        setFile(f);
+        setCropOpen(true);
+      }
     }
   };
 
@@ -71,25 +92,52 @@ export default function ImageUploadWithCrop({
   const handleComplete = (cropped: File) => {
     setCropOpen(false);
     setFile(null);
-    setPreviewUrl(URL.createObjectURL(cropped));
-    setUsingExisting(false);
-    onFileSelected(cropped);
+    if (multiple) {
+      setFileQueue((q) => q.slice(1));
+      setCroppedFiles((prev) => {
+        const updated = [...prev, cropped];
+        onFilesSelected?.(updated);
+        return updated;
+      });
+      setPreviewUrls((prev) => [...prev, URL.createObjectURL(cropped)]);
+    } else {
+      setPreviewUrl(URL.createObjectURL(cropped));
+      setUsingExisting(false);
+      onFileSelected?.(cropped);
+    }
   };
 
   const handleCancel = () => {
     setCropOpen(false);
+    if (multiple) {
+      setFileQueue((q) => q.slice(1));
+    }
     setFile(null);
   };
 
-  const handleRemove = (e: React.MouseEvent) => {
+  const handleRemove = (e: React.MouseEvent, index?: number) => {
     e.stopPropagation();
-    if (usingExisting && onRemoveExisting) {
-      onRemoveExisting();
+    if (multiple) {
+      if (index !== undefined) {
+        setCroppedFiles((prev) => {
+          const updated = prev.filter((_, i) => i !== index);
+          onFilesSelected?.(updated);
+          return updated;
+        });
+        setPreviewUrls((prev) => {
+          URL.revokeObjectURL(prev[index]);
+          return prev.filter((_, i) => i !== index);
+        });
+      }
+    } else {
+      if (usingExisting && onRemoveExisting) {
+        onRemoveExisting();
+      }
+      setPreviewUrl("");
+      setUsingExisting(false);
+      setFile(null);
+      onFileSelected?.(null);
     }
-    setPreviewUrl("");
-    setUsingExisting(false);
-    setFile(null);
-    onFileSelected(null);
   };
 
   useEffect(() => {
@@ -101,6 +149,13 @@ export default function ImageUploadWithCrop({
       setUsingExisting(false);
     }
   }, [existingUrl]);
+
+  useEffect(() => {
+    if (multiple && !file && fileQueue.length > 0) {
+      setFile(fileQueue[0]);
+      setCropOpen(true);
+    }
+  }, [multiple, fileQueue, file]);
 
   return (
     <FormControl mb={4} isRequired={isRequired}>
@@ -122,7 +177,7 @@ export default function ImageUploadWithCrop({
           onDragOver={onDragOver}
           onDrop={onDrop}
         >
-          {previewUrl && (
+          {(!multiple && previewUrl) && (
             <IconButton
               aria-label="Remove"
               icon={<CloseIcon />}
@@ -136,33 +191,54 @@ export default function ImageUploadWithCrop({
             />
           )}
           <Box mb={4}>
-            {previewUrl ? (
+            {!multiple && previewUrl ? (
               <Image src={previewUrl} alt="preview" maxH="100px" mx="auto" />
             ) : (
               <Text color="white" fontSize={18}>
-                Drag & drop image here
+                {multiple ? "Drag & drop images here" : "Drag & drop image here"}
               </Text>
             )}
           </Box>
           <Button
             size="sm"
             variant="primary"
-            mt={previewUrl ? 0 : 4}
+            mt={!multiple && previewUrl ? 0 : 4}
             onClick={(e) => {
               e.stopPropagation();
               inputRef.current?.click();
             }}
           >
-            {previewUrl ? "Change Image" : "Browse files"}
+            {!multiple && previewUrl ? "Change Image" : "Browse files"}
           </Button>
           <input
             ref={inputRef}
             type="file"
             accept="image/*"
+            multiple={multiple}
             style={{ display: "none" }}
             onChange={handleChange}
           />
         </Box>
+        {multiple && previewUrls.length > 0 && (
+          <HStack flexWrap="wrap" spacing={2} w="100%">
+            {previewUrls.map((url, idx) => (
+              <Box key={idx} position="relative">
+                <IconButton
+                  aria-label="Remove"
+                  icon={<CloseIcon />}
+                  size="xs"
+                  color="red.500"
+                  variant="ghost"
+                  position="absolute"
+                  top={1}
+                  right={1}
+                  onClick={(e) => handleRemove(e, idx)}
+                />
+                <Image src={url} alt={`preview-${idx}`} maxH="100px" />
+              </Box>
+            ))}
+          </HStack>
+        )}
       </VStack>
       <ImageCropper
         file={file}
