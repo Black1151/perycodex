@@ -32,8 +32,8 @@ import MobileDrawerSelector from "./MobileDrawerSelector";
 
 type MobileSelectorItem = {
   id: string | number;
-  label: string;
   isActive?: boolean;
+  content: ReactNode;
 };
 
 type Props = {
