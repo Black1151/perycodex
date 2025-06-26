@@ -329,8 +329,10 @@ export default function CategoriesModal(props: {
   /* mobile selector items ---------------------------------------------- */
   const mobileItems = categories.map((c) => ({
     id: c.uniqueId,
-    label: c.name,
     isActive: c.isActive,
+    content: (
+      <>{c.name}</>
+    ),
   }));
 
   return (

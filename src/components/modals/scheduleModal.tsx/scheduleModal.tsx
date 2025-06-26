@@ -360,8 +360,10 @@ export default function QuickScheduleSetupModal({
       ) : <Text mt={10} textAlign='center'>No schedules</Text>}
       mobileItems={schedules.map((s) => ({
         id: s.scheduleId,
-        label: s.name,
         isActive: s.isActive,
+        content: (
+          <>{s.name}</>
+        ),
       }))}
       mobileSelectedId={selected?.scheduleId}
       onMobileSelect={(id) =>

@@ -19,6 +19,7 @@ import PaletteIcon from '@mui/icons-material/Palette';
 import CodeIcon from '@mui/icons-material/Code';
 import SecurityIcon from '@mui/icons-material/Security';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import ImportExportIcon from '@mui/icons-material/ImportExport';
 import { useSession } from "next-auth/react";
 import { useUser } from "@/providers/UserProvider";
 import { SALES_EMAIL } from "@/utils/emailAddresses";
@@ -61,6 +62,7 @@ const AdditionalServicesPage: React.FC = () => {
         'bespoke-development': 'Bespoke Tool, Dashboard or Report Development (£850 per day)',
         'enabling-sso': 'Enabling SSO (£200 one off)',
         'auto-user-signup': 'Enabling Auto Company User Signup (Free!)',
+        'data-import-migration': 'Data Import and Migration (from £500 one off)',
       }[serviceId];
     });
 
@@ -108,6 +110,13 @@ const AdditionalServicesPage: React.FC = () => {
       price: "£850 per day",
       description: "Work with our development team to build bespoke tools, dashboards, or reports tailored to your specific business needs and requirements.",
       icon: <CodeIcon sx={{ color: theme.colors.primary }} />
+    },
+    {
+      id: "data-import-migration",
+      name: "Data Import and Migration",
+      price: "from £500 (one off)",
+      description: "Seamlessly import your existing data or migrate from another platform. Our team will handle the process to ensure your data is safely and accurately transferred into Perygon.",
+      icon: <ImportExportIcon sx={{ color: theme.colors.primary }} />
     }
   ];
 
